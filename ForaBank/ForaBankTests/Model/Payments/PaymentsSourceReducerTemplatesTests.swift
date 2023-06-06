@@ -787,24 +787,3 @@ extension Model {
         paymentTemplates.value.append(template)
     }
 }
-
-// TODO: - Remove after merge input component tests
-extension Model {
-    
-    static func mockWithEmpty() -> Model {
-        
-        .init(
-            sessionAgent: SessionAgentEmptyMock(),
-            serverAgent: ServerAgentEmptyMock(),
-            localAgent: LocalAgentEmptyMock(),
-            keychainAgent: KeychainAgentMock(),
-            settingsAgent: SettingsAgentMock(),
-            biometricAgent: BiometricAgentMock(),
-            locationAgent: LocationAgentMock(),
-            contactsAgent: ContactsAgentMock(),
-            cameraAgent: CameraAgentMock(),
-            imageGalleryAgent: ImageGalleryAgentMock(),
-            networkMonitorAgent: NetworkMonitorAgentMock()
-        )
-    }
-}

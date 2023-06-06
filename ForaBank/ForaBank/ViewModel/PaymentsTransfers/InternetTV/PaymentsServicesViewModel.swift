@@ -46,7 +46,7 @@ class PaymentsServicesViewModel: ObservableObject {
    
     func bind() {
    
-        searchBar.textField.$text
+        searchBar.textFieldModel.textPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
                 
@@ -89,7 +89,7 @@ class PaymentsServicesViewModel: ObservableObject {
                     
                 case _ as PaymentsServicesViewModelWithNavBarAction.OpenCityView:
                     self.sheet = .init(sheetType: .city(.init(model: model,
-                                                              searchView: .init(textFieldPhoneNumberView: .init(.text("Введите название"))),
+                                                              searchView: .withText("Введите название"),
                                                               operators: allOperators,
                                                               action: { region in
                         

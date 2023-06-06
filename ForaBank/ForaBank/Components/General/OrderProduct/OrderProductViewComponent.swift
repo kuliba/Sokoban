@@ -7,13 +7,17 @@
 
 import SwiftUI
 import Combine
+import TextFieldComponent
 
 // MARK: - ViewModel
 
 extension OrderProductView {
     
     class ViewModel: ObservableObject {
-        
+                
+        @Published var isError: Bool = false
+        @Published var isUserInteractionEnabled: Bool = true
+
         @Published var isOrderCompletion: Bool
         @Published var isValidPhoneNumber: Bool
         @Published var isSmsCode: Bool
@@ -21,7 +25,7 @@ extension OrderProductView {
         @Published var alert: Alert.ViewModel?
         
         let nameTextField: TextFieldView.ViewModel
-        let phoneNumber: PhoneNumberViewModel
+        let phoneNumber: RegularFieldViewModel
         let smsCode: SmsCodeViewModel
         let agreeData: AgreeDataViewModel
         let sendButton: SendButtonViewModel
@@ -29,8 +33,10 @@ extension OrderProductView {
         
         let title = "Заполните информацию"
         let detailTitle = "В ближайшее время Вам позвонит\nсотрудник банка для\nподтверждения данных"
+        let phoneTextFiledTitle: String
         
         private let model: Model
+        private let validator: Validator
         private let productTariff: Int
         private let productType: Int
         private var bindings = Set<AnyCancellable>()
@@ -44,9 +50,10 @@ extension OrderProductView {
             case error
         }
         
-        init(_ model: Model, productTariff: Int, productType: Int, isOrderCompletion: Bool, isValidPhoneNumber: Bool, isSmsCode: Bool, state: State, nameTextField: TextFieldView.ViewModel, phoneNumber: PhoneNumberViewModel, smsCode: SmsCodeViewModel, agreeData: AgreeDataViewModel, sendButton: SendButtonViewModel, notify: NotifyViewModel) {
+        init(_ model: Model, validator: Validator, productTariff: Int, productType: Int, isOrderCompletion: Bool, isValidPhoneNumber: Bool, isSmsCode: Bool, state: State, nameTextField: TextFieldView.ViewModel, phoneNumber: RegularFieldViewModel, smsCode: SmsCodeViewModel, agreeData: AgreeDataViewModel, sendButton: SendButtonViewModel, notify: NotifyViewModel, phoneTextFiledTitle: String) {
             
             self.model = model
+            self.validator = validator
             self.productTariff = productTariff
             self.productType = productType
             self.isOrderCompletion = isOrderCompletion
@@ -59,17 +66,22 @@ extension OrderProductView {
             self.agreeData = agreeData
             self.sendButton = sendButton
             self.notify = notify
+            self.phoneTextFiledTitle = phoneTextFiledTitle
         }
         
-        convenience init(_ model: Model, productData: CatalogProductData) {
+        convenience init(_ model: Model, validator: Validator = PhoneValidator(), productData: CatalogProductData) {
             
-            let phoneNumber: PhoneNumberViewModel = .init(
-                style: .order,
-                placeHolder: .phone
+            let placeHolder: TextViewPhoneNumberView.ViewModel.PlaceHolder = .phone
+            let phoneNumber = TextFieldFactory.makePhoneKitTextField(
+                initialPhoneNumber: nil,
+                placeholderText: placeHolder.title,
+                filterSymbols: [],
+                countryCodeReplaces: []
             )
             
             self.init(
                 model,
+                validator: validator,
                 productTariff: productData.tariff,
                 productType: productData.productType,
                 isOrderCompletion: false,
@@ -81,7 +93,8 @@ extension OrderProductView {
                 smsCode: .init(.smsCode),
                 agreeData: .init(),
                 sendButton: .init(),
-                notify: .init()
+                notify: .init(),
+                phoneTextFiledTitle: placeHolder.title
             )
             
             bind()
@@ -103,20 +116,20 @@ extension OrderProductView {
                             self.leadID = leadID
                             
                             withAnimation {
-                                phoneNumber.isError = false
+                                isError = false
                             }
                             
                         case let .error(message: message):
                             
                             withAnimation {
                                 
-                                phoneNumber.isError = true
+                                isError = true
                                 state = .error
                             }
                             
                             makeAlert(message)
                         }
-                        
+                        // TODO: looks like error: setting state here regardless of switch above
                         state = .normal
                         isSmsCode = true
                         
@@ -219,6 +232,7 @@ extension OrderProductView {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                    
+                    // TODO: add else clause to reset button style
                     if text.count == 6 {
                         sendButton.style = .red
                     }
@@ -282,20 +296,20 @@ extension OrderProductView {
                     let isEnabled = isSmsCode == false
                     
                     nameTextField.isUserInteractionEnabled = isEnabled
-                    phoneNumber.isUserInteractionEnabled = isEnabled
+                    isUserInteractionEnabled = isEnabled
 
                 }.store(in: &bindings)
             
-            phoneNumber.$text
+            phoneNumber.textPublisher()
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
-                    guard let text = text else {
-                        return
-                    }
+                    guard let text = text, !text.isEmpty
+                    else { return }
                     
                     isValidPhoneNumber = isValidPhone(text)
-                    self.phoneNumber.isError = !isValidPhoneNumber
+                    isError = !isValidPhoneNumber
                     
                 }.store(in: &bindings)
         }
@@ -308,7 +322,8 @@ extension OrderProductView {
         }
         
         private func isValidPhone(_ text: String) -> Bool {
-            phoneNumber.phoneNumberFormatter.isValid(text)
+            
+            validator.isValid(text)
         }
         
         private func updateTimer() {
@@ -409,12 +424,6 @@ extension OrderProductView.ViewModel {
 }
 
 extension OrderProductView.ViewModel {
-    
-    class PhoneNumberViewModel: TextViewPhoneNumberView.ViewModel {
-        
-        @Published var isUserInteractionEnabled: Bool = true
-        @Published var isError: Bool = false
-    }
     
     class SmsCodeViewModel: TextFieldView.ViewModel {
         
@@ -557,7 +566,7 @@ extension OrderProductView.ViewModel {
         }
     }
     
-    struct NotifyViewModel {
+    struct NotifyViewModel: Equatable {
         
         let title = "Спасибо"
         let description = "В ближайшее время Вам позвонит\nсотрудник банка для\nподтверждения данных"
@@ -602,7 +611,12 @@ struct OrderProductView: View {
                 VStack(spacing: 16) {
                     
                     NameView(viewModel: viewModel.nameTextField)
-                    PhoneNumberView(viewModel: viewModel.phoneNumber)
+                    PhoneNumberView(
+                        viewModel: viewModel.phoneNumber,
+                        title: viewModel.phoneTextFiledTitle,
+                        isError: viewModel.isError,
+                        isDisabled: !viewModel.isUserInteractionEnabled
+                    )
                     
                     if viewModel.isSmsCode == true {
                         SmsCodeView(viewModel: viewModel.smsCode)
@@ -633,6 +647,26 @@ struct OrderProductView: View {
                         })
                     }
             }
+        }
+    }
+}
+
+extension ReducerTextFieldViewModel {
+    
+    var isActive: Bool {
+        
+        switch state {
+        case .editing:
+            return true
+            
+        case .noFocus(""):
+            return false
+        
+        case .noFocus:
+            return true
+            
+        case .placeholder:
+            return false
         }
     }
 }
@@ -682,7 +716,11 @@ extension OrderProductView {
     
     struct PhoneNumberView: View {
         
-        @ObservedObject var viewModel: ViewModel.PhoneNumberViewModel
+        @ObservedObject var viewModel: RegularFieldViewModel
+        
+        let title: String
+        let isError: Bool
+        let isDisabled: Bool
         
         var body: some View {
             
@@ -702,17 +740,20 @@ extension OrderProductView {
                         
                         if viewModel.isActive == true {
                             
-                            Text(viewModel.placeHolder.title)
+                            Text(title)
                                 .font(.textBodyMR14180())
                                 .foregroundColor(.mainColorsGray)
                         }
                         
-                        TextViewPhoneNumberView(viewModel: viewModel)
+                        RegularTextFieldView(
+                            viewModel: viewModel,
+                            textFieldConfig: .black16
+                        )
                         
                         Spacer()
                     }
                     
-                    if viewModel.isError == true {
+                    if isError {
                         
                         Image.ic24AlertCircle
                             .foregroundColor(.mainColorsRed)
@@ -722,7 +763,7 @@ extension OrderProductView {
                 .padding(.horizontal)
                 
             }
-            .disabled(viewModel.isUserInteractionEnabled == false)
+            .disabled(isDisabled)
             .frame(height: 72)
         }
     }

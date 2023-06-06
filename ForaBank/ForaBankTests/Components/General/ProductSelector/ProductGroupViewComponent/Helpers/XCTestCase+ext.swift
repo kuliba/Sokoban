@@ -12,6 +12,18 @@ extension XCTestCase {
     
     // MARK: - Helpers
     
+    func assert<T: Equatable>(
+        _ received: [T],
+        equals partial: inout [T],
+        appending: T...,
+        message: @autoclosure () -> String = "",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        partial += appending
+        XCTAssertNoDiff(received, partial, message(), file: file, line: line)
+    }
+    
     typealias ProductTypeCounts = [(ProductType, Int)]
 
     func makeProductViewVMs(count: Int) -> [ProductView.ViewModel] {

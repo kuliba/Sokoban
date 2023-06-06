@@ -127,26 +127,25 @@ class QRSearchOperatorViewModel: ObservableObject {
     
     func bind() {
         
-        searchBar.textField.$text
+        searchBar.textFieldModel.textPublisher
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] value in
-                
-                guard let value = value else {
-                    return
-                }
-                
+            .sink { [unowned self] text in
+                                
                 self.filteredOperators.removeAll()
                                 
-                if !self.doStringContainsNumber(_string: value) {
+                if text.doesNotContainNumber {
                     
-                    filteredOperators = operators.filter { $0.title.lowercased().prefix(value.count) == value.lowercased() }
+                    filteredOperators = operators.filter {
+                        $0.title.lowercased().prefix(text.count) == text.lowercased()
+                    }
                     
-                    if filteredOperators.count == 0 {
+                    if filteredOperators.isEmpty {
                         self.searchValue = .noResult
                         return
                     }
                     
-                    switch value.isContainsLetters {
+                    switch text.doesContainLetters {
                     case true:
                         self.searchValue = .noEmpty
                     case false:
@@ -155,14 +154,15 @@ class QRSearchOperatorViewModel: ObservableObject {
                     
                 } else {
                     
-                    filteredOperators = operators.filter { $0.description?.prefix(value.count) ?? "" == value }
+                    filteredOperators = operators.filter { $0.description?.prefix(text.count) ?? "" == text }
                     
-                    if filteredOperators.count == 0 {
+                    if filteredOperators.isEmpty {
+                        
                         self.searchValue = .noResult
                         return
                     }
                     
-                    switch value.isContainsNumerics {
+                    switch text.doesContainNumerics {
                     case true:
                         self.searchValue = .noEmpty
                     case false:
@@ -178,45 +178,42 @@ class QRSearchOperatorViewModel: ObservableObject {
                 switch action {
                     
                 case _ as QRSearchOperatorViewModelAction.OpenCityView:
-                    self.sheet = .init(sheetType: .city(.init(model: model, searchView: .init(textFieldPhoneNumberView: .init(.text("Введите название города"))), action: { region in
-                        
-                        let regions = self.model.dictionaryRegion(for: region)
-                        self.searchValue = .noEmpty
-                        self.filteredOperators = regions.map {QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
-                            
-                            guard let model = self?.model else {
-                                return
-                            }
-                            
-                            let operatorsData = model.dictionaryQRAnewayOperator().filter{ !$0.parameterList.isEmpty }
-                            
-                            if let operatorData = operatorsData.filter({$0.id.description == id}).first {
-                                
-                                let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
+                    self.sheet = .init(
+                        sheetType: .city(
+                            .init(
+                                regions: model.dictionaryAnywayOperators()?.compactMap(\.region).uniqued() ?? [],
+                                searchViewModel: .withText("Введите название города"),
+                                select: { region in
                                     
-                                    self?.link = nil
-                                })
-                                self?.link = .operation(viewModel)
-                            }
-                        })}
-                        
-                        self.sheet = nil
-                    })))
+                                    let regions = self.model.dictionaryRegion(for: region)
+                                    self.searchValue = .noEmpty
+                                    self.filteredOperators = regions.map { QRSearchOperatorComponent.ViewModel(id: $0.id.description, operators: $0, action: { [weak self] id in
+                                        
+                                        guard let model = self?.model else {
+                                            return
+                                        }
+                                        
+                                        let operatorsData = model.dictionaryQRAnewayOperator()
+                                        
+                                        if let operatorData = operatorsData.filter({$0.id.description == id}).first {
+                                            
+                                            let viewModel: InternetTVDetailsViewModel = .init(model: model, operatorData: operatorData, closeAction: { [weak self] in
+                                                
+                                                self?.link = nil
+                                            })
+                                            self?.link = .operation(viewModel)
+                                        }
+                                    })}
+                                    
+                                    self.sheet = nil
+                                })))
                     
                 default:
                     break
                 }
             }.store(in: &bindings)
     }
-    
-    func doStringContainsNumber( _string : String) -> Bool{
         
-        let numberRegEx  = ".*[0-9]+.*"
-        let testCase = NSPredicate(format:"SELF MATCHES %@", numberRegEx)
-        let containsNumber = testCase.evaluate(with: _string)
-        return containsNumber
-    }
-    
     struct Sheet: Identifiable {
         
         let id = UUID()
@@ -247,15 +244,22 @@ enum QRSearchOperatorViewModelAction {
     struct OpenCityView: Action {}
 }
 
-extension String{
+extension String {
     
-    var isContainsLetters : Bool{
+    var doesContainLetters: Bool {
+        
         let letters = CharacterSet.letters
         return self.rangeOfCharacter(from: letters) != nil
     }
     
-    var isContainsNumerics : Bool{
+    var doesContainNumerics: Bool {
+        
         let letters = CharacterSet.alphanumerics
         return self.rangeOfCharacter(from: letters) != nil
+    }
+    
+    var doesNotContainNumber: Bool {
+        
+        allSatisfy { !$0.isNumber }
     }
 }

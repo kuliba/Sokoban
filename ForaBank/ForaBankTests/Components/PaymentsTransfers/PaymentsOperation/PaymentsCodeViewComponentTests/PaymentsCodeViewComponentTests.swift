@@ -7,7 +7,8 @@
 
 import CombineSchedulers
 @testable import ForaBank
-@testable import TextFieldRegularComponent
+@testable import TextFieldComponent
+@testable import TextFieldUI
 import XCTest
 
 final class PaymentsCodeViewComponentTests: XCTestCase {
@@ -41,8 +42,7 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         
         // textField extra
         XCTAssertEqual(sut.textField.keyboardType, .number)
-        XCTAssert(try XCTUnwrap(sut.textField.toolbar.doneButton.isEnabled))
-        XCTAssertNotNil(sut.textField.toolbar.closeButton)
+        XCTAssertNotNil(sut.textField.toolbar?.closeButton)
     }
     
     func test_init_shouldSetInitialValues_onEmpty() throws {
@@ -72,8 +72,7 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         
         // textField extra
         XCTAssertEqual(sut.textField.keyboardType, .number)
-        XCTAssert(try XCTUnwrap(sut.textField.toolbar.doneButton.isEnabled))
-        XCTAssertNotNil(sut.textField.toolbar.closeButton)
+        XCTAssertNotNil(sut.textField.toolbar?.closeButton)
     }
     
     func test_init_shouldSetInitialValues() throws {
@@ -103,8 +102,7 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         
         // textField extra
         XCTAssertEqual(sut.textField.keyboardType, .number)
-        XCTAssert(try XCTUnwrap(sut.textField.toolbar.doneButton.isEnabled))
-        XCTAssertNotNil(sut.textField.toolbar.closeButton)
+        XCTAssertNotNil(sut.textField.toolbar?.closeButton)
     }
     
     func test_shouldSetResendStateToButton_onResendDelayIsOverAction() {
@@ -187,7 +185,7 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
             .placeholder("OTP Title"),
         ])
         
-        sut.textField.textViewDidBeginEditing()
+        sut.textField.startEditing()
         scheduler.advance(by: .milliseconds(500))
         
         XCTAssertEqual(currentValueSpy.values, ["", ""])
@@ -196,7 +194,7 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         XCTAssertEqual(resendStateSpy.values.map(\.?.state), [.timer])
         XCTAssertEqual(textFieldSpy.values, [
             .placeholder("OTP Title"),
-            .focus(text: "", cursorPosition: 0),
+            .editing(.init("", cursorAt: 0)),
         ])
         
         sut.textField.setText(to: "1234")
@@ -208,8 +206,8 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         XCTAssertEqual(resendStateSpy.values.map(\.?.state), [.timer])
         XCTAssertEqual(textFieldSpy.values, [
             .placeholder("OTP Title"),
-            .focus(text: "", cursorPosition: 0),
-            .focus(text: "1234", cursorPosition: 4),
+            .editing(.init("",     cursorAt: 0)),
+            .editing(.init("1234", cursorAt: 4)),
         ])
         
         sut.textField.setText(to: "123456")
@@ -221,12 +219,12 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         XCTAssertEqual(resendStateSpy.values.map(\.?.state), [.timer])
         XCTAssertEqual(textFieldSpy.values, [
             .placeholder("OTP Title"),
-            .focus(text: "", cursorPosition: 0),
-            .focus(text: "1234", cursorPosition: 4),
-            .focus(text: "123456", cursorPosition: 6)
+            .editing(.init("",       cursorAt: 0)),
+            .editing(.init("1234",   cursorAt: 4)),
+            .editing(.init("123456", cursorAt: 6))
         ])
         
-        sut.textField.textViewDidEndEditing()
+        sut.textField.finishEditing()
         scheduler.advance()
         
         XCTAssertEqual(currentValueSpy.values, ["", "", "1234", "123456", "123456"])
@@ -235,9 +233,9 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         XCTAssertEqual(resendStateSpy.values.map(\.?.state), [.timer])
         XCTAssertEqual(textFieldSpy.values, [
             .placeholder("OTP Title"),
-            .focus(text: "", cursorPosition: 0),
-            .focus(text: "1234", cursorPosition: 4),
-            .focus(text: "123456", cursorPosition: 6),
+            .editing(.init("",       cursorAt: 0)),
+            .editing(.init("1234",   cursorAt: 4)),
+            .editing(.init("123456", cursorAt: 6)),
             .noFocus("123456")
         ])
     }
@@ -318,7 +316,9 @@ final class PaymentsCodeViewComponentTests: XCTestCase {
         timerDelay: TimeInterval = 0,
         errorMessage: String = "Bad code",
         length: Int = 6,
-        scheduler: AnySchedulerOf<DispatchQueue>
+        scheduler: AnySchedulerOf<DispatchQueue>,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> PaymentsCodeView.ViewModel {
         
         let parameterCode = Payments.ParameterCode(

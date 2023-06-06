@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SearchBarComponent
 
 struct ContactsView: View {
     
@@ -20,46 +21,52 @@ struct ContactsView: View {
                 Text(viewModel.title)
                     .font(.textH3SB18240())
                 
-                SearchBarView(viewModel: viewModel.searchBar)
-                    .accessibilityIdentifier("TransferByPhoneSearchField")
-                
+                DefaultCancellableSearchBarView(
+                    viewModel: viewModel.searchFieldModel,
+                    textFieldConfig: .black16,
+                    cancel: viewModel.cancelSearch
+                )
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)
             
-            ForEach(viewModel.visible) { section in
-                
-                switch section {
-                case let latestPaymentsViewModel as ContactsLatestPaymentsSectionViewModel:
-                    ContactsLatestPaymentsSectionView(viewModel: latestPaymentsViewModel)
-                        .accessibilityIdentifier("TransferByPhoneLatestPaymentsSection")
-                    
-                case let contactsSectionViewModel as ContactsListSectionViewModel:
-                    ContactsListSectionView(viewModel: contactsSectionViewModel)
-                        .accessibilityIdentifier("TransferByPhoneContactsSection")
-                    
-                case let banksPrefferedViewModel as ContactsBanksPrefferedSectionViewModel:
-                    ContactsBanksPrefferedSectionView(viewModel: banksPrefferedViewModel)
-                    
-                case let banksViewModel as ContactsBanksSectionViewModel:
-                    ContactsBanksSectionView(viewModel: banksViewModel)
-                    
-                case let countriesViewModel as ContactsCountriesSectionViewModel:
-                    ContactsCountriesSectionView(viewModel: countriesViewModel)
-                    
-                default:
-                    EmptyView()
-                }
-            }
-
-            Spacer()
+            ForEach(viewModel.visible, content: sectionView)
             
+            Spacer()
         }
         .ignoresSafeArea(.all, edges: .bottom)
     }
+    
+    @ViewBuilder
+    private func sectionView(
+        section: ContactsSectionViewModel
+    ) -> some View {
+        
+        switch section {
+        case let viewModel as ContactsLatestPaymentsSectionViewModel:
+            ContactsLatestPaymentsSectionView(viewModel: viewModel)
+                .accessibilityIdentifier("TransferByPhoneLatestPaymentsSection")
+            
+        case let viewModel as ContactsListSectionViewModel:
+            ContactsListSectionView(viewModel: viewModel)
+                .accessibilityIdentifier("TransferByPhoneContactsSection")
+            
+        case let viewModel as ContactsBanksPrefferedSectionViewModel:
+            ContactsBanksPrefferedSectionView(viewModel: viewModel)
+            
+        case let viewModel as ContactsBanksSectionViewModel:
+            ContactsBanksSectionView(viewModel: viewModel)
+            
+        case let viewModel as ContactsCountriesSectionViewModel:
+            ContactsCountriesSectionView(viewModel: viewModel)
+            
+        default:
+            EmptyView()
+        }
+    }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct ContactsView_Previews: PreviewProvider {
 
@@ -72,13 +79,4 @@ struct ContactsView_Previews: PreviewProvider {
             ContactsView(viewModel: .sampleFastBanks)
         }
     }
-}
-
-//MARK: - Preview Content
-
-extension ContactsViewModel {
-    
-    static let sampleFastContacts = ContactsViewModel(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), visible: [ContactsLatestPaymentsSectionViewModel.sample, ContactsListSectionViewModel.sample], sections: [], mode: .fastPayments(.contacts))
-    
-    static let sampleFastBanks = ContactsViewModel(.emptyMock, searchBar: .init(textFieldPhoneNumberView: .init(.contacts)), visible: [ContactsBanksPrefferedSectionViewModel.sample, ContactsBanksSectionViewModel.sample, ContactsCountriesSectionViewModel.sample], sections: [], mode: .fastPayments(.contacts))
 }

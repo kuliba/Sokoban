@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import TextFieldRegularComponent
+import TextFieldComponent
 
 //MARK: - ViewModel
 
@@ -81,7 +81,7 @@ extension PaymentsNameView {
         private func bind() {
             
             // last name
-            person.lastName.textField.$text
+            person.lastName.textField.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
@@ -89,7 +89,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.lastName.textField.$isEditing
+            person.lastName.textField.isEditing()
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -129,7 +129,7 @@ extension PaymentsNameView {
                 }.store(in: &bindings)
             
             // first name
-            person.firstName.textField.$text
+            person.firstName.textField.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
@@ -137,7 +137,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.firstName.textField.$isEditing
+            person.firstName.textField.isEditing()
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -177,7 +177,7 @@ extension PaymentsNameView {
                 }.store(in: &bindings)
             
             // middle name
-            person.middleName.textField.$text
+            person.middleName.textField.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
@@ -185,7 +185,7 @@ extension PaymentsNameView {
                     
                 }.store(in: &bindings)
             
-            person.middleName.textField.$isEditing
+            person.middleName.textField.isEditing()
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] isEditing in
@@ -278,11 +278,11 @@ extension PaymentsNameView.ViewModel {
     class NameViewModel: ObservableObject {
         
         @Published var title: String?
-        @Published var textField: TextFieldRegularView.ViewModel
+        @Published var textField: RegularFieldViewModel
         @Published var button: ButtonViewModel?
         @Published var warning: String?
         
-        init(title: String?, textField: TextFieldRegularView.ViewModel, button: ButtonViewModel? = nil) {
+        init(title: String?, textField: RegularFieldViewModel, button: ButtonViewModel? = nil) {
             
             self.title = title
             self.textField = textField
@@ -292,7 +292,12 @@ extension PaymentsNameView.ViewModel {
         convenience init(name: Payments.ParameterName.Name) {
       
             let title = name.value != nil ? name.title : nil
-            let textField = TextFieldRegularView.ViewModel(text: name.value, placeholder: name.title, keyboardType: .default, limit: name.limitator.limit)
+            let textField = TextFieldFactory.makeTextField(
+                text: name.value,
+                placeholderText: name.title,
+                keyboardType: .default,
+                limit: name.limitator.limit
+            )
             
             self.init(title: title, textField: textField)
         }
@@ -482,7 +487,7 @@ extension PaymentsNameView {
                 
                 HStack(spacing: 0) {
   
-                    TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
+                    RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 14), textColor: .textSecondary)
                         .frame(minWidth: 24)
                         .font(.textBodyMM14200())
                     

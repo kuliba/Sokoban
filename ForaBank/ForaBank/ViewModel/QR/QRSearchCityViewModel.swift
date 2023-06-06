@@ -5,56 +5,58 @@
 //  Created by Константин Савялов on 15.12.2022.
 //
 
-import SwiftUI
 import Combine
+import Foundation
+import TextFieldComponent
+
+enum RegionsState: Equatable {
+    
+    typealias Region = String
+    
+    case all([Region])
+    case filtered([Region])
+}
 
 class QRSearchCityViewModel: ObservableObject, Identifiable {
     
+    @Published private(set) var state: RegionsState
+    
     let id = UUID().uuidString
     let title = "Выберите регион"
-    let action: (String) -> Void
+    let select: (String) -> Void
     
-    var model: Model
-    @Published var searchView: SearchBarView.ViewModel
-    @Published var city: [String]
-    @Published var filteredCity: [String] = []
-    private var bindings = Set<AnyCancellable>()
+    let searchViewModel: SearchBarView.ViewModel
     
-    internal init(model: Model, searchView: SearchBarView.ViewModel, action: @escaping (String) -> Void) {
+    internal init(
+        regions: [RegionsState.Region],
+        searchViewModel: SearchBarView.ViewModel,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
+        select: @escaping (String) -> Void
+    ) {
+        self.state = .all(regions)
+        self.searchViewModel = searchViewModel
+        self.select = select
         
-        self.model = model
-        self.searchView = searchView
-        self.city = []
-        self.action = action
-        
-        guard let operatorsData = model.dictionaryAnywayOperators() else { return }
-        self.city = operatorsData.compactMap{$0.region}.uniqued()
-        bind()
+        searchViewModel.textFieldModel.textPublisher
+            .debounce(for: .milliseconds(299), scheduler: scheduler)
+            .removeDuplicates()
+            .map { [regions] in regions.reduce(with: $0) }
+            .receive(on: scheduler)
+            .assign(to: &$state)
     }
+}
+
+extension Array where Element == RegionsState.Region {
     
-    func bind() {
+    func reduce(with text: String?) -> RegionsState {
         
-        searchView.textField.$text
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] value in
-                
-                guard let value = value else {
-                    return
-                }
-                
-                if !self.doStringContainsNumber(value) {
-                    filteredCity = city.filter { $0.lowercased().prefix(value.count) == value.lowercased() }
-                }
-                
-            }.store(in: &bindings)
-    }
-    
-    func doStringContainsNumber(_ string : String) -> Bool{
+        guard let text, !text.isEmpty else {
+            return .all(self)
+        }
         
-        let numberRegEx  = ".*[0-9]+.*"
-        let testCase = NSPredicate(format:"SELF MATCHES %@", numberRegEx)
-        let containsNumber = testCase.evaluate(with: string)
-        return containsNumber
-        
+        let filtered = filter {
+            $0.localizedLowercase.prefix(text.count) == text.localizedLowercase
+        }
+        return .filtered(filtered)
     }
 }

@@ -90,7 +90,17 @@ struct PaymentsServicesOperatorsView: View {
 
 struct PaymentsServicesOperatorsView_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentsServicesOperatorsView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock,
-                                                      latestPayments: .sample, allOperators: [], addCompanyAction: {}, requisitesAction: {}))
+        
+        PaymentsServicesOperatorsView.init(
+            viewModel: .init(
+                searchBar: .withText("Введите ИНН"),
+                navigationBar: .init(title: "Все регионы"),
+                model: .emptyMock,
+                latestPayments: .sample,
+                allOperators: [],
+                addCompanyAction: {},
+                requisitesAction: {}
+            )
+        )
     }
 }

@@ -170,7 +170,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
@@ -182,7 +182,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
@@ -523,7 +523,7 @@ class MainViewModel: ObservableObject, Resetable {
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
                                         }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
                                         
-                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search),
+                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             

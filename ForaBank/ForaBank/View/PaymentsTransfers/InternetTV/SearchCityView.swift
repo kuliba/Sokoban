@@ -95,6 +95,12 @@ struct EmptyCityView: View {
 
 struct SearchCityView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchCityView(viewModel: .init(model: .emptyMock, searchView: .init(textFieldPhoneNumberView: .init(.text("Введите название региона"))), operators: [], action: {_ in }))
+        SearchCityView(
+            viewModel: .init(
+                model: .emptyMock,
+                searchView: .withText("Введите название региона"),
+                operators: [],
+                action: {_ in })
+        )
     }
 }
