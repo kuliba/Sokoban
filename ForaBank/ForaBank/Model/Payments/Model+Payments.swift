@@ -526,11 +526,34 @@ extension Model {
                     switch service {
                     case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV:
                             
-                            switch template.parameterList {
-                                case let payload as [TransferAnywayData]:
+                        if let payload = template.parameterList as? [TransferAnywayData] {
+                            
+                            return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                        }
+                        
+                        if let payload = template.parameterList as? [TransferGeneralData] {
+                            
+                            switch parameterId {
+                                case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                                    return template.phoneNumber
+                                    
+                                case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
+                                    return template.foraBankId
+                                    
+                                case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
+                                    return payload.last?.comment
+                                    
+                                default:
+                                    return nil
+                            }
+                        }
+                        return nil
+                        /*
+                        switch template.parameterList {
+                            case let payload as [TransferAnywayData]:
                                     return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
                                     
-                                case let payload as [TransferGeneralData]:
+                            case let payload as [TransferGeneralData]:
                                     switch parameterId {
                                         case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
                                             return template.phoneNumber
@@ -545,9 +568,10 @@ extension Model {
                                             return nil
                                     }
                                     
-                                default:
-                                    return nil
+                            default:
+                                return nil
                             }
+                         */
                             
                         case .requisites:
                             return paymentsProcessSourceTemplateReducerRequisites(templateData: template,

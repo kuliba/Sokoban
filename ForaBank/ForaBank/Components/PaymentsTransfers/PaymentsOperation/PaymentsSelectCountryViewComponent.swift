@@ -277,9 +277,9 @@ extension PaymentsSelectCountryView.ViewModel {
             
             guard let self else { return }
             
-            let contactViewModel = model.makeContactsViewModel(forMode: .select(.countries))
-            bind(contactsViewModel: contactViewModel)
-            action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
+            let contactViewModel = self.model.makeContactsViewModel(forMode: .select(.countries))
+            self.bind(contactsViewModel: contactViewModel)
+            self.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
         }
         
         return Self.reduce(
