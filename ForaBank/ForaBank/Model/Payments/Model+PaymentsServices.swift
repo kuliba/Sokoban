@@ -407,7 +407,16 @@ extension Model {
             
             let dataByOperation = try dataByOperation(operation)
             operatorCode = dataByOperation.puref
-
+            
+        case let .template(templateId):
+            let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+            
+            guard let list = template?.parameterList as? [TransferAnywayData],
+                let puref = list.first?.puref else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+            operatorCode = puref
+            
         case .servicePayment(let code, _, _):
             
             operatorCode = code
