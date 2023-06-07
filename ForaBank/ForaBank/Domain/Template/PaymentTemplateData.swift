@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreText
 
 struct PaymentTemplateData: Identifiable, Equatable {
     
@@ -135,113 +134,64 @@ extension PaymentTemplateData {
 
 //MARK: - Convenience SPF Properties
 
-//TODO: tests
 extension PaymentTemplateData {
     
-    var spfPhoneNumber: String? {
+    var sfpPhoneNumber: String? {
         
         guard let transfer = parameterList.first as? TransferAnywayData,
-              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
+              let phone = transfer.additional.sfpPhone else {
             return nil
         }
         
-        return phoneData.fieldvalue
+        return phone
     }
     
-    var spfBankId: String? {
+    var sfpBankId: String? {
         
         guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
+              let bank = transfer.additional.sfpBank else {
             return nil
         }
         
-        return bankData.fieldvalue
-    }
-    
-    var psfCardId: Int? {
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.payer.cardId else {
-            return nil
-        }
-        
-        return bankData
+        return bank
     }
 }
 
 //MARK: - Convenience Inside Bank by Phone Properties
 
-//TODO: tests
 extension PaymentTemplateData {
     
-    var insideByPhonePhoneNumber: String? {
+    var phoneNumber: String? {
         
         guard let transfer = parameterList.first as? TransferGeneralData,
-              let phoneData = transfer.payeeInternal?.phoneNumber  else {
+              let phoneData = transfer.payeeInternal?.phoneNumber else {
             return nil
         }
         
         return phoneData
     }
     
-    var insideByPhoneBankId: String? {
+    var foraBankId: String? {
         guard let transfer = parameterList.first as? TransferGeneralData,
-              transfer.payeeInternal?.phoneNumber != nil  else {
+              transfer.payeeInternal?.phoneNumber != nil else {
             return nil
         }
         
         return "100000000217"
     }
     
-    var insideByPhoneCardId: Int? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let bankData = transfer.payer.cardId else {
+    var payerProductId: Int? {
+        
+        guard let transfer = parameterList.first as? TransferGeneralData else {
             return nil
         }
         
-        return bankData
-    }
-    
-    var insideByPhoneAccountId: Int? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let bankData = transfer.payer.accountId else {
-            return nil
+        let productId = transfer.payer.accountId ?? transfer.payer.cardId
+        switch productId {
+            case let .some(productId):
+                return productId
+            default:
+                return nil
         }
-        
-        return bankData
-    }
-}
-
-//MARK: - Convenience Inside Bank by Card Properties
-
-//TODO: tests
-extension PaymentTemplateData {
-    
-    var insideByCardPhoneNumber: String? {
-        
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
-            return nil
-        }
-        
-        return phoneData.fieldvalue
-    }
-    
-    var insideByCardBankId: String? {
-        
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
-            return nil
-        }
-        
-        return bankData.fieldvalue
-    }
-    
-    var insideByCardCardId: Int? {
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.payer.cardId else {
-            return nil
-        }
-        
-        return bankData
     }
 }

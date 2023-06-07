@@ -780,7 +780,7 @@ public extension Image {
     static var ic32Trash: Image { Image(#function) }
     static var ic32UserCheck: Image { Image(#function) }
     static var ic32UserPlus: Image { Image(#function) }
-    static var ic40TVInternet: Image { Image(#function) }
+    static var ic40TvInternet: Image { Image(#function) }
     static var ic40ZKXServices: Image { Image(#function) }
     static var ic40AirTickets: Image { Image(#function) }
     static var ic40ArrowRightCircle: Image { Image(#function) }
@@ -840,5 +840,6 @@ public extension Image {
     static var ic64ForaColor: Image { Image(#function) }
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
+    static var qr_Icon: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }
 }

@@ -255,7 +255,9 @@ final class ArrayOfProductViewModelHelpersTests: XCTestCase {
     private func makeSUT(
         count: Int,
         minVisibleCount: Int,
-        isCollapsed: Bool
+        isCollapsed: Bool,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> (
         products: [ProductView.ViewModel],
         reduced: [ProductView.ViewModel],

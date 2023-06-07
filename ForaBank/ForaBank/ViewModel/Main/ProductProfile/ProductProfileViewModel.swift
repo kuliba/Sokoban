@@ -324,7 +324,7 @@ private extension ProductProfileViewModel {
                     case .success(let settings):
                         if settings.allowCloseDeposit, let product = productData as? ProductDepositData, let openDate = product.openDate, let number = product.number {
                             
-                            if product.isDemandDepositProduct {
+                            if product.isDemandDeposit {
                                 let displayNumber = product.displayNumber ?? number
                                 let topString = "Вы действительно хотите закрыть вклад №*\(displayNumber)?\n\n"
                                 let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
@@ -702,6 +702,10 @@ private extension ProductProfileViewModel {
                             case let .interest(amount):
                                 let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                                    
+                            case let .close(amount):
+                                let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
+                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
                             }
                             
                         default:
@@ -778,7 +782,7 @@ private extension ProductProfileViewModel {
                             
                             if let deposit = productData as? ProductDepositData {
                                 
-                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit(deposit.endDateNf == false)], productType: product.productType)
+                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.closeDeposit(deposit.isCanClosedDeposit)], productType: product.productType)
                                 self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             }
                             
@@ -829,9 +833,9 @@ private extension ProductProfileViewModel {
                                 
                                 let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
                                 self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
-                            }
-                                //только вклады
-                            else if let productData = productData as? ProductDepositData, productData.isDemandDepositProduct{
+                                
+                            } else if let productData = productData as? ProductDepositData,
+                                    productData.isDemandDeposit { //только вклады
                                                                 
                                 guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .makePaymentToDeposite(productData, 0)) else {
                                     return
@@ -881,10 +885,12 @@ private extension ProductProfileViewModel {
                             self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
                             self.action.send(ProductProfileViewModelAction.Close.Sheet())
                             
-                            if product.isDemandDepositProduct {
+                            if product.isDemandDeposit {
+                                
                                 self.model.action.send(ModelAction.Settings.ApplicationSettings.Request())
-                            }
-                            else{
+                                
+                            } else {
+                                
                                 switch product.depositType {
                                 case .birjevoy:
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1000)) {

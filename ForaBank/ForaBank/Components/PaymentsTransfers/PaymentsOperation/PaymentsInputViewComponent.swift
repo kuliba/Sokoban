@@ -7,17 +7,17 @@
 
 import SwiftUI
 import Combine
-import TextFieldRegularComponent
+import TextFieldComponent
 
 //MARK: - ViewModel
 
 extension PaymentsInputView {
     
     class ViewModel: PaymentsParameterViewModel, PaymentsParameterViewModelWarnable, ObservableObject {
-
+        
         let icon: Image?
         @Published var title: String?
-        let textField: TextFieldRegularView.ViewModel
+        let textField: RegularFieldViewModel
         @Published var additionalButton: ButtonViewModel?
         @Published var warning: String?
         @Published var info: String?
@@ -26,7 +26,7 @@ extension PaymentsInputView {
         
         var parameterInput: Payments.ParameterInput? { source as? Payments.ParameterInput }
 
-        init(icon: Image? = nil, title: String? = nil, textField: TextFieldRegularView.ViewModel, additionalButton: ButtonViewModel? = nil, warning: String? = nil, info: String? = nil, source: PaymentsParameterRepresentable) {
+        init(icon: Image? = nil, title: String? = nil, textField: RegularFieldViewModel, additionalButton: ButtonViewModel? = nil, warning: String? = nil, info: String? = nil, source: PaymentsParameterRepresentable) {
             
             self.icon = icon
             self.title = title
@@ -39,7 +39,12 @@ extension PaymentsInputView {
         
         convenience init(with parameterInput: Payments.ParameterInput) {
             
-            let textField = TextFieldRegularView.ViewModel(text: parameterInput.parameter.value, placeholder: parameterInput.title, keyboardType: parameterInput.inputType.keyboardType, limit: parameterInput.limitator?.limit)
+            let textField = TextFieldFactory.makeTextField(
+                text: parameterInput.parameter.value,
+                placeholderText: parameterInput.title,
+                keyboardType: parameterInput.inputType.keyboardType,
+                limit: parameterInput.limitator?.limit
+            )
             
             let additionalButton: ButtonViewModel? = {
                 
@@ -151,7 +156,7 @@ extension PaymentsInputView.ViewModel {
             .store(in: &bindings)
     }
     
-    private func updateTitle(textFieldState: TextFieldRegularView.ViewModel.State) {
+    private func updateTitle(textFieldState: TextFieldState) {
 
         switch textFieldState {
         case .placeholder:
@@ -180,6 +185,18 @@ extension PaymentsInputView.ViewModel {
                 
                 warning = nil
             }
+        }
+    }
+    
+    //TODO: add tests
+    var displayTitle: String? {
+        
+        if isEditable {
+            
+            return title
+        } else {
+            
+            return parameterInput?.title ?? ""
         }
     }
 }
@@ -220,7 +237,7 @@ extension PaymentsInputView.ViewModel {
 
 extension Payments.ParameterInput.InputType {
     
-    var keyboardType: TextFieldRegularView.ViewModel.KeyboardType {
+    var keyboardType: KeyboardType {
         
         switch self {
         case .default: return .default
@@ -303,9 +320,9 @@ struct PaymentsInputView: View {
     @ViewBuilder
     private var titleView: some View {
         
-        if let title = viewModel.title {
+        viewModel.displayTitle.map {
             
-            Text(title)
+            Text($0)
                 .font(.textBodyMR14180())
                 .foregroundColor(.textPlaceholder)
                 .transition(
@@ -320,9 +337,9 @@ struct PaymentsInputView: View {
     @ViewBuilder
     private var textFiled: some View {
         
-        if viewModel.isEditable == true {
+        if viewModel.isEditable {
             
-            TextFieldRegularView(
+            RegularTextFieldView(
                 viewModel: viewModel.textField,
                 font: .systemFont(ofSize: 16),
                 textColor: .textSecondary
@@ -330,10 +347,13 @@ struct PaymentsInputView: View {
             
         } else {
             
-            Text(viewModel.value.current ?? "")
-                .font(.textH4M16240())
-                .foregroundColor(.textSecondary)
-                .padding(.vertical, 7)
+            viewModel.value.current.map {
+                
+                Text($0)
+                    .font(.textH4M16240())
+                    .foregroundColor(.textSecondary)
+                    .padding(.vertical, 7)
+            }
         }
     }
     
@@ -454,9 +474,14 @@ private extension Payments.ParameterInput {
     }
 }
 
-private extension TextFieldRegularView.ViewModel {
+private extension RegularFieldViewModel {
     
-    static let preview: TextFieldRegularView.ViewModel = .init(text: "123", placeholder: "ИНН подразделения", keyboardType: .number, limit: nil)
+    static let preview = TextFieldFactory.makeTextField(
+        text: "123",
+        placeholderText: "ИНН подразделения",
+        keyboardType: .number,
+        limit: nil
+    )
 }
 
 private extension Payments.Validation.RulesSystem {

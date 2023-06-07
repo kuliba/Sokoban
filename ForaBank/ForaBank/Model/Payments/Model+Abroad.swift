@@ -17,12 +17,40 @@ extension Model {
             guard let source = operation.source else {
                 throw Payments.Error.missingSource(operation.service)
             }
-            
-            guard case let .direct(_, countryId: country, _) = source else {
                 
+            var country: String?
+            
+            switch source {
+            case let .direct(countryId: countryId):
+                country = countryId.countryId.description
+                    
+            case let .template(templateId):
+                        
+                let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                
+                guard let list = template?.parameterList as? [TransferAnywayData],
+                    let additional = list.last?.additional else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                        
+                country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
+            
+            case let .latestPayment(latestPaymentId):
+                guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                      let latestPayment = latestPayment as? PaymentServiceData else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                
+                country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+                
+            default:
                 throw Payments.Error.missingSource(operation.service)
             }
-            
+                
+            guard let country = country else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+                
             let countryWithService = self.countriesListWithSevice.value.first(where: {($0.code == country || $0.contactCode == country)})
             let operatorsList = self.dictionaryAnywayOperators()
             
@@ -457,13 +485,30 @@ extension Model {
                     title: parameterData.title,
                     validator: parameterData.validator, group: .init(id: "fio", type: .contact))
                 
-            case Payments.Parameter.Identifier.countryPhone.rawValue, "bPhone":
+            case Payments.Parameter.Identifier.countryPhone.rawValue:
                 let phoneId = Payments.Parameter.Identifier.countryPhone.rawValue
                 if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
                     
-                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle)
+                    // TODO: Create Model mock for testing
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .armenian)
                     return phoneParameter
+                    
                 } else {
+                    
+                    // TODO: Create Model mock for testing
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: parameterData.title, placeholder: parameterData.subTitle)
+                    return phoneParameter
+                }
+                
+            case Payments.Parameter.Identifier.countrybPhone.rawValue:
+                let phoneId = Payments.Parameter.Identifier.countrybPhone.rawValue
+                if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
+                    
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .turkey)
+                    return phoneParameter
+                    
+                } else {
+                    
                     let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: nil), title: parameterData.title, placeholder: parameterData.subTitle)
                     return phoneParameter
                 }

@@ -22,14 +22,14 @@ extension ProductProfileDetailView.ViewModel {
             self.progress = progress
         }
 
-        init(configuration: ProductProfileDetailView.ViewModel.Configuration, loanData: ProductCardData.LoanBaseParamInfoData, model: Model, action: @escaping () -> Void) {
+        init(configuration: ProductProfileDetailView.ViewModel.Configuration, productCard: ProductCardData, loanData: ProductCardData.LoanBaseParamInfoData, amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?, action: @escaping () -> Void) {
             
             switch configuration {
             case .loanRepaidAndOwnFunds:
-                let progressValue = loanData.availableExceedLimitValue > 0 ? loanData.ownFundsValue / loanData.availableExceedLimitValue : 1
+                let progressValue = productCard.balanceValue > 0 ? loanData.ownFundsValue / productCard.balanceValue : 1
                 
-                let ownFunds = model.amountFormatted(amount: loanData.ownFundsValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.ownFundsValue)
-                let availableLimit = model.amountFormatted(amount: loanData.availableExceedLimitValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.availableExceedLimitValue)
+                let ownFunds = amountFormatted(loanData.ownFundsValue, loanData.currencyCode, .normal) ?? String(loanData.ownFundsValue)
+                let availableLimit = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
                 
                 self.items = [
                     .init(type: .ownFunds, value: ownFunds, prefix: .legend(.mainColorsWhite)),
@@ -41,9 +41,9 @@ extension ProductProfileDetailView.ViewModel {
             default:
                 let progressValue = loanData.totalAvailableAmountValue > 0 ? loanData.debtAmountValue / loanData.totalAvailableAmountValue : 1
                 
-                let debtAmount = model.amountFormatted(amount: loanData.debtAmountValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.debtAmountValue)
-                let availableAmount = model.amountFormatted(amount: loanData.availableExceedLimitValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.availableExceedLimitValue)
-                let totalAmount = model.amountFormatted(amount: loanData.totalAvailableAmountValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.totalAvailableAmountValue)
+                let debtAmount = amountFormatted(loanData.debtAmountValue, loanData.currencyCode, .normal) ?? String(loanData.debtAmountValue)
+                let availableAmount = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
+                let totalAmount = amountFormatted(loanData.totalAvailableAmountValue,  loanData.currencyCode, .normal) ?? String(loanData.totalAvailableAmountValue)
       
                 self.items = [
                     .init(type: .debt, value: debtAmount, prefix: .legend(.textPlaceholder)),

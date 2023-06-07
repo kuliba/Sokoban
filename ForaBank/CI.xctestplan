@@ -9,7 +9,6 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
     "targetForVariableExpansion" : {
       "containerPath" : "container:ForaBank.xcodeproj",
       "identifier" : "EDB1437C265FDA410028EF5A",
@@ -28,8 +27,22 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "TextFieldRegularComponentTests",
-        "name" : "TextFieldRegularComponentTests"
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldDomainTests",
+        "name" : "TextFieldDomainTests"
       }
     }
   ],

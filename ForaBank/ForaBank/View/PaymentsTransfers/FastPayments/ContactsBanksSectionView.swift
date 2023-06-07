@@ -16,11 +16,15 @@ struct ContactsBanksSectionView: View {
         switch viewModel.mode {
         case .fastPayment:
             
-            if let searchBar = viewModel.searchBar {
+            if let searchTextField = viewModel.searchTextField {
                 
-                SearchBarView(viewModel: searchBar)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 0)
+                DefaultCancellableSearchBarView(
+                    viewModel: searchTextField,
+                    textFieldConfig: .black16,
+                    cancel: viewModel.cancelSearch
+                )
+                .padding(.horizontal, 20)
+                .padding(.vertical, 0)
                 
             } else {
                 
@@ -137,11 +141,4 @@ struct ContactsBanksSectionView_Previews: PreviewProvider {
         
         SearchPlaceholderView(viewModel: .init())
     }
-}
-
-//MARK: - Preview Content
-
-extension ContactsBanksSectionViewModel {
-    
-    static let sample = ContactsBanksSectionViewModel(.emptyMock, header: .init(kind: .banks), isCollapsed: true, mode: .fastPayment, searchBar: nil, options: .sample, visible: [ContactsBankItemView.ViewModel.sample, ContactsBankItemView.ViewModel.sample], items: [ContactsBankItemView.ViewModel.sample, ContactsBankItemView.ViewModel.sample], phone: nil)
 }

@@ -176,7 +176,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .fastPayment(contactsViewModel))
@@ -188,7 +188,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .country(contactsViewModel))
@@ -255,7 +255,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         link = .currencyWallet(walletViewModel)
                         
-                        
                         //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         
@@ -316,56 +315,55 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.bind(qrScannerModel)
                             fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                             
-                        case .service:
-                            let serviceOperators = OperatorsViewModel(mode: .general, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: { [weak self] in
-                                
-                                guard let self else { return }
-                                
-                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: {
-                                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                })
-                                self.bind(paymentsViewModel)
-                                
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 800,
-                                    action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                                )
-                                
-                            }, qrAction: { [weak self] in
-                                
-                                self?.link = nil
-                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-                            })
+                        case .service, .internet:
                             
-                            link = .serviceOperators(serviceOperators)
-                            InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-                            
-                        case .internet:
-                            let internetOperators = OperatorsViewModel(mode: .general, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }, requisitsViewAction: { [weak self] in
+                            if let dictionaryAnywayOperators = model.dictionaryAnywayOperators() {
                                 
-                                guard let self else { return }
+                                guard let operatorValue = Payments.operatorByPaymentsType(payload.type) else {
+                                    return
+                                }
                                 
-                                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: {
-                                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                })
-                                self.bind(paymentsViewModel)
+                                let operators = dictionaryAnywayOperators.filter({$0.parentCode == operatorValue.rawValue}).sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.caseInsensitiveCompare($1.name) == .orderedAscending})
                                 
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 800,
-                                    action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                                )
-                                
-                            }, qrAction: { [weak self] in
-                                
-                                self?.link = nil
-                                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-                            })
-                            link = .internetOperators(internetOperators)
-                            InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                    
+                                    let navigationBarViewModel = NavigationBarView.ViewModel(title: PaymentsServicesViewModel.allRegion,
+                                                                                             titleButton: .init(icon: Image.ic24ChevronDown, action: { [weak self] in
+                                        self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())}),
+                                                                                             leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })],
+                                                                                             rightItems: [
+                                                                                                NavigationBarView.ViewModel.ButtonItemViewModel(icon: .qr_Icon, action: {
+                                                                                                    [weak self] in
+                                                                                                        self?.link = nil
+                                                                                                        self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                                                                                })
+                                                                                             ]
+                                    )
+                                    let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+                                    let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
+
+                                    let operatorsViewModel = PaymentsServicesViewModel(searchBar: .withText("Наименование или ИНН"),
+                                                                                       navigationBar: navigationBarViewModel,
+                                                                                       model: self.model,
+                                                                                       latestPayments: latestPayments,
+                                                                                       allOperators: operators,
+                                                                                       addCompanyAction: { [weak self] in
+                                        
+                                        self?.link = nil
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                            self?.rootActions?.switchTab(.chat)
+                                        }
+                                        
+                                    }, requisitesAction: { [weak self] in
+                                        
+                                        self?.link = nil
+                                        self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
+                                    })
+                                    
+                                    self.link = .paymentsServices(operatorsViewModel)
+                                }
+                            }
                             
                         case .transport:
                             let transportOperators = OperatorsViewModel(mode: .general, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -618,7 +616,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         
                         if let qrMapping = model.qrMapping.value {
                             
-                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
+                            if let operatorsFromQr = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
+                                let validQrOperators = model.dictionaryQRAnewayOperator()
+                                let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
                                 
                                 guard operators.count > 0 else {
                                 
@@ -628,13 +628,36 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 }
                                 
                                 if operators.count == 1 {
-                                    
                                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                                    
+                                    if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                                        Task { [weak self] in
+                                            guard let self = self else { return }
+                                            let puref = operatorValue.code
+                                            let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
+                                            let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
+                                            let paymentsViewModel = PaymentsViewModel(
+                                                source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100),
+                                                model: model,
+                                                closeAction: { [weak self] in
+                                                    self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                    
+                                                })
+                                            self.bind(paymentsViewModel)
+
+                                            await MainActor.run { [weak self] in
+                                                self?.link = .init(.payments(paymentsViewModel))
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                                            
+                                            let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
+                                            
+                                            self.link = .operatorView(viewModel)
+                                        }
                                         
-                                        let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
-                                        
-                                        self.link = .operatorView(viewModel)
                                     }
                                     
                                 } else {
@@ -646,7 +669,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
                                         }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
                                         
-                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search),
+                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             
@@ -788,6 +811,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 }
             }.store(in: &bindings)
     }
+
     
     private func makeAlert(_ message: String) {
         
@@ -815,55 +839,7 @@ extension PaymentsTransfersViewModel {
     func handle(latestPayment: LatestPaymentData) {
         
         switch (latestPayment.type, latestPayment) {
-        case (.phone, let paymentData as PaymentGeneralData):
-            let paymentsViewModel = PaymentsViewModel(source: .sfp(phone: paymentData.phoneNumber, bankId: paymentData.bankId), model: model) { [weak self] in
-                
-                guard let self else { return }
-                
-                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                self.action.send(DelayWrappedAction(
-                    delayMS: 300,
-                    action: PaymentsTransfersViewModelAction.Show.Contacts())
-                )
-            }
-            bind(paymentsViewModel)
-            
-            self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-            )
-            
-        case (.outside, let paymentData as PaymentServiceData):
-            guard let countryId = paymentData.additionalList.first(where: { $0.isTrnPickupPoint } )?.fieldValue else {
-                return
-            }
-            
-            let paymentsViewModel = PaymentsViewModel(source: .direct(phone: paymentData.lastPaymentName, countryId: countryId, serviceData: paymentData), model: model) { [weak self] in
-                
-                guard let self else { return }
-                
-                self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                self.action.send(DelayWrappedAction(
-                    delayMS: 300,
-                    action: PaymentsTransfersViewModelAction.Show.Countries())
-                )
-            }
-            bind(paymentsViewModel)
-            
-            self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-            )
-            
-        case (.service, let paymentData as PaymentServiceData):
-            let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {}, qrAction: { [weak self] in
-                
-                self?.link = nil
-            })
-            link = .service(operatorsViewModel)
-            
+        //TODO: move case transport after refactoring
         case (.transport, let paymentData as PaymentServiceData):
             let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -873,20 +849,27 @@ extension PaymentsTransfersViewModel {
             })
             link = .transport(operatorsViewModel)
             
-        case (.internet, let paymentData as PaymentServiceData):
-            let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {}, qrAction: { [weak self] in
+        case (.internet, let paymentData),
+            (.service, let paymentData),
+            (.mobile, let paymentData),
+            (.outside, let paymentData),
+            (.phone, let paymentData):
+            
+                let paymentsViewModel = PaymentsViewModel(source: .latestPayment(paymentData.id),
+                                                          model: model) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                }
                 
-                self?.link = nil
-            })
-            link = .internet(operatorsViewModel)
-            
-        case (.mobile, let paymentData as PaymentServiceData):
-            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }))
-            
+                bind(paymentsViewModel)
+                
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                )
+
         case (.taxAndStateService, let paymentData as PaymentServiceData):
             bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
             
@@ -894,6 +877,7 @@ extension PaymentsTransfersViewModel {
             bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
         }
     }
+
 }
 
 //MARK: - Types
@@ -976,6 +960,7 @@ extension PaymentsTransfersViewModel {
         case c2b(C2BViewModel)
         case searchOperators(QRSearchOperatorViewModel)
         case operatorView(InternetTVDetailsViewModel)
+        case paymentsServices(PaymentsServicesViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

@@ -22,7 +22,7 @@ extension Model {
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
-            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя")
+            let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneParameterId, value: nil), title: "Номер телефона получателя", countryCode: .russian)
             
             // bank
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
@@ -47,7 +47,7 @@ extension Model {
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
+            let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
             
             return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
             
@@ -298,11 +298,15 @@ extension Model {
     }
     
     // debug mock
-    func paymentsMockSFP() -> Payments.Mock {
+    static func paymentsMockSFP() -> Payments.Mock {
         
-        return .init(service: .sfp,
-                     parameters: [.init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: "+7 0115110217"),
-                                  .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "1crt88888881")])
+        return .init(
+            service: .sfp,
+            parameters: [
+                .init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: "+7 0115110217"),
+                .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "1crt88888881")
+            ]
+        )
     }
 }
 

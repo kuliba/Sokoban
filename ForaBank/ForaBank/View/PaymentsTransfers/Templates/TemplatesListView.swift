@@ -202,61 +202,8 @@ struct TemplatesListView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-                    case .byPhone(let paymentPhoneView):
-                        PaymentPhoneView(viewModel: paymentPhoneView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-
-                    case .sfp(let paymentPhoneView):
-                        PaymentPhoneView(viewModel: paymentPhoneView)
-                            .edgesIgnoringSafeArea(.all)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .direct(let paymentTemplateData):
-                        CountryPaymentView(viewModel: paymentTemplateData)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .contactAdressless(let paymentTemplateData):
-                        CountryPaymentView(viewModel: paymentTemplateData)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .housingAndCommunalService(let internetTVDetailsViewModel):
-                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .mobile(let mobileViewModel):
-                        MobilePayView(viewModel: mobileViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .internet(let internetTVDetailsViewModel):
-                        InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .transport(let avtodorDetailsViewModel):
-                        OperatorsView(viewModel: avtodorDetailsViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarBackButtonHidden(true)
-
-                    case .externalEntity(let transferByRequisitesView):
-                        TransferByRequisitesView(viewModel: transferByRequisitesView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.bottom)
-
-                    case .externalIndividual(let transferByRequisitesView):
-                        TransferByRequisitesView(viewModel: transferByRequisitesView)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.bottom)
-                        
-                    case .betweenTheir(let meToMeViewModel):
-                        MeToMeView(viewModel: meToMeViewModel)
-                            .navigationBarBackButtonHidden(true)
-                            .navigationBarHidden(false)
-                            .edgesIgnoringSafeArea(.bottom)
+                    case let .payment(paymentViewModel):
+                        PaymentsView(viewModel: paymentViewModel)
                     }
                 }
             }
@@ -286,19 +233,21 @@ struct TemplatesListView: View {
                         TwoButtonsNavBarView(viewModel: reorderViewModel) }
                 }
             }
-            
         }
-        .bottomSheet(item: $viewModel.sheet, content: { sheet in
-            
+        .bottomSheet(item: $viewModel.sheet) { sheet in
             switch sheet.type {
-            case let .betweenTheir(meToMeViewModel):
+            
+            case let .meToMe(viewModel):
                 
-                NavigationView {
-                    MeToMeView(viewModel: meToMeViewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
-                }
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.success) { successViewModel in
+                
+                        PaymentsSuccessView(viewModel: successViewModel)
+                    }
+                    .transaction { transaction in
+
+                        transaction.disablesAnimations = false
+                    }
                 
             case let .renameItem(renameViewModel):
                 
@@ -308,7 +257,7 @@ struct TemplatesListView: View {
             
                 ProductListView(viewModel: productListViewModel)
             }
-        })
+        }
     }
 }
     

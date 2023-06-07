@@ -81,9 +81,9 @@ extension [PaymentServiceData.AdditionalListData] {
 
 extension PaymentServiceData.AdditionalListData {
     
-    var isTrnPickupPoint: Bool {
-        
-        fieldName == "trnPickupPoint"
+    var isCountry: Bool {
+    
+        fieldName == Payments.Parameter.Identifier.countrySelect.rawValue
     }
     
     var isPhone: Bool {

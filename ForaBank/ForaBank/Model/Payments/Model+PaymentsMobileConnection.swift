@@ -27,7 +27,8 @@ extension Model {
             let phoneParameterId = Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
             let phoneParameter = Payments.ParameterInputPhone(
                 .init(id: phoneParameterId, value: nil),
-                title: "Номер телефона"
+                title: "Номер телефона",
+                countryCode: .russian
             )
             
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
@@ -42,7 +43,7 @@ extension Model {
             let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
             let amountParameter = Payments.ParameterAmount(
-                value: "0",
+                value: nil,
                 title: "Сумма перевода",
                 currencySymbol: currencySymbol,
                 transferButtonTitle: "Продолжить",

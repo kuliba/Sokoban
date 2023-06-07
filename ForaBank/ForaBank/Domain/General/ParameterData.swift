@@ -24,7 +24,7 @@ struct ParameterData: Codable, Equatable, Identifiable {
     let subTitle: String?
     let title: String
     let type: String
-    let inputFieldType: String?
+    let inputFieldType: inputFieldType?
     let dataDictionary: String?
     let dataDictionaryРarent: String?
     let group: String?
@@ -39,6 +39,26 @@ struct ParameterData: Codable, Equatable, Identifiable {
         case constant = "CONSTANT"
         case input = "INPUT"
         case output = "OUTPUT"
+        case unknown
+    }
+    
+    enum inputFieldType: String, Codable, Equatable, Unknownable {
+        case address = "ADDRESS"
+        case bic = "BIC"
+        case account = "ACCOUNT"
+        case purpose = "PURPOSE"
+        case phone = "PHONE"
+        case date = "DATE"
+        case insurance = "INSURANCE"
+        case penalty = "PENALTY"
+        case counter = "COUNTER"
+        case view = "VIEW"
+        case name = "NAME"
+        case inn = "INN"
+        case oktmo = "OKTMO"
+        case recipient = "RECIPIENT"
+        case amount = "AMOUNT"
+        case bank = "BANK"
         case unknown
     }
 }
@@ -62,6 +82,9 @@ extension ParameterData {
         //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
         case general
         
+        //"=:1=оплата за жилищно-коммунальные услуги:2=оплата за электроэнергию:3=оплата за технический надзор"
+        case extended
+
         //"=;RUB=USD,EUR; USD=RUB,EUR"
         case currency
     }
@@ -94,6 +117,25 @@ extension ParameterData {
                 options.append(option)
             }
 
+        case .extended:
+
+            let dataSplitted = data.split(separator: ":")
+
+            for chunk in dataSplitted {
+
+                let chunkSplitted = chunk.split(separator: "=")
+
+                guard chunkSplitted.count == 2, chunkSplitted[0] != "", chunkSplitted[1] != "" else {
+                    continue
+                }
+
+                let id = String(chunkSplitted[0])
+                let name = String(chunkSplitted[1])
+                let option = Option(id: id, name: name)
+
+                options.append(option)
+            }
+
         case .currency:
             let dataSplitted = data.split(separator: ";")
 
@@ -105,9 +147,10 @@ extension ParameterData {
                     continue
                 }
 
-                let name = String(chunkSplitted[1])
+                let name = String(chunkSplitted[0]).replacingOccurrences(of: " ", with: "")
 
-                options = name.split(separator: ",").map({Option(id: $0.description, name: $0.description)})
+                let option = name.split(separator: ",").map({Option(id: $0.description, name: $0.description)})
+                options += option
             }
         }
 
@@ -140,7 +183,7 @@ extension ParameterData {
     
     var validator: Payments.Validation.RulesSystem {
         
-        var rules = [Payments.Validation.Rule]()
+        var rules = [PaymentsValidationRulesSystemRule]()
         
         if let minLength = minLength {
             

@@ -138,6 +138,11 @@ struct MainView: View {
                         InternetTVDetailsView(viewModel: internetDetailViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.all)
+                        
+                    case .paymentsServices(let viewModel):
+                        PaymentsServicesOperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }

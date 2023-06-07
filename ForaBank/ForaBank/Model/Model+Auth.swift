@@ -19,7 +19,7 @@ extension ModelAction {
         
             struct Start {
                 
-                struct Request: Action {}
+                struct Request: Action, Equatable {}
                 
                 struct Response: Action {
                     
