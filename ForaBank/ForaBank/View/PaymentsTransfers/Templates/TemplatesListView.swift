@@ -217,20 +217,16 @@ struct TemplatesListView: View {
                     
                 switch viewModel.navBarState {
                 case let .regular(regViewModel):
-                    if let regViewModel {
-                        RegularNavBarView(viewModel: regViewModel) }
+                    RegularNavBarView(viewModel: regViewModel)
                     
                 case let .search(searchViewModel):
-                    if let searchViewModel {
-                        SearchNavBarView(viewModel: searchViewModel) }
+                    SearchNavBarView(viewModel: searchViewModel)
                 
                 case let .delete(deleteViewModel):
-                    if let deleteViewModel {
-                        TwoButtonsNavBarView(viewModel: deleteViewModel) }
+                    TwoButtonsNavBarView(viewModel: deleteViewModel)
                 
                 case let .reorder(reorderViewModel):
-                    if let reorderViewModel {
-                        TwoButtonsNavBarView(viewModel: reorderViewModel) }
+                    TwoButtonsNavBarView(viewModel: reorderViewModel)
                 }
             }
         }
