@@ -38,97 +38,37 @@ struct TemplatesListView: View {
                             
                             switch item.kind {
                             case .regular, .deleting:
-                                
-                                if #available(iOS 15.0, *) {
-                                    
-                                    TemplateItemView(viewModel: item,
-                                                     style: .constant(.list),
-                                                     editMode: $viewModel.editModeState)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                        .listRowBackground(
-                                            Color.mainColorsGrayLightest.cornerRadius(16)
-                                                .padding(.vertical, 6)
-                                                .background(Color.white)
-                                        )
-                                        .listRowSeparatorTint(.white)
-                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                        
-                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
-                                            
-                                                ForEach(itemsMenuViewModel) { button in
-                                                
-                                                    Button(action: { button.action(item.id) }) {
-                                                    
-                                                        button.icon
-                                                            .renderingMode(.original)
-                                                            .tint(.black)
-                                                    }
-                                                    .tint(.white)
-                                                }
-                                            
-                                            } else {
-                                            
-                                                EmptyView()
-                                            }
-                                        
-                                        } //swipeAction
-                             
-                                } else { //iOS 14
-                                    
-                                    TemplateItemView(viewModel: item,
-                                                     style: .constant(.list),
-                                                     editMode: $viewModel.editModeState)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                        .listRowBackground(
-                                            Color.mainColorsGrayLightest.cornerRadius(16)
-                                                .padding(.vertical, 6)
-                                                .background(Color.white)
-                                        )
-                                    //.frame(height: 72, alignment: .bottomLeading)
-                                    //                                            .modifier(SwipeSidesModifier(leftAction: {
-                                    //
-                                    //                                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                    //                                                                    direction: .left, editMode: editMode))
-                                    //                                            }, rightAction: {
-                                    //
-                                    //                                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                    //                                                                    direction: .right, editMode: editMode))
-                                    //                                            }))
-                                    
-                                } //iOS14-15
-                                
+                           
+                                TemplateItemView(viewModel: item,
+                                                 style: .constant(.list),
+                                                 editMode: $viewModel.editModeState)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowBackground(BackgroundListView())
+                                    .modifier(Self.listRowSeparatorTint())
+                                    .modifier(Self.trailingSwipeAction(
+                                                    viewModel: viewModel.getItemsMenuViewModel(),
+                                                    item: item))
                             case .add:
-                                if #available(iOS 15.0, *) {
-                                    
-                                    AddNewItemView(viewModel: item, style: .constant(.list))
-                                        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
-                                        .listRowBackground(
-                                            Color.mainColorsGrayLightest.cornerRadius(16)
-                                                .padding(.vertical, 6)
-                                                .background(Color.white)
-                                        )
-                                        .listRowSeparatorTint(.white)
-                                }
-                                //.matchedGeometryEffect(id: "item", in: namespace)
+                               
+                                AddNewItemView(viewModel: item, style: .constant(.list))
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                                    .listRowBackground(BackgroundListView())
+                                    .modifier(Self.listRowSeparatorTint())
+                                
                             case .placeholder:
                                 
                                 PlaceholderItemView(style: .constant(.list))
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowBackground(
-                                        Color.mainColorsGrayLightest.cornerRadius(16)
-                                            .padding(.vertical, 6)
-                                            .background(Color.white)
-                                    )
-                                
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                                    .shimmering(active: true, bounce: true)
+
                             } //swich kind
                         }//ForEach
                         .onMove { indexes, destination in
-                            guard let first = indexes.first else { return }
                             
-                            viewModel.action.send(TemplatesListViewModelAction.ReorderItems
-                                .ItemMoved(move: (first, destination)))
+                            guard let first = indexes.first else { return }
+                            viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
+                                                    .init(move: (first, destination)))
                         }
-                        
                     } //List
                     .listStyle(.plain)
                     .environment(\.editMode, $viewModel.editModeState)
@@ -149,19 +89,19 @@ struct TemplatesListView: View {
                                     TemplateItemView(viewModel: item,
                                                      style: .constant(.tiles),
                                                      editMode: $viewModel.editModeState)
-                                    .contextMenu {
+                                        .contextMenu {
                                         
-                                        if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
+                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
                                             
-                                            ForEach(itemsMenuViewModel) { button in
+                                                ForEach(itemsMenuViewModel) { button in
                                                 
-                                                Button(action: { button.action(item.id) }) {
-                                                    Text(button.subTitle)
-                                                    button.icon
+                                                    Button(action: { button.action(item.id) }) {
+                                                        Text(button.subTitle)
+                                                        button.icon.renderingMode(.original)
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
                                     
                                 case .add:
                                     
@@ -170,10 +110,9 @@ struct TemplatesListView: View {
                                 case .placeholder:
                                     
                                     PlaceholderItemView(style: .constant(.tiles))
+                                        .shimmering(active: true, bounce: true)
                                     
                                 } //kind swith
-                                
-                            
                             }
                         }
                         .padding(.horizontal)
@@ -218,7 +157,7 @@ struct TemplatesListView: View {
                 switch viewModel.navBarState {
                 case let .regular(regViewModel):
                     RegularNavBarView(viewModel: regViewModel)
-                    
+                   
                 case let .search(searchViewModel):
                     SearchNavBarView(viewModel: searchViewModel)
                 
@@ -231,8 +170,8 @@ struct TemplatesListView: View {
             }
         }
         .bottomSheet(item: $viewModel.sheet) { sheet in
-            switch sheet.type {
             
+            switch sheet.type {
             case let .meToMe(viewModel):
                 
                 PaymentsMeToMeView(viewModel: viewModel)
@@ -256,7 +195,7 @@ struct TemplatesListView: View {
         }
     }
 }
-    
+ 
 extension TemplatesListView {
     
     struct RenameTemplateItemView: View {
@@ -430,9 +369,7 @@ extension TemplatesListView {
                             
                             RoundedRectangle(cornerRadius: 12)
                                 .frame(height: 188)
-                                //.padding(.bottom, 12)
                                 .shimmering(active: true, bounce: true)
-                            
                         }
                     }
                 }
@@ -504,10 +441,73 @@ extension TemplatesListView {
             .opacity(viewModel.isDisable ? 0.5 : 1.0)
         }
     }
+    
+    struct BackgroundListView: View {
+        
+        var body: some View {
+            
+            Color.mainColorsGrayLightest
+                .cornerRadius(16)
+                .padding(.vertical, 6)
+                .background(Color.white)
+        }
+    }
 
 }
 
 //MARK: - Helpers
+
+extension TemplatesListView {
+    
+    struct listRowSeparatorTint: ViewModifier {
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 15.0, *) {
+                content
+                    .listRowSeparatorTint(.white)
+            } else { //iOS14
+                content
+            }
+        }
+    }
+    
+    struct trailingSwipeAction: ViewModifier {
+        
+        let viewModel: [TemplatesListViewModel.ItemViewModel.ItemActionViewModel]?
+        let item: TemplatesListViewModel.ItemViewModel
+        
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 15.0, *) {
+                content
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        
+                        if let viewModel {
+                            
+                            ForEach(viewModel) { button in
+                                
+                                Button(action: { button.action(item.id) }) {
+                                    
+                                    button.icon
+                                        .renderingMode(.original)
+                                        .tint(.black)
+                                }
+                                .tint(.white)
+                            }
+                            
+                        } else {
+                            
+                            EmptyView()
+                        }
+                    }
+                
+            } else { //iOS14
+                content //TODO: Swipe
+            }
+        }
+    }
+    
+}
 
 struct TemplatesListView_Previews: PreviewProvider {
     

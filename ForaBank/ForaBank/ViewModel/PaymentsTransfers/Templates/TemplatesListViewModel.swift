@@ -23,7 +23,6 @@ class TemplatesListViewModel: ObservableObject {
     @Published var items: [ItemViewModel]
 
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    //@Published var bottomSheet: BottomSheet?
     @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
@@ -159,7 +158,7 @@ private extension TemplatesListViewModel {
                 switch navBarState {
                 case let .regular(viewModel):
                     
-                    if items.contains(where: { $0.kind == .deleting })
+                    if items.contains(where: { $0.kind == .deleting || $0.kind == .placeholder })
                         || items.filter({ $0.kind == .regular }).isEmpty {
                         
                         viewModel.isMenuDisable = true
@@ -320,14 +319,7 @@ private extension TemplatesListViewModel {
                     
                 case _ as TemplatesListViewModelAction.RegularNavBar.RegularNavBarPresent:
                     
-                    let regularNavBarViewModel: RegularNavBarViewModel =
-                    
-                        .init(backButton: .init(icon: .ic24ChevronLeft, action: self.dismissAction),
-                              menuList: self.getMenuListViewModel(),
-                              searchButton: .init(icon: .ic24Search, action: {
-                            self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent()) }))
-                                
-                    self.navBarState = .regular(regularNavBarViewModel)
+                    updateNavBar(event: .setRegular)
             
             //MARK: Enabled Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.EditModeEnabled:

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Shimmer
 
 extension TemplatesListView {
     
@@ -93,15 +92,13 @@ extension TemplatesListView {
                 
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
-                    .frame(height: 84)
-                    .shimmering(active: true, bounce: true)
+                    .frame(height: 72)
                 
             case .tiles:
                 
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
                     .frame(height: 188)
-                    .shimmering(active: true, bounce: true)
             }
         }
     }
@@ -128,7 +125,7 @@ extension TemplatesListView {
                     }
                 }
                 .padding(.horizontal)
-                .frame(height: 84)
+                .frame(height: 72)
                 .onTapGesture { viewModel.tapAction(0) }
                 
             case .tiles:
@@ -196,7 +193,7 @@ extension TemplatesListView {
                                                            style: style)
                     }
                 }
-                .padding(16)
+                .padding(.horizontal)
                 .frame(height: 84)
                 
             case .tiles:
@@ -225,7 +222,7 @@ extension TemplatesListView {
                             .padding(.bottom, 16)
                         
                     }
-                }//.frame(height: 188)
+                }
             } //switch style
             
         }
@@ -519,23 +516,9 @@ struct TemplatesItemView_Previews: PreviewProvider {
                     TemplatesListView.TemplateItemView(viewModel: item,
                                                        style: .constant(.list),
                                                        editMode: .constant(.inactive))
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        .listRowBackground(
-                            Color.mainColorsGrayLightest.cornerRadius(16)
-                                .padding(.vertical, 6)
-                                .background(Color.white)
-                        )
+                        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                        .listRowBackground(TemplatesListView.BackgroundListView())
                 }
-                
-                TemplatesListView.AddNewItemView(viewModel: TemplatesListViewModel.sampleItems[4],
-                                                 style: .constant(.list))
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(
-                    Color.mainColorsGrayLightest.cornerRadius(16)
-                        .padding(.vertical, 6)
-                        .background(Color.white)
-                )
-                
             }
             .listStyle(.plain)
             .environment(\.editMode, .constant(.inactive))
