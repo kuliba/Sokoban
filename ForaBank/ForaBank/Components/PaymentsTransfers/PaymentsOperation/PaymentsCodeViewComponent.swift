@@ -331,14 +331,15 @@ struct PaymentsCodeView: View {
     
     private var textField: some View {
         
-        RegularTextFieldView(viewModel: viewModel.textField, font: .textH4M16240(), textColor: .textSecondary)
-            .onTapGesture {
-                viewModel.editingState = .idle
-            }
-            .foregroundColor(.textSecondary)
-            .textFieldStyle(DefaultTextFieldStyle())
-            .frame(height: 24)
-            .keyboardType(.numberPad)
+        RegularTextFieldView(
+            viewModel: viewModel.textField,
+            font: .textH4M16240(),
+            textColor: .textSecondary
+        )
+        .foregroundColor(.textSecondary)
+        .textFieldStyle(DefaultTextFieldStyle())
+        .frame(height: 24)
+        .keyboardType(.numberPad)
     }
     
     @ViewBuilder
