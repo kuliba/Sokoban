@@ -118,6 +118,8 @@ extension TemplatesListViewModel {
             
             @Published var progress: Int
             @Published var countTitle: String
+            @Published var isDisableCancelButton: Bool
+            
             let cancelButton: CancelButtonViewModel
             let title: String
             let subTitle: String
@@ -127,6 +129,7 @@ extension TemplatesListViewModel {
             init(progress: Int,
                  countTitle: String,
                  cancelButton: CancelButtonViewModel,
+                 isDisableCancelButton: Bool = false,
                  title: String,
                  subTitle: String = "Удаление...",
                  style: TemplatesListViewModel.Style,
@@ -135,6 +138,7 @@ extension TemplatesListViewModel {
                 self.progress = progress
                 self.countTitle = countTitle
                 self.cancelButton = cancelButton
+                self.isDisableCancelButton = isDisableCancelButton
                 self.title = title
                 self.subTitle = subTitle
                 self.style = style

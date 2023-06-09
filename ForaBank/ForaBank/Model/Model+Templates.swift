@@ -83,7 +83,10 @@ extension ModelAction {
                 let paymentTemplateIdList: [Int]
             }
             
-            struct Complete: Action {}
+            struct Complete: Action {
+               
+                let paymentTemplateIdList: [Int]
+            }
             
             struct Failed: Action {
                 
@@ -124,7 +127,6 @@ extension ModelAction {
 }
 
 //MARK: - Helpers
-
 extension Model {
     
     func productTemplate(for templateId: String) -> ProductTemplateData? {
@@ -137,11 +139,8 @@ extension Model {
     }
 }
 
-//MARK: - Handlers
-
+//MARK:- product Templates
 extension Model {
-    
-//product Templates
     
     func handleProductTemplatesListRequest() {
         
@@ -160,7 +159,7 @@ extension Model {
                         
                         // update model data
                         self.productTemplates.value = templates
-                       
+                        
                         do {
                             
                             // cache tempates data
@@ -178,11 +177,11 @@ extension Model {
                         self.action.send(ModelAction.ProductTemplate.List.Response(result: .failure(.emptyData(message: response.errorMessage))))
                         self.handleServerCommandEmptyData(command: command)
                     }
-
+                    
                 default:
                     self.action.send(ModelAction.ProductTemplate.List.Response(result: .failure(.statusError(status: response.statusCode, message: response.errorMessage))))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-    
+                    
                 }
                 
             case .failure(let error):
@@ -200,7 +199,7 @@ extension Model {
         }
         
         let command = ServerCommands.ProductTemplateController.DeleteProductTemplate
-                        .init(token: token, productId: payload.productTemplateId)
+            .init(token: token, productId: payload.productTemplateId)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -219,9 +218,10 @@ extension Model {
             }
         }
     }
+}
 
-    
 //MARK: - paymentTemplates
+extension Model {
     
     func handleTemplatesListRequest() {
         
@@ -280,8 +280,7 @@ extension Model {
             case .failure(let error):
                 
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.PaymentTemplate.List.Failed
-                    .init(error: ResponseError(message: error.localizedDescription)))
+                self.action.send(ModelAction.PaymentTemplate.List.Failed(error: error))
             }
         }
     }
@@ -328,11 +327,18 @@ extension Model {
     
     func handleTemplatesUpdateRequest(_ payload: ModelAction.PaymentTemplate.Update.Requested) {
         
-        guard let token = token else {
+        guard let token = token
+        else {
             handledUnauthorizedCommandAttempt()
             return
         }
-        let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate(token: token, payload: .init(name: payload.name, parameterList: payload.parameterList, paymentTemplateId: payload.paymentTemplateId))
+        
+        let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate
+                        .init(token: token,
+                              payload: .init(name: payload.name,
+                                             parameterList: payload.parameterList,
+                                             paymentTemplateId: payload.paymentTemplateId))
+        
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -366,18 +372,22 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
+        
         let command = ServerCommands.PaymentTemplateController.DeletePaymentTemplates
                         .init(token: token,
                               payload: .init(paymentTemplateIdList: payload.paymentTemplateIdList))
         
-        serverAgent.executeCommand(command: command) { result in
+        serverAgent.executeCommand(command: command) { [payload] result in
             
             switch result {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
                     
-                    self.action.send(ModelAction.PaymentTemplate.Delete.Complete())
+                    self.action.send(ModelAction.PaymentTemplate.Delete.Complete
+                                    .init(paymentTemplateIdList: payload.paymentTemplateIdList))
+                    
+                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
                     self.handleServerCommandStatus(command: command,
@@ -395,10 +405,12 @@ extension Model {
     
     func handleTemplatesSortRequest(_ payload: ModelAction.PaymentTemplate.Sort.Requested) {
         
-        guard let token = token else {
+        guard let token = token
+        else {
             handledUnauthorizedCommandAttempt()
             return
         }
+        
         let command = ServerCommands.PaymentTemplateController.SortingPaymentTemplates
                         .init(token: token,
                               payload: .init(sortDataList: payload.sortDataList))

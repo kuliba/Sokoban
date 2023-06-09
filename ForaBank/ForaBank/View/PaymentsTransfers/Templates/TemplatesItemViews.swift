@@ -282,9 +282,11 @@ extension TemplatesListView {
                         
                         viewModel.cancelButton.action(viewModel.id)
                     }
+                    .disabled(viewModel.isDisableCancelButton)
                 }
                 .padding(16)
                 .frame(height: 84)
+                .shimmering(active: viewModel.isDisableCancelButton, bounce: true)
                 
             case .tiles:
                 

@@ -87,11 +87,37 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
 
                 switch action {
+                    
+                case let payload as ModelAction.PaymentTemplate.Delete.Complete:
+                    
+                    self.itemsRaw.value.removeAll { item in
+                         
+                        payload.paymentTemplateIdList.contains(item.id)
+                    }
+                    
                 case _ as ModelAction.PaymentTemplate.List.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось загрузить шаблоны",
                                               icon: .close)))
+                case _ as ModelAction.PaymentTemplate.Update.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось сохранить изменения",
+                                              icon: .close)))
+                
+                case _ as ModelAction.PaymentTemplate.Delete.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось удалить шаблоны",
+                                              icon: .close)))
+                
+                case _ as ModelAction.PaymentTemplate.Sort.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось сохранить изменения",
+                                              icon: .close)))
+                    
                 default: break
                 }
             }.store(in: &bindings)
@@ -119,12 +145,18 @@ private extension TemplatesListViewModel {
                             
                         DispatchQueue.main.async { [unowned self] in
                            
+                            let selector = self.categorySelector?.selected
+                            
                             withAnimation {
                                
                                 self.itemsRaw.value = templatesVM
                                 let newCategorySelector = getCategorySelectorModel(with: templates)
-                                self.categorySelector = newCategorySelector
                                 bindCategorySelector(newCategorySelector)
+                                if let selector {
+                                    newCategorySelector.selected = selector
+                                }
+                                self.categorySelector = newCategorySelector
+                                    
                                 self.state = .normal
                             }
                         }
@@ -214,52 +246,7 @@ private extension TemplatesListViewModel {
                     bind(renameTemplateItemViewModel)
                     
                     self.sheet = .init(type: .renameItem(renameTemplateItemViewModel))
-            
-            //Personal Item Delete start
-                case let payload as TemplatesListViewModelAction.Item.Delete:
-                   
-                    guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
-                          let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
-                    else { return }
                     
-                    itemVM.timer = DeletingTimer()
-                    guard let timer = itemVM.timer else { return }
-                    
-                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
-                        .init(progress: 0,
-                              countTitle: "\(timer.maxCount)",
-                              cancelButton: .init(title: "Отменить",
-                                                  action: { [unowned itemVM] id in
-                                                                itemVM.timer = nil
-                                                                itemVM.state = .normal }),
-                              title: itemVM.title,
-                              style: self.style,
-                              id: itemVM.id)
-                    
-                    itemVM.state = .deleting(deletingViewModel)
-                    
-                    itemVM.timer?.timerPublisher
-                        .receive(on: DispatchQueue.main)
-                        .map({ [unowned timer] output in
-                            return Int(output.timeIntervalSince(timer.startDate))
-                        })
-                        .sink { [unowned self, unowned timer] timerValue in
-                            
-                            if timerValue < timer.maxCount + 1 {
-
-                                deletingViewModel.progress = timerValue
-                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
-
-                            } else {
-                                
-                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [itemVM.id]))
-                                
-                                itemVM.timer = nil
-                                //itemVM.state = .normal
-                                self.itemsRaw.value.removeAll { $0.id == itemVM.id }
-                            }
-                        }
-                        .store(in: &bindings)
             //Item Tapped
                 case let payload as TemplatesListViewModelAction.Item.Tapped:
                     guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId })
@@ -493,7 +480,7 @@ private extension TemplatesListViewModel {
                     guard let timer = itemVM.timer else { return }
                     
                     let deletingViewModel = ItemViewModel.DeletingProgressViewModel
-                        .init(progress: 0,
+                        .init(progress: timer.maxCount,
                               countTitle: "\(timer.maxCount)",
                               cancelButton: .init(title: "Отменить",
                                                   action: { [unowned itemVM, unowned self] id in
@@ -525,23 +512,19 @@ private extension TemplatesListViewModel {
                             
                             if timerValue < timer.maxCount + 1 {
 
-                                deletingViewModel.progress = timerValue
+                                deletingViewModel.progress = timer.maxCount - timerValue
                                 deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
 
                             } else {
                                 
+                                deletingViewModel.isDisableCancelButton = true
                                 model.action.send(ModelAction.PaymentTemplate.Delete.Requested
                                     .init(paymentTemplateIdList: Array(deleteGroupItemsId)))
                                 
                                 itemVM.timer = nil
-                                self.itemsRaw.value.removeAll { item in
-                                    
-                                    deleteGroupItemsId.contains(item.id)
-                                }
-                                
                             }
-                        }
-                        .store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                     
             //Multi Deleting cancel
                 case _ as TemplatesListViewModelAction.Delete.Selection.CancelDeleting:
@@ -557,6 +540,53 @@ private extension TemplatesListViewModel {
                                                  isAddItemNeeded: true)
                     }
                     
+            //Personal Item Delete start
+                case let payload as TemplatesListViewModelAction.Item.Delete:
+                    
+                    guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
+                          let itemModel = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    else { return }
+                    
+                    itemModel.timer = DeletingTimer()
+                    guard let timer = itemModel.timer else { return }
+                    
+                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
+                        .init(progress: timer.maxCount,
+                              countTitle: "\(timer.maxCount)",
+                              cancelButton: .init(title: "Отменить",
+                                                  action: { [unowned itemModel] id in
+                            itemModel.timer = nil
+                            itemModel.state = .normal }),
+                              title: itemModel.title,
+                              style: self.style,
+                              id: itemModel.id)
+                    
+                    itemModel.state = .deleting(deletingViewModel)
+                    
+                    itemModel.timer?.timerPublisher
+                        .receive(on: DispatchQueue.main)
+                        .map({ [unowned timer] output in
+                            return Int(output.timeIntervalSince(timer.startDate))
+                        })
+                        .sink { [unowned self, unowned timer] timerValue in
+                            
+                            if timerValue < timer.maxCount + 1 {
+                                
+                                deletingViewModel.progress = timer.maxCount - timerValue
+                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
+                                
+                            } else {
+                                
+                                deletingViewModel.isDisableCancelButton = true
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                    .init(paymentTemplateIdList: [itemModel.id]))
+                                
+                                itemModel.timer = nil
+                            }
+                    }
+                    .store(in: &bindings)
+                    
+            //CloseLink
                 case _ as TemplatesListViewModelAction.CloseAction:
                     link = nil
                     
