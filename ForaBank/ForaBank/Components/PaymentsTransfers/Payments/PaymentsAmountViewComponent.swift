@@ -366,11 +366,13 @@ struct PaymentsAmountView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(.textPlaceholder)
                             .padding(.top, 4)
+                            .accessibilityIdentifier("PaymentsAmountViewTitle")
                         
                         HStack {
                             
                             TextFieldFormatableView(viewModel: viewModel.textField, font: .systemFont(ofSize: 24, weight: .semibold), textColor: .white, keyboardType: .decimalPad)
                                 .frame(height: 24, alignment: .center)
+                                .accessibilityIdentifier("PaymentsAmountViewInputField")
                             
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
@@ -451,6 +453,7 @@ struct PaymentsAmountView: View {
                         .font(.textH4R16240())
                         .foregroundColor(.mainColorsWhite.opacity(0.5))
                 }
+                .accessibilityIdentifier("PaymentAmountViewTransferButtonInactive")
                 
             case .active(title: let title, action: let action):
                 Button(action: action) {
@@ -464,6 +467,7 @@ struct PaymentsAmountView: View {
                             .font(.textH4R16240())
                             .foregroundColor(.textWhite)
                     }
+                    .accessibilityIdentifier("PaymentAmountViewTransferButton")
                 }
                 
             case let .loading(icon: icon, iconSize: iconSize):
@@ -485,6 +489,7 @@ struct PaymentsAmountView: View {
                     Text(title)
                         .font(.textBodySR12160())
                         .foregroundColor(.textPlaceholder)
+                        .accessibilityIdentifier("PaymentsAmountViewFeeSubtitle")
                     
                     Button(action: action) {
                         
@@ -501,6 +506,7 @@ struct PaymentsAmountView: View {
                 Text(text)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
+                    .accessibilityIdentifier("PaymentsAmountViewCurrencySubtitle")
             }
         }
     }
@@ -549,14 +555,17 @@ struct PaymentsAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencyFrom")
                     
                     viewModel.icon
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencySwitchIcon")
                     
                     Text(viewModel.to)
                         .font(.textBodySR12160())
                         .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencyTo")
                     
                 }
                 .padding(4)
@@ -567,6 +576,7 @@ struct PaymentsAmountView: View {
                 )
                 
             }.disabled(viewModel.isUserInteractionEnabled == false)
+                .accessibilityIdentifier("PaymentsAmountViewSwitchCurrencyButton")
         }
     }
     
