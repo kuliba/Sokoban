@@ -16,6 +16,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var style: Style
     @Published var navBarState: NavBarState
     @Published var editModeState: EditMode = .inactive
+    @Published var idList: UUID = UUID()
     
     @Published var categorySelector: OptionSelectorView.ViewModel?
     @Published var deletePannel: DeletePannelViewModel?
@@ -100,6 +101,7 @@ private extension TemplatesListViewModel {
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось загрузить шаблоны",
                                               icon: .close)))
+                    
                 case _ as ModelAction.PaymentTemplate.Update.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
@@ -111,6 +113,14 @@ private extension TemplatesListViewModel {
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось удалить шаблоны",
                                               icon: .close)))
+                    withAnimation {
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: false,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: self.navBarState.searchModel?.searchText,
+                                                 isAddItemNeeded: true)
+                    }
                 
                 case _ as ModelAction.PaymentTemplate.Sort.Failed:
                     
@@ -570,12 +580,11 @@ private extension TemplatesListViewModel {
                         })
                         .sink { [unowned self, unowned timer] timerValue in
                             
-                            if timerValue < timer.maxCount + 1 {
-                                
-                                deletingViewModel.progress = timer.maxCount - timerValue
-                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
-                                
-                            } else {
+                            let current = timer.maxCount - timerValue
+                            deletingViewModel.progress = current
+                            deletingViewModel.countTitle = "\(current)"
+                            
+                            if current == 0 {
                                 
                                 deletingViewModel.isDisableCancelButton = true
                                 model.action.send(ModelAction.PaymentTemplate.Delete.Requested
@@ -617,6 +626,17 @@ private extension TemplatesListViewModel {
                 
             }.store(in: &bindings)
          
+        $editModeState
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .active: self.idList = UUID()
+                    
+                default: return
+                }
+            }.store(in: &bindings)
     }
     
     func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {

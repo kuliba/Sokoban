@@ -21,8 +21,8 @@ extension TemplatesListView {
             case .normal:
                             
                 TemplatesListView.NormalItemView
-                    .init(image: viewModel.image,
-                          logoImage: viewModel.logoImage,
+                    .init(avatar: viewModel.avatar,
+                          topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
@@ -37,8 +37,8 @@ extension TemplatesListView {
             case let .select(roundButtonViewModel):
                             
                 TemplatesListView.NormalItemView
-                    .init(image: viewModel.image,
-                          logoImage: viewModel.logoImage,
+                    .init(avatar: viewModel.avatar,
+                          topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
@@ -54,8 +54,8 @@ extension TemplatesListView {
             case let .delete(itemActionViewModel):
                             
                 TemplatesListView.NormalItemView
-                    .init(image: viewModel.image,
-                          logoImage: viewModel.logoImage,
+                    .init(avatar: viewModel.avatar,
+                          topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
@@ -115,7 +115,9 @@ extension TemplatesListView {
                 
                 HStack(spacing: 16) {
                     
-                    TemplatesListView.ItemIconView(image: viewModel.image, style: style)
+                    TemplatesListView.ItemIconView(avatar: viewModel.avatar,
+                                                   topImage: viewModel.topImage,
+                                                   style: style)
                     
                     VStack(alignment: .leading, spacing: 4) {
                         
@@ -136,7 +138,9 @@ extension TemplatesListView {
                     
                     VStack(spacing: 0) {
                         
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
+                        TemplatesListView.ItemIconView(avatar: viewModel.avatar,
+                                                       topImage: viewModel.topImage,
+                                                       style: style)
                             .padding(.vertical, 16)
                         
                         TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
@@ -160,8 +164,8 @@ extension TemplatesListView {
     
     struct NormalItemView: View {
         
-        let image: Image?
-        let logoImage: Image?
+        let avatar: TemplatesListViewModel.ItemViewModel.Avatar?
+        let topImage: Image?
         let title: String
         let subTitle: String
         let amount: String
@@ -174,8 +178,8 @@ extension TemplatesListView {
                 
                 HStack(spacing: 16) {
                     
-                    TemplatesListView.ItemIconView(image: image,
-                                                   logoImage: logoImage,
+                    TemplatesListView.ItemIconView(avatar: avatar,
+                                                   topImage: topImage,
                                                    style: style)
                     
                     VStack(alignment: .leading, spacing: 4) {
@@ -204,19 +208,18 @@ extension TemplatesListView {
                     
                     VStack(spacing: 0) {
                         
-                        TemplatesListView.ItemIconView(image: image,
-                                                       logoImage: logoImage,
+                        TemplatesListView.ItemIconView(avatar: avatar,
+                                                       topImage: topImage,
                                                        style: style)
-                        .padding(.vertical, 16)
+                            .padding(.vertical, 16)
                         
                         TemplatesListView.ItemTitleView(title: title,
                                                         style: style)
-                        .padding(.bottom, 4)
+                            .padding(.bottom, 4)
                         
                         
                         TemplatesListView.ItemSubtitleView(subtitle: subTitle,
                                                            style: style)
-                        //.padding(.bottom, 4)
                         
                         TemplatesListView.ItemAmountView(amount: amount)
                             .padding(.bottom, 16)
@@ -325,43 +328,58 @@ extension TemplatesListView {
     
     struct ItemIconView: View {
         
-        let image: Image?
-        var logoImage: Image? = nil
-        var style: TemplatesListViewModel.Style = .list
+        let avatar: TemplatesListViewModel.ItemViewModel.Avatar?
+        let topImage: Image?
+        let style: TemplatesListViewModel.Style
         
-        private var side: CGFloat {
+        private var side: (main: CGFloat, top: CGFloat) {
             
             switch style {
-            case .list: return 40
-            case .tiles: return 56
+            case .list: return (40, 20)
+            case .tiles: return (56, 24)
             }
         }
  
         var body: some View {
             
-            ZStack(alignment: .topTrailing) {
+            ZStack(alignment: .topTrailing)  {
                 
-                if let image = image {
+                switch avatar {
+                case let .image(image):
                     
                     image
-                        .resizable()
                         .renderingMode(.original)
-                        .frame(width: side, height: side)
-                } else {
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(height: side.main)
+                    
+                case let .text(text):
                     
                     Circle()
-                        .foregroundColor(.mainColorsGrayLightest)
-                        .frame(width: side, height: side)
+                        .fill(Color.mainColorsGrayMedium)
+                        .frame(height: side.main)
+                        .overlay13 {
+                            Text(text)
+                                .font(.textH4M16240())
+                                .foregroundColor(.textPlaceholder)
+                        }
+                
+                case .none:
+                    EmptyView()
                 }
                 
-                if let logoImage = logoImage {
+                if let topImage = topImage {
                     
-                    logoImage
+                    topImage
+                        .renderingMode(.original)
                         .resizable()
-                        .frame(width: 24, height: 24)
-                        .offset(.init(width: 8, height: 0))
+                        .clipShape(Circle())
+                        .frame(width: side.top, height: side.top)
+                        .offset(x: 9, y: -2)
                 }
             }
+       
         }
     }
     

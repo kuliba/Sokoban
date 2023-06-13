@@ -15,10 +15,10 @@ extension TemplatesListViewModel {
         let id: Int
         var sortOrder: Int
         @Published var state: State
-        let image: Image?
+        let avatar: Avatar?
         @Published var title: String
         @Published var subTitle: String
-        let logoImage: Image?
+        let topImage: Image?
         let ammount: String
         
         var timer: DeletingTimer?
@@ -59,10 +59,10 @@ extension TemplatesListViewModel {
         init(id: Int = 0,
              sortOrder: Int = 0,
              state: TemplatesListViewModel.ItemViewModel.State = .normal,
-             image: Image? = nil,
+             avatar: Avatar? = nil,
              title: String = "",
              subTitle: String = "",
-             logoImage: Image? = nil,
+             topImage: Image? = nil,
              ammount: String = "",
              tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
              deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
@@ -72,10 +72,10 @@ extension TemplatesListViewModel {
             self.id = id
             self.sortOrder = sortOrder
             self.state = state
-            self.image = image
+            self.avatar = avatar
             self.title = title
             self.subTitle = subTitle
-            self.logoImage = logoImage
+            self.topImage = topImage
             self.ammount = ammount
             self.tapAction = tapAction
             self.deleteAction = deleteAction
@@ -98,6 +98,11 @@ extension TemplatesListViewModel {
                 return viewModel
             }
             
+        }
+        
+        enum Avatar {
+            case image(Image)
+            case text(String)
         }
         
         struct ToggleRoundButtonViewModel {
@@ -203,11 +208,31 @@ extension TemplatesListViewModel {
                                   amountFormatted: model.amountFormatted(amount:currencyCode:style:))
         else { return nil }
         
+        var avatar: ItemViewModel.Avatar? = nil
+        var topImage: Image? = nil
+        
+        if let phoneNumber = getPhoneNumber(for: data),
+           let contact = model.contact(for: phoneNumber) {
+           
+            if let img = contact.avatar?.image {
+                avatar = .image(img)
+            } else {
+                avatar = .text(contact.initials ?? "")
+            }
+            
+            topImage = data.svgImage.image
+            
+        } else {
+            
+            if let image = data.svgImage.image { avatar = .image(image) }
+        }
+        
         return .init(id: data.paymentTemplateId,
                      sortOrder: data.sort,
-                     image: data.svgImage.image,
+                     avatar: avatar,
                      title: data.name,
                      subTitle: data.groupName,
+                     topImage: topImage,
                      ammount: amount,
                      tapAction: { [weak self] itemId in
                         self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
@@ -221,7 +246,7 @@ extension TemplatesListViewModel {
         
         return ItemViewModel(id: Int.max,
                              sortOrder: Int.max,
-                             image: .ic40Star,
+                             avatar: .image(.ic40Star),
                              title: "Добавить шаблон",
                              subTitle: "Из любой успешной операции\nв разделе «История»",
                              tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
@@ -252,6 +277,44 @@ extension TemplatesListViewModel {
         }
     }
     
+    func getPhoneNumber(for data: PaymentTemplateData) -> String? {
+        
+        switch data.type {
+        case .mobile:
+         
+            guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
+            else { return nil }
+            
+            return "+7" + phoneField.fieldvalue
+            
+        case .sfp:
+            
+            guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RecipientID" })
+            else { return nil }
+            
+            return "+7" + phoneField.fieldvalue
+            
+        case .byPhone:
+            
+            guard let transfer = data.parameterList.first as? TransferGeneralData,
+                  let phoneNumber = transfer.payeeInternal?.phoneNumber
+            else { return nil }
+            
+            return "+" + phoneNumber
+        
+        case .direct, .newDirect:
+            
+            guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RECP" })
+            else { return nil }
+            
+            return "+" + phoneField.fieldvalue
+            
+        default: return nil
+        }
+    }
     
     func amount(for template: PaymentTemplateData,
                 amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?) -> String? {

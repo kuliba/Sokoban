@@ -34,7 +34,7 @@ struct TemplatesListView: View {
                     
                     List {
                         
-                        ForEach($viewModel.items) { $item in
+                        ForEach(viewModel.items) { item in
                             
                             switch item.kind {
                             case .regular, .deleting:
@@ -69,10 +69,12 @@ struct TemplatesListView: View {
                             viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
                                                     .init(move: (first, destination)))
                         }
+                        .moveDisabled(viewModel.editModeState != .active)
                     } //List
                     .listStyle(.plain)
                     .environment(\.editMode, $viewModel.editModeState)
                     .padding(.horizontal)
+                    .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
                     
                 // TilesView
                 case .tiles:
