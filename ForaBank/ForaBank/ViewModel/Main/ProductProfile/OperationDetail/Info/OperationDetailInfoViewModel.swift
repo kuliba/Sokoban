@@ -1560,35 +1560,44 @@ extension OperationDetailInfoViewModel {
                 
             case .housingAndCommunalService:
                 
-                var cells = [
-                    amountViewModel,
-                    commissionViewModel,
-                    payerViewModel,
-                    payeeViewModel,
-                    dateViewModel
-                ]
+            var cells = [
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                dateViewModel
+            ]
+
+            let puref = operation.puref ?? ""
+            let operatorValue = model.dictionaryAnywayOperator(for: puref)
+
+            if let account = operation.account {
                 
-                let puref = operation.puref ?? ""
-                let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
-                                                              iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
-                                                              value: operation.payeeFullName ?? "")
-                cells.append(operatorViewModel)
+                let numberViewModel = PropertyCellViewModel(
+                    title: "Лицевой счет",
+                    iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                    value: account
+                )
+                cells.insert(numberViewModel, at: 0)
+            }
+            
+            if let payeeINN = operation.payeeINN {
                 
-                if let payeeINN = operation.payeeINN {
-                    
-                    cells.append(PropertyCellViewModel(title: "ИНН получателя",
-                                                       iconType: IconType.account.icon,
-                                                       value: payeeINN))
-                }
+                cells.insert(PropertyCellViewModel(title: "ИНН получателя",
+                                                   iconType: IconType.account.icon,
+                                                   value: payeeINN), at: 0)
+            }
+            
+            if let payeeFullName = operation.payeeFullName {
                 
-                let numberViewModel = PropertyCellViewModel(title: "Лицевой счет",
-                                                            iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
-                                                            value: operation.account ?? "")
-                
-                cells.append(numberViewModel)
-                
-                return cells.compactMap { $0 }
+                let operatorViewModel = PropertyCellViewModel(
+                    title: "Наименование получателя",
+                    iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                    value: payeeFullName
+                )
+                cells.insert(operatorViewModel, at: 0)
+            }
+            
+            return cells.compactMap { $0 }
                 
             default:
                 
