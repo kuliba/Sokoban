@@ -155,6 +155,7 @@ class RootViewModel: ObservableObject, Resetable {
                 case _ as RootViewModelAction.DismissAll:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.DismissAll")
                     reset()
+                    model.setPreferredProductID(to: nil)
                     
                 case let payload as RootViewModelAction.ShowUserProfile:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.ShowUserProfile")

@@ -186,7 +186,13 @@ struct PaymentsTransfersView: View {
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
-            leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+            leading: Group {
+                
+                if viewModel.mode == .normal {
+                    
+                    MainView.UserAccountButton(viewModel: viewModel.userAccountButton)
+                }
+            },
             trailing:
                 HStack {
                     ForEach(viewModel.navButtonsRight) { navButtonViewModel in

@@ -44,6 +44,13 @@
         "identifier" : "TextFieldDomainTests",
         "name" : "TextFieldDomainTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UserModelTests",
+        "name" : "UserModelTests"
+      }
     }
   ],
   "version" : 1

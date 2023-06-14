@@ -1124,6 +1124,8 @@
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
 		77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */; };
 		77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE68028FDCF31001E892B /* HelpersExtensions.swift */; };
+		77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */ = {isa = PBXBuildFile; productRef = 77B243DB2A2F658500CDCEC6 /* UserModel */; };
+		77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B243DD2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift */; };
 		77B6B3542850961A00E3001B /* Period.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B3532850961A00E3001B /* Period.swift */; };
 		77B6B3562850976B00E3001B /* ProductStatementsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B3552850976B00E3001B /* ProductStatementsStorage.swift */; };
 		77B6B35928509A0300E3001B /* ProductStatementsUpdateState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B6B35828509A0300E3001B /* ProductStatementsUpdateState.swift */; };
@@ -1236,6 +1238,7 @@
 		77EC58F4277381970054D75C /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F3277381970054D75C /* OperationType.swift */; };
 		77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F5277382A60054D75C /* OperationEnvironment.swift */; };
 		77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */; };
+		77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ED5FAA2A2F78DD001BFA3D /* ProductProfileViewModelTests.swift */; };
 		77F1581B28108BB500CA5E4E /* SessionAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1581A28108BB500CA5E4E /* SessionAgentProtocol.swift */; };
 		77F1581D28108C1800CA5E4E /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1581C28108C1800CA5E4E /* SessionState.swift */; };
 		77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1581E2810909B00CA5E4E /* SessionAgent.swift */; };
@@ -2848,6 +2851,7 @@
 		77A900F529EFBB060089379F /* PaymentsSelectBankViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewComponentTests.swift; sourceTree = "<group>"; };
 		77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStatementTests.swift; sourceTree = "<group>"; };
 		77AEE68028FDCF31001E892B /* HelpersExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpersExtensions.swift; sourceTree = "<group>"; };
+		77B243DD2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreferredProductTests.swift; sourceTree = "<group>"; };
 		77B6B3532850961A00E3001B /* Period.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
 		77B6B3552850976B00E3001B /* ProductStatementsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementsStorage.swift; sourceTree = "<group>"; };
 		77B6B35828509A0300E3001B /* ProductStatementsUpdateState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementsUpdateState.swift; sourceTree = "<group>"; };
@@ -2959,6 +2963,7 @@
 		77EC58F3277381970054D75C /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		77EC58F5277382A60054D75C /* OperationEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationEnvironment.swift; sourceTree = "<group>"; };
 		77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		77ED5FAA2A2F78DD001BFA3D /* ProductProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileViewModelTests.swift; sourceTree = "<group>"; };
 		77F1581A28108BB500CA5E4E /* SessionAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgentProtocol.swift; sourceTree = "<group>"; };
 		77F1581C28108C1800CA5E4E /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		77F1581E2810909B00CA5E4E /* SessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionAgent.swift; sourceTree = "<group>"; };
@@ -3441,6 +3446,7 @@
 				77AC9159277A518B00E49D5D /* Shimmer in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				7769F5CB27D8CAD100F80607 /* ScrollViewProxy in Frameworks */,
+				77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
@@ -6140,6 +6146,7 @@
 				0BCFBE022817F77D003F2F36 /* ModelNotificationsTests.swift */,
 				77F15826281682D400CA5E4E /* ModelDictionaryAtmTests.swift */,
 				77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */,
+				77B243DD2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6368,6 +6375,7 @@
 		77BE9A36290C2097006046B1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				77ED5FA82A2F78B7001BFA3D /* Main */,
 				2AABD3CF2A2540BF0085CDA6 /* QR */,
 				2A3086BE29FCE44400966B1A /* PaymentsTransfers */,
 				77BE9A37290C20AC006046B1 /* Payments */,
@@ -7117,6 +7125,22 @@
 				77C3829427E1F72800B5246E /* Legacy */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		77ED5FA82A2F78B7001BFA3D /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				77ED5FA92A2F78C0001BFA3D /* ProductProfile */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		77ED5FA92A2F78C0001BFA3D /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				77ED5FAA2A2F78DD001BFA3D /* ProductProfileViewModelTests.swift */,
+			);
+			path = ProductProfile;
 			sourceTree = "<group>";
 		};
 		77FF66CB27B42DAF009FEA09 /* Taxes */ = {
@@ -9067,6 +9091,7 @@
 				ED0AF884286B24DF00F86B68 /* AnyImageKit */,
 				2AB766BF29EA89AB00501DD2 /* UIKitHelpers */,
 				2A12674729EFE53200461884 /* CombineSchedulers */,
+				77B243DB2A2F658500CDCEC6 /* UserModel */,
 				2A8142602A0B9237005CF83F /* SearchBarComponent */,
 				2A3947172A19E84500EB9757 /* TextFieldComponent */,
 			);
@@ -10838,6 +10863,7 @@
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				6820923027A97A1D003DCAFD /* ServerCommandsFastPaymentTests.swift in Sources */,
 				682092A827AC0692003DCAFD /* ServerCommandsPersonTests.swift in Sources */,
+				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
 				77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */,
@@ -10871,6 +10897,7 @@
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
+				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */,
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
@@ -12197,6 +12224,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
 			productName = Shimmer;
+		};
+		77B243DB2A2F658500CDCEC6 /* UserModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserModel;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;

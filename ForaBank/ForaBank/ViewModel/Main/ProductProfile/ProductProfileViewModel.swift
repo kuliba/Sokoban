@@ -111,6 +111,33 @@ private extension ProductProfileViewModel {
     
     func bind() {
         
+        // TransferButtonDidTapped
+        
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.TransferButtonDidTapped }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                model.setPreferredProductID(to: product.activeProductId)
+                let paymentsTransfersViewModel = PaymentsTransfersViewModel(
+                    model: model,
+                    isTabBarHidden: true,
+                    mode: .link
+                )
+                link = .paymentsTransfers(paymentsTransfersViewModel)
+                
+            }.store(in: &bindings)
+        
+        $isLinkActive
+            .sink { [unowned self] value in
+                
+                if value == false {
+                    
+                    model.setPreferredProductID(to: nil)
+                }
+                
+            }.store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -417,8 +444,6 @@ private extension ProductProfileViewModel {
                     buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
                 }
                 
-                bind(buttons: buttons)
-                
             }.store(in: &bindings)
         
         model.loans
@@ -477,8 +502,6 @@ private extension ProductProfileViewModel {
                 withAnimation {
                     buttons.update(with: product, depositInfo: model.depositsInfo.value[product.id])
                 }
-                
-                bind(buttons: buttons)
                 
                 // detail update
                 withAnimation {
@@ -677,8 +700,7 @@ private extension ProductProfileViewModel {
                     case .topRight:
                         switch product.productType {
                         case .card, .account:
-                            rootActions?.dismissAll()
-                            rootActions?.switchTab(.payments)
+                            self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
                         case .deposit:
                             guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
@@ -1327,6 +1349,7 @@ extension ProductProfileViewModel {
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
+        case paymentsTransfers(PaymentsTransfersViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -1434,4 +1457,6 @@ enum ProductProfileViewModelAction {
         
         struct OpenDeposit: Action {}
     }
+    
+    struct TransferButtonDidTapped: Action {}
 }

@@ -28,25 +28,38 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var fullCover: FullCover?
-    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
+    @Published var link: Link? {
+        didSet {
+            
+            isLinkActive = link != nil
+            
+            if mode == .normal {
+                isTabBarHidden = link != nil
+            }
+        }
+    }
     @Published var isLinkActive: Bool = false
-    @Published var isTabBarHidden: Bool = false
+    @Published var isTabBarHidden: Bool
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
-    private let model: Model
     
+    let mode: Mode
     var rootActions: RootViewModel.RootActions?
     
+    private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(model: Model) {
+    init(model: Model, isTabBarHidden: Bool = false, mode: Mode = .normal) {
         self.navButtonsRight = []
         self.sections = [
             PTSectionLatestPaymentsView.ViewModel(model: model),
             PTSectionTransfersView.ViewModel(),
             PTSectionPaymentsView.ViewModel()
         ]
+        self.isTabBarHidden = isTabBarHidden
+        self.mode = mode
         self.model = model
+        
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -57,10 +70,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(sections: [PaymentsTransfersSectionViewModel],
          model: Model,
-         navButtonsRight: [NavigationBarButtonViewModel]) {
+         navButtonsRight: [NavigationBarButtonViewModel],
+         isTabBarHidden: Bool = false,
+         mode: Mode = .normal) {
         
         self.sections = sections
+        self.isTabBarHidden = isTabBarHidden
+        self.mode = mode
         self.model = model
+        
         self.navButtonsRight = navButtonsRight
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
@@ -78,7 +96,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sheet = nil
         link = nil
         fullScreenSheet = nil
-        isTabBarHidden = false
+        
+        if mode == .normal {
+            isTabBarHidden = false
+        }
     }
     
     private func bind() {
@@ -134,7 +155,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                    isTabBarHidden = false
+                    
+                    if mode == .normal {
+                        isTabBarHidden = false
+                    }
                 
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -883,6 +907,15 @@ extension PaymentsTransfersViewModel {
 //MARK: - Types
 
 extension PaymentsTransfersViewModel {
+    
+    enum Mode {
+        
+        /// view presented in main tab view
+        case normal
+        
+        /// view presented in navigation stack
+        case link
+    }
     
     struct BottomSheet: BottomSheetCustomizable {
         
