@@ -47,10 +47,10 @@ extension TransferGeneralData {
                 payeeInternal: .init(
                     accountId: nil,
                     accountNumber: nil,
-                    cardId: nil,
+                    cardId: 1,
                     cardNumber: nil,
                     phoneNumber: "number",
-                    productCustomName: nil)
+                    productCustomName: "customName")
             )
         ]
         
@@ -71,7 +71,7 @@ extension TransferAnywayData {
             phoneNumber: nil
         )
         
-        let amount: Double?  = nil
+        let amount: Double?  = 100
         
         let parameter = TransferAnywayData(
             amount: amount,
@@ -102,7 +102,7 @@ extension TransferMe2MeData {
             inn: nil,
             accountId: nil,
             accountNumber: nil,
-            cardId: nil,
+            cardId: 1,
             cardNumber: nil,
             phoneNumber: nil
         )

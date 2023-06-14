@@ -154,3 +154,14 @@ extension TransferGeneralData {
     }
 }
 
+extension TransferGeneralData {
+    
+    var suffixCustomName: String? {
+        
+        guard let customName = self.payeeInternal?.productCustomName?.suffix(4) else {
+            return nil
+        }
+        
+        return customName.description
+    }
+}

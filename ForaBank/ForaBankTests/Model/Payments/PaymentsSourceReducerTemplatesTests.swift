@@ -13,7 +13,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
     private let templateId = 2513
     private let fakeParameterId = "1"
     
-    func test_updateParameter_withFakeParameterId_shouldReturnNil() throws {
+    func test_updateParameter_mobileService_withFakeParameterId_shouldReturnNil() throws {
         
         // given
         let (service, source, _, parameterId) = makeOperationDummy(
@@ -163,7 +163,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(value, "number")
+        XCTAssertEqual(value, "7number")
     }
     
     func test_updateParameter_withGeneral_sfpPhoneParameter_shouldReturnNumber() throws {
@@ -292,7 +292,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(value, "0")
+        XCTAssertEqual(value, nil)
     }
     
     func test_updateParameter_withGeneral_amountParameter_shouldReturn_100() throws {
@@ -350,8 +350,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        let unwrappedValue = try XCTUnwrap(value)
-        XCTAssertEqual(unwrappedValue, nil)
+        XCTAssertEqual(value, nil)
     }
     
     func test_updateParameter_withMe2MeStub_mobilePhoneParameter_shouldReturnNil() throws {
@@ -731,6 +730,174 @@ extension PaymentsSourceReducerTemplateTests {
         
         // then
         XCTAssertEqual(value, nil)
+    }
+    
+    func test_updateParameter_payerProductId_productParameter_shouldReturnId() throws {
+        
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .requisites,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.product.rawValue
+        )
+        
+        let transferData = TransferMe2MeData.me2MeStub()
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
+        sut.paymentTemplates.value.append(template)
+        
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+        
+        // then
+        XCTAssertEqual(result, "1")
+    }
+    
+    func test_updateParameter_parameterAmount_shouldReturnValue() throws {
+        
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .requisites,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.amount.rawValue
+        )
+        
+        let transferData = TransferAnywayData.anywayStub()
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
+        sut.paymentTemplates.value.append(template)
+        
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+        
+        // then
+        XCTAssertEqual(result, "100.0")
+    }
+    
+    func test_updateParameter_toAnotherCard_parameterMobilePhone_shouldReturnNil() throws {
+
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .toAnotherCard,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.mobileConnectionPhone.rawValue
+        )
+
+        let transferData = TransferAnywayData.anywayStub()
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
+        sut.paymentTemplates.value.append(template)
+
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+
+        // then
+        XCTAssertEqual(result, nil)
+    }
+    
+    func test_updateParameter_toAnotherCard_productTemplate_shouldReturnProductId() throws {
+
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .toAnotherCard,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.productTemplate.rawValue
+        )
+
+        let transferData = TransferGeneralData.generalStub()
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
+        sut.paymentTemplates.value.append(template)
+        sut.productTemplates.value.append(ProductTemplateData.productTemplateStub())
+
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+
+        // then
+        XCTAssertEqual(result, "T:2513")
+    }
+    
+    func test_updateParameter_toAnotherCard_withMe2MeData_shouldReturnNil() throws {
+
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .toAnotherCard,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.productTemplate.rawValue
+        )
+
+        let transferData = TransferMe2MeData.me2MeStub()
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
+        sut.paymentTemplates.value.append(template)
+
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+
+        // then
+        XCTAssertEqual(result, nil)
+    }
+    
+    func test_updateParameter_toAnotherCard_mobilePhoneParameter_shouldReturnNil() throws {
+
+        // given
+        let (service, source, type, parameterId) = makeOperationDummy(
+            .toAnotherCard,
+            .template(templateId),
+            .externalIndividual,
+            Identifier.mobileConnectionPhone.rawValue
+        )
+
+        let sut = makeSUT()
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: [])
+        sut.paymentTemplates.value.append(template)
+
+        // when
+        let result = updateParameterValue(
+            model: sut,
+            service: service,
+            source: source,
+            parameterId: parameterId)
+
+        // then
+        XCTAssertEqual(result, nil)
     }
 }
 

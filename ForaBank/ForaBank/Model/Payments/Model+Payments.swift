@@ -501,133 +501,26 @@ extension Model {
         case .template(let templateId):
             
             guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
-                return nil
+               return nil
             }
             
-            switch parameterId {
-                case Payments.Parameter.Identifier.amount.rawValue:
-                    return template.amount?.description ?? "0"
-                    
-                default:
-                    switch service {
-                    case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV:
-                            
-                            switch template.parameterList {
-                                case let payload as [TransferAnywayData]:
-                                    return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
-                                    
-                                case let payload as [TransferGeneralData]:
-                                    switch parameterId {
-                                        case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
-                                            return template.phoneNumber
-                                            
-                                        case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
-                                            return template.foraBankId
-                                            
-                                        case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
-                                            return payload.last?.comment
-                                            
-                                        default:
-                                            return nil
-                                    }
-                                    
-                                default:
-                                    return nil
-                            }
-                            
-                        case .requisites:
-                            return paymentsProcessSourceTemplateReducerRequisites(templateData: template,
-                                                                                  parameterId: parameterId)
-                        case .mobileConnection:
-                            guard let anywayDataList = template.parameterList as? [TransferAnywayData],
-                            let puref = anywayDataList.last?.puref else {
-                               return nil
-                            }
-                            
-                            switch parameterId {
-                                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
-                                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
-                                    return anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue
-
-                                default:
-                                    return nil
-                            }
-
-                        default:
-                            return nil
-                    }
-            }
+            return paymentsTemplateParameterValue(
+                service: service,
+                parameterId: parameterId,
+                template: template
+            )
             
         case let .latestPayment(latestPaymentId):
-        
-                guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
-                    return nil
-                }
-                
-                switch parameterId {
-                        
-                    case Payments.Operation.Parameter.Identifier.amount.rawValue:
-                        switch latestPayment {
-                            case let latestPayment as PaymentGeneralData:
-                                return latestPayment.amount
-                                
-                            case let latestPayment as PaymentServiceData:
-                                return latestPayment.amount.description
-                                
-                            default:
-                                return nil
-                        }
-                        
-                    default:
-                        switch latestPayment.type {
-                        
-                            case .phone:
-                                guard let paymentData = latestPayment as? PaymentGeneralData else {
-                                    return nil
-                                }
-                                
-                                let phoneNumber = paymentData.phoneNumber
-                                let bankId = paymentData.bankId
-                                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
-                                                                       bankId: bankId,
-                                                                       parameterId: parameterId)
-
-                            case .mobile:
-                                guard let latestPayment = latestPayment as? PaymentServiceData else {
-                                   return nil
-                                }
-                                
-                                let puref = latestPayment.puref
-                                
-                                switch parameterId {
-                                    case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
-                                        let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
-                                        guard let value = latestPayment.additionalList.first(where: { $0.fieldName == operatorId })?.fieldValue else {
-                                            return nil
-                                        }
-
-                                        return value
-                                        
-                                    default:
-                                        return nil
-                                }
-                                
-                            case .internet,
-                                .service,
-                                .outside:
-                                
-                                guard let paymentData = latestPayment  as? PaymentServiceData else {
-                                    return nil
-                                }
-                                
-                                let value = paymentData.additionalList.first(where: { $0.fieldName == parameterId })?.fieldValue
-                                
-                                return value
-                                
-                            default:
-                                return nil
-                        }
-                }
+            
+            guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
+                return nil
+            }
+           
+            return latestsPaymentsParameterValue(
+                parameterId: parameterId,
+                latestPayment: latestPayment
+            )
+            
         default:
             return nil
         }
@@ -938,6 +831,184 @@ extension Model {
             
         default:
             return nil
+        }
+    }
+    
+    func latestsPaymentsParameterValue(
+        parameterId: Payments.Parameter.ID,
+        latestPayment: LatestPaymentData
+    ) -> Payments.Parameter.Value? {
+        
+        switch parameterId {
+                
+            case Payments.Operation.Parameter.Identifier.amount.rawValue:
+                switch latestPayment {
+                    case let latestPayment as PaymentGeneralData:
+                        return latestPayment.amount
+                        
+                    case let latestPayment as PaymentServiceData:
+                        return latestPayment.amount.description
+                        
+                    default:
+                        return nil
+                }
+                
+            default:
+            switch latestPayment.type {
+                
+            case .phone:
+                guard let paymentData = latestPayment as? PaymentGeneralData else {
+                    return nil
+                }
+                
+                let phoneNumber = paymentData.phoneNumberRu
+                let bankId = paymentData.bankId
+                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
+                                                       bankId: bankId,
+                                                       parameterId: parameterId)
+                
+            case .mobile:
+                guard let latestPayment = latestPayment as? PaymentServiceData else {
+                    return nil
+                }
+                
+                let puref = latestPayment.puref
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
+                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
+                    guard let value = latestPayment.additionalList.first(where: { $0.fieldName == operatorId })?.fieldValue else {
+                        return nil
+                    }
+                    
+                    return value
+                    
+                default:
+                    return nil
+                }
+                
+            case .internet,
+                 .service,
+                 .outside:
+                
+                guard let paymentData = latestPayment  as? PaymentServiceData else {
+                    return nil
+                }
+                
+                let value = paymentData.additionalList.first(where: { $0.fieldName == parameterId })?.fieldValue
+                
+                return value
+                
+            default:
+                return nil
+            }
+        }
+    }
+    
+    func paymentsTemplateParameterValue(
+        service: Payments.Service,
+        parameterId: Payments.Parameter.ID,
+        template: PaymentTemplateData) -> Payments.Parameter.Value? {
+     
+        switch parameterId {
+        case Payments.Parameter.Identifier.amount.rawValue:
+            
+            if let amount = template.amount?.description {
+                return amount
+                
+            } else if let parameterList = template.parameterList as? [TransferAnywayData] {
+                
+                return parameterList.compactMap(\.amountDouble).first?.description
+            }
+            
+            return nil
+            
+        case Payments.Parameter.Identifier.product.rawValue:
+            return template.parameterList.last?.payer?.productIdDescription
+            
+        default:
+            switch service {
+            case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV:
+                
+                switch template.parameterList {
+                case let payload as [TransferAnywayData]:
+                    
+                    switch parameterId {
+                    case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                        return payload.last?.additional.sfpPhone
+                        
+                    default:
+                        return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                    }
+                    
+                case let payload as [TransferGeneralData]:
+                    switch parameterId {
+                    case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                        return template.phoneNumber
+                        
+                    case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
+                        return template.foraBankId
+                        
+                    case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
+                        return payload.last?.comment
+                        
+                    default:
+                        return nil
+                    }
+                    
+                default:
+                    return nil
+                }
+                
+            case .requisites:
+                return paymentsProcessSourceTemplateReducerRequisites(templateData: template,
+                                                                      parameterId: parameterId)
+            case .mobileConnection:
+                guard let anywayDataList = template.parameterList as? [TransferAnywayData],
+                      let puref = anywayDataList.last?.puref else {
+                    return nil
+                }
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
+                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
+                    
+                    if let phone = anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue {
+                        
+                        return "7" + phone
+                    }
+                    
+                    return nil
+                    
+                default:
+                    return nil
+                }
+            case .toAnotherCard:
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.productTemplate.rawValue:
+                    if let parameterList = template.parameterList as? [TransferGeneralData],
+                       let suffixCustomCard = parameterList.last?.suffixCustomName {
+                        
+                        let productId = self.productTemplates.value.first(where: { $0.numberMaskSuffix == suffixCustomCard })?.id.description
+                        
+                        guard let productId else {
+                            return nil
+                        }
+                        
+                        let templateProductId =                             Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
+                        return templateProductId
+                    }
+                    
+                    return nil
+                    
+                default:
+                    return nil
+                }
+                
+            default:
+                return nil
+            }
         }
     }
 }

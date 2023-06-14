@@ -175,8 +175,10 @@ final class PaymentsServicesTests: XCTestCase {
                 operatorCode: "",
                 additionalList: nil,
                 amount: 0,
-                isSingle: true
+                isSingle: true,
+                source: nil
             )
+            
             XCTFail("Expected error, got step \(step) instead.")
         } catch {}
     }
@@ -565,7 +567,8 @@ extension Model {
             operatorCode: "iFora||5576",
             additionalList: nil,
             amount: 0,
-            isSingle: isSingle)
+            isSingle: isSingle,
+            source: nil)
         
     }
     
@@ -575,7 +578,8 @@ extension Model {
             operatorCode: "iFora||C31",
             additionalList: nil,
             amount: 0,
-            isSingle: isSingle)
+            isSingle: isSingle,
+            source: nil)
     }
     
     func makeLocalStep(

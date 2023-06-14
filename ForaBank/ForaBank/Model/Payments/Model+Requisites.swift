@@ -108,7 +108,15 @@ extension Model {
                 }()
                 
                 //MARK: Message Parameter
-                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: "Перевод денежных средств. НДС не облагается"), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                var messageValue: String?
+                switch operation.source {
+                case .template:
+                    messageValue = nil
+                default:
+                    messageValue = "Перевод денежных средств. НДС не облагается"
+                }
+                
+                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: messageValue), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
                 
                 //MARK: Product Parameter
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
@@ -117,7 +125,9 @@ extension Model {
                       let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                     throw Payments.Error.unableCreateRepresentable(productParameterId)
                 }
-                let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+                
+                let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+                let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
                 
                 //MARK: Amount Parameter
                 let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
@@ -271,7 +281,9 @@ extension Model {
                   let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             parameters.append(productParameter)
 
             //MARK: Amount Parameter

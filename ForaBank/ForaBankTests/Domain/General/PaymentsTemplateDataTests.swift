@@ -37,7 +37,6 @@ final class PaymentsTemplateDataTests: XCTestCase {
                                                         parameterList: transferData)
         let insideByPhonePhoneNumber = template.phoneNumber
         
-        XCTAssertNotNil(insideByPhonePhoneNumber)
         XCTAssertEqual(
             insideByPhonePhoneNumber,
             "number")

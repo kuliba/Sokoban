@@ -97,11 +97,13 @@ extension Model {
             guard let product = firstProduct(with: filter) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
-            if countryWithService?.servicesList.first(where: {$0.isDefault == true}) != nil {
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+            
+            if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
                 
-                let option = countryWithService?.servicesList.first(where: {$0.isDefault == true})?.code.rawValue
+                let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
                 
                 let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
                 
