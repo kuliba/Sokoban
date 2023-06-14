@@ -176,7 +176,7 @@ extension Model {
                 
             case .input:
                 
-                let regExp: PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                let regExp: any PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
                 var value: String?
                 if let additionalList = additionalList {
                     
@@ -571,7 +571,7 @@ extension Model {
         case .input:
             switch parameterData.id {
             default:
-                let regExp: PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                let regExp: any PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
                 
                 return Payments.ParameterInput(
                     .init(id: parameterData.id, value: parameterData.value),

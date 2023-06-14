@@ -13,7 +13,7 @@ extension Payments {
         
         struct RulesSystem {
             
-            let rules: [PaymentsValidationRulesSystemRule]
+            let rules: [any PaymentsValidationRulesSystemRule]
             
             func evaluate(_ value: Payments.Parameter.Value) -> Bool {
                 
@@ -66,8 +66,7 @@ extension Payments.Validation {
     
     struct MinLengthRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let minLength: UInt
         
         init(minLenght: UInt, actions: [Stage: Action]) {
@@ -88,8 +87,7 @@ extension Payments.Validation {
     
     struct MaxLengthRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let maxLength: UInt
         
         init(maxLenght: UInt, actions: [Stage: Action]) {
@@ -110,8 +108,7 @@ extension Payments.Validation {
     
     struct LengthLimitsRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let lengthLimits: Set<UInt>
         
         init(lengthLimits: Set<UInt>, actions: [Stage: Action]) {
@@ -132,8 +129,7 @@ extension Payments.Validation {
     
     struct ContainsStringRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let start: UInt
         let expected: String
         
@@ -161,8 +157,7 @@ extension Payments.Validation {
     
     struct RegExpRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let regExp: String
         
         init(regExp: String, actions: [Stage: Action]) {
@@ -181,8 +176,7 @@ extension Payments.Validation {
     
     struct OptionalRegExpRule: PaymentsValidationRulesSystemRule {
         
-        var actions: [Payments.Validation.Stage : Payments.Validation.Action]
-        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let regExp: String
         
         init(regExp: String, actions: [Stage: Action]) {

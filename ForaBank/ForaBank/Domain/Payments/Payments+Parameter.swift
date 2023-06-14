@@ -635,6 +635,7 @@ extension Payments {
         let limit: Int?
         let timerDelay: TimeInterval
         let errorMessage: String
+        //TODO: refactor to Payments.Validation.RulesSystem
         let validator: Validator
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
@@ -1235,4 +1236,90 @@ extension Payments.Validation.RulesSystem {
         
         return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
     }()
+}
+
+
+extension Array where Element == PaymentsParameterRepresentable {
+
+    var parameterAmount: Payments.ParameterAmount? {
+        compactMap {
+            $0 as? Payments.ParameterAmount
+        }.first
+    }
+    
+    var parameterProduct: Payments.ParameterProduct? {
+        compactMap {
+            $0 as? Payments.ParameterProduct
+        }.first
+    }
+    
+    var phoneParameterValue: String {
+        get throws {
+            try value(forIdentifier: .mobileConnectionPhone)
+        }
+    }
+    
+    func parameter(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) throws -> Element {
+        
+        try parameter(forId: identifier.rawValue)
+    }
+    
+    func parameter(
+        forId parameterId: Payments.Parameter.ID
+    ) throws -> Element {
+        
+        guard let parameter = first(where: { $0.id == parameterId })
+        else {
+            throw Payments.Error.missingParameter(parameterId)
+        }
+        
+        return parameter
+    }
+    
+    func parameter<T: PaymentsParameterRepresentable>(
+        forIdentifier identifier: Payments.Parameter.Identifier,
+        as type: T.Type
+    ) throws -> T {
+        
+        try parameter(forId: identifier.rawValue, as: type)
+    }
+    
+    func parameter<T: PaymentsParameterRepresentable>(
+        forId parameterId: Payments.Parameter.ID,
+        as type: T.Type
+    ) throws -> T {
+        
+        guard let parameter = first(where: { $0.id == parameterId })
+        else {
+            throw Payments.Error.missingParameter(parameterId)
+        }
+        
+        guard let result = parameter as? T
+        else {
+            throw Payments.Error.unableCreateRepresentable(parameterId)
+        }
+        
+        return result
+    }
+    
+    func value(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) throws -> String {
+        
+        try value(forId: identifier.rawValue)
+    }
+    
+    func value(
+        forId parameterId: Payments.Parameter.ID
+    ) throws -> String {
+        
+        guard let value = try parameter(forId: parameterId).value
+        else {
+            throw Payments.Error.missingValueForParameter(parameterId)
+        }
+        
+        return value
+    }
 }

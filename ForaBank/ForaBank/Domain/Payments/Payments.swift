@@ -243,7 +243,7 @@ extension Payments.Operation {
     /// Operation step
     struct Step {
         
-        let parameters: [PaymentsParameterRepresentable]
+        let parameters: [any PaymentsParameterRepresentable]
         let front: Front
         let back: Back
         
