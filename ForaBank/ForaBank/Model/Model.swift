@@ -93,8 +93,8 @@ class Model {
     //MARK: - User Settings
     let userSettings: CurrentValueSubject<[UserSettingData], Never>
 
-    //MARK: Loacation
-    let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
+    //MARK: Location
+    let currentUserLocation: CurrentValueSubject<LocationData?, Never>
 
     //MARK: Bank Client Info
     let bankClientsInfo: CurrentValueSubject<Set<BankClientInfo>, Never>
@@ -190,7 +190,7 @@ class Model {
         self.clientPhoto = .init(nil)
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
-        self.currentUserLoaction = .init(nil)
+        self.currentUserLocation = .init(nil)
         self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
@@ -945,15 +945,15 @@ class Model {
                 
             }.store(in: &bindings)
         
-        locationAgent.currentLoaction.sink { [unowned self] coordinate in
+        locationAgent.currentLocation.sink { [unowned self] coordinate in
             
             if let coordinate = coordinate {
                 
-                currentUserLoaction.value = LocationData(with: coordinate)
+                currentUserLocation.value = LocationData(with: coordinate)
                 
             } else {
                 
-                currentUserLoaction.value = nil
+                currentUserLocation.value = nil
             }
             
         }.store(in: &bindings)
@@ -1350,7 +1350,7 @@ private extension Model {
         clientInfo.value = nil
         clientPhoto.value = nil
         clientName.value = nil
-        currentUserLoaction.value = nil
+        currentUserLocation.value = nil
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []

@@ -12,7 +12,7 @@ import CoreLocation
 class LocationAgent: NSObject, LocationAgentProtocol {
     
     var status: CurrentValueSubject<LocationAgentStatus, Never>
-    var currentLoaction: CurrentValueSubject<CLLocationCoordinate2D?, Never>
+    var currentLocation: CurrentValueSubject<CLLocationCoordinate2D?, Never>
     
     private let locationManager: CLLocationManager
     private var bindings = Set<AnyCancellable>()
@@ -20,7 +20,7 @@ class LocationAgent: NSObject, LocationAgentProtocol {
     override init() {
         
         self.status = .init(.disabled)
-        self.currentLoaction = .init(nil)
+        self.currentLocation = .init(nil)
         self.locationManager = CLLocationManager()
         super.init()
         
@@ -55,7 +55,7 @@ extension LocationAgent {
             
             if status == .disabled {
                 
-                currentLoaction.value = nil
+                currentLocation.value = nil
             }
             
         }.store(in: &bindings)
@@ -83,6 +83,6 @@ extension LocationAgent: CLLocationManagerDelegate {
             return
         }
         
-        currentLoaction.value = firstLocation.coordinate
+        currentLocation.value = firstLocation.coordinate
     }
 }

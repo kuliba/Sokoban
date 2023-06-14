@@ -12,7 +12,7 @@ import CoreLocation
 protocol LocationAgentProtocol {
     
     var status: CurrentValueSubject<LocationAgentStatus, Never> { get }
-    var currentLoaction: CurrentValueSubject<CLLocationCoordinate2D?, Never> { get }
+    var currentLocation: CurrentValueSubject<CLLocationCoordinate2D?, Never> { get }
     func requestPermissions()
     func start()
     func stop()

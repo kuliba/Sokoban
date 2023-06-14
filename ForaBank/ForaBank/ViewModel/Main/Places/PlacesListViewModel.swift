@@ -21,18 +21,18 @@ class PlacesListViewModel: ObservableObject {
         self.items = items
     }
     
-    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLoaction: CLLocationCoordinate2D) {
+    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLocation: CLLocationCoordinate2D) {
         
         self.items = []
 
-        update(with: atmList, metroStationsList: metroStationsList, referenceLoaction: referenceLoaction)
+        update(with: atmList, metroStationsList: metroStationsList, referenceLocation: referenceLocation)
     }
         
-    static func atmItemsSorted(atmList: [AtmData], referenceLoaction: CLLocationCoordinate2D) -> [AtmData] {
+    static func atmItemsSorted(atmList: [AtmData], referenceLocation: CLLocationCoordinate2D) -> [AtmData] {
         
         let atmItemsWithDistances: [(item: AtmData, distance: CLLocationDistance)] = atmList.compactMap { atmItem in
             
-            guard let distance = atmItem.distance(to: referenceLoaction) else {
+            guard let distance = atmItem.distance(to: referenceLocation) else {
                 return nil
             }
             
@@ -42,14 +42,14 @@ class PlacesListViewModel: ObservableObject {
         return atmItemsWithDistances.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
     }
     
-    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLoaction: CLLocationCoordinate2D) {
+    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLocation: CLLocationCoordinate2D) {
         
-        let atmListSorted = Self.atmItemsSorted(atmList: atmList, referenceLoaction: referenceLoaction)
+        let atmListSorted = Self.atmItemsSorted(atmList: atmList, referenceLocation: referenceLocation)
         
         var items = [ItemViewModel]()
         for atmItem in atmListSorted {
             
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: referenceLoaction, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
+            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLocation: referenceLocation, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
             items.append(item)
         }
         
@@ -80,7 +80,7 @@ extension PlacesListViewModel {
             self.action = action
         }
         
-        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLoaction: CLLocationCoordinate2D?, action: @escaping () -> Void) {
+        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?, action: @escaping () -> Void) {
             
             let metroStations = metroStationsList?.filter({ atmItem.metroStationList.contains($0.id) }).map({ MetroStationViewModel(id: $0.id, name: $0.name, color: $0.color.color)})
             
@@ -89,7 +89,7 @@ extension PlacesListViewModel {
                       address: atmItem.address,
                       metro: metroStations,
                       schedule: atmItem.schedule,
-                      distance: atmItem.distanceFormatted(to: currentLoaction),
+                      distance: atmItem.distanceFormatted(to: currentLocation),
                       action: action)
             
         }
