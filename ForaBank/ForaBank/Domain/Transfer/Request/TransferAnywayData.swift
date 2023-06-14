@@ -105,16 +105,24 @@ extension TransferAnywayData {
 }
 
 extension Array where Element == TransferAnywayData.Additional {
-
-    typealias Identifier = Payments.Operation.Parameter.Identifier
     
     var sfpPhone: String? {
-     
-        self.first(where: { $0.fieldname == Identifier.sfpPhone.rawValue })?.fieldvalue
+        
+        guard let phone = value(forIdentifier: .sfpPhone)
+        else { return nil }
+        
+        return "7" + phone
     }
     
     var sfpBank: String? {
-     
-        self.first(where: { $0.fieldname == Identifier.sfpBank.rawValue })?.fieldvalue
+        
+        value(forIdentifier: .sfpBank)
+    }
+    
+    private func value(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) -> String? {
+        
+        first(where: { $0.fieldname == identifier.rawValue })?.fieldvalue
     }
 }

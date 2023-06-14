@@ -40,7 +40,8 @@ extension Model {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
             let amountParameter = Payments.ParameterAmount(
                 value: nil,

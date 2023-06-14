@@ -130,32 +130,13 @@ extension PaymentTemplateData {
         
         return transfer.amountDouble
     }
-}
-
-//MARK: - Convenience SPF Properties
-
-extension PaymentTemplateData {
     
-    var sfpPhoneNumber: String? {
+    private var transfer: TransferGeneralData? {
         
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let phone = transfer.additional.sfpPhone else {
-            return nil
-        }
-        
-        return phone
-    }
-    
-    var sfpBankId: String? {
-        
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bank = transfer.additional.sfpBank else {
-            return nil
-        }
-        
-        return bank
+        return parameterList.first as? TransferGeneralData
     }
 }
+
 
 //MARK: - Convenience Inside Bank by Phone Properties
 
@@ -163,35 +144,28 @@ extension PaymentTemplateData {
     
     var phoneNumber: String? {
         
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let phoneData = transfer.payeeInternal?.phoneNumber else {
-            return nil
-        }
+        guard let transfer,
+              let phoneData = transfer.payeeInternal?.phoneNumber
+        else { return nil }
         
         return phoneData
     }
     
     var foraBankId: String? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              transfer.payeeInternal?.phoneNumber != nil else {
-            return nil
-        }
+        
+        guard let transfer,
+              transfer.payeeInternal?.phoneNumber != nil
+        else { return nil }
         
         return "100000000217"
     }
     
     var payerProductId: Int? {
         
-        guard let transfer = parameterList.first as? TransferGeneralData else {
-            return nil
-        }
+        guard let transfer,
+              let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
+        else { return nil }
         
-        let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
-        switch productId {
-            case let .some(productId):
-                return productId
-            default:
-                return nil
-        }
+        return productId
     }
 }

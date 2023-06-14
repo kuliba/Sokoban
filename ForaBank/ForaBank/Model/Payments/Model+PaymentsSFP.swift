@@ -38,7 +38,9 @@ extension Model {
                   let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
@@ -321,6 +323,20 @@ extension Payments.ParameterAmount {
         } else {
             
             return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+        }
+    }
+}
+
+extension Model {
+    
+    static func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
+    
+        switch source {
+        case .some(.template):
+            return nil
+            
+        default:
+            return productId
         }
     }
 }

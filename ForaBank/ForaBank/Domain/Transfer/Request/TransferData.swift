@@ -66,6 +66,11 @@ extension TransferData {
             
             "cardId: \(String(describing: cardId)), accountId: \(String(describing: accountId))"
         }
+        
+        var productIdDescription: String? {
+            
+            cardId?.description ?? accountId?.description
+        }
     }
 }
 

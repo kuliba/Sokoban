@@ -29,7 +29,9 @@ extension Model {
                     operatorCode: operatorCode,
                     additionalList: dataByOperation.additionalList,
                     amount: amount,
-                    isSingle: isSingle)
+                    isSingle: isSingle,
+                    source: operation.source)
+                
             case let .template(templateId):
                 let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
                 
@@ -43,7 +45,8 @@ extension Model {
                     operatorCode: puref,
                     additionalList: nil,
                     amount: list.last?.amountDouble ?? 0,
-                    isSingle: isSingle)
+                    isSingle: isSingle,
+                    source: operation.source)
                 
             case .servicePayment(let operatorCode,
                                  let additionalList,
@@ -54,7 +57,8 @@ extension Model {
                     operatorCode: operatorCode,
                     additionalList: additionalList,
                     amount: amount,
-                    isSingle: isSingle)
+                    isSingle: isSingle,
+                    source: operation.source)
                 
             default:
                 throw Payments.Error.missingSource(operation.service)
@@ -70,7 +74,8 @@ extension Model {
         operatorCode: String,
         additionalList: [PaymentServiceData.AdditionalListData]?,
         amount: Double,
-        isSingle : Bool
+        isSingle : Bool,
+        source: Payments.Operation.Source?
     ) async throws -> Payments.Operation.Step {
         
         guard let operatorValue = self.dictionaryAnywayOperator(for: operatorCode) else {
@@ -101,7 +106,8 @@ extension Model {
         parameters.append(headerParameter)
         visible.append(headerParameter.id)
         
-        let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+        let productId = Self.productWithSource(source: source, productId: String(product.id))
+        let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
         parameters.append(productParameter)
         required.append(productParameter.id)
         let parametersList = operatorValue.parameterList.sorted { ($0.order ?? 0) < ($1.order ?? 0) }
