@@ -477,11 +477,12 @@ private extension TemplatesListViewModel {
                 
             } else {
                 guard let transfer = template.parameterList.first,
-                      let amount = template.amount else {
+                      let amount = template.amount,
+                      let currenAmount = transfer.currencyAmount else {
         
                     return nil
                 }
-                return amount.currencyFormatter(symbol: transfer.currencyAmount)
+                return amount.currencyFormatter(symbol: currenAmount)
             }
             
         }

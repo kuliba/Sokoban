@@ -96,7 +96,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         if productsFilterredMapped.count > 0 {
             if let template = self.paymentTemplate,
                let transfer = template.parameterList.first as? TransferAnywayData,
-               let cardId = transfer.payer.cardId {
+               let cardId = transfer.payer?.cardId {
                 
                 let card = productsFilterredMapped.first(where: { $0.id == cardId })
                 return card

@@ -186,7 +186,7 @@ extension PaymentTemplateData {
             return nil
         }
         
-        let productId = transfer.payer.accountId ?? transfer.payer.cardId
+        let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
         switch productId {
             case let .some(productId):
                 return productId

@@ -22,7 +22,7 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         
         XCTAssertEqual(request.puref, "iFora||4285")
         XCTAssertEqual(request.amount, 9)
-        XCTAssertEqual(request.payer.cardId, 10000184510)
+        XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9039999999")
     }
@@ -44,7 +44,7 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         
         XCTAssertEqual(request.puref, "iFora||4285")
         XCTAssertEqual(request.amount, 10)
-        XCTAssertEqual(request.payer.cardId, 10000184510)
+        XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9039999999")
     }
@@ -72,7 +72,7 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         
         XCTAssertEqual(request.puref, "iFora||4286")
         XCTAssertEqual(request.amount, 1)
-        XCTAssertEqual(request.payer.cardId, 10000184510)
+        XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_NUMBER_1_2")
         XCTAssertEqual(request.phoneNumber, "9191619658")
     }
@@ -100,7 +100,7 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         
         XCTAssertEqual(request.puref, "iFora||515A3")
         XCTAssertEqual(request.amount, 1)
-        XCTAssertEqual(request.payer.cardId, 10000184510)
+        XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_code_1_1_1")
         XCTAssertEqual(request.phoneNumber, "9999679969")
     }
@@ -122,7 +122,7 @@ final class CreateAnywayTransferHelpersTests: XCTestCase {
         
         XCTAssertEqual(request.puref, "iFora||515A3")
         XCTAssertEqual(request.amount, 10)
-        XCTAssertEqual(request.payer.cardId, 10000184510)
+        XCTAssertEqual(request.payer?.cardId, 10000184510)
         XCTAssertEqual(request.operatorID, "a3_code_1_1_1")
         XCTAssertEqual(request.phoneNumber, "9999679969")
     }
