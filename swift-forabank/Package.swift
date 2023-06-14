@@ -13,6 +13,7 @@ let package = Package(
         .textFieldComponent,
         .textFieldModel,
         .uiKitHelpers,
+        .userModel,
     ],
     dependencies: [
         .combineSchedulers,
@@ -29,6 +30,8 @@ let package = Package(
         .textFieldUI,
         .uiKitHelpers,
         .wipTests,
+        .userModel,
+        .userModelTests,
     ]
 )
 
@@ -59,6 +62,13 @@ private extension Product {
         name: .uiKitHelpers,
         targets: [
             .uiKitHelpers,
+        ]
+    )
+    
+    static let userModel = library(
+        name: .userModel,
+        targets: [
+            .userModel
         ]
     )
 }
@@ -149,6 +159,14 @@ private extension Target {
             .textFieldModel,
         ]
     )
+    
+    static let userModel = target(name: .userModel)
+    static let userModelTests = testTarget(
+        name: .userModelTests,
+        dependencies: [
+            .userModel
+        ]
+    )
 }
 
 private extension Target.Dependency {
@@ -168,6 +186,10 @@ private extension Target.Dependency {
     
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
+    )
+    
+    static let userModel = byName(
+        name: .userModel
     )
 }
 
@@ -190,6 +212,9 @@ private extension String {
     static let uiKitHelpers = "UIKitHelpers"
     
     static let wipTests = "WIPTests"
+    
+    static let userModel = "UserModel"
+    static let userModelTests = "UserModelTests"
 }
 
 // MARK: - Point-Free

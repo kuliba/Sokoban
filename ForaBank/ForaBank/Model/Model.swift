@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import os
+import UserModel
 
 class Model {
     
@@ -125,6 +126,16 @@ class Model {
     internal let imageGalleryAgent: ImageGalleryAgentProtocol
     internal let networkMonitorAgent: NetworkMonitorAgentProtocol
     
+    // Models
+    private let userModel: UserModel<ProductData.ID>
+    var preferredProductID: ProductData.ID? {
+        userModel.preferredProductValue
+    }
+    
+    var preferredProductIDPublisher: AnyPublisher<ProductData.ID?, Never> {
+        userModel.preferredProductPublisher
+    }
+    
     // private
     private var bindings: Set<AnyCancellable>
     private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
@@ -146,7 +157,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init()) {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
@@ -214,6 +225,7 @@ class Model {
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
         self.networkMonitorAgent = networkMonitorAgent
+        self.userModel = userModel
         self.bindings = []
         
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
@@ -957,6 +969,16 @@ class Model {
             }
             
         }.store(in: &bindings)
+    }
+}
+
+//MARK: - Public Methods
+
+extension Model {
+    
+    func setPreferredProductID(to productID: ProductData.ID?) {
+        
+        userModel.setPreferredProduct(to: productID)
     }
 }
 

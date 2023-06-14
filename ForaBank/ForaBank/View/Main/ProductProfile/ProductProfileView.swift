@@ -116,6 +116,8 @@ struct ProductProfileView: View {
                     case let .myProducts(myProductsViewModel):
                         MyProductsView(viewModel: myProductsViewModel)
                         
+                    case let .paymentsTransfers(paymentsTransfersViewModel):
+                        PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
                     }
                 }
             }
