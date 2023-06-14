@@ -183,7 +183,7 @@ extension ParameterData {
     
     var validator: Payments.Validation.RulesSystem {
         
-        var rules = [PaymentsValidationRulesSystemRule]()
+        var rules = [any PaymentsValidationRulesSystemRule]()
         
         if let minLength = minLength {
             

@@ -186,7 +186,7 @@ final class Model_PaymentsMobileConnectionTests: XCTestCase {
             let id = Payments.Parameter.Identifier.mobileConnectionPhone
             XCTAssertEqual(
                 error as NSError,
-                Payments.Error.missingParameter(id.rawValue) as NSError
+                Payments.Error.missingValueForParameter(id.rawValue) as NSError
             )
         }
     }

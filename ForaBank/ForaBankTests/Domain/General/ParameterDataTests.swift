@@ -180,7 +180,7 @@ private extension ParameterData {
 
 // MARK: DSL
 
-private extension Array where Element == PaymentsValidationRulesSystemRule {
+private extension Array where Element == any PaymentsValidationRulesSystemRule {
     
     var minLength: Self {
         

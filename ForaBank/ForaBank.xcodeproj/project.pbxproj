@@ -1263,6 +1263,8 @@
 		77F5CE1B28060E1D00611B66 /* GetAtmCityListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */; };
 		77F5CE1D28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */; };
 		77F5CE1F28060E6800611B66 /* GetAtmRegionListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */; };
+		77F6A86C2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F6A86B2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift */; };
+		77F6A8742A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F6A8732A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift */; };
 		77FC5E1B2940F8E0006784F4 /* QRMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */; };
 		77FC5E2229422633006784F4 /* Payments+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E2129422633006784F4 /* Payments+Validation.swift */; };
 		77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FC5E2329423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift */; };
@@ -2988,6 +2990,8 @@
 		77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmCityListResponseServer.json; sourceTree = "<group>"; };
 		77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseGeneric.json; sourceTree = "<group>"; };
 		77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseServer.json; sourceTree = "<group>"; };
+		77F6A86B2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterRepresentableArrayTests.swift; sourceTree = "<group>"; };
+		77F6A8732A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesFSSPTests.swift; sourceTree = "<group>"; };
 		77FC5E1A2940F8E0006784F4 /* QRMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRMappingTests.swift; sourceTree = "<group>"; };
 		77FC5E2129422633006784F4 /* Payments+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Validation.swift"; sourceTree = "<group>"; };
 		77FC5E2329423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemTests.swift; sourceTree = "<group>"; };
@@ -6154,11 +6158,13 @@
 		7758401927B2A0B000251969 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
+				77F6A8712A2E43BF003BDE07 /* Taxes */,
 				77CCEA6528EF034000C62215 /* PaymentsStepTests.swift */,
 				7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */,
 				77D73EE529094D7A00A956A3 /* PaymentsProcessTests.swift */,
 				77504C8C28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift */,
 				77FC5E2329423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift */,
+				77F6A86B2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift */,
 				C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */,
 			);
 			path = Payments;
@@ -7125,6 +7131,22 @@
 				77C3829427E1F72800B5246E /* Legacy */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		77F6A8712A2E43BF003BDE07 /* Taxes */ = {
+			isa = PBXGroup;
+			children = (
+				77F6A8722A2E43C8003BDE07 /* FSSP */,
+			);
+			path = Taxes;
+			sourceTree = "<group>";
+		};
+		77F6A8722A2E43C8003BDE07 /* FSSP */ = {
+			isa = PBXGroup;
+			children = (
+				77F6A8732A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift */,
+			);
+			path = FSSP;
 			sourceTree = "<group>";
 		};
 		77ED5FA82A2F78B7001BFA3D /* Main */ = {
@@ -10837,6 +10859,7 @@
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				778426302A28B91900543FB8 /* ProductProfileDetailMainBlockViewModelTests.swift in Sources */,
 				77504C8D28C8B07C00A2F444 /* PaymentsParameterHelpersTests.swift in Sources */,
+				77F6A8742A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */,
 				2A30392A2A17D25F0008701D /* PhoneTransformerTests.swift in Sources */,
@@ -10949,6 +10972,7 @@
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
 				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,
 				2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */,
+				77F6A86C2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift in Sources */,
 				77DD55CA29F1456000756451 /* TransferDataTests.swift in Sources */,
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
@@ -11284,7 +11308,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -11359,7 +11383,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -11388,7 +11412,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -11417,7 +11441,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -11510,7 +11534,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -11583,7 +11607,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -11740,7 +11764,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -11775,7 +11799,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

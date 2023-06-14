@@ -78,9 +78,19 @@ extension Model {
 
 extension Model {
     
+    //TODO: remove async in proceess of refartoring Abroad payments
     func paymentsTransferAnywayStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
+        for parameterData in response.parameterListForNextStep {
+            
+            if let parameter = try await paymentsParameterRepresentable(operation, parameterData: parameterData) {
+                
+                result.append(parameter)
+                
+            }
+        }
+        
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
@@ -91,17 +101,8 @@ extension Model {
             
             result.append(parameter)
         }
-        
-        for parameterData in response.parameterListForNextStep {
-            
-            if let parameter = try await paymentsParameterRepresentable(operation, parameterData: parameterData) {
-                
-                result.append(parameter)
-                
-            }
-        }
-        
-        if response.needSum == true {
+
+        if response.needSum {
             
             // amount
             let productParameterId = Payments.Parameter.Identifier.product.rawValue

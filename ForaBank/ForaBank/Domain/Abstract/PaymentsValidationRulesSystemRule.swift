@@ -9,7 +9,7 @@ import Foundation
 
 protocol PaymentsValidationRulesSystemRule {
     
-    var actions: [Payments.Validation.Stage: Payments.Validation.Action] { get set }
+    var actions: [Payments.Validation.Stage: Payments.Validation.Action] { get }
     func grade(_ value: Payments.Parameter.Value) -> Bool
 }
 
