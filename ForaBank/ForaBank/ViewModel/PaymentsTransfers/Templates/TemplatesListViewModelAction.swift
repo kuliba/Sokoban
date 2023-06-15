@@ -9,14 +9,72 @@ import Foundation
 
 enum TemplatesListViewModelAction {
 
-    // Toggle view style (list, tiles)
     struct ToggleStyle: Action {}
     
-    // Item tapped
-    struct ItemTapped: Action {
+    enum Item {
         
-        let itemId: TemplatesListViewModel.ItemViewModel.ID
+        struct Tapped: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
+        struct Rename: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
+        struct Delete: Action {
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+        
     }
+    
+    struct Search: Action {
+        
+        let text: String
+    }
+    
+    enum RegularNavBar {
+        
+        struct SearchNavBarPresent: Action {}
+        
+        struct RegularNavBarPresent: Action {}
+    }
+    
+    enum ReorderItems {
+        
+        struct EditModeEnabled: Action {}
+        
+        struct CloseEditMode: Action {}
+        
+        struct SaveReorder: Action {}
+        
+        struct ItemMoved: Action {
+            let move: (from: IndexSet.Element, to: Int)
+        }
+    }
+    
+    enum SearchNavBarAction {
+        
+        struct Close: Action {}
+    }
+    
+    enum RenameSheetAction {
+        
+        struct SaveNewName: Action {
+            let newName: String
+            let itemId: TemplatesListViewModel.ItemViewModel.ID
+        }
+    }
+    
+    enum ProductListAction {
+        
+        enum Item {
+            
+            struct Tapped: Action {
+                let productId: String
+            }
+        }
+    }
+    
     
     enum Delete {
     
@@ -32,17 +90,17 @@ enum TemplatesListViewModelAction {
                 let itemId: TemplatesListViewModel.ItemViewModel.ID
             }
             
+            // SelectAll/DeselectAll items
+            struct Toggle: Action {}
+            
             // Delete selected items
             struct Accept: Action {}
             
             // Exit selection mode
             struct Exit: Action {}
-        }
-        
-        // Delete single item
-        struct Item: Action {
             
-            let itemId: TemplatesListViewModel.ItemViewModel.ID
+            // cancel deleting selection
+            struct CancelDeleting: Action {}
         }
         
         // Cancel button tapped for item in deletion state
@@ -53,7 +111,11 @@ enum TemplatesListViewModelAction {
     }
     
     // Add new template action
-    struct AddTemplate: Action {}
+    struct OpenProductProfile: Action {
+        let productId: ProductData.ID
+    }
+    
+    struct AddTemplateTapped: Action {}
     
     // Action to present payment screen
     enum Present {

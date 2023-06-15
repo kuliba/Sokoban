@@ -1,7 +1,10 @@
 {
     "statusCode": 0,
     "errorMessage": null,
-    "data": [{
+    "data": {
+        "serial": "e3efwef43rwee4r4",
+        "templateList":
+    [{
         "paymentTemplateId": 279,
         "name": "Петр Петрович П.",
         "groupName": "Переводы СБП",
@@ -26,5 +29,5 @@
             ]
         }],
         "productTemplate": null
-    }]
+    }]}
 }

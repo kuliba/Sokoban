@@ -16,7 +16,7 @@ class ServerAgentTests: XCTestCase {
     func testRequest_With_ServerCommand() throws {
 
         // given
-        let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: token)
+        let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: token, serial: nil)
         
         // when
         let request = try serverAgent.request(with: command)

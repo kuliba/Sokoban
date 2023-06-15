@@ -751,16 +751,17 @@ class MainViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as TemplatesListViewModelAction.AddTemplate:
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())
 
-                    if let productFirst = model.allProducts.first {
+                    //if let productFirst = model.allProducts.first {
                 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        self.action.send(MainViewModelAction.Show.ProductProfile
+                            .init(productId: payload.productId))
                         }
-                    }
+                    //}
                     
                 default:
                     break
