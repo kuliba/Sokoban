@@ -35,6 +35,15 @@ extension TemplatesListViewModel {
             }
         }
         
+        var reorderModel: TwoButtonsNavBarViewModel? {
+            
+            if case .reorder(let viewModel) = self {
+                return viewModel
+            } else {
+                return nil
+            }
+        }
+        
         enum Events {
             case setRegular, setSearch, setDelete, setReorder
         }
@@ -45,14 +54,17 @@ extension TemplatesListViewModel {
         let leadingButton: NavigationBarButtonViewModel
         let trailingButton: NavigationBarButtonViewModel
         let title: String
+        @Published var isTrailingButtonDisable: Bool
         
         init(leadingButton: NavigationBarButtonViewModel,
              trailingButton: NavigationBarButtonViewModel,
-             title: String) {
+             title: String,
+             isTrailingButtonDisable: Bool) {
             
             self.leadingButton = leadingButton
             self.trailingButton = trailingButton
             self.title = title
+            self.isTrailingButtonDisable = isTrailingButtonDisable
         }
     }
     
@@ -125,10 +137,14 @@ extension TemplatesListViewModel {
         switch event {
         case .setRegular:
             
+            let isButtonsDisable = self.state.isPlaceholder
+            
             self.navBarState = .regular(.init(backButton: .init(icon: .ic24ChevronLeft, action: self.dismissAction),
                                               menuList: getMenuListViewModel(),
                                               searchButton: .init(icon: .ic24Search, action: {
-                self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent()) })))
+                self.action.send(TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent()) }),
+                                              isMenuDisable: isButtonsDisable,
+                                              isSearchButtonDisable: isButtonsDisable))
             
         case .setSearch:
            
@@ -142,7 +158,8 @@ extension TemplatesListViewModel {
                                              trailingButton: .init(icon: .ic24Close, action: {
                 self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
             }),
-                                             title: "Выбрать шаблоны"))
+                                             title: "Выбрать шаблоны",
+                                             isTrailingButtonDisable: false))
         case .setReorder:
             
             self.navBarState = .reorder(.init(leadingButton: .init(icon: .ic24Close, action: {
@@ -151,7 +168,8 @@ extension TemplatesListViewModel {
                                              trailingButton: .init(icon: .ic24Check, action: {
                 self.action.send(TemplatesListViewModelAction.ReorderItems.SaveReorder())
             }),
-                                             title: "Последовательность"))
+                                              title: "Последовательность",
+                                              isTrailingButtonDisable: true))
         }
         
     }
@@ -188,7 +206,7 @@ extension TemplatesListViewModel {
             menuItems.append(styleMenuItem)
         }
         
-        let deleteMenuItem = MenuItemViewModel(icon: .ic24Trash,//Image("trash_empty"),
+        let deleteMenuItem = MenuItemViewModel(icon: .ic24Trash,
                                                textImage: "ic24Trash",
                                                title: "Удалить") { [weak self] in
             self?.action.send(TemplatesListViewModelAction.Delete.Selection.Enter())

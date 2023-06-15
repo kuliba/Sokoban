@@ -89,13 +89,6 @@ private extension TemplatesListViewModel {
 
                 switch action {
                     
-                case let payload as ModelAction.PaymentTemplate.Delete.Complete:
-                    
-                    self.itemsRaw.value.removeAll { item in
-                         
-                        payload.paymentTemplateIdList.contains(item.id)
-                    }
-                    
                 case _ as ModelAction.PaymentTemplate.List.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
@@ -128,6 +121,8 @@ private extension TemplatesListViewModel {
                         .init(informer: .init(message: "Не удалось сохранить изменения",
                                               icon: .close)))
                     
+                    self.action.send(TemplatesListViewModelAction.ReorderItems.CloseEditMode())
+                    
                 default: break
                 }
             }.store(in: &bindings)
@@ -158,7 +153,8 @@ private extension TemplatesListViewModel {
                             let selector = self.categorySelector?.selected
                             
                             withAnimation {
-                               
+                                
+                                self.state = .normal
                                 self.itemsRaw.value = templatesVM
                                 let newCategorySelector = getCategorySelectorModel(with: templates)
                                 bindCategorySelector(newCategorySelector)
@@ -166,30 +162,9 @@ private extension TemplatesListViewModel {
                                     newCategorySelector.selected = selector
                                 }
                                 self.categorySelector = newCategorySelector
-                                    
-                                self.state = .normal
                             }
                         }
                     }
-                }
-            }.store(in: &bindings)
-        
-        itemsRaw
-            .combineLatest(model.paymentTemplatesUpdating)
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] itemsRaw, isUpdating in
-               
-                guard !itemsRaw.isEmpty,
-                      case .normal = self.state
-                else { return }
-                
-                withAnimation {
-                    
-                    self.items = reduceItems(rawItems: itemsRaw,
-                                             isDataUpdating: isUpdating,
-                                             categorySelected: self.categorySelector?.selected,
-                                             searchText: self.navBarState.searchModel?.searchText,
-                                             isAddItemNeeded: true)
                 }
             }.store(in: &bindings)
         
@@ -201,7 +176,8 @@ private extension TemplatesListViewModel {
                 case let .regular(viewModel):
                     
                     if items.contains(where: { $0.kind == .deleting || $0.kind == .placeholder })
-                        || items.filter({ $0.kind == .regular }).isEmpty {
+                        || items.filter({ $0.kind == .regular }).isEmpty
+                        || state.isPlaceholder {
                         
                         viewModel.isMenuDisable = true
                         viewModel.isSearchButtonDisable = true
@@ -230,7 +206,7 @@ private extension TemplatesListViewModel {
                     let productsFilterred = model.products.value.filter { dict in
                         dict.key == .card || dict.key == .account
                     }
-                    let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": false, "ACCOUNT": true] )
+                    let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": true, "ACCOUNT": true] )
                     
                     let productSections = MyProductsViewModel
                                             .updateViewModel(with: productsFilterred,
@@ -318,7 +294,7 @@ private extension TemplatesListViewModel {
                     
                     updateNavBar(event: .setRegular)
             
-            //MARK: Enabled Reorder
+        //MARK: Enabled Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.EditModeEnabled:
                     
                     withAnimation {
@@ -337,17 +313,18 @@ private extension TemplatesListViewModel {
                     let newCategorySelector = getCategorySelectorModel(with: model.paymentTemplates.value)
                     
                     withAnimation {
-                        
+                        self.state = .normal
                         self.editModeState = .inactive
                         self.updateNavBar(event: .setRegular)
                         self.categorySelector = newCategorySelector
                         bindCategorySelector(newCategorySelector)
-                    }
+                   }
                 
             //Save Reorder
                 case _ as TemplatesListViewModelAction.ReorderItems.SaveReorder:
                     
                     self.editModeState = .inactive
+                    self.state = .placeholder
                     self.updateNavBar(event: .setRegular)
                     
                     var sortIndex = 1
@@ -360,28 +337,24 @@ private extension TemplatesListViewModel {
                         }
                     }
                     
-                    guard !newOrders.isEmpty else { return }
+                    guard !newOrders.isEmpty
+                    else {
+                        self.action.send(TemplatesListViewModelAction.ReorderItems.CloseEditMode())
+                        return
+                    }
                     
                     model.action.send(ModelAction.PaymentTemplate.Sort.Requested(sortDataList: newOrders))
                     
-                    let newCategorySelector = getCategorySelectorModel(with: model.paymentTemplates.value)
-                    
-                    withAnimation {
-                        self.categorySelector = newCategorySelector
-                    }
-                   
-                    bindCategorySelector(newCategorySelector)
-                    self.itemsRaw.value = self.items
-              
             // Item Moved
                 case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
 
                     self.items = Self.reduce(rawItems: self.items, move: payload.move)
-                    if editModeState == .inactive {
-                        self.action.send(TemplatesListViewModelAction.ReorderItems.EditModeEnabled())
-                    }
-               
-            //MARK: - MultiDeleting
+                    
+                    self.navBarState
+                        .reorderModel?
+                        .isTrailingButtonDisable = self.items.map(\.id) == self.itemsRaw.value.map(\.id)
+                    
+        //MARK: - MultiDeleting
                     
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
@@ -506,12 +479,10 @@ private extension TemplatesListViewModel {
                     
                     withAnimation {
                         
+                        self.items.removeAll { deleteGroupItemsId.contains($0.id) }
                         self.items.insert(itemVM, at: 0)
-                        self.items.removeAll { item in
-                            
-                            deleteGroupItemsId.contains(item.id)
-                        }
                     }
+                    self.idList = UUID() //focus on first item in list
                     
                     itemVM.timer?.timerPublisher
                         .receive(on: DispatchQueue.main)
@@ -520,12 +491,11 @@ private extension TemplatesListViewModel {
                         })
                         .sink { [unowned self, unowned timer] timerValue in
                             
-                            if timerValue < timer.maxCount + 1 {
-
-                                deletingViewModel.progress = timer.maxCount - timerValue
-                                deletingViewModel.countTitle = "\(timer.maxCount - timerValue)"
-
-                            } else {
+                            let current = timer.maxCount - timerValue
+                            deletingViewModel.progress = current
+                            deletingViewModel.countTitle = "\(current)"
+                            
+                            if current == 0 {
                                 
                                 deletingViewModel.isDisableCancelButton = true
                                 model.action.send(ModelAction.PaymentTemplate.Delete.Requested
@@ -645,11 +615,14 @@ private extension TemplatesListViewModel {
             .receive(on: DispatchQueue.main)
             .sink{ [unowned self]  selectedCategoryIndex in
                 
-                self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                         isDataUpdating: model.paymentTemplatesUpdating.value,
-                                         categorySelected: selectedCategoryIndex,
-                                         searchText: self.navBarState.searchModel?.searchText,
-                                         isAddItemNeeded: !self.state.isSelect)
+                withAnimation {
+                 
+                    self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                             isDataUpdating: false,
+                                             categorySelected: selectedCategoryIndex,
+                                             searchText: self.navBarState.searchModel?.searchText,
+                                             isAddItemNeeded: !self.state.isSelect)
+                }
             }.store(in: &bindings)
     }
     
@@ -899,9 +872,9 @@ private extension TemplatesListViewModel {
             newItems = sortedItems(filterredItems(newItems, categorySelected))
         }
             
-        if isDataUpdating {
-            newItems.insert(.init(kind: .placeholder), at: 0)
-        }
+        //if isDataUpdating {
+        //    newItems.insert(.init(kind: .placeholder), at: 0)
+        //}
           
         if isAddItemNeeded {
             newItems.append(getItemAddNewTemplateModel())
@@ -956,29 +929,10 @@ extension TemplatesListViewModel {
             
         } else {
             
-            return rawItems.filter{ $0.title.capitalized.contains(searchText.capitalized) }
+            return rawItems.filter({$0.title.localizedCaseInsensitiveContains(searchText)})
+                
         }
-       
-        /*
-        var tempItems = itemsRaw.value
-        
-        if let selectedCategoryIndex = categorySelector?.selected {
-            
-            tempItems = sortedItems(filterredItems(itemsRaw.value, selectedCategoryIndex))
-        }
-        
-        if searchText.isEmpty {
-            
-            return tempItems
-            
-        } else {
-            
-            return tempItems.filter{ $0.title.capitalized.contains(searchText.capitalized) }
-        }
-        */
     }
-    
-    
 }
 
 //MARK: - Local View Models
@@ -1087,6 +1041,15 @@ extension TemplatesListViewModel {
         var isSelect: Bool {
             
             if case .select = self {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        var isPlaceholder: Bool {
+            
+            if case .placeholder = self {
                 return true
             } else {
                 return false

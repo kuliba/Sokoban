@@ -249,9 +249,9 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     
-                    guard let data = response.data,
-                          !data.templateList.isEmpty
+                    guard let data = response.data, serial != data.serial
                     else { return }
+                    
                         
                     // update model data
                     self.paymentTemplates.value = data.templateList

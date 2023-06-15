@@ -81,7 +81,11 @@ extension TemplatesListView {
                 }
                 
                 Button(action: viewModel.trailingButton.action,
-                       label: { viewModel.trailingButton.icon })
+                       label: { viewModel.trailingButton.icon
+                                    .opacity(viewModel.isTrailingButtonDisable ? 0.4 : 1.0)
+                })
+                .disabled(viewModel.isTrailingButtonDisable)
+                
             }
             .foregroundColor(.textSecondary)
             .overlay13 {
@@ -191,7 +195,8 @@ struct TemplatesNavBar_Previews: PreviewProvider {
                                                        trailingButton: .init(title: "",
                                                                           icon: .ic24Close,
                                                                              action: {}),
-                                                       title: "Выбрать шаблоны"))
+                                                       title: "Выбрать шаблоны",
+                                                       isTrailingButtonDisable: true))
                         }
                     }
             }

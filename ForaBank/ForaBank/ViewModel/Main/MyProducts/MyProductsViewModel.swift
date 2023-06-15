@@ -148,6 +148,7 @@ class MyProductsViewModel: ObservableObject {
                                 .forEach { $0.sideButton = nil }
                         
                         self.editModeState = .active
+                        sections.forEach { $0.idList = UUID() }
                         
                         if !self.settingsOnboarding.isOpenedReorder {
                             self.settingsOnboarding.isOpenedReorder = true

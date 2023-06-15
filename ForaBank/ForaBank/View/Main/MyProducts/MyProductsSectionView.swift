@@ -106,12 +106,13 @@ struct MyProductsSectionView: View {
                         viewModel.action.send(MyProductsSectionViewModelAction
                                                 .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
                     }
-            
+                    .moveDisabled(editMode != .active)
                 } //List
                 .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
                 .listStyle(.plain)
                 .environment(\.editMode, $editMode)
                 .opacity(viewModel.isCollapsed ? 0 : 1)
+                .id(viewModel.idList)
                 
         } //VStack section
         .background(Color.barsBars)

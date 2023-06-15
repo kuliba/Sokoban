@@ -254,6 +254,7 @@ extension TemplatesListView {
     struct ProductListView: View {
         
         @ObservedObject var viewModel: TemplatesListViewModel.ProductListViewModel
+        @Environment(\.mainViewSize) var mainViewSize
         
         var body: some View {
             
@@ -272,12 +273,20 @@ extension TemplatesListView {
                             
                             MyProductsSectionView(viewModel: sectionVM,
                                                   editMode: .constant(.inactive))
+                            .onAppear {
+                                
+                                if ProductType(rawValue: sectionVM.id) == .card {
+                                    sectionVM.isCollapsed = false
+                                }
+                            }
                         }
                     }
                 }
-                .frame(height: viewModel.containerHeight)
-                    
+                .frame(height: mainViewSize.height - 40 > viewModel.containerHeight
+                                ? viewModel.containerHeight
+                                : mainViewSize.height - 40)
             } //VStack section
+            .padding(.bottom, 16)
     
         }
     }
