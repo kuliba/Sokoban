@@ -12,6 +12,7 @@ fileprivate typealias IconData = [String: String]
 fileprivate typealias Model = ItemSelectModel<Country>
 fileprivate typealias ViewModel = IconedItemSelectViewModel<Country, IconData>
 
+@available(iOS 16.0.0, *)
 @available(macOS 13.0.0, *)
 final class IconedItemSelectViewModelTests: XCTestCase {
     

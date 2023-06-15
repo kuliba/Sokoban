@@ -11,18 +11,20 @@ import Combine
 class PaymentsServicesViewModel: ObservableObject {
     
     typealias ItemViewModel = PaymentsServicesOperatorItemView.ViewModel
-
+    typealias OpenCityViewPublisher = AnyPublisher<PaymentsServicesViewModelWithNavBarAction.OpenCityView, Never>
+    typealias MakePaymentsViewModel = (Payments.Operation.Source) -> PaymentsViewModel
+    typealias MakeSearchCityViewModel = (String, [OperatorGroupData.OperatorData], @escaping (String) -> Void) -> SearchCityViewModel
+    
     static let allRegion = "Все регионы"
     
-    let model: Model
-    let navigationBar: NavigationBarView.ViewModel
     let searchBar: SearchBarView.ViewModel
+    let navigationBar: NavigationBarView.ViewModel
     let noCompanyInListViewModel: NoCompanyInListViewModel
- 
+    
     let allOperators: [OperatorGroupData.OperatorData]
     
     @Published var latestPayments: PaymentsServicesLatestPaymentsSectionViewModel
-
+    
     @Published var operators: [ItemViewModel] = []
     @Published var filteredOperators: [ItemViewModel] = []
     @Published var sheet: Sheet?
@@ -30,137 +32,243 @@ class PaymentsServicesViewModel: ObservableObject {
     @Published var isLinkActive: Bool = false
     @Published var searchValue: SearchValue = .empty
     
+    private let openCityViewPublisher: OpenCityViewPublisher
+    private let makePaymentsViewModel: MakePaymentsViewModel
+    private let makeSearchCityViewModel: MakeSearchCityViewModel
+    
     private var bindings = Set<AnyCancellable>()
     
-    init(searchBar: SearchBarView.ViewModel, navigationBar: NavigationBarView.ViewModel, model: Model, latestPayments: PaymentsServicesLatestPaymentsSectionViewModel, allOperators: [OperatorGroupData.OperatorData], addCompanyAction: @escaping () -> Void, requisitesAction: @escaping () -> Void) {
-        
-        self.searchBar = searchBar
+    init(
+        searchBar: SearchBarView.ViewModel,
+        navigationBar: NavigationBarView.ViewModel,
+        latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
+        allOperators: [OperatorGroupData.OperatorData],
+        openCityViewPublisher: PaymentsServicesViewModel.OpenCityViewPublisher,
+        makePaymentsViewModel: @escaping PaymentsServicesViewModel.MakePaymentsViewModel,
+        makeSearchCityViewModel: @escaping PaymentsServicesViewModel.MakeSearchCityViewModel,
+        addCompanyAction: @escaping () -> Void,
+        requisitesAction: @escaping () -> Void
+    ) {
         self.navigationBar = navigationBar
-        self.model = model
+        self.searchBar = searchBar
+        self.noCompanyInListViewModel = .init(
+            title: NoCompanyInListViewModel.defaultTitle,
+            content: NoCompanyInListViewModel.defaultContent,
+            subtitle: NoCompanyInListViewModel.defaultSubtitle,
+            addCompanyAction: addCompanyAction,
+            requisitesAction: requisitesAction
+        )
         self.allOperators = allOperators
-        self.noCompanyInListViewModel = .init(title: NoCompanyInListViewModel.defaultTitle, content: NoCompanyInListViewModel.defaultContent, subtitle: NoCompanyInListViewModel.defaultSubtitle, addCompanyAction: addCompanyAction, requisitesAction: requisitesAction)
         self.latestPayments = latestPayments
+        self.openCityViewPublisher = openCityViewPublisher
+        self.makePaymentsViewModel = makePaymentsViewModel
+        self.makeSearchCityViewModel = makeSearchCityViewModel
+        
         self.setStartValues()
-        bind()
+        self.bind()
     }
-   
+
     func bind() {
-   
+        
         searchBar.textFieldModel.textPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
                 
                 self.operatorsFilter(by: .init(value: value, region: self.navigationBar.title))
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         latestPayments.action
+            .compactMap { $0 as? PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] payload in
                 
-                switch action {
-                case let payload as PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped:
-                    Task { [weak self] in
-                        
-                        guard let self = self else { return }
-                        
-                        let paymentsViewModel = PaymentsViewModel(
-                            source: .servicePayment(puref: payload.latestPayment.puref,
-                                                additionalList: payload.latestPayment.additionalList,
-                                                amount: payload.latestPayment.amount),
-                            model: model,
-                            closeAction: { [weak self] in
-                                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                                
-                            })
-                        await MainActor.run { [weak self] in
-                            self?.link = .init(.payments(paymentsViewModel))
-                        }
+                Task { [weak self] in
+                    
+                    guard let self = self else { return }
+                    
+                    let paymentsViewModel = makePaymentsViewModel(
+                        .servicePayment(
+                            puref: payload.latestPayment.puref,
+                            additionalList: payload.latestPayment.additionalList,
+                            amount: payload.latestPayment.amount
+                        )
+                    )
+                    
+                    await MainActor.run { [weak self] in
+                        self?.link = .init(.payments(paymentsViewModel))
                     }
-                default:
-                    break
                 }
             }.store(in: &bindings)
         
-        model.action
+        openCityViewPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] _ in
                 
-                switch action {
-                    
-                case _ as PaymentsServicesViewModelWithNavBarAction.OpenCityView:
-                    self.sheet = .init(sheetType: .city(.init(model: model,
-                                                              searchView: .withText("Введите название"),
-                                                              operators: allOperators,
-                                                              action: { region in
-                        
-                        self.navigationBar.title = region
-                        self.operatorsFilter(by: .init(value: self.searchBar.text, region: self.navigationBar.title))
-                        self.searchValue = .noEmpty
-                        self.sheet = nil
-                    })))
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
+                self.sheet = .init(
+                    sheetType: .city(
+                        makeSearchCityViewModel("Введите название", allOperators) { region in
+                            
+                            self.navigationBar.title = region
+                            self.operatorsFilter(by: .init(value: self.searchBar.text, region: self.navigationBar.title))
+                            self.searchValue = .noEmpty
+                            self.sheet = nil
+                        }
+                    )
+                )
+            }
+            .store(in: &bindings)
     }
-    
 }
 
-//MARK: - Action
+// MARK: Convenience: to use with Model
+
+extension PaymentsServicesViewModel {
+    
+    convenience init(
+        searchBar: SearchBarView.ViewModel,
+        navigationBar: NavigationBarView.ViewModel,
+        model: Model,
+        latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
+        allOperators: [OperatorGroupData.OperatorData],
+        addCompanyAction: @escaping () -> Void,
+        requisitesAction: @escaping () -> Void
+    ) {
+        let openCityViewPublisher = model.action
+            .compactMap { $0 as? PaymentsServicesViewModelWithNavBarAction.OpenCityView }
+            .eraseToAnyPublisher()
+        
+        self.init(
+            searchBar: searchBar,
+            navigationBar: navigationBar,
+            latestPayments: latestPayments,
+            allOperators: allOperators,
+            openCityViewPublisher: openCityViewPublisher,
+            makePaymentsViewModel: model.makePaymentsViewModel(source:),
+            makeSearchCityViewModel: model.makeSearchCityViewModel(placeholderText:operators:action:),
+            addCompanyAction: addCompanyAction,
+            requisitesAction: requisitesAction
+        )
+    }
+}
+
+// MARK: - Action
 
 enum PaymentsServicesViewModelWithNavBarAction {
     
     struct OpenCityView: Action {}
 }
 
-//MARK: - Private helpers
+// MARK: - Private helpers
+
+extension Model {
+    
+    func makePaymentsViewModel(
+        source: Payments.Operation.Source
+    ) -> PaymentsViewModel {
+        
+        return .init(
+            source: source,
+            model: self,
+            closeAction: { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+    }
+    
+    func makeSearchCityViewModel(
+        placeholderText: String,
+        operators: [OperatorGroupData.OperatorData],
+        action: @escaping (String) -> Void
+    ) -> SearchCityViewModel {
+        
+        .init(
+            model: self,
+            searchView: .withText(placeholderText),
+            operators: operators,
+            action: action
+        )
+    }
+}
 
 extension PaymentsServicesViewModel {
     
     private func setStartValues() {
         
-        self.operators = self.reduceOperators(operatorsList: allOperators)
-    }
-    
-    private func reduceOperators(operatorsList: [OperatorGroupData.OperatorData]) -> [ItemViewModel] {
-        
-        let items: [ItemViewModel] = operatorsList.filter({ !$0.parameterList.isEmpty }).map {
-
-            let operatorSubtitle = operatorSubtitle(for: $0.description)
-            return ItemViewModel.init(code: $0.code, icon: $0.iconImageData, name: $0.name, description: operatorSubtitle, region: $0.region, action: { [weak self] code in
-                guard let model = self?.model else { return }
-                Task { [weak self] in
-                    
-                    guard let self = self else { return }
-                    
-                    let paymentsViewModel = PaymentsViewModel(
-                        source: .servicePayment(puref: code, additionalList: .none, amount: 0),
-                        model: model,
-                        closeAction: { [weak self] in
-                            self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                        })
-                    await MainActor.run { [weak self] in
-                        self?.link = .init(.payments(paymentsViewModel))
+        let action: (String) -> Void = { code in
+            
+            Task { [weak self] in
+                
+                guard let self else { return }
+                
+                let link: Link
+                
+                switch code {
+                case Purefs.avtodorGroup:
+                    let action: (String) -> Void = { puref in
+                        
+                        Task { [weak self] in
+                            
+                            guard let self = self else { return }
+                            
+                            let paymentsViewModel = makePaymentsViewModel(
+                                .servicePayment(
+                                    puref: puref,
+                                    additionalList: [],
+                                    amount: 0
+                                )
+                            )
+                            
+                            await MainActor.run { [weak self] in
+                                self?.link = .init(.payments(paymentsViewModel))
+                            }
+                        }
                     }
+                    link = .avtodor(action)
+
+                case Purefs.iFora4990MosParking:
+                    link = .mosParking
+
+                default:
+                    let paymentsViewModel = makePaymentsViewModel(
+                        .servicePayment(puref: code, additionalList: .none, amount: 0)
+                    )
+                    link = .payments(paymentsViewModel)
                 }
-            })
+                
+                await MainActor.run { [weak self] in self?.link = link }
+            }
         }
         
-        let sortedItems = items.sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.caseInsensitiveCompare($1.name) == .orderedAscending})
-        
-        return sortedItems
-    }
-        
-    private func operatorSubtitle (for description: String?) -> String {
-        if let desc = description, !desc.isEmpty {
-            return "ИНН \(desc)"
-        }
-        return ""
+        self.operators = Self.reduceOperators(operatorsList: allOperators, action: action)
     }
     
-    private func operatorsConditions (searchValue: SearchValueForOperator, allRegionsName: String) -> [(ItemViewModel) -> Bool] {
-
+    static func reduceOperators(
+        operatorsList: [OperatorGroupData.OperatorData],
+        action: @escaping (String) -> Void
+    ) -> [ItemViewModel] {
+        
+        return operatorsList
+            .filter { !$0.parameterList.isEmpty }
+            .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
+            .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
+            .map {
+                
+                return .makeItemViewModel(from: $0, with: action)
+            }
+    }
+        
+    private func operatorSubtitle(for description: String?) -> String {
+        
+        guard let desc = description, !desc.isEmpty
+        else { return "" }
+        
+        return "ИНН \(desc)"
+    }
+    
+    private func operatorsConditions(searchValue: SearchValueForOperator, allRegionsName: String) -> [(ItemViewModel) -> Bool] {
+        
         let conditions: [(ItemViewModel) -> Bool] = [
             {
                 if searchValue.region != allRegionsName {
@@ -172,7 +280,7 @@ extension PaymentsServicesViewModel {
                 if let identifier = searchValue.value, !identifier.isEmpty {
                     
                     let searchType: SearchType = identifier.isOnlyDigits ? .inn : .name
-
+                    
                     switch searchType {
                         
                     case .name:
@@ -180,32 +288,67 @@ extension PaymentsServicesViewModel {
                     case .inn:
                         return ($0.description?.lowercased() ?? "").contains(identifier.lowercased())
                     }
+                } else {
+                    return true
                 }
-                else { return true }
             }
         ]
+        
         return conditions
     }
     
     private func operatorsFilter(by value: SearchValueForOperator) {
         
-        let conditions: [(ItemViewModel) -> Bool] = operatorsConditions(searchValue: .init(value: value.value, region: value.region), allRegionsName: PaymentsServicesViewModel.allRegion)
-
-        filteredOperators = operators.filter {
-            operatorValue in
+        let conditions: [(ItemViewModel) -> Bool] = operatorsConditions(
+            searchValue: .init(value: value.value, region: value.region),
+            allRegionsName: PaymentsServicesViewModel.allRegion
+        )
+        
+        filteredOperators = operators.filter { operatorValue in
             conditions.reduce(true) { $0 && $1(operatorValue) }
         }
-
-        if filteredOperators.count == 0, let searchValue = value.value, !searchValue.isEmpty {
+        
+        if filteredOperators.isEmpty,
+           let searchValue = value.value,
+           !searchValue.isEmpty {
             
             self.searchValue = .noResult
             return
         }
+        
         self.searchValue = (value.value ?? "").isEmpty ? .empty : .noEmpty
     }
 }
 
-//MARK: - Types
+// MARK: - Mapper
+
+extension PaymentsServicesViewModel.ItemViewModel {
+    
+    static func makeItemViewModel(
+        from operatorData: OperatorGroupData.OperatorData,
+        with action: @escaping (String) -> Void
+    ) -> PaymentsServicesViewModel.ItemViewModel {
+        
+        return .init(
+            code: operatorData.code,
+            icon: operatorData.iconImageData,
+            name: operatorData.name,
+            description: operatorSubtitle(for: operatorData.description),
+            region: operatorData.region,
+            action: action
+        )
+    }
+    
+    private static func operatorSubtitle(for description: String?) -> String {
+        
+        guard let desc = description, !desc.isEmpty
+        else { return "" }
+        
+        return "ИНН \(desc)"
+    }
+}
+
+// MARK: - Types
 
 extension PaymentsServicesViewModel {
     
@@ -223,8 +366,10 @@ extension PaymentsServicesViewModel {
     enum Link {
         
         case payments(PaymentsViewModel)
+        #warning("replace with strong type")
+        case avtodor((String) -> Void)
         case operation(InternetTVDetailsViewModel) // legacy!!!!!!
-        
+        case mosParking
     }
     
     enum SearchValue {
@@ -245,5 +390,4 @@ extension PaymentsServicesViewModel {
         let value: String?
         let region: String?
     }
-
 }

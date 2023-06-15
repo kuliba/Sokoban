@@ -942,11 +942,13 @@ extension PaymentsSourceReducerTemplateTests {
 extension Model {
     
     func stubPaymentTemplates(
+        paymentTemplateId: Int = 2513,
         for type: PaymentsSourceReducerTemplateTests.Kind
     ) {
         
         let transferData = TransferGeneralData.generalStub()
         let template = PaymentTemplateData.templateStub(
+            paymentTemplateId: paymentTemplateId,
             type: type,
             parameterList: transferData
         )

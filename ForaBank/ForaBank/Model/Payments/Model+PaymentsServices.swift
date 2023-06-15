@@ -178,6 +178,11 @@ extension Model {
         if parameterData.viewType == .input {
             
             let operatorParameterId = parameterData.id
+            let value = additionalList?
+                .filter({ $0.fieldName == operatorParameterId })
+                .first?
+                .fieldValue
+            
             switch parameterData.view {
                 
             case .input:
@@ -189,41 +194,26 @@ extension Model {
                     let additionalValue = additionalList.filter({$0.fieldName == operatorParameterId}).first
                     value = additionalValue?.fieldValue ?? nil
                 }
-                return (Payments.ParameterInput(
+                return Payments.ParameterInput(
                     .init(id: operatorParameterId, value: value),
                     icon: (ImageData(with: parameterData.svgImage ?? .init(description: ""))),
                     title: parameterData.title,
                     validator: .init(rules: [regExp]),
-                    inputType: .default))
+                    inputType: .default
+                )
                 
             case .select:
                 
-                if let options = parameterData.options(style: .general) {
+                if let options = parameterData.options(style: .general)
+                    ?? parameterData.options(style: .extended) {
                     
-                    var value: String?
-                    if let additionalList = additionalList {
-                        let additionalValue = additionalList.filter({$0.fieldName == operatorParameterId}).first
-                        value = additionalValue?.fieldValue ?? nil
-                    }
-                    return (Payments.ParameterSelect(
+                    return Payments.ParameterSelect(
                         Payments.Parameter(id: operatorParameterId, value: value),
                         icon: .image(parameterData.iconData ?? .iconInput),
                         title: parameterData.title,
                         placeholder: "Начните ввод для поиска",
-                        options: options.map({ .init(id: $0.id, name: $0.name)})))
-                } else if let options = parameterData.options(style: .extended) {
-                    
-                    var value: String?
-                    if let additionalList = additionalList {
-                        let additionalValue = additionalList.filter({$0.fieldName == operatorParameterId}).first
-                        value = additionalValue?.fieldValue ?? nil
-                    }
-                    return (Payments.ParameterSelect(
-                        Payments.Parameter(id: operatorParameterId, value: value),
-                        icon: .image(parameterData.iconData ?? .iconInput),
-                        title: parameterData.title,
-                        placeholder: "Начните ввод для поиска",
-                        options: options.map({ .init(id: $0.id, name: $0.name)})))
+                        options: options.map({ .init(id: $0.id, name: $0.name)})
+                    )
                 }
                 
             default:
@@ -449,7 +439,6 @@ extension Model {
         )
     }
     
-    
     func paymentsProcessRemoteServicesComplete(
         code: String,
         operation: Payments.Operation
@@ -479,7 +468,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsProcessOperationResetVisibleToPaymentsServices(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+    func paymentsProcessOperationResetVisibleToPaymentsServices(_ operation: Payments.Operation) -> [Payments.Parameter.ID]? {
         
         // check if current step stage is confirm
         guard case .remote(let remote) = operation.steps.last?.back.stage,
@@ -549,6 +538,24 @@ extension Model {
         default:
             throw Payments.Error.missingSource(operation.service)
         }
+    }
+    
+    /// Return `Operator` for given a `Operator Code` (`puref`).
+    func paymentsOperator(
+        forOperatorCode operatorCode: String
+    ) throws -> Payments.Operator {
+        
+        guard let parentCode = self.dictionaryAnywayOperator(for: operatorCode)?.parentCode
+        else {
+            throw Payments.Error.missingOperator(forCode: operatorCode)
+        }
+        
+        guard let operatorr = Payments.Operator(rawValue: parentCode)
+        else {
+            throw Payments.Error.missingOperator(forCode: parentCode)
+        }
+        
+        return operatorr
     }
 }
 

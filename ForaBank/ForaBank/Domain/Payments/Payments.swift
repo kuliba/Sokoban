@@ -20,7 +20,7 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .utility]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .utility, .transport]
             case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -65,7 +65,7 @@ enum Payments {
         case change
         case internetTV
         case utility
-
+        case transport
     }
     
     enum Operator: String {
@@ -87,13 +87,15 @@ enum Payments {
         case change            = "change"
         case internetTV        = "iFora||1051001"
         case utility           = "iFora||1031001"
+        case transport         = "iFora||1051062"
     }
     
     static var paymentsServicesOperators: [Operator] {
         
         [
             .internetTV,
-            .utility
+            .utility,
+            .transport
         ]
     }
     
@@ -101,9 +103,10 @@ enum Payments {
         
         switch paymentsType {
             
-        case .service:  return .utility
-        case .internet: return .internetTV
-        default:        return .none
+        case .service:   return .utility
+        case .internet:  return .internetTV
+        case .transport: return .transport
+        default:         return .none
         }
     }
 }
@@ -326,6 +329,7 @@ extension Payments.Operation {
         case change
         case internetTV
         case utility
+        case transport
     }
     
     enum Action: Equatable {
@@ -461,6 +465,8 @@ extension Payments {
         case missingValue(ParameterData)
         case missingSource(Service)
         
+        case missingOperator(forCode: String)
+        
         case action(Action)
         case ui(UI)
 
@@ -512,7 +518,10 @@ extension Payments {
             
             case let .missingValueForParameter(parameterId):
                 return "Missing value for parameter: \(parameterId)"
-                
+
+            case let .missingOperator(forCode: code):
+                return "Missing operator for code: \(code)"
+            
             case let .action(action):
                 switch action {
                 case let .warning(parameterId: parameterId, message: message):

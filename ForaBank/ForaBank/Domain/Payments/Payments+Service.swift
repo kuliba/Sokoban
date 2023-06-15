@@ -26,6 +26,7 @@ extension Payments.Service {
         case .change:           return [.change]
         case .internetTV:       return [.internetTV]
         case .utility:          return [.utility]
+        case .transport:        return [.transport]
         }
     }
     
@@ -56,6 +57,7 @@ extension Payments.Service {
         case .change:            return .change
         case .internetTV:        return .internetTV
         case .utility:           return .utility
+        case .transport:         return .transport
         }
     }
 }
