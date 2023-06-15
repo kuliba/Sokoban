@@ -34,25 +34,26 @@ extension PaymentTemplateData {
     static func templateStub(
         paymentTemplateId: Int = 2513,
         type: Kind,
-        parameterList: [TransferData]) -> PaymentTemplateData {
-            
-            let template = getTemplate(
-                groupName: "groupName",
-                name: "name",
-                parameterList: parameterList,
-                paymentTemplateId: paymentTemplateId,
-                sort: 0,
-                svgImage: .init(description: ""),
-                type: type)
-            
-            return .init(
-                groupName: template.groupName,
-                name: template.name,
-                parameterList: parameterList,
-                paymentTemplateId: template.id,
-                productTemplate: template.productTemplate,
-                sort: template.sort,
-                svgImage: template.svgImage,
-                type: type)
-        }
+        parameterList: [TransferData]
+    ) -> PaymentTemplateData {
+        
+        let template = getTemplate(
+            groupName: "groupName",
+            name: "name",
+            parameterList: parameterList,
+            paymentTemplateId: paymentTemplateId,
+            sort: 0,
+            svgImage: .init(description: ""),
+            type: type)
+        
+        return .init(
+            groupName: template.groupName,
+            name: template.name,
+            parameterList: parameterList,
+            paymentTemplateId: template.id,
+            productTemplate: template.productTemplate,
+            sort: template.sort,
+            svgImage: template.svgImage,
+            type: type)
+    }
 }

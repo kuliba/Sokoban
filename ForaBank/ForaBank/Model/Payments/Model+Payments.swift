@@ -113,7 +113,7 @@ extension Model {
         }
     }
         
-    func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
+    func paymentsService(for source: Payments.Operation.Source) throws -> Payments.Service {
         
         switch source {
         case let .mock(mock): return mock.service
@@ -128,59 +128,62 @@ extension Model {
             guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
                 throw Payments.Error.unsupported
             }
-
-                switch template.type {
-                case .newDirect,
-                        .direct,
-                        .contactCash,
-                        .contactAddressing,
-                        .contactAdressless,
-                        .contactAddressless:
-                        
-                    return .abroad
-                    
-                case .sfp, .byPhone:
-                    return .sfp
-                    
-                case .externalEntity, .externalIndividual:
-                    return .requisites
+            
+            switch template.type {
+            case .newDirect,
+                    .direct,
+                    .contactCash,
+                    .contactAddressing,
+                    .contactAdressless,
+                    .contactAddressless:
                 
-                case .mobile:
-                    return .mobileConnection
+                return .abroad
                 
-                case .taxAndStateService:
-                        guard let parameterList = template.parameterList as? [TransferAnywayData],
-                          let puref = parameterList.first?.puref,
-                          let `operator` = Payments.Operator(rawValue: puref) else {
-                        throw Payments.Error.unsupported
-                    }
-
-                    switch `operator` {
-                        case .fms:
-                            return .fms
-                            
-                        case .fns, .fnsUin:
-                            return .fns
-                            
-                        case .fssp:
-                            return .fssp
-                            
-                        default:
-                            throw Payments.Error.unsupported
-                    }
-        
-                case .insideBank:
-                    return .toAnotherCard
+            case .sfp, .byPhone:
+                return .sfp
+                
+            case .externalEntity, .externalIndividual:
+                return .requisites
+                
+            case .mobile:
+                return .mobileConnection
+                
+            case .taxAndStateService:
+                guard let parameterList = template.parameterList as? [TransferAnywayData],
+                      let puref = parameterList.first?.puref,
+                      let `operator` = Payments.Operator(rawValue: puref) else {
+                    throw Payments.Error.unsupported
+                }
+                
+                switch `operator` {
+                case .fms:
+                    return .fms
                     
-                case .housingAndCommunalService:
-                    return .utility
+                case .fns, .fnsUin:
+                    return .fns
                     
-                case .internet:
-                    return .internetTV
+                case .fssp:
+                    return .fssp
                     
                 default:
                     throw Payments.Error.unsupported
                 }
+                
+            case .insideBank:
+                return .toAnotherCard
+                
+            case .housingAndCommunalService:
+                return .utility
+                
+            case .internet:
+                return .internetTV
+                
+            case .transport:
+                return .transport
+                
+            default:
+                throw Payments.Error.unsupported
+            }
             
         case .servicePayment(let operatorCode, _, _):
             guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
@@ -196,35 +199,41 @@ extension Model {
             case Payments.Operator.utility.rawValue:
                 return .utility
                 
+            case Payments.Operator.transport.rawValue:
+                return .transport
+                
             default:
                 throw Payments.Error.unsupported
             }
-
+            
         case let .latestPayment(latestPaymentId):
-        
+            
             guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
                 throw Payments.Error.unsupported
             }
             
-                switch latestPayment.type {
-                    case .internet:
-                        return .internetTV
-                        
-                    case .service:
-                        return .utility
-                        
-                    case .mobile:
-                        return .mobileConnection
-                        
-                    case .phone:
-                        return .sfp
-                        
-                    case .outside:
-                        return .abroad
-                        
-                    default:
-                        throw Payments.Error.unsupported
-                }
+            switch latestPayment.type {
+            case .internet:
+                return .internetTV
+                
+            case .service:
+                return .utility
+                
+            case .mobile:
+                return .mobileConnection
+                
+            case .phone:
+                return .sfp
+                
+            case .outside:
+                return .abroad
+                
+            case .transport:
+                return .transport
+                
+            default:
+                throw Payments.Error.unsupported
+            }
         default:
             throw Payments.Error.unsupported
         }
@@ -257,7 +266,7 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Initial operation requested for source: \(source))")
 
         // try get service with source
-        let service = try await paymentsService(for: source)
+        let service = try paymentsService(for: source)
         
         // create empty operation
         let operation = Payments.Operation(service: service, source: source)
@@ -274,7 +283,7 @@ extension Model {
     
     /// Executes each time after appending step to operation.
     /// Return nil if no changes in parameters visibility and order required
-    /// Othewise return parameters ids that must be visible in exact order
+    /// Otherwise return parameters ids that must be visible in exact order
     func paymentsProcessOperationResetVisible(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         switch operation.service {
@@ -290,8 +299,8 @@ extension Model {
         case .toAnotherCard:
             return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
             
-        case .internetTV, .utility:
-            return try await paymentsProcessOperationResetVisibleToPaymentsServices(operation)
+        case .internetTV, .utility, .transport:
+            return paymentsProcessOperationResetVisibleToPaymentsServices(operation)
         
         case .mobileConnection:
             return try await paymentsProcessOperationResetVisibleMobileConnection(operation)
@@ -341,7 +350,7 @@ extension Model {
         case .mobileConnection:
             return try await paymentsProcessLocalStepMobileConnection(operation, for: stepIndex)
             
-        case .internetTV, .utility:
+        case .internetTV, .utility, .transport:
             return try await paymentsProcessLocalStepServices(operation, for: stepIndex)
 
         case .change:
@@ -385,7 +394,7 @@ extension Model {
                     response: anywayResponse
                 )
                 
-            case .internetTV, .utility:
+            case .internetTV, .utility, .transport:
                 
                 let next = try await paymentsTransferPaymentsServicesStepParameters(operation, response: anywayResponse)
                 if anywayResponse.finalStep {
@@ -545,7 +554,7 @@ extension Model {
         case .abroad:
             return paymentsProcessDependencyReducerAbroad(parameterId: parameterId, parameters: parameters)
             
-        case .internetTV, .utility:
+        case .internetTV, .utility, .transport:
             return paymentsProcessDependencyReducerPaymentsServices(parameterId: parameterId, parameters: parameters)
             
         case .toAnotherCard:
@@ -617,7 +626,7 @@ extension Model {
         case .mobileConnection:
             return try await paymentsTransferMobileConnectionProcess(parameters: operation.parameters, process: process)
             
-        case .internetTV, .utility:
+        case .internetTV, .utility, .transport:
             return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: true)
 
         default:
@@ -637,7 +646,7 @@ extension Model {
         case .abroad:
             return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
             
-        case .internetTV, .utility:
+        case .internetTV, .utility, .transport:
             return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: false)
 
 
@@ -668,7 +677,7 @@ extension Model {
                 operation: operation
             )
     
-        case .internetTV, .utility:
+        case .internetTV, .utility, .transport:
             return try await paymentsProcessRemoteServicesComplete(
                 code: codeValue,
                 operation: operation

@@ -215,7 +215,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             case .extended:
                 switch (data.type, data) {
                     
-                case (.internet, let paymentData as PaymentServiceData), (.service, let paymentData as PaymentServiceData):
+                case (.internet, let paymentData as PaymentServiceData),
+                    (.service, let paymentData as PaymentServiceData),
+                    (.transport, let paymentData as PaymentServiceData):
                     return "\(model.amountFormatted(amount: paymentData.amount, currencyCode: "RUB", style: .normal) ?? "")"
                 default:
                     return nil

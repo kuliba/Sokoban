@@ -249,9 +249,9 @@ final class ReducerTextFieldViewModelTests: XCTestCase {
         )
         let spy = ValueSpy(sut.$state)
         
-        trackForMemoryLeaks(sut)
-        trackForMemoryLeaks(spy)
-        trackForMemoryLeaks(scheduler)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(scheduler, file: file, line: line)
         
         return (sut, spy, scheduler)
     }

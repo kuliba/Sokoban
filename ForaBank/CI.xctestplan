@@ -51,6 +51,13 @@
         "identifier" : "UserModelTests",
         "name" : "UserModelTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
+      }
     }
   ],
   "version" : 1

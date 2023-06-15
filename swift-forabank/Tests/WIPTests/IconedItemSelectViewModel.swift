@@ -68,6 +68,7 @@ where Item: Equatable,
     }
 }
 
+@available(iOS 16.0.0, *)
 extension IconedItemSelectViewModel {
     
     @available(macOS 13.0.0, *)

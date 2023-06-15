@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .pickerWithPreviewComponent,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldModel,
@@ -20,6 +21,8 @@ let package = Package(
         .customDump,
     ],
     targets: [
+        .pickerWithPreviewComponent,
+        .pickerWithPreviewComponentTests,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -37,6 +40,13 @@ let package = Package(
 
 private extension Product {
     
+    static let pickerWithPreviewComponent = library(
+        name: .pickerWithPreviewComponent,
+        targets: [
+            .pickerWithPreviewComponent,
+        ]
+    )
+
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
@@ -75,6 +85,19 @@ private extension Product {
 
 private extension Target {
     
+    static let pickerWithPreviewComponent = target(
+        name: .pickerWithPreviewComponent,
+        dependencies: [
+            .uiKitHelpers,
+        ]
+    )
+    static let pickerWithPreviewComponentTests = testTarget(
+        name: .pickerWithPreviewComponentTests,
+        dependencies: [
+            .pickerWithPreviewComponent,
+        ]
+    )
+
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -171,6 +194,10 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let pickerWithPreviewComponent = byName(
+        name: .pickerWithPreviewComponent
+    )
+
     static let textFieldComponent = byName(
         name: .textFieldComponent
     )
@@ -194,6 +221,9 @@ private extension Target.Dependency {
 }
 
 private extension String {
+    
+    static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
+    static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
     static let searchBarComponent = "SearchBarComponent"
     

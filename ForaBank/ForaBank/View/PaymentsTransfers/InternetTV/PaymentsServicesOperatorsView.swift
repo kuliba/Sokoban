@@ -69,10 +69,23 @@ struct PaymentsServicesOperatorsView: View {
                     InternetTVDetailsView(viewModel: viewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .edgesIgnoringSafeArea(.all)
+                    
                 case .payments(let viewModel):
                     PaymentsView(viewModel: viewModel)
                         .navigationBarHidden(true)
 
+                case let .avtodor(action):
+                    MultiOperatorView(viewModel: .init(), action: action)
+                    //.navigationBarHidden(true)
+                    
+                case .mosParking:
+                    
+                    MosParkingSelectorView(
+                        initialState: .monthlyOne,
+                        options: .all,
+                        paymentAction: {},
+                        continueAction: {}
+                    )
                 }
             }
         }.opacity(0))

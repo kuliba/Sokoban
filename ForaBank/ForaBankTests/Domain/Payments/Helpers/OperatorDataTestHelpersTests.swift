@@ -111,6 +111,19 @@ extension OperatorGroupData.OperatorData {
     static let iFora4286: Self = .data(for: "iFora||4286")!
     static let iFora515A3: Self = .data(for: "iFora||515A3")!
     
+    // transport
+    static let iFora4811Gibdd:      Self = .data(for: Purefs.iFora4811Gibdd)!
+    static let iFora4990MosParking: Self = .data(for: Purefs.iFora4990MosParking)!
+    static let iForaPYDPodorozhnik: Self = .data(for: Purefs.iForaPYDPodorozhnik)!
+    static let iFora5300Strelka:    Self = .data(for: Purefs.iFora5300Strelka)!
+    static let iForaMMRTroika:      Self = .data(for: Purefs.iForaMMRTroika)!
+    static let iFora5173GibddFines: Self = .data(for: Purefs.iFora5173GibddFines)!
+    
+    // Avtodor
+    static let iForaAVDD: Self = .data(for: Purefs.avtodorContract)!
+    static let iForaAVDТ: Self = .data(for: Purefs.avtodorTransponder)!
+    
+    // helper
     static func data(for code: String) -> Self? {
         
         try? OperatorGroupData

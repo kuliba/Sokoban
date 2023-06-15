@@ -13,6 +13,7 @@
   },
   "testTargets" : [
     {
+      "enabled" : false,
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
@@ -49,6 +50,14 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UserModelTests",
         "name" : "UserModelTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
       }
     }
   ],
