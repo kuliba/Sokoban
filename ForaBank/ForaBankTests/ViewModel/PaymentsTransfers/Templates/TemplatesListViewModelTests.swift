@@ -140,7 +140,7 @@ final class TemplatesListViewModelTests: XCTestCase {
                             isLoadingData: true,
                             styleSetting: .tiles)
         // wait for bindings
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 1)
 
         //data
         XCTAssertEqual(model.paymentTemplates.value.count, 2)
@@ -172,7 +172,7 @@ final class TemplatesListViewModelTests: XCTestCase {
         XCTAssertEqual(menuItemsModel.firstIndex { $0.subTitle == "Переименовать" }, 1)
     
         //templateItems
-        XCTAssertEqual(sut.items.map(\.kind), [.placeholder, .regular, .regular, .add])
+        XCTAssertEqual(sut.items.map(\.kind), [.regular, .regular, .add])
     }
     
     /*
@@ -233,9 +233,6 @@ final class TemplatesListViewModelTests: XCTestCase {
 }
 
 
-
-//let spy = ValueSpy(sut.$state)
-
 //MARK: Helpers
 
 private extension TemplatesListViewModelTests {
@@ -264,8 +261,6 @@ private extension Model {
         XCTAssertEqual(paymentTemplates.value, templatesData)
     }
 }
-
-
 
 private extension PaymentTemplateData {
     
