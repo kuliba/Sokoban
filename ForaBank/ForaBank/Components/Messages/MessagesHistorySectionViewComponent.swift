@@ -56,6 +56,7 @@ struct MessagesHistorySectionView: View {
                 .foregroundColor(.textSecondary)
                 .padding(.top, 30)
                 .lineLimit(2)
+                .accessibilityIdentifier("MessageHistorySectionTitle")
             
             ForEach(viewModel.items) { item in
                 MessagesHistoryItemView.init(viewModel: item)
