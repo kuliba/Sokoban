@@ -354,10 +354,11 @@ extension TemplatesListViewModel {
             } else {
                 
                 guard let transfer = template.parameterList.first,
+                      let currencyAmount = transfer.currencyAmount,
                       let amount = template.amount
                 else { return nil }
-                return amount.currencyFormatter(symbol: transfer.currencyAmount)
-                //return amountFormatted(amount, transfer.currencyAmount, .normal)
+                //return amount.currencyFormatter(symbol: currencyAmount)
+                return amountFormatted(amount, currencyAmount, .fraction)
             }
         }
     }
