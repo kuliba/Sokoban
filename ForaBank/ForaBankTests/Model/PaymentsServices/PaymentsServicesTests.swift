@@ -257,7 +257,7 @@ final class PaymentsServicesTests: XCTestCase {
         
         let sut = makeSUT()
         let step = try await sut.makeLocalStepForInternetTV(stepIndex: 0)
-        let parameterNames = sut.parameterNameForRepresentationInternetTV()
+        let parameterNames = await sut.parameterNameForRepresentationInternetTV()
         
         let expectedIDs: [String] = [
             Payments.Parameter.Identifier.operator.rawValue,
@@ -632,9 +632,22 @@ extension Model {
         return .init()
     }
     
-    func parameterNameForRepresentationInternetTV() -> [String] {
+    func parameterNameForRepresentationInternetTV() async -> [String] {
         
-        return parameterListForInternetTV().compactMap { paymentsParameterRepresentableServices(additionalList: nil, parameterData: $0)?.id ?? "" }
+        var names = [String]()
+        
+        for data in parameterListForInternetTV() {
+            
+            let parameter = await paymentsParameterRepresentableServices(
+                additionalList: nil,
+                parameterData: data
+            )
+            if let id = parameter?.id {
+                names.append(id)
+            }
+        }
+        
+        return names
     }
     
     func parameterNameForRequiredInternetTV() -> [String] {
@@ -658,9 +671,22 @@ extension Model {
         return .init()
     }
     
-    func parameterNameForRepresentationServices() -> [String] {
+    func parameterNameForRepresentationServices() async -> [String] {
         
-        return parameterListForServices().compactMap { paymentsParameterRepresentableServices(additionalList: nil, parameterData: $0)?.id ?? "" }
+        var names = [String]()
+        
+        for data in parameterListForServices() {
+            
+            let parameter = await paymentsParameterRepresentableServices(
+                additionalList: nil,
+                parameterData: data
+            )
+            if let id = parameter?.id {
+                names.append(id)
+            }
+        }
+        
+        return names
     }
     
     func parameterNameForRequiredServices() -> [String] {

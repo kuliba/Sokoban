@@ -83,23 +83,20 @@ class PaymentsServicesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] payload in
                 
-                Task { [weak self] in
-                    
-                    guard let self = self else { return }
-                    
-                    let paymentsViewModel = makePaymentsViewModel(
-                        .servicePayment(
-                            puref: payload.latestPayment.puref,
-                            additionalList: payload.latestPayment.additionalList,
-                            amount: payload.latestPayment.amount
-                        )
+                let paymentsViewModel = makePaymentsViewModel(
+                    .servicePayment(
+                        puref: payload.latestPayment.puref,
+                        additionalList: payload.latestPayment.additionalList,
+                        amount: payload.latestPayment.amount
                     )
+                )
+                
+                Task { @MainActor [weak self] in
                     
-                    await MainActor.run { [weak self] in
-                        self?.link = .init(.payments(paymentsViewModel))
-                    }
+                    self?.link = .payments(paymentsViewModel)
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         openCityViewPublisher
             .receive(on: DispatchQueue.main)
@@ -196,52 +193,23 @@ extension PaymentsServicesViewModel {
     
     private func setStartValues() {
         
-        let action: (String) -> Void = { code in
+        let action: (String) -> Void = { [weak self] code in
             
-            Task { [weak self] in
-                
-                guard let self else { return }
-                
-                let link: Link
-                
-                switch code {
-                case Purefs.avtodorGroup:
-                    let action: (String) -> Void = { puref in
-                        
-                        Task { [weak self] in
-                            
-                            guard let self = self else { return }
-                            
-                            let paymentsViewModel = makePaymentsViewModel(
-                                .servicePayment(
-                                    puref: puref,
-                                    additionalList: [],
-                                    amount: 0
-                                )
-                            )
-                            
-                            await MainActor.run { [weak self] in
-                                self?.link = .init(.payments(paymentsViewModel))
-                            }
-                        }
-                    }
-                    link = .avtodor(action)
-
-                case Purefs.iFora4990MosParking:
-                    link = .mosParking
-
-                default:
-                    let paymentsViewModel = makePaymentsViewModel(
-                        .servicePayment(puref: code, additionalList: .none, amount: 0)
-                    )
-                    link = .payments(paymentsViewModel)
-                }
-                
-                await MainActor.run { [weak self] in self?.link = link }
-            }
+            guard let link = self?.link(for: code) else { return }
+            
+            Task { @MainActor [weak self] in self?.link = link }
         }
         
         self.operators = Self.reduceOperators(operatorsList: allOperators, action: action)
+    }
+    
+    func link(for code: String) -> Link {
+        
+        let paymentsViewModel = makePaymentsViewModel(
+            .servicePayment(puref: code, additionalList: .none, amount: 0)
+        )
+        
+        return .payments(paymentsViewModel)
     }
     
     static func reduceOperators(
@@ -253,10 +221,7 @@ extension PaymentsServicesViewModel {
             .filter { !$0.parameterList.isEmpty }
             .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
             .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
-            .map {
-                
-                return .makeItemViewModel(from: $0, with: action)
-            }
+            .map { .makeItemViewModel(from: $0, with: action) }
     }
         
     private func operatorSubtitle(for description: String?) -> String {
@@ -365,11 +330,8 @@ extension PaymentsServicesViewModel {
     
     enum Link {
         
-        case payments(PaymentsViewModel)
-        #warning("replace with strong type")
-        case avtodor((String) -> Void)
         case operation(InternetTVDetailsViewModel) // legacy!!!!!!
-        case mosParking
+        case payments(PaymentsViewModel)
     }
     
     enum SearchValue {

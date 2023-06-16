@@ -35,7 +35,9 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
         let avtodors: [OperatorGroupData.OperatorData] = .avtodors
         let avtodorINN = "7710965662"
         
-        XCTAssertTrue(avtodors.map(\.synonymList).allSatisfy({ $0 == [avtodorINN] }))
+        XCTAssertEqual(avtodors.map(\.synonymList).count, 2)
+        XCTAssertNoDiff(avtodors.map(\.synonymList)[0], [avtodorINN])
+        XCTAssertNoDiff(avtodors.map(\.synonymList)[1], [avtodorINN])
     }
     
     func test_transportOperators_shouldHaveTransportParentCode() {
@@ -44,18 +46,18 @@ final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
         let transportParentCode = "iFora||1051062"
         
         XCTAssertTrue(operators.map(\.parentCode).allSatisfy({ $0 == transportParentCode }))
+        XCTAssertEqual(operators.map(\.parentCode).count, 7)
     }
 }
 
 extension Array where Element == OperatorGroupData.OperatorData {
     
     static let transportWithoutAvtodor: Self = [
-        .iFora4811Gibdd,
-        .iFora4990MosParking,
-        .iForaPYDPodorozhnik,
-        .iFora5300Strelka,
-        .iForaMMRTroika,
-        .iFora5173GibddFines,
+        .iForaGibdd,
+        .iForaMosParking,
+        .iForaPodorozhnik,
+        .iForaStrelka,
+        .iForaTroika,
     ]
     static let avtodors: Self = [
         .iForaAVDD,

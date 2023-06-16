@@ -9,11 +9,24 @@ import SwiftUI
 
 struct PaymentsServicesLatestPaymentsSectionView: View {
     
-    @ObservedObject var viewModel: PaymentsServicesLatestPaymentsSectionViewModel
+    @ObservedObject private var viewModel: PaymentsServicesLatestPaymentsSectionViewModel
+    
+    private let iconSize: CGFloat
+    
+    init(
+        viewModel: PaymentsServicesLatestPaymentsSectionViewModel,
+        iconSize: CGFloat = 56
+    ) {
+        self.viewModel = viewModel
+        self.iconSize = iconSize
+    }
     
     var body: some View {
        
-        LatestPaymentsView(viewModel: viewModel.latestPayments)
+        LatestPaymentsView(
+            viewModel: viewModel.latestPayments,
+            iconSize: iconSize
+        )
     }
 }
 

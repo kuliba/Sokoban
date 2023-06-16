@@ -10,7 +10,7 @@ import Foundation
 extension Sequence {
     
     /// Sort Sequence by element keyPath.
-    /// 
+    ///
     func sorted<T: Comparable>(
         by keyPath: KeyPath<Element, T>,
         using comparator: (T, T) -> Bool = (<)
@@ -20,4 +20,19 @@ extension Sequence {
         }
     }
     
+    /// Sort Sequence by element keyPath for optional element.
+    ///
+    func sorted<T: Comparable>(
+        by keyPath: KeyPath<Element, T?>,
+        using comparator: (T, T) -> Bool = (<),
+        ifNil: Bool = false
+    ) -> [Element] {
+        sorted { a, b in
+            guard let a = a[keyPath: keyPath],
+                  let b = b[keyPath: keyPath]
+            else { return ifNil }
+            
+            return comparator(a, b)
+        }
+    }
 }
