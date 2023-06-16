@@ -793,45 +793,31 @@ extension PaymentsSuccessViewModel {
         switch documentStatus {
         case .complete:
             
-            switch operationDetail?.transferEnum {
-            case .some(.contactAddressing), .some(.contactAddressless), .some(.contactAddressingCash), .some(.direct):
+            switch mode {
+            case .normal, .meToMe:
+                buttons = [templateButton, documentButton, detailButton]
+                
+            case .makePaymentToDeposite:
                 buttons = [documentButton, detailButton]
                 
-            default:
+            case .closeDeposit, .closeAccount:
+                buttons = [documentButton, detailButton]
                 
-                switch mode {
-                case .normal, .meToMe:
-                    buttons = [templateButton, documentButton, detailButton]
-                    
-                case .makePaymentToDeposite:
-                    buttons = [documentButton, detailButton]
-                    
-                case .closeDeposit, .closeAccount:
-                    buttons = [documentButton, detailButton]
-                    
-                case .closeAccountEmpty:
-                    buttons = [documentButton]
-                }
+            case .closeAccountEmpty:
+                buttons = [documentButton]
             }
             
         case .inProgress:
             
-            switch operationDetail?.transferEnum {
-            case .some(.contactAddressing), .some(.contactAddressless), .some(.contactAddressingCash), .some(.direct):
-                buttons = [documentButton, detailButton]
+            switch mode {
+            case .closeAccount, .closeAccountEmpty:
+                return []
                 
-            default:
+            case .meToMe, .normal:
+                buttons = [templateButton, detailButton]
                 
-                switch mode {
-                case .closeAccount, .closeAccountEmpty:
-                    return []
-                    
-                case .meToMe, .normal:
-                    buttons = [templateButton, detailButton]
-                    
-                case .makePaymentToDeposite, .closeDeposit:
-                    buttons = [detailButton]
-                }
+            case .makePaymentToDeposite, .closeDeposit:
+                buttons = [detailButton]
             }
             
         case .rejected, .unknown:

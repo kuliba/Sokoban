@@ -937,7 +937,7 @@ extension Model {
             
         default:
             switch service {
-            case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV:
+            case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV, .transport:
                 
                 switch template.parameterList {
                 case let payload as [TransferAnywayData]:
@@ -996,20 +996,33 @@ extension Model {
                 
                 switch parameterId {
                 case Payments.Parameter.Identifier.productTemplate.rawValue:
-                    if let parameterList = template.parameterList as? [TransferGeneralData],
-                       let suffixCustomCard = parameterList.last?.suffixCustomName {
-                        
-                        let productId = self.productTemplates.value.first(where: { $0.numberMaskSuffix == suffixCustomCard })?.id.description
-                        
-                        guard let productId else {
-                            return nil
-                        }
-                        
-                        let templateProductId =                             Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
-                        return templateProductId
+                    
+                    guard let parameterList = template.parameterList as? [TransferGeneralData] else {
+                        return nil
                     }
                     
-                    return nil
+                    var productId: String?
+                    
+                    switch parameterList.lastPayeeProductId {
+                    case let .some(payeeProductId):
+                        productId = self.productTemplates.value.first(where: { $0.id == payeeProductId })?.id.description
+                        
+                    default:
+                        
+                        if let suffixCardNumber = parameterList.last?.suffixCardNumber {
+                            
+                            productId = self.productTemplates.value.first(where: { $0.numberMaskSuffix == suffixCardNumber })?.id.description
+                            
+                        }
+                    }
+                    
+                    guard let productId else {
+                        return nil
+                    }
+                    
+                    let templateProductId =                             Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
+                    
+                    return templateProductId
                     
                 default:
                     return nil

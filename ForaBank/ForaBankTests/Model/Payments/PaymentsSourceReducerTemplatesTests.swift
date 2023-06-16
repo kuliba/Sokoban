@@ -842,7 +842,7 @@ extension PaymentsSourceReducerTemplateTests {
             parameterId: parameterId)
 
         // then
-        XCTAssertEqual(result, "T:2513")
+        XCTAssertEqual(result, "T:1")
     }
     
     func test_updateParameter_toAnotherCard_withMe2MeData_shouldReturnNil() throws {
