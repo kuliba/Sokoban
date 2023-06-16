@@ -25,79 +25,95 @@ struct PaymentsServicesOperatorsView: View {
                     .padding(.top, 15)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    
-                    switch viewModel.searchValue {
-                        
-                    case .empty:
-                        
-                        ForEach(viewModel.operators) { singleOperator in
-                        
-                            PaymentsServicesOperatorItemView(viewModel: singleOperator)
-                        }
-                        
-                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 43)
-                        
-                    case .noEmpty:
-                        
-                        if !viewModel.filteredOperators.isEmpty {
-                            
-                            ForEach(viewModel.filteredOperators) { singleOperator in
-                                
-                                PaymentsServicesOperatorItemView(viewModel: singleOperator)
-                            }
-                        }
-                        
-                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 43)
-                        
-                    case .noResult:
-                        
-                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
-                            .padding(.top, 43)
-                    }
+                    OperatorsView(
+                        searchValue: viewModel.searchValue,
+                        operators: viewModel.operators,
+                        filteredOperators: viewModel.filteredOperators
+                    )
+
+                    NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
+                        .padding(.top, 43)
                 }
             }
         }
-        .background(NavigationLink("", isActive: $viewModel.isLinkActive) {
-            
-            if let link = viewModel.link  {
-                
-                switch link {
-                    
-                case .operation(let viewModel):
-                    InternetTVDetailsView(viewModel: viewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .edgesIgnoringSafeArea(.all)
-                    
-                case .payments(let viewModel):
-                    PaymentsView(viewModel: viewModel)
-                        .navigationBarHidden(true)
-
-                case let .avtodor(action):
-                    MultiOperatorView(viewModel: .init(), action: action)
-                    //.navigationBarHidden(true)
-                    
-                case .mosParking:
-                    
-                    MosParkingSelectorView(
-                        initialState: .monthlyOne,
-                        options: .all,
-                        paymentAction: {},
-                        continueAction: {}
-                    )
-                }
-            }
-        }.opacity(0))
+        .background(navigationLink)
         .padding(.top, 20)
         .navigationBar(with: viewModel.navigationBar)
-        .sheet(item: $viewModel.sheet) { item in
+        .sheet(item: $viewModel.sheet, content: sheet(item:))
+    }
+    
+    private var navigationLink: some View {
+        
+        NavigationLink("", isActive: $viewModel.isLinkActive) {
+            
+            destination(link: viewModel.link)
+        }
+        .opacity(0)
+    }
+    
+    @ViewBuilder
+    private func destination(
+        link: PaymentsServicesViewModel.Link?
+    ) -> some View {
+        
+        switch link {
+        case .none:
+            EmptyView()
+            
+        case .operation(let viewModel):
+            InternetTVDetailsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case .payments(let viewModel):
+            PaymentsView(viewModel: viewModel)
+                .navigationBarHidden(true)
+        }
+    }
+    
+    @ViewBuilder
+    private func sheet(
+        item: PaymentsServicesViewModel.Sheet
+    ) -> some View {
+        
+        switch item.sheetType {
+        case .city(let model):
+            SearchCityView(viewModel: model)
+        }
+    }
+    
+    struct OperatorsView: View {
+        
+        let searchValue: PaymentsServicesViewModel.SearchValue
+        let operators: [PaymentsServicesViewModel.ItemViewModel]
+        let filteredOperators: [PaymentsServicesViewModel.ItemViewModel]
+        
+        var body: some View {
+            
+            switch searchValue {
                 
-                switch item.sheetType {
-                case .city(let model):
-                    SearchCityView(viewModel: model)
+            case .empty:
+                
+                ForEach(
+                    operators,
+                    content: PaymentsServicesOperatorItemView.init(viewModel:)
+                )
+                
+            case .noEmpty:
+                
+                if !filteredOperators.isEmpty {
+                    
+                    ForEach(
+                        filteredOperators,
+                        content: PaymentsServicesOperatorItemView.init(viewModel:)
+                    )
                 }
+                
+            case .noResult:
+                
+                EmptyView()
             }
+        }
     }
 }
 

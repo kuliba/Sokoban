@@ -729,7 +729,7 @@ extension Model {
         case .abroad:
             return try await paymentsParameterRepresentableCountries(operation: operation, parameterData: parameterData)
 
-        case .utility:
+        case .utility, .transport:
             return try await paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
 
         default:

@@ -339,17 +339,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.bind(qrScannerModel)
                             fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                             
-                        case .service, .internet, .transport:
+                        case .service, .internet:
                             
                             guard let dictionaryAnywayOperators = model.dictionaryAnywayOperators(),
                                   let operatorValue = Payments.operatorByPaymentsType(payload.type)
                             else { return }
                             
                             let operators = dictionaryAnywayOperators
-                                .filter({ $0.parentCode == operatorValue.rawValue })
+                                .filter { $0.parentCode == operatorValue.rawValue }
                                 .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
                                 .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
-                                .substitutingAvtodors(with: model.avtodorGroup)
                             
                             self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                             
@@ -359,9 +358,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     titleButtonAction: { [weak self] in
                                         self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
                                     },
-                                    leftButtonAction: { [weak self] in
+                                    navLeadingAction: { [weak self] in
                                         self?.link = nil },
-                                    rightButtonAction: { [weak self] in
+                                    navTrailingAction: { [weak self] in
                                         self?.link = nil
                                         self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
                                     }
@@ -369,7 +368,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
                                 let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
                                 
-                                let operatorsViewModel = PaymentsServicesViewModel(
+                                let paymentsServicesViewModel = PaymentsServicesViewModel(
                                     searchBar: .withText("Наименование или ИНН"),
                                     navigationBar: navigationBarViewModel,
                                     model: self.model,
@@ -382,13 +381,27 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                             self?.rootActions?.switchTab(.chat)
                                         }
                                         
-                                    }, requisitesAction: { [weak self] in
+                                    },
+                                    requisitesAction: { [weak self] in
                                         
                                         self?.link = nil
                                         self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
-                                    })
+                                    }
+                                )
                                 
-                                self.link = .paymentsServices(operatorsViewModel)
+                                self.link = .paymentsServices(paymentsServicesViewModel)
+                            }
+                            
+                        case .transport:
+                            
+                            guard let transportPaymentsViewModel = makeTransportPaymentsViewModel()
+                            else { return }
+                            
+                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                                
+                                self.link = .transportPayments(transportPaymentsViewModel)
                             }
                             
                         case .taxAndStateService:
@@ -813,7 +826,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
     }
 
-    
     private func makeAlert(_ message: String) {
         
         let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
@@ -835,12 +847,75 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 //MARK: - Helpers
 
+private extension PaymentsTransfersViewModel {
+    
+    // TODO: rename `makeTransportPaymentsViewModel`
+    func makeTransportPaymentsViewModel() -> TransportPaymentsViewModel? {
+        
+        model.makeTransportPaymentsViewModel(
+            type: .transport,
+            navLeadingAction: { [weak self] in
+                
+                self?.link = nil
+            },
+            navTrailingAction: { [weak self] in
+                
+                self?.link = nil
+                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+            }
+        )
+    }
+}
+
+private extension Model {
+    
+    // TODO: rename `makeTransportPaymentsViewModel`
+    // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
+    func makeTransportPaymentsViewModel(
+        type: PTSectionPaymentsView.ViewModel.PaymentsType,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> TransportPaymentsViewModel? {
+        
+        guard let anywayOperators = dictionaryAnywayOperators(),
+              let operatorValue = Payments.operatorByPaymentsType(type)
+        else { return nil }
+        
+        let operators = anywayOperators
+            .filter { $0.parentCode == operatorValue.rawValue }
+        // TODO: Remove filter after GIBDD & MosParking fix
+            .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
+            .sorted { $0.name.lowercased() < $1.name.lowercased() }
+            .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
+            .substitutingAvtodors(with: avtodorGroup)
+        
+        let lastPaymentsKind = LatestPaymentData.Kind(rawValue: type.rawValue)
+        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(
+            model: self,
+            including: [lastPaymentsKind ?? .unknown]
+        )
+        
+        let navigationBarViewModel = NavigationBarView.ViewModel.with(
+            title: "Транспорт",
+            navLeadingAction: navLeadingAction,
+            navTrailingAction: navTrailingAction
+        )
+        
+        return .init(
+            operators: operators,
+            latestPayments: latestPayments,
+            navigationBar: navigationBarViewModel,
+            makePaymentsViewModel: makePaymentsViewModel(source:)
+        )
+    }
+}
+
 extension NavigationBarView.ViewModel {
     
     static func allRegions(
         titleButtonAction: @escaping () -> Void,
-        leftButtonAction: @escaping () -> Void,
-        rightButtonAction: @escaping () -> Void
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
     ) -> NavigationBarView.ViewModel {
         
         .init(
@@ -852,13 +927,36 @@ extension NavigationBarView.ViewModel {
             leftItems: [
                 NavigationBarView.ViewModel.BackButtonItemViewModel(
                     icon: .ic24ChevronLeft,
-                    action: leftButtonAction
+                    action: navLeadingAction
                 )
             ],
             rightItems: [
                 NavigationBarView.ViewModel.ButtonItemViewModel(
                     icon: .qr_Icon,
-                    action: rightButtonAction
+                    action: navTrailingAction
+                )
+            ]
+        )
+    }
+    
+    static func with(
+        title: String,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: title,
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: .qr_Icon,
+                    action: navTrailingAction
                 )
             ]
         )
@@ -924,8 +1022,9 @@ extension PaymentsTransfersViewModel {
             (.outside, let paymentData),
             (.phone, let paymentData):
             
-                let paymentsViewModel = PaymentsViewModel(source: .latestPayment(paymentData.id),
-                                                          model: model) { [weak self] in
+            let paymentsViewModel = PaymentsViewModel(
+                source: .latestPayment(paymentData.id),
+                model: model) { [weak self] in
                     
                     guard let self else { return }
                     
@@ -1039,6 +1138,7 @@ extension PaymentsTransfersViewModel {
         case searchOperators(QRSearchOperatorViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
+        case transportPayments(TransportPaymentsViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

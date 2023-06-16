@@ -131,7 +131,10 @@ struct PaymentsTransfersView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
 
-                        
+                    case let .transportPayments(transportPaymentsViewModel):
+                        TransportPaymentsView(viewModel: transportPaymentsViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }

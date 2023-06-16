@@ -423,7 +423,17 @@ enum LatestPaymentsViewModelAction {
 
 struct LatestPaymentsView: View {
     
-    @ObservedObject var viewModel: LatestPaymentsView.ViewModel
+    @ObservedObject private var viewModel: LatestPaymentsView.ViewModel
+
+    private let iconSize: CGFloat
+
+    init(
+        viewModel: LatestPaymentsView.ViewModel,
+        iconSize: CGFloat = 56
+    ) {
+        self.viewModel = viewModel
+        self.iconSize = iconSize
+    }
     
     var body: some View {
         
@@ -439,7 +449,10 @@ struct LatestPaymentsView: View {
                         LatestPaymentButtonView(viewModel: currencyWalletButtonViewModel)
                         
                     case let .latestPayment(latestPaymentVM):
-                        LatestPaymentButtonView(viewModel: latestPaymentVM)
+                        LatestPaymentButtonView(
+                            viewModel: latestPaymentVM,
+                            iconSize: iconSize
+                        )
                         
                     case let .placeholder(placeholderVM):
                         PlaceholderView(viewModel: placeholderVM)
@@ -493,7 +506,16 @@ extension LatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
         
-        let viewModel: ViewModel.LatestPaymentButtonVM
+        private let viewModel: ViewModel.LatestPaymentButtonVM
+        private let iconSize: CGFloat
+
+        init(
+            viewModel: ViewModel.LatestPaymentButtonVM,
+            iconSize: CGFloat = 56
+        ) {
+            self.viewModel = viewModel
+            self.iconSize = iconSize
+        }
         
         var body: some View {
             
@@ -503,7 +525,7 @@ extension LatestPaymentsView {
                         
                         Circle()
                             .fill(Color.mainColorsGrayLightest)
-                            .frame(height: 56)
+                            .frame(height: iconSize)
                             .accessibilityIdentifier("LatestPaymentsAvatarIcon")
                         
                         switch viewModel.avatar {
@@ -514,7 +536,7 @@ extension LatestPaymentsView {
                                 .resizable()
                                 .scaledToFit()
                                 .clipShape(Circle())
-                                .frame(height: 56)
+                                .frame(height: iconSize)
                             
                         case let .text(text):
                             Text(text)

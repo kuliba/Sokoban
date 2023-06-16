@@ -10,20 +10,24 @@ enum Purefs {}
 extension Purefs {
     
     // Transport Group
-    static let transport           = "iFora||1051062"
+    static let transport          = "iFora||1051062"
     
     // transport
-    static let iFora4811Gibdd      = "iFora||4811"
-    static let iFora4990MosParking = "iFora||4990"
-    static let iForaPYDPodorozhnik = "iFora||PYD"
-    static let iFora5300Strelka    = "iFora||5300"
-    static let iForaMMRTroika      = "iFora||MMR"
-    static let iFora5173GibddFines = "iFora||5173"
+    static let iForaMosParking    = "iFora||4990"
+    static let iForaPodorozhnik   = "iFora||PYD"
+    static let iForaStrelka       = "iFora||5300"
+    #if DEBUG
+    static let iForaGibdd         = "iFora||4811" // test
+    static let iForaTroika        = "iFora||MMR"  // test
+    #else
+    static let iForaGibdd         = "iFora||5173" // live
+    static let iForaTroika        = "iFora||MGZ"  // live
+    #endif
     
     // transport: Avtodor
-    static let avtodorContract     = "iFora||AVDD"
-    static let avtodorTransponder  = "iFora||AVDТ"
+    static let avtodorContract    = "iFora||AVDD"
+    static let avtodorTransponder = "iFora||AVDТ"
 
     // transport: (fake) Avtodor Group for hardcoded
-    static let avtodorGroup        = "AVD"
+    static let avtodorGroup       = "AVD"
 }

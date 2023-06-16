@@ -23,7 +23,7 @@ struct ParameterData: Codable, Equatable, Identifiable {
     let regExp: String?
     let subTitle: String?
     let title: String
-    let type: String
+    let type: String?
     let inputFieldType: inputFieldType?
     let dataDictionary: String?
     let dataDictionaryРarent: String?
@@ -69,7 +69,7 @@ extension ParameterData {
     
     var view: Payments.Parameter.View {
         
-        switch type.lowercased() {
+        switch type?.lowercased() {
         case "select": return .select
         case "masklist": return .selectSwitch
         case "input", "string", "int": return .input
