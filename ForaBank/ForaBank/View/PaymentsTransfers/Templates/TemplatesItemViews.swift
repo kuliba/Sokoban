@@ -63,21 +63,9 @@ extension TemplatesListView {
                     .offset(x: -100, y: 0)
                             
             } //switch item state
-          
-
-//            .modifier(SwipeSidesModifier(leftAction: {
-//
-//                guard style == .list else {
-//                    return
-//                }
-//                viewModel.swipeLeft()
-//
-//            }, rightAction:viewModel.swipeRight))
         }
     }
 }
-
-
 
 extension TemplatesListView {
     

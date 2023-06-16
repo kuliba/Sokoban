@@ -325,7 +325,6 @@ extension TemplatesListViewModel {
            let amount = template.amount {
             
             return amountFormatted(amount, currencyAmount.fieldvalue, .normal)
-            //amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
             
         } else {
             
@@ -344,7 +343,6 @@ extension TemplatesListViewModel {
                    let currencyAmount = currencyAmount {
                     
                     return amountFormatted(amount, currencyAmount, .normal)
-                    //return amount.currencyFormatter(symbol: currencyAmount)
                     
                 } else {
                     
@@ -357,7 +355,7 @@ extension TemplatesListViewModel {
                       let currencyAmount = transfer.currencyAmount,
                       let amount = template.amount
                 else { return nil }
-                //return amount.currencyFormatter(symbol: currencyAmount)
+                
                 return amountFormatted(amount, currencyAmount, .fraction)
             }
         }

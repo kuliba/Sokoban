@@ -75,7 +75,6 @@ enum TemplatesListViewModelAction {
         }
     }
     
-    
     enum Delete {
     
         // Delete selection mode actions

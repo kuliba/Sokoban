@@ -332,7 +332,6 @@ private extension TemplatesListViewModel {
                         
                         if let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == itemVM.id }) {
                             payloadData.append(.init(paymentTemplateId: data.id, sort: sortIndex))
-                            itemVM.sortOrder = sortIndex
                             sortIndex += 1
                         }
                     }
@@ -871,10 +870,6 @@ private extension TemplatesListViewModel {
         if let categorySelected {
             newItems = sortedItems(filterredItems(newItems, categorySelected))
         }
-            
-        //if isDataUpdating {
-        //    newItems.insert(.init(kind: .placeholder), at: 0)
-        //}
           
         if isAddItemNeeded {
             newItems.append(getItemAddNewTemplateModel())
@@ -985,39 +980,6 @@ extension TemplatesListViewModel {
     }
 }
 
-
-//MARK: - Updates
-/*
-private extension TemplatesListViewModel {
-    
-    func updateAddNewTemplateItem() {
-        
-        switch self.state {
-        case .normal:
-            
-//            if self.items.isEmpty {
-//
-//                self.items.append(itemAddNewTemplateViewModel())
-//
-//            } else {
-                
-                guard let lastItem = self.items.last, lastItem.kind != .add
-                else { return }
-                
-                self.items.append(getItemAddNewTemplateModel())
-           // }
-            
-        default:
-            guard let lastItem = items.last, lastItem.kind == .add else {
-                return
-            }
-            
-            items.removeLast()
-        }
-    }
-    
-}
-*/
 //MARK: - Internal Components
 
 extension TemplatesListViewModel {
@@ -1055,7 +1017,6 @@ extension TemplatesListViewModel {
                 return false
             }
         }
-        
     }
     
     enum Style: Codable {
@@ -1101,7 +1062,6 @@ extension TemplatesListViewModel {
             self.isDisable = isDisable
             self.action = action
         }
-        
     }
     
     struct EmptyTemplateListViewModel {
