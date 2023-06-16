@@ -90,7 +90,7 @@ private extension TemplatesListViewHostingViewController {
                     let templateModel = payload.viewModel
                     openLatestUtilities(template: templateModel)
                     
-                case _ as TemplatesListViewModelAction.AddTemplate:
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     dismiss(animated: true) { [weak self] in
                         self?.delegate?.presentProductViewController()
                     }

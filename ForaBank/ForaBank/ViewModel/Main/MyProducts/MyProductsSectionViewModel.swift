@@ -16,6 +16,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     
     @Published var items: [ItemViewModel]
     @Published var isCollapsed: Bool
+    @Published var idList: UUID = UUID()
 
     let id: String
     let title: String

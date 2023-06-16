@@ -5,7 +5,6 @@
 //  Created by Mikhail on 18.01.2022.
 //
 
-import Foundation
 import SwiftUI
 import Combine
 
@@ -15,146 +14,263 @@ class TemplatesListViewModel: ObservableObject {
     
     @Published var state: State
     @Published var style: Style
-    @Published var title: String
-    let navButtonBack: NavigationBarButtonViewModel
-    @Published var navButtonsRight: [NavigationBarButtonViewModel]
+    @Published var navBarState: NavBarState
+    @Published var editModeState: EditMode = .inactive
+    @Published var idList: UUID = UUID()
+    
     @Published var categorySelector: OptionSelectorView.ViewModel?
-    @Published var items: [ItemViewModel]
-    @Published var onboarding: OnboardingViewModel?
-    @Published var contextMenu: ContextMenuViewModel?
     @Published var deletePannel: DeletePannelViewModel?
+    
+    @Published var items: [ItemViewModel]
+
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var bottomSheet: BottomSheet?
     @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
     
     private let model: Model
-    private var bindings = Set<AnyCancellable>()
+    var bindings = Set<AnyCancellable>()
+    
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     
-    init(_ model: Model, dismissAction: @escaping () -> Void) {
-        
-        self.state = .normal
-        self.style = model.paymentTemplatesViewSettings.value.style
-        self.title = "Шаблоны"
-        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
-        self.navButtonsRight = []
-        self.items = []
-        self.model = model
-        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
-        
-        bind()
-    }
+    let dismissAction: () -> Void
     
-    internal init(state: State, style: Style, title: String, navButtonBack: NavigationBarButtonViewModel, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
+    internal init(state: State, style: Style,
+                  navBarState: NavBarState,
+                  categorySelector: OptionSelectorView.ViewModel?,
+                  items: [ItemViewModel],
+                  deletePannel: DeletePannelViewModel?,
+                  dismissAction: @escaping () -> Void = {},
+                  model: Model) {
         
         self.state = state
         self.style = style
-        self.title = title
-        self.navButtonBack = navButtonBack
-        self.navButtonsRight = navButtonsRight
+        self.navBarState = navBarState
         self.categorySelector = categorySelector
         self.items = items
-        self.contextMenu = contextMenu
         self.deletePannel = deletePannel
+        self.dismissAction = dismissAction
         self.model = model
     }
     
-    func closeContextMenu() {
+    convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
+  
+        self.init(state: .placeholder,
+                  style: model.paymentTemplatesViewSettings.value.style,
+                  navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
+                                                                action: dismissAction),
+                                              menuList: [],
+                                              searchButton: .init(icon: .ic24Search,
+                                                                  action: {} ))),
+                  categorySelector: nil,
+                  items: [],
+                  deletePannel: nil,
+                  dismissAction: dismissAction,
+                  model: model)
         
-        contextMenu = nil
+        updateNavBar(event: .setRegular)
+        
+        bind()
+        
+        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
     }
 }
 
 //MARK: - Bindings
-
 private extension TemplatesListViewModel {
     
     func bind() {
         
-        // templates data updates from model
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+                    
+                case _ as ModelAction.PaymentTemplate.List.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось загрузить шаблоны",
+                                              icon: .close)))
+                    
+                case _ as ModelAction.PaymentTemplate.Update.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось сохранить изменения",
+                                              icon: .close)))
+                
+                case _ as ModelAction.PaymentTemplate.Delete.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось удалить шаблоны",
+                                              icon: .close)))
+                    withAnimation {
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: false,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: self.navBarState.searchModel?.searchText,
+                                                 isAddItemNeeded: true)
+                    }
+                
+                case _ as ModelAction.PaymentTemplate.Sort.Failed:
+                    
+                    model.action.send(ModelAction.Informer.Show
+                        .init(informer: .init(message: "Не удалось сохранить изменения",
+                                              icon: .close)))
+                    
+                    self.action.send(TemplatesListViewModelAction.ReorderItems.CloseEditMode())
+                    
+                default: break
+                }
+            }.store(in: &bindings)
+        
+    
         model.paymentTemplates
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] templates in
-                
-                withAnimation {
+              
+                style = model.paymentTemplatesViewSettings.value.style
                     
-                    style = model.paymentTemplatesViewSettings.value.style
-                    
-                    if templates.isEmpty == false {
+                if templates.isEmpty {
+                   
+                    withAnimation {
                         
-                        state = .normal
-                        itemsRaw.value = templates.compactMap{ itemViewModel(with: $0) }
-                        categorySelector = categorySelectorViewModel(with: templates)
-                        bindCategorySelector()
-                        navButtonsRight = [menuButtonViewModel()]
-                        onboarding = nil
-                        
-                    } else {
-                        
-                        state = .onboarding
+                        state = .emptyList(getEmptyTemplateListViewModel())
                         itemsRaw.value = []
                         categorySelector = nil
-                        navButtonsRight = []
-                        onboarding = onboardingViewModel()
+                    }
+                        
+                } else {
+                        
+                    DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+                        let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
+                            
+                        DispatchQueue.main.async { [unowned self] in
+                           
+                            let selector = self.categorySelector?.selected
+                            
+                            withAnimation {
+                                
+                                self.state = .normal
+                                self.itemsRaw.value = templatesVM
+                                let newCategorySelector = getCategorySelectorModel(with: templates)
+                                bindCategorySelector(newCategorySelector)
+                                if let selector,
+                                   newCategorySelector.options.contains(where: { $0.id == selector }) {
+                                    
+                                    newCategorySelector.selected = selector
+                                }
+                                self.categorySelector = newCategorySelector
+                            }
+                        }
                     }
                 }
-    
             }.store(in: &bindings)
         
-        // all templates view models storage updates
-        itemsRaw
+        $items
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] itemsRaw in
+            .sink { [unowned self] items in
                 
-                withAnimation {
+                switch navBarState {
+                case let .regular(viewModel):
                     
-                    if let selectedCategoryIndex = categorySelector?.selected {
+                    if items.contains(where: { $0.kind == .deleting || $0.kind == .placeholder })
+                        || items.filter({ $0.kind == .regular }).isEmpty
+                        || state.isPlaceholder {
                         
-                        items = sortedItems(filterredItems(itemsRaw, selectedCategoryIndex))
+                        viewModel.isMenuDisable = true
+                        viewModel.isSearchButtonDisable = true
                         
                     } else {
                         
-                        items = sortedItems(itemsRaw)
+                        viewModel.isMenuDisable = false
+                        viewModel.isSearchButtonDisable = false
                     }
                     
-                    updateAddNewTemplateItem()
+                default: break
                 }
- 
+                
             }.store(in: &bindings)
         
-        // actions handlers
+    // actions handlers
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as TemplatesListViewModelAction.ItemTapped:
-                    guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId }) else { return }
                     
-                        switch template.type {
-                            case .betweenTheir:
-                                guard let parameterList = template.parameterList.first as? TransferGeneralData,
-                                      let id = parameterList.payeeInternal?.cardId ?? parameterList.payeeInternal?.accountId,
-                                      let product = model.product(productId: id),
-                                      let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, parameterList.amountDouble ?? 0)) else {
-                                    return
-                                }
-
-                                bind(paymentsMeToMeViewModel)
-                                
-                                bottomSheet = .init(type: .meToMe(paymentsMeToMeViewModel))
-
-                            default:
-                                link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
-                                    
-                                    self?.action.send(TemplatesListViewModelAction.CloseAction())
-                                }))
+            //Add Item Tapped
+                case _ as TemplatesListViewModelAction.AddTemplateTapped:
+                    
+                    let productsFilterred = model.products.value.filter { dict in
+                        dict.key == .card || dict.key == .account
+                    }
+                    let sectionSettings = ProductsSectionsSettings(collapsed: ["CARD": true, "ACCOUNT": true] )
+                    
+                    let productSections = MyProductsViewModel
+                                            .updateViewModel(with: productsFilterred,
+                                                             sections: [],
+                                                             productsOpening: [],
+                                                             settingsProductsSections: sectionSettings,
+                                                             model: model)
+                   
+                    let productListViewModel = ProductListViewModel(sections: productSections)
+                    bind(productListViewModel)
+                    
+                    self.sheet = .init(type: .productList(productListViewModel))
+                                       
+            //Rename Item start
+                case let payload as TemplatesListViewModelAction.Item.Rename:
+                    
+                    guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
+                          let _ = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    else { return }
+                    
+                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: data.name,
+                                                                                  templateID: data.id)
+                    bind(renameTemplateItemViewModel)
+                    
+                    self.sheet = .init(type: .renameItem(renameTemplateItemViewModel))
+                    
+            //Item Tapped
+                case let payload as TemplatesListViewModelAction.Item.Tapped:
+                    guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId })
+                    else { return }
+                    
+                    switch template.type {
+                    case .betweenTheir:
+                        guard let parameterList = template.parameterList.first as? TransferGeneralData,
+                              let id = parameterList.payeeInternal?.cardId ?? parameterList.payeeInternal?.accountId,
+                              let product = model.product(productId: id),
+                              let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, parameterList.amountDouble ?? 0)) else {
+                            return
                         }
-                                        
+                        
+                        bind(paymentsMeToMeViewModel)
+                        
+                        sheet = .init(type: .meToMe(paymentsMeToMeViewModel))
+                        
+                    default:
+                        link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
+                            
+                            self?.action.send(TemplatesListViewModelAction.CloseAction())
+                        }))
+                    }
+            //MARK: Search
+                case let payload as TemplatesListViewModelAction.Search:
+                    
+                    withAnimation {
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: payload.text,
+                                                 isAddItemNeeded: true)
+                    }
+                    
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
                     withAnimation {
@@ -169,15 +285,92 @@ private extension TemplatesListViewModel {
                         case .tiles: style = .list
                         }
                     }
+    
+                    updateNavBar(event: .setRegular)
+                    
+                case _ as TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent:
+                    
+                    updateNavBar(event: .setSearch)
+                    
+                case _ as TemplatesListViewModelAction.RegularNavBar.RegularNavBarPresent:
+                    
+                    updateNavBar(event: .setRegular)
+            
+        //MARK: Enabled Reorder
+                case _ as TemplatesListViewModelAction.ReorderItems.EditModeEnabled:
+                    
+                    withAnimation {
+                        
+                        if case .tiles = self.style { self.style = .list }
+                        
+                        self.categorySelector = nil
+                        self.items = self.itemsRaw.value
+                        self.editModeState = .active
+                        self.updateNavBar(event: .setReorder)
+                    }
+              
+            //Close Reorder
+                case _ as TemplatesListViewModelAction.ReorderItems.CloseEditMode:
+            
+                    let newCategorySelector = getCategorySelectorModel(with: model.paymentTemplates.value)
+                    
+                    withAnimation {
+                        self.state = .normal
+                        self.editModeState = .inactive
+                        self.updateNavBar(event: .setRegular)
+                        self.categorySelector = newCategorySelector
+                        bindCategorySelector(newCategorySelector)
+                   }
+                
+            //Save Reorder
+                case _ as TemplatesListViewModelAction.ReorderItems.SaveReorder:
+                    
+                    self.editModeState = .inactive
+                    self.state = .placeholder
+                    self.updateNavBar(event: .setRegular)
+                    
+                    var sortIndex = 1
+                    let newOrders = items.reduce(into: [PaymentTemplateData.SortData]()) { payloadData, itemVM in
+                        
+                        if let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == itemVM.id }) {
+                            payloadData.append(.init(paymentTemplateId: data.id, sort: sortIndex))
+                            sortIndex += 1
+                        }
+                    }
+                    
+                    guard !newOrders.isEmpty
+                    else {
+                        self.action.send(TemplatesListViewModelAction.ReorderItems.CloseEditMode())
+                        return
+                    }
+                    
+                    model.action.send(ModelAction.PaymentTemplate.Sort.Requested(sortDataList: newOrders))
+                    
+            // Item Moved
+                case let payload as TemplatesListViewModelAction.ReorderItems.ItemMoved:
+
+                    self.items = Self.reduce(rawItems: self.items, move: payload.move)
+                    
+                    self.navBarState
+                        .reorderModel?
+                        .isTrailingButtonDisable = self.items.map(\.id) == self.itemsRaw.value.map(\.id)
+                    
+        //MARK: - MultiDeleting
                     
                 case _ as TemplatesListViewModelAction.Delete.Selection.Enter:
                     
                     withAnimation {
                         
-                        state = .select
-                        navButtonsRight = [cancelDeleteModeButtonViewModel()]
-                        selectedItemsIds.value = []
-                        deletePannel = deletePannelViewModel(selectedCount: 0)
+                        self.state = .select
+                        updateNavBar(event: .setDelete)
+                        self.selectedItemsIds.value = []
+                        self.deletePannel = getDeletePannelModel(selectedCount: 0)
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: false,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: nil,
+                                                 isAddItemNeeded: false)
                         
                         for item in itemsRaw.value {
                             
@@ -188,13 +381,13 @@ private extension TemplatesListViewModel {
                             }))
                         }
                     }
-
+                //Exit in Select State
                 case _ as TemplatesListViewModelAction.Delete.Selection.Exit:
                     
                     withAnimation {
                         
                         state = .normal
-                        navButtonsRight = [menuButtonViewModel()]
+                        updateNavBar(event: .setRegular)
                         selectedItemsIds.value = []
                         deletePannel = nil
                         
@@ -205,9 +398,10 @@ private extension TemplatesListViewModel {
                     }
 
                 case let payload as TemplatesListViewModelAction.Delete.Selection.ToggleItem:
-                    guard let item = itemsRaw.value.first(where: { $0.id == payload.itemId}) else {
-                        return
-                    }
+                    
+                    guard let item = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    else { return }
+                    
                     let action: (ItemViewModel.ID) -> Void = {[weak self] itemId in
                         
                         self?.action.send(TemplatesListViewModelAction.Delete.Selection.ToggleItem(itemId: itemId))
@@ -226,21 +420,153 @@ private extension TemplatesListViewModel {
                             item.state = .select(.init(isSelected: true, action: action))
                         }
                     }
+              //SelectAll
+                case _ as TemplatesListViewModelAction.Delete.Selection.Toggle:
                     
+                    let action: (ItemViewModel.ID) -> Void = {[weak self] itemId in
+                        
+                        self?.action.send(TemplatesListViewModelAction.Delete.Selection.ToggleItem(itemId: itemId))
+                    }
+                    
+                    if selectedItemsIds.value.count == items.count {
+                        //deselect all
+                        for item in items {
+                            if selectedItemsIds.value.contains(item.id) {
+                                
+                                selectedItemsIds.value.remove(item.id)
+                                item.state = .select(.init(isSelected: false, action: action))
+                            }
+                        }
+                        
+                    } else {
+                        //select all
+                        for item in items {
+                            if !selectedItemsIds.value.contains(item.id) {
+                                
+                                selectedItemsIds.value.insert(item.id)
+                                item.state = .select(.init(isSelected: true, action: action))
+                            }
+                        }
+                    }
+                
+            //Multi Deleting Start
                 case _ as TemplatesListViewModelAction.Delete.Selection.Accept:
-                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: Array(selectedItemsIds.value)))
+                    
+                    let deleteGroupItemsId = self.selectedItemsIds.value
+                    
                     self.action.send(TemplatesListViewModelAction.Delete.Selection.Exit())
                     
-                case let payload as TemplatesListViewModelAction.Delete.Item:
-                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [payload.itemId]))
+                    let itemVM = TemplatesListViewModel.ItemViewModel
+                        .init(title: "Выбрано \(deleteGroupItemsId.count)",
+                              kind: .deleting)
+                    
+                    itemVM.timer = DeletingTimer()
+                    guard let timer = itemVM.timer else { return }
+                    
+                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
+                        .init(progress: timer.maxCount,
+                              countTitle: "\(timer.maxCount)",
+                              cancelButton: .init(title: "Отменить",
+                                                  action: { [unowned itemVM, unowned self] id in
+                                    itemVM.timer = nil
+                                    self.action.send(
+                                        TemplatesListViewModelAction.Delete.Selection.CancelDeleting())
+                                    }),
+                              title: itemVM.title,
+                              style: self.style,
+                              id: itemVM.id)
+                    
+                    itemVM.state = .deleting(deletingViewModel)
                     
                     withAnimation {
                         
-                        for item in itemsRaw.value {
-                            
-                            item.state = .normal
-                        }
+                        self.items.removeAll { deleteGroupItemsId.contains($0.id) }
+                        self.items.insert(itemVM, at: 0)
                     }
+                    self.idList = UUID() //focus on first item in list
+                    
+                    itemVM.timer?.timerPublisher
+                        .receive(on: DispatchQueue.main)
+                        .map({ [unowned timer] output in
+                            return Int(output.timeIntervalSince(timer.startDate))
+                        })
+                        .sink { [unowned self, unowned timer] timerValue in
+                            
+                            let current = timer.maxCount - timerValue
+                            deletingViewModel.progress = current
+                            deletingViewModel.countTitle = "\(current)"
+                            
+                            if current == 0 {
+                                
+                                deletingViewModel.isDisableCancelButton = true
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                    .init(paymentTemplateIdList: Array(deleteGroupItemsId)))
+                                
+                                itemVM.timer = nil
+                            }
+                    }
+                    .store(in: &bindings)
+                    
+            //Multi Deleting cancel
+                case _ as TemplatesListViewModelAction.Delete.Selection.CancelDeleting:
+                    
+                    withAnimation {
+                        
+                        self.updateNavBar(event: .setRegular)
+                            
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: model.paymentTemplatesUpdating.value,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: nil,
+                                                 isAddItemNeeded: true)
+                    }
+                    
+            //Personal Item Delete start
+                case let payload as TemplatesListViewModelAction.Item.Delete:
+                    
+                    guard let _ = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
+                          let itemModel = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                    else { return }
+                    
+                    itemModel.timer = DeletingTimer()
+                    guard let timer = itemModel.timer else { return }
+                    
+                    let deletingViewModel = ItemViewModel.DeletingProgressViewModel
+                        .init(progress: timer.maxCount,
+                              countTitle: "\(timer.maxCount)",
+                              cancelButton: .init(title: "Отменить",
+                                                  action: { [unowned itemModel] id in
+                            itemModel.timer = nil
+                            itemModel.state = .normal }),
+                              title: itemModel.title,
+                              style: self.style,
+                              id: itemModel.id)
+                    
+                    itemModel.state = .deleting(deletingViewModel)
+                    
+                    itemModel.timer?.timerPublisher
+                        .receive(on: DispatchQueue.main)
+                        .map({ [unowned timer] output in
+                            return Int(output.timeIntervalSince(timer.startDate))
+                        })
+                        .sink { [unowned self, unowned timer] timerValue in
+                            
+                            let current = timer.maxCount - timerValue
+                            deletingViewModel.progress = current
+                            deletingViewModel.countTitle = "\(current)"
+                            
+                            if current == 0 {
+                                
+                                deletingViewModel.isDisableCancelButton = true
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                    .init(paymentTemplateIdList: [itemModel.id]))
+                                
+                                itemModel.timer = nil
+                            }
+                    }
+                    .store(in: &bindings)
+                    
+            //CloseLink
                 case _ as TemplatesListViewModelAction.CloseAction:
                     link = nil
                     
@@ -255,45 +581,104 @@ private extension TemplatesListViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] selected in
                 
-                if state == .select {
+                if case .select = self.state {
                     
-                    deletePannel = deletePannelViewModel(selectedCount: selected.count)
-                }
-                
-            }.store(in: &bindings)
-        
-        // state changes
-        $state
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
-                
-                withAnimation {
-                    
-                    updateTitle()
-                    updateAddNewTemplateItem()
+                    deletePannel = getDeletePannelModel(selectedCount: selected.count)
                 }
                 
             }.store(in: &bindings)
         
         $style
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] style in
                 
                 model.paymentTemplatesViewSettings.value = Settings(style: style)
                 
             }.store(in: &bindings)
-            
+         
+        $editModeState
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .active: self.idList = UUID()
+                    
+                default: return
+                }
+            }.store(in: &bindings)
     }
     
-    func bindCategorySelector() {
+    func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
         
-        categorySelector?.$selected
+        viewModel.$selected
             .receive(on: DispatchQueue.main)
             .sink{ [unowned self]  selectedCategoryIndex in
                 
-                items = sortedItems(filterredItems(itemsRaw.value, selectedCategoryIndex))
-                updateAddNewTemplateItem()
-                
+                withAnimation {
+                 
+                    self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                             isDataUpdating: false,
+                                             categorySelected: selectedCategoryIndex,
+                                             searchText: self.navBarState.searchModel?.searchText,
+                                             isAddItemNeeded: !self.state.isSelect)
+                }
             }.store(in: &bindings)
+    }
+    
+    func bind(_ viewModel: RenameTemplateItemViewModel) {
+            
+        viewModel.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                viewModel.isFocused = false
+                self.sheet = nil
+                
+                guard let item = items.first(where: { $0.id == payload.itemId}) else { return }
+                
+                item.title = payload.newName
+                self.model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                                        .init(name: payload.newName,
+                                              parameterList: nil,
+                                              paymentTemplateId: payload.itemId))
+            }
+            .store(in: &bindings)
+    }
+    
+    private func bind(_ viewModel: ProductListViewModel) {
+        
+        for section in viewModel.sections {
+            
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self]  action in
+                    
+                    switch action {
+                    case let payload as MyProductsSectionViewModelAction.Events.ItemTapped:
+                       
+                        self.sheet = nil
+                        guard let product = model.products.value.values
+                                                .flatMap({ $0 })
+                                                .first(where: { $0.id == payload.productId })
+                        else { return }
+                        
+                        self.action.send(TemplatesListViewModelAction.OpenProductProfile
+                                            .init(productId: product.id))
+                    default: break
+                    }
+            }.store(in: &bindings)
+            
+            section.$isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned viewModel] isCollapsed in
+                    
+                    viewModel.containerHeight = viewModel.calcHeight
+                    
+            }.store(in: &bindings)
+        }
     }
     
     /// Сlosing success screen
@@ -376,7 +761,89 @@ extension TemplatesListViewModel {
         
         enum Kind {
             
-            case betweenTheir(MeToMeViewModel)
+            case meToMe(PaymentsMeToMeViewModel)
+            case renameItem(RenameTemplateItemViewModel)
+            case productList(ProductListViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+           
+        let id = UUID()
+        let type: Kind
+           
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
+        }
+    }
+    
+    class ProductListViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        let title = "Выберите продукт"
+        
+        @Published var sections: [MyProductsSectionViewModel]
+        @Published var containerHeight: CGFloat
+        
+        var calcHeight: CGFloat {
+            
+            var height: CGFloat = 16
+            for section in sections {
+                
+                if section.isCollapsed {
+                    height += 48 + 16
+                } else {
+                    height += CGFloat(section.items.count) * 72 + 48 + 16
+                }
+            }
+            
+            return height
+        }
+        
+        init(sections: [MyProductsSectionViewModel],
+             containerHeight: CGFloat = 80) {
+            self.sections = sections
+            self.containerHeight = containerHeight
+        }
+        
+    }
+    
+    class RenameTemplateItemViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        let saveButtonText = "Сохранить"
+        let textFieldLabel = "Введите название шаблона"
+        let oldName: String
+        let templateID: ItemViewModel.ID
+        
+        @Published var text: String
+        @Published var isFocused: Bool
+        
+        var clearButton: NavigationBarButtonViewModel? {
+            text.isEmpty ? nil : .init(icon: .ic24Close,
+                                       action: { self.text = "" } )
+        }
+        
+        var isNameNotValid: Bool {
+            
+            self.text.count < 1 || self.text == self.oldName
+        }
+        
+        var saveButtonAction: () -> Void {
+            
+            { [unowned self] in self.action.send(TemplatesListViewModelAction.RenameSheetAction.SaveNewName
+                .init(newName: self.text, itemId: self.templateID))
+            }
+        }
+        
+        init(oldName: String,
+             templateID: ItemViewModel.ID,
+             isFocused: Bool = true) {
+            
+            self.oldName = oldName
+            self.templateID = templateID
+            self.text = oldName
+            self.isFocused = isFocused
         }
     }
     
@@ -390,170 +857,102 @@ extension TemplatesListViewModel {
 
 private extension TemplatesListViewModel {
     
-    func itemViewModel(with template: PaymentTemplateData) -> ItemViewModel? {
+    func reduceItems(rawItems: [ItemViewModel],
+                     isDataUpdating: Bool,
+                     categorySelected: Option.ID?,
+                     searchText: String?,
+                     isAddItemNeeded: Bool) -> [ItemViewModel] {
+            
+        var newItems = rawItems
         
-        guard let amount = amount(for: template) else {
-            return nil
+        if let searchText, !searchText.isEmpty {
+            newItems = searchedItems(newItems, searchText)
         }
         
-        let image = image(for: template)
-        let subTitle = subTitle(for: template)
-        let logoImage = logoImage(for: template)
+        if let categorySelected {
+            newItems = sortedItems(filterredItems(newItems, categorySelected))
+        }
+          
+        if isAddItemNeeded {
+            newItems.append(getItemAddNewTemplateModel())
+        }
         
-        return ItemViewModel(id: template.paymentTemplateId,
-                             sortOrder: template.sort,
-                             state: .normal,
-                             image: image,
-                             title: template.name,
-                             subTitle: subTitle,
-                             logoImage: logoImage,
-                             ammount: amount,
-                             tapAction: { [weak self] itemId in  self?.action.send(TemplatesListViewModelAction.ItemTapped(itemId: itemId)) },
-                             deleteAction: { [weak self] itemId in  self?.action.send(TemplatesListViewModelAction.Delete.Item(itemId: itemId))})
+        return newItems
+        
     }
     
-    func itemAddNewTemplateViewModel() -> ItemViewModel {
+    static func reduce(rawItems: [ItemViewModel], move: (from: IndexSet.Element, to: Int)) -> [ItemViewModel] {
         
-        return ItemViewModel(id: Int.max,
-                             sortOrder: Int.max,
-                             state: .normal,
-                             image: Image("Templates Add New Icon"),
-                             title: "Добавить шаблон",
-                             subTitle: "Из операции в разделе История",
-                             logoImage: nil,
-                             ammount: "",
-                             tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplate()) },
-                             deleteAction: { _ in }, kind: .add)
-    }
-    
-    func image(for template: PaymentTemplateData) -> Image {
+        var updatedItems = rawItems
+        let removed = updatedItems.remove(at: move.from)
+
+        if move.from < move.to {
+            updatedItems.insert(removed, at: move.to != 0 ? move.to - 1 : 0)
         
-        //TODO: placeholder
-        template.svgImage.image ?? Image("")
-    }
-    
-    func subTitle(for template: PaymentTemplateData) -> String {
-        
-        template.groupName
-    }
-    
-    func logoImage(for template: PaymentTemplateData) -> Image? {
-        
-        return nil
-    }
-    
-    func amount(for template: PaymentTemplateData) -> String? {
-        
-        if template.type == .contactAdressless ,
-           let parameterList = template.parameterList.first as? TransferAnywayData,
-           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
-           let amount = template.amount {
-            
-            
-            return amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
-            
         } else {
-            
-            if template.parameterList.count > 1 {
-                var amount: Double?
-                var currencyAmount: String?
-                
-                template.parameterList.forEach { parameter in
-                    if let paramAmount = parameter.amountDouble {
-                        amount = paramAmount
-                    }
-                    currencyAmount = parameter.currencyAmount
-                    
-                }
-                if let amount = amount,
-                   let currencyAmount = currencyAmount {
-                    
-                    return amount.currencyFormatter(symbol: currencyAmount)
-                    
-                } else {
-                    
-                    return nil
-                }
-                
-            } else {
-                guard let transfer = template.parameterList.first,
-                      let amount = template.amount,
-                      let currenAmount = transfer.currencyAmount else {
-        
-                    return nil
-                }
-                return amount.currencyFormatter(symbol: currenAmount)
-            }
-            
+            updatedItems.insert(removed, at: move.to)
         }
+        
+        return updatedItems
     }
 }
 
-//MARK: - Filtering & Sorting
+//MARK: - Filtering & Sorting ItemsModel
 
-private extension TemplatesListViewModel {
+extension TemplatesListViewModel {
     
-    func filterredItems(_ items: [ItemViewModel], _ selectedCategoryIndex: String) -> [ItemViewModel] {
+    func sortedItems(_ rawItems: [ItemViewModel]) -> [ItemViewModel] {
+        
+        return rawItems.sorted(by: { $0.sortOrder < $1.sortOrder })
+    }
+    
+    func filterredItems(_ rawItems: [ItemViewModel], _ selectedCategoryIndex: String) -> [ItemViewModel] {
         
         if selectedCategoryIndex == categoryIndexAll {
             
-            return items
+            return rawItems
             
         } else {
             
-            return items.filter{ $0.subTitle == selectedCategoryIndex }
+            return rawItems.filter{ $0.subTitle == selectedCategoryIndex }
         }
     }
     
-    func sortedItems(_ items: [ItemViewModel]) -> [ItemViewModel] {
+    func searchedItems(_ rawItems: [ItemViewModel], _ searchText: String) -> [ItemViewModel] {
         
-        return items.sorted(by: { $0.sortOrder < $1.sortOrder })
-    }
-}
-
-//MARK: - Navigation Buttons View Models
-
-private extension TemplatesListViewModel {
-    
-    func menuButtonViewModel() -> NavigationBarButtonViewModel {
-        
-        NavigationBarButtonViewModel(icon: Image("more-horizontal")) { [weak self] in
+        if searchText.isEmpty {
             
-            guard let self = self else {
-                return
-            }
+            return rawItems
             
-            if self.contextMenu == nil {
+        } else {
+            
+            return rawItems.filter({$0.title.localizedCaseInsensitiveContains(searchText)})
                 
-                self.contextMenu = self.contextMenuViewModel()
-                
-            } else {
-                
-                self.contextMenu = nil
-            }
         }
-    }
-    
-    func cancelDeleteModeButtonViewModel() -> NavigationBarButtonViewModel {
-        
-        NavigationBarButtonViewModel(icon: Image("Templates Nav Icon Cancel"), action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Exit()) })
     }
 }
 
 //MARK: - Local View Models
 
-private extension TemplatesListViewModel {
+extension TemplatesListViewModel {
     
-    func categorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
+    func getCategorySelectorModel(with templates: [PaymentTemplateData])
+    -> OptionSelectorView.ViewModel {
         
-        let groupNames = templates.map{ $0.groupName }
-        let groupNamesUnique = Set(groupNames)
-        let groupNamesSorted = Array(groupNamesUnique).sorted(by: { $0 < $1 })
-        var options = groupNamesSorted.map{ Option(id: $0, name: $0) }
+        let groupNames = templates.map(\.groupName)
+        var groupNamesUnique = Set(groupNames)
         let optionAll = Option(id: categoryIndexAll, name: "Все")
-        options.insert(optionAll, at: 0)
+        var options = [optionAll]
         
-        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template)
+        for groupName in groupNames {
+            
+            if groupNamesUnique.contains(groupName) {
+                options.append(Option(id: groupName, name: groupName))
+                groupNamesUnique.remove(groupName)
+            }
+        }
+        
+        return .init(options: options, selected: optionAll.id, style: .template)
     }
     
     func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {
@@ -567,102 +966,27 @@ private extension TemplatesListViewModel {
         return categoriesIds.contains(categoryId)
     }
     
-    func contextMenuViewModel() -> ContextMenuViewModel {
+    func getDeletePannelModel(selectedCount: Int) -> DeletePannelViewModel {
         
-        var menuItems = [ContextMenuViewModel.MenuItemViewModel]()
-        
-        //TODO: implement sorting first
-        /*
-        let orderMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("bar-in-order"), title: "Последовательность") { [weak self] in
-            //TODO: action required
-            self?.closeContextMenu()
-        }
-        menuItems.append(orderMenuItem)
-         */
-        
-        switch style {
-        case .list:
-            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("grid"), title: "Вид (Плитка)") { [weak self] in
-                self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                self?.closeContextMenu()
-            }
-            menuItems.append(styleMenuItem)
-            
-        case .tiles:
-            let styleMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("Templates Menu Icon List"), title: "Вид (Список)") { [weak self] in
-                self?.action.send(TemplatesListViewModelAction.ToggleStyle())
-                self?.closeContextMenu()
-            }
-            menuItems.append(styleMenuItem)
-        }
-        
-        let deleteMenuItem = ContextMenuViewModel.MenuItemViewModel(icon: Image("trash_empty"), title: "Удалить") { [weak self] in
-            self?.action.send(TemplatesListViewModelAction.Delete.Selection.Enter())
-            self?.closeContextMenu()
-        }
-        menuItems.append(deleteMenuItem)
-        
-        return ContextMenuViewModel(items: menuItems)
+        .init(description: "Выбрано \(selectedCount)",
+              selectAllButton: .init(icon: .ic24CheckCircle,
+                                     title: "Выбрать все",
+                                     isDisable: false,
+                                     action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Toggle()) }),
+              deleteButton: .init(icon: .ic24Trash2,
+                                  title: "Удалить",
+                                  isDisable: selectedCount == 0,
+                                  action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Accept()) }))
     }
     
-    func deletePannelViewModel(selectedCount: Int) -> DeletePannelViewModel {
+    func getEmptyTemplateListViewModel() -> EmptyTemplateListViewModel {
         
-        DeletePannelViewModel(description: "Выбрано \(selectedCount)",
-                              button: .init(icon: Image("trash"), caption: "Удалить все", isEnabled: selectedCount > 0, action: {[weak self] in self?.action.send(TemplatesListViewModelAction.Delete.Selection.Accept()) }))
+        .init(icon: .ic40Star,
+              title: "Нет шаблонов",
+              message: "Вы можете создать шаблон из любой успешной операции в разделе История",
+              button: .init(title: "Перейти в историю",
+                            action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplateTapped())}))
     }
-    
-    func onboardingViewModel() -> OnboardingViewModel {
-        
-        OnboardingViewModel(icon: Image("Templates Onboarding Icon"),
-                            title: "Нет шаблонов", message: "Вы можете создать шаблон из любой успешной операции в разделе История",
-                            button: .init(title: "Перейти в историю",
-                                          action: { [weak self] in self?.action.send(TemplatesListViewModelAction.AddTemplate())}))
-    }
-}
-
-
-//MARK: - Updates
-
-private extension TemplatesListViewModel {
-    
-    func updateAddNewTemplateItem() {
-        
-        switch state {
-        case .normal:
-            guard let lastItem = items.last, lastItem.kind != .add else {
-                return
-            }
-
-            items.append(itemAddNewTemplateViewModel())
-            
-        default:
-            guard let lastItem = items.last, lastItem.kind == .add else {
-                return
-            }
-            
-            items.removeLast()
-        }
-    }
-    
-    func updateTitle() {
-        
-        switch state {
-        case .onboarding, .normal:
-            title = "Шаблоны"
-            
-        case .select:
-            title = "Выбрать объекты"
-        }
-    }
-}
-
-//MARK: - External Components
-
-struct NavigationBarButtonViewModel: Identifiable {
-    
-    let id: String = UUID().uuidString
-    let icon: Image
-    let action: () -> Void
 }
 
 //MARK: - Internal Components
@@ -671,9 +995,37 @@ extension TemplatesListViewModel {
     
     enum State {
         
-        case onboarding
+        case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
+        case placeholder
+        
+        var emptyListModel: EmptyTemplateListViewModel? {
+            
+            if case .emptyList(let viewModel) = self {
+                return viewModel
+            } else {
+                return nil
+            }
+        }
+        
+        var isSelect: Bool {
+            
+            if case .select = self {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        var isPlaceholder: Bool {
+            
+            if case .placeholder = self {
+                return true
+            } else {
+                return false
+            }
+        }
     }
     
     enum Style: Codable {
@@ -693,24 +1045,35 @@ extension TemplatesListViewModel {
     class DeletePannelViewModel: ObservableObject {
 
         @Published var description: String
-        let button: ButtonViewModel
+        let selectAllButton: PanelButtonViewModel
+        let deleteButton: PanelButtonViewModel
         
-        struct ButtonViewModel {
-            
-            let icon: Image
-            let caption: String
-            let isEnabled: Bool
-            let action: () -> Void
-        }
-        
-        internal init(description: String, button: ButtonViewModel) {
+        init(description: String,
+             selectAllButton: PanelButtonViewModel,
+             deleteButton: PanelButtonViewModel) {
             
             self.description = description
-            self.button = button
+            self.selectAllButton = selectAllButton
+            self.deleteButton = deleteButton
         }
     }
     
-    struct OnboardingViewModel {
+    class PanelButtonViewModel {
+        
+        let icon: Image
+        let title: String
+        let isDisable: Bool
+        let action: () -> Void
+        
+        init(icon: Image, title: String, isDisable: Bool, action: @escaping () -> Void) {
+            self.icon = icon
+            self.title = title
+            self.isDisable = isDisable
+            self.action = action
+        }
+    }
+    
+    struct EmptyTemplateListViewModel {
         
         let icon: Image
         let title: String
@@ -721,143 +1084,6 @@ extension TemplatesListViewModel {
             
             let title: String
             let action: () -> Void
-        }
-    }
-}
-
-//MARK: - ItemViewModel
-
-extension TemplatesListViewModel {
-    
-    class ItemViewModel: Identifiable, ObservableObject {
-
-        let id: Int
-        let sortOrder: Int
-        @Published var state: State
-        let image: Image
-        let title: String
-        @Published var subTitle: String
-        let logoImage: Image?
-        let ammount: String
-        let tapAction: (ItemViewModel.ID) -> Void
-        let deleteAction: (ItemViewModel.ID) -> Void
-        let kind: Kind //FIXME: kind looks ugly, refactor it to subclasses
-        lazy var swipeLeft: () -> Void = {
-
-            switch self.state {
-            case .normal:
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    self.state = .delete(.init(icon: Image("trash_empty"), subTitle: "Удалить", action: self.deleteAction))
-                }
-                
-            default:
-                break
-            }
-        }
-        
-        lazy var swipeRight: () -> Void = {
-
-            switch self.state {
-            case .delete:
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    self.state = .normal
-                }
-                
-            default:
-                break
-            }
-        }
-
-        internal init(id: Int, sortOrder: Int, state: TemplatesListViewModel.ItemViewModel.State, image: Image, title: String, subTitle: String, logoImage: Image?, ammount: String, tapAction: @escaping (ItemViewModel.ID) -> Void, deleteAction: @escaping (ItemViewModel.ID) -> Void, kind: Kind = .regular) {
-            
-            self.id = id
-            self.sortOrder = sortOrder
-            self.state = state
-            self.image = image
-            self.title = title
-            self.subTitle = subTitle
-            self.logoImage = logoImage
-            self.ammount = ammount
-            self.tapAction = tapAction
-            self.deleteAction = deleteAction
-            self.kind = kind
-        }
-        
-        enum State {
-            
-            case normal
-            case select(ToggleRoundButtonViewModel)
-            case delete(DeleteButtonViewModel)
-            case deleting(DeletingProgressViewModel)
-        }
-        
-        struct ToggleRoundButtonViewModel {
-            
-            let isSelected: Bool
-            let action: (ItemViewModel.ID) -> Void
-        }
-        
-        struct DeleteButtonViewModel {
-            
-            let icon: Image
-            let subTitle: String
-            let action: (ItemViewModel.ID) -> Void
-        }
-        
-        struct DeletingProgressViewModel {
-            
-            let progress: Double
-            let countTitle: String
-            let cancelButton: CancelButtonViewModel
-        }
-        
-        struct CancelButtonViewModel {
-            
-            let title: String
-            let action: (ItemViewModel.ID) -> Void
-        }
-        
-        enum Kind {
-            
-            case regular
-            case add
-        }
-    }
-    
-    struct BottomSheet: BottomSheetCustomizable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
-        
-        var keyboardOfssetMultiplier: CGFloat {
-            
-            switch type {
-                case .meToMe: return 1
-            }
-        }
-        
-        var animationSpeed: Double {
-            
-            switch type {
-                case .meToMe: return 0.4
-            }
-        }
-        
-        enum Kind {
-            
-            case meToMe(PaymentsMeToMeViewModel)
-        }
-    }
-    
-    struct FullCover: Identifiable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            case successMeToMe(PaymentsSuccessViewModel)
         }
     }
 }

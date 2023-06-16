@@ -71,6 +71,7 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let paymentTemplatesUpdating: CurrentValueSubject<Bool, Never>
     let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
     //TODO: move to settings agent
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
@@ -108,10 +109,6 @@ class Model {
     
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
-    
-    //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .taxes]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .newDirect, .contactCash, .contactAddressless, .contactAddressing, .taxAndStateService]
     
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -191,6 +188,7 @@ class Model {
         self.images = .init([:])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
+        self.paymentTemplatesUpdating = .init(false)
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
@@ -769,6 +767,9 @@ class Model {
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                     handleTemplatesDeleteRequest(payload)
+                
+                case let payload as ModelAction.PaymentTemplate.Sort.Requested:
+                    handleTemplatesSortRequest(payload)
                     
                     //MARK: - Dictionaries Actions
                     
