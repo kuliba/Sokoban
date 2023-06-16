@@ -158,7 +158,9 @@ private extension TemplatesListViewModel {
                                 self.itemsRaw.value = templatesVM
                                 let newCategorySelector = getCategorySelectorModel(with: templates)
                                 bindCategorySelector(newCategorySelector)
-                                if let selector {
+                                if let selector,
+                                   newCategorySelector.options.contains(where: { $0.id == selector }) {
+                                    
                                     newCategorySelector.selected = selector
                                 }
                                 self.categorySelector = newCategorySelector
@@ -934,16 +936,23 @@ extension TemplatesListViewModel {
 
 extension TemplatesListViewModel {
     
-    func getCategorySelectorModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
+    func getCategorySelectorModel(with templates: [PaymentTemplateData])
+    -> OptionSelectorView.ViewModel {
         
-        let groupNames = templates.map{ $0.groupName }
-        let groupNamesUnique = Set(groupNames)
-        let groupNamesSorted = Array(groupNamesUnique).sorted(by: { $0 < $1 })
-        var options = groupNamesSorted.map{ Option(id: $0, name: $0) }
+        let groupNames = templates.map(\.groupName)
+        var groupNamesUnique = Set(groupNames)
         let optionAll = Option(id: categoryIndexAll, name: "Все")
-        options.insert(optionAll, at: 0)
+        var options = [optionAll]
         
-        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template)
+        for groupName in groupNames {
+            
+            if groupNamesUnique.contains(groupName) {
+                options.append(Option(id: groupName, name: groupName))
+                groupNamesUnique.remove(groupName)
+            }
+        }
+        
+        return .init(options: options, selected: optionAll.id, style: .template)
     }
     
     func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {
