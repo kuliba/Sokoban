@@ -48,7 +48,7 @@ extension TransferGeneralData {
                     accountId: nil,
                     accountNumber: nil,
                     cardId: 1,
-                    cardNumber: nil,
+                    cardNumber: "cardNumber",
                     phoneNumber: "number",
                     productCustomName: "customName")
             )

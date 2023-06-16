@@ -64,13 +64,13 @@ extension Model {
     }
     
     func paymentsTransferPaymentsServicesStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
-        func amountForPayment(operation: Payments.Operation) -> String {
+        func amountForPayment(operation: Payments.Operation) -> String? {
             if case .servicePayment(_, _, let amountValue) = operation.source {
                 
                 let amount = Decimal(amountValue)
                 return "\(amount)"
             }
-            return "0"
+            return nil
         }
         var result = [PaymentsParameterRepresentable]()
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)

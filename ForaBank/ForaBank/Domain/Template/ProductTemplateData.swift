@@ -35,8 +35,8 @@ extension ProductTemplateData {
         return .init(
             currency: "Rub",
             customName: "customName",
-            id: 2513,
-            numberMask: "customName",
+            id: 1,
+            numberMask: "cardNumber",
             paymentSystemImage: nil,
             smallDesign: .init(description: ""),
             type: .card)
