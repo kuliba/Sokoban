@@ -105,37 +105,10 @@ extension Model {
         if response.needSum {
             
             // amount
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let productParameter = operation.parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
-                  let productId = productParameter.productId,
-                  let product = product(productId: productId),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
-                throw Payments.Error.missingParameter(productParameterId)
-            }
-            
-            if let currencies = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) {
-                
-                let currencies = currencies.options(style: .currency)?.compactMap({$0.id}).joined(separator: "-")
-                let currency = currencies?.components(separatedBy: "-")
-
-                var currencyArr: [Currency] = []
-                if let currency = currency {
-                    
-                    for item in currency {
-                        
-                        currencyArr.append(Currency(description: item))
-                    }
-                }
-                
-                if let first = currencyArr.first {
-                    
-                    let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), validator: .init(minAmount: 10, maxAmount: product.balance))
-                    result.append(amountParameter)
-                }
-                
-            } else {
-                
-                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+            if let amountParameter = try? amountParameter(
+                parameters: operation.parameters,
+                parameterListForNextStep: response.parameterListForNextStep
+            ) {
                 result.append(amountParameter)
             }
         }
@@ -146,6 +119,33 @@ extension Model {
         }
         
         return result
+    }
+    
+    // TODO: Add tests
+    func amountParameter(
+        parameters: [PaymentsParameterRepresentable],
+        parameterListForNextStep: [ParameterData]
+    ) throws -> Payments.ParameterAmount {
+        
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct,
+              let productId = productParameter.productId,
+              let product = product(productId: productId),
+              let currencySymbol = dictionaryCurrencySymbol(for: product.currency)
+        else {
+            throw Payments.Error.missingParameter(productParameterId)
+        }
+        
+        return .init(
+            value: nil,
+            title: "Сумма",
+            currencySymbol: currencySymbol,
+            deliveryCurrency: parameterListForNextStep.deliveryCurrency,
+            validator: .init(
+                minAmount: 10,
+                maxAmount: product.balance
+            )
+        )
     }
     
     func paymentsTransferAnywayStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
@@ -194,5 +194,24 @@ extension Model {
     func paymentsTransferAnywayStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], restrictedParameters: [Payments.Parameter.ID]) throws -> [Payments.Parameter.ID] {
         
         try paymentsTransferStepRequired(operation, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters, restrictedParameters: restrictedParameters)
+    }
+}
+
+extension Array where Element == ParameterData {
+    
+    typealias DeliveryCurrency = Payments.ParameterAmount.DeliveryCurrency
+    
+    var deliveryCurrency: DeliveryCurrency? {
+        
+        let currencyList = first(where: { $0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })?
+            .options(style: .currency)?
+            .compactMap { Currency(description: $0.id) }
+        
+        return currencyList?
+            .first
+            .map {
+                
+                .init(selectedCurrency: $0, currenciesList: currencyList)
+            }
     }
 }
