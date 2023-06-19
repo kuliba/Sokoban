@@ -135,6 +135,15 @@ struct PaymentsTransfersView: View {
                         TransportPaymentsView(viewModel: transportPaymentsViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
+                        
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                        
+                    case .openDeposit(let depositListViewModel):
+                        OpenDepositDetailView(viewModel: depositListViewModel)
+                        
+                    case .openDepositsList(let openDepositViewModel):
+                        OpenDepositView(viewModel: openDepositViewModel)
                     }
                 }
             }

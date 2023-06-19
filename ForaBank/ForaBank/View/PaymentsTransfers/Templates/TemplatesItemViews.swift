@@ -116,6 +116,7 @@ extension TemplatesListView {
                 }
                 .padding(.horizontal)
                 .frame(height: 72)
+                .contentShape(Rectangle())
                 .onTapGesture { viewModel.tapAction(0) }
                 
             case .tiles:
