@@ -188,7 +188,7 @@ final class PaymentsSelectCountryViewModelTests: XCTestCase {
             options: options
         )
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         try model.replaceCountriesWithService(with: countriesWithService)
         
         let scheduler = DispatchQueue.test

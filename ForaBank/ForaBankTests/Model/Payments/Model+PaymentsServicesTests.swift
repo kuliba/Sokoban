@@ -78,7 +78,7 @@ final class Model_PaymentsServicesTests: XCTestCase {
     func test_superDummyOperatorData() throws {
         
         let localAgent = OperatorsLocalAgentSub([.superDummy(code: "transport")])
-        let model: Model = .mockWithEmpty(
+        let model: Model = .mockWithEmptyExcept(
             localAgent: localAgent
         )
         
@@ -98,7 +98,7 @@ final class Model_PaymentsServicesTests: XCTestCase {
     ) -> Model {
         
         let localAgent = OperatorsLocalAgentSub(operatorGroupData)
-        let sut: Model = .mockWithEmpty(
+        let sut: Model = .mockWithEmptyExcept(
             localAgent: localAgent
         )
         

@@ -66,6 +66,7 @@ enum Payments {
         case internetTV
         case utility
         case transport
+        case avtodor
     }
     
     enum Operator: String {
@@ -88,6 +89,7 @@ enum Payments {
         case internetTV        = "iFora||1051001"
         case utility           = "iFora||1031001"
         case transport         = "iFora||1051062"
+        case avtodor           = "AVD"
     }
     
     static var paymentsServicesOperators: [Operator] {
@@ -222,6 +224,8 @@ extension Payments.Operation {
         case c2bSubscribe(URL)
         
         case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
+        
+        case avtodor
 
         case mock(Payments.Mock)
         
@@ -239,6 +243,7 @@ extension Payments.Operation {
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
             case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
+            case .avtodor: return "Fake/Combined Avtodor"
             }
         }
     }
@@ -330,6 +335,7 @@ extension Payments.Operation {
         case internetTV
         case utility
         case transport
+        case avtodor
     }
     
     enum Action: Equatable {
@@ -466,6 +472,7 @@ extension Payments {
         case missingSource(Service)
         
         case missingOperator(forCode: String)
+        case missingParameterList(forCode: String)
         
         case action(Action)
         case ui(UI)
@@ -521,6 +528,9 @@ extension Payments {
 
             case let .missingOperator(forCode: code):
                 return "Missing operator for code: \(code)"
+            
+            case let .missingParameterList(forCode: code):
+                return "Missing parameterList for operator with code: \(code)"
             
             case let .action(action):
                 switch action {

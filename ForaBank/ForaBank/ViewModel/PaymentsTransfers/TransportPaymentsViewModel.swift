@@ -132,35 +132,23 @@ extension TransportPaymentsViewModel.ItemViewModel {
 
 extension TransportPaymentsViewModel {
     
-    func link(for code: String) -> Link {
+    func link(for puref: String) -> Link {
         
-        let link: Link
+        let paymentsViewModel: PaymentsViewModel
         
-        switch code {
+        switch puref {
         case Purefs.avtodorGroup:
-            let action: (String) -> Void = { [weak self] puref in
-                
-                guard let self else { return }
-                
-                let paymentsViewModel = makePaymentsViewModel(
-                    .servicePayment(puref: puref, additionalList: .none, amount: 0)
-                )
-                
-                self.link = .init(.payments(paymentsViewModel))
-            }
-            
-            link = .avtodor(action)
+            paymentsViewModel = makePaymentsViewModel(.avtodor)
             
             // case Purefs.iForaMosParking:
             //     link = { fatalError() }()
             
         default:
-            let paymentsViewModel = makePaymentsViewModel(
-                .servicePayment(puref: code, additionalList: .none, amount: 0)
+            paymentsViewModel = makePaymentsViewModel(
+                .servicePayment(puref: puref, additionalList: .none, amount: 0)
             )
-            link = .payments(paymentsViewModel)
         }
         
-        return link
+        return .payments(paymentsViewModel)
     }
 }

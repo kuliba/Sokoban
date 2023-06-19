@@ -2878,7 +2878,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_fastPayments_contacts() {
         
         let mode: ContactsViewModel.Mode = .fastPayments(.contacts)
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2892,7 +2892,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_fastPayments_banksAndCountries() {
         
         let mode: ContactsViewModel.Mode = .fastPayments(.banksAndCountries(phone: "+7 911 111-11-11"))
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2906,7 +2906,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_abroad() {
         
         let mode: ContactsViewModel.Mode = .abroad
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2920,7 +2920,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_select_contacts() {
         
         let mode: ContactsViewModel.Mode = .select(.contacts)
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2934,7 +2934,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_select_banks() {
         
         let mode: ContactsViewModel.Mode = .select(.banks)
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2948,7 +2948,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_select_banksFullInfo() {
         
         let mode: ContactsViewModel.Mode = .select(.banksFullInfo)
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2962,7 +2962,7 @@ final class ContactsViewModelTests: XCTestCase {
     func test_sectionsForModeShouldCreateSections_select_countries() {
         
         let mode: ContactsViewModel.Mode = .select(.countries)
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         
         let sections = model.sections(for: mode)
         
@@ -2984,7 +2984,7 @@ final class ContactsViewModelTests: XCTestCase {
         scheduler: TestSchedulerOfDispatchQueue,
         model: Model
     ) {
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let scheduler = DispatchQueue.test
         let sut = model.makeContactsViewModel(
             forMode: mode,
@@ -3002,7 +3002,7 @@ final class ContactsViewModelTests: XCTestCase {
 
 extension Model {
     
-    static func mockWithEmpty(
+    static func mockWithEmptyExcept(
         sessionAgent: SessionAgentProtocol = SessionAgentEmptyMock(),
         serverAgent: ServerAgentProtocol = ServerAgentEmptyMock(),
         localAgent: LocalAgentProtocol = LocalAgentEmptyMock(),

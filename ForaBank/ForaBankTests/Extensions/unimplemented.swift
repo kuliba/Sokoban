@@ -1,5 +1,5 @@
 //
-//  unimplemented.swift
+//  Unimplemented.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 12.05.2023.
@@ -7,9 +7,13 @@
 
 @testable import ForaBank
 
-func unimplemented<T>(_ message: String = "Unimplemented") -> T {
-    
-    fatalError(message)
+func unimplemented<T>(
+    _ message: String = "",
+    file: StaticString = #file,
+    line: UInt = #line
+) -> T {
+
+    fatalError("Unimplemented: \(message)", file: file, line: line)
 }
 
 extension Model {

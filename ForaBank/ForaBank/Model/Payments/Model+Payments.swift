@@ -206,6 +206,9 @@ extension Model {
                 throw Payments.Error.unsupported
             }
             
+        case .avtodor:
+            return .avtodor
+            
         case let .latestPayment(latestPaymentId):
             
             guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
@@ -308,6 +311,9 @@ extension Model {
         case .fssp:
             return try await paymentsProcessOperationResetVisibleTaxesFSSP(operation)
             
+        case .avtodor:
+            return try await paymentsProcessOperationResetVisibleAvtodor(operation)
+            
         default:
             return nil
         }
@@ -352,6 +358,12 @@ extension Model {
             
         case .internetTV, .utility, .transport:
             return try await paymentsProcessLocalStepServices(operation, for: stepIndex)
+            
+        case .avtodor:
+            return try await paymentsProcessLocalStepAvtodor(
+                parameters: operation.parameters,
+                for: stepIndex
+            )
 
         case .change:
             return try await paymentsStepChangePayment(operation, for: stepIndex)
@@ -371,21 +383,14 @@ extension Model {
             switch operation.transferType {
             case .anyway:
                 
-                let next = try await paymentsTransferAnywayStepParameters(operation, response: anywayResponse)
+                return try await step(for: operation, with: anywayResponse)
                 
-                let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
-                if duplicates.count > 0 {
-                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
-                }
+            case .avtodor:
                 
-                // next parameters without duplicates
-                let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
-                
-                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: [])
-                
-                return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
+                return try await paymentsProcessRemoteStepAvtodor(
+                    operation,
+                    response: anywayResponse
+                )
                 
             case .mobileConnection:
                 
@@ -396,11 +401,12 @@ extension Model {
                 
             case .internetTV, .utility, .transport:
                 
-                let next = try await paymentsTransferPaymentsServicesStepParameters(operation, response: anywayResponse)
-                if anywayResponse.finalStep {
+                guard !anywayResponse.finalStep else {
                     
                     return try await paymentsProcessRemoteStepServices(operation: operation, response: response)
                 }
+                
+                let next = try await paymentsTransferPaymentsServicesStepParameters(operation, response: anywayResponse)
                 let duplicates = next.map(\.parameter).filter { operation.parametersIds.contains($0.id) }
                 if !duplicates.isEmpty {
                     
@@ -454,8 +460,12 @@ extension Model {
                 // next parameters without duplicates
                 let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
                 
-                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
+                let visible = try paymentsTransferAnywayStepVisible(
+                    nextStepParametersIDs: nextParameters.map(\.id),
+                    operationParametersIDs: operation.parameters.map(\.id),
+                    needSum: anywayResponse.needSum
+                )
+                let stepStage = try paymentsTransferAnywayStepStage(operation, isFinalStep: anywayResponse.finalStep)
                 let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber"]
                 let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
                 
@@ -484,6 +494,89 @@ extension Model {
                 throw Payments.Error.unsupported
             }
         }
+    }
+    
+    // MARK: - Helpers
+    
+    /// Create next step for operation using response.
+    func step(
+        for operation: Payments.Operation,
+        with response: TransferAnywayResponseData
+    ) async throws -> Payments.Operation.Step {
+
+        let nextParameters = try await uniqueNextParameters(
+            for: operation,
+            with: response
+        )
+        
+        return try step(
+            for: operation,
+            withNextParameters: nextParameters,
+            response: response
+        )
+    }
+    
+    /// Return next step parameters without duplication.
+    func uniqueNextParameters(
+        for operation: Payments.Operation,
+        with response: TransferAnywayResponseData
+    ) async throws -> [PaymentsParameterRepresentable] {
+        
+        let next = try await paymentsTransferAnywayStepParameters(operation, response: response)
+        
+        let duplicates = next
+            .map { $0.parameter }
+            .filter { operation.parametersIds.contains($0.id) }
+        
+        if duplicates.count > 0 {
+            
+            LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+        }
+        
+        // next parameters without duplicates
+        let nextParameters = next.filter {
+            
+            !operation.parametersIds.contains($0.id)
+        }
+        
+        return nextParameters
+    }
+    
+    /// Create next step for operation using next step parameters and response.
+    func step(
+        for operation: Payments.Operation,
+        withNextParameters nextParameters: [PaymentsParameterRepresentable],
+        response: TransferAnywayResponseData
+    ) throws -> Payments.Operation.Step {
+        
+        let visible = try paymentsTransferAnywayStepVisible(
+            nextStepParametersIDs: nextParameters.map(\.id),
+            operationParametersIDs: operation.parameters.map(\.id),
+            needSum: response.needSum
+        )
+        let stepStage = try paymentsTransferAnywayStepStage(
+            operation,
+            isFinalStep: response.finalStep
+        )
+        let required = try paymentsTransferAnywayStepRequired(
+            operation,
+            visible: visible,
+            nextStepParameters: nextParameters,
+            operationParameters: operation.parameters,
+            restrictedParameters: []
+        )
+        
+        return Payments.Operation.Step(
+            parameters: nextParameters,
+            front: .init(
+                visible: visible,
+                isCompleted: false),
+            back: .init(
+                stage: stepStage,
+                required: required,
+                processed: nil
+            )
+        )
     }
 }
 
@@ -608,7 +701,7 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway:
+        case .anyway, .avtodor:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
             
         case .sfp:
@@ -640,7 +733,7 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway:
+        case .anyway, .avtodor:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
         
         case .abroad:

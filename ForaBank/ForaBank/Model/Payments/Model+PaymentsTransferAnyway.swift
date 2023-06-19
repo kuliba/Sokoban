@@ -148,20 +148,21 @@ extension Model {
         )
     }
     
-    func paymentsTransferAnywayStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsTransferAnywayStepVisible(
+        nextStepParametersIDs: [Payments.Parameter.ID],
+        operationParametersIDs: [Payments.Parameter.ID],
+        needSum: Bool
+    ) throws -> [Payments.Parameter.ID] {
         
-        var result = [Payments.Parameter.ID]()
-        
-        let nexStepParametersIds = nextStepParameters.map{ $0.id }
-        result.append(contentsOf: nexStepParametersIds)
-        
-        if response.needSum == true {
+        var result = nextStepParametersIDs
+                
+        if needSum {
             
-            let operationParametersIds = operationParameters.map{ $0.id }
-            let allParametersIds = operationParametersIds + nexStepParametersIds
+            let allParametersIds = operationParametersIDs + nextStepParametersIDs
             
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard allParametersIds.contains(productParameterId) else {
+            guard allParametersIds.contains(productParameterId)
+            else {
                 throw Payments.Error.missingParameter(productParameterId)
             }
             
@@ -171,23 +172,20 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepStage(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
+    func paymentsTransferAnywayStepStage(
+        _ operation: Payments.Operation,
+        isFinalStep: Bool
+    ) throws -> Payments.Operation.Stage {
         
-        if response.finalStep == true {
+        if isFinalStep {
             
             return .remote(.confirm)
             
         } else {
             
-            let operationStepsStages = operation.steps.map{ $0.back.stage }
-            if operationStepsStages.count > 0 {
-                
-                return .remote(.next)
-                
-            } else {
-                
-                return .remote(.start)
-            }
+            let stepsStages = operation.steps.map(\.back.stage)
+       
+            return stepsStages.isEmpty ? .remote(.start) : .remote(.next)
         }
     }
     

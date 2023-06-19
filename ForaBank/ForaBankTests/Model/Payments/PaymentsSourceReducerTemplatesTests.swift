@@ -907,7 +907,7 @@ extension PaymentsSourceReducerTemplateTests {
     
     func makeSUT() -> Model {
         
-        .mockWithEmpty()
+        .mockWithEmptyExcept()
     }
     
     typealias Service = Payments.Service

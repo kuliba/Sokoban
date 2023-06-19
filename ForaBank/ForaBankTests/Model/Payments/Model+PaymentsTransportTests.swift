@@ -12,7 +12,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     
     func test_paymentsService_shouldThrowOnEmptyTemplatesList() throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let paymentTemplateId = 54321
         let source: Payments.Operation.Source = .template(paymentTemplateId)
         
@@ -24,7 +24,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     
     func test_paymentsService_shouldReturnTransport_forTransportTemplate() throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let paymentTemplateId = 54321
         model.stubPaymentTemplates(
             paymentTemplateId: paymentTemplateId,
@@ -43,7 +43,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     
     func test_paymentsService_shouldThrowOnEmptyLatestPayments() throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let source: Payments.Operation.Source = .latestPayment(0)
         
         XCTAssertThrowsError(
@@ -54,7 +54,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     
     func test_paymentsService_shouldReturnTransport_forTransportLatestPayments() throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let latestPaymentID = model.stubLatestPayments(
             for: .transport
         )
@@ -73,7 +73,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsPaymentsProcessLocalStep_transport_shouldProcessAs_paymentsProcessLocalStepServices() async throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let operation: Payments.Operation = .init(service: .transport)
         
         do {
@@ -86,7 +86,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsProcessLocalStep_transport_shouldProcessAs_paymentsProcessLocalStepServices() async throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let operation: Payments.Operation = .init(service: .transport)
         
         do {
@@ -99,7 +99,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsProcessRemoteStep_transport_shouldProcessAs_paymentsTransferPaymentsServicesStepParameters() async throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let operation: Payments.Operation = .init(service: .transport)
         
         let step = try await model.paymentsProcessRemoteStep(operation: operation, response: TransferAnywayResponseData.makeDummy(finalStep: false))
@@ -111,7 +111,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsProcessRemoteNext_transport_shouldProcessAs_paymentsTransferPaymentsServicesProcess() async throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let operation: Payments.Operation = .init(service: .transport)
         
         do {
@@ -124,7 +124,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsProcessRemoteConfirm_transport_shouldProcessAs_paymentsProcessRemoteServicesComplete() async throws {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let operation: Payments.Operation = .emptyWithParameterCode()
         
         do {
@@ -137,7 +137,7 @@ final class Model_PaymentsTransportTests: XCTestCase {
     /// - Note: this test is testing implementation details - this is known and intentional until there is a modular and testable components.
     func test_paymentsProcessSourceReducer_transport_shouldProcess_template()  {
         
-        let model: Model = .mockWithEmpty()
+        let model: Model = .mockWithEmptyExcept()
         let paymentTemplateId = 54321
         model.stubPaymentTemplates(
             paymentTemplateId: paymentTemplateId,

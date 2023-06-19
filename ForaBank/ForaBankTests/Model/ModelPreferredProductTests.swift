@@ -74,7 +74,7 @@ extension ModelPreferredProductTests {
     
     func makeSut(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
         
-        let sut = Model.mockWithEmpty()
+        let sut = Model.mockWithEmptyExcept()
         sut.products.value = makeProductsData(counts)
         
         return sut
