@@ -90,7 +90,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 extension ProductProfileViewModelTests {
     
     func makeSUT(
-        model: Model = .mockWithEmpty(),
+        model: Model = .mockWithEmptyExcept(),
         product: ProductData,
         rootView: String = "")
     -> ProductProfileViewModel? {
@@ -100,7 +100,7 @@ extension ProductProfileViewModelTests {
     
     func makeModelWithProducts(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
         
-        let model = Model.mockWithEmpty()
+        let model = Model.mockWithEmptyExcept()
         model.products.value = makeProductsData(counts)
         
         return model

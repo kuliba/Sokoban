@@ -249,7 +249,7 @@ private extension PaymentsTaxesFSSPTests {
         file: StaticString = #file,
         line: UInt = #line) -> Model {
             
-            let sut = Model.mockWithEmpty()
+            let sut = Model.mockWithEmptyExcept()
             
             sut.products.value = makeProductsData(counts)
             sut.currencyList.value = currencies
