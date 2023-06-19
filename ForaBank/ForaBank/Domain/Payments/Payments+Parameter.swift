@@ -105,6 +105,7 @@ extension Payments.Parameter {
         case countryFamilyName               = "bSurName"
         case countryGivenName                = "bName"
         case countryMiddleName               = "bLastName"
+        case paymentSystem                   = "paymentSystem"
         
         case countryReturnNumber                = "countryReturnNumber"
         case countryReturnAmount                = "countryReturnAmount"
