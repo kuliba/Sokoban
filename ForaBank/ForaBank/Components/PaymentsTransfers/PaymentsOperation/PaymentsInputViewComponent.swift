@@ -308,7 +308,7 @@ struct PaymentsInputView: View {
             
             icon
                 .resizable()
-                .renderingMode(.template)
+                .renderingMode(.original)
                 .foregroundColor(.mainColorsGray)
             
         } else {

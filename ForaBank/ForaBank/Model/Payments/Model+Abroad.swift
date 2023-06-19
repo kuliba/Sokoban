@@ -107,7 +107,44 @@ extension Model {
                 
                 let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
                 
-                return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
+                var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
+                                                                       headerParameter,
+                                                                       dropDownListParameter,
+                                                                       countryParameter,
+                                                                       productParameter]
+                
+                let paymentsSystemId = Payments.Parameter.Identifier.paymentSystem.rawValue
+
+                if case .template = source {
+                    
+                    let countrySwitch = try parameters.parameter(forIdentifier: .countryDropDownList)
+                    
+                    if let value = countrySwitch.value,
+                       let puref = Payments.Operator(rawValue: value) {
+                        
+                        let `operator` = self.dictionaryAnywayGroupOperatorData(for: value)
+                        
+                        if let parentCode = `operator`?.parentCode,
+                           let parentOperator = self.dictionaryAnywayOperatorGroup(for: parentCode) {
+                            
+                            if let svgImage = parentOperator.logotypeList.last?.svgImage,
+                               let icon = ImageData(with: svgImage) {
+                                
+                                switch puref {
+                                case .contact, .contactCash:
+                                    let value = "CONTACT"
+                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                    
+                                default:
+                                    let value = "МИГ"
+                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return .init(parameters: parameters, front: .init(visible: [headerParameter.id, dropDownListId, paymentsSystemId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 
             } else {
                 

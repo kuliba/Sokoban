@@ -31,7 +31,9 @@ extension Model {
                                               Payments.Parameter.Identifier.service.rawValue,
                                               Payments.Parameter.Identifier.category.rawValue,
                                               Payments.Parameter.Identifier.countryDropDownList.rawValue,
-                                              Payments.Parameter.Identifier.countryCurrencyFilter.rawValue]
+                                              Payments.Parameter.Identifier.countryCurrencyFilter.rawValue,
+                                              Payments.Parameter.Identifier.paymentSystem.rawValue,
+        ]
         
         let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: restrictedParameters)
         
