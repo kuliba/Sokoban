@@ -4326,14 +4326,6 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
-		0CCE2DDE2A2D065A0016C81A /* PaymentsTransfers */ = {
-			isa = PBXGroup;
-			children = (
-				0CCE2DDF2A2D06890016C81A /* Templates */,
-			);
-			path = PaymentsTransfers;
-			sourceTree = "<group>";
-		};
 		0CCE2DDF2A2D06890016C81A /* Templates */ = {
 			isa = PBXGroup;
 			children = (
@@ -4524,6 +4516,8 @@
 		2A3086BE29FCE44400966B1A /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
+				77BE9A37290C20AC006046B1 /* Payments */,
+				0CCE2DDF2A2D06890016C81A /* Templates */,
 				2A3086BF29FCE45B00966B1A /* FastPayments */,
 				2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */,
 				2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */,
@@ -6460,10 +6454,8 @@
 			isa = PBXGroup;
 			children = (
 				77ED5FA82A2F78B7001BFA3D /* Main */,
-				0CCE2DDE2A2D065A0016C81A /* PaymentsTransfers */,
 				2AABD3CF2A2540BF0085CDA6 /* QR */,
 				2A3086BE29FCE44400966B1A /* PaymentsTransfers */,
-				77BE9A37290C20AC006046B1 /* Payments */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
