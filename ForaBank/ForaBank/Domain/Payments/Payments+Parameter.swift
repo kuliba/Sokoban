@@ -122,6 +122,7 @@ extension Payments.Parameter {
         case paymentsServiceAmount           = "paymentsServiceAmount"
 
         case p1                              = "P1"
+        case mosParking                      = "MosParking"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
