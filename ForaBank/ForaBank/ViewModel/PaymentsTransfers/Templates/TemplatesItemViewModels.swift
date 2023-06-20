@@ -248,7 +248,7 @@ extension TemplatesListViewModel {
                              sortOrder: Int.max,
                              avatar: .image(.ic40Star),
                              title: "Добавить шаблон",
-                             subTitle: "Из любой успешной операции\nв разделе «История»",
+                             subTitle: "Из любой успешной операции в разделе «История»",
                              tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
                              kind: .add)
     }

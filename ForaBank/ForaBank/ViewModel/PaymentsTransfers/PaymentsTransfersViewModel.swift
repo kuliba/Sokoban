@@ -109,6 +109,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
+                    guard let product = model.product(productId: payload.productId),
+                          let productProfileViewModel = ProductProfileViewModel(
+                            model,
+                            product: product,
+                            rootView: "\(type(of: self))",
+                            dismissAction: {[weak self] in self?.link = nil })
+                    else { return }
+
+                    productProfileViewModel.rootActions = rootActions
+                    bind(productProfileViewModel)
+                    link = .productProfile(productProfileViewModel)
+                    
+                case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
+                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    })
+                    link = .openDepositsList(openDepositViewModel)
+                    
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value
                     else {return }
@@ -261,6 +279,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
+                        bind(viewModel)
                         link = .template(viewModel)
                         
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
@@ -421,6 +440,59 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+        
+        templatesListViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
+                            .init(productId: payload.productId))
+                        }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ productProfile: ProductProfileViewModel) {
+        
+        productProfile.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        
+                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile(productId: payload.productId))
+                    }
+                    
+                case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        
+                        self.action.send(PaymentsTransfersViewModelAction.Show.OpenDeposit())
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
@@ -1139,6 +1211,9 @@ extension PaymentsTransfersViewModel {
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case transportPayments(TransportPaymentsViewModel)
+        case productProfile(ProductProfileViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
+        case openDepositsList(OpenDepositViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -1188,6 +1263,11 @@ enum PaymentsTransfersViewModelAction {
     
     enum Show {
         
+        struct ProductProfile: Action {
+            
+            let productId: ProductData.ID
+        }
+        
         struct Alert: Action {
             
             let title: String
@@ -1207,6 +1287,8 @@ enum PaymentsTransfersViewModelAction {
         struct Contacts: Action {}
         
         struct Countries: Action {}
+        
+        struct OpenDeposit: Action {}
     }
     
     struct ViewDidApear: Action {}
