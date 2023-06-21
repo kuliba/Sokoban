@@ -86,6 +86,7 @@ extension TemplatesListViewModel {
         enum State {
             
             case normal
+            case processing
             case select(ToggleRoundButtonViewModel)
             case delete(ItemActionViewModel)
             case deleting(DeletingProgressViewModel)
@@ -96,6 +97,12 @@ extension TemplatesListViewModel {
                 else { return nil }
                 
                 return viewModel
+            }
+            
+            var isProcessing: Bool {
+                
+                if case .processing = self { return true }
+                else { return false }
             }
             
         }

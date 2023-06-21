@@ -18,7 +18,7 @@ extension TemplatesListView {
         var body: some View {
                         
             switch viewModel.state {
-            case .normal:
+            case .normal, .processing:
                             
                 TemplatesListView.NormalItemView
                     .init(avatar: viewModel.avatar,
@@ -27,7 +27,12 @@ extension TemplatesListView {
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
                           style: style, editMode: $editMode)
-                    .onTapGesture { viewModel.tapAction(viewModel.id) }
+                    .shimmering(active: viewModel.state.isProcessing, bounce: true)
+                    .onTapGesture {
+                        if !viewModel.state.isProcessing {
+                            viewModel.tapAction(viewModel.id)
+                        }
+                    }
                 
             case let .deleting(deletingProgressViewModel):
                             

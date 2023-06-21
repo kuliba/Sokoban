@@ -95,19 +95,23 @@ private extension TemplatesListViewModel {
                         .init(informer: .init(message: "Не удалось загрузить шаблоны",
                                               icon: .close)))
                     
-                case _ as ModelAction.PaymentTemplate.Update.Failed:
+                case let payload as ModelAction.PaymentTemplate.Update.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось сохранить изменения",
                                               icon: .close)))
-                    withAnimation {
-                        
-                        self.items = reduceItems(rawItems: self.itemsRaw.value,
-                                                 isDataUpdating: false,
-                                                 categorySelected: self.categorySelector?.selected,
-                                                 searchText: self.navBarState.searchModel?.searchText,
-                                                 isAddItemNeeded: true)
-                    }
+                    guard let item = items.first(where: { $0.id == payload.paymentTemplateId})
+                    else { return }
+                    
+                    item.state = .normal
+                    
+                case let payload as ModelAction.PaymentTemplate.Update.Complete:
+                    
+                    guard let item = items.first(where: { $0.id == payload.paymentTemplateId})
+                    else { return }
+                    
+                    item.state = .normal
+                    item.title = payload.newName
                 
                 case _ as ModelAction.PaymentTemplate.Delete.Failed:
                     
@@ -666,7 +670,7 @@ private extension TemplatesListViewModel {
                 
                 guard let item = items.first(where: { $0.id == payload.itemId}) else { return }
                 
-                item.title = payload.newName
+                item.state = .processing
                 self.model.action.send(ModelAction.PaymentTemplate.Update.Requested
                                         .init(name: payload.newName,
                                               parameterList: nil,

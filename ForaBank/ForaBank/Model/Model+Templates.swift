@@ -68,10 +68,15 @@ extension ModelAction {
                 let paymentTemplateId: Int
             }
             
-            struct Complete: Action {}
+            struct Complete: Action {
+                
+                let paymentTemplateId: Int
+                let newName: String
+            }
             
             struct Failed: Action {
                 
+                let paymentTemplateId: Int
                 let error: Error
             }
         }
@@ -385,7 +390,9 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     // confirm template updated
-                    self.action.send(ModelAction.PaymentTemplate.Update.Complete())
+                    self.action.send(ModelAction.PaymentTemplate.Update.Complete
+                        .init(paymentTemplateId: payload.paymentTemplateId,
+                              newName: payload.name ?? ""))
                     // request all templates from server
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
@@ -395,11 +402,14 @@ extension Model {
                                                    errorMessage: response.errorMessage)
                     
                     self.action.send(ModelAction.PaymentTemplate.Update.Failed
-                                        .init(error: ResponseError(message: response.errorMessage)))
+                        .init(paymentTemplateId: payload.paymentTemplateId,
+                              error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.PaymentTemplate.Update.Failed(error: error))
+                self.action.send(ModelAction.PaymentTemplate.Update.Failed
+                    .init(paymentTemplateId: payload.paymentTemplateId,
+                          error: error))
             }
         }
     }
