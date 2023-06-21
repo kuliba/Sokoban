@@ -67,7 +67,16 @@ extension TemplatesListViewModel {
                   subTitle: "Удаление...",
                   ammount: " 1,31 млн. ₽"),
             
-                .init(id: 5, sortOrder: 5,
+                .init(id: 5,
+                      sortOrder: 5,
+                      state: .normal,
+                      avatar: .text("K"),
+                      title: "Маме на Сбер",
+                      subTitle: "Перевод по СБП",
+                      topImage: Image("Bank Logo Sample"),
+                      ammount: "450 ₽"),
+            
+                .init(id: 6, sortOrder: 6,
                       state: .normal,
                       avatar: .image(.ic40Star),
                       title: "Добавить шаблон",

@@ -223,6 +223,44 @@ extension Model {
 //MARK: - paymentTemplates
 extension Model {
     
+    func makeTemplatesImagesCache(data: [PaymentTemplateData]) {
+        
+        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+            
+            let prefixKey = "Template"
+            let dataIds = data.map(\.id)
+            let cacheIds = Set(self.images.value.keys
+                .filter { $0.hasPrefix(prefixKey) }
+                .compactMap { Int($0.dropFirst(prefixKey.count)) })
+            
+            let fullDiff = cacheIds.symmetricDifference(dataIds)
+            let addDiff = fullDiff.intersection(dataIds)
+            let delDiff = fullDiff.intersection(cacheIds)
+            
+            var localImages = self.images.value
+            
+            for id in delDiff { //delete images
+                
+                localImages.removeValue(forKey: "\(prefixKey)\(id)")
+            }
+            
+            for id in addDiff { //add images
+                
+                if let template = data.first(where: { $0.id == id }),
+                   let imgData = ImageData(with: template.svgImage) {
+                    
+                    localImages["\(prefixKey)\(id)"] = imgData
+                }
+            }
+            
+            if !addDiff.isEmpty || !delDiff.isEmpty {
+                
+                self.images.value = localImages
+                try? self.localAgent.store(self.images.value, serial: nil)
+            }
+        }
+    }
+    
     func handleTemplatesListRequest() {
         
         guard let token
@@ -252,7 +290,8 @@ extension Model {
                     guard let data = response.data, serial != data.serial
                     else { return }
                     
-                        
+                    makeTemplatesImagesCache(data: data.templateList )
+                    
                     // update model data
                     self.paymentTemplates.value = data.templateList
                        

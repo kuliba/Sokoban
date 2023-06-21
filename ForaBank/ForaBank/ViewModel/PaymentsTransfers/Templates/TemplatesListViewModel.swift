@@ -57,7 +57,9 @@ class TemplatesListViewModel: ObservableObject {
     
     convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
   
-        self.init(state: .placeholder,
+        model.action.send(ModelAction.PaymentTemplate.List.Requested())
+        
+        self.init(state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
                   style: model.paymentTemplatesViewSettings.value.style,
                   navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
                                                                 action: dismissAction),
@@ -73,8 +75,6 @@ class TemplatesListViewModel: ObservableObject {
         updateNavBar(event: .setRegular)
         
         bind()
-        
-        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
     }
 }
 
@@ -100,6 +100,14 @@ private extension TemplatesListViewModel {
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось сохранить изменения",
                                               icon: .close)))
+                    withAnimation {
+                        
+                        self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                                 isDataUpdating: false,
+                                                 categorySelected: self.categorySelector?.selected,
+                                                 searchText: self.navBarState.searchModel?.searchText,
+                                                 isAddItemNeeded: true)
+                    }
                 
                 case _ as ModelAction.PaymentTemplate.Delete.Failed:
                     
@@ -144,31 +152,50 @@ private extension TemplatesListViewModel {
                     }
                         
                 } else {
+                    
+                    let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
+                       
+                    let selector = self.categorySelector?.selected
                         
-                    DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-                        let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
+                    withAnimation {
+                        
+                        self.state = .normal
+                        self.itemsRaw.value = templatesVM
+                        let newCategorySelector = getCategorySelectorModel(with: templates)
+                        bindCategorySelector(newCategorySelector)
+                        if let selector,
+                           newCategorySelector.options.contains(where: { $0.id == selector }) {
                             
-                        DispatchQueue.main.async { [unowned self] in
-                           
-                            let selector = self.categorySelector?.selected
-                            
-                            withAnimation {
-                                
-                                self.state = .normal
-                                self.itemsRaw.value = templatesVM
-                                let newCategorySelector = getCategorySelectorModel(with: templates)
-                                bindCategorySelector(newCategorySelector)
-                                if let selector,
-                                   newCategorySelector.options.contains(where: { $0.id == selector }) {
-                                    
-                                    newCategorySelector.selected = selector
-                                }
-                                self.categorySelector = newCategorySelector
-                            }
+                            newCategorySelector.selected = selector
                         }
+                        self.categorySelector = newCategorySelector
                     }
+                    
                 }
             }.store(in: &bindings)
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                itemsRaw.value.filter { $0.avatar.isPlaceholder }
+                     .forEach { item in
+                    
+                         if let img = images["Template\(item.id)"]?.image {
+                             item.avatar = .image(img)
+                         }
+                }
+                
+                withAnimation {
+                 
+                    self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                             isDataUpdating: false,
+                                             categorySelected: self.categorySelector?.selected,
+                                             searchText: self.navBarState.searchModel?.searchText,
+                                             isAddItemNeeded: !self.state.isSelect)
+                }
+                
+        }.store(in: &bindings)
         
         $items
             .receive(on: DispatchQueue.main)
@@ -873,6 +900,10 @@ private extension TemplatesListViewModel {
             newItems = sortedItems(filterredItems(newItems, categorySelected))
         }
           
+        if isDataUpdating {
+            newItems.insert(ItemViewModel(kind: .placeholder), at: 0)
+        }
+        
         if isAddItemNeeded {
             newItems.append(getItemAddNewTemplateModel())
         }
