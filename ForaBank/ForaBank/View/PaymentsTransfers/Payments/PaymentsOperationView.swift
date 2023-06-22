@@ -94,6 +94,9 @@ struct PaymentsOperationView: View {
                         
                     case .hint(let hintViewModel):
                         HintView(viewModel: hintViewModel)
+                        
+                    case .changeName(let changeNameViewModel):
+                        TemplatesListView.RenameTemplateItemView(viewModel: changeNameViewModel)
                     }
                 }
         }

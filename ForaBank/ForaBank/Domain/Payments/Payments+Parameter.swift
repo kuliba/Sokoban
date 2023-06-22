@@ -1044,6 +1044,7 @@ extension Payments {
           enum ActionType {
 
             case scanQrCode
+            case editName(TemplatesListViewModel.RenameTemplateItemViewModel)
           }
        }
         

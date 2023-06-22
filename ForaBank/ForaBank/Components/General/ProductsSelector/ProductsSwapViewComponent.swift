@@ -163,7 +163,12 @@ extension ProductsSwapView {
                 
                 self.init(model: model, items: [from, to], divider: .init())
                     
-            case let .templatePayment(productFrom: productFrom, productTo: productTo, amount: _):
+            case let .templatePayment(templateId):
+                
+                guard let (productTo, productFrom, _) = model.productsTransfer(templateId: templateId) else {
+                    return nil
+                }
+                
                 let filterFrom = ProductData.Filter.generalFrom
                     
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда",
@@ -585,5 +590,25 @@ struct ProductsSwapViewComponent_Previews: PreviewProvider {
         ProductsSwapView(
             viewModel: .init(model: .emptyMock, items: items, divider: .sample)
         )
+    }
+}
+
+extension Model {
+    
+    func productsTransfer(templateId: PaymentTemplateData.ID) -> (productTo: ProductData, productFrom: ProductData, amount: Double)? {
+        
+        guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }),
+              let parameterList = template.parameterList as? [TransferGeneralData],
+              let payeeProductId = parameterList.lastPayeeProductId,
+              let productTo = self.product(productId: payeeProductId),
+              let payerProductId = parameterList.last?.payer?.productIdDescription,
+              let payerProductIdInt = Int(payerProductId),
+              let productFrom = self.product(productId: payerProductIdInt) else {
+            return nil
+        }
+        
+        let amount = parameterList.last?.amountDouble ?? 0
+        
+        return (productTo: productTo, productFrom: productFrom, amount: amount)
     }
 }

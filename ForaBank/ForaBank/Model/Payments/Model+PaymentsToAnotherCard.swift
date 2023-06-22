@@ -18,8 +18,11 @@ extension Model {
         case 0:
             
             // Header
-            let headerParameter = Payments.ParameterHeader(title: "На другую карту")
-            
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(title: "На другую карту")
+            )
+
             //Product Parameter
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom

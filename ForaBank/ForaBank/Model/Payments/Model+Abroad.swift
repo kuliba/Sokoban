@@ -55,7 +55,14 @@ extension Model {
             let operatorsList = self.dictionaryAnywayOperators()
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "Переводы за рубеж", subtitle: "Денежные переводы МИГ", icon: .name("MigAvatar"), style: .large)
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Переводы за рубеж",
+                    subtitle: "Денежные переводы МИГ",
+                    icon: .image(.init(named: "ic24Edit2") ?? .iconPlaceholder),
+                    style: .large)
+            )
             
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
             
@@ -897,6 +904,28 @@ extension Model {
             
         } else {
             
+            return nil
+        }
+    }
+}
+
+extension Model {
+    
+    func templateHeader(
+        templates: [PaymentTemplateData],
+        source: Payments.Operation.Source
+        ) -> Payments.ParameterHeader? {
+            
+        if case let .template(templateId) = source,
+            let template = templates.first(where: { $0.id == templateId }) {
+            
+            return Payments.ParameterHeader(title: template.name,
+                                                       rightButton: [.init(icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
+                                                                           action: .editName(
+                                                                            .init(oldName: template.name,
+                                                                                  templateID: templateId)))])
+        } else {
+                
             return nil
         }
     }

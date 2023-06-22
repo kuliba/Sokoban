@@ -242,10 +242,7 @@ private extension TemplatesListViewModel {
                     
                     switch template.type {
                     case .betweenTheir:
-                        guard let parameterList = template.parameterList.first as? TransferGeneralData,
-                              let id = parameterList.payeeInternal?.cardId ?? parameterList.payeeInternal?.accountId,
-                              let product = model.product(productId: id),
-                              let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, parameterList.amountDouble ?? 0)) else {
+                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .templatePayment(template.id)) else {
                             return
                         }
                         

@@ -305,7 +305,11 @@ class PaymentsViewModel: ObservableObject {
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     self.action.send(PaymentsViewModelAction.ScanQrCode())
-                    
+                 
+                case _ as PaymentsViewModelAction.EditName:
+                    break
+                //TODO: setup open edit name sheet action
+                        
                 case let payload as PaymentsOperationViewModelAction.CancelOperation:
 
                     //TODO: move to convenience init
@@ -372,6 +376,8 @@ enum PaymentsViewModelAction {
     struct CloseSuccessView: Action {}
     
     struct ScanQrCode: Action {}
+    
+    struct EditName: Action {}
     
     struct ContactAbroad: Action {
         
