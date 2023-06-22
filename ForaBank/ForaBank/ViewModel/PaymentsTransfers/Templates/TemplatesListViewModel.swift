@@ -104,6 +104,7 @@ private extension TemplatesListViewModel {
                     else { return }
                     
                     item.state = .normal
+                    self.idList = UUID()
                     
                 case let payload as ModelAction.PaymentTemplate.Update.Complete:
                     
@@ -112,6 +113,7 @@ private extension TemplatesListViewModel {
                     
                     item.state = .normal
                     item.title = payload.newName
+                    self.idList = UUID()
                 
                 case _ as ModelAction.PaymentTemplate.Delete.Failed:
                     
@@ -257,10 +259,10 @@ private extension TemplatesListViewModel {
                 case let payload as TemplatesListViewModelAction.Item.Rename:
                     
                     guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
-                          let _ = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                          let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
                     
-                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: data.name,
+                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: itemVM.title,
                                                                                   templateID: data.id)
                     bind(renameTemplateItemViewModel)
                     
