@@ -369,59 +369,49 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
                                 .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                            let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+                                titleButtonAction: { [weak self] in
+                                    self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+                                },
+                                navLeadingAction: { [weak self] in
+                                    self?.link = nil },
+                                navTrailingAction: { [weak self] in
+                                    self?.link = nil
+                                    self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                }
+                            )
+                            let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+                            let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                
-                                let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-                                    titleButtonAction: { [weak self] in
-                                        self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-                                    },
-                                    navLeadingAction: { [weak self] in
-                                        self?.link = nil },
-                                    navTrailingAction: { [weak self] in
-                                        self?.link = nil
-                                        self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                            let paymentsServicesViewModel = PaymentsServicesViewModel(
+                                searchBar: .withText("Наименование или ИНН"),
+                                navigationBar: navigationBarViewModel,
+                                model: self.model,
+                                latestPayments: latestPayments,
+                                allOperators: operators,
+                                addCompanyAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        self?.rootActions?.switchTab(.chat)
                                     }
-                                )
-                                let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-                                let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
-                                
-                                let paymentsServicesViewModel = PaymentsServicesViewModel(
-                                    searchBar: .withText("Наименование или ИНН"),
-                                    navigationBar: navigationBarViewModel,
-                                    model: self.model,
-                                    latestPayments: latestPayments,
-                                    allOperators: operators,
-                                    addCompanyAction: { [weak self] in
-                                        
-                                        self?.link = nil
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                            self?.rootActions?.switchTab(.chat)
-                                        }
-                                        
-                                    },
-                                    requisitesAction: { [weak self] in
-                                        
-                                        self?.link = nil
-                                        self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
-                                    }
-                                )
-                                
-                                self.link = .paymentsServices(paymentsServicesViewModel)
-                            }
+                                    
+                                },
+                                requisitesAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
+                                }
+                            )
+                            
+                            self.link = .paymentsServices(paymentsServicesViewModel)
                             
                         case .transport:
                             
                             guard let transportPaymentsViewModel = makeTransportPaymentsViewModel()
                             else { return }
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                
-                                self.link = .transportPayments(transportPaymentsViewModel)
-                            }
+                            self.link = .transportPayments(transportPaymentsViewModel)
                             
                         case .taxAndStateService:
                             let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -433,9 +423,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                             
                         }
+                        
                     default:
                         break
-                        
                     }
                     
                 }.store(in: &bindings)
