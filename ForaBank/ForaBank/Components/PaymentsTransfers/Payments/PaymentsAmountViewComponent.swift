@@ -122,8 +122,17 @@ extension PaymentsAmountView {
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
                 
                 self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+                
+            case let .templatePayment(templateId):
+                guard let (_, productFrom, amount) = model.productsTransfer(templateId: templateId) else {
+
+                    let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
+                    let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
                     
-            case let .templatePayment(productFrom: productFrom, productTo: _, amount: amount):
+                    self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
+                    return
+                }
+
                 let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? ""
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
                     

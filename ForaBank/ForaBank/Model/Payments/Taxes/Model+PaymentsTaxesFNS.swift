@@ -31,8 +31,13 @@ extension Model {
             let anywayOperators = anywayGroup?.operators.filter{ operatorsCodes.contains($0.code)}
             let taxesOperator = anywayOperators?.first(where: {$0.code == Payments.Operator.fns.rawValue})
             
-            let headerParameter = Payments.ParameterHeader(title: "ФНС", icon: .image(taxesOperator?.logotypeList.first?.iconData ?? .empty))
-            
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "ФНС",
+                    icon: .image(taxesOperator?.logotypeList.first?.iconData ?? .empty))
+            )
+                
             // operator
             let operatorParameterValue = Payments.Operator.fns.rawValue
             let operatorParameter = Payments.ParameterSelectDropDownList(

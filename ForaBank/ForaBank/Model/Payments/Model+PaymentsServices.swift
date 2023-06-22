@@ -98,11 +98,13 @@ extension Model {
         )
         parameters.append(operatorParameter)
         
-        let headerParameter = Payments.ParameterHeader(
+        let headerParameter = parameterHeader(
+            source: source,
+            header: Payments.ParameterHeader(
             title: "\(operatorValue.name)",
             subtitle: operatorValue.description,
             icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
-        )
+        ))
         parameters.append(headerParameter)
         visible.append(headerParameter.id)
         

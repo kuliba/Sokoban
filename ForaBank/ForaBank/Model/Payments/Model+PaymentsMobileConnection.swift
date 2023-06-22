@@ -20,10 +20,11 @@ extension Model {
                 operatorType: .mobileConnection
             )
             
-            let headerParameter = Payments.ParameterHeader(
-                title: "Оплата мобильной связи"
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(title: "Оплата мобильной связи")
             )
-            
+                
             let phoneParameterId = Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
             let phoneParameter = Payments.ParameterInputPhone(
                 .init(id: phoneParameterId, value: nil),
@@ -193,5 +194,20 @@ extension Model {
         ]
         
         return identifiers.map(\.rawValue)
+    }
+    
+    func parameterHeader(
+        source: Payments.Operation.Source?,
+        header: Payments.ParameterHeader
+    ) -> Payments.ParameterHeader {
+        
+        guard let source,
+              let templateHeader = templateHeader(
+            templates: self.paymentTemplates.value,
+            source: source) else {
+            return header
+        }
+            
+        return templateHeader
     }
 }

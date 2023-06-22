@@ -22,7 +22,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
         
-    let title: String
+    var title: String
     let mode: Mode
     
     private let model: Model
@@ -265,6 +265,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as PaymentsMeToMeAction.Show.ChangeName:
+                    guard case let .templatePayment(templateId) = mode else {
+                        return
+                    }
+
+                    renameBottomSheet(
+                        oldName: title,
+                        templateId: templateId
+                    )
+                    
                 case _ as PaymentsMeToMeAction.Show.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
                         return
@@ -500,7 +510,42 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+    func bindRename(
+        rename: TemplatesListViewModel.RenameTemplateItemViewModel
+    ) {
         
+        rename.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                bottomSheet = nil
+                
+                title = payload.newName
+                model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                    .init(name: payload.newName,
+                          parameterList: nil,
+                          paymentTemplateId: payload.itemId))
+                model.action.send(ModelAction.PaymentTemplate.List.Requested())
+                
+            }.store(in: &bindings)
+    }
+    
+    func renameBottomSheet(
+        oldName: String,
+        templateId: PaymentTemplateData.ID
+    ) {
+        
+        let viewModel = TemplatesListViewModel.RenameTemplateItemViewModel(
+            oldName: oldName,
+            templateID: templateId
+        )
+        
+        self.bottomSheet = .init(type: .rename(viewModel))
+        self.bindRename(rename: viewModel)
+    }
+    
     private func makeInformer(closeAccount: Bool) {
         
         if let productIdFrom = swapViewModel.productIdFrom,
@@ -901,6 +946,7 @@ enum PaymentsMeToMeAction {
     
     enum Show {
         struct PlacesMap: Action {}
+        struct ChangeName: Action {}
     }
     
 }
@@ -909,20 +955,17 @@ enum PaymentsMeToMeAction {
 
 extension PaymentsMeToMeViewModel {
     
-    enum Mode {
+    enum Mode: Equatable {
         
         case general
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
         case makePaymentTo(ProductData, Double)
-        case templatePayment(productFrom: ProductData,
-                             productTo: ProductData,
-                             amount: Double)
+        case templatePayment(PaymentTemplateData.ID)
         case makePaymentToDeposite(ProductData, Double)
         case transferDeposit(ProductData, Double)
         case transferAndCloseDeposit(ProductData, Double)
         case demandDeposit
-
 
         var isUserInterractionEnabled: Bool {
             
@@ -944,6 +987,7 @@ extension PaymentsMeToMeViewModel {
         enum BottomSheetType {
 
             case info(InfoView.ViewModel)
+            case rename(TemplatesListViewModel.RenameTemplateItemViewModel)
         }
     }
     

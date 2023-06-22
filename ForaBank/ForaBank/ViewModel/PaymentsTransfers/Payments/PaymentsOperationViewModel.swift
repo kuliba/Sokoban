@@ -231,6 +231,10 @@ class PaymentsOperationViewModel: ObservableObject {
                         spinner = nil
                     }
                     
+                case let changeName as PaymentsOperationViewModelAction.ChangeName:
+                    bottomSheet = .init(type: .changeName(changeName.viewModel))
+                    bindRename(rename: changeName.viewModel)
+                    
                 default:
                     break
                 }
@@ -303,7 +307,7 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    //MARK: Bind Navigatoin Bar
+    //MARK: Bind Navigation Bar
     private func bindNavBar() {
         
         navigationBar.action
@@ -313,9 +317,33 @@ class PaymentsOperationViewModel: ObservableObject {
                 switch action {
                 case _ as NavigationBarViewModelAction.ScanQrCode:
                     self.action.send(PaymentsViewModelAction.ScanQrCode())
-                
+                    
+                case let editName as NavigationBarViewModelAction.EditName:
+                    self.action.send(PaymentsOperationViewModelAction.ChangeName(viewModel: editName.viewModel))
+                    
                 default: break
                 }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bindRename(
+        rename: TemplatesListViewModel.RenameTemplateItemViewModel
+    ) {
+        
+        rename.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                bottomSheet = nil
+                
+                navigationBar.title = payload.newName
+                model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                    .init(name: payload.newName,
+                          parameterList: nil,
+                          paymentTemplateId: payload.itemId))
+                model.action.send(ModelAction.PaymentTemplate.List.Requested())
                 
             }.store(in: &bindings)
     }
@@ -508,6 +536,7 @@ extension PaymentsOperationViewModel {
             case popUp(PaymentsPopUpSelectView.ViewModel)
             case antifraud(PaymentsAntifraudViewModel)
             case hint(HintViewModel)
+            case changeName(TemplatesListViewModel.RenameTemplateItemViewModel)
         }
     }
     
@@ -562,5 +591,10 @@ enum PaymentsOperationViewModelAction {
         
         let parameterId: Payments.Parameter.ID
         let message: String
+    }
+    
+    struct ChangeName: Action {
+        
+        let viewModel: TemplatesListViewModel.RenameTemplateItemViewModel
     }
 }

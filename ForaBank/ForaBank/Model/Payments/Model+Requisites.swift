@@ -26,7 +26,15 @@ extension Model {
             let operatorParameter = Payments.ParameterOperator(operatorType: .requisites)
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "Перевести", subtitle: "Человеку или организации", icon: nil, rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder, action: .scanQrCode)])
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Перевести",
+                    subtitle: "Человеку или организации",
+                    icon: nil,
+                    rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder,
+                                        action: .scanQrCode)])
+            )
             
             //MARK: Bic Bank Parameter            
             let banks = self.dictionaryFullBankInfoPrefferedFirstList()

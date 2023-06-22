@@ -19,7 +19,7 @@ extension TransferGeneralData {
             inn: nil,
             accountId: nil,
             accountNumber: nil,
-            cardId: nil,
+            cardId: 1,
             cardNumber: nil,
             phoneNumber: "number"
         )
