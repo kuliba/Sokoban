@@ -93,7 +93,7 @@ struct TemplatesListView: View {
                                                      editMode: $viewModel.editModeState)
                                         .contextMenu {
                                         
-                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
+                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
                                             
                                                 ForEach(itemsMenuViewModel) { button in
                                                 
