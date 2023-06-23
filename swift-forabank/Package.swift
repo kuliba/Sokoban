@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .loadableResourceComponent,
         .pickerWithPreviewComponent,
         .searchBarComponent,
         .textFieldComponent,
@@ -21,6 +22,8 @@ let package = Package(
         .customDump,
     ],
     targets: [
+        .loadableResourceComponent,
+        .loadableResourceComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .searchBarComponent,
@@ -40,6 +43,13 @@ let package = Package(
 
 private extension Product {
     
+    static let loadableResourceComponent = library(
+        name: .loadableResourceComponent,
+        targets: [
+            .loadableResourceComponent,
+        ]
+    )
+
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
@@ -85,6 +95,20 @@ private extension Product {
 
 private extension Target {
     
+    static let loadableResourceComponent = target(
+        name: .loadableResourceComponent
+    )
+    static let loadableResourceComponentTests = testTarget(
+        name: .loadableResourceComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableResourceComponent,
+        ]
+    )
+
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
@@ -194,19 +218,26 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let loadableResourceComponent = byName(
+        name: .loadableResourceComponent
+    )
+    
     static let pickerWithPreviewComponent = byName(
         name: .pickerWithPreviewComponent
     )
-
+    
     static let textFieldComponent = byName(
         name: .textFieldComponent
     )
+    
     static let textFieldDomain = byName(
         name: .textFieldDomain
     )
+    
     static let textFieldModel = byName(
         name: .textFieldModel
     )
+    
     static let textFieldUI = byName(
         name: .textFieldUI
     )
@@ -221,6 +252,9 @@ private extension Target.Dependency {
 }
 
 private extension String {
+    
+    static let loadableResourceComponent = "LoadableResourceComponent"
+    static let loadableResourceComponentTests = "LoadableResourceComponentTests"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"

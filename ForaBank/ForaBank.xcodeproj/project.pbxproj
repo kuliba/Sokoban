@@ -2194,6 +2194,7 @@
 		2AE5972E29F918C20083F138 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2AE5973029F918C30083F138 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2AE5973329F918C30083F138 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		2AE9834C29A223040001DF72 /* ValueSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsFreeCardAvailableHelperTests.swift; sourceTree = "<group>"; };
@@ -8339,6 +8340,7 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
+				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
 				833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */,
 				2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */,
 				2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */,
