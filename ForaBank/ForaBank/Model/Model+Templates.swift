@@ -228,42 +228,37 @@ extension Model {
 //MARK: - paymentTemplates
 extension Model {
     
-    func makeTemplatesImagesCache(data: [PaymentTemplateData]) {
-        
-        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
+    static func reduce(images: [String: ImageData],
+                       with data: [PaymentTemplateData])
+    async -> [String: ImageData] {
             
-            let prefixKey = "Template"
-            let dataIds = data.map(\.id)
-            let cacheIds = Set(self.images.value.keys
-                .filter { $0.hasPrefix(prefixKey) }
-                .compactMap { Int($0.dropFirst(prefixKey.count)) })
+        let prefixKey = "Template"
+        let dataIds = data.map(\.id)
+        let cacheIds = Set(images.keys
+                            .filter { $0.hasPrefix(prefixKey) }
+                            .compactMap { Int($0.dropFirst(prefixKey.count)) })
             
-            let fullDiff = cacheIds.symmetricDifference(dataIds)
-            let addDiff = fullDiff.intersection(dataIds)
-            let delDiff = fullDiff.intersection(cacheIds)
+        let fullDiff = cacheIds.symmetricDifference(dataIds)
+        let addDiff = fullDiff.intersection(dataIds)
+        let delDiff = fullDiff.intersection(cacheIds)
             
-            var localImages = self.images.value
+        var localImages = images
             
-            for id in delDiff { //delete images
+        for id in delDiff { //delete images
                 
-                localImages.removeValue(forKey: "\(prefixKey)\(id)")
-            }
+            localImages.removeValue(forKey: "\(prefixKey)\(id)")
+        }
             
-            for id in addDiff { //add images
+        for id in addDiff { //add images
                 
-                if let template = data.first(where: { $0.id == id }),
-                   let imgData = ImageData(with: template.svgImage) {
+            if let template = data.first(where: { $0.id == id }),
+                let imgData = ImageData(with: template.svgImage) {
                     
-                    localImages["\(prefixKey)\(id)"] = imgData
-                }
-            }
-            
-            if !addDiff.isEmpty || !delDiff.isEmpty {
-                
-                self.images.value = localImages
-                try? self.localAgent.store(self.images.value, serial: nil)
+                localImages["\(prefixKey)\(id)"] = imgData
             }
         }
+             
+        return localImages
     }
     
     func handleTemplatesListRequest() {
@@ -295,7 +290,17 @@ extension Model {
                     guard let data = response.data, serial != data.serial
                     else { return }
                     
-                    makeTemplatesImagesCache(data: data.templateList )
+                    Task {
+                        
+                        let updatedImages = await Self.reduce(images: self.images.value,
+                                                              with: data.templateList)
+
+                        if self.images.value != updatedImages {
+
+                            self.images.value = updatedImages
+                            try? self.localAgent.store(self.images.value, serial: nil)
+                        }
+                    }
                     
                     // update model data
                     self.paymentTemplates.value = data.templateList
