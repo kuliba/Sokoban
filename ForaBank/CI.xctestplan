@@ -58,6 +58,13 @@
         "identifier" : "PickerWithPreviewComponentTests",
         "name" : "PickerWithPreviewComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
     }
   ],
   "version" : 1
