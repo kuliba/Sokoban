@@ -24,20 +24,13 @@ extension Model {
             _ = try await isSingleService(Purefs.avtodorTransponder)
             
             // header
-            let contractLogo = operatorLogo(forPuref: Purefs.avtodorContract)
-            let headerParameter = Payments.ParameterHeader(
-                title: "Автодор Платные дороги",
-                subtitle: nil,
-                icon: .image(contractLogo ?? .empty)
-            )
+            let headerParameter = transportHeader(
+                forPuref: Purefs.avtodorContract,
+                title: "Автодор Платные дороги")
             
             // product
-            let filter = ProductData.Filter.generalFrom
-            let product = try firstProductToPayFrom(filter: filter)
-            let productParameter = Payments.ParameterProduct(
-                value: String(product.id),
-                filter: filter,
-                isEditable: true
+            let (productParameter, _) = try productParameter(
+                filter: .generalFrom
             )
             
             // black drop down
@@ -83,27 +76,25 @@ extension Model {
             
         case 1:
             
-            let puref = try parameters.value(forIdentifier: .operator)
+            let inputParameterData = try firstParameterData(
+                ofType: "Input",
+                forIdentifier: .operator,
+                from: parameters
+            )
             
-            guard let operatorValue = dictionaryAnywayOperator(for: puref)
-            else {
-                throw Payments.Error.missingOperator(forCode: puref)
-            }
-            
-            guard let parameterData = operatorValue.parameterList.first
-            else {
-                throw Payments.Error.missingParameterList(forCode: operatorValue.code)
-            }
-            
+            // TODO: FIX validation
             // manual validation creation due to incorrect data
             // let pureInput = try paymentsParameterRepresentable(
             //     parameterData: parameterData
             // )
 #warning("fix validation")
             let input = Payments.ParameterInput(
-                .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterDocument,
-                title: parameterData.title,
+                .init(
+                    id: inputParameterData.id,
+                    value: inputParameterData.value
+                ),
+                icon: inputParameterData.iconData ?? .parameterDocument,
+                title: inputParameterData.title,
                 validator: .init(rules: [])
             )
             
@@ -114,8 +105,27 @@ extension Model {
                     isCompleted: false
                 ),
                 back: .init(
-                    stage: .remote(.start),
+                    stage: .local,
                     required: [input.id],
+                    processed: nil
+                )
+            )
+            
+        case 2:
+            
+            let amountParameter: Payments.ParameterAmount = .avtodor(
+                maxAmount: nil
+            )
+            
+            return .init(
+                parameters: [amountParameter],
+                front: .init(
+                    visible: [amountParameter.id],
+                    isCompleted: false
+                ),
+                back: .init(
+                    stage: .remote(.start),
+                    required: [amountParameter.id],
                     processed: nil
                 )
             )
@@ -123,32 +133,6 @@ extension Model {
         default:
             throw Payments.Error.unsupported
         }
-    }
-    
-    // MARK: - Process Remote Step
-    
-    func paymentsProcessRemoteStepAvtodor(
-        _ operation: Payments.Operation,
-        response: TransferAnywayResponseData
-    ) async throws -> Payments.Operation.Step {
-        
-        let step = try await step(
-            for: operation,
-            with: response
-        )
-        
-        var parameters = step.parameters
-        
-        if let amount = try? makeAvtodorAmount(with: step.parameters) {
-            
-            parameters.append(amount)
-        }
-        
-        return Payments.Operation.Step(
-            parameters: parameters,
-            front: step.front,
-            back: step.back
-        )
     }
     
     // MARK: - Change Parameters Visibility and Order
@@ -175,6 +159,24 @@ extension Model {
     }
     
     // MARK: - Helpers
+    
+    func productParameter(
+        filter: ProductData.Filter
+    ) throws -> (
+        productParameter: Payments.ParameterProduct,
+        balance: Double?
+    ) {
+        
+        let product = try firstProductToPayFrom(filter: filter)
+        let productParameter = Payments.ParameterProduct(
+            value: String(product.id),
+            filter: filter,
+            isEditable: true
+        )
+        let balance = product.balance
+        
+        return (productParameter, balance)
+    }
     
     func firstProductToPayFrom(
         filter: ProductData.Filter
@@ -229,5 +231,65 @@ extension Model {
     ) -> ImageData? {
         
         dictionaryAnywayOperator(for: puref)?.logotypeList.first?.iconData
+    }
+    
+    func firstParameterData(
+        ofType type: String?,
+        forIdentifier identifier: Payments.Parameter.Identifier,
+        from parameters: [PaymentsParameterRepresentable]
+    ) throws -> ParameterData {
+        
+        let data = try parameterData(
+            ofType: type,
+            forIdentifier: identifier,
+            from: parameters
+        )
+        
+        guard let parameterData = data.first
+        else {
+            throw Payments.Error.emptyParameterList(forType: type)
+        }
+        
+        return parameterData
+    }
+    
+    func parameterData(
+        ofType type: String?,
+        forIdentifier identifier: Payments.Parameter.Identifier,
+        from parameters: [PaymentsParameterRepresentable]
+    ) throws -> [ParameterData] {
+        
+        let puref = try parameters.value(forIdentifier: .operator)
+        
+        guard let operatorValue = dictionaryAnywayOperator(for: puref)
+        else {
+            throw Payments.Error.missingOperator(forCode: puref)
+        }
+
+        return operatorValue.parameterList.filter { $0.type == type }
+    }
+}
+
+private extension Payments.ParameterAmount {
+    
+    static func avtodor(
+        maxAmount: Double?
+    ) -> Self {
+        
+        return .init(
+            value: nil,
+            title: "Сумма платежа",
+            currencySymbol: "RUB",
+            transferButtonTitle: "Продолжить",
+            validator: .init(
+                minAmount: 0.01,
+                maxAmount: maxAmount
+            ),
+            info: .action(
+                title: "Возможна комиссия",
+                .name("ic24Info"),
+                .feeInfo
+            )
+        )
     }
 }

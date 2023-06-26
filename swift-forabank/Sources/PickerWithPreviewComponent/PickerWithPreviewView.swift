@@ -18,6 +18,22 @@ public struct PickerWithPreviewView: View {
     
     public let viewConfig: PickerWithPreviewContainerView.ViewConfig
     
+    public init(
+        state: ComponentState,
+        send: @escaping (ComponentAction) -> Void,
+        paymentAction: @escaping () -> Void,
+        continueAction: @escaping () -> Void,
+        checkUncheckImage: CheckUncheckImages,
+        viewConfig: PickerWithPreviewContainerView.ViewConfig
+    ) {
+        self.state = state
+        self.send = send
+        self.paymentAction = paymentAction
+        self.continueAction = continueAction
+        self.checkUncheckImage = checkUncheckImage
+        self.viewConfig = viewConfig
+    }
+    
     public var body: some View {
         
         VStack {

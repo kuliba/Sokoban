@@ -11,14 +11,12 @@ import XCTest
 
 final class Model_PaymentsTransportAvtodorTests: XCTestCase {
     
-    // MARK: - paymentsProcessLocalStepAvtodor: Step 0
-    
     func test_paymentsProcessLocalStepAvtodor_shouldThrowOnIncorrectStep() async throws {
         
         let parameters = parametersForStep0()
         let sut = makeSUT()
         
-        for stepIndex in [-2, -1, 2, 3] {
+        for stepIndex in [-2, -1, 3, 4] {
             
             try await assertThrowsAsNSError(
                 try await sut.paymentsProcessLocalStepAvtodor(
@@ -29,6 +27,8 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - paymentsProcessLocalStepAvtodor: Step 0
     
     func test_paymentsProcessLocalStepAvtodor_shouldCallIsSingleService_onStep0_false() async throws {
         
@@ -145,10 +145,10 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
     
     // MARK: - paymentsProcessLocalStepAvtodor: Step 1
     
-    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep0_false() async throws {
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep1_false() async throws {
         
         let serverAgentSpy = ServerAgentSpy(isSingleService: false)
-        let parameters = parametersForStep0()
+        let parameters = parametersForStep1()
         let sut = makeSUT(
             serverAgent: serverAgentSpy
         )
@@ -164,10 +164,10 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
         )
     }
     
-    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep0_true() async throws {
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep1_true() async throws {
         
         let serverAgentSpy = ServerAgentSpy(isSingleService: true)
-        let parameters = parametersForStep0()
+        let parameters = parametersForStep1()
         let sut = makeSUT(
             serverAgent: serverAgentSpy
         )
@@ -183,10 +183,10 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
         )
     }
     
-    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep0_nil() async throws {
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep1_nil() async throws {
         
         let serverAgentSpy = ServerAgentSpy(isSingleService: nil)
-        let parameters = parametersForStep0()
+        let parameters = parametersForStep1()
         let sut = makeSUT(
             serverAgent: serverAgentSpy
         )
@@ -204,7 +204,7 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
     
     func test_paymentsProcessLocalStepAvtodor_shouldThrowOnMissingOperatorParameter_onStep1() async throws {
         
-        let parameters = parametersForStep0()
+        let parameters = parametersForStep1()
         let sut = makeSUT()
         
         try await assertThrowsAsNSError(
@@ -212,10 +212,10 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
                 parameters: parameters,
                 for: 1
             ),
-            error: Payments.Error.missingParameter("ru.forabank.sense.operator")
+            error: Payments.Error.missingValueForParameter("ru.forabank.sense.operator")
         )
         
-        XCTAssertNil(try? parameters.parameter(forIdentifier: .operator))
+        XCTAssertNil(try? parameters.parameter(forIdentifier: .operator).value)
     }
     
     func test_paymentsProcessLocalStepAvtodor_shouldFailOnNilValueForParameterOperator_onStep1() async throws {
@@ -251,7 +251,7 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
         )
     }
     
-    func test_paymentsProcessLocalStepAvtodor_shouldFailOnMissingParameterList_onStep1() async throws {
+    func test_paymentsProcessLocalStepAvtodor_shouldFailOnEmptyParameterList_onStep1() async throws {
         
         let operatorData = OperatorGroupData.OperatorData.test(
             code: "a3",
@@ -273,21 +273,54 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
                 parameters: parameters,
                 for: 1
             ),
-            error: Payments.Error.missingParameterList(forCode: "a 3")
+            error: Payments.Error.emptyParameterList(forType: "Input")
         )
         
         let parameter = try parameters.parameter(forIdentifier: .operator)
         XCTAssertNotNil(parameter.value)
-        XCTAssertTrue(operatorData.parameterList.isEmpty)
+        XCTAssertTrue(operatorData.parameterList.filter({ $0.type == "Input" }).isEmpty)
     }
     
-    func test_paymentsProcessLocalStepAvtodor_shouldReturnStep1_onStep1() async throws {
+    func test_paymentsProcessLocalStepAvtodor_shouldFailOnParameterListWithoutInput_onStep1() async throws {
         
         let operatorData = OperatorGroupData.OperatorData.test(
             code: "a3",
             name: "AVDD",
             parameterList: [
                 .test(id: "selected", rawLength: 5, title: "A")
+            ],
+            parentCode: "AVD"
+        )
+        let operatorGroupData = OperatorGroupData.test(
+            code: "AVD",
+            name: "Avtodor",
+            operators: [operatorData]
+        )
+        let sut = try makeSUT(
+            locaStubs: [operatorGroupData]
+        )
+        let parameters = parametersForStep1(operatorParameterValue: "a3")
+        
+        try await assertThrowsAsNSError(
+            try await sut.paymentsProcessLocalStepAvtodor(
+                parameters: parameters,
+                for: 1
+            ),
+            error: Payments.Error.emptyParameterList(forType: "Input")
+        )
+        
+        let parameter = try parameters.parameter(forIdentifier: .operator)
+        XCTAssertNotNil(parameter.value)
+        XCTAssertTrue(operatorData.parameterList.filter({ $0.type == "Input" }).isEmpty)
+    }
+    
+    func test_paymentsProcessLocalStepAvtodor_shouldReturnStep_onStep1() async throws {
+        
+        let operatorData = OperatorGroupData.OperatorData.test(
+            code: "a3",
+            name: "AVDD",
+            parameterList: [
+                .test(id: "selected", rawLength: 5, title: "A", type: "Input")
             ],
             parentCode: "AVD"
         )
@@ -311,15 +344,94 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
         XCTAssertNoDiff(step.front.visible, ["selected"])
         XCTAssertNoDiff(step.front.isCompleted, false)
         
-        XCTAssertNoDiff(step.back.stage, .remote(.start))
+        XCTAssertNoDiff(step.back.stage, .local)
         XCTAssertNoDiff(step.back.required, ["selected"])
         XCTAssertNoDiff(step.back.processed, nil)
         
         let parameter = try parameters.parameter(forIdentifier: .operator)
         XCTAssertNotNil(parameter.value)
-        XCTAssertFalse(operatorData.parameterList.isEmpty)
+        XCTAssertFalse(operatorData.parameterList.filter({ $0.type == "Input" }).isEmpty)
+    }
+        
+    // MARK: - paymentsProcessLocalStepAvtodor: Step 2
+    
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep2_false() async throws {
+        
+        let serverAgentSpy = ServerAgentSpy(isSingleService: false)
+        let parameters = parametersForStep2()
+        let sut = makeSUT(
+            serverAgent: serverAgentSpy
+        )
+        
+        _ = try? await sut.paymentsProcessLocalStepAvtodor(
+            parameters: parameters,
+            for: 2
+        )
+        
+        XCTAssertNoDiff(
+            serverAgentSpy.isSingleServiceRequestsPurefs,
+            []
+        )
     }
     
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep2_true() async throws {
+        
+        let serverAgentSpy = ServerAgentSpy(isSingleService: true)
+        let parameters = parametersForStep2()
+        let sut = makeSUT(
+            serverAgent: serverAgentSpy
+        )
+        
+        _ = try? await sut.paymentsProcessLocalStepAvtodor(
+            parameters: parameters,
+            for: 2
+        )
+        
+        XCTAssertNoDiff(
+            serverAgentSpy.isSingleServiceRequestsPurefs,
+            []
+        )
+    }
+    
+    func test_paymentsProcessLocalStepAvtodor_shouldNotCallIsSingleService_onStep2_nil() async throws {
+        
+        let serverAgentSpy = ServerAgentSpy(isSingleService: nil)
+        let parameters = parametersForStep2()
+        let sut = makeSUT(
+            serverAgent: serverAgentSpy
+        )
+        
+        _ = try? await sut.paymentsProcessLocalStepAvtodor(
+            parameters: parameters,
+            for: 2
+        )
+        
+        XCTAssertNoDiff(
+            serverAgentSpy.isSingleServiceRequestsPurefs,
+            []
+        )
+    }
+    
+    func test_paymentsProcessLocalStepAvtodor_shouldReturnStepWithAmount_onStep2() async throws {
+        
+        let sut = makeSUT()
+        let parameters = parametersForStep2(operatorParameterValue: "a3")
+        
+        let step = try await sut.paymentsProcessLocalStepAvtodor(
+            parameters: parameters,
+            for: 2
+        )
+        
+        XCTAssertNoDiff(step.parameters.map(\.id), ["ru.forabank.sense.amount"])
+        
+        XCTAssertNoDiff(step.front.visible, ["ru.forabank.sense.amount"])
+        XCTAssertNoDiff(step.front.isCompleted, false)
+        
+        XCTAssertNoDiff(step.back.stage, .remote(.start))
+        XCTAssertNoDiff(step.back.required, ["ru.forabank.sense.amount"])
+        XCTAssertNoDiff(step.back.processed, nil)
+    }
+        
     // MARK: - Helpers
     
     private func parametersForStep0() -> [PaymentsParameterRepresentable] {
@@ -341,6 +453,22 @@ final class Model_PaymentsTransportAvtodorTests: XCTestCase {
             // product
             operatorParameter
         ]
+    }
+    
+    private func parametersForStep2(
+        operatorParameterValue: String? = nil
+    ) -> [PaymentsParameterRepresentable] {
+        
+        let inputParameter = Payments.ParameterInput(
+            .init(
+                id: "input",
+                value: ""
+            ),
+            title: "Enter data",
+            validator: .init(rules: [])
+        )
+        
+        return [inputParameter]
     }
     
     private func makeSUT(

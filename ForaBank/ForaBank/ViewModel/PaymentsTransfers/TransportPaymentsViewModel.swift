@@ -11,65 +11,129 @@ import SwiftUI
 
 final class TransportPaymentsViewModel: ObservableObject {
     
-    @Published private(set) var link: Link?
+    @Published private(set) var destination: Destination?
     
     let operators: [OperatorGroupData.OperatorData]
     let latestPayments: PaymentsServicesLatestPaymentsSectionViewModel
-    let navigationBar: NavigationBarView.ViewModel
     
     typealias MakePaymentsViewModel = (Payments.Operation.Source) -> PaymentsViewModel
+    typealias HandleError = (String) -> Void
     
     private let makePaymentsViewModel: MakePaymentsViewModel
+    private let handleError: HandleError
     
-    private var bindings = Set<AnyCancellable>()
-
     init(
         operators: [OperatorGroupData.OperatorData],
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
-        navigationBar: NavigationBarView.ViewModel,
-        makePaymentsViewModel: @escaping PaymentsServicesViewModel.MakePaymentsViewModel
+        makePaymentsViewModel: @escaping MakePaymentsViewModel,
+        handleError: @escaping HandleError
     ) {
         self.operators = operators
         self.latestPayments = latestPayments
-        self.navigationBar = navigationBar
         self.makePaymentsViewModel = makePaymentsViewModel
-        
-        bind()
-    }
-    
-    func setLink(to isActive: Bool) {
-        
-        if !isActive { link = nil }
-    }
-    
-    enum Link {
-        
-#warning("replace with strong type")
-        case avtodor((String) -> Void)
-        case payments(PaymentsViewModel)
-    }
-    
-    private func bind() {
+        self.handleError = handleError
         
         latestPayments.action
             .compactMap { $0 as? PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped }
+            .map(Payments.Operation.Source.init(withItemDidTapped:))
+            .map(makePaymentsViewModel)
+            .map(Destination.payment)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
-                
-                let paymentsViewModel = makePaymentsViewModel(
-                    .servicePayment(
-                        puref: payload.latestPayment.puref,
-                        additionalList: payload.latestPayment.additionalList,
-                        amount: payload.latestPayment.amount
-                    )
-                )
-                
-                Task { @MainActor [weak self] in
-                    
-                    self?.link = .payments(paymentsViewModel)
-                }
+            .assign(to: &$destination)
+    }
+    
+    enum Destination {
+        
+        case payment(PaymentsViewModel)
+        case mosParking
+    }
+}
+
+extension TransportPaymentsViewModel {
+    
+    func setDestination(to isActive: Bool) {
+        
+        if !isActive { destination = nil }
+    }
+}
+
+extension TransportPaymentsViewModel {
+    
+    func select(track: Track) {
+        
+        do {
+            let link = try destination(for: track)
+            
+            DispatchQueue.main.async { [weak self] in
+             
+                self?.destination = link
             }
-            .store(in: &bindings)
+        } catch {
+            switch track {
+            case let .puref(puref):
+                handleError("Ошибка создания платежа для оператора \(puref)")
+                
+            case let .source(source):
+                handleError("Ошибка создания платежа для \(source)")
+            }
+        }
+    }
+    
+    enum Track {
+        
+        case puref(String)
+        case source(Payments.Operation.Source)
+    }
+    
+    func destination(
+        for track: Track
+    ) throws -> Destination {
+        
+        switch track {
+        case let .puref(puref):
+            
+            let source: Payments.Operation.Source
+            
+            switch puref {
+            case Purefs.avtodorGroup:
+                source = .avtodor
+                
+            case Purefs.iForaMosParking:
+                return .mosParking
+                
+            case Purefs.iForaGibdd:
+                source = .gibdd
+                
+            default:
+                source = .makeServicePayment(puref: puref)
+            }
+            
+            return .payment(makePaymentsViewModel(source))
+            
+        case let .source(source):
+            return .payment(makePaymentsViewModel(source))
+        }
+    }
+    
+    func selectMosParkingID(id: String) {
+        
+        let source: Payments.Operation.Source = .makeServicePayment(
+            puref: Purefs.iForaMosParking,
+            additionalList: [additional(value: id)]
+        )
+        select(track: .source(source))
+    }
+    
+    private func additional(
+        value: String
+    ) -> PaymentServiceData.AdditionalListData {
+        
+        .init(
+            fieldTitle: nil,
+            fieldName: "a3_serviceId_2_1",
+            fieldValue: value,
+            svgImage: nil
+        )
     }
 }
 
@@ -86,11 +150,9 @@ extension TransportPaymentsViewModel {
     
     var viewOperators: [ItemViewModel] {
         
-        let action: (String) -> Void = { [weak self] code in
+        let action: (String) -> Void = { [weak self] puref in
             
-            guard let link = self?.link(for: code) else { return }
-            
-            Task { @MainActor [weak self] in self?.link = link }
+            self?.select(track: .puref(puref))
         }
         
         return operators
@@ -132,23 +194,47 @@ extension TransportPaymentsViewModel.ItemViewModel {
 
 extension TransportPaymentsViewModel {
     
-    func link(for puref: String) -> Link {
+    func mosParkingPaymentAction() {
         
-        let paymentsViewModel: PaymentsViewModel
-        
-        switch puref {
-        case Purefs.avtodorGroup:
-            paymentsViewModel = makePaymentsViewModel(.avtodor)
-            
-            // case Purefs.iForaMosParking:
-            //     link = { fatalError() }()
-            
-        default:
-            paymentsViewModel = makePaymentsViewModel(
-                .servicePayment(puref: puref, additionalList: .none, amount: 0)
+        let paymentsViewModel = makePaymentsViewModel(
+            .servicePayment(
+                puref: Purefs.iForaMosParking,
+                additionalList: .none,
+                amount: 0
             )
-        }
+        )
         
-        return .payments(paymentsViewModel)
+        destination = .payment(paymentsViewModel)
+    }
+    
+    func continueAction() {
+        
+    }
+}
+
+private extension Payments.Operation.Source {
+    
+    typealias ItemDidTapped = PaymentsServicesSectionViewModelAction.LatestPayments.ItemDidTapped
+    
+    init(withItemDidTapped itemDidTapped: ItemDidTapped) {
+        
+        self = .servicePayment(
+            puref: itemDidTapped.latestPayment.puref,
+            additionalList: itemDidTapped.latestPayment.additionalList,
+            amount: itemDidTapped.latestPayment.amount
+        )
+    }
+    
+    static func makeServicePayment(
+        puref: String,
+        additionalList: [PaymentServiceData.AdditionalListData]? = nil,
+        amount: Double = 0
+    ) -> Self {
+        
+        .servicePayment(
+            puref: puref,
+            additionalList: additionalList,
+            amount: amount
+        )
     }
 }

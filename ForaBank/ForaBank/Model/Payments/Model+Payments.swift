@@ -209,6 +209,9 @@ extension Model {
         case .avtodor:
             return .avtodor
             
+        case .gibdd:
+            return .gibdd
+            
         case let .latestPayment(latestPaymentId):
             
             guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
@@ -365,6 +368,12 @@ extension Model {
                 for: stepIndex
             )
 
+        case .gibdd:
+            return try await paymentsProcessLocalStepGibdd(
+                parameters: operation.parameters,
+                for: stepIndex
+            )
+
         case .change:
             return try await paymentsStepChangePayment(operation, for: stepIndex)
 
@@ -387,7 +396,11 @@ extension Model {
                 
             case .avtodor:
                 
-                return try await paymentsProcessRemoteStepAvtodor(
+                return try await step(for: operation, with: anywayResponse)
+                
+            case .gibdd:
+                
+                return try await paymentsProcessRemoteStepGibdd(
                     operation,
                     response: anywayResponse
                 )
@@ -419,15 +432,17 @@ extension Model {
                 let visible = try paymentsServicesStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
                 let stepStage = try paymentsServicesStepStage(operation, response: anywayResponse)
                 let excludingParameters = try paymentsServicesStepExcludingParameters(response: anywayResponse)
-                let required = try paymentsServicesStepRequired(operation,
-                                                                visible: visible,
-                                                                nextStepParameters: nextParameters,
-                                                                operationParameters: operation.parameters,
-                                                                excludingParameters: excludingParameters)
+                let required = try paymentsServicesStepRequired(
+                    operation,
+                    visible: visible,
+                    nextStepParameters: nextParameters,
+                    operationParameters: operation.parameters,
+                    excludingParameters: excludingParameters)
                 
-                return Payments.Operation.Step(parameters: nextParameters,
-                                               front: .init(visible: visible, isCompleted: false),
-                                               back: .init(stage: stepStage, required: required, processed: nil))
+                return Payments.Operation.Step(
+                    parameters: nextParameters,
+                    front: .init(visible: visible, isCompleted: false),
+                    back: .init(stage: stepStage, required: required, processed: nil))
 
             case .sfp:
                 let next = try paymentsTransferSFPStepParameters(operation, response: anywayResponse)
@@ -701,7 +716,7 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway, .avtodor:
+        case .anyway, .avtodor, .gibdd:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
             
         case .sfp:
@@ -733,7 +748,7 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway, .avtodor:
+        case .anyway, .avtodor, .gibdd:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
         
         case .abroad:
@@ -826,7 +841,7 @@ extension Model {
             return try await paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
 
         default:
-            throw Payments.Error.unsupported
+            return try paymentsParameterRepresentable(parameterData: parameterData)
         }
     }
     
@@ -834,23 +849,25 @@ extension Model {
         
         switch parameterData.view {
         case .select:
-            guard let options = parameterData.options(style: .general) else {
-                return Payments.ParameterSelect(.init(id: parameterData.id,
-                                                      value: parameterData.value),
-                                                icon: .image(parameterData.iconData ?? .iconPlaceholder),
-                                                title: parameterData.title,
-                                                placeholder: "Выберете категорию",
-                                                options: [])
+            guard let options = parameterData.options(style: .general)
+            else {
+                return Payments.ParameterSelect(
+                    .init(id: parameterData.id, value: parameterData.value),
+                    icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                    title: parameterData.title,
+                    placeholder: "Выберете категорию",
+                    options: [])
             }
             
             let selectOptions = options.map({ Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subtitle) })
             
-            return Payments.ParameterSelect(.init(id: parameterData.id,
-                                                  value: parameterData.value),
-                                            icon: .image(parameterData.iconData ?? .iconPlaceholder),
-                                            title: parameterData.title,
-                                            placeholder: "Выберете категорию",
-                                            options: selectOptions)
+            return Payments.ParameterSelect(
+                .init(id: parameterData.id,
+                      value: parameterData.value),
+                icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                title: parameterData.title,
+                placeholder: "Выберете категорию",
+                options: selectOptions)
             
         case .selectSwitch:
             guard let value = parameterData.value else {

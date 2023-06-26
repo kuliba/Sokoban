@@ -357,6 +357,12 @@
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3EB71C29B1098C002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
 		2A3EB71D29B10B3E002A1309 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3EB71B29B1098C002A1309 /* Config.swift */; };
+		2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B152A47763000D8FE55 /* MosParkingView.swift */; };
+		2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3F1B172A47768A00D8FE55 /* LoadableResourceComponent */; };
+		2A3F1B1E2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */; };
+		2A3F1B232A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B222A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift */; };
+		2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */; };
+		2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */; };
 		2A4E8DFF29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
 		2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */; };
@@ -374,6 +380,7 @@
 		2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */; };
 		2A65D8AB2A333123003B3FEA /* INNs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AA2A333123003B3FEA /* INNs.swift */; };
 		2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A65D8AC2A333135003B3FEA /* Purefs.swift */; };
+		2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A7325EA2A30466800C35022 /* PaymentsTypesTransportCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */; };
 		2A7325EC2A304A6E00C35022 /* Model+PaymentsTransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */; };
@@ -381,6 +388,7 @@
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
+		2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */; };
 		2A85DEAF29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */; };
 		2A87848B29DC18020067DE04 /* UIFont+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A87848A29DC18020067DE04 /* UIFont+Assets.swift */; };
 		2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */; };
@@ -415,6 +423,9 @@
 		2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */; };
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
+		2AD5E2282A42FF94007D7196 /* MosParkingPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */; };
+		2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */; };
+		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADF48EE2A27210D000FE607 /* PaymentComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF48ED2A27210D000FE607 /* PaymentComponents.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
 		2AE5972F29F918C20083F138 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972E29F918C20083F138 /* ContentView.swift */; };
@@ -425,6 +436,9 @@
 		2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */; };
 		2AECD58D29FC519800FC0E81 /* SearchBarComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECD58C29FC519800FC0E81 /* SearchBarComponentTests.swift */; };
 		2AED642A2A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED64292A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift */; };
+		2AED642E2A4169FA00A52C35 /* Model+PaymentsTransportGibdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED642D2A4169FA00A52C35 /* Model+PaymentsTransportGibdd.swift */; };
+		2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED642F2A416BBA00A52C35 /* TransportPaymentsHelpers.swift */; };
+		2AED64322A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED64312A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift */; };
 		2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4129A4EA4A00017F73 /* ModelMemoryLeaksTests.swift */; };
 		2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4929A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift */; };
 		2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4B29A4F1C900017F73 /* CurrencyData+Extension.swift */; };
@@ -1309,7 +1323,6 @@
 		77FF670D27BABFD3009FEA09 /* ValetKeychainAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
 		831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */; };
-		833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */; };
 		834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */; };
 		834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DE2A13746B002590A3 /* NoCompanyInListView.swift */; };
 		834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */; };
@@ -2130,6 +2143,12 @@
 		2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewModelTests.swift; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3EB71B29B1098C002A1309 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2A3F1B152A47763000D8FE55 /* MosParkingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingView.swift; sourceTree = "<group>"; };
+		2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapperTests.swift; sourceTree = "<group>"; };
+		2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ForaBank-SELECTED_TESTS.xctestplan"; sourceTree = "<group>"; };
+		2A3F1B222A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
+		2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerData.swift; sourceTree = "<group>"; };
+		2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
 		2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldView+ext.swift"; sourceTree = "<group>"; };
@@ -2147,6 +2166,7 @@
 		2A65D8A82A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelAvtodorTests.swift; sourceTree = "<group>"; };
 		2A65D8AA2A333123003B3FEA /* INNs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INNs.swift; sourceTree = "<group>"; };
 		2A65D8AC2A333135003B3FEA /* Purefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Purefs.swift; sourceTree = "<group>"; };
+		2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapper.swift; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A7325E92A30466800C35022 /* PaymentsTypesTransportCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTypesTransportCaseTests.swift; sourceTree = "<group>"; };
 		2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportTests.swift"; sourceTree = "<group>"; };
@@ -2155,6 +2175,7 @@
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
 		2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsGroupSettings.swift; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
+		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
 		2A87848A29DC18020067DE04 /* UIFont+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Assets.swift"; sourceTree = "<group>"; };
 		2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportMosParkingTests.swift"; sourceTree = "<group>"; };
@@ -2188,6 +2209,9 @@
 		2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewComponent.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
+		2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPicker.swift; sourceTree = "<group>"; };
+		2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapperTests.swift; sourceTree = "<group>"; };
+		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
 		2ADF48ED2A27210D000FE607 /* PaymentComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentComponents.swift; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextViewPreviewApp.swift; sourceTree = "<group>"; };
@@ -2201,6 +2225,9 @@
 		2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfProductViewModelHelpersTests.swift; sourceTree = "<group>"; };
 		2AECD58C29FC519800FC0E81 /* SearchBarComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarComponentTests.swift; sourceTree = "<group>"; };
 		2AED64292A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+ParameterMosParkingTests.swift"; sourceTree = "<group>"; };
+		2AED642D2A4169FA00A52C35 /* Model+PaymentsTransportGibdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportGibdd.swift"; sourceTree = "<group>"; };
+		2AED642F2A416BBA00A52C35 /* TransportPaymentsHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsHelpers.swift; sourceTree = "<group>"; };
+		2AED64312A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportGibddTests.swift"; sourceTree = "<group>"; };
 		2AEDAD4129A4EA4A00017F73 /* ModelMemoryLeaksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelMemoryLeaksTests.swift; sourceTree = "<group>"; };
 		2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentStub.swift; sourceTree = "<group>"; };
 		2AEDAD4929A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferMobileConnectionTests.swift"; sourceTree = "<group>"; };
@@ -3072,7 +3099,6 @@
 		77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValetKeychainAgent.swift; sourceTree = "<group>"; };
 		8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CloseDepositResponseUnknowStatusGeneric.json; sourceTree = "<group>"; };
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
-		833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingSelectorView.swift; sourceTree = "<group>"; };
 		833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PickerWithPreviewComponent.xctestplan; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
 		834731DE2A13746B002590A3 /* NoCompanyInListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListView.swift; sourceTree = "<group>"; };
@@ -3534,6 +3560,7 @@
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
+				2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
@@ -4304,13 +4331,12 @@
 			children = (
 				83FAD89729CDD01B00474B06 /* InternetTV */,
 				0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */,
-				2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */,
-				833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */,
 				0B04EBCE27B0847000893687 /* Payments */,
 				EDE70907279865960048CA94 /* Templates */,
 				6819084228BCAAC7003E81A3 /* SbpPay */,
 				C113225428CFA79200F90072 /* FastPayments */,
 				C1F8F5FC294A508600FE5703 /* Requisites */,
+				2A3F1B202A4988E300D8FE55 /* Transport */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -4404,7 +4430,6 @@
 				2A01BAF429A8A0820021833F /* LocalAgentStub.swift */,
 				2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */,
 				2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */,
-				2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */,
 				2A0F2F4329AE338E0054B920 /* MCError.swift */,
 			);
 			path = Stubs;
@@ -4598,6 +4623,59 @@
 			path = MobileConnection;
 			sourceTree = "<group>";
 		};
+		2A3F1B192A4982EA00D8FE55 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2A3F1B1A2A4982FC00D8FE55 /* PaymentsTransfers */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2A3F1B1A2A4982FC00D8FE55 /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				2A3F1B1B2A49831600D8FE55 /* Transport */,
+			);
+			path = PaymentsTransfers;
+			sourceTree = "<group>";
+		};
+		2A3F1B1B2A49831600D8FE55 /* Transport */ = {
+			isa = PBXGroup;
+			children = (
+				2A3F1B1C2A49831D00D8FE55 /* MosParking */,
+			);
+			path = Transport;
+			sourceTree = "<group>";
+		};
+		2A3F1B1C2A49831D00D8FE55 /* MosParking */ = {
+			isa = PBXGroup;
+			children = (
+				2A3F1B1D2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift */,
+			);
+			path = MosParking;
+			sourceTree = "<group>";
+		};
+		2A3F1B202A4988E300D8FE55 /* Transport */ = {
+			isa = PBXGroup;
+			children = (
+				2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */,
+				2A3F1B212A49893100D8FE55 /* MosParking */,
+			);
+			path = Transport;
+			sourceTree = "<group>";
+		};
+		2A3F1B212A49893100D8FE55 /* MosParking */ = {
+			isa = PBXGroup;
+			children = (
+				2A3F1B152A47763000D8FE55 /* MosParkingView.swift */,
+				2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */,
+				2A3F1B222A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift */,
+				2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */,
+				2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */,
+			);
+			path = MosParking;
+			sourceTree = "<group>";
+		};
 		2A4B62F129E6AE1200788F56 /* PaymentsCodeViewComponentTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -4658,12 +4736,29 @@
 			path = SupportingTypes;
 			sourceTree = "<group>";
 		};
+		2A67A01C2A43311B003BE637 /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */,
+			);
+			path = Mappers;
+			sourceTree = "<group>";
+		};
 		2A81425D2A0B9209005CF83F /* SearchBar */ = {
 			isa = PBXGroup;
 			children = (
 				2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */,
 			);
 			path = SearchBar;
+			sourceTree = "<group>";
+		};
+		2A850F482A448587006B5C4B /* XCTestCase+Ext */ = {
+			isa = PBXGroup;
+			children = (
+				2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */,
+				2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */,
+			);
+			path = "XCTestCase+Ext";
 			sourceTree = "<group>";
 		};
 		2A8A283C2A4088C5000D3807 /* Helpers */ = {
@@ -4681,7 +4776,10 @@
 			isa = PBXGroup;
 			children = (
 				2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */,
+				2AED64312A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift */,
 				2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */,
+				2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */,
+				2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */,
 				2A8A283C2A4088C5000D3807 /* Helpers */,
 			);
 			path = Transport;
@@ -4785,6 +4883,8 @@
 			isa = PBXGroup;
 			children = (
 				2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */,
+				2AED642D2A4169FA00A52C35 /* Model+PaymentsTransportGibdd.swift */,
+				2AED642F2A416BBA00A52C35 /* TransportPaymentsHelpers.swift */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
@@ -8340,6 +8440,7 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
+				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
 				833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */,
 				2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */,
@@ -8385,6 +8486,7 @@
 				77DC125D277098D500C917B0 /* View */,
 				77EA0DB92779B04A00C6ED12 /* Components */,
 				2AA68E802A179C000063BBB0 /* Adapters */,
+				2A67A01C2A43311B003BE637 /* Mappers */,
 				77EC58F727738B3A0054D75C /* Extensions */,
 				0C27658F290691800007D31D /* OnboardingContent */,
 				774E318727A0506D005A067B /* PreviewContent */,
@@ -8419,11 +8521,13 @@
 				7758401827B2A0A300251969 /* Model */,
 				77EC58CE2771D4440054D75C /* Services */,
 				77BE9A36290C2097006046B1 /* ViewModel */,
+				2A3F1B192A4982EA00D8FE55 /* View */,
 				7772978A27C3B7480099EF91 /* Components */,
 				2A3039332A17D4390008701D /* ThirdPartyDependencies */,
 				2A93385B2A17CA2400397C88 /* Adapters */,
 				77067CD7275FBB40000C442B /* Extensions */,
 				77C026E9275E62E4002BE1F6 /* Realm */,
+				2A850F482A448587006B5C4B /* XCTestCase+Ext */,
 				77EC58B3277122100054D75C /* Resources */,
 				EDB14399265FDA430028EF5A /* Info.plist */,
 				7757624A276FEC4F00B902BF /* URLHostTests.swift */,
@@ -9281,6 +9385,7 @@
 				2A8142602A0B9237005CF83F /* SearchBarComponent */,
 				2A3947172A19E84500EB9757 /* TextFieldComponent */,
 				837F82E42A3B271C003544BB /* PickerWithPreviewComponent */,
+				2A3F1B172A47768A00D8FE55 /* LoadableResourceComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -9965,6 +10070,7 @@
 				6820928927AB0EEC003DCAFD /* PaymentSystemData.swift in Sources */,
 				77F5CE0B2804A10500611B66 /* LocationAgent.swift in Sources */,
 				ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */,
+				2AD5E2282A42FF94007D7196 /* MosParkingPicker.swift in Sources */,
 				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				0C534CAD296DE31300967FE8 /* ImageStateViewModel.swift in Sources */,
 				774A8B5C2865FDAF00B81140 /* PaymentsSelectViewComponent.swift in Sources */,
@@ -10084,6 +10190,7 @@
 				0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */,
 				2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */,
 				0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */,
+				2A3F1B232A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				774A8B3B2865FCDD00B81140 /* UserAccountSecurityView.swift in Sources */,
@@ -10106,6 +10213,7 @@
 				ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
 				503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */,
+				2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				0CA1CDE9284551A000021671 /* PaymentData.swift in Sources */,
 				502FE6962931362E00E4D5F1 /* TransfersDetailViewComponent.swift in Sources */,
@@ -10323,6 +10431,7 @@
 				7767049E27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift in Sources */,
 				EDDFE3CA275E1C4100F57C71 /* OpenDepositDecodableModel.swift in Sources */,
 				500ECA6228DC4DCD00881710 /* ProductsSwapViewComponent.swift in Sources */,
+				2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
 				EDCE659527C4FFDE006C2C3E /* Model+PaymentsTaxesFNS.swift in Sources */,
 				68A07C4B281B190800797A54 /* OpenDepositViewModel.swift in Sources */,
@@ -10447,7 +10556,6 @@
 				77BF27AF284651D4009624BB /* Model+Formatters.swift in Sources */,
 				77448C1328734643009EEEA8 /* ChangeReturnView+Legacy.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
-				833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
 				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
@@ -10602,7 +10710,9 @@
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
 				774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */,
+				2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */,
 				0BD8ED232846CB3D0052214F /* PushHistoryViewModel.swift in Sources */,
+				2A3F1B162A47763000D8FE55 /* MosParkingView.swift in Sources */,
 				0BAD466E27E7C04700569FE6 /* QRSearchDataViewController.swift in Sources */,
 				EDDFE3B52756D54800F57C71 /* CalculatorDepositCollectionViewCell.swift in Sources */,
 				0CA7D0BC29F7D66F00986C80 /* SwipeButtonViewModel.swift in Sources */,
@@ -10724,6 +10834,7 @@
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,
 				C154986E2907DB6900D00670 /* ContactsListSectionViewModel.swift in Sources */,
 				773E6837298B816800B75482 /* PaymentsSubscribeViewComponent.swift in Sources */,
 				EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */,
@@ -10816,6 +10927,7 @@
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */,
 				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
+				2AED642E2A4169FA00A52C35 /* Model+PaymentsTransportGibdd.swift in Sources */,
 				0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */,
 				0BB24AA626F0024B00DDA4F6 /* GetLatestPayments.swift in Sources */,
 				77D73EE22908290C00A956A3 /* Model+MeToMe.swift in Sources */,
@@ -11083,6 +11195,7 @@
 				2A01BAFB29A8E52B0021833F /* ActiveSessionAgentStubTests.swift in Sources */,
 				2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
+				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
@@ -11137,6 +11250,7 @@
 				2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */,
 				C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */,
 				2AA555702A3E603B00B13D47 /* Model+PaymentsTests.swift in Sources */,
+				2AED64322A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift in Sources */,
 				77EC58B2277121CF0054D75C /* TransferGeneralDataTests.swift in Sources */,
 				77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */,
 				2A8A28422A4089D3000D3807 /* OperatorData+test.swift in Sources */,
@@ -11167,6 +11281,7 @@
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
 				2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */,
+				2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */,
 				2AC396A72A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift in Sources */,
 				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,
 				2A8A28442A4089FF000D3807 /* LocalAgentStub+convenience.swift in Sources */,
@@ -11176,7 +11291,9 @@
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,
+				2A3F1B1E2A49833800D8FE55 /* DefaultMosParkingPickerDataMapperTests.swift in Sources */,
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
+				2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */,
 				2AEDAD5229A6157300017F73 /* OperatorDataTestHelpersTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,
 				2A3039322A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift in Sources */,
@@ -12410,6 +12527,10 @@
 		2A3947172A19E84500EB9757 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2A3F1B172A47768A00D8FE55 /* LoadableResourceComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LoadableResourceComponent;
 		};
 		2A81425B2A0B8EED005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -16,7 +16,7 @@ extension Purefs {
     static let iForaMosParking    = "iFora||4990"
     static let iForaPodorozhnik   = "iFora||PYD"
     static let iForaStrelka       = "iFora||5300"
-    #if DEBUG
+    #if DEBUG || MOCK
     static let iForaGibdd         = "iFora||4811" // test
     static let iForaTroika        = "iFora||MMR"  // test
     #else

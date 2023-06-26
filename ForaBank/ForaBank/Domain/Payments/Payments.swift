@@ -67,6 +67,7 @@ enum Payments {
         case utility
         case transport
         case avtodor
+        case gibdd
     }
     
     enum Operator: String {
@@ -90,6 +91,11 @@ enum Payments {
         case utility           = "iFora||1031001"
         case transport         = "iFora||1051062"
         case avtodor           = "AVD"
+#if DEBUG || MOCK
+        case gibdd             = "iFora||4811" // test
+#else
+        case gibdd             = "iFora||5173" // live
+#endif
     }
     
     static var paymentsServicesOperators: [Operator] {
@@ -226,6 +232,8 @@ extension Payments.Operation {
         case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
         
         case avtodor
+        
+        case gibdd
 
         case mock(Payments.Mock)
         
@@ -244,6 +252,7 @@ extension Payments.Operation {
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
             case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
             case .avtodor: return "Fake/Combined Avtodor"
+            case .gibdd: return "GIBDD Fines"
             }
         }
     }
@@ -336,6 +345,7 @@ extension Payments.Operation {
         case utility
         case transport
         case avtodor
+        case gibdd
     }
     
     enum Action: Equatable {
@@ -473,12 +483,14 @@ extension Payments {
         
         case missingOperator(forCode: String)
         case missingParameterList(forCode: String)
+        case emptyParameterList(forType: String?)
         
         case action(Action)
         case ui(UI)
 
         case notAuthorized
         case unsupported
+        case unexpectedIsSingleService
         
         enum Action {
             
@@ -532,6 +544,9 @@ extension Payments {
             case let .missingParameterList(forCode: code):
                 return "Missing parameterList for operator with code: \(code)"
             
+            case .emptyParameterList:
+                return "Empty parameterList."
+            
             case let .action(action):
                 switch action {
                 case let .warning(parameterId: parameterId, message: message):
@@ -552,6 +567,9 @@ extension Payments {
 
             case .notAuthorized:
                 return "Not authorized request attempt"
+                
+            case .unexpectedIsSingleService:
+                return "Unexpected isSingleService response"
                 
             case let .missingSource(service):
                 return "Missing source for service: \(service)"
