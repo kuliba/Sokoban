@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import PickerWithPreviewComponent
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -408,10 +409,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                         case .transport:
                             
-                            guard let transportPaymentsViewModel = makeTransportPaymentsViewModel()
-                            else { return }
-                            
-                            self.link = .transportPayments(transportPaymentsViewModel)
+                            bindTransport()
                             
                         case .taxAndStateService:
                             let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -429,6 +427,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     }
                     
                 }.store(in: &bindings)
+        }
+    }
+    
+    private func bindTransport() {
+        
+        let transportPaymentsViewModel = model.makeTransportPaymentsViewModel(
+            type: .transport,
+            handleError: { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: $0))
+            }
+        )
+        
+        if let transportPaymentsViewModel {
+            
+            self.link = .transportPayments(transportPaymentsViewModel)
+            
+        } else {
+            
+            self.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: "Ошибка создания транспортных платежей"))
         }
     }
     
@@ -907,25 +925,50 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
 }
 
-//MARK: - Helpers
+// MARK: - Helpers
 
-private extension PaymentsTransfersViewModel {
+extension PaymentsTransfersViewModel {
     
-    // TODO: rename `makeTransportPaymentsViewModel`
-    func makeTransportPaymentsViewModel() -> TransportPaymentsViewModel? {
+    func dismiss() {
         
-        model.makeTransportPaymentsViewModel(
-            type: .transport,
-            navLeadingAction: { [weak self] in
-                
-                self?.link = nil
-            },
-            navTrailingAction: { [weak self] in
-                
-                self?.link = nil
-                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-            }
+        self.link = nil
+    }
+    
+    func openScanner() {
+        
+        self.link = nil
+        self.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+    }
+    
+    func getMosParkingPickerData() async throws -> MosParkingPickerData {
+        
+        let (_, data) = try await model.getMosParkingListData()
+        let (state, options, refillID) = try MosParkingDataMapper.map(data: data)
+        
+        return .init(
+            state: state,
+            options: options,
+            refillID: refillID
         )
+    }
+}
+
+extension Model {
+    
+    func getMosParkingListData() async throws -> (serial: String, data: [MosParkingData]) {
+        
+        guard let token else {
+            
+            throw Payments.Error.notAuthorized
+        }
+        
+        typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
+        typealias MosParkingListData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingListData
+        
+        let command = GetMosParkingList(token: token, serial: nil)
+        let listData: MosParkingListData = try await serverAgent.executeCommand(command: command)
+
+        return (listData.serial, listData.mosParkingList)
     }
 }
 
@@ -933,10 +976,10 @@ private extension Model {
     
     // TODO: rename `makeTransportPaymentsViewModel`
     // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
+    // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
     func makeTransportPaymentsViewModel(
         type: PTSectionPaymentsView.ViewModel.PaymentsType,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
+        handleError: @escaping (String) -> Void
     ) -> TransportPaymentsViewModel? {
         
         guard let anywayOperators = dictionaryAnywayOperators(),
@@ -946,29 +989,30 @@ private extension Model {
         let operators = anywayOperators
             .filter { $0.parentCode == operatorValue.rawValue }
         // TODO: Remove filter after GIBDD & MosParking fix
-            .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
+        // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
             .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
+        // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
             .substitutingAvtodors(with: avtodorGroup)
         
-        let lastPaymentsKind = LatestPaymentData.Kind(rawValue: type.rawValue)
-        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(
-            model: self,
-            including: [lastPaymentsKind ?? .unknown]
-        )
-        
-        let navigationBarViewModel = NavigationBarView.ViewModel.with(
-            title: "Транспорт",
-            navLeadingAction: navLeadingAction,
-            navTrailingAction: navTrailingAction
-        )
+        let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
         
         return .init(
             operators: operators,
             latestPayments: latestPayments,
-            navigationBar: navigationBarViewModel,
-            makePaymentsViewModel: makePaymentsViewModel(source:)
+            makePaymentsViewModel: makePaymentsViewModel(source:),
+            handleError: handleError
         )
+    }
+    
+    func makeLatestPaymentsSectionViewModel(
+        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> PaymentsServicesLatestPaymentsSectionViewModel {
+        
+        let kind = LatestPaymentData.Kind(rawValue: type.rawValue)
+        let including = Set([kind].compactMap { $0 })
+        
+        return .init(model: self, including: including)
     }
 }
 

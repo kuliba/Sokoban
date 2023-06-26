@@ -96,7 +96,11 @@ private extension Product {
 private extension Target {
     
     static let loadableResourceComponent = target(
-        name: .loadableResourceComponent
+        name: .loadableResourceComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
     )
     static let loadableResourceComponentTests = testTarget(
         name: .loadableResourceComponentTests,

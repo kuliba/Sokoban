@@ -7,13 +7,18 @@
 
 import SwiftUI
 
-struct TransportPaymentsView: View {
+struct TransportPaymentsView<MosParkingView: View>: View {
     
     @ObservedObject private var viewModel: TransportPaymentsViewModel
     
-    init(viewModel: TransportPaymentsViewModel) {
-        
+    private let mosParkingView: () -> MosParkingView
+    
+    init(
+        viewModel: TransportPaymentsViewModel,
+        mosParkingView: @escaping () -> MosParkingView
+    ) {
         self.viewModel = viewModel
+        self.mosParkingView = mosParkingView
     }
     
     var body: some View {
@@ -22,22 +27,32 @@ struct TransportPaymentsView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                LatestPaymentsView(for: viewModel.latestPayments)
+                Transport.LatestPaymentsView(for: viewModel.latestPayments)
                 
-                OperatorsView(for: viewModel.viewOperators)
+                Transport.OperatorsView(for: viewModel.viewOperators)
                     .frame(maxHeight: .infinity, alignment: .top)
             }
         }
         .padding(.top, 20)
         .background(navigationLink)
-        .navigationBar(with: viewModel.navigationBar)
     }
     
     private var navigationLink: some View {
         
+        /// - Note: `init(_ titleKey: LocalizedStringKey, isActive: Binding<Bool>, @ViewBuilder destination: () -> Destination)` is not the best API to use since it allows an impossible case where `viewModel.destination` is nil
         NavigationLink("Destination", isActive: isActive) {
             
-            destination(link: viewModel.link)
+            switch viewModel.destination {
+            case .none:
+                EmptyView()
+                
+            case .mosParking:
+                mosParkingView()
+                
+            case let .payment(viewModel):
+                PaymentsView(viewModel: viewModel)
+                    .navigationBarHidden(true)
+            }
         }
         .opacity(0)
         .frame(height: 0)
@@ -45,35 +60,17 @@ struct TransportPaymentsView: View {
     
     private var isActive: Binding<Bool> {
         .init(
-            get: { viewModel.link != nil },
-            set: viewModel.setLink(to:)
+            get: { viewModel.destination != nil },
+            set: viewModel.setDestination(to:)
         )
-    }
-    
-    @ViewBuilder
-    private func destination(
-        link: TransportPaymentsViewModel.Link?
-    ) -> some View {
-        
-        switch link {
-        case .none:
-            EmptyView()
-            
-        case let .avtodor(action):
-            AvtodorCrutchView(viewModel: .init(), action: action)
-                .navigationBarTitle("Автодор Платные дороги", displayMode: .inline)
-            //.navigationBarHidden(true)
-            
-        case .payments(let viewModel):
-            PaymentsView(viewModel: viewModel)
-                .navigationBarHidden(true)
-        }
     }
 }
 
 // MARK: - Views
 
-extension TransportPaymentsView {
+enum Transport {}
+
+extension Transport {
     
     struct LatestPaymentsView: View {
         
@@ -86,9 +83,9 @@ extension TransportPaymentsView {
         
         var body: some View {
             
-            VStack {
+            if !latestPayments.latestPayments.items.isEmpty {
                 
-                if !latestPayments.latestPayments.items.isEmpty {
+                VStack {
                     
                     PaymentsServicesLatestPaymentsSectionView(
                         viewModel: latestPayments,
@@ -119,8 +116,7 @@ extension TransportPaymentsView {
                 
                 ForEach(
                     viewOperators,
-                    // to help Xcode preview
-                    content: TransportPaymentsView.OperatorItemView.init(viewModel:)
+                    content: Transport.OperatorItemView.init(viewModel:)
                 )
             }
         }
@@ -201,31 +197,41 @@ struct TransportPaymentsView_Previews: PreviewProvider {
         
         Group {
             
-            TransportPaymentsView(viewModel: .preview)
+            transportPaymentsView(viewModel: .preview)
                 .previewDisplayName("TransportPaymentsView")
             
             Group {
-                TransportPaymentsView.LatestPaymentsView(
+                Transport.LatestPaymentsView(
                     for: TransportPaymentsViewModel.preview.latestPayments
                 )
-                TransportPaymentsView.LatestPaymentsView(for: .sample)
+                Transport.LatestPaymentsView(for: .sample)
             }
             .previewDisplayName("LatestPaymentsView")
             
             Group {
-                TransportPaymentsView.OperatorsView(
+                Transport.OperatorsView(
                     for: TransportPaymentsViewModel.preview.viewOperators
                 )
-                TransportPaymentsView.OperatorsView(for: .preview)
+                Transport.OperatorsView(for: .preview)
             }
             .previewDisplayName("OperatorsView")
             
             List {
-                TransportPaymentsView.OperatorItemView(viewModel: .noINN)
-                TransportPaymentsView.OperatorItemView(viewModel: .withINN)
+                Transport.OperatorItemView(viewModel: .noINN)
+                Transport.OperatorItemView(viewModel: .withINN)
             }
             .listStyle(.plain)
             .previewDisplayName("OperatorItemView")
+        }
+    }
+    
+    private static func transportPaymentsView(
+        viewModel: TransportPaymentsViewModel
+    ) -> some View {
+        
+        TransportPaymentsView(viewModel: viewModel) {
+            
+            Text("MosParkingView")
         }
     }
 }
@@ -237,14 +243,14 @@ private extension TransportPaymentsViewModel {
     static let preview: TransportPaymentsViewModel = .init(
         operators: .preview,
         latestPayments: .sample,
-        navigationBar: .init(title: "Transport"),
         makePaymentsViewModel: {
             .init(
                 source: $0,
                 model: .emptyMock,
                 closeAction: {}
             )
-        }
+        },
+        handleError: { _ in }
     )
 }
 
