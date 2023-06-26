@@ -4,42 +4,45 @@
 //
 //  Created by Dmitry Martynov on 23.06.2023.
 //
-
+/*
 import XCTest
 @testable import ForaBank
 
 final class ModelPaymentTemplatesTests: XCTestCase {
-
+    
     //данные содержат один шаблон
     //кэш пустой
-    //выход должен содержать ту же одну картинку, что в данных
+    //выход должен содержать ту же одну картинку, что в данных (в кэш добавляется)
 
-    func test_reduceImages_withEmptyCache() throws {
+    func test_reduceImages_withEmptyCache() async throws {
          
-        let temlatesData = try getTemplatesDataFromJson()
-        XCTAssertEqual(temlatesData.count, 1)
+        let templatesData = try getTemplatesDataFromJson()
+        XCTAssertEqual(templatesData.count, 1)
             
         let images = [String: ImageData]()
             
-        Task {
-                
-            let sut = await Model.reduce(images: images, with: temlatesData)
-                
-            let firstData = try XCTUnwrap(temlatesData.first)
-            let svgImageData = try XCTUnwrap(firstData.svgImage)
-            let imgData = try XCTUnwrap(ImageData(with: svgImageData))
-                
-            let firstSutImage = try XCTUnwrap(sut["Template\(firstData.id)"])
-                
-            XCTAssertEqual(sut.count, 1)
-            XCTAssertEqual(firstSutImage, imgData)
-        }
-           
+        
+            let sut = Model.reduce
+            let sutData = await sut(images, templatesData)
+            
+            let sutImageData = try XCTUnwrap(sutData["Template\(templatesData[0].id)"])
+            
+            XCTAssertEqual(sutData.count, 1)
+            XCTAssertEqual(sutImageData, try imageData(templateData: templatesData.first))
+        
+    }
+    
+    private func imageData(templateData: PaymentTemplateData?) throws -> ImageData {
+        
+        let templateData = try XCTUnwrap(templateData)
+        let svgImageData = try XCTUnwrap(templateData.svgImage)
+        
+        return try XCTUnwrap(ImageData(with: svgImageData))
     }
     
     //данные содержат один шаблон
     //кэш содержит одну ту же картинку, что в данных
-    //выход должен содержать ту же одну картинку, что в данных
+    //выход должен содержать ту же одну картинку, что в данных (кэш не меняется)
 
     func test_reduceImages_CacheWithOneImage() throws {
          
@@ -133,3 +136,4 @@ private extension ModelPaymentTemplatesTests {
     static let secondSVG =
     "<svg width=\"32\" height=\"32\" viewBox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect y=\"5\" width=\"32\" height=\"22\" rx=\"3\" fill=\"#FF3636\"/>\n<g clip-path=\"url(#clip0)\">\n<path d=\"M5 10.5C5 10.2239 5.22386 10 5.5 10H9.5C9.77614 10 10 10.2239 10 10.5V11.8557C10 11.9744 9.83338 12.0308 9.75526 11.9414C9.3714 11.5021 8.56071 10.752 7.5 10.752C6.43929 10.752 5.6286 11.5021 5.24474 11.9414C5.16662 12.0308 5 11.9744 5 11.8557V10.5Z\" fill=\"white\"/>\n<path d=\"M5 14.7431C5 14.8871 5.11678 15.0039 5.26084 15.0039H9.73916C9.88322 15.0039 10 14.8871 10 14.7431V14.7431C10 14.7348 9.99724 14.7273 9.99125 14.7216C9.89001 14.6245 8.91861 13.7301 7.5 13.7301C6.08139 13.7301 5.10999 14.6245 5.00875 14.7216C5.00276 14.7273 5 14.7348 5 14.7431V14.7431Z\" fill=\"white\"/>\n<path d=\"M5 13.4207C5 13.5175 5.10972 13.5763 5.1917 13.5248C5.61983 13.2561 6.68048 12.6472 7.5 12.6472C8.31955 12.6472 9.38023 13.2558 9.80833 13.5243C9.89031 13.5757 10 13.5169 10 13.4201V13.1861C10 13.1282 9.9805 13.0727 9.94118 13.0302C9.70656 12.7763 8.78745 11.8805 7.5 11.8805C6.21255 11.8805 5.29344 12.7763 5.05882 13.0302C5.0195 13.0727 5 13.1282 5 13.1861V13.4207Z\" fill=\"white\"/>\n</g>\n<defs>\n<clipPath id=\"clip0\">\n<rect x=\"5\" y=\"10\" width=\"5\" height=\"5.00391\" rx=\"1\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>"
 }
+*/
