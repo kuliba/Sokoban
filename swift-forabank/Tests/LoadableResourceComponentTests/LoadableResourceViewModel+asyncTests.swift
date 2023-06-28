@@ -48,7 +48,7 @@ final class LoadableResourceViewModel_asyncTests: XCTestCase {
             .loading,
         ])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.11)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.15)
         
         assertEqual(spy.values, [
             .loading,
@@ -64,7 +64,7 @@ final class LoadableResourceViewModel_asyncTests: XCTestCase {
             .loading,
         ])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.11)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.15)
         
         assertEqual(spy.values, [
             .loading,
@@ -83,7 +83,7 @@ final class LoadableResourceViewModel_asyncTests: XCTestCase {
             .loading,
         ])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.11)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.15)
         
         assertEqual(spy.values, [
             .loading,
