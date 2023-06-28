@@ -11,7 +11,6 @@ import Combine
 
 final class OperationDetailInfoViewModel: Identifiable {
     
-    let id = UUID()
     let title = "Детали операции"
     var logo: Image?
     var cells: [DefaultCellViewModel]
@@ -20,8 +19,12 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     typealias IconType = PropertyIconType
     
-    init(model: Model, logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void) {
-        
+    init(
+        model: Model,
+        logo: Image?,
+        cells: [DefaultCellViewModel],
+        dismissAction: @escaping () -> Void
+    ) {
         self.model = model
         self.logo = logo
         self.cells = cells
@@ -66,8 +69,13 @@ final class OperationDetailInfoViewModel: Identifiable {
         }
     }
     
-    init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
-        
+    init?(
+        with statement: ProductStatementData,
+        operation: OperationDetailData?,
+        product: ProductData,
+        dismissAction: @escaping () -> Void,
+        model: Model
+    ) {
         self.model = model
         let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date)
         let foraBankName = "Фора Банк"
@@ -1893,44 +1901,55 @@ extension OperationDetailInfoViewModel {
     }
 }
 
+// MARK: Preview content
+
 extension OperationDetailInfoViewModel {
     
-    static let detailMockData: OperationDetailInfoViewModel = {
+    static func detailMockData() -> OperationDetailInfoViewModel {
         
-        return OperationDetailInfoViewModel(model: .emptyMock,
-                                            logo: nil,
-                                            cells: [PropertyCellViewModel(title: "По номеру телефона",
-                                                                          iconType: IconType.phone.icon,
-                                                                          value: "+7 (962) 62-12-12"),
-                                                    PropertyCellViewModel(title: "Получатель",
-                                                                          iconType: IconType.user.icon,
-                                                                          value: "Алексей Андреевич К."),
-                                                    BankCellViewModel(title: "Банк получателя",
-                                                                      icon: Image("Bank Logo Sample"),
-                                                                      name: "СБЕР"),
-                                                    PropertyCellViewModel(title: "Сумма перевода",
-                                                                          iconType: IconType.balance.icon,
-                                                                          value: "1 000,00 ₽"),
-                                                    
-                                                    PropertyCellViewModel(title: "Комиссия",
-                                                                          iconType: IconType.commission.icon,
-                                                                          value: "10,20 ₽"),
-                                                    ProductCellViewModel(title: "Счет списания",
-                                                                         icon: Image("card_sample"),
-                                                                         name: "Standart",
-                                                                         iconPaymentService: Image("card_mastercard_logo"),
-                                                                         balance: "10 ₽",
-                                                                         description: "· 4896 · Корпоративная"),
-                                                    PropertyCellViewModel(title: "Назначение платежа",
-                                                                          iconType: IconType.purpose.icon,
-                                                                          value: "Оплата по договору №285"),
-                                                    PropertyCellViewModel(title: "Номер операции СБП",
-                                                                          iconType: IconType.operationNumber.icon,
-                                                                          value: "B11271248585590B00001750251A3F95"),
-                                                    PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                                          iconType: IconType.date.icon,
-                                                                          value: "10.05.2021 15:38:12")]
-                                            , dismissAction: {})
-        
-    }()
+        return OperationDetailInfoViewModel(
+            model: .emptyMock,
+            logo: nil,
+            cells: [
+                PropertyCellViewModel(
+                    title: "По номеру телефона",
+                    iconType: IconType.phone.icon,
+                    value: "+7 (962) 62-12-12"),
+                PropertyCellViewModel(
+                    title: "Получатель",
+                    iconType: IconType.user.icon,
+                    value: "Алексей Андреевич К."),
+                BankCellViewModel(
+                    title: "Банк получателя",
+                    icon: Image("Bank Logo Sample"),
+                    name: "СБЕР"),
+                PropertyCellViewModel(
+                    title: "Сумма перевода",
+                    iconType: IconType.balance.icon,
+                    value: "1 000,00 ₽"),
+                PropertyCellViewModel(
+                    title: "Комиссия",
+                    iconType: IconType.commission.icon,
+                    value: "10,20 ₽"),
+                ProductCellViewModel(
+                    title: "Счет списания",
+                    icon: Image("card_sample"),
+                    name: "Standart",
+                    iconPaymentService: Image("card_mastercard_logo"),
+                    balance: "10 ₽",
+                    description: "· 4896 · Корпоративная"),
+                PropertyCellViewModel(
+                    title: "Назначение платежа",
+                    iconType: IconType.purpose.icon,
+                    value: "Оплата по договору №285"),
+                PropertyCellViewModel(
+                    title: "Номер операции СБП",
+                    iconType: IconType.operationNumber.icon,
+                    value: "B11271248585590B00001750251A3F95"),
+                PropertyCellViewModel(
+                    title: "Дата и время операции (МСК)",
+                    iconType: IconType.date.icon,
+                    value: "10.05.2021 15:38:12")],
+            dismissAction: {})
+    }
 }

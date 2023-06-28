@@ -379,9 +379,10 @@ extension Payments {
         let productId: ProductData.ID
         let amount: Double
         let service: Payments.Service
+        let operation: Payments.Operation?
         let serviceData: ServiceData?
         
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil, operation: Payments.Operation?) {
             
             self.operationDetailId = operationDetailId
             self.status = status
@@ -389,6 +390,7 @@ extension Payments {
             self.amount = amount
             self.service = service
             self.serviceData = serviceData
+            self.operation = operation
         }
         
         init(
@@ -405,7 +407,7 @@ extension Payments {
                 throw Payments.Error.unsupported
             }
             
-            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData)
+            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData, operation: operation)
         }
         
         enum ServiceData {

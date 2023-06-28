@@ -225,6 +225,6 @@ extension OperationDetailInfoView {
 
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        OperationDetailInfoView(viewModel: .detailMockData)
+        OperationDetailInfoView(viewModel: .detailMockData())
     }
 }

@@ -101,6 +101,11 @@ struct PaymentsSuccessView: View {
                     
                     HStack(spacing: 52) {
                         
+                        if let template = viewModel.templateButton {
+                            
+                            TemplateButtonView(viewModel: template)
+                        }
+                        
                         ForEach(viewModel.optionButtons) { buttonViewModel in
                             
                             switch buttonViewModel {
