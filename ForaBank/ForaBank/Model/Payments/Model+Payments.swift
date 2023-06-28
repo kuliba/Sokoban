@@ -394,16 +394,9 @@ extension Model {
                 
                 return try await step(for: operation, with: anywayResponse)
                 
-            case .avtodor:
+            case .avtodor, .gibdd:
                 
                 return try await step(for: operation, with: anywayResponse)
-                
-            case .gibdd:
-                
-                return try await paymentsProcessRemoteStepGibdd(
-                    operation,
-                    response: anywayResponse
-                )
                 
             case .mobileConnection:
                 

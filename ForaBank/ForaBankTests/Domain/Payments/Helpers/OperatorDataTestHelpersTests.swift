@@ -116,7 +116,9 @@ extension OperatorGroupData.OperatorData {
     static let iForaMosParking:  Self = .data(for: Purefs.iForaMosParking)!
     static let iForaPodorozhnik: Self = .data(for: Purefs.iForaPodorozhnik)!
     static let iForaStrelka:     Self = .data(for: Purefs.iForaStrelka)!
-    static let iForaTroika:      Self = .data(for: Purefs.iForaTroika)!
+    // backend has  changes not reflected in local files
+    // TODO: change to `.data(for: Purefs.iForaTroika)!` after local resources update
+    static let iForaTroika:      Self = .data(for: "iFora||MMR")!
     
     // Avtodor
     static let iForaAVDD: Self = .data(for: Purefs.avtodorContract)!

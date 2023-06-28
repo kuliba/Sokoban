@@ -992,8 +992,8 @@ private extension Model {
         // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
             .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
-        // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
-            .substitutingAvtodors(with: avtodorGroup)
+        // TODO: `replacingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
+            .replacingAvtodors(with: avtodorGroup)
         
         let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
         
@@ -1071,7 +1071,7 @@ extension NavigationBarView.ViewModel {
 
 extension Array where Element == OperatorGroupData.OperatorData {
     
-    func substitutingAvtodors(
+    func replacingAvtodors(
         with avtodor: OperatorGroupData.OperatorData?
     ) -> Self {
         
@@ -1079,16 +1079,16 @@ extension Array where Element == OperatorGroupData.OperatorData {
         
         var copy = self
 
-        copy.removeAll { $0.synonymList == [INNs.avtodor] }
+        copy.removeAll { $0.synonymList == [TaxCodes.avtodor] }
         copy.insert(avtodor, at: 0)
         
         return copy
     }
 }
 
-extension Model {
+private extension Model {
     
-    fileprivate var avtodorGroup: OperatorGroupData.OperatorData? {
+    var avtodorGroup: OperatorGroupData.OperatorData? {
         
         guard let avtodorContract = dictionaryAnywayOperator(for: Purefs.avtodorContract)
         else { return nil }

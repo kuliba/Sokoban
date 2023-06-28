@@ -62,23 +62,6 @@ extension Model {
             throw Payments.Error.unsupported
         }
     }
-    
-    // MARK: - Process Remote Step
-    
-    func paymentsProcessRemoteStepGibdd(
-        _ operation: Payments.Operation,
-        response: TransferAnywayResponseData
-    ) async throws -> Payments.Operation.Step {
-        
-        let step = try await step(for: operation, with: response)
-        let amount = try makeAvtodorAmount(with: step.parameters)
-        
-        return Payments.Operation.Step(
-            parameters: step.parameters + [amount],
-            front: step.front,
-            back: step.back
-        )
-    }
 }
 
 // MARK: - Helpers
