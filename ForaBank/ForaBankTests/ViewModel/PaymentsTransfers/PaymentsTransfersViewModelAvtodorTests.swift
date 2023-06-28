@@ -10,20 +10,20 @@ import XCTest
 
 final class PaymentsTransfersViewModelAvtodorTests: XCTestCase {
     
-    func test_substitutingAvtodors_shouldReturnSame_onNil() {
+    func test_replacingAvtodors_shouldReturnSame_onNil() {
         
         let operators: [OperatorGroupData.OperatorData] = .transport
         
-        let result = operators.substitutingAvtodors(with: nil)
+        let result = operators.replacingAvtodors(with: nil)
         
         XCTAssertNoDiff(result, operators)
     }
     
-    func test_substitutingAvtodors_shouldSubstituteAvtodorsWithProvided_onNonNil() {
+    func test_replacingAvtodors_shouldSubstituteAvtodorsWithProvided_onNonNil() {
         
         let operators: [OperatorGroupData.OperatorData] = .transport
         
-        let result = operators.substitutingAvtodors(with: .iFora4285)
+        let result = operators.replacingAvtodors(with: .iFora4285)
         
         XCTAssertNoDiff(result, [.iFora4285] + .transportWithoutAvtodor)
     }
