@@ -314,3 +314,50 @@ struct OperationDetailData: Codable, Equatable {
         case paymentMethod
     }
 }
+
+extension OperationDetailData {
+    
+    var templateName: String {
+        
+        switch transferEnum {
+        case .transport:
+            return payeeFullName ?? "Транспорт"
+        case .taxAndStateService:
+            return payeeFullName ?? "Налоги и госуслуги"
+        case .accountToAccount, .cardToAccount, .cardToCard:
+            return payeeFullName ?? "Перевод между своими"
+        case .accountToCard:
+            return payeeFullName ?? "Между своими"
+        case .accountToPhone, .cardToPhone:
+            return payeeFullName ?? "Перевод внутри банка"
+        case .contactAddressingCash, .contactAddressless:
+            return payeeFullName ?? "Перевод Contact"
+        case .direct:
+            return payeeFullName ?? "Перевод МИГ"
+        case .elecsnet:
+            return "В другой банк"
+        case .external:
+            return payeeFullName ?? "Перевод по реквизитам"
+        case .housingAndCommunalService:
+            return payeeFullName ?? "ЖКХ"
+        case .internet:
+            return payeeFullName ?? "Интернет и ТВ"
+        case .mobile:
+            return payeeFullName ?? "Мобильная связь"
+        case .sfp:
+            return payeeFullName ?? payeeBankName ?? "Исходящие СБП"
+        case .conversionAccountToAccount:
+            return payeeFullName ?? "Перевод между счетами"
+        case .conversionAccountToCard:
+            return payeeFullName ?? "Перевод со счета на карту"
+        case .conversionCardToAccount:
+            return payeeFullName ?? "Перевод с карты на счет"
+        case .conversionCardToCard:
+            return payeeFullName ?? "Перевод с карты на карту"
+        case .conversionAccountToPhone, .conversionCardToPhone:
+            return payeeFullName ?? payeePhone ?? "Перевод между счетами"
+        default:
+            return payeeFullName ?? "Шаблон по операции"
+        }
+    }
+}
