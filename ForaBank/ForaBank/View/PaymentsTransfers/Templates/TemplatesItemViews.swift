@@ -18,7 +18,7 @@ extension TemplatesListView {
         var body: some View {
                         
             switch viewModel.state {
-            case .normal:
+            case .normal, .processing:
                             
                 TemplatesListView.NormalItemView
                     .init(avatar: viewModel.avatar,
@@ -26,8 +26,13 @@ extension TemplatesListView {
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
-                          style: style)
-                    .onTapGesture { viewModel.tapAction(viewModel.id) }
+                          style: style, editMode: $editMode)
+                    .shimmering(active: viewModel.state.isProcessing, bounce: true)
+                    .onTapGesture {
+                        if !viewModel.state.isProcessing {
+                            viewModel.tapAction(viewModel.id)
+                        }
+                    }
                 
             case let .deleting(deletingProgressViewModel):
                             
@@ -42,7 +47,7 @@ extension TemplatesListView {
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
-                          style: style)
+                          style: style, editMode: .constant(.inactive))
                     .overlay13(alignment: .topLeading) {
                                    
                         TemplatesListView.SelectItemVew
@@ -59,7 +64,7 @@ extension TemplatesListView {
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
                           amount: viewModel.ammount,
-                          style: style)
+                          style: style, editMode: .constant(.inactive))
                     .offset(x: -100, y: 0)
                             
             } //switch item state
@@ -147,18 +152,39 @@ extension TemplatesListView {
     }
 }
 
+extension TemplatesListView.NormalItemView {
+    
+    struct ItemPaddings: ViewModifier {
+        
+        @Binding var editMode: EditMode
+        
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 16.0, *) {
+                content
+                    .padding(.horizontal)
+            } else {
+                content
+                    .padding(.leading, editMode == .active ? 0 : 16 )
+                    .padding(.trailing, 16)
+            }
+        }
+    }
+}
+
 //MARK: - TemplateItemViews components
 
 extension TemplatesListView {
     
     struct NormalItemView: View {
         
-        let avatar: TemplatesListViewModel.ItemViewModel.Avatar?
+        let avatar: TemplatesListViewModel.ItemViewModel.Avatar
         let topImage: Image?
         let title: String
         let subTitle: String
         let amount: String
         let style: TemplatesListViewModel.Style
+        @Binding var editMode: EditMode
         
         var body: some View {
             
@@ -185,8 +211,9 @@ extension TemplatesListView {
                         TemplatesListView.ItemSubtitleView(subtitle: subTitle,
                                                            style: style)
                     }
+                    
                 }
-                .padding(.horizontal)
+                .modifier(Self.ItemPaddings(editMode: $editMode))
                 .frame(height: 84)
                 
             case .tiles:
@@ -317,7 +344,7 @@ extension TemplatesListView {
     
     struct ItemIconView: View {
         
-        let avatar: TemplatesListViewModel.ItemViewModel.Avatar?
+        let avatar: TemplatesListViewModel.ItemViewModel.Avatar
         let topImage: Image?
         let style: TemplatesListViewModel.Style
         
@@ -346,16 +373,20 @@ extension TemplatesListView {
                 case let .text(text):
                     
                     Circle()
-                        .fill(Color.mainColorsGrayMedium)
-                        .frame(height: side.main)
+                        .fill(Color.mainColorsGrayMedium.opacity(0.4))
+                        .frame(width: side.main, height: side.main)
                         .overlay13 {
                             Text(text)
                                 .font(.textH4M16240())
                                 .foregroundColor(.textPlaceholder)
                         }
                 
-                case .none:
-                    EmptyView()
+                case .placeholder:
+                    
+                    Circle()
+                        .fill(Color.mainColorsGrayMedium.opacity(0.4))
+                        .frame(width: side.main, height: side.main)
+                        .shimmering(active: true, bounce: true)
                 }
                 
                 if let topImage = topImage {

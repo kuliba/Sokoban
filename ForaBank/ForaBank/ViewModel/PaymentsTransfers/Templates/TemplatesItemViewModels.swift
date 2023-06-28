@@ -15,7 +15,7 @@ extension TemplatesListViewModel {
         let id: Int
         var sortOrder: Int
         @Published var state: State
-        let avatar: Avatar?
+        @Published var avatar: Avatar
         @Published var title: String
         @Published var subTitle: String
         let topImage: Image?
@@ -59,7 +59,7 @@ extension TemplatesListViewModel {
         init(id: Int = 0,
              sortOrder: Int = 0,
              state: TemplatesListViewModel.ItemViewModel.State = .normal,
-             avatar: Avatar? = nil,
+             avatar: Avatar = .placeholder,
              title: String = "",
              subTitle: String = "",
              topImage: Image? = nil,
@@ -86,6 +86,7 @@ extension TemplatesListViewModel {
         enum State {
             
             case normal
+            case processing
             case select(ToggleRoundButtonViewModel)
             case delete(ItemActionViewModel)
             case deleting(DeletingProgressViewModel)
@@ -98,11 +99,26 @@ extension TemplatesListViewModel {
                 return viewModel
             }
             
+            var isProcessing: Bool {
+                
+                if case .processing = self { return true }
+                else { return false }
+            }
+            
         }
         
         enum Avatar {
             case image(Image)
             case text(String)
+            case placeholder
+            
+            var isPlaceholder: Bool {
+                if case .placeholder = self {
+                    return true
+                } else {
+                    return false
+                }
+            }
         }
         
         struct ToggleRoundButtonViewModel {
@@ -208,8 +224,15 @@ extension TemplatesListViewModel {
                                   amountFormatted: model.amountFormatted(amount:currencyCode:style:))
         else { return nil }
         
-        var avatar: ItemViewModel.Avatar? = nil
+        var avatar: ItemViewModel.Avatar = .placeholder
         var topImage: Image? = nil
+        
+        var mainImage: Image? = nil
+        if let imgData = model.images.value["Template\(data.id)"],
+           let img = imgData.image {
+            
+            mainImage = img
+        }
         
         if let phoneNumber = getPhoneNumber(for: data),
            let contact = model.contact(for: phoneNumber) {
@@ -220,11 +243,14 @@ extension TemplatesListViewModel {
                 avatar = .text(contact.initials ?? "")
             }
             
-            topImage = data.svgImage.image
+            topImage = mainImage
             
         } else {
             
-            if let image = data.svgImage.image { avatar = .image(image) }
+            if let img = mainImage {
+                
+                avatar = .image(img)
+            }
         }
         
         return .init(id: data.paymentTemplateId,

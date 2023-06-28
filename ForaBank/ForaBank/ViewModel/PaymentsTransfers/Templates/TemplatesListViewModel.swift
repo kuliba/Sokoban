@@ -57,7 +57,9 @@ class TemplatesListViewModel: ObservableObject {
     
     convenience init(_ model: Model, dismissAction: @escaping () -> Void) {
   
-        self.init(state: .placeholder,
+        model.action.send(ModelAction.PaymentTemplate.List.Requested())
+        
+        self.init(state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
                   style: model.paymentTemplatesViewSettings.value.style,
                   navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
                                                                 action: dismissAction),
@@ -73,8 +75,6 @@ class TemplatesListViewModel: ObservableObject {
         updateNavBar(event: .setRegular)
         
         bind()
-        
-        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
     }
 }
 
@@ -95,11 +95,25 @@ private extension TemplatesListViewModel {
                         .init(informer: .init(message: "Не удалось загрузить шаблоны",
                                               icon: .close)))
                     
-                case _ as ModelAction.PaymentTemplate.Update.Failed:
+                case let payload as ModelAction.PaymentTemplate.Update.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
                         .init(informer: .init(message: "Не удалось сохранить изменения",
                                               icon: .close)))
+                    guard let item = items.first(where: { $0.id == payload.paymentTemplateId})
+                    else { return }
+                    
+                    item.state = .normal
+                    self.idList = UUID()
+                    
+                case let payload as ModelAction.PaymentTemplate.Update.Complete:
+                    
+                    guard let item = items.first(where: { $0.id == payload.paymentTemplateId})
+                    else { return }
+                    
+                    item.state = .normal
+                    item.title = payload.newName
+                    self.idList = UUID()
                 
                 case _ as ModelAction.PaymentTemplate.Delete.Failed:
                     
@@ -144,31 +158,50 @@ private extension TemplatesListViewModel {
                     }
                         
                 } else {
+                    
+                    let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
+                       
+                    let selector = self.categorySelector?.selected
                         
-                    DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-                        let templatesVM = templates.compactMap { getItemViewModel(with: $0, model: model) }
+                    withAnimation {
+                        
+                        self.state = .normal
+                        self.itemsRaw.value = templatesVM
+                        let newCategorySelector = getCategorySelectorModel(with: templates)
+                        bindCategorySelector(newCategorySelector)
+                        if let selector,
+                           newCategorySelector.options.contains(where: { $0.id == selector }) {
                             
-                        DispatchQueue.main.async { [unowned self] in
-                           
-                            let selector = self.categorySelector?.selected
-                            
-                            withAnimation {
-                                
-                                self.state = .normal
-                                self.itemsRaw.value = templatesVM
-                                let newCategorySelector = getCategorySelectorModel(with: templates)
-                                bindCategorySelector(newCategorySelector)
-                                if let selector,
-                                   newCategorySelector.options.contains(where: { $0.id == selector }) {
-                                    
-                                    newCategorySelector.selected = selector
-                                }
-                                self.categorySelector = newCategorySelector
-                            }
+                            newCategorySelector.selected = selector
                         }
+                        self.categorySelector = newCategorySelector
                     }
+                    
                 }
             }.store(in: &bindings)
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                itemsRaw.value.filter { $0.avatar.isPlaceholder }
+                     .forEach { item in
+                    
+                         if let img = images["Template\(item.id)"]?.image {
+                             item.avatar = .image(img)
+                         }
+                }
+                
+                withAnimation {
+                 
+                    self.items = reduceItems(rawItems: self.itemsRaw.value,
+                                             isDataUpdating: false,
+                                             categorySelected: self.categorySelector?.selected,
+                                             searchText: self.navBarState.searchModel?.searchText,
+                                             isAddItemNeeded: !self.state.isSelect)
+                }
+                
+        }.store(in: &bindings)
         
         $items
             .receive(on: DispatchQueue.main)
@@ -226,10 +259,10 @@ private extension TemplatesListViewModel {
                 case let payload as TemplatesListViewModelAction.Item.Rename:
                     
                     guard let data = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}),
-                          let _ = itemsRaw.value.first(where: { $0.id == payload.itemId})
+                          let itemVM = itemsRaw.value.first(where: { $0.id == payload.itemId})
                     else { return }
                     
-                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: data.name,
+                    let renameTemplateItemViewModel = RenameTemplateItemViewModel(oldName: itemVM.title,
                                                                                   templateID: data.id)
                     bind(renameTemplateItemViewModel)
                     
@@ -636,7 +669,7 @@ private extension TemplatesListViewModel {
                 
                 guard let item = items.first(where: { $0.id == payload.itemId}) else { return }
                 
-                item.title = payload.newName
+                item.state = .processing
                 self.model.action.send(ModelAction.PaymentTemplate.Update.Requested
                                         .init(name: payload.newName,
                                               parameterList: nil,
@@ -870,6 +903,10 @@ private extension TemplatesListViewModel {
             newItems = sortedItems(filterredItems(newItems, categorySelected))
         }
           
+        if isDataUpdating {
+            newItems.insert(ItemViewModel(kind: .placeholder), at: 0)
+        }
+        
         if isAddItemNeeded {
             newItems.append(getItemAddNewTemplateModel())
         }
