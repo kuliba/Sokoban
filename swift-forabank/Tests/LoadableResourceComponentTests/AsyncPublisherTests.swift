@@ -15,10 +15,10 @@ final class AsyncPublisherTests: XCTestCase {
         
         let action: () async throws -> TestItem = {
             
-            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 50)
+            try await Task.sleep(nanoseconds: .ms50)
             return .init(id: 42)
         }
-#warning("USE ValueSpy")
+        #warning("USE ValueSpy")
         var receivedItem: TestItem?
         let cancellable = AnyPublisher(action)
             .sink { completion in
@@ -34,7 +34,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertNil(receivedItem)
         
-        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 60)
+        try await Task.sleep(nanoseconds: .ms100)
         
         XCTAssertNoDiff(receivedItem, .init(id: 42))
         XCTAssertNotNil(cancellable)
@@ -44,7 +44,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         let action: () async throws -> TestItem = {
             
-            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 50)
+            try await Task.sleep(nanoseconds: .ms50)
             return .init(id: 42)
         }
         
@@ -52,7 +52,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertTrue(spy.events.isEmpty)
         
-        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 60)
+        try await Task.sleep(nanoseconds: .ms100)
         
         assert(spy.events, [
             .value(.init(id: 42)),
@@ -64,7 +64,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         let action: () async throws -> TestItem = {
             
-            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 50)
+            try await Task.sleep(nanoseconds: .ms50)
             throw anyNSError(domain: "Abc")
         }
         
@@ -83,7 +83,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertNil(receivedError)
         
-        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 60)
+        try await Task.sleep(nanoseconds: .ms100)
         
         XCTAssertNoDiff(
             try XCTUnwrap(receivedError) as NSError,
@@ -96,7 +96,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         let action: () async throws -> TestItem = {
             
-            try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 50)
+            try await Task.sleep(nanoseconds: .ms50)
             throw anyNSError(domain: "Abc")
         }
         
@@ -104,7 +104,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertTrue(spy.events.isEmpty)
         
-        try await Task.sleep(nanoseconds: NSEC_PER_MSEC * 60)
+        try await Task.sleep(nanoseconds: .ms100)
         
         assert(spy.events, [.failure])
     }
@@ -121,4 +121,10 @@ private func anyNSError(
 ) -> NSError {
     
     NSError(domain: domain, code: code)
+}
+
+private extension UInt64 {
+    
+    static let ms50: Self = NSEC_PER_MSEC * 50
+    static let ms100: Self = NSEC_PER_MSEC * 100
 }
