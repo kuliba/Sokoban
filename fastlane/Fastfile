@@ -51,7 +51,7 @@ platform :ios do
       project: ENV["XCODE_PROJECT"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
       clean: true,
-      suppress_xcode_output: true)
+      suppress_xcode_output: false)
 
   end
 

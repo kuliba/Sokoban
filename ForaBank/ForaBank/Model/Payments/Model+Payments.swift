@@ -394,10 +394,17 @@ extension Model {
                 
                 return try await step(for: operation, with: anywayResponse)
                 
-            case .avtodor, .gibdd:
+            case .avtodor:
                 
                 return try await step(for: operation, with: anywayResponse)
                 
+            case .gibdd:
+                
+                return try await paymentsProcessRemoteGibdd(
+                    operation,
+                    response: anywayResponse
+                )
+
             case .mobileConnection:
                 
                 return try await paymentsProcessRemoteStepMobileConnection(
@@ -554,6 +561,7 @@ extension Model {
     func step(
         for operation: Payments.Operation,
         withNextParameters nextParameters: [PaymentsParameterRepresentable],
+        restrictedParameters: [Payments.Parameter.ID] = [],
         response: TransferAnywayResponseData
     ) throws -> Payments.Operation.Step {
         
@@ -571,7 +579,7 @@ extension Model {
             visible: visible,
             nextStepParameters: nextParameters,
             operationParameters: operation.parameters,
-            restrictedParameters: []
+            restrictedParameters: restrictedParameters
         )
         
         return Payments.Operation.Step(

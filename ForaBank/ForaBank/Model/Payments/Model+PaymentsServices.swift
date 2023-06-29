@@ -352,14 +352,11 @@ extension Model {
         return result
     }
     
-    func paymentsServicesStepExcludingParameters(response: TransferAnywayResponseData)
-    throws -> [Payments.Parameter.ID] {
+    func paymentsServicesStepExcludingParameters(
+        response: TransferAnywayResponseData
+    ) throws -> [Payments.Parameter.ID] {
         
-        var result = [Payments.Parameter.ID]()
-        // isRequired is optional value - need '== false'
-        let nexStepParametersIds = response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
-        result.append(contentsOf: nexStepParametersIds)
-        return result
+        response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
     }
     
     func paymentsServicesStepStage(_ operation: Payments.Operation,
