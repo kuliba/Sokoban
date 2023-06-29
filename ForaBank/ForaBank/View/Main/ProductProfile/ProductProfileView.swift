@@ -178,6 +178,11 @@ struct ProductProfileView: View {
                     .padding(.top, 26)
                     .padding(.bottom, 72)
                 
+            case let .meToMeLegacy(meToMeViewModel):
+                MeToMeView(viewModel: meToMeViewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 474)
+                
             case let .meToMe(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
                     .fullScreenCover(item: $viewModel.success) { successViewModel in
