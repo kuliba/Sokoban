@@ -7,6 +7,7 @@
 
 import Foundation
 import TextFieldComponent
+import UIKit
 
 /// A namespace for factory methods used to create text input field.
 enum TextFieldFactory {}
@@ -30,7 +31,13 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {
+                UIApplication.shared.endEditing()
+            }
         )
         
         return .init(
@@ -61,7 +68,14 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {
+                UIApplication.shared.endEditing()
+                
+            }
         )
         
         return .init(
@@ -100,7 +114,9 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: needCloseButton ? .image("Close Button") : nil,
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: { UIApplication.shared.endEditing() },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: { UIApplication.shared.endEditing() }
         )
         
         return .init(
