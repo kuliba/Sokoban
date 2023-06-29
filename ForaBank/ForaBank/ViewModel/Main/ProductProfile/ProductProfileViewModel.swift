@@ -722,12 +722,24 @@ private extension ProductProfileViewModel {
                                 self.bottomSheet = .init(type: .meToMe(viewModel))
                                 
                             case let .interest(amount):
-                                let meToMeViewModel = MeToMeViewModel(type: .transferDepositInterest(depositProduct, amount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                                
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                                        self.model,
+                                                        mode: .transferDeposit(depositProduct, amount))
+                                else { return }
+                                
+                                self.bind(viewModel)
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                                     
                             case let .close(amount):
-                                let meToMeViewModel = MeToMeViewModel(type: .transferBeforeCloseDeposit(depositProduct, amount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                                
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                                        self.model,
+                                                        mode: .transferAndCloseDeposit(depositProduct, amount))
+                                else { return }
+                                
+                                self.bind(viewModel)
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                             }
                             
                         default:
@@ -851,10 +863,17 @@ private extension ProductProfileViewModel {
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
-                            if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
+                            if let productData = productData as? ProductLoanData,
+                               let loanAccount = self.model.products.value[.account]?
+                                                    .first(where: {$0.number == productData.settlementAccount}) {
                                 
-                                let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel)) //TODO: newMeToMe
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                                        self.model,
+                                                        mode: .makePaymentTo(loanAccount, 0.0))
+                                else { return }
+                                
+                                self.bind(viewModel)
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                                 
                             } else if let productData = productData as? ProductDepositData,
                                     productData.isDemandDeposit { //только вклады
@@ -868,8 +887,10 @@ private extension ProductProfileViewModel {
                                 self.bottomSheet = .init(type: .meToMe(viewModel))
                             }
                             else {
-                                guard let viewModel = PaymentsMeToMeViewModel
-                                                        .init(self.model, mode: .makePaymentTo(productData, 0.0))
+                                
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                                        self.model,
+                                                        mode: .makePaymentTo(productData, 0.0))
                                 else { return }
                                 
                                 self.bind(viewModel)
@@ -1327,20 +1348,13 @@ extension ProductProfileViewModel {
         let type: Kind
         
         let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
-        
-        var keyboardOfssetMultiplier: CGFloat {
-            switch type {
-            case .meToMeLegacy: return 0
-            default: return 0.6
-            }
-        }
+        let keyboardOfssetMultiplier: CGFloat = 0.6
         
         enum Kind {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case meToMe(PaymentsMeToMeViewModel)
-            case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
             case info(OperationDetailInfoViewModel)
