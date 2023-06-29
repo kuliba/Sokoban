@@ -1581,7 +1581,7 @@ extension OperationDetailInfoViewModel {
                 
                 let numberViewModel = PropertyCellViewModel(
                     title: "Лицевой счет",
-                    iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                    iconType: IconType.account.icon,
                     value: account
                 )
                 cells.insert(numberViewModel, at: 0)
