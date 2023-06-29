@@ -1605,6 +1605,24 @@ extension OperationDetailInfoViewModel {
             }
             
             return cells.compactMap { $0 }
+            
+        case .cardToCard:
+            
+            var cells = [
+                amountViewModel,
+                commissionViewModel,
+                payeeViewModel,
+                dateViewModel
+            ]
+            
+            if let payeeProductNumber {
+                let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
+                                                               iconType: .ic24Bank,
+                                                               value: payeeProductNumber)
+                cells.insert(payeeCellViewModel, at: 0)
+            }
+            
+            return cells.compactMap {$0}
                 
             default:
                 
