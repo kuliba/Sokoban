@@ -68,13 +68,10 @@ public struct TextFieldView: UIViewRepresentable {
             textView.text = textState.text
             textView.setCursorPosition(to: textState.cursorPosition)
             textView.textColor = .init(textFieldConfig.textColor)
-
-            if !textView.isFirstResponder && textView.canBecomeFirstResponder {
+            
+            DispatchQueue.main.async {
                 
-                DispatchQueue.main.async {
-                    
-                    textView.becomeFirstResponder()
-                }
+                textView.becomeFirstResponder()
             }
             
         case let .noFocus(text):
@@ -125,11 +122,13 @@ extension TextFieldView {
         }
         
         @objc func handleDoneAction() {
-            UIApplication.shared.endEditing()
+            
+            send(.finishEditing)
         }
         
         @objc func handleCloseAction() {
-            UIApplication.shared.endEditing()
+            
+            send(.finishEditing)
         }
         
         // title "Готово"
@@ -182,12 +181,7 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
         
         send(.startEditing)
     }
-    
-    public func textViewDidEndEditing(_ textView: UITextView) {
         
-        send(.finishEditing)
-    }
-    
     public func textView(
         _ textView: UITextView,
         shouldChangeTextIn range: NSRange,
