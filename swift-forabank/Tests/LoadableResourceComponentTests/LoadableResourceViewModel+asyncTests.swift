@@ -150,20 +150,7 @@ final class LoadableResourceViewModel_asyncTests: XCTestCase {
     }
 }
 
-private extension UInt64 {
-    
-    static let ms100: Self = NSEC_PER_MSEC * 100
-}
-
 private struct TestResource: Equatable {
     
     let id: Int
-}
-
-private func anyNSError(
-    domain: String = "any error",
-    code: Int = 0
-) -> NSError {
-    
-    NSError(domain: domain, code: code)
 }
