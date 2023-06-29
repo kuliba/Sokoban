@@ -34,6 +34,7 @@
         "DaDataPhoneDataHelpersTests",
         "DateExtensionsTests",
         "DateFormatterExtensionsTests",
+        "DefaultMosParkingPickerDataMapperTests",
         "DoubleExtensionsTests",
         "GKHHistoryModelTests",
         "IsFreeCardAvailableHelperTests",

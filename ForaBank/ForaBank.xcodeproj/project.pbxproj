@@ -365,6 +365,7 @@
 		2A3F1B232A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B222A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift */; };
 		2A3F1B252A49895100D8FE55 /* MosParkingPickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */; };
 		2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */; };
+		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4E8DFF29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
 		2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */; };
@@ -2160,6 +2161,7 @@
 		2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerData.swift; sourceTree = "<group>"; };
 		2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
 		2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
+		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldView+ext.swift"; sourceTree = "<group>"; };
 		2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModel.swift; sourceTree = "<group>"; };
@@ -4792,6 +4794,7 @@
 			children = (
 				2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */,
 				2AED64312A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift */,
+				2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */,
 				2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */,
 				2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */,
 				2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */,
@@ -11352,6 +11355,7 @@
 				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,
 				2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */,
 				77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */,
+				2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */,
 				7789794929CB6C1200ECF684 /* XCTestCase+ext.swift in Sources */,
 				2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */,
 				2A30394A2A17D8B50008701D /* ReducerTextFieldViewModelTests.swift in Sources */,
@@ -11674,7 +11678,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
 				CURRENT_PROJECT_VERSION = 90;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -11903,7 +11906,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
 				CURRENT_PROJECT_VERSION = 90;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -12136,7 +12138,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
 				CURRENT_PROJECT_VERSION = 90;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -12172,7 +12173,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
 				CURRENT_PROJECT_VERSION = 90;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;

@@ -62,6 +62,39 @@ extension Model {
             throw Payments.Error.unsupported
         }
     }
+    
+    // MARK: Process Remote Step
+    
+    func paymentsProcessRemoteGibdd(
+        _ operation: Payments.Operation,
+        response: TransferAnywayResponseData
+    ) async throws -> Payments.Operation.Step {
+        
+        let nextParameters = try await uniqueNextParameters(
+            for: operation,
+            with: response
+        )
+        
+        let restrictedParameters = ["a3_DriverLicence_1_2", "a3_RegCert_2_2"]
+        
+        let next = nextParameters.map {
+            
+            guard let parameter = $0 as? Payments.ParameterInput,
+                  restrictedParameters.contains(parameter.parameter.id)
+            else { return $0 }
+            
+            let rules = parameter.validator.rules.relaxed
+            
+            return parameter.replacingValidator(with: .init(rules: rules))
+        }
+        
+        return try step(
+            for: operation,
+            withNextParameters: next,
+            restrictedParameters: restrictedParameters,
+            response: response
+        )
+    }
 }
 
 // MARK: - Helpers
@@ -80,4 +113,49 @@ private extension Payments.ParameterSelectDropDownList {
         ],
         placement: .top
     )
+}
+
+
+private extension Array where Element == PaymentsValidationRulesSystemRule {
+    
+    var relaxed: Self {
+        
+        map {
+            
+            guard let rule = $0 as? Payments.Validation.RegExpRule
+            else { return $0 }
+            
+            return rule.relaxed
+        }
+    }
+}
+
+extension Payments.Validation.RegExpRule {
+    
+    var relaxed: Payments.Validation.OptionalRegExpRule {
+        
+        return .init(regExp: regExp, actions: actions)
+    }
+}
+
+private extension Payments.ParameterInput {
+    
+    func replacingValidator(
+        with validator: Payments.Validation.RulesSystem
+    ) -> Self {
+        
+        .init(
+            parameter,
+            icon: icon,
+            title: title,
+            hint: hint,
+            info: info,
+            validator: validator,
+            limitator: limitator,
+            isEditable: isEditable,
+            placement: placement,
+            inputType: inputType,
+            group: group
+        )
+    }
 }
