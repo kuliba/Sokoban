@@ -18,7 +18,7 @@ final class AsyncPublisherTests: XCTestCase {
             try await Task.sleep(nanoseconds: .ms50)
             return .init(id: 42)
         }
-        #warning("USE ValueSpy")
+        
         var receivedItem: TestItem?
         let cancellable = AnyPublisher(action)
             .sink { completion in
@@ -34,7 +34,8 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertNil(receivedItem)
         
-        try await Task.sleep(nanoseconds: .ms100)
+        try await Task.sleep(nanoseconds: .ms50)
+        await Task.megaYield()
         
         XCTAssertNoDiff(receivedItem, .init(id: 42))
         XCTAssertNotNil(cancellable)
@@ -52,8 +53,9 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertTrue(spy.events.isEmpty)
         
-        try await Task.sleep(nanoseconds: .ms100)
-        
+        try await Task.sleep(nanoseconds: .ms50)
+        await Task.megaYield()
+
         assert(spy.events, [
             .value(.init(id: 42)),
             .finished,
@@ -83,8 +85,9 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertNil(receivedError)
         
-        try await Task.sleep(nanoseconds: .ms100)
-        
+        try await Task.sleep(nanoseconds: .ms50)
+        await Task.megaYield()
+
         XCTAssertNoDiff(
             try XCTUnwrap(receivedError) as NSError,
             anyNSError(domain: "Abc")
@@ -104,8 +107,9 @@ final class AsyncPublisherTests: XCTestCase {
         
         XCTAssertTrue(spy.events.isEmpty)
         
-        try await Task.sleep(nanoseconds: .ms100)
-        
+        try await Task.sleep(nanoseconds: .ms50)
+        await Task.megaYield()
+
         assert(spy.events, [.failure])
     }
 }
@@ -113,18 +117,4 @@ final class AsyncPublisherTests: XCTestCase {
 private struct TestItem: Equatable {
     
     let id: Int
-}
-
-private func anyNSError(
-    domain: String = "any error",
-    code: Int = 0
-) -> NSError {
-    
-    NSError(domain: domain, code: code)
-}
-
-private extension UInt64 {
-    
-    static let ms50: Self = NSEC_PER_MSEC * 50
-    static let ms100: Self = NSEC_PER_MSEC * 100
 }
