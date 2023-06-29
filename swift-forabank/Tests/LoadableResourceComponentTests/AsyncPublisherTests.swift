@@ -86,7 +86,7 @@ final class AsyncPublisherTests: XCTestCase {
         XCTAssertNil(receivedError)
         
         try await Task.sleep(nanoseconds: .ms50)
-        await Task.megaYield()
+        await Task.megaYield(count: 100)
 
         XCTAssertNoDiff(
             try XCTUnwrap(receivedError) as NSError,
