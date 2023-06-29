@@ -29,6 +29,10 @@ struct CountryWithServiceData: Codable, Equatable, Identifiable {
             case contact = "iFora||Addressless"
             case contactCash = "iFora||Addressing||cash"
             case contactAccount = "iFora||Addressing||account"
+            case dkm = "iFora||DKM"
+            case dkq = "iFora||DKQ"
+            case dkr = "iFora||DKR"
+            case pw0 = "iFora||PW0"
             case unknown
         }
     }
