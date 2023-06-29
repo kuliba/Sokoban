@@ -851,10 +851,17 @@ private extension ProductProfileViewModel {
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
-                            if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
-                                
-                                let meToMeViewModel = MeToMeViewModel(type: .refill(loanAccount), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                            if let productData = productData as? ProductLoanData,
+                               let loanAccount = self.model.products.value[.account]?
+                                                    .first(where: {$0.number == productData.settlementAccount}) {
+                                    
+                                    guard let viewModel = PaymentsMeToMeViewModel(
+                                                            self.model,
+                                                            mode: .makePaymentTo(loanAccount, 0.0))
+                                    else { return }
+                                    
+                                    self.bind(viewModel)
+                                    self.bottomSheet = .init(type: .meToMe(viewModel))
                                 
                             } else if let productData = productData as? ProductDepositData,
                                     productData.isDemandDeposit { //только вклады
@@ -868,8 +875,14 @@ private extension ProductProfileViewModel {
                                 self.bottomSheet = .init(type: .meToMe(viewModel))
                             }
                             else {
-                                let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
-                                self.bottomSheet = .init(type: .meToMeLegacy(meToMeViewModel))
+                                
+                                guard let viewModel = PaymentsMeToMeViewModel(
+                                                        self.model,
+                                                        mode: .makePaymentTo(productData, 0.0))
+                                else { return }
+                                
+                                self.bind(viewModel)
+                                self.bottomSheet = .init(type: .meToMe(viewModel))
                             }
                             
                         case .refillFromOtherBank:
