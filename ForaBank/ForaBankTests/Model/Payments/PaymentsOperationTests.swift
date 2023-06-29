@@ -429,6 +429,32 @@ extension PaymentsOperationTests {
         // then
         XCTAssertThrowsError(try operation.rollback(to: 5))
     }
+    
+    func test_rollback_parametersThatBecameVisibleOnNextStepsReseted() throws {
+        
+        // given
+        let paramOne = Payments.ParameterMock(id: "one", value: "100")
+        let paramOneHidden = Payments.ParameterMock(id: "one_hidden", value: "100")
+        let stepOne = Payments.Operation.Step(parameters: [paramOne], front: .init(visible: ["one"], isCompleted: true), back: .init(stage: .remote(.start), required: ["one"], processed: [paramOne.parameter]))
+
+        let paramTwo = Payments.ParameterMock(id: "two", value: "200")
+        let stepTwo = Payments.Operation.Step(parameters: [paramTwo], front: .init(visible: ["two"], isCompleted: true), back: .init(stage: .remote(.next), required: ["two"], processed: [paramTwo.parameter]))
+        
+        let paramThree = Payments.ParameterMock(id: "three", value: "300")
+        let stepThree = Payments.Operation.Step(parameters: [paramThree], front: .init(visible: ["three", "one_hidden"], isCompleted: true), back: .init(stage: .remote(.complete), required: ["three"], processed: [paramThree.parameter]))
+
+        var operation = Payments.Operation(service: .fms, source: nil, steps: [], visible: [])
+        operation = try operation.appending(step: stepOne)
+        operation = try operation.appending(step: stepTwo)
+        operation = try operation.appending(step: stepThree)
+        XCTAssertEqual(operation.visible, ["one", "two", "three", "one_hidden"])
+        
+        // when
+        let result = try operation.rollback(to: 0)
+
+        // visible
+        XCTAssertEqual(result.visible, ["one"])
+    }
 }
  
 //MARK: - Processed

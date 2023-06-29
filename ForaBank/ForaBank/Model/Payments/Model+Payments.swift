@@ -1207,22 +1207,44 @@ extension Model {
     
     func paymentsIsAutoContinueRequired(operation: Payments.Operation, updated: Payments.Parameter.ID) -> Bool {
         
-        guard let nextAction = try? operation.nextAction() else {
+        guard let parameter = operation.parameters.first(where: { $0.id == updated }) else {
             return false
         }
         
-        switch nextAction {
-        case .rollback:
-            switch updated {
-            case Payments.Parameter.Identifier.amount.rawValue:
-                return false
-                
-            default:
-                return true
-            }
+        switch parameter {
+        case _ as Payments.ParameterSelect,
+            _ as Payments.ParameterSelectBank,
+            _ as Payments.ParameterSelectCountry,
+            _ as Payments.ParameterSelectService,
+            _ as Payments.ParameterSelectDropDownList,
+            _ as Payments.ParameterCheck,
+            _ as Payments.ParameterSelectSimple,
+            _ as Payments.ParameterSelectSwitch:
+            return true
             
         default:
             return false
+        }
+    }
+    
+    func paymentsIsRollbackRequired(operation: Payments.Operation, updated: Payments.Parameter.ID) -> Int? {
+        
+        guard let nextAction = try? operation.nextAction() else {
+            return nil
+        }
+        
+        switch nextAction {
+        case let .rollback(step):
+            switch updated {
+            case Payments.Parameter.Identifier.amount.rawValue:
+                return nil
+                
+            default:
+                return step
+            }
+            
+        default:
+            return nil
         }
     }
     

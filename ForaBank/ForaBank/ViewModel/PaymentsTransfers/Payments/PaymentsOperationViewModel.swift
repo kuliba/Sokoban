@@ -49,7 +49,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     convenience init(navigationBar: NavigationBarView.ViewModel = .init(), operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(navigationBar: navigationBar, top: [], feed: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        self.init(navigationBar: navigationBar, top: nil, feed: [], bottom: nil, link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
     }
@@ -149,18 +149,32 @@ class PaymentsOperationViewModel: ObservableObject {
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
-                    // check if auto continue required
-                    if isParameterValueValid(parameterId: payload.parameterId),
-                       model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
+                    // check if rollback required
+                    if let rollbackStep = model.paymentsIsRollbackRequired(operation: updatedOperation, updated: payload.parameterId) {
                         
-                        // update stage
-                        let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
-                        
-                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
-                        
-                        // auto continue operation
-                        model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
-                        self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                        do {
+                            
+                            let rolledBackOperation = try updatedOperation.rollback(to: rollbackStep)
+                            
+                            if model.paymentsIsAutoContinueRequired(operation: rolledBackOperation, updated: payload.parameterId) {
+                                
+                                // update stage
+                                let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
+                                
+                                LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
+                                
+                                // auto continue operation
+                                model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
+                                self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                            }
+                           
+                            operation.value = rolledBackOperation
+                            
+                        } catch {
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable rollback operation with error: \(error)")
+                            rootActions?.alert("Unable rollback operation with error: \(error)")
+                        }
                         
                     } else {
                         

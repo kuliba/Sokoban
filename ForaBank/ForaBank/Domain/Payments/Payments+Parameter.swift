@@ -906,6 +906,7 @@ extension Payments {
         let filter: ProductData.Filter
         let isEditable: Bool
         let group: Payments.Parameter.Group?
+        let isAutoContinue: Bool = true
         var productId: ProductData.ID? {
             
             guard let value = value else {
@@ -1216,7 +1217,7 @@ extension Payments {
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterMock(id: parameter.id, value: value, group: group)
+            ParameterMock(id: parameter.id, value: value, placement: placement, group: group)
         }
     }
 }
