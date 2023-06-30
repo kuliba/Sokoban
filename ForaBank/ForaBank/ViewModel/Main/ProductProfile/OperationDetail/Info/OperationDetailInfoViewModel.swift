@@ -1609,13 +1609,13 @@ extension OperationDetailInfoViewModel {
             var cells = [
                 amountViewModel,
                 commissionViewModel,
-                payeeViewModel,
+                payerViewModel,
                 dateViewModel
             ]
             
             if let payeeProductNumber {
                 let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
-                                                               iconType: .ic24Bank,
+                                                               iconType: Image("otherCard"),
                                                                value: payeeProductNumber)
                 cells.insert(payeeCellViewModel, at: 0)
             }
