@@ -444,12 +444,14 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
-                    if auth.value == .authorized, let deepLinkType = deepLinkType {
+                    if auth.value == .authorized,
+                       let deepLinkType = deepLinkType {
                         
                         self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
                     }
                     
-                    if auth.value == .authorized, let notification = notificationsTransition {
+                    if auth.value == .authorized,
+                       let notification = notificationsTransition {
                         
                         self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }

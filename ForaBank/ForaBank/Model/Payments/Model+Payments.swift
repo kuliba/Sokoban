@@ -481,7 +481,7 @@ extension Model {
                     needSum: anywayResponse.needSum
                 )
                 let stepStage = try paymentsTransferAnywayStepStage(operation, isFinalStep: anywayResponse.finalStep)
-                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber"]
+                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber", "CURR"]
                 let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
@@ -997,7 +997,7 @@ extension Model {
                 switch parameterId {
                 case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
                     let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
-                    guard let value = latestPayment.additionalList.first(where: { $0.fieldName == operatorId })?.fieldValue else {
+                    guard let value = latestPayment.additionalList.first(where: { $0.fieldName == operatorId })?.mobilePhone else {
                         return nil
                     }
                     

@@ -139,7 +139,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: card.currency, style: .clipped), let icon = card.smallDesign.image,
                                let additional = card.additionalField {
                                 
-                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.displayName, iconPaymentService: card.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                             }
                         }
                     }
@@ -174,8 +174,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 
                                 cells.append(ProductCellViewModel(title: "Счет списания",
                                                                   icon: icon,
-                                                                  name: card.mainField,
-                                                                  iconPaymentService: nil,
+                                                                  name: card.displayName,
+                                                                  iconPaymentService: card.paymentSystem,
                                                                   balance: balanceFormatted,
                                                                   description: "· \(description) · \(additional)"))
                             }
@@ -550,8 +550,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 
                                 cells.append(ProductCellViewModel(title: "Счет пополнения",
                                                                   icon: icon,
-                                                                  name: productInfo.mainField,
-                                                                  iconPaymentService: nil,
+                                                                  name: productInfo.displayName,
+                                                                  iconPaymentService: productInfo.paymentSystem,
                                                                   balance: balanceFormatted,
                                                                   description: "· \(description) · \(additional)"))
                             }
@@ -915,16 +915,16 @@ final class OperationDetailInfoViewModel: Identifiable {
                                                        value: documentComment))
                 }
                 
-                if let transferNumber = operation?.transferNumber {
-                    
-                    cells.append(PropertyCellViewModel(title: "Номер операции СБП",
-                                                       iconType: IconType.operationNumber.icon,
-                                                       value: transferNumber))
-                }
+            if let transferNumber = statement.fastPayment?.opkcid {
                 
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                   iconType: IconType.date.icon,
-                                                   value: dateString))
+                cells.append(PropertyCellViewModel(title: "Номер операции СБП",
+                                                   iconType: IconType.operationNumber.icon,
+                                                   value: transferNumber))
+            }
+            
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
+                                               iconType: IconType.date.icon,
+                                               value: dateString))
                 
             case .transport:
                 
@@ -1167,7 +1167,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: productInfo.currency, style: .clipped), let icon = productInfo.smallDesign.image,
                                let additional = productInfo.additionalField {
                                 
-                                cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                                cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: productInfo.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                             }
                         }
                     }
@@ -1206,22 +1206,20 @@ private extension OperationDetailInfoViewModel {
             return nil
         }
         
-        let productName = product.mainField
-        
         if let additionalField = product.additionalField {
             
             return ProductCellViewModel(title: title,
                                         icon: smallDesign,
-                                        name: productName,
-                                        iconPaymentService: nil,
+                                        name: product.displayName,
+                                        iconPaymentService: product.paymentSystem,
                                         balance: balanceString,
                                         description: "· \(description) · \(additionalField)")
         } else {
             
             return ProductCellViewModel(title: title,
                                         icon: smallDesign,
-                                        name: productName,
-                                        iconPaymentService: nil,
+                                        name: product.displayName,
+                                        iconPaymentService: product.paymentSystem,
                                         balance: balanceString,
                                         description: "· \(description)")
         }
@@ -1756,13 +1754,6 @@ extension OperationDetailInfoViewModel {
             return nil
         }
         
-        var image: Image? = nil
-        
-        if let productCardData = productData as? ProductCardData,
-           let paymentSystemImage = productCardData.paymentSystemImage {
-            image = paymentSystemImage.image
-        }
-        
         let productNumber = productNumber ?? ""
         let lastNumber = productNumber.isEmpty == false ? "• \(productNumber.suffix(4)) • " : ""
         let name = ProductView.ViewModel.name(product: productData,
@@ -1772,7 +1763,7 @@ extension OperationDetailInfoViewModel {
         let viewModel: ProductCellViewModel = .init(title: title,
                                                     icon: icon,
                                                     name: name,
-                                                    iconPaymentService: image,
+                                                    iconPaymentService: productData.paymentSystem,
                                                     balance: formattedBalance,
                                                     description: "\(lastNumber)\(description)")
         
