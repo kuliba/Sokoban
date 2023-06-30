@@ -63,6 +63,14 @@ extension PaymentServiceData {
     }
 }
 
+extension PaymentServiceData.AdditionalListData {
+    
+    var mobilePhone: String {
+        
+        "7 \(fieldValue)"
+    }
+}
+
 extension [PaymentServiceData.AdditionalListData] {
     
     var fullName: String? {

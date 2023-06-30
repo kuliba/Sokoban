@@ -9,10 +9,10 @@ import Foundation
 
 struct ConsentMe2MeDebitData: Codable, Equatable {
     
-    let accountId: Int
+    let accountId: Int?
     let amount: Double
     let bankRecipientID: String?
-    let cardId: Int
+    let cardId: Int?
     let fee: Double
     let rcvrMsgId: String?
     let recipientID: String?

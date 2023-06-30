@@ -190,7 +190,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     switch payload.type {
                     case let .me2me(bankId):
-                        self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+                        self.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
                         model.action.send(ModelAction.DeepLink.Clear())
 
                     case let .c2b(urlString):
