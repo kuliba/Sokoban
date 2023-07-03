@@ -1212,14 +1212,15 @@ extension Model {
         }
         
         switch parameter {
-        case _ as Payments.ParameterSelect,
-            _ as Payments.ParameterSelectBank,
-            _ as Payments.ParameterSelectCountry,
-            _ as Payments.ParameterSelectService,
-            _ as Payments.ParameterSelectDropDownList,
-            _ as Payments.ParameterCheck,
-            _ as Payments.ParameterSelectSimple,
-            _ as Payments.ParameterSelectSwitch:
+        case _ as Payments.ParameterProduct,
+             _ as Payments.ParameterSelect,
+             _ as Payments.ParameterSelectBank,
+             _ as Payments.ParameterSelectCountry,
+             _ as Payments.ParameterSelectService,
+             _ as Payments.ParameterSelectDropDownList,
+             _ as Payments.ParameterCheck,
+             _ as Payments.ParameterSelectSimple,
+             _ as Payments.ParameterSelectSwitch:
             return true
             
         default:
