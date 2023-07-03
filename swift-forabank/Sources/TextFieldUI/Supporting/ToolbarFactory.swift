@@ -69,7 +69,7 @@ public extension ToolbarFactory {
 // private
 extension UIApplication {
     
-    func endEditing(_ force: Bool = false) {
-        windows.forEach { $0.endEditing(force) }
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

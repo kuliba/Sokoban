@@ -73,12 +73,12 @@ public struct TextFieldView: UIViewRepresentable {
         case let .noFocus(text):
             textView.text = text
             textView.textColor = .init(textFieldConfig.textColor)
-            textView.endEditing(true)
+            textView.resignFirstResponder()
             
         case let .placeholder(placeholderText):
             textView.text = placeholderText
             textView.textColor = .init(textFieldConfig.placeholderColor)
-            textView.endEditing(true)
+            textView.resignFirstResponder()
         }
     }
     
