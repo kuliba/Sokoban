@@ -68,11 +68,7 @@ public struct TextFieldView: UIViewRepresentable {
             textView.text = textState.text
             textView.setCursorPosition(to: textState.cursorPosition)
             textView.textColor = .init(textFieldConfig.textColor)
-            
-            DispatchQueue.main.async {
-                
-                textView.becomeFirstResponder()
-            }
+            textView.becomeFirstResponder()
             
         case let .noFocus(text):
             textView.text = text
@@ -180,6 +176,11 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
         send(.startEditing)
+    }
+        
+    public func textViewDidEndEditing(_ textView: UITextView) {
+        
+        send(.finishEditing)
     }
         
     public func textView(
