@@ -77,6 +77,20 @@
                ReferencedContainer = "container:../swift-forabank">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PinCodeUI"
+               BuildableName = "PinCodeUI"
+               BlueprintName = "PinCodeUI"
+               ReferencedContainer = "container:../swift-forabank">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

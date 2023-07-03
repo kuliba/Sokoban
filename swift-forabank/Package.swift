@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .loadableResourceComponent,
         .pickerWithPreviewComponent,
+        .pinCodeUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldModel,
@@ -26,6 +27,7 @@ let package = Package(
         .loadableResourceComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
+        .pinCodeUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -54,6 +56,13 @@ private extension Product {
         name: .pickerWithPreviewComponent,
         targets: [
             .pickerWithPreviewComponent,
+        ]
+    )
+
+    static let pinCodeUI = library(
+        name: .pinCodeUI,
+        targets: [
+            .pinCodeUI,
         ]
     )
 
@@ -126,6 +135,10 @@ private extension Target {
         ]
     )
 
+    static let pinCodeUI = target(
+        name: .pinCodeUI
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -262,6 +275,8 @@ private extension String {
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
+    
+    static let pinCodeUI = "PinCodeUI"
     
     static let searchBarComponent = "SearchBarComponent"
     
