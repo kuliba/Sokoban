@@ -655,7 +655,7 @@ struct PaymentsSelectCountryView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 13) {
             
             SelectedItemView(viewModel: viewModel.selectedItem, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable, warning: viewModel.warning)
                 .allowsHitTesting(viewModel.isEditable)
@@ -714,7 +714,7 @@ struct PaymentsSelectCountryView: View {
                             .frame(width: 40, height: 40)
                         
                         Text(viewModel.name)
-                            .font(.textBodyXSR11140())
+                            .font(.textBodySR12160())
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)
                             .lineLimit(viewModel.lineLimit)

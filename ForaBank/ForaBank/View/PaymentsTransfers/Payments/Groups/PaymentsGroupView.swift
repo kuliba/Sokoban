@@ -25,7 +25,7 @@ struct PaymentsGroupView: View {
                             .foregroundColor(backgroundColor(for: itemViewModel)))
                     .padding(.horizontal, horizontalPadding(for: itemViewModel))
                 
-                separatorVeiew(for: itemViewModel)
+                separatorView(for: itemViewModel)
                     .padding(.horizontal, 16)
             }
         }
@@ -186,7 +186,7 @@ extension PaymentsGroupView {
     }
     
     @ViewBuilder
-    func separatorVeiew(for itemViewModel: PaymentsParameterViewModel) -> some View {
+    func separatorView(for itemViewModel: PaymentsParameterViewModel) -> some View {
         
         if viewModel.items.count > 1,
             itemViewModel.id != viewModel.items.last?.id {
@@ -194,7 +194,7 @@ extension PaymentsGroupView {
             Rectangle()
                 .frame(height: 1)
                 .foregroundColor(.mainColorsGrayMedium)
-                .opacity(0.5)
+                .opacity(0.3)
             
         } else  {
             

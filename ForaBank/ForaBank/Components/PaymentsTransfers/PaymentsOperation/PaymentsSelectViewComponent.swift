@@ -471,6 +471,7 @@ extension PaymentsSelectView {
                     
                     Text(viewModel.name)
                         .font(.textH4M16240())
+                        .lineLimit(1)
                         .foregroundColor(.textSecondary)
                 }
                 
