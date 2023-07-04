@@ -338,14 +338,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                 let amount = detailData.amount
                                     
                                 self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
-                                
-                            case .changeOutgoing, .returnOutgoing:
-                                let image = Image("Operation Type Contact Icon")
-                                self.logo = .init(title: "", image: image)
-                                let amount = detailData.payerAmount
-                                    
-                                self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
-                                
+
                             case .contactAddressing, .contactAddressless, .contactAddressingCash:
                                 self.logo = .init(title: "", image: Image("Operation Type Contact Icon"))
                                 
