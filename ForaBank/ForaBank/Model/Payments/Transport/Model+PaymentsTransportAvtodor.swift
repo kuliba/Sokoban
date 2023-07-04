@@ -113,8 +113,8 @@ extension Model {
             
         case 2:
             
-            let amountParameter: Payments.ParameterAmount = .avtodor(
-                maxAmount: nil
+            let amountParameter = avtodorParameterAmount(
+                parameters: parameters
             )
             
             return .init(
@@ -135,27 +135,103 @@ extension Model {
         }
     }
     
+    // MARK: - Process Remote Step
+    
+    func paymentsProcessRemoteStepAvtodor(
+        parameters: [PaymentsParameterRepresentable],
+        process: [Payments.Parameter],
+        isNewPayment: Bool
+    ) async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let puref = try paymentsTransferAnywayPuref(parameters)
+        let payer = try paymentsTransferAnywayPayer(parameters)
+        let amount = try paymentsTransferAnywayAmount(parameters)
+        let currency = try paymentsTransferAnywayCurrency(parameters)
+        let comment = try paymentsTransferAnywayComment(parameters)
+        
+        let excludingParameters: [Payments.Parameter.Identifier] = [
+            .amount,
+            .code,
+            .product,
+            .`continue`,
+            .header,
+            .`operator`,
+            .service,
+            .category
+        ]
+        
+        let additional = try paymentsTransferAvtodorAdditional(
+            parameters,
+            excluding: excludingParameters.map(\.rawValue)
+        )
+
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        
+        return try await serverAgent.executeCommand(command: command)
+    }
+    
+    // MARK: - Request Parameters
+    
+    func paymentsTransferAvtodorAdditional(
+        _ parameters: [PaymentsParameterRepresentable],
+        excluding excludingParameterIDs: [String]
+    ) throws -> [TransferAnywayData.Additional] {
+        
+        return parameters
+            .filter { !excludingParameterIDs.contains($0.id) }
+            .enumerated()
+            .compactMap { (index, parameter) -> TransferAnywayData.Additional? in
+                
+                guard let parameterValue = parameter.value
+                else { return nil }
+                
+                return .init(
+                    fieldid: index + 1,
+                    fieldname: parameter.id,
+                    fieldvalue: parameterValue
+                )
+            }
+    }
+    
     // MARK: - Change Parameters Visibility and Order
     
     func paymentsProcessOperationResetVisibleAvtodor(
         _ operation: Payments.Operation
     ) async throws -> [Payments.Parameter.ID]? {
         
-        guard operation.isConfirmCurrentStage else {
-            return nil
+        let identifiers: [Payments.Parameter.Identifier]?
+        
+        switch operation.steps.last?.back.stage {
+            
+        case .remote(.start):
+            identifiers = [
+                .header,
+                .operator,
+                .p1,
+                .product,
+                .amount,
+            ]
+            
+        case .remote(.confirm):
+            identifiers = [
+                .header,
+                .operator,
+                .p1,
+                .product,
+                .sfpAmount,
+                .code,
+                .amount,
+            ]
+            
+        default:
+            identifiers = nil
         }
         
-        let identifiers: [Payments.Parameter.Identifier] = [
-            .header,
-            .operator,
-            .p1,
-            .product,
-            .sfpAmount,
-            .code,
-            .amount,
-        ]
-        
-        return identifiers.map(\.rawValue)
+        return identifiers?.map(\.rawValue)
     }
     
     // MARK: - Helpers
@@ -191,23 +267,6 @@ extension Model {
         return product
     }
 
-    // TODO: add tests
-    func makeAvtodorAmount(
-        with parameters: [PaymentsParameterRepresentable]
-    ) throws -> Payments.ParameterAmount {
-        
-        let sum = try parameters.value(forId: "SumSTrs")
-
-        let amount = Payments.ParameterAmount(
-            value: sum,
-            title: "Сумма платежа",
-            currencySymbol: "RUB",
-            validator: .init(minAmount: 1, maxAmount: nil)
-        )
-
-        return amount
-    }
-    
     func icon(
         forPuref puref: String,
         fallback iconName: String
@@ -270,16 +329,35 @@ extension Model {
     }
 }
 
-private extension Payments.ParameterAmount {
+extension Model {
     
-    static func avtodor(
-        maxAmount: Double?
-    ) -> Self {
+    func avtodorParameterAmount(
+        parameters: [PaymentsParameterRepresentable]
+    ) -> Payments.ParameterAmount {
+        
+        let currencySymbol: String
+        let maxAmount: Double?
+        
+        if
+            let productId = try? parameters.parameter(
+                forIdentifier: Payments.Parameter.Identifier.product,
+                as: Payments.ParameterProduct.self
+            ).productId,
+            let product: ProductData = product(productId: productId) {
+            
+            currencySymbol = dictionaryCurrencySymbol(for: product.currency) ?? "₽"
+            maxAmount = product.balance
+            
+        } else {
+            
+            currencySymbol = "₽"
+            maxAmount = nil
+        }
         
         return .init(
             value: nil,
             title: "Сумма платежа",
-            currencySymbol: "RUB",
+            currencySymbol: currencySymbol,
             transferButtonTitle: "Продолжить",
             validator: .init(
                 minAmount: 0.01,

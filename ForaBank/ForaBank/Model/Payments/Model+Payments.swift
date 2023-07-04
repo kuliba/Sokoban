@@ -717,8 +717,11 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway, .avtodor, .gibdd:
+        case .anyway, .gibdd:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+            
+        case .avtodor:
+            return try await paymentsProcessRemoteStepAvtodor(parameters: operation.parameters, process: process, isNewPayment: true)
             
         case .sfp:
             return try await paymentsTransferSFPProcess(parameters: operation.parameters, process: process)
@@ -749,8 +752,11 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway, .avtodor, .gibdd:
+        case .anyway, .gibdd:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
+        
+        case .avtodor:
+            return try await paymentsProcessRemoteStepAvtodor(parameters: operation.parameters, process: process, isNewPayment: false)
         
         case .abroad:
             return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
