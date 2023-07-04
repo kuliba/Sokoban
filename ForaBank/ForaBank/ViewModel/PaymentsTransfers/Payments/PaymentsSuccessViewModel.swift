@@ -1040,6 +1040,35 @@ enum PaymentsSuccessAction {
 }
 
 extension PaymentsSuccessViewModel {
+
+    func createDocumentButton(
+        model: Model,
+        transferData: TransferResponseBaseData,
+        type: PrintFormType
+    ) {
+        
+        let documentButton: PaymentsSuccessOptionButtonView.ViewModel = .init(
+            icon: .ic24File,
+            title: "Документ",
+            action: {
+                
+                self.sheet = .init(
+                    type: .printForm(
+                        .init(
+                            type: .operation(
+                                paymentOperationDetailId: transferData.paymentOperationDetailId,
+                                printFormType: type
+                            ),
+                            model: model
+                        )))
+                
+            })
+        
+        self.optionButtons = [documentButton]
+    }
+}
+
+extension PaymentsSuccessViewModel {
     
     func makeDetailData(amount: Double, productFrom: ProductData, productTo: ProductData, paymentOperationDetailId: Int, transferEnum: OperationDetailData.TransferEnum) -> OperationDetailData {
         
