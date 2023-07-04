@@ -187,11 +187,26 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 ),
                 optionButtons: []
             )
-                        
+            
+            switch paymentSuccess.operation?.service {
+            case .return:
+                createDocumentButton(
+                    model: model,
+                    transferData: transferData,
+                    type: .returnOutgoing
+                )
+                
+            case .change:
+                createDocumentButton(
+                    model: model,
+                    transferData: transferData,
+                    type: .changeOutgoing
+                )
+                
+            default: break
+            }
+            
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status, operation: paymentSuccess.operation)
-
-            self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
-        
         }
         
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
