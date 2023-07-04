@@ -68,6 +68,14 @@
         "identifier" : "LoadableResourceComponentTests",
         "name" : "LoadableResourceComponentTests"
       }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
     }
   ],
   "version" : 1
