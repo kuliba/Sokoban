@@ -1484,50 +1484,7 @@ extension OperationDetailInfoViewModel {
                 }
                 
             case .external:
-                switch operation.externalTransferType {
-                    case .entity:
-                        return [
-                            payeeNameViewModel,
-                            payeeViewModel,
-                            payeeBankViewModel,
-                            amountViewModel,
-                            commissionViewModel,
-                            payerViewModel,
-                            purposeViewModel,
-                            dateViewModel].compactMap { $0 }
-                        
-                    default:
-                        var cells = [DefaultCellViewModel?]()
-                        cells.append(contentsOf: [
-                            payeeNameViewModel,
-                            payeeViewModel
-                        ])
-                        
-                        if let payeeINN = operation.payeeINN {
-                            
-                            cells.append(PropertyCellViewModel(title: "ИНН получателя",
-                                                               iconType: nil,
-                                                               value: payeeINN))
-                        }
-                        
-                        if let payeeKPP = operation.payeeKPP {
-                            
-                            cells.append(PropertyCellViewModel(title: "КПП получателя",
-                                                               iconType: nil,
-                                                               value: payeeKPP))
-                        }
-                        
-                        cells.append(contentsOf: [
-                            payeeBankViewModel,
-                            amountViewModel,
-                            commissionViewModel,
-                            payerViewModel,
-                            purposeViewModel,
-                            dateViewModel
-                        ])
-                        
-                        return cells.compactMap { $0 }
-                }
+                return Self.makeItemsForExternal(operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
                 
             case .internet:
                 
@@ -1630,6 +1587,68 @@ extension OperationDetailInfoViewModel {
                     commissionViewModel,
                     payeeViewModel,
                     dateViewModel].compactMap {$0}
+        }
+    }
+    
+    static func makeItemsForExternal(
+        _ operation: OperationDetailData,
+        _ payeeNameViewModel: PropertyCellViewModel?,
+        _ payeeViewModel: ProductCellViewModel?,
+        _ payeeBankViewModel: BankCellViewModel?,
+        _ amountViewModel: PropertyCellViewModel?,
+        _ commissionViewModel: PropertyCellViewModel?,
+        _ payerViewModel: ProductCellViewModel?,
+        _ purposeViewModel: PropertyCellViewModel?,
+        _ dateViewModel: PropertyCellViewModel?
+    ) -> [DefaultCellViewModel] {
+        
+        let payeeINN = operation.payeeINN.map {
+            
+            PropertyCellViewModel(
+                title: "ИНН получателя",
+                iconType: nil,
+                value: $0
+            )
+        }
+        
+        let payeeKPP = operation.payeeKPP.map {
+            
+            PropertyCellViewModel(
+                title: "КПП получателя",
+                iconType: nil,
+                value: $0
+            )
+        }
+        
+        switch operation.externalTransferType {
+        case .none:
+            return []
+            
+        case .entity, .unknown:
+            return [
+                payeeNameViewModel,
+                payeeViewModel,
+                payeeINN,
+                payeeKPP,
+                payeeBankViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ].compactMap { $0 }
+            
+        case .individual:
+            return [
+                payeeNameViewModel,
+                payeeViewModel,
+                payeeBankViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ].compactMap { $0 }
         }
     }
     
