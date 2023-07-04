@@ -36,6 +36,7 @@ let package = Package(
         .textFieldModel,
         .textFieldModelTests,
         .textFieldUI,
+        .textFieldUITests,
         .uiKitHelpers,
         .wipTests,
         .userModel,
@@ -202,10 +203,11 @@ private extension Target {
             .uiKitHelpers,
         ]
     )
-    static let textFieldUITests = target(
+    static let textFieldUITests = testTarget(
         name: .textFieldUITests,
         dependencies: [
             .customDump,
+            .textFieldDomain,
             .textFieldUI,
         ]
     )
