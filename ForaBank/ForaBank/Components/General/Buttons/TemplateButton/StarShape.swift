@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct StarView: Shape {
+struct StarShape: Shape {
     
     let corners: Int
     let smoothness: Double
@@ -65,7 +65,7 @@ struct StarView_Previews: PreviewProvider {
             
             VStack {
                 
-                    StarView(corners: 5, smoothness: 0.5)
+                    StarShape(corners: 5, smoothness: 0.5)
                         .stroke(lineWidth: 1)
                         .fill(Color.black)
                         .frame(width: 19, height: 19, alignment: .center)

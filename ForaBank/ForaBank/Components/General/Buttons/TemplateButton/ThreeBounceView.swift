@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-struct ThreeBounceAnimation: View {
+struct ThreeBounceAnimationView: View {
     
     struct AnimationData {
         var delay: TimeInterval
@@ -80,7 +80,7 @@ struct ThreeBounceAnimation_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ThreeBounceAnimation()
+        ThreeBounceAnimationView()
             .background(Color.red)
     }
 }
