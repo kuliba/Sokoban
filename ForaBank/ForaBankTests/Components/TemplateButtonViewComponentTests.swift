@@ -154,7 +154,9 @@ extension TemplateButtonViewComponentTests {
 
 extension ProductStatementData {
     
-    static func stub() -> ProductStatementData {
+    static func stub(paymentDetailType: ProductStatementData.Kind = .betweenTheir,
+                     documentId: Int? = 1,
+                     operationId: String = "1") -> ProductStatementData {
         
         return .init(
             mcc: nil,
@@ -169,7 +171,7 @@ extension ProductStatementData {
             date: Date(),
             deviceCode: nil,
             documentAmount: 20,
-            documentId: 1,
+            documentId: documentId,
             fastPayment: nil,
             groupName: "",
             isCancellation: nil,
@@ -177,9 +179,9 @@ extension ProductStatementData {
             merchantName: nil,
             merchantNameRus: nil,
             opCode: nil,
-            operationId: "",
+            operationId: operationId,
             operationType: .credit,
-            paymentDetailType: .betweenTheir,
+            paymentDetailType: paymentDetailType,
             svgImage: nil,
             terminalCode: nil,
             tranDate: nil,

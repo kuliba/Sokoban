@@ -136,7 +136,7 @@ struct OperationDetailData: Codable, Equatable {
         case meToMeCredit = "ME2ME_CREDIT"
         case meToMeDebit = "ME2ME_DEBIT"
         case mobile = "MOBILE"
-        case oth = "OTH"
+        case other = "OTH"
         case returnOutgoing = "RETURN_OUTGOING"
         case sfp = "SFP"
         case transport = "TRANSPORT"
@@ -149,8 +149,8 @@ struct OperationDetailData: Codable, Equatable {
         case depositClose = "DEPOSIT_CLOSE"
         case accountClose = "ACCOUNT_CLOSE"
         case taxAndStateService = "TAX_AND_STATE_SERVICE"
-        case ctbQrData = "C2B_QR_DATA"
-        case ctbPayment = "C2B_PAYMENT"
+        case c2bQrData = "C2B_QR_DATA"
+        case c2bPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
         case unknown
     }
@@ -358,6 +358,31 @@ extension OperationDetailData {
             return payeeFullName ?? payeePhone ?? "Перевод между счетами"
         default:
             return payeeFullName ?? "Шаблон по операции"
+        }
+    }
+}
+
+extension OperationDetailData {
+    
+    var restrictedTemplateButton: Bool {
+        
+        switch self.transferEnum {
+        case .interestDeposit,
+             .elecsnet,
+             .depositOpen,
+             .depositClose,
+             .accountClose,
+             .bestToPay,
+             .meToMeCredit,
+             .changeOutgoing,
+             .returnOutgoing,
+             .c2bQrData,
+             .c2bPayment,
+             .bankDef,
+             .other:
+            return false
+        default:
+            return true
         }
     }
 }

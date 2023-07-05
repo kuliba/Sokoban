@@ -121,14 +121,18 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.isLoading = false
                     }
                     switch payload.result {
-                    case .success(details: let details):
+                    case let .success(details: details):
                         guard let statement = model.statement(statementId: id),
                               let product = model.product(statementId: id) else {
                             return
                         }
                         
                         self.update(with: statement, product: product, operationDetail: details)
-
+                        
+                        guard statement.paymentDetailType != .insideOther else {
+                            break
+                        }
+                        
                         self.templateButton = .init(model: model, operationDetail: details)
                         if let templateButton = self.templateButton {
                                 
