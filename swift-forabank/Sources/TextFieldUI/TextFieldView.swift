@@ -68,17 +68,27 @@ public struct TextFieldView: UIViewRepresentable {
             textView.text = textState.text
             textView.setCursorPosition(to: textState.cursorPosition)
             textView.textColor = .init(textFieldConfig.textColor)
-            textView.becomeFirstResponder()
+            if !textView.isFirstResponder {
+                textView.becomeFirstResponder()
+            }
             
         case let .noFocus(text):
             textView.text = text
             textView.textColor = .init(textFieldConfig.textColor)
-            textView.resignFirstResponder()
+            if textView.isFirstResponder {
+                DispatchQueue.main.async { [weak textView] in
+                    textView?.resignFirstResponder()
+                }
+            }
             
         case let .placeholder(placeholderText):
             textView.text = placeholderText
             textView.textColor = .init(textFieldConfig.placeholderColor)
-            textView.resignFirstResponder()
+            if textView.isFirstResponder {
+                DispatchQueue.main.async { [weak textView] in
+                    textView?.resignFirstResponder()
+                }
+            }
         }
     }
     
