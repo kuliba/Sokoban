@@ -148,12 +148,24 @@ extension Model {
             return parameter.replacingValidator(with: .init(rules: rules))
         }
         
-        return try step(
+        let step = try step(
             for: operation,
             withNextParameters: next,
             restrictedParameters: restrictedParameters,
             response: response
         )
+        
+        // DBSNEW-9403: use semi-duplicated input fields for GIBDD to show no fines alert
+        let parametersToExclude = ["a3_DriverLicence_1_1", "a3_RegCert_2_1"]
+        let badIDs = step.parameters.map(\.id).filter {
+            parametersToExclude.contains($0)
+        }
+        
+        guard !badIDs.isEmpty,
+              let message = step.parameters.first(where: { $0.id == "warning" })?.value
+        else { return step }
+        
+        throw Payments.Error.action(.alert(title: "", message: message))
     }
 }
 

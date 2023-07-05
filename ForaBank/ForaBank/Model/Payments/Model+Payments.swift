@@ -574,7 +574,7 @@ extension Model {
             operation,
             isFinalStep: response.finalStep
         )
-        let required = try paymentsTransferAnywayStepRequired(
+        let required = try paymentsTransferStepRequired(
             operation,
             visible: visible,
             nextStepParameters: nextParameters,
@@ -586,7 +586,8 @@ extension Model {
             parameters: nextParameters,
             front: .init(
                 visible: visible,
-                isCompleted: false),
+                isCompleted: false
+            ),
             back: .init(
                 stage: stepStage,
                 required: required,
