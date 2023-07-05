@@ -330,35 +330,34 @@ extension TemplateButtonView {
         
         var body: some View {
             
-            ZStack {
+            Button(action: tapAction ) {
                 
-                stars(startAnimation: startAnimation)
-                
-                filledCircle(animation: startAnimation)
-                    .frame(height: 56)
-                
-                Circle()
-                    .fill(startAnimation ? Color.systemColorActive : .mainColorsGrayLightest)
-                    .frame(width: 56)
-                    .animation(.easeInOut(duration: 0.4).delay(0.3))
-                
-                StarShape(corners: 5, smoothness: 0.5)
-                    .frame(width: 19, height: 19, alignment: .center)
-                    .opacity(startAnimation ? 1 : 0)
-                    .foregroundColor(startAnimation ? Color.white : Color.gray)
-                    .animation(.easeInOut(duration: 0.2))
-                    .scaleEffect(startAnimation ? 1 : 0.7)
-                    .animation(.timingCurve(0.01, 2, 0.65, 0.65, duration: 0.5))
-                
+                ZStack {
+                    
+                    stars(startAnimation: startAnimation)
+                    
+                    filledCircle(animation: startAnimation)
+                        .frame(height: 56)
+                    
+                    Circle()
+                        .fill(startAnimation ? Color.systemColorActive : .mainColorsGrayLightest)
+                        .frame(width: 56)
+                        .animation(.easeInOut(duration: 0.4).delay(0.3))
+                    
+                    StarShape(corners: 5, smoothness: 0.5)
+                        .frame(width: 19, height: 19, alignment: .center)
+                        .opacity(startAnimation ? 1 : 0)
+                        .foregroundColor(startAnimation ? Color.white : Color.gray)
+                        .animation(.easeInOut(duration: 0.2))
+                        .scaleEffect(startAnimation ? 1 : 0.7)
+                        .animation(.timingCurve(0.01, 2, 0.65, 0.65, duration: 0.5))
+                    
+                }
             }
             .onAppear {
                 
                 self.startAnimation = true
                 
-            }
-            .onTapGesture {
-                
-                tapAction()
             }
         }
         
@@ -478,27 +477,27 @@ struct TemplateButtonView: View {
 }
 
 struct TemplateButtonView_Previews: PreviewProvider {
+    
     static var previews: some View {
         
-        TemplateButtonView(viewModel: .init(state: .idle,
-                                            model: .emptyMock,
-                                            tapAction: {}))
-        .previewDisplayName("idle state")
+        TemplateButtonView(viewModel: .preview(state: .idle))
+            .previewDisplayName("idle state")
         
-        TemplateButtonView(viewModel: .init(state: .refresh,
-                                            model: .emptyMock,
-                                            tapAction: {}))
-        .previewDisplayName("refresh state")
+        TemplateButtonView(viewModel: .preview(state: .refresh))
+            .previewDisplayName("refresh state")
         
-        TemplateButtonView(viewModel: .init(state: .loading,
-                                            model: .emptyMock,
-                                            tapAction: {}))
-        .previewDisplayName("loading state")
+        TemplateButtonView(viewModel: .preview(state: .loading))
+            .previewDisplayName("loading state")
         
-        TemplateButtonView(viewModel: .init(state: .complete,
-                                            model: .emptyMock,
-                                            tapAction: {}))
-        .previewDisplayName("complete state")
+        TemplateButtonView(viewModel: .preview(state: .complete))
+            .previewDisplayName("complete state")
     }
 }
 
+private extension TemplateButtonView.ViewModel {
+ 
+    static func preview(state: State) -> TemplateButtonView.ViewModel {
+        
+        .init(state: state, model: .emptyMock, tapAction: {})
+    }
+}
