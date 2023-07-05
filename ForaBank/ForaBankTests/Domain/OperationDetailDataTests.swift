@@ -362,7 +362,7 @@ final class OperationDetailDataTests: XCTestCase {
     func test_templateName_other_shouldReturnPayeeFullName() throws {
 
         let detail = Detail.stub(
-            transferEnum: .oth,
+            transferEnum: .other,
             payeeFullName: payeeFullName
         )
         
@@ -372,7 +372,7 @@ final class OperationDetailDataTests: XCTestCase {
     func test_templateName_default_payeeFullNameNil_shouldReturnDefaultValue() throws {
 
         let detail = Detail.stub(
-            transferEnum: .oth
+            transferEnum: .other
         )
         
         XCTAssertEqual(detail.templateName, "Шаблон по операции")

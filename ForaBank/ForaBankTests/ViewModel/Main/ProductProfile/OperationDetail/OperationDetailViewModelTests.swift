@@ -12,7 +12,12 @@ final class OperationDetailViewModelTests: XCTestCase {
     
     func test_modelAction_templateComplete_shouldCreateDocumentWithTemplateID() throws {
         
-        let (sut, spy) = try makeSUT()
+        let (sut, spy) = try makeSUT(statementData: [1: .init(
+            period: .init(
+                start: Date(),
+                end: Date()),
+            statements: [.stub()])]
+        )
         let templateId = 1
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         XCTAssertNoDiff(spy.values, [])
@@ -32,7 +37,12 @@ final class OperationDetailViewModelTests: XCTestCase {
     
     func test_modelAction_templateDeleteComplete_shouldCreateDocumentWithTemplateID() throws {
         
-        let (sut, spy) = try makeSUT()
+        let (sut, spy) = try makeSUT(statementData: [1: .init(
+            period: .init(
+                start: Date(),
+                end: Date()),
+            statements: [.stub()])]
+        )
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         XCTAssertNoDiff(spy.values, [])
         XCTAssertNotNil(sut)
@@ -48,6 +58,7 @@ final class OperationDetailViewModelTests: XCTestCase {
     func test_modelAction_detailResponseSuccess_shouldSetIsLoadingToFalse() throws {
         
         let (sut, _) = try makeSUT()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         sut.isLoading = true
         XCTAssertTrue(sut.isLoading)
@@ -153,24 +164,99 @@ final class OperationDetailViewModelTests: XCTestCase {
     private typealias InfoCell = OperationDetailViewModel.Sheet.Cell
 }
 
+//MARK: Bind
+
+extension OperationDetailViewModelTests {
+    
+    func test_modelAction_operationDetailResponse_shouldSetupTemplateButtonComplete() throws {
+        
+        let (sut, _) = try makeSUT(statementData: [1: .init(
+            period: .init(
+                start: Date(),
+                end: Date()),
+            statements: [.stub()])]
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        sut.model.action.send(
+            ModelAction.Operation.Detail.Response(result:
+                    .success(.stub())
+            )
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(sut.templateButton?.state, .complete)
+    }
+    
+    func test_modelAction_operationDetailResponse_shouldTemplateButtonNil() throws {
+        
+        let (sut, _) = try makeSUT(statement: .stub(paymentDetailType: .insideOther))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        XCTAssertNil(sut.templateButton)
+        
+        sut.model.action.send(
+            ModelAction.Operation.Detail.Response(result:
+                    .success(.stub())
+            )
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(sut.templateButton)
+    }
+    
+    func test_modelAction_paymentTemplateDelete_documentIdNil_shouldReturnTemplateButtonNil() throws {
+        
+        let (sut, _) = try makeSUT(statement: .stub(documentId: nil))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        XCTAssertNil(sut.templateButton)
+        
+        sut.model.action.send(
+            ModelAction.PaymentTemplate.Delete.Complete(
+                paymentTemplateIdList: []
+            )
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(sut.templateButton)
+    }
+    
+    func test_modelAction_paymentTemplateSave_documentIdNil_shouldReturnTemplateButtonNil() throws {
+        
+        let (sut, _) = try makeSUT(statement: .stub(documentId: nil))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        XCTAssertNil(sut.templateButton)
+        
+        sut.model.action.send(
+            ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: 1)
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(sut.templateButton)
+    }
+}
+
 extension OperationDetailViewModelTests {
     
     typealias Kind = ModelAction.Operation.Detail.Request.Kind
     
     func makeSUT(
+        statement: ProductStatementData = .stub(),
+        statementData: StatementsData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> (OperationDetailViewModel, ValueSpy<Kind>) {
         
         let model = Model.mockWithEmptyExcept()
-        model.statements.value = [1: .init(
-            period: .init(start: Date(), end: Date()),
-            statements: [.stub()])
-        ]
+        if let statementData {
+            
+            model.statements.value = statementData
+        }
+        
+        model.products.value = [.card: [.stub(productId: 1)]]
         
         let sut = try XCTUnwrap(
             OperationDetailViewModel(
-                productStatement: .stub(),
+                productStatement: statement,
                 product: .stub(),
                 model: model
             ),
@@ -189,6 +275,7 @@ extension OperationDetailViewModelTests {
         return (sut, spy)
     }
 }
+
 private extension PrintFormView.ViewModel.State {
     
     var `case`: Case {

@@ -415,67 +415,71 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                     
                                 default: break
                                 }
-                                
-                                switch payload.result {
-                                case let .success(operationDetailData):
-                                    
-                                    switch operation?.source {
-                                    case let .template(templateId):
-                                        
-                                        templateButton = .init(
-                                            state: refreshTemplateButton == true ? .refresh : .complete,
-                                            model: model,
-                                            tapAction: { [weak self] in
-                                                
-                                                if self?.refreshTemplateButton == true {
-                                                    
-                                                    guard let template = self?.model.paymentTemplates.value.first(where: { $0.id == templateId }),
-                                                        let parameterList = template.parameterList as? [TransferAnywayData],
-                                                          let additional = parameterList.map({ $0.additional }).first else {
-                                                        return
-                                                    }
-                                                    
-                                                    self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
-                                                        name: operationDetailData.templateName,
-                                                        parameterList: [
-                                                            TransferAnywayData(
-                                                                amount: Decimal(string: detailData.amount.description),
-                                                                check: false,
-                                                                comment: detailData.comment,
-                                                                currencyAmount: detailData.currencyAmount,
-                                                                payer: .init(
-                                                                    inn: nil,
-                                                                    accountId: detailData.payerAccountId,
-                                                                    accountNumber: detailData.payerAccountNumber,
-                                                                    cardId: detailData.payerCardId,
-                                                                    cardNumber: detailData.payerCardNumber,
-                                                                    phoneNumber: nil
-                                                                ),
-                                                                additional: additional,
-                                                                puref: nil)
-                                                        ],
-                                                        paymentTemplateId: templateId)
-                                                    )
-                                                } else {
-                                                    
-                                                    self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [
-                                                        templateId
-                                                    ]))
-                                                }
-                                            }
-                                        )
-                                    default:
-                                        templateButton = createTemplateButton(model: model, operationDetail: operationDetailData)
-                                        
-                                    }
-                                    
-                                    bindTemplate(operationDetail: operationDetailData,
-                                                 paymentOperationDetailId: paymentOperationDetailId)
-                                case .failure:
-                                    model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
-                                }
-                                handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
                             }
+                            
+                            switch payload.result {
+                            case let .success(operationDetailData):
+                                
+                                guard operationDetailData.restrictedTemplateButton else {
+                                    break
+                                }
+                                
+                                switch operation?.source {
+                                case let .template(templateId):
+                                    
+                                    templateButton = .init(
+                                        state: .complete,
+                                        model: model,
+                                        tapAction: { [weak self] in
+                                            
+                                            if self?.refreshTemplateButton == true {
+                                                
+                                                guard let template = self?.model.paymentTemplates.value.first(where: { $0.id == templateId }),
+                                                      let parameterList = template.parameterList as? [TransferAnywayData],
+                                                      let additional = parameterList.map({ $0.additional }).first else {
+                                                    return
+                                                }
+                                                
+                                                self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                                                    name: operationDetailData.templateName,
+                                                    parameterList: [
+                                                        TransferAnywayData(
+                                                            amount: Decimal(string: detailData.amount.description),
+                                                            check: false,
+                                                            comment: detailData.comment,
+                                                            currencyAmount: detailData.currencyAmount,
+                                                            payer: .init(
+                                                                inn: nil,
+                                                                accountId: detailData.payerAccountId,
+                                                                accountNumber: detailData.payerAccountNumber,
+                                                                cardId: detailData.payerCardId,
+                                                                cardNumber: detailData.payerCardNumber,
+                                                                phoneNumber: nil
+                                                            ),
+                                                            additional: additional,
+                                                            puref: nil)
+                                                    ],
+                                                    paymentTemplateId: templateId)
+                                                )
+                                            } else {
+                                                
+                                                self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [
+                                                    templateId
+                                                ]))
+                                            }
+                                        }
+                                    )
+                                default:
+                                    templateButton = createTemplateButton(model: model, operationDetail: operationDetailData)
+                                    
+                                }
+                                
+                                bindTemplate(operationDetail: operationDetailData,
+                                             paymentOperationDetailId: paymentOperationDetailId)
+                            case .failure:
+                                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
+                            }
+                            handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
                             
                         case let .failure(error):
                             //MARK: Informer Detail Error
@@ -487,7 +491,6 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     default:
                         break
                     }
-                    
                 }.store(in: &bindings)
             
             action
@@ -1118,7 +1121,7 @@ enum PaymentsSuccessAction {
 }
 
 extension PaymentsSuccessViewModel {
-
+    
     func createDocumentButton(
         model: Model,
         transferData: TransferResponseBaseData,
@@ -1206,7 +1209,7 @@ extension PaymentsSuccessViewModel {
             )
             
             let amountTemplate = template.amount?.description
-            let productTemplate = template.payerProductId?.description 
+            let productTemplate = template.payerProductId?.description
             
             if let transferAnywayData = template.parameterList as? [TransferAnywayData] {
                 
