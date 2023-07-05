@@ -63,6 +63,66 @@ extension Model {
         }
     }
     
+    // MARK: Process Remote Step Next
+    
+    func paymentsProcessRemoteNextGibdd(
+        parameters: [PaymentsParameterRepresentable],
+        process: [Payments.Parameter],
+        isNewPayment: Bool
+    ) async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let puref = try paymentsTransferAnywayPuref(parameters)
+        let payer = try paymentsTransferAnywayPayer(parameters)
+        let amount = try paymentsTransferAnywayAmount(parameters)
+        let currency = try paymentsTransferAnywayCurrency(parameters)
+        let comment = try paymentsTransferAnywayComment(parameters)
+        
+        let excludingParameters: [Payments.Parameter.Identifier] = [
+            .amount,
+            .code,
+            .product,
+            .`continue`,
+            .header,
+            .`operator`,
+            .service,
+            .category
+        ]
+        let additional = paymentsTransferGibddAdditional(
+            parameters.map(\.parameter),
+            excluding: excludingParameters.map(\.rawValue)
+        )
+        
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        
+        return try await serverAgent.executeCommand(command: command)
+    }
+    
+    func paymentsTransferGibddAdditional(
+        _ parameters: [Payments.Parameter],
+        excluding excludingParameterIDs: [String]
+    ) -> [TransferAnywayData.Additional] {
+        
+        return parameters
+            .filter { !excludingParameterIDs.contains($0.id) }
+            .enumerated()
+            .compactMap { (index, parameter) -> TransferAnywayData.Additional? in
+                
+                guard let parameterValue = parameter.value,
+                      !parameterValue.isEmpty
+                else { return nil }
+                
+                return .init(
+                    fieldid: index + 1,
+                    fieldname: parameter.id,
+                    fieldvalue: parameterValue
+                )
+            }
+    }
+    
     // MARK: Process Remote Step
     
     func paymentsProcessRemoteGibdd(
