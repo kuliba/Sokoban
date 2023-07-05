@@ -249,7 +249,7 @@ extension TemplateButtonView {
                             .fill(Color.mainColorsGrayLightest)
                             .frame(CGSize(width: 56, height: 56))
                         
-                        StarView(corners: 5, smoothness: 0.50)
+                        StarShape(corners: 5, smoothness: 0.50)
                             .stroke(lineWidth: 1)
                             .fill(Color.black)
                             .frame(width: 19.5, height: 19)
@@ -274,7 +274,7 @@ extension TemplateButtonView {
                     .fill(Color.mainColorsGrayLightest)
                     .frame(width: 56, height: 56)
                 
-                ThreeBounceAnimation()
+                ThreeBounceAnimationView()
             }
         }
     }
@@ -307,7 +307,7 @@ extension TemplateButtonView {
                             .fill(Color.systemColorActive)
                             .frame(width: 24, height: 24)
                         
-                        StarView(corners: 5, smoothness: 0.50)
+                        StarShape(corners: 5, smoothness: 0.50)
                             .fill(.white)
                             .frame(width: 9.75, height: 9.5)
                     }
@@ -324,7 +324,8 @@ extension TemplateButtonView {
     
     struct CompleteView: View {
         
-        @State private var startAnimation: Bool = false
+        @State private var startAnimation = false
+        
         let tapAction: () -> Void
         
         var body: some View {
@@ -333,7 +334,7 @@ extension TemplateButtonView {
                 
                 stars(startAnimation: startAnimation)
                 
-                circleFill(animation: startAnimation)
+                filledCircle(animation: startAnimation)
                     .frame(height: 56)
                 
                 Circle()
@@ -341,21 +342,19 @@ extension TemplateButtonView {
                     .frame(width: 56)
                     .animation(.easeInOut(duration: 0.4).delay(0.3))
                 
-                ZStack {
-                    
-                    StarView(corners: 5, smoothness: 0.5)
-                        .frame(width: 19, height: 19, alignment: .center)
-                        .opacity(startAnimation ? 1 : 0)
-                        .foregroundColor(startAnimation ? Color.white : Color.gray)
-                        .animation(.easeInOut(duration: 0.2))
-                        .scaleEffect(startAnimation ? 1 : 0.7)
-                        .animation(.timingCurve(0.01, 2, 0.65, 0.65, duration: 0.5))
-                    
-                }
+                StarShape(corners: 5, smoothness: 0.5)
+                    .frame(width: 19, height: 19, alignment: .center)
+                    .opacity(startAnimation ? 1 : 0)
+                    .foregroundColor(startAnimation ? Color.white : Color.gray)
+                    .animation(.easeInOut(duration: 0.2))
+                    .scaleEffect(startAnimation ? 1 : 0.7)
+                    .animation(.timingCurve(0.01, 2, 0.65, 0.65, duration: 0.5))
+                
             }
             .onAppear {
                 
                 self.startAnimation = true
+                
             }
             .onTapGesture {
                 
@@ -364,7 +363,33 @@ extension TemplateButtonView {
         }
         
         @ViewBuilder
-        func circleFill(animation: Bool) -> some View {
+        func stars(startAnimation: Bool) -> some View {
+            
+            let starView = StarShape(corners: 5, smoothness: 0.45)
+            
+            starView
+                .rotation(.init(degrees: 100))
+                .frame(.init(width: 25, height: 25))
+                .modifier(StarModifier(startAnimation: startAnimation))
+                .offset(x: startAnimation ? 0 : 0, y: startAnimation ? 30 : 10)
+                .rotationEffect(.init(degrees: 220))
+            
+            starView
+                .rotation(.init(degrees: 100))
+                .modifier(StarModifier(startAnimation: startAnimation))
+                .offset(x: startAnimation ? 10 : 5, y: startAnimation ? 40 : 10)
+                .rotationEffect(.init(degrees: 188))
+            
+            starView
+                .rotation(.init(degrees: 100))
+                .frame(.init(width: 25, height: 25))
+                .modifier(StarModifier(startAnimation: startAnimation))
+                .offset(x: startAnimation ? 30 : 10, y: startAnimation ? 30 : 10)
+                .rotationEffect(.init(degrees: 170))
+        }
+        
+        @ViewBuilder
+        func filledCircle(animation: Bool) -> some View {
             
             Circle()
                 .fill(Color.systemColorActive)
@@ -372,7 +397,6 @@ extension TemplateButtonView {
                 .frame(width: 90)
                 .mask(
                     circleView(startAnimation: startAnimation, position: 0.5)
-
                 )
                 .animation(.easeInOut(duration: 0.8))
             
@@ -385,69 +409,40 @@ extension TemplateButtonView {
                 )
                 .animation(.easeInOut(duration: 0.4).delay(0.1))
             
-            
             Circle()
                 .fill(Color.systemColorActive)
                 .opacity(startAnimation ? 1 : 0)
                 .frame(width: 80)
                 .mask(
                     circleView(startAnimation: startAnimation, position: 0.3)
-
                 )
                 .animation(.easeInOut(duration: 0.4).delay(0.2))
         }
         
-        @ViewBuilder
-        func stars(startAnimation: Bool) -> some View {
+        private struct StarModifier: ViewModifier {
             
-            ZStack {
+            let startAnimation: Bool
+            
+            func body(content: Content) -> some View {
                 
-                StarView(corners: 5, smoothness: 0.45)
-                    .modifier(StarModifier(startAnimation: startAnimation))
-                    .offset(x: startAnimation ? 40 : 10, y: startAnimation ? 50 : 20)
-                    .rotationEffect(.init(degrees: 220))
-                
-                StarView(corners: 5, smoothness: 0.45)
-                    .modifier(StarModifier(startAnimation: startAnimation))
+                content
+                    .frame(width: 19.5, height: 19.5)
+                    .foregroundColor(Color.systemColorActive)
+                    .opacity(startAnimation ? 1 : 0)
                     .offset(x: startAnimation ? 10 : 0, y: startAnimation ? 50 : 20)
-                    .rotationEffect(.init(degrees: 220))
+                    .animation(.easeInOut(duration: 0.6))
+                    .opacity(startAnimation ? 0 : 1)
+                    .animation(.linear(duration: 0.6))
                 
-                
-                StarView(corners: 5, smoothness: 0.45)
-                    .modifier(StarModifier(startAnimation: startAnimation))
-                    .rotationEffect(.init(degrees: 170))
             }
         }
         
         @ViewBuilder
         func circleView(startAnimation: Bool, position: Double) -> some View {
-         
+            
             Circle()
                 .scale(x: startAnimation ? 1 : position, y: startAnimation ? 1 : position)
                 .stroke(lineWidth: startAnimation ? 0 : 10)
-        }
-    }
-}
-
-// MARK: View modifiers
-
-extension TemplateButtonView {
-    
-    struct StarModifier: ViewModifier {
-        
-        let startAnimation: Bool
-        
-        func body(content: Content) -> some View {
-            
-            content
-                .frame(width: 19.5, height: 19.5)
-                .foregroundColor(Color.systemColorActive)
-                .opacity(startAnimation ? 1 : 0)
-                .offset(x: startAnimation ? 10 : 0, y: startAnimation ? 50 : 20)
-                .animation(.easeInOut(duration: 0.5).delay(0.2))
-                .opacity(startAnimation ? 0 : 1)
-                .animation(.linear(duration: 0.3).delay(0.4))
-
         }
     }
 }
@@ -462,26 +457,23 @@ struct TemplateButtonView: View {
         
         VStack(spacing: 12) {
             
-            ZStack {
+            switch viewModel.state {
+            case .idle:
+                IdleView(tapAction: viewModel.tapAction)
                 
-                switch viewModel.state {
-                case .idle:
-                    IdleView(tapAction: viewModel.tapAction)
-                    
-                case .loading:
-                    LoadingView()
-                    
-                case .refresh:
-                    RefreshView(tapAction: viewModel.tapAction)
-                    
-                case .complete:
-                    CompleteView(tapAction: viewModel.tapAction)
-                }
+            case .loading:
+                LoadingView()
+                
+            case .refresh:
+                RefreshView(tapAction: viewModel.tapAction)
+                
+            case .complete:
+                CompleteView(tapAction: viewModel.tapAction)
             }
             
             bottomView(viewModel: viewModel)
         }
-        .frame(width: 70)
+        .frame(width: 70, height: 92)
     }
 }
 
