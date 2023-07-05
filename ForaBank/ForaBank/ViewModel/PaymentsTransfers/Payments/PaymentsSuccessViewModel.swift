@@ -22,10 +22,12 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     @Published var alert: Alert.ViewModel?
     @Published var transferNumber: TransferNumber?
     @Published var templateButton: TemplateButtonView.ViewModel?
-
+    
+    var refreshTemplateButton = false
+    
     var amount: String?
     var logo: LogoIconViewModel?
-
+    
     let id = UUID()
     let title: String?
     let warningTitle: String?
@@ -74,7 +76,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     }
     
     convenience init(_ model: Model, paymentSuccess: Payments.Success) {
-    
+        
         switch paymentSuccess.serviceData {
         case .none:
             
@@ -83,6 +85,15 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
             
+            if case let .template(templateId) = paymentSuccess.operation?.source {
+                
+                refreshTemplateButton = Self.isTemplateEqualPayment(
+                    model: model,
+                    templateId: templateId,
+                    paymentSuccess: paymentSuccess
+                )
+            }
+            
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status, operation: paymentSuccess.operation)
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
@@ -90,11 +101,11 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         case let .c2bSubscriptionData(c2bSubscribtion):
             
             self.init(model, title: c2bSubscribtion.title, warningTitle: nil, amount: nil, iconType: .init(with: c2bSubscribtion.operationStatus), service: nil, options: nil, logo: nil, repeatButton: nil, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], company: .init(with: c2bSubscribtion, model: model), link: .init(with: c2bSubscribtion), bottomIcon: .ic72Sbp)
-
+            
         case let .mobileConnectionData(mobileConnectionData):
             
             let (title, iconType) = Self.iconType(status: paymentSuccess.status)
-
+            
             let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
             let amount = model.amountFormatted(
                 amount: paymentSuccess.amount,
@@ -116,6 +127,15 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 optionButtons: []
             )
             
+            if case let .template(templateId) = paymentSuccess.operation?.source {
+                
+                refreshTemplateButton = Self.isTemplateEqualPayment(
+                    model: model,
+                    templateId: templateId,
+                    paymentSuccess: paymentSuccess
+                )
+            }
+            
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status, operation: paymentSuccess.operation)
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
@@ -123,7 +143,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         case let .paymentsServicesData(paymentsServicesData):
             
             let (title, iconType) = Self.iconType(status: paymentSuccess.status)
-
+            
             let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
             let amount = model.amountFormatted(
                 amount: paymentSuccess.amount,
@@ -145,10 +165,19 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 optionButtons: []
             )
             
+            if case let .template(templateId) = paymentSuccess.operation?.source {
+                
+                refreshTemplateButton = Self.isTemplateEqualPayment(
+                    model: model,
+                    templateId: templateId,
+                    paymentSuccess: paymentSuccess
+                )
+            }
+            
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status, operation: paymentSuccess.operation)
             
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentSuccess.operationDetailId)))
-
+            
         case let .abroadData(transferData):
             
             let (title, iconType) = Self.iconType(status: paymentSuccess.status)
@@ -166,11 +195,20 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 ),
                 optionButtons: []
             )
-                        
+            
+            if case let .template(templateId) = paymentSuccess.operation?.source {
+                
+                refreshTemplateButton = Self.isTemplateEqualPayment(
+                    model: model,
+                    templateId: templateId,
+                    paymentSuccess: paymentSuccess
+                )
+            }
+            
             bind(.normal, paymentOperationDetailId: paymentSuccess.operationDetailId, documentStatus: paymentSuccess.status, operation: paymentSuccess.operation)
-
+            
             self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
-        
+            
         case let .returnAbroadData(transferData: transferData, title: title):
             let (_, iconType) = Self.iconType(status: paymentSuccess.status)
             
@@ -299,7 +337,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             default:
                 self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
                 repeatButton = .init(title: "Повторить", style: .gray, action: repeatAction)
-
+                
             }
         }
     }
@@ -309,181 +347,213 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         paymentOperationDetailId: Int,
         documentStatus: TransferResponseBaseData.DocumentStatus,
         operation: Payments.Operation?) {
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
+            
+            model.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
                     
-                case let payload as ModelAction.Operation.Detail.Response:
-                    
-                    switch payload.result {
-                    case let .success(detailData):
-                     
-                        switch mode {
-                        case .closeAccount(_):
-                            let viewModel: OperationDetailInfoViewModel = .init(model: self.model, operation: detailData, dismissAction: {
-                                
-                                self.sheet = nil
-                            })
-                            
-                            self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
-                            
-                        default:
-                            switch detailData.transferEnum {
-                            case .direct:
-                                let image = Image("MigAvatar")
-                                self.logo = .init(title: "", image: image)
-                                let amount = detailData.amount
-                                    
-                                self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
-
-                            case .contactAddressing, .contactAddressless, .contactAddressingCash:
-                                self.logo = .init(title: "", image: Image("Operation Type Contact Icon"))
-                                
-                                if let number = detailData.transferReference {
-                                    
-                                    if let amount = detailData.payeeAmount {
-                                        
-                                        self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
-                                    }
-                                    
-                                    self.transferNumber = .init(title: number, state: .copy(action: { [weak self] in
-                                        
-                                        self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: number))
-                                    }))
-                                    
-                                    var additioinalButtons: [AdditionalButton] = []
-                                    
-                                    if let name = detailData.payeeFullName {
-                                        
-                                        additioinalButtons.append(.init(title: "Изменить", action: { [weak self] in
-                                            
-                                            self?.action.send(PaymentsSuccessAction.Payment(source: .change(operationId: detailData.paymentOperationDetailId.description,transferNumber: number, name: name)))
-                                        }))
-                                    }
-                                    
-                                    let amountValue = detailData.payerAmount - detailData.payerFee
-                                    if let amount = model.amountFormatted(amount: amountValue, currencyCode: detailData.payerCurrency, style: .fraction) {
-                                        additioinalButtons.append(.init(title: "Вернуть", action: { [weak self] in
-                                            
-                                            self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId, transferNumber: number, amount: amount, productId: detailData.payerCardId?.description ?? detailData.payerAccountId.description)))
-                                        }))
-                                    }
-                                    
-                                    self.additioinalButtons = additioinalButtons
-                                }
-                                
-                            default: break
-                            }
-                            
-                            switch payload.result {
-                            case let .success(operationDetailData):
-                                
-                                switch operation?.source {
-                                case let .template(templateId):
-                                    
-                                    templateButton = .init(
-                                        state: .complete,
-                                        model: model,
-                                        tapAction: { [weak self] in
-                                            
-                                            self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [
-                                                templateId
-                                            ]))
-                                        }
-                                    )
-                                default:
-                                    templateButton = createTemplateButton(model: model, operationDetail: operationDetailData)
-
-                                }
-                                
-                                bindTemplate(operationDetail: operationDetailData,
-                                              paymentOperationDetailId: paymentOperationDetailId)
-                            case .failure:
-                                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
-                            }
-                            handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
-                        }
-                          
-                    case let .failure(error):
-                        //MARK: Informer Detail Error
-                        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
+                    switch action {
                         
-                        LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response error: \(error)")
+                    case let payload as ModelAction.Operation.Detail.Response:
+                        
+                        switch payload.result {
+                        case let .success(detailData):
+                            
+                            switch mode {
+                            case .closeAccount(_):
+                                let viewModel: OperationDetailInfoViewModel = .init(model: self.model, operation: detailData, dismissAction: {
+                                    
+                                    self.sheet = nil
+                                })
+                                
+                                self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
+                                
+                            default:
+                                switch detailData.transferEnum {
+                                case .direct:
+                                    let image = Image("MigAvatar")
+                                    self.logo = .init(title: "", image: image)
+                                    let amount = detailData.amount
+                                    
+                                    self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
+                                    
+                                case .contactAddressing, .contactAddressless, .contactAddressingCash:
+                                    self.logo = .init(title: "", image: Image("Operation Type Contact Icon"))
+                                    
+                                    if let number = detailData.transferReference {
+                                        
+                                        if let amount = detailData.payeeAmount {
+                                            
+                                            self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
+                                        }
+                                        
+                                        self.transferNumber = .init(title: number, state: .copy(action: { [weak self] in
+                                            
+                                            self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: number))
+                                        }))
+                                        
+                                        var additioinalButtons: [AdditionalButton] = []
+                                        
+                                        if let name = detailData.payeeFullName {
+                                            
+                                            additioinalButtons.append(.init(title: "Изменить", action: { [weak self] in
+                                                
+                                                self?.action.send(PaymentsSuccessAction.Payment(source: .change(operationId: detailData.paymentOperationDetailId.description,transferNumber: number, name: name)))
+                                            }))
+                                        }
+                                        
+                                        let amountValue = detailData.payerAmount - detailData.payerFee
+                                        if let amount = model.amountFormatted(amount: amountValue, currencyCode: detailData.payerCurrency, style: .fraction) {
+                                            additioinalButtons.append(.init(title: "Вернуть", action: { [weak self] in
+                                                
+                                                self?.action.send(PaymentsSuccessAction.Payment(source: .return(operationId: detailData.paymentOperationDetailId, transferNumber: number, amount: amount, productId: detailData.payerCardId?.description ?? detailData.payerAccountId.description)))
+                                            }))
+                                        }
+                                        
+                                        self.additioinalButtons = additioinalButtons
+                                    }
+                                    
+                                default: break
+                                }
+                                
+                                switch payload.result {
+                                case let .success(operationDetailData):
+                                    
+                                    switch operation?.source {
+                                    case let .template(templateId):
+                                        
+                                        templateButton = .init(
+                                            state: refreshTemplateButton == true ? .refresh : .complete,
+                                            model: model,
+                                            tapAction: { [weak self] in
+                                                
+                                                if self?.refreshTemplateButton == true {
+                                                    
+                                                    guard let template = self?.model.paymentTemplates.value.first(where: { $0.id == templateId }),
+                                                        let parameterList = template.parameterList as? [TransferAnywayData],
+                                                          let additional = parameterList.map({ $0.additional }).first else {
+                                                        return
+                                                    }
+                                                    
+                                                    self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                                                        name: operationDetailData.templateName,
+                                                        parameterList: [
+                                                            TransferAnywayData(
+                                                                amount: Decimal(string: detailData.amount.description),
+                                                                check: false,
+                                                                comment: detailData.comment,
+                                                                currencyAmount: detailData.currencyAmount,
+                                                                payer: .init(
+                                                                    inn: nil,
+                                                                    accountId: detailData.payerAccountId,
+                                                                    accountNumber: detailData.payerAccountNumber,
+                                                                    cardId: detailData.payerCardId,
+                                                                    cardNumber: detailData.payerCardNumber,
+                                                                    phoneNumber: nil
+                                                                ),
+                                                                additional: additional,
+                                                                puref: nil)
+                                                        ],
+                                                        paymentTemplateId: templateId)
+                                                    )
+                                                } else {
+                                                    
+                                                    self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [
+                                                        templateId
+                                                    ]))
+                                                }
+                                            }
+                                        )
+                                    default:
+                                        templateButton = createTemplateButton(model: model, operationDetail: operationDetailData)
+                                        
+                                    }
+                                    
+                                    bindTemplate(operationDetail: operationDetailData,
+                                                 paymentOperationDetailId: paymentOperationDetailId)
+                                case .failure:
+                                    model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
+                                }
+                                handleDetailResponse(mode, payload: payload, documentStatus: documentStatus)
+                            }
+                            
+                        case let .failure(error):
+                            //MARK: Informer Detail Error
+                            model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .close)))
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response error: \(error)")
+                        }
+                        
+                    default:
+                        break
                     }
                     
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-        
-        action
-            .compactMap({ $0 as? DelayWrappedAction })
-            .flatMap({
-                
-                Just($0.action)
-                    .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
-
-            })
-            .sink(receiveValue: { [weak self] in
-                
-                self?.action.send($0)
-                
-            }).store(in: &bindings)
-        
-        action
-            .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Copy })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] payload in
-                
-                UIPasteboard.general.string = payload.number
-                
-                withAnimation {
+                }.store(in: &bindings)
+            
+            action
+                .compactMap({ $0 as? DelayWrappedAction })
+                .flatMap({
                     
-                    self.transferNumber = .init(title: payload.number, state: .check)
-                }
-
-                self.action.send(DelayWrappedAction(delayMS: 2000, action: PaymentsSuccessAction.TransferNumber.Check(number: payload.number)))
-                
-            }).store(in: &bindings)
-        
-        action
-            .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Check })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] payload in
-                
-                withAnimation {
+                    Just($0.action)
+                        .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
                     
-                    self.transferNumber = .init(title: payload.number, state: .copy(action: { [weak self] in
+                })
+                .sink(receiveValue: { [weak self] in
+                    
+                    self?.action.send($0)
+                    
+                }).store(in: &bindings)
+            
+            action
+                .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Copy })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [unowned self] payload in
+                    
+                    UIPasteboard.general.string = payload.number
+                    
+                    withAnimation {
                         
-                        self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: payload.number))
-                    }))
-                }
-                
-            }).store(in: &bindings)
-        
-        action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as PaymentsSuccessAction.OptionButton.Details.Tap:
+                        self.transferNumber = .init(title: payload.number, state: .check)
+                    }
                     
-                    self.sheet = .init(type: .detailInfo(payload.viewModel))
+                    self.action.send(DelayWrappedAction(delayMS: 2000, action: PaymentsSuccessAction.TransferNumber.Check(number: payload.number)))
                     
-                case _ as PaymentsSuccessAction.Button.Close:
+                }).store(in: &bindings)
+            
+            action
+                .compactMap({ $0 as? PaymentsSuccessAction.TransferNumber.Check })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [unowned self] payload in
                     
-                    model.action.send(ModelAction.Products.Update.Total.All())
-
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
+                    withAnimation {
+                        
+                        self.transferNumber = .init(title: payload.number, state: .copy(action: { [weak self] in
+                            
+                            self?.action.send(PaymentsSuccessAction.TransferNumber.Copy(number: payload.number))
+                        }))
+                    }
+                    
+                }).store(in: &bindings)
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as PaymentsSuccessAction.OptionButton.Details.Tap:
+                        
+                        self.sheet = .init(type: .detailInfo(payload.viewModel))
+                        
+                    case _ as PaymentsSuccessAction.Button.Close:
+                        
+                        model.action.send(ModelAction.Products.Update.Total.All())
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+        }
     
     private func bindTemplate(
         operationDetail: OperationDetailData,
@@ -501,7 +571,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         state: .complete,
                         model: model,
                         tapAction: { [weak self] in
-                         
+                            
                             self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [payload.paymentTemplateId]))
                         })
                     
@@ -511,7 +581,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         state: .idle,
                         model: model,
                         tapAction: { [weak self] in
-                         
+                            
                             self?.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: operationDetail.templateName, paymentOperationDetailId: paymentOperationDetailId))
                         }
                     )
@@ -532,12 +602,12 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Failed }
                 .map { _ in "Не удалось добавить шаблон" }
         )
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] message in
-                
-                self.model.action.send(ModelAction.Informer.Show(informer: .init(message: message, icon: .check)))
-                
-            }.store(in: &bindings)
+        .receive(on: DispatchQueue.main)
+        .sink { [unowned self] message in
+            
+            self.model.action.send(ModelAction.Informer.Show(informer: .init(message: message, icon: .check)))
+            
+        }.store(in: &bindings)
     }
     
     private func bind(_ mode: Mode, paymentOperationDetailId: Int, amount: Double, productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, documentStatus: TransferResponseBaseData.DocumentStatus) {
@@ -606,7 +676,7 @@ extension PaymentsSuccessViewModel {
     }
     
     struct AdditionalButton: Identifiable {
-    
+        
         let id = UUID()
         let title: String
         let action: () -> Void
@@ -701,7 +771,7 @@ extension PaymentsSuccessViewModel {
     }
     
     struct Company {
-
+        
         let icon: Image
         let name: String?
         
@@ -718,13 +788,13 @@ extension PaymentsSuccessViewModel {
     }
     
     struct Link {
-
+        
         let icon: Image
         let title: String
         let url: URL
         
-         init(icon: Image = .ic24ExternalLink, title: String, url: URL) {
-             
+        init(icon: Image = .ic24ExternalLink, title: String, url: URL) {
+            
             self.icon = icon
             self.title = title
             self.url = url
@@ -962,7 +1032,7 @@ extension PaymentsSuccessViewModel {
                 switch mode {
                 case .closeAccount(_):
                     self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
-
+                    
                 default:
                     guard let operationDetail = operationDetail else {
                         self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
@@ -1034,7 +1104,7 @@ enum PaymentsSuccessAction {
     }
     
     enum TransferNumber {
-     
+        
         struct Copy: Action {
             
             let number: String
@@ -1116,5 +1186,89 @@ private extension PaymentsServicesData {
         }
         
         return .init(title: "", image: image)
+    }
+}
+
+extension PaymentsSuccessViewModel {
+    
+    static func isTemplateEqualPayment(
+        model: Model,
+        templateId: PaymentTemplateData.ID,
+        paymentSuccess: Payments.Success
+    ) -> Bool {
+        
+        if let template = model.paymentTemplates.value.first(where: { $0.id == templateId })  {
+            
+            let additional = Self.additionalPayments(
+                model: model,
+                service: paymentSuccess.service,
+                paymentSuccess: paymentSuccess
+            )
+            
+            let amountTemplate = template.amount?.description
+            let productTemplate = template.payerProductId?.description 
+            
+            if let transferAnywayData = template.parameterList as? [TransferAnywayData] {
+                
+                if transferAnywayData.last?.payer?.productIdDescription != productTemplate {
+                    
+                    return true
+                }
+                
+                if transferAnywayData.last?.additional != additional  {
+                    
+                    return true
+                }
+            }
+            
+            if paymentSuccess.amount.description != amountTemplate {
+                
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    static func additionalPayments(
+        model: Model,
+        service: Payments.Service,
+        paymentSuccess: Payments.Success
+    ) ->  [TransferAnywayData.Additional]? {
+        
+        let additionalStepIndex = (paymentSuccess.operation?.steps.count ?? 0) - 2
+        
+        guard let parameters = paymentSuccess.operation?.parameters,
+              let processed = paymentSuccess.operation?.steps[additionalStepIndex].back.processed else {
+            return nil
+        }
+        
+        switch service {
+        case .abroad:
+            return try? model.paymentsTransferAnywayAbroadAdditional(
+                parameters,
+                restrictedParameters: model.restrictedParametersAbroad
+            )
+            
+        case .sfp:
+            return try? model.paymentsTransferSFPAdditional(
+                processed,
+                allParameters: parameters
+            )
+            
+        case .avtodor,
+                .fms,
+                .fns,
+                .fssp,
+                .gibdd,
+                .internetTV,
+                .utility,
+                .mobileConnection:
+            
+            return try? model.paymentsTransferAnywayAdditional(processed)
+            
+        default:
+            return nil
+        }
     }
 }

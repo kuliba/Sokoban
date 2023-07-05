@@ -18,7 +18,8 @@ extension PaymentTemplateData {
         productTemplate: ProductTemplateData? = nil,
         sort: Int,
         svgImage: SVGImageData,
-        type: Kind) -> PaymentTemplateData {
+        type: Kind
+    ) -> PaymentTemplateData {
             
             return PaymentTemplateData(
                 groupName: groupName,
@@ -34,7 +35,7 @@ extension PaymentTemplateData {
     static func templateStub(
         paymentTemplateId: Int = 2513,
         type: Kind,
-        parameterList: [TransferData]
+        parameterList: [TransferData] = TransferGeneralData.generalStub()
     ) -> PaymentTemplateData {
         
         let template = getTemplate(
