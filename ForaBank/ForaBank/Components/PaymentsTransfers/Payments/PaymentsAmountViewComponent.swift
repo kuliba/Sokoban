@@ -123,7 +123,7 @@ extension PaymentsAmountView {
                 
                 self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
                 
-            case let .templatePayment(templateId):
+            case let .templatePayment(templateId, _):
                 guard let (_, productFrom, amount) = model.productsTransfer(templateId: templateId) else {
 
                     let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""

@@ -163,7 +163,7 @@ extension ProductsSwapView {
                 
                 self.init(model: model, items: [from, to], divider: .init())
                     
-            case let .templatePayment(templateId):
+            case let .templatePayment(templateId, _):
                 
                 guard let (productTo, productFrom, _) = model.productsTransfer(templateId: templateId) else {
                     return nil

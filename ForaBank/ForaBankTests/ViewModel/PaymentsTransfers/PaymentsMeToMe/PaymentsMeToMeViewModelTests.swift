@@ -73,9 +73,10 @@ extension PaymentsMeToMeViewModelTests {
         templateId: PaymentTemplateData.ID = 1
     ) -> PaymentsMeToMeViewModel? {
         
+        let name = model.paymentTemplates.value.first(where: { $0.id == templateId })?.name
         let sut = PaymentsMeToMeViewModel(
             model,
-            mode: .templatePayment(templateId)
+            mode: .templatePayment(templateId, name ?? "Между своими")
         )
         
         return sut
