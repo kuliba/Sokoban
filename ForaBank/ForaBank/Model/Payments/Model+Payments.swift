@@ -752,11 +752,14 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: NEXT: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway, .gibdd:
+        case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
         
         case .avtodor:
             return try await paymentsProcessRemoteStepAvtodor(parameters: operation.parameters, process: process, isNewPayment: false)
+        
+        case .gibdd:
+            return try await paymentsProcessRemoteNextGibdd(parameters: operation.parameters, process: process, isNewPayment: false)
         
         case .abroad:
             return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
