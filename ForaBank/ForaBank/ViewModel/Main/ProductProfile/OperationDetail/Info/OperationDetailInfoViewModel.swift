@@ -1561,7 +1561,7 @@ extension OperationDetailInfoViewModel {
             
             return cells.compactMap { $0 }
             
-        case .cardToCard:
+        case .cardToCard, .accountToCard:
             
             var cells = [
                 amountViewModel,
