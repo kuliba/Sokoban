@@ -25,11 +25,160 @@ final class Model_PaymentsAbroadTests: XCTestCase {
     }
 }
 
+//MARK: Process Tests
+extension Model_PaymentsAbroadTests {
+    
+    func test_paymentsTransferAnywayAbroadAdditional_shouldReturnEmptyResult() async throws {
+        
+        // given
+        let sut = makeSut()
+        let parameters: [PaymentsParameterRepresentable] = [Payments.ParameterHeader(title: "")]
+        
+        // when
+        let result = try sut.paymentsTransferAnywayAbroadAdditional(
+            parameters,
+            restrictedParameters: [
+                Payments.Parameter.Identifier.header.rawValue
+            ])
+        
+        // then
+        XCTAssertTrue(result.isEmpty)
+    }
+    
+    func test_paymentsTransferAnywayAbroadAdditional_parametersWithSurName_shouldReturnAdditionalData() async throws {
+        
+        // given
+        let sut = makeSut(currencyList: [.rub])
+        let parameters: [PaymentsParameterRepresentable] = .mock(bSurName: "bSurName")
+        
+        
+        // when
+        let result = try sut.paymentsTransferAnywayAbroadAdditional(
+            parameters,
+            restrictedParameters: [
+                Payments.Parameter.Identifier.header.rawValue
+            ])
+        
+        // then
+        XCTAssertNoDiff(
+            result,
+            [
+                .init(
+                    fieldid: 2,
+                    fieldname: "CURR",
+                    fieldvalue: "RUB"
+                ),
+                .init(
+                    fieldid: 3,
+                    fieldname: "bSurName",
+                    fieldvalue: "bSurName"
+                ),
+                .init(
+                    fieldid: 5,
+                    fieldname: "ID",
+                    fieldvalue: "value"
+                )
+            ]
+        )
+    }
+    
+    func test_paymentsTransferAnywayAbroadAdditional_shouldReturnAdditionalData() async throws {
+        
+        // given
+        let sut = makeSut()
+        let parameters: [PaymentsParameterRepresentable] = .mock()
+        
+        
+        // when
+        let result = try sut.paymentsTransferAnywayAbroadAdditional(
+            parameters,
+            restrictedParameters: [
+                Payments.Parameter.Identifier.header.rawValue
+            ])
+        
+        // then
+        XCTAssertNoDiff(
+            result,
+            [
+                .init(
+                    fieldid: 3,
+                    fieldname: "bSurName",
+                    fieldvalue: ""
+                ),
+                .init(
+                    fieldid: 5,
+                    fieldname: "ID",
+                    fieldvalue: "value"
+                )
+            ]
+        )
+    }
+}
+
+//MARK: RestrictedParametersAbroad computed property tests
+
+extension Model_PaymentsAbroadTests {
+    
+    func test_model_restrictedParametersAbroad_shouldReturnIdentifiers() async throws {
+        
+        // given
+        let sut = makeSut()
+        
+        let count = sut.restrictedParametersAbroad.count
+        // then
+        XCTAssertEqual(count, 10)
+        XCTAssertNoDiff(
+            sut.restrictedParametersAbroad,
+            [
+                "ru.forabank.sense.code",
+                "ru.forabank.sense.product",
+                "ru.forabank.sense.continue",
+                "ru.forabank.sense.header",
+                "ru.forabank.sense.operator",
+                "ru.forabank.sense.service",
+                "ru.forabank.sense.category",
+                "countryDropDownList",
+                "countryCurrencyFilter",
+                "paymentSystem"
+            ])
+    }
+}
+
+private extension [PaymentsParameterRepresentable] {
+    
+    static func mock(bSurName: Payments.Parameter.Value = nil) -> [PaymentsParameterRepresentable] {
+        
+        [
+            Payments.ParameterHeader(title: ""),
+            Payments.ParameterMock(id: "search#3#"),
+            Payments.ParameterMock(id: "search#5#"),
+            Payments.ParameterMock(id: "CURR", value: "RUB"),
+            Payments.ParameterMock(id: "bSurName", value: bSurName),
+            Payments.ParameterAmount(
+                value: "1",
+                title: "parameterAmountTitle",
+                currencySymbol: "₽",
+                deliveryCurrency: .init(
+                    selectedCurrency: .rub,
+                    currenciesList: [.rub]
+                ),
+                validator: .init(
+                    minAmount: 1,
+                    maxAmount: 10
+                )),
+            Payments.ParameterMock(id: "ID", value: "value")
+        ]
+    }
+}
+
 private extension Model_PaymentsAbroadTests {
     
-    func makeSut() -> Model {
+    func makeSut(currencyList: [CurrencyData] = []) -> Model {
         
-        .emptyMock
+        let model: Model = .mockWithEmptyExcept()
+        model.currencyList.value = currencyList
+        
+        return model
     }
 }
 

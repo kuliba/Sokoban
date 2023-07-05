@@ -57,14 +57,17 @@ extension PaymentTemplateData {
             case .sfp: return "Перевод СБП"
             case .externalEntity: return "По реквизитам: компания"
             case .externalIndividual: return "По реквизитам: частный"
-            case .contactAdressless, .contactCash, .contactAddressing, .contactAddressless: return "Перевод Контакт"
+            case .contactAdressless,
+                 .contactCash,
+                 .contactAddressing,
+                 .contactAddressless: return "Перевод Контакт"
             case .direct, .newDirect: return "Перевод МИГ"
             case .housingAndCommunalService: return "Услуги ЖКХ"
             case .mobile: return "Мобильная связь"
             case .internet: return "Интернет, ТВ"
             case .transport: return "Транспорт"
             case .taxAndStateService: return "Налоги и госуслуги"
-            case.interestDeposit: return "Проценты по депозитам"
+            case .interestDeposit: return "Проценты по депозитам"
             case .unknown: return "Неизвестно"
             }
         }
@@ -131,9 +134,14 @@ extension PaymentTemplateData {
         return transfer.amountDouble
     }
     
-    private var transfer: TransferGeneralData? {
+    private var transferGeneralData: TransferGeneralData? {
         
         return parameterList.first as? TransferGeneralData
+    }
+    
+    var transferAnywayData: TransferAnywayData? {
+        
+        return parameterList.first as? TransferAnywayData
     }
 }
 
@@ -144,8 +152,8 @@ extension PaymentTemplateData {
     
     var phoneNumber: String? {
         
-        guard let transfer,
-              let phoneData = transfer.payeeInternal?.phoneNumber
+        guard let transferGeneralData,
+              let phoneData = transferGeneralData.payeeInternal?.phoneNumber
         else { return nil }
         
         return phoneData
@@ -153,14 +161,16 @@ extension PaymentTemplateData {
     
     var foraBankId: String? {
         
-        guard let transfer,
-              transfer.payeeInternal?.phoneNumber != nil
+        guard let transferGeneralData,
+              transferGeneralData.payeeInternal?.phoneNumber != nil
         else { return nil }
         
         return "100000000217"
     }
     
     var payerProductId: Int? {
+        
+        let transfer = transferGeneralData ?? transferAnywayData
         
         guard let transfer,
               let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
