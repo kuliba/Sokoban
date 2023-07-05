@@ -61,7 +61,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
         
         let amountViewModel = PaymentsAmountView.ViewModel(mode: mode, model: model)
         
-        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
+        switch mode {
+        case let .templatePayment(_, title):
+            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: title, mode: mode, state: .normal)
+            
+        default:
+            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
+        }
         
         bind()
     }
@@ -266,7 +272,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
                 switch action {
                 case _ as PaymentsMeToMeAction.Show.ChangeName:
-                    guard case let .templatePayment(templateId) = mode else {
+                    guard case let .templatePayment(templateId, _) = mode else {
                         return
                     }
 
@@ -961,7 +967,7 @@ extension PaymentsMeToMeViewModel {
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
         case makePaymentTo(ProductData, Double)
-        case templatePayment(PaymentTemplateData.ID)
+        case templatePayment(PaymentTemplateData.ID, String)
         case makePaymentToDeposite(ProductData, Double)
         case transferDeposit(ProductData, Double)
         case transferAndCloseDeposit(ProductData, Double)

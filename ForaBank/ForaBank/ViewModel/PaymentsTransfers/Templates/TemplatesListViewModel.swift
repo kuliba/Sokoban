@@ -270,12 +270,13 @@ private extension TemplatesListViewModel {
                     
             //Item Tapped
                 case let payload as TemplatesListViewModelAction.Item.Tapped:
-                    guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId })
+                    guard let template = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId }),
+                          let item = self.items.first(where: { $0.id == payload.itemId })
                     else { return }
                     
                     switch template.type {
                     case .betweenTheir:
-                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .templatePayment(template.id)) else {
+                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .templatePayment(template.id, item.title)) else {
                             return
                         }
                         
