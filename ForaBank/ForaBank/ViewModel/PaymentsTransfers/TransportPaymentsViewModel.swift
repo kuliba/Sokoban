@@ -174,7 +174,7 @@ extension TransportPaymentsViewModel.ItemViewModel {
             id: operatorData.code,
             icon: operatorData.iconImageData?.image,
             name: operatorData.name,
-            inn: operatorINN(for: operatorData.description),
+            inn: nil,
             select: action
         )
     }

@@ -85,7 +85,7 @@ extension Transport {
             
             if !latestPayments.latestPayments.items.isEmpty {
                 
-                VStack {
+                VStack(spacing: 0) {
                     
                     PaymentsServicesLatestPaymentsSectionView(
                         viewModel: latestPayments,
