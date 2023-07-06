@@ -267,6 +267,7 @@ extension ProductsSwapView {
                 self.to?.context.value = contextFrom
                 
                 divider.isToogleButton.toggle()
+                self.action.send(ProductsSwapAction.Swapped())
             }
         }
         
