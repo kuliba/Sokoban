@@ -77,7 +77,8 @@ extension XCTestCase {
     
     func anyProduct(
         id: Int,
-        productType: ProductType
+        productType: ProductType,
+        currency: String = "RUB"
     ) -> ProductData {
         
         .init(
