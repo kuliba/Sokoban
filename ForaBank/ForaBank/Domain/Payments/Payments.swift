@@ -91,6 +91,10 @@ enum Payments {
         case utility           = "iFora||1031001"
         case transport         = "iFora||1051062"
         case avtodor           = "AVD"
+        case cardTJ            = "iFora||DKM"
+        case cardHumoUZ        = "iFora||DKQ"
+        case cardUZ            = "iFora||DKR"
+        case cardKZ            = "iFora||PW0"
 #if DEBUG || MOCK
         case gibdd             = "iFora||4811" // test
 #else
