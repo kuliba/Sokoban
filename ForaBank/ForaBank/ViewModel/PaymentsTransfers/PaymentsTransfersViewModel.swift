@@ -542,13 +542,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self, unowned viewModel] action in
+            .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    guard let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                          let productIdTo = viewModel.swapViewModel.productIdTo else {
+                    guard let productIdFrom = viewModel?.swapViewModel.productIdFrom,
+                          let productIdTo = viewModel?.swapViewModel.productIdTo else {
                         return
                     }
                     
