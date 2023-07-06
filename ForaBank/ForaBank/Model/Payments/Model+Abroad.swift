@@ -620,10 +620,10 @@ extension Model {
             let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
             if let bankParameter = operation.parameters.first(where: { $0.id == countrySwitch }),
                let value = bankParameter.value,
-               let options = Payments.Operator.init(rawValue: value) {
+               let options = Payments.Operator(rawValue: value) {
                 
                 switch options {
-                case .direct:
+                case .direct, .cardKZ, .cardTJ, .cardUZ, .cardHumoUZ:
                     if let customerName = response.payeeName {
                         
                         let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
