@@ -367,12 +367,12 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                 })
                                 
                                 self.action.send(PaymentsSuccessAction.OptionButton.Details.Tap(viewModel: viewModel))
-                                
+                            
                             default:
                                 switch detailData.transferEnum {
-                                case .direct:
+                                case .direct, .elecsnet:
                                     let image = Image("MigAvatar")
-                                    self.logo = .init(title: "", image: image)
+                                    self.logo = operation?.service == .abroad ? .init(title: "", image: image) : nil
                                     let amount = detailData.amount
                                     
                                     self.amount = model.amountFormatted(amount: amount, currencyCode: detailData.currencyAmount, style: .fraction)
