@@ -14,10 +14,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, model) = makeSUT()
         
-        let betweenSelf = PTSectionTransfersViewAction.ButtonTapped.Transfer(type: .betweenSelf)
-        
-        sut.sections[1].action.send(betweenSelf)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        sut.sendBetweenSelf()
         
         XCTAssertNil(sut.meToMe)
         XCTAssertTrue(model.products.value.isEmpty)
