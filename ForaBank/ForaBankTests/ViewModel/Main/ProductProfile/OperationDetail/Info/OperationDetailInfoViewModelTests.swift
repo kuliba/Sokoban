@@ -13,11 +13,14 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     // MARK: init - external entity
     // OperationDetailInfoViewModel.swift:1490
     
-    func test_init_shouldReturnEmptyCellsOnMissingProduct() {
+    func test_init_shouldReturnPayeeAccountNumberAndPayeeBankBICOnMissingProduct() {
         
         let (sut, model) = makeSUT()
         
-        XCTAssertNoDiff(sut.testCells, [])
+        XCTAssertNoDiff(sut.testCells, [
+            .payeeAccountNumber,
+            .payeeBankBIC,
+        ])
         XCTAssertTrue(model.products.value.isEmpty)
     }
     
@@ -33,9 +36,11 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         )
         
         XCTAssertNoDiff(sut.testCells, [
-            .property(title: "Получатель", value: "ИП Домрачев Сергей Николаевич"),
-            .property(title: "Назначение платежа", value: "Lorem ipsum dolor sit amet"),
-            .property(title: "Дата и время операции (МСК)", value: "30.06.2023 12:33:28"),
+            .payee,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .purpose,
+            .date,
         ])
         XCTAssertNoDiff(model.products.value.values.map { $0.map(\.id) }, [[12345]])
         XCTAssertNil(detail.payeeINN)
@@ -53,16 +58,18 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         )
         
         XCTAssertNoDiff(sut.testCells, [
-            .property(title: "Получатель", value: "ИП Домрачев Сергей Николаевич"),
-            .property(title: "ИНН получателя", value: "772016190450"),
-            .property(title: "Назначение платежа", value: "Lorem ipsum dolor sit amet"),
-            .property(title: "Дата и время операции (МСК)", value: "30.06.2023 12:33:28"),
+            .payee,
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeBankBIC,
+            .purpose,
+            .date,
         ])
         XCTAssertNoDiff(model.products.value.values.map { $0.map(\.id) }, [[12345]])
         XCTAssertNotNil(detail.payeeINN)
     }
     
-    // MARK: - makeItemsForExternal
+    // MARK: - makeItemsForExternal entity
     
     func test_makeItemsForExternal_entity_shouldReturnEmpty_onNilTransferType() {
         
@@ -81,7 +88,10 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
         
-        XCTAssertNoDiff(cells, [])
+        XCTAssertNoDiff(cells, [
+            .payeeAccountNumber,
+            .payeeBankBIC,
+        ])
         XCTAssertNil(detail.payeeINN)
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -93,7 +103,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, .init(title: "payee Name", iconType: nil, value: "Mr Payee"), nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "payee Name", value: "Mr Payee")
+            .property(title: "payee Name", value: "Mr Payee"),
+            .payeeAccountNumber,
+            .payeeBankBIC,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -105,7 +117,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, .init(title: "payee", icon: .checkImage, name: "Payee", iconPaymentService: nil, balance: "1234", description: "Payee Description"), nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description")
+            .payeeAccountNumber,
+            .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description"),
+            .payeeBankBIC,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -117,7 +131,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, .init(title: "Bank", icon: .checkImage, name: "Bank Detail"), nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .bank(title: "Bank", name: "Bank Detail")
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .bank(title: "Bank", name: "Bank Detail"),
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -129,7 +145,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, .init(title: "Amount", iconType: nil, value: "1234"), nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "Amount", value: "1234")
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .amount,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -141,7 +159,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, .init(title: "Fee", iconType: nil, value: "345"), nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "Fee", value: "345")
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .fee
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -153,7 +173,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, .init(title: "payer", icon: .checkImage, name: "Payer", iconPaymentService: nil, balance: "9876", description: "PayerDescription"), nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription")
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .payer,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -165,7 +187,10 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, .init(title: "purpose", iconType: nil, value: "Payment Purpose"), nil)
         
         XCTAssertNoDiff(cells, [
+            .payeeAccountNumber,
+            .payeeBankBIC,
             .property(title: "purpose", value: "Payment Purpose")
+,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -177,7 +202,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, .init(title: "DATE", iconType: nil, value: "30.06.2023 12:32:41"))
         
         XCTAssertNoDiff(cells, [
-            .property(title: "DATE", value: "30.06.2023 12:32:41")
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "DATE", value: "30.06.2023 12:32:41"),
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -200,7 +227,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cells, [
             .property(title: "payee Name", value: "Mr Payee"),
+            .payeeAccountNumber,
             .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description"),
+            .payeeBankBIC,
             .bank(title: "Bank", name: "Bank Detail"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
@@ -221,7 +250,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "ИНН получателя", value: "772016190450"),
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeBankBIC,
         ])
         XCTAssertNotNil(detail.payeeINN)
         XCTAssertEqual(detail.externalTransferType, .entity)
@@ -237,7 +268,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "КПП получателя", value: "770801001"),
+            .payeeAccountNumber,
+            .payeeKPP,
+            .payeeBankBIC,
         ])
         XCTAssertNotNil(detail.payeeKPP)
         XCTAssertEqual(detail.externalTransferType, .entity)
@@ -254,13 +287,17 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
         
         XCTAssertNoDiff(cells, [
-            .property(title: "ИНН получателя", value: "772016190450"),
-            .property(title: "КПП получателя", value: "770801001"),
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeKPP,
+            .payeeBankBIC
         ])
         XCTAssertNotNil(detail.payeeINN)
         XCTAssertNotNil(detail.payeeKPP)
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
+    
+    // MARK: - makeItemsForExternal individual
     
     func test_makeItemsForExternal_individual_shouldReturnCells() {
         
@@ -280,7 +317,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cells, [
             .property(title: "payee Name", value: "Mr Payee"),
+            .payeeAccountNumber,
             .product(title: "payee", name: "Payee", balance: "1234", description: "Payee Description"),
+            .payeeBankBIC,
             .bank(title: "Bank", name: "Bank Detail"),
             .property(title: "Amount", value: "1234"),
             .property(title: "Fee", value: "345"),
@@ -301,7 +340,10 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let cells = makeItemsForExternal(detail, nil, nil, nil, nil, nil, nil, nil, nil)
         
-        XCTAssertNoDiff(cells, [])
+        XCTAssertNoDiff(cells, [
+            .payeeAccountNumber,
+            .payeeBankBIC,
+        ])
         XCTAssertNotNil(detail.payeeINN)
         XCTAssertNotNil(detail.payeeKPP)
         XCTAssertEqual(detail.externalTransferType, .individual)
@@ -310,6 +352,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData? = { _ in nil },
         _ operation: OperationDetailData,
         _ payeeNameViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
         _ payeeViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
@@ -322,7 +365,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     ) -> [OperationDetailInfoViewModel.TestCell] {
         
         OperationDetailInfoViewModel
-            .makeItemsForExternal(operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            .makeItemsForExternal(dictionaryFullBankInfoBank: dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
             .map(\.testCell)
     }
     
@@ -439,6 +482,20 @@ private extension OperationDetailInfoViewModel {
         case product(title: String, name: String, balance: String, description: String)
         case property(title: String, value: String)
     }
+}
+
+private extension OperationDetailInfoViewModel.TestCell {
+    
+    static let payee: Self = .property(title: "Получатель", value: "ИП Домрачев Сергей Николаевич")
+    static let payeeAccountNumber: Self = .property(title: "Номер счета получателя", value: "40802810938050002771")
+    static let payeeBankBIC: Self = .bank(title: "Бик банка получателя", name: "044525225")
+    static let payeeINN: Self = .property(title: "ИНН получателя", value: "772016190450")
+    static let payeeKPP: Self = .property(title: "КПП получателя", value: "770801001")
+    static let purpose: Self = .property(title: "Назначение платежа", value: "Lorem ipsum dolor sit amet")
+    static let amount: Self = .property(title: "Amount", value: "1234")
+    static let fee: Self = .property(title: "Fee", value: "345")
+    static let payer: Self = .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription")
+    static let date: Self = .property(title: "Дата и время операции (МСК)", value: "30.06.2023 12:33:28")
 }
 
 private extension OperationDetailInfoViewModel.TestCell {

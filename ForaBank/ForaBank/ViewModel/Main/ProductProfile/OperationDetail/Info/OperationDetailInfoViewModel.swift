@@ -1484,7 +1484,7 @@ extension OperationDetailInfoViewModel {
                 }
                 
             case .external:
-                return Self.makeItemsForExternal(operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
                 
             case .internet:
                 
@@ -1591,6 +1591,7 @@ extension OperationDetailInfoViewModel {
     }
     
     static func makeItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData?,
         _ operation: OperationDetailData,
         _ payeeNameViewModel: PropertyCellViewModel?,
         _ payeeViewModel: ProductCellViewModel?,
@@ -1602,20 +1603,37 @@ extension OperationDetailInfoViewModel {
         _ dateViewModel: PropertyCellViewModel?
     ) -> [DefaultCellViewModel] {
         
-        let payeeINN = operation.payeeINN.map {
+        let payeeAccountNumber = operation.payeeAccountNumber.map {
             
             PropertyCellViewModel(
-                title: "ИНН получателя",
-                iconType: nil,
+                for: .payeeAccountNumber,
+                iconType: IconType.account,
                 value: $0
             )
         }
-        
+        let payeeBankBIC = operation.payeeBankBIC.map { bankBic in
+            
+            let bank = dictionaryFullBankInfoBank(bankBic)
+            
+            return BankCellViewModel(
+                title: "Бик банка получателя",
+                icon: bank?.svgImage.image ?? IconType.account.icon,
+                name: bankBic
+            )
+        }
+        let payeeINN = operation.payeeINN.map {
+            
+            PropertyCellViewModel(
+                for: .payeeINN,
+                iconType: IconType.account,
+                value: $0
+            )
+        }
         let payeeKPP = operation.payeeKPP.map {
             
             PropertyCellViewModel(
-                title: "КПП получателя",
-                iconType: nil,
+                for: .payeeKPP,
+                iconType: IconType.account,
                 value: $0
             )
         }
@@ -1627,9 +1645,11 @@ extension OperationDetailInfoViewModel {
         case .entity, .unknown:
             return [
                 payeeNameViewModel,
+                payeeAccountNumber,
                 payeeViewModel,
                 payeeINN,
                 payeeKPP,
+                payeeBankBIC,
                 payeeBankViewModel,
                 amountViewModel,
                 commissionViewModel,
@@ -1641,7 +1661,9 @@ extension OperationDetailInfoViewModel {
         case .individual:
             return [
                 payeeNameViewModel,
+                payeeAccountNumber,
                 payeeViewModel,
+                payeeBankBIC,
                 payeeBankViewModel,
                 amountViewModel,
                 commissionViewModel,
@@ -1818,6 +1840,28 @@ extension OperationDetailInfoViewModel {
                                      icon: Image("BankIcon"),
                                      name: bankName)
         }
+    }
+}
+
+private extension OperationDetailInfoViewModel.PropertyCellViewModel {
+    
+    convenience init(
+        for cellType: CellType,
+        iconType: OperationDetailInfoViewModel.IconType,
+        value: String
+    ) {
+        self.init(
+            title: cellType.rawValue,
+            iconType: iconType.icon,
+            value: value
+        )
+    }
+    
+    enum CellType: String {
+        
+        case payeeAccountNumber = "Номер счета получателя"
+        case payeeINN = "ИНН получателя"
+        case payeeKPP = "КПП получателя"
     }
 }
 
