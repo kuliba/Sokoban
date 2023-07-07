@@ -97,14 +97,12 @@ extension Model {
             operatorType: operatorCode
         )
         parameters.append(operatorParameter)
-        
-        let headerParameter = parameterHeader(
-            source: source,
-            header: Payments.ParameterHeader(
-            title: "\(operatorValue.name)",
-            subtitle: operatorValue.description,
-            icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
-        ))
+                
+        let headerParameter = header(
+            operatorCode: operatorCode,
+            operatorValue: operatorValue,
+            source: source
+        )
         parameters.append(headerParameter)
         visible.append(headerParameter.id)
         
@@ -556,6 +554,26 @@ extension Model {
         }
         
         return operatorr
+    }
+    
+    func header(
+        operatorCode: String,
+        operatorValue: OperatorGroupData.OperatorData,
+        source: Payments.Operation.Source?
+    ) -> Payments.ParameterHeader {
+        
+        let title: String = operatorCode == Purefs.avtodorContract || operatorCode == Purefs.avtodorTransponder ? .avtodorGroupTitle : operatorValue.name
+        
+        let description: String? = (operatorValue.parentCode == Payments.Operator.transport.rawValue) ? nil : operatorValue.description
+        
+        return parameterHeader(
+            source: source,
+            header: Payments.ParameterHeader(
+                title: title,
+                subtitle: description,
+                icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
+            )
+        )
     }
 }
 

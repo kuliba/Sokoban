@@ -457,6 +457,63 @@ final class PaymentsServicesTests: XCTestCase {
         }
     }
     
+    //MARK: - test header
+    
+    func test_header_ifAvtodorContractSetAvtodorGroupTitleSubtitleNil(){
+        
+        let sut = makeSUT()
+        
+        let header = sut.header(
+            operatorCode: Purefs.avtodorContract,
+            operatorValue: .test(
+                code: Purefs.avtodorContract,
+                name: "test",
+                parentCode: Purefs.transport
+            ),
+            source: nil
+        )
+        
+        XCTAssertNoDiff(header.title, .avtodorGroupTitle)
+        XCTAssertNil(header.subtitle)
+    }
+
+    func test_header_ifAvtodorTransponderSetAvtodorGroupTitleSubtitleNil(){
+        
+        let sut = makeSUT()
+        
+        let header = sut.header(
+            operatorCode: Purefs.avtodorTransponder,
+            operatorValue: .test(
+                code: Purefs.avtodorTransponder,
+                name: "test",
+                parentCode: Purefs.transport
+            ),
+            source: nil
+        )
+        
+        XCTAssertNoDiff(header.title, .avtodorGroupTitle)
+        XCTAssertNil(header.subtitle)
+    }
+
+    func test_header_isNotAvtodorShouldSetTitleByName(){
+        
+        let sut = makeSUT()
+        
+        let header = sut.header(
+            operatorCode: "iFora||5576",
+            operatorValue: .test(
+                code: "iFora||5576",
+                name: "test",
+                parentCode: "111",
+                synonymList: ["subtitle"]
+            ),
+            source: nil
+        )
+        
+        XCTAssertNoDiff(header.title, "test")
+        XCTAssertNoDiff(header.subtitle, "subtitle")
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(
