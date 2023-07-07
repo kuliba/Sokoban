@@ -26,7 +26,7 @@ extension Model {
             // header
             let headerParameter = transportHeader(
                 forPuref: Purefs.avtodorContract,
-                title: "Автодор Платные дороги")
+                title: .avtodorGroupTitle)
             
             // product
             let (productParameter, _) = try productParameter(

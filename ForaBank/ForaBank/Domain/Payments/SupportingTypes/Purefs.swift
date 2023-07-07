@@ -30,3 +30,8 @@ extension Purefs {
     // transport: (fake) Avtodor Group for hardcoded
     static let avtodorGroup       = "AVD"
 }
+
+extension String {
+    
+    static let avtodorGroupTitle = "Автодор Платные дороги"
+}

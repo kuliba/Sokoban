@@ -1098,7 +1098,7 @@ private extension Model {
             code: Purefs.avtodorGroup,
             isGroup: true,
             logotypeList: avtodorContract.logotypeList,
-            name: "Автодор Платные дороги",
+            name: .avtodorGroupTitle,
             parameterList: avtodorContract.parameterList,
             parentCode: Purefs.transport,
             region: avtodorContract.region,
@@ -1112,21 +1112,13 @@ extension PaymentsTransfersViewModel {
     func handle(latestPayment: LatestPaymentData) {
         
         switch (latestPayment.type, latestPayment) {
-        //TODO: move case transport after refactoring
-        case (.transport, let paymentData as PaymentServiceData):
-            let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {}, qrAction: { [weak self] in
-                
-                self?.link = nil
-            })
-            link = .transport(operatorsViewModel)
-            
+       
         case (.internet, let paymentData),
             (.service, let paymentData),
             (.mobile, let paymentData),
             (.outside, let paymentData),
-            (.phone, let paymentData):
+            (.phone, let paymentData),
+            (.transport, let paymentData):
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),

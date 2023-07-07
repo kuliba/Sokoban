@@ -1019,7 +1019,8 @@ extension Model {
                 
             case .internet,
                  .service,
-                 .outside:
+                 .outside,
+                 .transport:
                 
                 guard let paymentData = latestPayment  as? PaymentServiceData else {
                     return nil
