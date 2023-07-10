@@ -170,22 +170,33 @@ extension OperationDetailViewModelTests {
     
     func test_modelAction_operationDetailResponse_shouldSetupTemplateButtonComplete() throws {
         
-        let (sut, _) = try makeSUT(statementData: [1: .init(
-            period: .init(
-                start: Date(),
-                end: Date()),
-            statements: [.stub()])]
-        )
+        let (sut, _) = try makeSUT()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         sut.model.action.send(
             ModelAction.Operation.Detail.Response(result:
-                    .success(.stub())
+                    .success(.stub(transferEnum: .cardToCard))
             )
         )
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(sut.templateButton?.state, .complete)
+    }
+    
+    func test_modelAction_operationDetailResponse_transferEnumAccountClose_shouldSetupTemplateButtonComplete() throws {
+        
+        let (sut, _) = try makeSUT()
+        XCTAssertNil(sut.templateButton)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        sut.model.action.send(
+            ModelAction.Operation.Detail.Response(result:
+                    .success(.stub(transferEnum: .accountClose))
+            )
+        )
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(sut.templateButton)
     }
     
     func test_modelAction_operationDetailResponse_shouldTemplateButtonNil() throws {
@@ -241,7 +252,7 @@ extension OperationDetailViewModelTests {
     
     func makeSUT(
         statement: ProductStatementData = .stub(),
-        statementData: StatementsData? = nil,
+        statementData: StatementsData? = .stub(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> (OperationDetailViewModel, ValueSpy<Kind>) {
@@ -273,6 +284,19 @@ extension OperationDetailViewModelTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, spy)
+    }
+}
+
+private extension StatementsData {
+    
+    static func stub() -> StatementsData {
+        return [
+            1: .init(
+                period: .init(
+                    start: Date(),
+                    end: Date()),
+                statements: [.stub()]
+            )]
     }
 }
 
