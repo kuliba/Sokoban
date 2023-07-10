@@ -55,7 +55,7 @@ extension Model {
         var additional = [TransferAnywayData.Additional]()
         for (index, parameter) in parameters.enumerated() {
             
-            guard let parameterValue = parameter.value  else {
+            guard let parameterValue = parameter.value else {
                 continue
             }
             additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))

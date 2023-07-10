@@ -472,7 +472,7 @@ struct TemplateButtonView: View {
             
             bottomView(viewModel: viewModel)
         }
-        .frame(width: 70, height: 92)
+        .frame(width: 70, height: 120)
     }
 }
 

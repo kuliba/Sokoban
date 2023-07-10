@@ -60,18 +60,19 @@ extension TransferGeneralData {
 
 extension TransferAnywayData {
     
-    static func anywayStub() -> [TransferAnywayData] {
+    static func anywayStub(
+        amount: Double? = 100,
+        cardId: Int = 10000184511
+    ) -> [TransferAnywayData] {
         
         let payer = TransferData.Payer(
             inn: nil,
             accountId: nil,
             accountNumber: nil,
-            cardId: 10000184511,
+            cardId: cardId,
             cardNumber: nil,
             phoneNumber: nil
         )
-        
-        let amount: Double?  = 100
         
         let parameter = TransferAnywayData(
             amount: amount,
@@ -79,18 +80,27 @@ extension TransferAnywayData {
             comment: nil,
             currencyAmount: "RUB",
             payer: payer,
-            additional: [
-                .init(fieldid: 1,
-                      fieldname: "trnPickupPoint",
-                      fieldvalue: "AM"),
-                .init(fieldid: 1,
-                      fieldname: "RecipientID",
-                      fieldvalue: "number")
-            ],
+            additional: .stub(),
             puref: "iFora||MIG"
         )
         
         return [parameter]
+    }
+}
+
+extension Array where Element == TransferAnywayData.Additional {
+    
+    static func stub() -> [TransferAnywayData.Additional] {
+        
+        
+        return [
+            .init(fieldid: 1,
+                  fieldname: "trnPickupPoint",
+                  fieldvalue: "AM"),
+            .init(fieldid: 1,
+                  fieldname: "RecipientID",
+                  fieldvalue: "number")
+        ]
     }
 }
 
