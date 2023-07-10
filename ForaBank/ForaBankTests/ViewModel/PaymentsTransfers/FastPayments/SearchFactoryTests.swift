@@ -120,6 +120,94 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertEqual(stateSpy.values, [.idle])
     }
     
+    // MARK: - fastPayments - contacts
+    
+    func test_shouldReplacePrefix8_fastPayments_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "8")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    func test_shouldReplacePrefixStartingWith8_fastPayments_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "8916")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+7 916")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+7 916"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    func test_shouldNotReplacePrefix2_fastPayments_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "2916")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+291 6")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    // MARK: - select - contacts
+    
+    func test_shouldReplacePrefix8_select_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "8")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    func test_shouldReplacePrefixStartingWith8_select_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "8916")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+7 916")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+7 916"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
+    func test_shouldNotReplacePrefix2_select_contacts() {
+       
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts))
+        scheduler.advance()
+        
+        sut.setText(to: "2916")
+        scheduler.advance()
+
+        XCTAssertNoDiff(sut.text, "+291 6")
+        XCTAssertNoDiff(sut.phoneNumberState, .selected)
+        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
+        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(
