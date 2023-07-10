@@ -285,7 +285,6 @@ private extension TemplatesListViewModelTests {
         let model: Model = .mockWithEmptyExcept()
         model.addTemplates(templatesData: templatesData)
         model.paymentTemplatesUpdating.value = isLoadingData
-        model.paymentTemplatesViewSettings.value = .init(style: styleSetting)
         model.products.value = [.card: [.stub(productId: 1)]]
         model.currencyList.value = [.rub]
         

@@ -73,8 +73,7 @@ class Model {
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     let paymentTemplatesUpdating: CurrentValueSubject<Bool, Never>
     let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
-    //TODO: move to settings agent
-    let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
+ 
     
     //MARK: LatestAllPayments
     let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
@@ -189,7 +188,6 @@ class Model {
         self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesUpdating = .init(false)
-        self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
         self.paymentsByPhone = .init([:])
@@ -1368,7 +1366,6 @@ private extension Model {
         statements.value = [:]
         statementsUpdating.value = [:]
         paymentTemplates.value = []
-        paymentTemplatesViewSettings.value = .initial
         latestPayments.value = []
         latestPaymentsUpdating.value = false
         notifications.value = []
