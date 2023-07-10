@@ -25,7 +25,7 @@ extension TemplatesListView {
                           topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
-                          amount: viewModel.ammount,
+                          amount: viewModel.amount,
                           style: style, editMode: $editMode)
                     .shimmering(active: viewModel.state.isProcessing, bounce: true)
                     .onTapGesture {
@@ -46,7 +46,7 @@ extension TemplatesListView {
                           topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
-                          amount: viewModel.ammount,
+                          amount: viewModel.amount,
                           style: style, editMode: .constant(.inactive))
                     .overlay13(alignment: .topLeading) {
                                    
@@ -63,7 +63,7 @@ extension TemplatesListView {
                           topImage: viewModel.topImage,
                           title: viewModel.title,
                           subTitle: viewModel.subTitle,
-                          amount: viewModel.ammount,
+                          amount: viewModel.amount,
                           style: style, editMode: .constant(.inactive))
                     .offset(x: -100, y: 0)
                             
