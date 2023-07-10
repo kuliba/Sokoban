@@ -120,7 +120,7 @@ struct PaymentsSuccessView: View {
                     
                     VStack(spacing: 8) {
                         
-                        if let additionalButtons = viewModel.additioinalButtons {
+                        if let additionalButtons = viewModel.additionalButtons {
                             
                             HStack(spacing: 8) {
                                 

@@ -168,7 +168,7 @@ extension PaymentsAmountView {
                 return
             }
             
-            let currency = self.model.currencyList.value.first(where: {$0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description})
+            let currency = self.model.currencyList.value.first(where: { $0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description })
             textField.update(parameterAmount.amount, currencySymbol: currency?.currencySymbol ?? parameterAmount.currencySymbol)
             actionTitle = parameterAmount.transferButtonTitle
             

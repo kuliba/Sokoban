@@ -1042,6 +1042,14 @@ extension Model {
         template: PaymentTemplateData) -> Payments.Parameter.Value? {
      
         switch parameterId {
+        case Payments.Parameter.Identifier.sfpMessage.rawValue:
+            if let parameterList = template.parameterList as? [TransferGeneralData] {
+                
+                return parameterList.last?.comment
+            }
+            
+            return nil
+            
         case Payments.Parameter.Identifier.amount.rawValue:
             
             if let amount = template.amount?.description {
@@ -1142,7 +1150,7 @@ extension Model {
                         return nil
                     }
                     
-                    let templateProductId =                             Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
+                    let templateProductId = Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
                     
                     return templateProductId
                     
