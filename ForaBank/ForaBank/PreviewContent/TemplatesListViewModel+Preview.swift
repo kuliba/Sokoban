@@ -33,7 +33,7 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Маме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "450 ₽"),
+                  amount: "450 ₽"),
             
             .init(id: 2,
                   sortOrder: 2,
@@ -41,7 +41,7 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Паме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "324 000 ₽"),
+                  amount: "324 000 ₽"),
             
             .init(id: 3,
                   sortOrder: 3,
@@ -51,7 +51,7 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Жене на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: " 1,31 млн. ₽"),
+                  amount: " 1,31 млн. ₽"),
             
             .init(id: 4,
                   sortOrder: 4,
@@ -65,7 +65,7 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Жене на Сбер",
                   subTitle: "Удаление...",
-                  ammount: " 1,31 млн. ₽"),
+                  amount: " 1,31 млн. ₽"),
             
                 .init(id: 5,
                       sortOrder: 5,
@@ -74,7 +74,7 @@ extension TemplatesListViewModel {
                       title: "Маме на Сбер",
                       subTitle: "Перевод по СБП",
                       topImage: Image("Bank Logo Sample"),
-                      ammount: "450 ₽"),
+                      amount: "450 ₽"),
             
                 .init(id: 6, sortOrder: 6,
                       state: .normal,
@@ -93,21 +93,21 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Между своими счетами",
                   subTitle: "Перевод по СБП",
-                  ammount: "450 ₽"),
+                  amount: "450 ₽"),
             
             .init(id: 1, sortOrder: 1,
                   state: .normal,
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Паме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "324 000 ₽"),
+                  amount: "324 000 ₽"),
             
             .init(id: 2, sortOrder: 2,
                   state: .normal,
                   avatar: .image(Image("Ban§k Logo Sample")),
                   title: "Жене на Сбер",
                   subTitle: "Перевод по СБП",
-                  topImage: Image("beline"), ammount: " 1,31 млн. ₽"),
+                  topImage: Image("beline"), amount: " 1,31 млн. ₽"),
             
                 .init(id: 4, sortOrder: 4,
                       state: .normal,
@@ -126,35 +126,35 @@ extension TemplatesListViewModel {
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Маме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "450 ₽"),
+                  amount: "450 ₽"),
             
             .init(id: 1, sortOrder: 1,
                   state: .select(.init(isSelected: false, action: { _ in })),
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Маме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "450 ₽"),
+                  amount: "450 ₽"),
             
             .init(id: 2, sortOrder: 2,
                   state: .select(.init(isSelected: true, action: { _ in })),
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Паме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "324 000 ₽"),
+                  amount: "324 000 ₽"),
             
             .init(id: 3, sortOrder: 3,
                   state: .deleting(TemplatesListViewModel.sampleDeletingProgress),
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Жене на Сбер",
                   subTitle: "Удаление...",
-                  topImage: Image("beline"), ammount: " 1,31 млн. ₽"),
+                  topImage: Image("beline"), amount: " 1,31 млн. ₽"),
             
             .init(id: 4, sortOrder: 4,
                   state: .delete(.init(icon: .ic24Trash, subTitle: "Удалить", action: { _ in } )),
                   avatar: .image(Image("Bank Logo Sample")),
                   title: "Маме на Сбер",
                   subTitle: "Перевод по СБП",
-                  ammount: "450 ₽"),
+                  amount: "450 ₽"),
         ]
     }()
     

@@ -19,7 +19,7 @@ extension TemplatesListViewModel {
         @Published var title: String
         @Published var subTitle: String
         let topImage: Image?
-        let ammount: String
+        let amount: String
         
         var timer: DeletingTimer?
         
@@ -63,7 +63,7 @@ extension TemplatesListViewModel {
              title: String = "",
              subTitle: String = "",
              topImage: Image? = nil,
-             ammount: String = "",
+             amount: String = "",
              tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
              deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
              renameAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
@@ -76,7 +76,7 @@ extension TemplatesListViewModel {
             self.title = title
             self.subTitle = subTitle
             self.topImage = topImage
-            self.ammount = ammount
+            self.amount = amount
             self.tapAction = tapAction
             self.deleteAction = deleteAction
             self.renameAction = renameAction
@@ -259,7 +259,7 @@ extension TemplatesListViewModel {
                      title: data.name,
                      subTitle: data.groupName,
                      topImage: topImage,
-                     ammount: amount,
+                     amount: amount,
                      tapAction: { [weak self] itemId in
                         self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
                      deleteAction: { [weak self] itemId in
@@ -345,7 +345,7 @@ extension TemplatesListViewModel {
     func amount(for template: PaymentTemplateData,
                 amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?) -> String? {
         
-        if template.type == .contactAdressless ,
+        if template.type == .contactAdressless,
            let parameterList = template.parameterList.first as? TransferAnywayData,
            let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
            let amount = template.amount {

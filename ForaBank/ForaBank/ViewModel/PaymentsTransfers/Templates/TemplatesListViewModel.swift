@@ -725,6 +725,7 @@ private extension TemplatesListViewModel {
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.success = nil
+                    self.sheet = nil
                         
                 default:
                     break
@@ -737,19 +738,18 @@ private extension TemplatesListViewModel {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self, unowned viewModel] action in
+            .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    guard let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                          let productIdTo = viewModel.swapViewModel.productIdTo else {
+                    guard let productIdFrom = viewModel?.swapViewModel.productIdFrom,
+                          let productIdTo = viewModel?.swapViewModel.productIdTo else {
                         return
                     }
                     
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
                     model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
-                    self.sheet = nil
                         
                     bind(payload.viewModel)
                     success = payload.viewModel

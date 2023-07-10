@@ -29,7 +29,7 @@ final class TemplatesListViewModelTests: XCTestCase {
     
     func test_initNoTempatesDataNoLoadingData_correct() throws {
     
-        let (sut, model) = makeSut(templatesData: [],
+        let (sut, model) = makeSUT(templatesData: [],
                                    isLoadingData: false)
        
         XCTAssertTrue(model.paymentTemplates.value.isEmpty)
@@ -202,7 +202,7 @@ final class TemplatesListViewModelTests: XCTestCase {
     
     func test_EmptyViewGoHistoryButtonTap() throws {
     
-        let (sut, model) = makeSut(templatesData: [],
+        let (sut, model) = makeSUT(templatesData: [],
                                    isLoadingData: false)
        
         let sutActionSpy = ValueSpy(sut.action)
@@ -238,24 +238,103 @@ final class TemplatesListViewModelTests: XCTestCase {
     }
 }
 
+//MARK: PaymentsMeToMeViewModel
+
+extension TemplatesListViewModelTests {
+    
+    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetDeallocated() throws {
+        
+        let (sut, model) = makeSUT(templatesData: [
+            .templateStub(
+                paymentTemplateId: 1,
+                type: .betweenTheir,
+                parameterList: TransferGeneralData.generalStub(
+                    amount: 10
+                ))
+        ])
+ 
+        sut.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: 1))
+        sut.action.send(PaymentsMeToMeAction.Response.Success(viewModel: .sample1))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+                
+        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "Куда"])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        let spy = ValueSpy(model.action)
+        XCTAssertEqual(spy.values.count, 0)
+        
+        sut.meToMe?.action.send(PaymentsMeToMeAction.Response.Success(viewModel: .sample1))
+        sut.sheet = nil
+
+        XCTAssertEqual(spy.values.count, 0)
+        XCTAssertNil(sut.meToMe)
+    }
+}
 
 //MARK: Helpers
 
 private extension TemplatesListViewModelTests {
     
-    func makeSut(templatesData: [PaymentTemplateData] = [],
+    func makeSUT(templatesData: [PaymentTemplateData] = [],
                  isLoadingData: Bool = false,
-                 styleSetting: TemplatesListViewModel.Style = .list)
-    -> (sut: TemplatesListViewModel, model: Model) {
+                 styleSetting: TemplatesListViewModel.Style = .list,
+                 file: StaticString = #file,
+                 line: UInt = #line
+    ) -> (sut: TemplatesListViewModel, model: Model) {
         
-        let model: Model = .emptyMock
+        let model: Model = .mockWithEmptyExcept()
         model.addTemplates(templatesData: templatesData)
         model.paymentTemplatesUpdating.value = isLoadingData
         model.paymentTemplatesViewSettings.value = .init(style: styleSetting)
+        model.products.value = [.card: [.stub(productId: 1)]]
+        model.currencyList.value = [.rub]
         
         let sut = TemplatesListViewModel(model, dismissAction: {})
         
+        sut.items = [.stub()]
+        //TODO: restore memory leak tracking after Model fix
+//        trackForMemoryLeaks(model, file: file, line: line)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+        
         return (sut, model)
+    }
+}
+
+private extension TemplatesListViewModel.ItemViewModel {
+
+    static func stub() -> TemplatesListViewModel.ItemViewModel {
+        
+        return .init(
+            id: 1,
+            sortOrder: 1,
+            state: .normal,
+            avatar: .placeholder,
+            title: "title",
+            subTitle: "subtitle",
+            topImage: nil,
+            amount: "100",
+            tapAction: {_ in},
+            deleteAction: {_ in},
+            renameAction: {_ in },
+            kind: .regular
+        )
+    }
+}
+
+private extension TemplatesListViewModel {
+    
+    var meToMe: PaymentsMeToMeViewModel? {
+        
+        guard case let .meToMe(viewModel) = sheet?.type
+        else { return nil }
+        
+        return viewModel
+    }
+    
+    func selectedMeToMeProductTitles() throws -> [String] {
+     
+        let swapViewModel = try XCTUnwrap(meToMe?.swapViewModel)
+        return swapViewModel.items.compactMap(\.product?.title)
     }
 }
 
