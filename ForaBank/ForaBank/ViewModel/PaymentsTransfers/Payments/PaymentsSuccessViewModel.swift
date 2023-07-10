@@ -472,6 +472,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                             return
                                         }
                                         
+                                        self?.templateButton?.state = .loading(isComplete: true)
+
                                         if self?.refreshTemplateButton == false {
                                             
                                             self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
@@ -616,6 +618,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         model: model,
                         tapAction: { [weak self] in
                             
+                            self?.templateButton?.state = .loading(isComplete: false)
                             self?.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: operationDetail.templateName, paymentOperationDetailId: paymentOperationDetailId))
                         }
                     )

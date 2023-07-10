@@ -21,7 +21,7 @@ extension TemplateButtonViewComponentTests {
 
         let sut = makeSUT(state: .idle)
         
-        XCTAssertEqual(sut.state, .idle)
+        XCTAssertEqual(sut.testState, .idle)
     }
     
     func test_init_shouldSet_refreshState() throws {
@@ -32,7 +32,7 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub()
         )
         
-        XCTAssertEqual(sut.state, .refresh)
+        XCTAssertEqual(sut.testState, .refresh)
     }
     
     func test_init_paymentTemplateId_shouldSet_refreshState() throws {
@@ -43,7 +43,7 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub(paymentTemplateId: nil)
         )
         
-        XCTAssertEqual(sut.state, .refresh)
+        XCTAssertEqual(sut.testState, .refresh)
     }
     
     func test_convenienceInit_shouldSet_idleState() throws {
@@ -54,7 +54,7 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub()
         )
         
-        XCTAssertEqual(sut.state, .idle)
+        XCTAssertEqual(sut.testState, .idle)
     }
     
     func test_convenienceInit_withTemplateId_shouldSet_completeState() throws {
@@ -64,7 +64,7 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub(paymentTemplateId: 1)
         )
         
-        XCTAssertEqual(ViewModel.State.complete, sut.state)
+        XCTAssertEqual(ViewModel.TestState.complete, sut.testState)
     }
     
     func test_convenienceInit_templateIdNil_shouldSet_idleState() throws {
@@ -74,7 +74,7 @@ extension TemplateButtonViewComponentTests {
             operationDetail: .stub(paymentTemplateId: nil)
         )
         
-        XCTAssertEqual(sut.state, .idle)
+        XCTAssertEqual(sut.testState, .idle)
     }
 }
 
@@ -92,7 +92,7 @@ extension TemplateButtonViewComponentTests {
     
     func test_computedPropertyTitle_loadingState_shouldReturnTemplate() throws {
 
-        let sut = makeSUT(state: .loading)
+        let sut = makeSUT(state: .loading(isComplete: true))
         
         XCTAssertEqual(sut.title, "Шаблон")
     }
@@ -134,7 +134,7 @@ extension TemplateButtonViewComponentTests {
 
         }
 
-        XCTAssertEqual(sut?.templateButton?.state, .idle)
+        XCTAssertEqual(sut?.templateButton?.testState, .idle)
     }
 }
 
@@ -149,6 +149,31 @@ extension TemplateButtonViewComponentTests {
             model: model,
             tapAction: {}
         )
+    }
+}
+
+extension TemplateButtonView.ViewModel {
+
+    var testState: TestState {
+        
+        switch self.state {
+        case .idle:
+            return .idle
+        case .loading:
+            return .loading
+        case .refresh:
+            return .refresh
+        case .complete:
+            return .complete
+        }
+    }
+    
+    enum TestState {
+        
+        case idle
+        case loading
+        case refresh
+        case complete
     }
 }
 

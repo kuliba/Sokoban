@@ -13,7 +13,8 @@ extension TemplateButtonView {
     class ViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
-        
+        private var bindings = Set<AnyCancellable>()
+
         @Published var state: State
         let tapAction: () -> Void
         
@@ -148,7 +149,13 @@ extension TemplateButtonView {
     }
     
     private var foregroundColor: Color {
-        viewModel.state == .complete ? .systemColorActive : .mainColorsBlack
+        
+        switch viewModel.state {
+        case .complete:
+            return .systemColorActive
+        default:
+            return .mainColorsBlack
+        }
     }
 }
 
@@ -180,9 +187,26 @@ extension TemplateButtonView.ViewModel {
             .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
             .map { _ in State.complete}
         
-        Publishers.Merge4(complete, idle, loading, refresh)
+        Publishers.Merge3(complete, idle, refresh)
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
+
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { action in
+                
+                switch action {
+                case _ as ModelAction.PaymentTemplate.Save.Requested:
+                    self.state = .loading(isComplete: false)
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Requested:
+                    self.state = .loading(isComplete: true)
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -193,29 +217,9 @@ extension TemplateButtonView.ViewModel {
     enum State {
         
         case idle
-        case loading
+        case loading(isComplete: Bool)
         case refresh
         case complete
-    }
-}
-
-// MARK: Reducer's
-
-extension TemplateButtonView.ViewModel {
-    
-    //TODO: setup action to args func
-    static func reduce(state: State) -> State {
-        
-        switch state {
-        case .idle:
-            return .loading
-        case .loading:
-            return .complete
-        case .refresh:
-            return .loading
-        case .complete:
-            return .loading
-        }
     }
 }
 
@@ -266,16 +270,24 @@ extension TemplateButtonView {
     
     struct LoadingView: View {
         
+        let state: State
+        
         var body: some View {
             
             ZStack {
                 
                 Circle()
-                    .fill(Color.mainColorsGrayLightest)
+                    .fill(state == .idle ? Color.mainColorsGrayLightest : .systemColorActive)
                     .frame(width: 56, height: 56)
                 
-                ThreeBounceAnimationView()
+                ThreeBounceAnimationView(color: state == .idle ? .black : .white)
             }
+        }
+        
+        enum State {
+            
+            case idle
+            case complete
         }
     }
 }
@@ -460,8 +472,8 @@ struct TemplateButtonView: View {
             case .idle:
                 IdleView(tapAction: viewModel.tapAction)
                 
-            case .loading:
-                LoadingView()
+            case let .loading(isComplete: isComplete):
+                LoadingView(state: isComplete ? .complete : .idle)
                 
             case .refresh:
                 RefreshView(tapAction: viewModel.tapAction)
@@ -486,7 +498,7 @@ struct TemplateButtonView_Previews: PreviewProvider {
         TemplateButtonView(viewModel: .preview(state: .refresh))
             .previewDisplayName("refresh state")
         
-        TemplateButtonView(viewModel: .preview(state: .loading))
+        TemplateButtonView(viewModel: .preview(state: .loading(isComplete: true)))
             .previewDisplayName("loading state")
         
         TemplateButtonView(viewModel: .preview(state: .complete))
