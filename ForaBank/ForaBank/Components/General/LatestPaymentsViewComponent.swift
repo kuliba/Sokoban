@@ -627,8 +627,6 @@ extension LatestPaymentsView {
     }
 }
 
-
-
 struct LatestPaymentsViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         LatestPaymentsView(viewModel: .init(.emptyMock,
