@@ -276,6 +276,7 @@
 		0C4B0BC128635898004B7F69 /* BankFullInfoData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */; };
 		0C534CAD296DE31300967FE8 /* ImageStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C534CAC296DE31300967FE8 /* ImageStateViewModel.swift */; };
 		0C58FB75290B1A94005B76B5 /* UInt64+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C58FB74290B1A94005B76B5 /* UInt64+Extentions.swift */; };
+		0C5BFEAE2A5C87A500292346 /* PaymentTemplatesSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5BFEAD2A5C87A500292346 /* PaymentTemplatesSettings.swift */; };
 		0C5CE76228B2D2F200C30CD3 /* ProductsMoneySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */; };
 		0C5D7D9C2982FE1C00BC0CCF /* NetworkMonitorAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7D9B2982FE1C00BC0CCF /* NetworkMonitorAgent.swift */; };
 		0C5D7D9E298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5D7D9D298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift */; };
@@ -2072,6 +2073,7 @@
 		0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BankFullInfoData+Legacy.swift"; sourceTree = "<group>"; };
 		0C534CAC296DE31300967FE8 /* ImageStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStateViewModel.swift; sourceTree = "<group>"; };
 		0C58FB74290B1A94005B76B5 /* UInt64+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt64+Extentions.swift"; sourceTree = "<group>"; };
+		0C5BFEAD2A5C87A500292346 /* PaymentTemplatesSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplatesSettings.swift; sourceTree = "<group>"; };
 		0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsMoneySettings.swift; sourceTree = "<group>"; };
 		0C5D7D9B2982FE1C00BC0CCF /* NetworkMonitorAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorAgent.swift; sourceTree = "<group>"; };
 		0C5D7D9D298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorAgentProtocol.swift; sourceTree = "<group>"; };
@@ -6636,6 +6638,7 @@
 				0C5CE76128B2D2F200C30CD3 /* ProductsMoneySettings.swift */,
 				7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */,
 				2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */,
+				0C5BFEAD2A5C87A500292346 /* PaymentTemplatesSettings.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -10704,6 +10707,7 @@
 				0CF5D0DB29A60F6A00EDF8CB /* Model+ToAnotherCardTransfer.swift in Sources */,
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,
 				F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */,
+				0C5BFEAE2A5C87A500292346 /* PaymentTemplatesSettings.swift in Sources */,
 				68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */,
 				774A3E4529264A980011D952 /* Model+Payments.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,

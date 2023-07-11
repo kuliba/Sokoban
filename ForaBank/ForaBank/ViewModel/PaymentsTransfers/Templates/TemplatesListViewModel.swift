@@ -60,7 +60,7 @@ class TemplatesListViewModel: ObservableObject {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
         self.init(state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
-                  style: model.paymentTemplatesViewSettings.value.style,
+                  style: model.settingsPaymentTemplates.style,
                   navBarState: .regular(.init(backButton: .init(icon: .ic24ChevronLeft,
                                                                 action: dismissAction),
                                               menuList: [],
@@ -145,8 +145,6 @@ private extension TemplatesListViewModel {
         model.paymentTemplates
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] templates in
-              
-                style = model.paymentTemplatesViewSettings.value.style
                     
                 if templates.isEmpty {
                    
@@ -318,6 +316,10 @@ private extension TemplatesListViewModel {
                     }
     
                     updateNavBar(event: .setRegular)
+                    //save settings style
+                    var settings = model.settingsPaymentTemplates
+                    settings.update(style: style)
+                    model.settingsPaymentTemplatesUpdate(settings)
                     
                 case _ as TemplatesListViewModelAction.RegularNavBar.SearchNavBarPresent:
                     
@@ -348,6 +350,7 @@ private extension TemplatesListViewModel {
                     withAnimation {
                         self.state = .normal
                         self.editModeState = .inactive
+                        self.style = model.settingsPaymentTemplates.style
                         self.updateNavBar(event: .setRegular)
                         self.categorySelector = newCategorySelector
                         bindCategorySelector(newCategorySelector)
@@ -358,6 +361,7 @@ private extension TemplatesListViewModel {
                     
                     self.editModeState = .inactive
                     self.state = .placeholder
+                    self.style = model.settingsPaymentTemplates.style
                     self.updateNavBar(event: .setRegular)
                     
                     var sortIndex = 1
@@ -618,15 +622,6 @@ private extension TemplatesListViewModel {
                 }
                 
             }.store(in: &bindings)
-        
-        $style
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] style in
-                
-                model.paymentTemplatesViewSettings.value = Settings(style: style)
-                
-            }.store(in: &bindings)
          
         $editModeState
             .dropFirst()
@@ -777,13 +772,6 @@ private extension TemplatesListViewModel {
 //MARK: - Settings
 
 extension TemplatesListViewModel {
-    
-    struct Settings: Codable {
-        
-        let style: Style
-        
-        static let initial = Settings(style: .list)
-    }
     
     struct Sheet: BottomSheetCustomizable {
         
