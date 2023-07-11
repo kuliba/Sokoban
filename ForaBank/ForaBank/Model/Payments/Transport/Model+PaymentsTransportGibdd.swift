@@ -89,11 +89,30 @@ extension Model {
             .header,
             .`operator`,
             .service,
-            .category
+            .category,
+        ]
+        let excluding2 = [
+            "a3_PenaltyList_1_2",
+            "a3_DriverLicence_1_1",
+            "a3_RegCert_2_1",
+            "warning",
+            "a3_iDriverLicence_1_4",
+            "a3_iBillNumber_2_4",
+            "a3_iBillDate_3_4",
+            "a3_iUIN_4_4",
+            "a3_iRecipientName_5_4",
+            "a3_iRecipientINN_6_4",
+            "a3_iRecipientKPP_7_4",
+            "a3_iRecipientAccount_8_4",
+            "a3_iRecipientBankName_9_4",
+            "a3_iRecipientBIC_10_4",
+            "a3_iRecipientOKATO_11_4",
+            "a3_iRecipientKBK_12_4",
+            "a3_amount_13_4",
         ]
         let additional = paymentsTransferGibddAdditional(
             parameters.map(\.parameter),
-            excluding: excludingParameters.map(\.rawValue)
+            excluding: excludingParameters.map(\.rawValue) + excluding2
         )
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
