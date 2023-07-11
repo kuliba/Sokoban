@@ -160,9 +160,12 @@ extension Model {
         let badIDs = step.parameters.map(\.id).filter {
             parametersToExclude.contains($0)
         }
+        let penaltyList = response.parameterListForNextStep.filter { $0.id == "a3_PenaltyList_1_2" }
+        let warning = step.parameters.first { $0.id == "warning" }
         
         guard !badIDs.isEmpty,
-              let message = step.parameters.first(where: { $0.id == "warning" })?.value
+              penaltyList.isEmpty,
+              let message = warning?.value
         else { return step }
         
         throw Payments.Error.action(.alert(title: "", message: message))
