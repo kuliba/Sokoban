@@ -193,7 +193,11 @@ extension Model {
     }
     
     // update depependend parameters
-    func paymentsProcessDependencyReducerAbroad(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducerAbroad(
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable],
+        operation: Payments.Operation
+    ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
         case Payments.Parameter.Identifier.operator.rawValue:
@@ -282,7 +286,7 @@ extension Model {
             
             if let countryDeliveryCurrency = try? parameters.parameter(forIdentifier: .countryDeliveryCurrency),
                let currencyValue = countryDeliveryCurrency.value,
-               let currency = self.currencyList.value.first(where: {$0.code == currencyValue}),
+               let currency = self.currencyList.value.first(where: { $0.code == currencyValue }),
                let symbol = currency.currencySymbol {
                 
                 currencySymbol = symbol
@@ -301,7 +305,26 @@ extension Model {
                     return nil
                 }
 
-                return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                switch operation.source {
+                case let .template(templateId):
+                    let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                    let parameterList = template?.parameterList.last as? TransferAnywayData
+                    let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
+                    let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
+                    
+                    if let currencySymbol = selectedCurrency?.currencySymbol,
+                       let code = selectedCurrency?.code{
+                        
+                        let updateAmount = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount) as? Payments.ParameterAmount
+                        return updateAmount?.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: .init(description: code), currenciesList: currenciesList))
+                 
+                    } else {
+                        
+                        return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                    }
+                default:
+                    return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                }
             }
             
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)

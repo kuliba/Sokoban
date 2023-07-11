@@ -86,7 +86,10 @@ extension Model {
         return additional
     }
     
-    func paymentsTransferAbroadStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferAbroadStepParameters(
+        _ operation: Payments.Operation,
+        response: TransferAnywayResponseData
+    ) async throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
@@ -165,8 +168,23 @@ extension Model {
                 if let product = firstProduct(with: filter),
                    let first = currencyArr.first {
                     
-                    let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
-                    result.append(amountParameter)
+                    switch operation.source {
+                    case let .template(templateId):
+                        
+                        let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                        let parameterList = template?.parameterList.last as? TransferAnywayData
+                        let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
+                        
+                        
+                        let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
+                        
+                        let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: Currency.init(description: currency?.fieldvalue ?? "RUB"), currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
+                        result.append(amountParameter)
+                        
+                    default:
+                        let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
+                        result.append(amountParameter)
+                    }
                     
                 } else {
                     

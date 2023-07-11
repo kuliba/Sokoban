@@ -662,7 +662,11 @@ extension Model {
             return paymentsProcessDependencyReducerC2B(parameterId: parameterId, parameters: parameters)
 
         case .abroad:
-            return paymentsProcessDependencyReducerAbroad(parameterId: parameterId, parameters: parameters)
+            return paymentsProcessDependencyReducerAbroad(
+                parameterId: parameterId,
+                parameters: parameters,
+                operation: operation
+            )
             
         case .internetTV, .utility, .transport:
             return paymentsProcessDependencyReducerPaymentsServices(parameterId: parameterId, parameters: parameters)
@@ -1039,7 +1043,8 @@ extension Model {
     func paymentsTemplateParameterValue(
         service: Payments.Service,
         parameterId: Payments.Parameter.ID,
-        template: PaymentTemplateData) -> Payments.Parameter.Value? {
+        template: PaymentTemplateData
+    ) -> Payments.Parameter.Value? {
      
         switch parameterId {
         case Payments.Parameter.Identifier.sfpMessage.rawValue:

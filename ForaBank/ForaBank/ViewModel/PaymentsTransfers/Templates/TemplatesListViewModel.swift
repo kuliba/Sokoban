@@ -274,7 +274,10 @@ private extension TemplatesListViewModel {
                     
                     switch template.type {
                     case .betweenTheir:
-                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(model, mode: .templatePayment(template.id, item.title)) else {
+                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(
+                            model,
+                            mode: .templatePayment(template.id, item.title)) else {
+                            
                             return
                         }
                         
