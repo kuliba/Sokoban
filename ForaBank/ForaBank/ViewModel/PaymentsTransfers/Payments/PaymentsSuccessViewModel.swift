@@ -402,7 +402,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             
                         default:
                             switch detailData.transferEnum {
-                            case .direct:
+                            case .direct, .elecsnet:
                                 let image = Image("MigAvatar")
                                 self.logo = operation?.service == .abroad ? .init(title: "", image: image) : nil
                                 let amount = detailData.amount
@@ -503,7 +503,6 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                     model: model,
                                     operationDetail: operationDetailData
                                 )
-                                
                             }
                             
                             bindTemplate(operationDetail: operationDetailData,
