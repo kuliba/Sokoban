@@ -241,9 +241,10 @@ extension PaymentsAmountView {
                         if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
                             
                             update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
+                        } else {
+                                                    
+                            update(value: nil)
                         }
-                        
-                        update(value: nil)
                     }
                     
                 }.store(in: &bindings)
