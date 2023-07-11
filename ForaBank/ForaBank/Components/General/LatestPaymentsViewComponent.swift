@@ -242,8 +242,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             let outsideData = Self.reduceAdditional(model: model, additionalList: paymentData.additionalList)
             
-            self.avatar = outsideData.avatar ?? icon
-            self.description = outsideData.description ?? name
+            let defaultIcon = Self.avatarOutside(puref: paymentData.puref, additionalList: paymentData.additionalList) ?? icon
+            self.avatar = outsideData.avatar ?? defaultIcon
+            self.description = outsideData.description ?? (paymentData.lastPaymentName ?? name)
             self.topIcon = outsideData.topIcon
         
         case (.transport, let paymentData as PaymentServiceData),
@@ -376,7 +377,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             return (nil, fullName, topIcon)
         }
         
-        return (nil, nil, nil)
+        return (nil, nil, topIcon)
     }
     
     static func topIconOutside(model: Model, additionalList: [PaymentServiceData.AdditionalListData]) -> Image? {
@@ -391,6 +392,33 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         return image
     }
     
+    static func avatarOutside(puref: String, additionalList: [PaymentServiceData.AdditionalListData]) -> Avatar? {
+        
+        let code = CountryWithServiceData.Service.Code(rawValue: puref) ?? .unknown
+        
+        switch code {
+            
+        case .direct:
+           return .icon(.ic24Smartphone, .iconGray)
+            
+        case .directCard, .dkm, .dkq, .dkr, .pw0:
+            return .icon(.ic24CreditCard, .iconGray)
+            
+        case .contact, .contactCash, .contactAccount:
+            
+            guard let givenName = additionalList.first(where: { $0.isGivenName })?.fieldValue,
+                  let middleName = additionalList.first(where: { $0.isMiddleName })?.fieldValue else {
+                 
+                return .icon(.ic24Globe, .iconGray)
+            }
+
+            return .text(firstLetter(name: givenName, lastName: middleName))
+            
+        case .unknown:
+            return .icon(.ic24Globe, .iconGray)
+        }
+    }
+
     static func firstLetter(name: String, lastName: String) -> String {
         
         let letters = [name, lastName]
