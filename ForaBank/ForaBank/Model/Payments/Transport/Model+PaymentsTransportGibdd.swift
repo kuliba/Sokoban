@@ -92,7 +92,6 @@ extension Model {
             .category,
         ]
         let excluding2 = [
-            "a3_PenaltyList_1_2",
             "a3_DriverLicence_1_1",
             "a3_RegCert_2_1",
             "warning",
