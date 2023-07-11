@@ -18,7 +18,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
     
     func test_avatarOutside_mig_shouldReturnSmartphoneIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .direct,
             additionalList: .test
         )
@@ -29,7 +29,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
     
     func test_avatarOutside_migCard_shouldReturnCardIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .directCard,
             additionalList: .test
         )
@@ -40,7 +40,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_dkm_shouldReturnCardIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .dkm,
             additionalList: .test
         )
@@ -51,7 +51,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_dkq_shouldReturnCardIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .dkq,
             additionalList: .test
         )
@@ -62,7 +62,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_dkr_shouldReturnCardIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .dkr,
             additionalList: .test
         )
@@ -73,7 +73,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_pw0_shouldReturnCardIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .pw0,
             additionalList: .test
         )
@@ -84,7 +84,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_unknow_shouldReturnGlobeIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: "",
             additionalList: .test
         )
@@ -95,7 +95,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_contact_shouldReturnInitials() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .contact,
             additionalList: .testContact
         )
@@ -106,7 +106,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
     
     func test_avatarOutside_contact_withOutNameLasName_shouldReturnGlobeIcon() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .contact,
             additionalList: .test
         )
@@ -114,11 +114,10 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
         XCTAssertNoDiff(sut?.currentIcon, .ic24Globe)
         XCTAssertNil(sut?.currentAvatarText)
     }
-
     
     func test_avatarOutside_contactCash_shouldReturnInitials() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .contactCash,
             additionalList: .testContact
         )
@@ -129,7 +128,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
 
     func test_avatarOutside_contactAccount_shouldReturnInitials() {
         
-        let sut = makeSUT(
+        let sut = avatar(
             puref: .contactAccount,
             additionalList: .testContact
         )
@@ -140,7 +139,7 @@ final class LatestPaymentsViewComponentTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(
+    private func avatar(
         puref: String,
         additionalList: [PaymentServiceData.AdditionalListData]
     ) -> ViewModel.Avatar? {
