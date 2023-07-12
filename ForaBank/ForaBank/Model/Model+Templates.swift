@@ -441,8 +441,6 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.Delete.Complete
                                     .init(paymentTemplateIdList: payload.paymentTemplateIdList))
                     
-                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
-                    
                 default:
                     self.handleServerCommandStatus(command: command,
                                                    serverStatusCode: response.statusCode,

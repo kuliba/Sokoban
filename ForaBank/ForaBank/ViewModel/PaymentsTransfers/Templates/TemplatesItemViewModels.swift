@@ -105,6 +105,20 @@ extension TemplatesListViewModel {
                 else { return false }
             }
             
+            var isDeleting: Bool {
+                
+                if case .deleting = self { return true }
+                else { return false }
+            }
+            
+            var isDeleteProcessing: Bool {
+                
+                if case .deleting(let viewModel) = self, viewModel.progress > 0 {
+                    
+                    return true }
+                else { return false }
+            }
+            
         }
         
         enum Avatar {
@@ -235,15 +249,11 @@ extension TemplatesListViewModel {
         }
         
         if let phoneNumber = getPhoneNumber(for: data),
-           let contact = model.contact(for: phoneNumber) {
+           let contact = model.contact(for: phoneNumber),
+           let img = contact.avatar?.image {
            
-            if let img = contact.avatar?.image {
                 avatar = .image(img)
-            } else {
-                avatar = .text(contact.initials ?? "")
-            }
-            
-            topImage = mainImage
+                topImage = mainImage
             
         } else {
             
