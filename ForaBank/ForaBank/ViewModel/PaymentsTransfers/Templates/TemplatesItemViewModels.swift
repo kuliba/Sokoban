@@ -249,15 +249,11 @@ extension TemplatesListViewModel {
         }
         
         if let phoneNumber = getPhoneNumber(for: data),
-           let contact = model.contact(for: phoneNumber) {
+           let contact = model.contact(for: phoneNumber),
+           let img = contact.avatar?.image {
            
-            if let img = contact.avatar?.image {
                 avatar = .image(img)
-            } else {
-                avatar = .text(contact.initials ?? "")
-            }
-            
-            topImage = mainImage
+                topImage = mainImage
             
         } else {
             
