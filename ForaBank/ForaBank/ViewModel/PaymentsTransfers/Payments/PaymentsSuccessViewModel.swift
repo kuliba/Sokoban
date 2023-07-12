@@ -521,43 +521,48 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                 
                             default:
                                 
-                                guard let template = self.model.paymentTemplates.value.first(where: { $0.id == self.templateId }) else {
-                                    return
-                                }
-                                
-                                templateButton = .init(
-                                    state: self.refreshTemplateButton ? .complete : .refresh,
-                                    model: model,
-                                    tapAction: { [weak self] in
-                                        
-                                        guard let model = self?.model else {
-                                            return
-                                        }
-                                        
-                                        self?.templateButton?.state = .loading(isComplete: true)
-
-                                        if self?.refreshTemplateButton == false {
-                                            
-                                            self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
-                                                name: template.name,
-                                                parameterList: self?.createMe2MeParameterList(
-                                                    model: model,
-                                                    operationDetail: detailData,
-                                                    template: template),
-                                                
-                                                paymentTemplateId: template.id)
-                                            )
-                                            
-                                        } else {
-                                            
-                                            self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(
-                                                paymentTemplateIdList: [
-                                                    template.id
-                                                ]
-                                            ))
-                                        }
+                                if let templateId = self.templateId {
+                                    guard let template = self.model.paymentTemplates.value.first(where: { $0.id == self.templateId }) else {
+                                        return
                                     }
-                                )
+                                    
+                                    templateButton = .init(
+                                        state: self.refreshTemplateButton ? .complete : .refresh,
+                                        model: model,
+                                        tapAction: { [weak self] in
+                                            
+                                            guard let model = self?.model else {
+                                                return
+                                            }
+                                            
+                                            self?.templateButton?.state = .loading(isComplete: true)
+
+                                            if self?.refreshTemplateButton == false {
+                                                
+                                                self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                                                    name: template.name,
+                                                    parameterList: self?.createMe2MeParameterList(
+                                                        model: model,
+                                                        operationDetail: detailData,
+                                                        template: template),
+                                                    
+                                                    paymentTemplateId: template.id)
+                                                )
+                                                
+                                            } else {
+                                                
+                                                self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(
+                                                    paymentTemplateIdList: [
+                                                        template.id
+                                                    ]
+                                                ))
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    
+                                    self.templateButton = .init(model: model, operationDetail: detailData)
+                                }
                             }
                             
                             bindTemplate(operationDetail: operationDetailData,
@@ -1068,12 +1073,7 @@ extension PaymentsSuccessViewModel {
         
         return buttons.compactMap { $0 }
     }
-    
-    private func createTemplateButton(model: Model, operationDetail: OperationDetailData) -> TemplateButtonView.ViewModel {
-        
-        return .init(model: model, operationDetail: operationDetail)
-    }
-    
+
     private func optionButton(_ mode: Mode, type: OptionButtonType, paymentOperationDetailId: Int = 0, operationDetail: OperationDetailData? = nil) -> PaymentsSuccessOptionButtonView.ViewModel? {
         
         switch type {
