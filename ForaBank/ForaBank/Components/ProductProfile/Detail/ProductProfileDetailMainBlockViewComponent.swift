@@ -29,11 +29,13 @@ extension ProductProfileDetailView.ViewModel {
                 let progressValue = productCard.balanceValue > 0 ? loanData.ownFundsValue / productCard.balanceValue : 1
                 
                 let ownFunds = amountFormatted(loanData.ownFundsValue, loanData.currencyCode, .normal) ?? String(loanData.ownFundsValue)
-                let availableLimit = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
+                let balance = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
+                let totalAvailableAmount = productCard.loanBaseParam?.totalAvailableAmount
+                let available = amountFormatted(totalAvailableAmount ?? 0, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
                 
                 self.items = [
                     .init(type: .ownFunds, value: ownFunds, prefix: .legend(.mainColorsWhite)),
-                    .init(type: .loanLimit, value: availableLimit, prefix: .legend(.mainColorsRed), postfix: .value(availableLimit))
+                    .init(type: .loanLimit, value: balance, prefix: .legend(.mainColorsRed), postfix: .value(available))
                 ]
                 
                 self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .mainColorsWhite, action: action)
