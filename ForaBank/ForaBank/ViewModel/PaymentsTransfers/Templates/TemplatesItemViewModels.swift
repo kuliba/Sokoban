@@ -105,6 +105,20 @@ extension TemplatesListViewModel {
                 else { return false }
             }
             
+            var isDeleting: Bool {
+                
+                if case .deleting = self { return true }
+                else { return false }
+            }
+            
+            var isDeleteProcessing: Bool {
+                
+                if case .deleting(let viewModel) = self, viewModel.progress > 0 {
+                    
+                    return true }
+                else { return false }
+            }
+            
         }
         
         enum Avatar {
