@@ -37,6 +37,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     let company: Company?
     let link: Link?
     let bottomIcon: Image?
+    let templateId: PaymentTemplateData.ID?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -49,7 +50,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self?.action.send(PaymentsSuccessAction.Button.Close())
     }
     
-    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, additionalButtons: [AdditionalButton]? = nil, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, transferNumber: TransferNumber? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], company: Company? = nil, link: Link? = nil, bottomIcon: Image? = nil, templateButton: TemplateButtonView.ViewModel? = nil) {
+    init(_ model: Model, title: String? = nil, warningTitle: String? = nil, amount: String? = nil, iconType: IconTypeViewModel, additionalButtons: [AdditionalButton]? = nil, service: ServiceViewModel? = nil, options: [OptionViewModel]? = nil, logo: LogoIconViewModel? = nil, transferNumber: TransferNumber? = nil, repeatButton: ButtonSimpleView.ViewModel? = nil, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], company: Company? = nil, link: Link? = nil, bottomIcon: Image? = nil, templateButton: TemplateButtonView.ViewModel? = nil, templateId: PaymentTemplateData.ID? = nil) {
         
         self.model = model
         self.title = title
@@ -68,6 +69,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         self.company = company
         self.link = link
         self.bottomIcon = bottomIcon
+        self.templateId = templateId
     }
     
     convenience init(_ model: Model, closeAction: @escaping () -> Void) {
@@ -83,14 +85,15 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             let product = model.allProducts.first(where: { $0.id == paymentSuccess.productId })
             let amount = model.amountFormatted(amount: paymentSuccess.amount, currencyCode: product?.currency, style: .normal)
             
-            self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+            self.init(model, documentStatus: paymentSuccess.status, mode: .normal, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], templateId: nil)
             
             if case let .template(templateId) = paymentSuccess.operation?.source {
                 
                 refreshTemplateButton = Self.isTemplateEqualPayment(
                     model: model,
                     templateId: templateId,
-                    paymentSuccess: paymentSuccess
+                    paymentSuccess: paymentSuccess,
+                    meToMePayment: nil
                 )
             }
             
@@ -138,7 +141,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 refreshTemplateButton = Self.isTemplateEqualPayment(
                     model: model,
                     templateId: templateId,
-                    paymentSuccess: paymentSuccess
+                    paymentSuccess: paymentSuccess,
+                    meToMePayment: nil
                 )
             }
             
@@ -182,7 +186,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 refreshTemplateButton = Self.isTemplateEqualPayment(
                     model: model,
                     templateId: templateId,
-                    paymentSuccess: paymentSuccess
+                    paymentSuccess: paymentSuccess,
+                    meToMePayment: nil
                 )
             }
             
@@ -219,7 +224,8 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 refreshTemplateButton = Self.isTemplateEqualPayment(
                     model: model,
                     templateId: templateId,
-                    paymentSuccess: paymentSuccess
+                    paymentSuccess: paymentSuccess,
+                    meToMePayment: nil
                 )
             }
             
@@ -281,7 +287,13 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
     }
     
-    convenience init?(_ model: Model, mode: Mode = .normal, transferData: TransferResponseData) {
+    convenience init?(
+        _ model: Model,
+        mode: Mode = .normal,
+        transferData: TransferResponseData,
+        meToMePayment: MeToMePayment?,
+        templateId: PaymentTemplateData.ID?
+    ) {
         
         guard let documentStatus = transferData.documentStatus else {
             return nil
@@ -289,11 +301,21 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         
         let amount = Self.amountFormatted(model, amount: transferData.debitAmount ?? 0, currencyCode: transferData.currencyPayer?.description)
         
-        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], templateId: templateId)
         
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
         
         bind(mode, paymentOperationDetailId: transferData.paymentOperationDetailId, documentStatus: documentStatus, operation: nil)
+        
+        if let templateId {
+         
+            refreshTemplateButton = Self.isTemplateEqualPayment(
+                model: model,
+                templateId: templateId,
+                paymentSuccess: nil,
+                meToMePayment: meToMePayment
+            )
+        }
         
         self.model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(transferData.paymentOperationDetailId)))
     }
@@ -307,7 +329,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         let debitAmount = transferData.debitAmount ?? 0
         let amount = Self.amountFormatted(model, amount: debitAmount, currencyCode: transferData.currencyPayer?.description)
         
-        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], templateId: nil)
         
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
         
@@ -327,7 +349,7 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         
         let amount = Self.amountFormatted(model, amount: balance, currencyCode: currency.description)
         
-        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [])
+        self.init(model, documentStatus: documentStatus, mode: mode, amount: amount, actionButton: .init(title: "На главный", style: .red, action: {}), optionButtons: [], templateId: nil)
         
         bind(mode, paymentOperationDetailId: paymentOperationDetailId, documentStatus: documentStatus, operation: nil)
         
@@ -348,25 +370,25 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         actionButton = .init(title: "На главный", style: .red, action: closeAction)
     }
     
-    convenience init(_ model: Model, documentStatus: TransferResponseBaseData.DocumentStatus, mode: Mode, amount: String?, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel]) {
+    convenience init(_ model: Model, documentStatus: TransferResponseBaseData.DocumentStatus, mode: Mode, amount: String?, actionButton: ButtonSimpleView.ViewModel, optionButtons: [PaymentsSuccessOptionButtonViewModel], templateId: PaymentTemplateData.ID?) {
         
         let title = Self.title(mode, documentStatus: documentStatus)
         
         switch documentStatus {
         case .complete:
             
-            self.init(model, title: title, amount: amount, iconType: .success, actionButton: actionButton, optionButtons: optionButtons)
+            self.init(model, title: title, amount: amount, iconType: .success, actionButton: actionButton, optionButtons: optionButtons, templateId: templateId)
             
         case .inProgress:
             
-            self.init(model, title: title, amount: amount, iconType: .accepted, actionButton: actionButton, optionButtons: [])
+            self.init(model, title: title, amount: amount, iconType: .accepted, actionButton: actionButton, optionButtons: [], templateId: templateId)
             
         case .rejected, .unknown:
             switch mode {
             case .makePaymentToDeposite, .closeDeposit:
-                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
+                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [], templateId: templateId)
             default:
-                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [])
+                self.init(model, title: title, amount: amount, iconType: .error, actionButton: actionButton, optionButtons: [], templateId: templateId)
                 repeatButton = .init(title: "Повторить", style: .gray, action: repeatAction)
                 
             }
@@ -499,9 +521,42 @@ class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                                 
                             default:
                                 
-                                templateButton = createTemplateButton(
+                                guard let template = self.model.paymentTemplates.value.first(where: { $0.id == self.templateId }) else {
+                                    return
+                                }
+                                
+                                templateButton = .init(
+                                    state: self.refreshTemplateButton ? .complete : .refresh,
                                     model: model,
-                                    operationDetail: operationDetailData
+                                    tapAction: { [weak self] in
+                                        
+                                        guard let model = self?.model else {
+                                            return
+                                        }
+                                        
+                                        self?.templateButton?.state = .loading(isComplete: true)
+
+                                        if self?.refreshTemplateButton == false {
+                                            
+                                            self?.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                                                name: template.name,
+                                                parameterList: self?.createMe2MeParameterList(
+                                                    model: model,
+                                                    operationDetail: detailData,
+                                                    template: template),
+                                                
+                                                paymentTemplateId: template.id)
+                                            )
+                                            
+                                        } else {
+                                            
+                                            self?.model.action.send(ModelAction.PaymentTemplate.Delete.Requested(
+                                                paymentTemplateIdList: [
+                                                    template.id
+                                                ]
+                                            ))
+                                        }
+                                    }
                                 )
                             }
                             
@@ -737,8 +792,6 @@ extension PaymentsSuccessViewModel {
         case closeDeposit
         case closeAccount(ProductData.ID)
         case closeAccountEmpty(ProductData.ID)
-        
-        
         case makePaymentToDeposite
     }
     
@@ -1230,10 +1283,15 @@ extension PaymentsSuccessViewModel {
     static func isTemplateEqualPayment(
         model: Model,
         templateId: PaymentTemplateData.ID,
-        paymentSuccess: Payments.Success
+        paymentSuccess: Payments.Success?,
+        meToMePayment: MeToMePayment?
     ) -> Bool {
         
-        if let template = model.paymentTemplates.value.first(where: { $0.id == templateId })  {
+        guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+            return true
+        }
+        
+        if let paymentSuccess {
             
             if let amountTemplate = template.amount?.description,
                let amount = Double(amountTemplate),
@@ -1316,7 +1374,45 @@ extension PaymentsSuccessViewModel {
                     
                     return true
                 }
+                
             default: break
+                
+            }
+            
+        } else {
+            
+            guard let meToMePayment else {
+                return true
+            }
+            
+            switch template.parameterList.last {
+            case let payload as TransferGeneralData:
+                
+                guard let payeeProductId = payload.payeeInternal?.cardId ?? payload.payeeInternal?.accountId,
+                      let amountDescription = payload.amount?.description,
+                      let amount = Double(amountDescription),
+                      let payerProductId = payload.payer?.cardId ?? payload.payer?.accountId else {
+                    
+                    return true
+                }
+                
+                let templatePayment = MeToMePayment(
+                    payerProductId: payerProductId,
+                    payeeProductId: payeeProductId,
+                    amount: amount
+                )
+                
+                if templatePayment != meToMePayment {
+                    
+                    return false
+                } else {
+                    
+                    return true
+                }
+                
+                
+            default:
+                return true
             }
         }
         
@@ -1368,6 +1464,32 @@ extension PaymentsSuccessViewModel {
         default:
             return nil
         }
+    }
+    
+    private func createMe2MeParameterList(
+        model: Model,
+        operationDetail: OperationDetailData,
+        template: PaymentTemplateData
+    ) -> [TransferData]? {
+        
+        let payerProductId = operationDetail.payerCardId ?? operationDetail.payerAccountId
+        guard let templateParameterList = template.parameterList.last as? TransferGeneralData,
+              let payeeProductId = templateParameterList.payeeInternal?.accountId ?? templateParameterList.payeeInternal?.cardId,
+              let payee = model.allProducts.first(where: {$0.id == payeeProductId }),
+              let payerData = model.allProducts.first(where: { $0.id == payerProductId }),
+              let payer = TransferGeneralData.Payer(productData: payerData) else {
+            return nil
+        }
+        
+        return [TransferGeneralData(
+            amount: Decimal(string: operationDetail.amount.description),
+            check: false,
+            comment: nil,
+            currencyAmount: operationDetail.currencyAmount,
+            payer: payer,
+            payeeExternal: nil,
+            payeeInternal: .init(productData: payee)
+        )]
     }
     
     private func templateParameterList(

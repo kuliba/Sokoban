@@ -146,8 +146,40 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 switch response.documentStatus {
                                 case .complete:
                                     
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: response) {
-                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                    guard let payerProductId = swapViewModel.productIdFrom,
+                                          let payeeProductId = swapViewModel.productIdTo else {
+                                        return
+                                    }
+                                    
+                                    let meToMePayment = MeToMePayment(
+                                        payerProductId: payerProductId,
+                                        payeeProductId: payeeProductId,
+                                        amount: paymentsAmount.textField.value
+                                    )
+                                    
+                                    switch mode {
+                                    case let .templatePayment(templateId, _):
+                                        
+                                        if let successViewModel = PaymentsSuccessViewModel(
+                                            model,
+                                            mode: modeForSuccessView,
+                                            transferData: response,
+                                            meToMePayment: meToMePayment,
+                                            templateId: templateId
+                                        ) {
+                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                        }
+                                        
+                                    default:
+                                        if let successViewModel = PaymentsSuccessViewModel(
+                                            model,
+                                            mode: modeForSuccessView,
+                                            transferData: response,
+                                            meToMePayment: meToMePayment,
+                                            templateId: nil
+                                        ) {
+                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                        }
                                     }
 
                                 default:
@@ -177,7 +209,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     case let .success(transferData):
                         let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
 
-                        if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: transferData) {
+                        if let successViewModel = PaymentsSuccessViewModel(
+                            model,
+                            mode: modeForSuccessView,
+                            transferData: transferData,
+                            meToMePayment: nil,
+                            templateId: nil
+                        ) {
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                         }
 
@@ -1007,4 +1045,11 @@ extension PaymentsMeToMeViewModel {
             case placesMap(PlacesViewModel)
         }
     }
+}
+
+struct MeToMePayment: Equatable {
+    
+    let payerProductId: Int
+    let payeeProductId: Int
+    let amount: Double
 }
