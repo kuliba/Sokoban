@@ -35,7 +35,10 @@ class TemplatesListViewModel: ObservableObject {
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     
-    var dismissAction: () -> Void
+    let dismissAction: () -> Void
+    
+    var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
+    var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
     internal init(state: State, style: Style,
                   navBarState: NavBarState,
@@ -71,22 +74,12 @@ class TemplatesListViewModel: ObservableObject {
                   deletePannel: nil,
                   dismissAction: dismissAction,
                   model: model)
-       
-        self.dismissAction = { [weak self] in
-            
-            let deletingIds = self?.items.filter { $0.state.isDeleting }.map(\.id)
-            if let deletingIds, !deletingIds.isEmpty {
-                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
-                    .init(paymentTemplateIdList: deletingIds))
-            }
-            dismissAction() }
         
         updateNavBar(event: .setRegular)
         bind()
     }
     
     deinit {
-        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "TemplatesListViewModel deinitialized")
     }
 }
@@ -142,6 +135,12 @@ private extension TemplatesListViewModel {
                                                  isAddItemNeeded: true)
                     }
                 
+                case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    
+                    if !self.isDeleteProcessing, self.isExistDeleted  {
+                        model.action.send(ModelAction.PaymentTemplate.List.Requested())
+                    }
+                    
                 case _ as ModelAction.PaymentTemplate.Sort.Failed:
                     
                     model.action.send(ModelAction.Informer.Show
@@ -590,17 +589,8 @@ private extension TemplatesListViewModel {
                             itemModel.timer = nil
                             itemModel.state = .normal
                             
-                            let countDeleteProcessing = self.items.filter {
-                                $0.state.isDeleteProcessing
-                            }
-                            
-                            if countDeleteProcessing.isEmpty {
-                                
-                                let deletingIds = self.items.filter { $0.state.isDeleting }.map(\.id)
-                                if !deletingIds.isEmpty {
-                                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested
-                                        .init(paymentTemplateIdList: deletingIds))
-                                }
+                            if !self.isDeleteProcessing, self.isExistDeleted  {
+                                model.action.send(ModelAction.PaymentTemplate.List.Requested())
                             }
                         }),
                               title: itemModel.title,
@@ -623,20 +613,10 @@ private extension TemplatesListViewModel {
                             if current == 0 {
                                 
                                 deletingViewModel.isDisableCancelButton = true
-                                
-                                let countDeleteProcessing = self.items.filter {
-                                    $0.state.isDeleteProcessing
-                                }
-                                
-                                if countDeleteProcessing.isEmpty {
-                                    
-                                    let deletingIds = self.items.filter { $0.state.isDeleting }.map(\.id)
-                                    
-                                    model.action.send(ModelAction.PaymentTemplate.Delete.Requested
-                                        .init(paymentTemplateIdList: deletingIds))
-                                }
-                                
                                 itemModel.timer = nil
+                                
+                                model.action.send(ModelAction.PaymentTemplate.Delete.Requested
+                                    .init(paymentTemplateIdList: [itemModel.id]))
                             }
                     }
                     .store(in: &bindings)
