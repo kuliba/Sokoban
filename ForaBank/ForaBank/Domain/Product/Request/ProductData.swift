@@ -403,4 +403,13 @@ extension ProductData {
     }
     
     var currencyValue: Currency { .init(description: currency) }
+    
+    var paymentSystem: Image? {
+        
+        guard let paymentSystem = self as? ProductCardData else {
+            return nil
+        }
+        
+        return paymentSystem.paymentSystemImage?.image
+    }
 }

@@ -97,11 +97,11 @@ extension Model {
             operatorType: operatorCode
         )
         parameters.append(operatorParameter)
-        
-        let headerParameter = Payments.ParameterHeader(
-            title: "\(operatorValue.name)",
-            subtitle: operatorValue.description,
-            icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
+                
+        let headerParameter = header(
+            operatorCode: operatorCode,
+            operatorValue: operatorValue,
+            source: source
         )
         parameters.append(headerParameter)
         visible.append(headerParameter.id)
@@ -350,14 +350,11 @@ extension Model {
         return result
     }
     
-    func paymentsServicesStepExcludingParameters(response: TransferAnywayResponseData)
-    throws -> [Payments.Parameter.ID] {
+    func paymentsServicesStepExcludingParameters(
+        response: TransferAnywayResponseData
+    ) throws -> [Payments.Parameter.ID] {
         
-        var result = [Payments.Parameter.ID]()
-        // isRequired is optional value - need '== false'
-        let nexStepParametersIds = response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
-        result.append(contentsOf: nexStepParametersIds)
-        return result
+        response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
     }
     
     func paymentsServicesStepStage(_ operation: Payments.Operation,
@@ -557,6 +554,26 @@ extension Model {
         }
         
         return operatorr
+    }
+    
+    func header(
+        operatorCode: String,
+        operatorValue: OperatorGroupData.OperatorData,
+        source: Payments.Operation.Source?
+    ) -> Payments.ParameterHeader {
+        
+        let title: String = operatorCode == Purefs.avtodorContract || operatorCode == Purefs.avtodorTransponder ? .avtodorGroupTitle : operatorValue.name
+        
+        let description: String? = (operatorValue.parentCode == Payments.Operator.transport.rawValue) ? nil : operatorValue.description
+        
+        return parameterHeader(
+            source: source,
+            header: Payments.ParameterHeader(
+                title: title,
+                subtitle: description,
+                icon: .image(operatorValue.logotypeList.first?.iconData ?? .empty)
+            )
+        )
     }
 }
 

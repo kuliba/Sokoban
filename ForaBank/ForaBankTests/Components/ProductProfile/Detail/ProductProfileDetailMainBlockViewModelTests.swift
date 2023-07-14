@@ -40,7 +40,7 @@ final class ProductProfileDetailMainBlockViewModelTests: XCTestCase {
 
 extension ProductProfileDetailMainBlockViewModelTests {
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceIsNil_ownFundsIsNill() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceIsNil_ownFundsIsNil() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: nil, ownFunds: nil)
         
@@ -50,7 +50,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 1, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceZero_ownFundsIsNill() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceZero_ownFundsIsNil() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 0, ownFunds: nil)
         
@@ -60,7 +60,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 1, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceGreaterZero_ownFundsIsNill() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceGreaterZero_ownFundsIsNil() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 100, ownFunds: nil)
         
@@ -70,7 +70,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 0, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceZero_ownFundsIsZero() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceZero_ownFundsIsZero() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 0, ownFunds: 0)
         
@@ -80,7 +80,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 1, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceGreaterZero_ownFundsIsZero() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceGreaterZero_ownFundsIsZero() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 100, ownFunds: nil)
         
@@ -90,7 +90,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 0, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceGreaterZero_ownFundsGreaterZeroLessBalance() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceGreaterZero_ownFundsGreaterZeroLessBalance() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 100, ownFunds: 50)
         
@@ -100,7 +100,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 0.5, accuracy: .ulpOfOne)
     }
     
-    func test_state_loanRepainAndOwnFundsConfig_balanceGreaterZero_ownFundsGreaterZeroGreaterBalance() {
+    func test_state_loanRepaidAndOwnFundsConfig_balanceGreaterZero_ownFundsGreaterZeroGreaterBalance() {
         
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 50, ownFunds: 100)
         
@@ -108,6 +108,33 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.loanLimitCurrent, "50.0")
         XCTAssertEqual(sut.loanLimitTotal, "50.0")
         XCTAssertEqual(sut.progress.progress, 2.0, accuracy: .ulpOfOne)
+    }
+    
+    func test_loanRepaidAndOwnFunds_shouldSetBalanceAndAvailableItems() {
+        
+        let sut = makeSut(
+            balance: 100,
+            ownFunds: 99,
+            totalAvailableAmount: 15,
+            currencyCode: "RUB"
+        )
+        
+        XCTAssertNoDiff(sut.items.map(\.type), [
+            .ownFunds,
+            .loanLimit
+        ])
+        XCTAssertNoDiff(sut.items.map(\.testPrefix), [
+            .legend,
+            .legend
+        ])
+        XCTAssertNoDiff(sut.items.map(\.value), [
+            "99,00 ₽",
+            "100,00 ₽"
+        ])
+        XCTAssertNoDiff(sut.items.map(\.testPostfix), [
+            .none,
+            .value("15,00 ₽")
+        ])
     }
 }
 
@@ -221,16 +248,24 @@ extension ProductProfileDetailMainBlockViewModelTests {
 
 private extension ProductProfileDetailMainBlockViewModelTests {
     
+    // TODO: fix to use currency
     func makeSut(
         configuration: ProductProfileDetailView.ViewModel.Configuration = .loanRepaidAndOwnFunds,
         balance: Double? = nil,
         ownFunds: Double? = nil,
         totalAvailableAmount: Double = 0,
+        currencyCode: String? = nil,
         debtAmount: Double? = nil
     ) -> ProductProfileDetailView.ViewModel.MainBlockViewModel {
         
-        let productCard = ProductCardData.make(balance: balance)
-        let loanData = ProductCardData.LoanBaseParamInfoData.makeLoanBaseParamInfoData(availableExceedLimit: balance, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount)
+        let loanData: ProductCardData.LoanBaseParamInfoData = .makeLoanBaseParamInfoData(
+            currencyCode: currencyCode,
+            availableExceedLimit: balance,
+            ownFunds: ownFunds,
+            debtAmount: debtAmount,
+            totalAvailableAmount: totalAvailableAmount
+        )
+        let productCard = ProductCardData.make(balance: balance, loanBaseParam: loanData)
         
         return .init(configuration: configuration, productCard: productCard, loanData: loanData, amountFormatted: Self.amountFormattedStub(amount:currency:style:), action: {})
     }
@@ -346,9 +381,51 @@ private extension ProductCardData.LoanBaseParamInfoData {
 
 private extension ProductCardData {
     
-    static func make(balance: Double?) -> ProductCardData {
+    static func make(
+        balance: Double?,
+        loanBaseParam: LoanBaseParamInfoData? = nil
+    ) -> ProductCardData {
         
-        .init(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: balance, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: nil, statusPc: nil, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
+        .init(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: balance, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 0, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], accountId: nil, cardId: 0, name: "", validThru: Date(), status: .active, expireDate: nil, holderName: nil, product: nil, branch: "", miniStatement: nil, paymentSystemName: nil, paymentSystemImage: nil, loanBaseParam: loanBaseParam, statusPc: nil, isMain: nil, externalId: nil, order: 0, visibility: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     }
 }
 
+private extension ProductProfileDetailView.ViewModel.AmountViewModel {
+    
+    var testPrefix: TestPrefix? {
+        
+        switch prefix {
+        case .legend: return .legend
+        case .none:   return .none
+        }
+    }
+    
+    var testPostfix: TestPostfix? {
+        
+        switch postfix {
+        
+        case .none:
+            return .none
+
+        case .checkmark:
+            return .checkmark
+        
+        case .info:
+            return .info
+        
+        case let .value(value):
+            return .value(value)
+        }
+    }
+    
+    enum TestPrefix {
+        
+        case legend
+    }
+    enum TestPostfix: Equatable {
+        
+        case checkmark
+        case info
+        case value(String)
+    }
+}

@@ -14,8 +14,8 @@ public enum ComponentState: Equatable {
     
     public struct SelectionWithOptions: Equatable {
         
-        let selection: OptionWithMapImage
-        let options: [OptionWithMapImage]
+        public let selection: OptionWithMapImage
+        public let options: [OptionWithMapImage]
         
         public init(selection: OptionWithMapImage, options: [OptionWithMapImage]) {
             

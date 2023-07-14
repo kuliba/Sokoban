@@ -214,5 +214,30 @@ extension ServerCommands {
                 self.token = token
             }
         }
+        
+        //TODO: доработать в рамках реализации запросов по CVV+PIN
+        /*
+         https://<DBO_server_url>/registration/{version}/getProcessingSessionCode
+         */
+        struct GetProcessingSessionCode: ServerCommand {
+            
+            let token: String
+            let endpoint = "/registration/getProcessingSessionCode"
+            let method: ServerCommandMethod = .post
+                    
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: ProcessingSessionCodeData?
+            }
+            
+            internal init(token: String) {
+                
+                self.token = token
+            }
+        }
     }
 }

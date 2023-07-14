@@ -29,13 +29,15 @@ struct InformerData {
         case refresh
         case check
         case close
-        
+        case copy
+
         var image: Image {
             
             switch self {
             case .refresh: return .ic24RefreshCw
             case .check: return .ic16Check
             case .close: return .ic16Close
+            case .copy: return .ic24Copy
             }
         }
     }
@@ -43,5 +45,6 @@ struct InformerData {
     enum CancelableType {
         
         case openAccount
+        case copyInfo
     }
 }

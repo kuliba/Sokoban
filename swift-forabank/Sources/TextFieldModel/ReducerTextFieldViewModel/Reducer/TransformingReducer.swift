@@ -32,7 +32,7 @@ public struct TransformingReducer {
     }
 }
 
-extension TransformingReducer {
+extension TransformingReducer: Reducer {
     
     @inlinable
     public func reduce(

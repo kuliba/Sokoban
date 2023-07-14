@@ -576,7 +576,7 @@ struct PaymentsSelectBankView: View {
             
             case let .empty(title: title):
                 Text(title)
-                    .font(.textH4M16240())
+                    .font(.textBodyMR14180())
                     .foregroundColor(.textPlaceholder)
             }
         }
@@ -592,7 +592,7 @@ struct PaymentsSelectBankView: View {
         
         var body: some View {
             
-            VStack {
+            VStack(spacing: 13) {
                 
                 HStack(spacing: 12) {
                     

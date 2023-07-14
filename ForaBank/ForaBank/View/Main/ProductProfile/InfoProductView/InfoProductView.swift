@@ -10,73 +10,134 @@ import SwiftUI
 struct InfoProductView: View {
     
     @ObservedObject var viewModel: InfoProductViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    private var buttonForegroundColor: Color {
+        
+        viewModel.isDisableShareButton ? .textPlaceholder : .mainColorsBlack
+    }
     
     var body: some View {
         
-        ZStack(alignment: .bottom) {
+        VStack(spacing: 0) {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(alignment: .leading, spacing: 24) {
+                VStack {
                     
-                    ForEach(viewModel.list, id: \.self) { item in
+                    if !viewModel.list.isEmpty {
                         
-                        ButtonView(viewModel: item)
+                        ItemsViewOld(items: viewModel.list)
+                    }
+                    
+                    if !viewModel.listWithAction.isEmpty {
                         
+                        ItemsViewNew(
+                            items: viewModel.listWithAction,
+                            title: "Реквизиты счета",
+                            showCheckbox: viewModel.needShowCheckbox,
+                            isCheck: $viewModel.accountInfoSelected
+                        )
+                    }
+                    
+                    if let items = viewModel.additionalList {
+                        
+                        ItemsViewNew(
+                            items: items,
+                            title: "Реквизиты карты",
+                            showCheckbox: viewModel.needShowCheckbox,
+                            isCheck: $viewModel.cardInfoSelected
+                        )
+                        .padding(.top, 20)
                     }
                 }
-                .padding(.top, 28)
-                .padding(.horizontal, 20)
-                .frame(alignment: .leading)
-                
-                if let additionalListViewModel = viewModel.additionalList {
-                    
-                    VStack(alignment: .leading, spacing: 24) {
-                        
-                        Divider()
-                        
-                        ForEach(additionalListViewModel, id: \.self) { item in
-                            
-                            ButtonView(viewModel: item)
-                            
-                        }
-                    }
-                    .padding(.top, 20)
-                    .padding(.horizontal, 20)
-                    .frame(alignment: .leading)
-                    .padding(.bottom, 100)
-                }
-                
+                .padding(.top, 20)
             }
-            
             if let buttonViewModel = viewModel.shareButton {
                 
-                Button(action: { buttonViewModel.action() }) {
+                Button(action: buttonViewModel.action) {
                     
                     Text(buttonViewModel.title)
-                        .frame(width: 336, height: 48, alignment: .center)
+                        .frame (height: 48,
+                                alignment: .center)
+                        .frame(maxWidth:.infinity)
+                        .padding(.leading, 16)
+                        .padding(.trailing, 15)
                 }
                 .background(Color.mainColorsGrayLightest)
                 .cornerRadius(8)
-                .foregroundColor(Color.mainColorsBlack)
-                .padding(.bottom, 44)
-                
+                .foregroundColor(buttonForegroundColor)
+                .padding()
+                .disabled(viewModel.isDisableShareButton)
             }
         }
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
-        .navigationBarItems(trailing:
-                                
-                                Button(action: { viewModel.shareButton?.action() }) {
-            Image.ic24Share
-                .foregroundColor(Color.mainColorsBlack)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: navigationLeadingItem,
+            trailing: navigationTrailingItem
+        )
+        .sheet(
+            isPresented: $viewModel.isShareViewPresented,
+            onDismiss: viewModel.hideCheckBox,
+            content: {
+            
+            ActivityView(viewModel: .init(
+                activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
+            )
         })
-        .sheet(isPresented: $viewModel.isShareViewPresented, onDismiss: {
-        }, content: {
-            ActivityViewController(itemsToShare: viewModel.list)
-        })
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+            if let sendAll = viewModel.sendAllButtonVM,
+               let sendSelected = viewModel.sendSelectedButtonVM {
+                
+                InfoProductSheet(
+                    sendAll: sendAll,
+                    sendSelected: sendSelected
+                )
+            }
+        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+    
+    @ViewBuilder
+    var navigationLeadingItem: some View {
+        
+        if viewModel.needShowCheckbox {
+            
+            Button(action: viewModel.hideCheckBox) {
+                
+                HStack {
+                    
+                    Image.ic24Close
+                        .aspectRatio(contentMode: .fit)
+                }
+            }
+        } else {
+            
+            Button(action: {
+                
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Image("back_button")
+                        .aspectRatio(contentMode: .fit)
+                }
+            }
+        }
+    }
+    
+    var navigationTrailingItem: some View {
+        
+        viewModel.shareButton.map {
+            Button(action: $0.action) {
+                
+                Image.ic24Share
+                    .foregroundColor(buttonForegroundColor)
+            }
+            .disabled(viewModel.isDisableShareButton)
+        }
     }
     
     struct ButtonView: View {
@@ -95,7 +156,6 @@ struct InfoProductView: View {
                     
                     Text(viewModel.subtitle)
                         .font(.system(size: 16))
-                    
                 }
                 
                 Spacer()
@@ -133,15 +193,130 @@ struct InfoProductView_Previews: PreviewProvider {
 
 extension InfoProductViewModel {
     
-    static let sample: InfoProductViewModel = .init(product: productData, title: "Информация о вкладе", list: list, additionalList: nil, shareButton: nil, model: .emptyMock)
+    static let sample: InfoProductViewModel = .init(product: productData, title: "Информация о вкладе", list: list, listWithAction: [],  additionalList: nil, shareButton: nil, model: .emptyMock)
     
-    static let sampleCard: InfoProductViewModel = .init(product: productData, title: "Реквизиты счета карты", list: listCard, additionalList: additionalList, shareButton: .init(.init(action: {})), model: .emptyMock)
+    static let sampleCard: InfoProductViewModel = .init(product: productData, title: "Реквизиты счета и карты", list: [], listWithAction: .items, additionalList: .cardItems, shareButton: .init(.init(action: {})), model: .emptyMock)
     
     static let productData: ProductData = .init(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")], order: 0, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     
     static let list: [InfoProductViewModel.ItemViewModel] = [.init(title: "Сумма первоначального размещения", subtitle: "1 000 000 ₽"), .init(title: "Дата открытия", subtitle: "24 августа 2021 года"), .init(title: "Дата закрытия", subtitle: "24 августа 2022 года"), .init(title: "Срок вклада", subtitle: "1 год"), .init(title: "Ставка по вкладу", subtitle: "7,04%"), .init(title: "Дата следующего начисления процентов", subtitle: "24 декабря 2021 года"), .init(title: "Сумма выплаченных процентов всего", subtitle: "17 744,66 ₽"), .init(title: "Суммы пополнений", subtitle: "2 744,66 ₽"), .init(title: "Суммы списаний", subtitle: "1 622,00 ₽"), .init(title: "Сумма начисленных процентов на дату", subtitle: "588, 90 ₽")]
+}
+
+extension Array where Element == InfoProductViewModel.ItemViewModelForList {
     
-    static let listCard: [InfoProductViewModel.ItemViewModel] = [.init(title: "Получатель", subtitle: "Константин Войцехов"), .init(title: "Номер счета", subtitle: "408178810888 005001137"), .init(title: "БИК", subtitle: "044525341"), .init(title: "Кореспондентский счет", subtitle: "301018103000000000341"), .init(title: "ИНН", subtitle: "7704113772"), .init(title: "КПП", subtitle: "770401001")]
+    static let items: Self = [
+        .single(
+            .init(
+                id: .payeeName,
+                title: "Получатель",
+                titleForInformer: "Получатель",
+                subtitle: "Константин Войцехов",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .single(
+            .init(
+                id: .accountNumber,
+                title: "Номер счета",
+                titleForInformer: "Номер счета",
+                subtitle: "408178810888 005001137",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .single(
+            .init(
+                id: .bic,
+                title: "БИК",
+                titleForInformer: "БИК",
+                subtitle: "044525341",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .single(
+            .init(
+                id: .corrAccount,
+                title: "Кореспондентский счет",
+                titleForInformer: "Кореспондентский счет",
+                subtitle: "301018103000000000341",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .multiple(
+            [
+                .init(
+                    id: .inn,
+                    title: "ИНН",
+                    titleForInformer: "ИНН",
+                    subtitle: "7704113772",
+                    valueForCopy: "valueForCopy",
+                    actionForLongPress: { _,_ in },
+                    actionForIcon: {}
+                ),
+                .init(
+                    id: .kpp,
+                    title: "КПП",
+                    titleForInformer: "КПП",
+                    subtitle: "770401001",
+                    valueForCopy: "valueForCopy",
+                    actionForLongPress: { _,_ in },
+                    actionForIcon: {}
+                )
+            ]
+        )
+    ]
     
-    static let additionalList: [InfoProductViewModel.ItemViewModel] = [.init(title: "Держатель карты", subtitle: "KONSTANTIN VOYZEKHOV"), .init(title: "Номер карты", subtitle: "4897 43** **** 7654"), .init(title: "Карта действует до", subtitle: "12/23")]
+    static let cardItems: Self = [
+        .single(
+            .init(
+                id: .holderName,
+                title: "Держатель",
+                titleForInformer: "Держатель",
+                subtitle: "Константин Войцехов",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .single(
+            .init(
+                id: .numberMasked,
+                title: "Номер карты",
+                titleForInformer: "Номер карты",
+                subtitle: "**** **** **** 0500",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .multiple(
+            [
+                .init(
+                    id: .expireDate,
+                    title: "Карта действует до",
+                    titleForInformer: "Срок действия карты",
+                    subtitle: "01/01",
+                    valueForCopy: "valueForCopy",
+                    actionForLongPress: { _,_ in },
+                    actionForIcon: {}
+                ),
+                .init(
+                    id: .cvvMasked,
+                    title: .cvvTitle,
+                    titleForInformer: .cvvTitle,
+                    subtitle: "111",
+                    valueForCopy: "",
+                    actionForLongPress: { _,_ in },
+                    actionForIcon: {}
+                )
+            ]
+        )
+    ]
 }

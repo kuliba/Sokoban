@@ -28,6 +28,7 @@ extension Payments.Service {
         case .utility:          return [.utility]
         case .transport:        return [.transport]
         case .avtodor:          return [.avtodor]
+        case .gibdd:            return [.gibdd]
         }
     }
     
@@ -60,6 +61,7 @@ extension Payments.Service {
         case .utility:           return .utility
         case .transport:         return .transport
         case .avtodor:           return .avtodor
+        case .gibdd:             return .gibdd
         }
     }
 }

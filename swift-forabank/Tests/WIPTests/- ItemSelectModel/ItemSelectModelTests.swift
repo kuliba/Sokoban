@@ -593,7 +593,7 @@ final class ArrayExtensionsTests: XCTestCase {
 
 extension Array {
     
-    func first(matching: String, keyPath: KeyPath<Element, String>) -> Element? {
+    func first<T: Equatable>(matching: T, keyPath: KeyPath<Element, T>) -> Element? {
         
         first { $0[keyPath: keyPath] == matching }
     }

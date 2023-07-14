@@ -9,9 +9,9 @@ import SearchBarComponent
 import SwiftUI
 import TextFieldComponent
 
+typealias ViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
+  
 struct ContentView: View {
-    
-    typealias ViewModel = ReducerTextFieldViewModel
     
     @StateObject private var viewModel: ViewModel = .init(
         initialState: .placeholder("Enter phone number"),
@@ -144,13 +144,13 @@ struct ContentView_Previews: PreviewProvider {
 
 struct DefaultCancellableSearchBarView: View {
     
-    @ObservedObject private var viewModel: ReducerTextFieldViewModel
+    @ObservedObject private var viewModel: ViewModel
     private let textFieldConfig: TextFieldView.TextFieldConfig
     private let buttonsColor: Color
     private let cancel: () -> Void
     
     init(
-        viewModel: ReducerTextFieldViewModel,
+        viewModel: ViewModel,
         textFieldConfig: TextFieldView.TextFieldConfig,
         buttonsColor: Color,
         cancel: @escaping () -> Void
@@ -217,7 +217,7 @@ extension TextFieldFactory {
         format: @escaping (String) -> String,
         limit: Int? = nil,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> ReducerTextFieldViewModel {
+    ) -> ViewModel {
         
         let transformer = Transformers.phone(
             filterSymbols: filterSymbols,
@@ -231,10 +231,12 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: {},
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {}
         )
         
-        return ReducerTextFieldViewModel(
+        return .init(
             initialState: .placeholder(placeholderText),
             reducer: reducer,
             keyboardType: .number,

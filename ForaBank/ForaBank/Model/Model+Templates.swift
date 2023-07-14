@@ -68,10 +68,15 @@ extension ModelAction {
                 let paymentTemplateId: Int
             }
             
-            struct Complete: Action {}
+            struct Complete: Action {
+                
+                let paymentTemplateId: Int
+                let newName: String
+            }
             
             struct Failed: Action {
                 
+                let paymentTemplateId: Int
                 let error: Error
             }
         }
@@ -223,6 +228,39 @@ extension Model {
 //MARK: - paymentTemplates
 extension Model {
     
+    static func reduce(images: [String: ImageData],
+                       with data: [PaymentTemplateData])
+    async -> [String: ImageData] {
+            
+        let prefixKey = "Template"
+        let dataIds = data.map(\.id)
+        let cacheIds = Set(images.keys
+                            .filter { $0.hasPrefix(prefixKey) }
+                            .compactMap { Int($0.dropFirst(prefixKey.count)) })
+            
+        let fullDiff = cacheIds.symmetricDifference(dataIds)
+        let addDiff = fullDiff.intersection(dataIds)
+        let delDiff = fullDiff.intersection(cacheIds)
+            
+        var localImages = images
+            
+        for id in delDiff { //delete images
+                
+            localImages.removeValue(forKey: "\(prefixKey)\(id)")
+        }
+            
+        for id in addDiff { //add images
+                
+            if let template = data.first(where: { $0.id == id }),
+                let imgData = ImageData(with: template.svgImage) {
+                    
+                localImages["\(prefixKey)\(id)"] = imgData
+            }
+        }
+             
+        return localImages
+    }
+    
     func handleTemplatesListRequest() {
         
         guard let token
@@ -252,7 +290,18 @@ extension Model {
                     guard let data = response.data, serial != data.serial
                     else { return }
                     
+                    Task {
                         
+                        let updatedImages = await Self.reduce(images: self.images.value,
+                                                              with: data.templateList)
+
+                        if self.images.value != updatedImages {
+
+                            self.images.value = updatedImages
+                            try? self.localAgent.store(self.images.value, serial: nil)
+                        }
+                    }
+                    
                     // update model data
                     self.paymentTemplates.value = data.templateList
                        
@@ -346,7 +395,9 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     // confirm template updated
-                    self.action.send(ModelAction.PaymentTemplate.Update.Complete())
+                    self.action.send(ModelAction.PaymentTemplate.Update.Complete
+                        .init(paymentTemplateId: payload.paymentTemplateId,
+                              newName: payload.name ?? ""))
                     // request all templates from server
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
@@ -356,11 +407,14 @@ extension Model {
                                                    errorMessage: response.errorMessage)
                     
                     self.action.send(ModelAction.PaymentTemplate.Update.Failed
-                                        .init(error: ResponseError(message: response.errorMessage)))
+                        .init(paymentTemplateId: payload.paymentTemplateId,
+                              error: ResponseError(message: response.errorMessage)))
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.PaymentTemplate.Update.Failed(error: error))
+                self.action.send(ModelAction.PaymentTemplate.Update.Failed
+                    .init(paymentTemplateId: payload.paymentTemplateId,
+                          error: error))
             }
         }
     }
@@ -386,8 +440,6 @@ extension Model {
                     
                     self.action.send(ModelAction.PaymentTemplate.Delete.Complete
                                     .init(paymentTemplateIdList: payload.paymentTemplateIdList))
-                    
-                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
                     self.handleServerCommandStatus(command: command,

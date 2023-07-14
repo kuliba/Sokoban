@@ -199,6 +199,23 @@ extension String {
         
         return copy
     }
+    
+    func formatted(
+        withChunkSize chunkSize: Int = 4,
+        withSeparator separator: String = " "
+    ) -> String {
+        var stringWithAddedSpaces = ""
+        
+        for i in Swift.stride(from: 0, to: self.count, by: 1) {
+            if i > 0 && (i % chunkSize) == 0 {
+                stringWithAddedSpaces.append(contentsOf: separator)
+            }
+            let characterToAdd = self[self.index(self.startIndex, offsetBy: i)]
+            stringWithAddedSpaces.append(characterToAdd)
+        }
+        
+        return stringWithAddedSpaces
+    }
 }
 
 enum StringHelperError: Error {
@@ -236,4 +253,9 @@ extension String {
             of: "^[0-9]*$",
             options: .regularExpression) != nil
     }
+}
+
+extension String {
+    
+    static let isNeedOnboardingShow = "isNeedOnboardingShow"
 }

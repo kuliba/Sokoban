@@ -49,7 +49,7 @@ extension ProductProfileOptionsPannelView {
             case .requisites:
                 switch productType {
                 case .card:
-                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета карты", style: .bold), orientation: .horizontal, action: action)
+                    return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета и карты", style: .bold), orientation: .horizontal, action: action)
                     
                 case .account:
                     return .init(icon: .init(image: .ic24FileText, background: .circleSmall), title: .init(text: "Реквизиты счета", style: .bold), orientation: .horizontal, action: action)
@@ -63,17 +63,14 @@ extension ProductProfileOptionsPannelView {
                 
             case .statement:
                 switch productType {
-                case .card:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету карты", style: .bold), orientation: .horizontal, action: action)
-                    
-                case .account:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету", style: .bold), orientation: .horizontal, action: action)
-                    
+                case .card, .account:
+                    return .cardAccountStatement(action: action)
+                                        
                 case .deposit:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету вклада", style: .bold), orientation: .horizontal, action: action)
+                    return .depositStatement(action: action)
                     
                 case .loan:
-                    return .init(icon: .init(image: .ic24FileHash, background: .circleSmall), title: .init(text: "Выписка по счету кредита", style: .bold), orientation: .horizontal, action: action)
+                    return .loanStatement(action: action)
                 }
                 
             case .info:
@@ -185,6 +182,65 @@ struct ProductProfileOptionsPannelViewComponent_Previews: PreviewProvider {
             .padding(.horizontal, 20)
             .previewLayout(.fixed(width: 375, height: 300))
     }
+}
+
+// MARK: - Helpers
+
+private extension ButtonIconTextView.ViewModel {
+    
+    static func cardAccountStatement(
+        action: @escaping () -> Void
+    ) -> ButtonIconTextView.ViewModel {
+        
+        return .statement(
+            title:  "Выписка по счету",
+            action: action
+        )
+    }
+    
+    static func depositStatement(
+        action: @escaping () -> Void
+    ) -> ButtonIconTextView.ViewModel {
+        
+        return .statement(
+            title: "Выписка по счету вклада",
+            action: action
+        )
+    }
+    
+    static func loanStatement(
+        action: @escaping () -> Void
+    ) -> ButtonIconTextView.ViewModel {
+        
+        return .statement(
+            title: "Выписка по счету кредита",
+            action: action
+        )
+    }
+    
+    static func statement(
+        title: String,
+        action: @escaping () -> Void
+    ) -> ButtonIconTextView.ViewModel {
+        
+        return .init(
+            icon: .statement,
+            title: .init(
+                text: title,
+                style: .bold
+            ),
+            orientation: .horizontal,
+            action: action
+        )
+    }
+}
+
+private extension ButtonIconTextView.ViewModel.Icon {
+    
+    static let statement: Self = .init(
+        image: .ic24FileHash,
+        background: .circleSmall
+    )
 }
 
 //MARK: - Preview Content

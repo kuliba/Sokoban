@@ -85,17 +85,68 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(model.preferredProductID)
     }
-}
-
-extension ProductProfileViewModelTests {
     
-    func makeSUT(
+    //MARK: - test showActivateCertificateAlert
+    
+    func test_showActivateCertificateAlert_setAlert() throws {
+        
+        let (sut, model) = try makeSUT()
+
+        XCTAssertNil(sut.alert)
+        
+        model.action.send(ModelAction.CVV.Show.ActivateCertificateAlertShow())
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+
+        XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
+        XCTAssertNoDiff(sut.alert?.message, model.activateCertificateMessage)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
+        XCTAssertNoDiff(sut.alert?.secondary?.title, "Активируйте")
+        XCTAssertNotNil(sut.alert?.secondary?.action)
+    }
+
+    // MARK: - Helpers
+    
+    private func makeSUT(
         model: Model = .mockWithEmptyExcept(),
         product: ProductData,
         rootView: String = "")
     -> ProductProfileViewModel? {
         
         .init(model, product: product, rootView: rootView, dismissAction: {})
+    }
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> (
+        sut: ProductProfileViewModel,
+        model: Model
+    ) {
+        let model = Model.mockWithEmptyExcept()
+        model.products.value = makeProductsData([(.card, 1)])
+        let product = try XCTUnwrap(model.products.value[.card]?.first)
+
+        let sut = try XCTUnwrap(
+            ProductProfileViewModel(
+                model,
+                product: product,
+                rootView: "",
+                dismissAction: {}
+            )
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
     }
     
     func makeModelWithProducts(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {

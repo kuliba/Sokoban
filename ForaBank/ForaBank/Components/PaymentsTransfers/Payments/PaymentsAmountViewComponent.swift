@@ -122,8 +122,17 @@ extension PaymentsAmountView {
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
                 
                 self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+                
+            case let .templatePayment(templateId, _):
+                guard let (_, productFrom, amount) = model.productsTransfer(templateId: templateId) else {
+
+                    let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
+                    let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
                     
-            case let .templatePayment(productFrom: productFrom, productTo: _, amount: amount):
+                    self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
+                    return
+                }
+
                 let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? ""
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
                     
@@ -159,7 +168,7 @@ extension PaymentsAmountView {
                 return
             }
             
-            let currency = self.model.currencyList.value.first(where: {$0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description})
+            let currency = self.model.currencyList.value.first(where: { $0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description })
             textField.update(parameterAmount.amount, currencySymbol: currency?.currencySymbol ?? parameterAmount.currencySymbol)
             actionTitle = parameterAmount.transferButtonTitle
             
@@ -232,9 +241,10 @@ extension PaymentsAmountView {
                         if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
                             
                             update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
+                        } else {
+                                                    
+                            update(value: nil)
                         }
-                        
-                        update(value: nil)
                     }
                     
                 }.store(in: &bindings)

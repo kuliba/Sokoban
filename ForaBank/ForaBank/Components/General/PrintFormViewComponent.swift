@@ -288,5 +288,15 @@ struct PrintFormViewComponent_Previews: PreviewProvider {
 
 extension PrintFormView.ViewModel {
     
-    static let sample = PrintFormView.ViewModel(state: .document(.sample, .init(title: "Сохранить или отправить", style: .red, action: {})), dismissAction: {})
+    static let sample = PrintFormView.ViewModel(
+        state: .document(
+            .sample,
+            .init(
+                title: "Сохранить или отправить",
+                style: .red,
+                action: {}
+            )
+        ),
+        dismissAction: {}
+    )
 }

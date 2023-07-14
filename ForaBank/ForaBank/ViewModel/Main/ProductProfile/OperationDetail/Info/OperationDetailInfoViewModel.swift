@@ -8,11 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
-import RealmSwift
 
 final class OperationDetailInfoViewModel: Identifiable {
     
-    let id = UUID()
     let title = "Детали операции"
     var logo: Image?
     var cells: [DefaultCellViewModel]
@@ -21,8 +19,12 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     typealias IconType = PropertyIconType
     
-    init(model: Model, logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void) {
-        
+    init(
+        model: Model,
+        logo: Image?,
+        cells: [DefaultCellViewModel],
+        dismissAction: @escaping () -> Void
+    ) {
         self.model = model
         self.logo = logo
         self.cells = cells
@@ -67,8 +69,13 @@ final class OperationDetailInfoViewModel: Identifiable {
         }
     }
     
-    init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
-        
+    init?(
+        with statement: ProductStatementData,
+        operation: OperationDetailData?,
+        product: ProductData,
+        dismissAction: @escaping () -> Void,
+        model: Model
+    ) {
         self.model = model
         let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date)
         let foraBankName = "Фора Банк"
@@ -132,7 +139,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: card.currency, style: .clipped), let icon = card.smallDesign.image,
                                let additional = card.additionalField {
                                 
-                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.displayName, iconPaymentService: card.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                             }
                         }
                     }
@@ -167,8 +174,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 
                                 cells.append(ProductCellViewModel(title: "Счет списания",
                                                                   icon: icon,
-                                                                  name: card.mainField,
-                                                                  iconPaymentService: nil,
+                                                                  name: card.displayName,
+                                                                  iconPaymentService: card.paymentSystem,
                                                                   balance: balanceFormatted,
                                                                   description: "· \(description) · \(additional)"))
                             }
@@ -543,8 +550,8 @@ final class OperationDetailInfoViewModel: Identifiable {
                                 
                                 cells.append(ProductCellViewModel(title: "Счет пополнения",
                                                                   icon: icon,
-                                                                  name: productInfo.mainField,
-                                                                  iconPaymentService: nil,
+                                                                  name: productInfo.displayName,
+                                                                  iconPaymentService: productInfo.paymentSystem,
                                                                   balance: balanceFormatted,
                                                                   description: "· \(description) · \(additional)"))
                             }
@@ -908,16 +915,16 @@ final class OperationDetailInfoViewModel: Identifiable {
                                                        value: documentComment))
                 }
                 
-                if let transferNumber = operation?.transferNumber {
-                    
-                    cells.append(PropertyCellViewModel(title: "Номер операции СБП",
-                                                       iconType: IconType.operationNumber.icon,
-                                                       value: transferNumber))
-                }
+            if let transferNumber = statement.fastPayment?.opkcid {
                 
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                   iconType: IconType.date.icon,
-                                                   value: dateString))
+                cells.append(PropertyCellViewModel(title: "Номер операции СБП",
+                                                   iconType: IconType.operationNumber.icon,
+                                                   value: transferNumber))
+            }
+            
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
+                                               iconType: IconType.date.icon,
+                                               value: dateString))
                 
             case .transport:
                 
@@ -1160,7 +1167,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                                let balanceFormatted = model.amountFormatted(amount: balance, currencyCode: productInfo.currency, style: .clipped), let icon = productInfo.smallDesign.image,
                                let additional = productInfo.additionalField {
                                 
-                                cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.mainField, iconPaymentService: nil, balance: balanceFormatted, description: "· \(description) · \(additional)"))
+                                cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: productInfo.displayName, iconPaymentService: productInfo.paymentSystem, balance: balanceFormatted, description: "· \(description) · \(additional)"))
                             }
                         }
                     }
@@ -1199,22 +1206,20 @@ private extension OperationDetailInfoViewModel {
             return nil
         }
         
-        let productName = product.mainField
-        
         if let additionalField = product.additionalField {
             
             return ProductCellViewModel(title: title,
                                         icon: smallDesign,
-                                        name: productName,
-                                        iconPaymentService: nil,
+                                        name: product.displayName,
+                                        iconPaymentService: product.paymentSystem,
                                         balance: balanceString,
                                         description: "· \(description) · \(additionalField)")
         } else {
             
             return ProductCellViewModel(title: title,
                                         icon: smallDesign,
-                                        name: productName,
-                                        iconPaymentService: nil,
+                                        name: product.displayName,
+                                        iconPaymentService: product.paymentSystem,
                                         balance: balanceString,
                                         description: "· \(description)")
         }
@@ -1479,50 +1484,7 @@ extension OperationDetailInfoViewModel {
                 }
                 
             case .external:
-                switch operation.externalTransferType {
-                    case .entity:
-                        return [
-                            payeeNameViewModel,
-                            payeeViewModel,
-                            payeeBankViewModel,
-                            amountViewModel,
-                            commissionViewModel,
-                            payerViewModel,
-                            purposeViewModel,
-                            dateViewModel].compactMap { $0 }
-                        
-                    default:
-                        var cells = [DefaultCellViewModel?]()
-                        cells.append(contentsOf: [
-                            payeeNameViewModel,
-                            payeeViewModel
-                        ])
-                        
-                        if let payeeINN = operation.payeeINN {
-                            
-                            cells.append(PropertyCellViewModel(title: "ИНН получателя",
-                                                               iconType: nil,
-                                                               value: payeeINN))
-                        }
-                        
-                        if let payeeKPP = operation.payeeKPP {
-                            
-                            cells.append(PropertyCellViewModel(title: "КПП получателя",
-                                                               iconType: nil,
-                                                               value: payeeKPP))
-                        }
-                        
-                        cells.append(contentsOf: [
-                            payeeBankViewModel,
-                            amountViewModel,
-                            commissionViewModel,
-                            payerViewModel,
-                            purposeViewModel,
-                            dateViewModel
-                        ])
-                        
-                        return cells.compactMap { $0 }
-                }
+            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
                 
             case .internet:
                 
@@ -1574,7 +1536,7 @@ extension OperationDetailInfoViewModel {
                 
                 let numberViewModel = PropertyCellViewModel(
                     title: "Лицевой счет",
-                    iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                    iconType: IconType.account.icon,
                     value: account
                 )
                 cells.insert(numberViewModel, at: 0)
@@ -1598,6 +1560,24 @@ extension OperationDetailInfoViewModel {
             }
             
             return cells.compactMap { $0 }
+            
+        case .cardToCard, .accountToCard:
+            
+            var cells = [
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                dateViewModel
+            ]
+            
+            if let payeeProductNumber {
+                let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
+                                                               iconType: Image("otherCard"),
+                                                               value: payeeProductNumber)
+                cells.insert(payeeCellViewModel, at: 0)
+            }
+            
+            return cells.compactMap {$0}
                 
             default:
                 
@@ -1607,6 +1587,90 @@ extension OperationDetailInfoViewModel {
                     commissionViewModel,
                     payeeViewModel,
                     dateViewModel].compactMap {$0}
+        }
+    }
+    
+    static func makeItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData?,
+        _ operation: OperationDetailData,
+        _ payeeNameViewModel: PropertyCellViewModel?,
+        _ payeeViewModel: ProductCellViewModel?,
+        _ payeeBankViewModel: BankCellViewModel?,
+        _ amountViewModel: PropertyCellViewModel?,
+        _ commissionViewModel: PropertyCellViewModel?,
+        _ payerViewModel: ProductCellViewModel?,
+        _ purposeViewModel: PropertyCellViewModel?,
+        _ dateViewModel: PropertyCellViewModel?
+    ) -> [DefaultCellViewModel] {
+        
+        let payeeAccountNumber = operation.payeeAccountNumber.map {
+            
+            PropertyCellViewModel(
+                for: .payeeAccountNumber,
+                iconType: IconType.account,
+                value: $0
+            )
+        }
+        let payeeBankBIC = operation.payeeBankBIC.map { bankBic in
+            
+            let bank = dictionaryFullBankInfoBank(bankBic)
+            
+            return BankCellViewModel(
+                title: "Бик банка получателя",
+                icon: bank?.svgImage.image ?? IconType.account.icon,
+                name: bankBic
+            )
+        }
+        let payeeINN = operation.payeeINN.map {
+            
+            PropertyCellViewModel(
+                for: .payeeINN,
+                iconType: IconType.account,
+                value: $0
+            )
+        }
+        let payeeKPP = operation.payeeKPP.map {
+            
+            PropertyCellViewModel(
+                for: .payeeKPP,
+                iconType: IconType.account,
+                value: $0
+            )
+        }
+        
+        switch operation.externalTransferType {
+        case .none:
+            return []
+            
+        case .entity, .unknown:
+            return [
+                payeeNameViewModel,
+                payeeAccountNumber,
+                payeeViewModel,
+                payeeINN,
+                payeeKPP,
+                payeeBankBIC,
+                payeeBankViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ].compactMap { $0 }
+            
+        case .individual:
+            return [
+                payeeNameViewModel,
+                payeeAccountNumber,
+                payeeViewModel,
+                payeeBankBIC,
+                payeeBankViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ].compactMap { $0 }
         }
     }
     
@@ -1731,13 +1795,6 @@ extension OperationDetailInfoViewModel {
             return nil
         }
         
-        var image: Image? = nil
-        
-        if let productCardData = productData as? ProductCardData,
-           let paymentSystemImage = productCardData.paymentSystemImage {
-            image = paymentSystemImage.image
-        }
-        
         let productNumber = productNumber ?? ""
         let lastNumber = productNumber.isEmpty == false ? "• \(productNumber.suffix(4)) • " : ""
         let name = ProductView.ViewModel.name(product: productData,
@@ -1747,7 +1804,7 @@ extension OperationDetailInfoViewModel {
         let viewModel: ProductCellViewModel = .init(title: title,
                                                     icon: icon,
                                                     name: name,
-                                                    iconPaymentService: image,
+                                                    iconPaymentService: productData.paymentSystem,
                                                     balance: formattedBalance,
                                                     description: "\(lastNumber)\(description)")
         
@@ -1783,6 +1840,28 @@ extension OperationDetailInfoViewModel {
                                      icon: Image("BankIcon"),
                                      name: bankName)
         }
+    }
+}
+
+private extension OperationDetailInfoViewModel.PropertyCellViewModel {
+    
+    convenience init(
+        for cellType: CellType,
+        iconType: OperationDetailInfoViewModel.IconType,
+        value: String
+    ) {
+        self.init(
+            title: cellType.rawValue,
+            iconType: iconType.icon,
+            value: value
+        )
+    }
+    
+    enum CellType: String {
+        
+        case payeeAccountNumber = "Номер счета получателя"
+        case payeeINN = "ИНН получателя"
+        case payeeKPP = "КПП получателя"
     }
 }
 
@@ -1894,44 +1973,55 @@ extension OperationDetailInfoViewModel {
     }
 }
 
+// MARK: Preview content
+
 extension OperationDetailInfoViewModel {
     
-    static let detailMockData: OperationDetailInfoViewModel = {
+    static func detailMockData() -> OperationDetailInfoViewModel {
         
-        return OperationDetailInfoViewModel(model: .emptyMock,
-                                            logo: nil,
-                                            cells: [PropertyCellViewModel(title: "По номеру телефона",
-                                                                          iconType: IconType.phone.icon,
-                                                                          value: "+7 (962) 62-12-12"),
-                                                    PropertyCellViewModel(title: "Получатель",
-                                                                          iconType: IconType.user.icon,
-                                                                          value: "Алексей Андреевич К."),
-                                                    BankCellViewModel(title: "Банк получателя",
-                                                                      icon: Image("Bank Logo Sample"),
-                                                                      name: "СБЕР"),
-                                                    PropertyCellViewModel(title: "Сумма перевода",
-                                                                          iconType: IconType.balance.icon,
-                                                                          value: "1 000,00 ₽"),
-                                                    
-                                                    PropertyCellViewModel(title: "Комиссия",
-                                                                          iconType: IconType.commission.icon,
-                                                                          value: "10,20 ₽"),
-                                                    ProductCellViewModel(title: "Счет списания",
-                                                                         icon: Image("card_sample"),
-                                                                         name: "Standart",
-                                                                         iconPaymentService: Image("card_mastercard_logo"),
-                                                                         balance: "10 ₽",
-                                                                         description: "· 4896 · Корпоративная"),
-                                                    PropertyCellViewModel(title: "Назначение платежа",
-                                                                          iconType: IconType.purpose.icon,
-                                                                          value: "Оплата по договору №285"),
-                                                    PropertyCellViewModel(title: "Номер операции СБП",
-                                                                          iconType: IconType.operationNumber.icon,
-                                                                          value: "B11271248585590B00001750251A3F95"),
-                                                    PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                                          iconType: IconType.date.icon,
-                                                                          value: "10.05.2021 15:38:12")]
-                                            , dismissAction: {})
-        
-    }()
+        return OperationDetailInfoViewModel(
+            model: .emptyMock,
+            logo: nil,
+            cells: [
+                PropertyCellViewModel(
+                    title: "По номеру телефона",
+                    iconType: IconType.phone.icon,
+                    value: "+7 (962) 62-12-12"),
+                PropertyCellViewModel(
+                    title: "Получатель",
+                    iconType: IconType.user.icon,
+                    value: "Алексей Андреевич К."),
+                BankCellViewModel(
+                    title: "Банк получателя",
+                    icon: Image("Bank Logo Sample"),
+                    name: "СБЕР"),
+                PropertyCellViewModel(
+                    title: "Сумма перевода",
+                    iconType: IconType.balance.icon,
+                    value: "1 000,00 ₽"),
+                PropertyCellViewModel(
+                    title: "Комиссия",
+                    iconType: IconType.commission.icon,
+                    value: "10,20 ₽"),
+                ProductCellViewModel(
+                    title: "Счет списания",
+                    icon: Image("card_sample"),
+                    name: "Standart",
+                    iconPaymentService: Image("card_mastercard_logo"),
+                    balance: "10 ₽",
+                    description: "· 4896 · Корпоративная"),
+                PropertyCellViewModel(
+                    title: "Назначение платежа",
+                    iconType: IconType.purpose.icon,
+                    value: "Оплата по договору №285"),
+                PropertyCellViewModel(
+                    title: "Номер операции СБП",
+                    iconType: IconType.operationNumber.icon,
+                    value: "B11271248585590B00001750251A3F95"),
+                PropertyCellViewModel(
+                    title: "Дата и время операции (МСК)",
+                    iconType: IconType.date.icon,
+                    value: "10.05.2021 15:38:12")],
+            dismissAction: {})
+    }
 }

@@ -23,19 +23,7 @@ extension Model {
         let currency = try paymentsTransferCurrencyAbroad(parameters)
         let comment = try paymentsTransferAnywayComment(parameters)
         
-        let restrictedParameters: [String] = [Payments.Parameter.Identifier.code.rawValue,
-                                              Payments.Parameter.Identifier.product.rawValue,
-                                              Payments.Parameter.Identifier.`continue`.rawValue,
-                                              Payments.Parameter.Identifier.header.rawValue,
-                                              Payments.Parameter.Identifier.`operator`.rawValue,
-                                              Payments.Parameter.Identifier.service.rawValue,
-                                              Payments.Parameter.Identifier.category.rawValue,
-                                              Payments.Parameter.Identifier.countryDropDownList.rawValue,
-                                              Payments.Parameter.Identifier.countryCurrencyFilter.rawValue,
-                                              Payments.Parameter.Identifier.paymentSystem.rawValue,
-        ]
-        
-        let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: restrictedParameters)
+        let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: restrictedParametersAbroad)
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
@@ -51,10 +39,10 @@ extension Model {
         
         var parameters = parameters.filter({!restrictedParameters.contains($0.id)})
         
-        if parameters.contains(where: {$0.id == Payments.Parameter.Identifier.countryCitySearch.rawValue}),
-            parameters.contains(where: {$0.id == Payments.Parameter.Identifier.countryBankSearch.rawValue}) {
+        if parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryCitySearch.rawValue }),
+            parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryBankSearch.rawValue }) {
             
-            parameters = parameters.filter({$0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue})
+            parameters = parameters.filter({ $0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue })
         }
                 
         var additional = [TransferAnywayData.Additional]()
@@ -98,7 +86,10 @@ extension Model {
         return additional
     }
     
-    func paymentsTransferAbroadStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
+    func paymentsTransferAbroadStepParameters(
+        _ operation: Payments.Operation,
+        response: TransferAnywayResponseData
+    ) async throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
@@ -177,8 +168,23 @@ extension Model {
                 if let product = firstProduct(with: filter),
                    let first = currencyArr.first {
                     
-                    let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
-                    result.append(amountParameter)
+                    switch operation.source {
+                    case let .template(templateId):
+                        
+                        let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                        let parameterList = template?.parameterList.last as? TransferAnywayData
+                        let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
+                        
+                        
+                        let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
+                        
+                        let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: Currency.init(description: currency?.fieldvalue ?? "RUB"), currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
+                        result.append(amountParameter)
+                        
+                    default:
+                        let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
+                        result.append(amountParameter)
+                    }
                     
                 } else {
                     
@@ -242,5 +248,22 @@ extension Model {
         }
         
         return operatorParameterValue
+    }
+}
+
+extension Model {
+    
+    var restrictedParametersAbroad: [String] {
+        [Payments.Parameter.Identifier.code,
+         Payments.Parameter.Identifier.product,
+         Payments.Parameter.Identifier.`continue`,
+         Payments.Parameter.Identifier.header,
+         Payments.Parameter.Identifier.`operator`,
+         Payments.Parameter.Identifier.service,
+         Payments.Parameter.Identifier.category,
+         Payments.Parameter.Identifier.countryDropDownList,
+         Payments.Parameter.Identifier.countryCurrencyFilter,
+         Payments.Parameter.Identifier.paymentSystem,
+        ].map(\.rawValue)
     }
 }

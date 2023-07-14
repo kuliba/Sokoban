@@ -7,13 +7,18 @@
 
 import Foundation
 
-struct SelectingReducer: Reducer {
+public struct SelectingReducer: Reducer {
         
-    typealias Options = [SubscriptionType: [OptionWithMapImage]]
+    public typealias Options = [SubscriptionType: [OptionWithMapImage]]
     
     let options: Options
+    
+    public init(options: Options) {
         
-    func reduce(
+        self.options = options
+    }
+        
+    public func reduce(
         _ state: ComponentState,
         action: ComponentAction
     ) -> ComponentState {

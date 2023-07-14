@@ -16,13 +16,33 @@ extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         _ errorHandler: (_ error: Error) -> Void = { _ in }
-    ) async throws {
+    ) async rethrows {
        
         do {
             let t = try await expression()
             XCTFail("Expected error, got \(t) instead.", file: file, line: line)
         } catch {
             errorHandler(error)
+        }
+    }
+
+    func assertThrowsAsNSError<T>(
+        _ expression: @autoclosure () async throws -> T,
+        _ message: @autoclosure () -> String = "",
+        file: StaticString = #file,
+        line: UInt = #line,
+        error expectedError: Error
+    ) async rethrows {
+       
+        do {
+            let t = try await expression()
+            XCTFail("Expected error, got \(t) instead.", file: file, line: line)
+        } catch {
+            XCTAssertNoDiff(
+                error as NSError,
+                expectedError as NSError,
+                file: file, line: line
+            )
         }
     }
 }

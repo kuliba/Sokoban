@@ -35,11 +35,13 @@ enum SettingType {
         
         case mainSections
         case inactiveProducts
-        case tempates
+        case paymentTemplates
         case productsHidden
         case productsSections
         case productsMoney
         case myProductsOnboarding
+        case profileOnboarding
+
     }
 }
 

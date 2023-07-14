@@ -25,8 +25,13 @@ extension Model {
             let operatorsCodes = Payments.Category.taxes.services.compactMap{ $0.operators.first?.rawValue }
             let anywayOperators = anywayGroup?.operators.filter{ operatorsCodes.contains($0.code)}
             let taxesOperator = anywayOperators?.first(where: {$0.code == Payments.Operator.fssp.rawValue})
-            
-            let headerParameter = Payments.ParameterHeader(title: "ФССП", subtitle: "Задолженность", icon: .image(taxesOperator?.logotypeList.first?.iconData ?? .empty))
+               
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "ФССП",
+                    icon: .image(taxesOperator?.logotypeList.first?.iconData ?? .empty))
+            )
             
             // product
             let productParameterId = Payments.Parameter.Identifier.product.rawValue

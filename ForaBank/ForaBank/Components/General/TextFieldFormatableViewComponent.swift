@@ -143,11 +143,19 @@ struct TextFieldFormatableView: UIViewRepresentable {
         }
         
         func textFieldDidBeginEditing(_ textField: UITextField) {
-            viewModel.isEditing = true
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.viewModel.isEditing = true
+            }
         }
         
         func textFieldDidEndEditing(_ textField: UITextField) {
-            viewModel.isEditing = false
+         
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.viewModel.isEditing = false
+            }
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
