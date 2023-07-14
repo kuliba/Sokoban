@@ -316,7 +316,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             }
 
             if filterProduct.count > 0 {
-                if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
+                if let cardId = self.paymentTemplate?.parameterList.first?.payer?.cardId {
                     let card = filterProduct.first(where: { $0.id == cardId })
                     self.cardField.model = card
                     guard let cardNumber = card?.number else { return }

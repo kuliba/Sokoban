@@ -54,7 +54,7 @@ extension ProductProfileDetailView {
             }
             
             let info = InfoViewModel(configuration: configuration)
-            let mainBlock = MainBlockViewModel(configuration: configuration, loanData: loanData, model: model, action: {})
+            let mainBlock = MainBlockViewModel(configuration: configuration, productCard: productCard, loanData: loanData, amountFormatted: model.amountFormatted(amount:currencyCode:style:), action: {})
             let footer = FooterViewModel(configuration: configuration, loanData: loanData, model: model)
             let isCollapsed = configuration == .notActivated ? true : false
     
@@ -84,7 +84,7 @@ extension ProductProfileDetailView {
             }
             
             info = .init(configuration: configuration)
-            mainBlock = .init(configuration: configuration, loanData: loanData, model: model, action: {})
+            mainBlock = .init(configuration: configuration, productCard: productCard, loanData: loanData, amountFormatted: model.amountFormatted(amount:currencyCode:style:), action: {})
             footer = .init(configuration: configuration, loanData: loanData, model: model)
         }
         

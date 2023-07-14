@@ -8,7 +8,6 @@
 @testable import ForaBank
 import XCTest
 
-#if MOCK
 final class ActiveSessionAgentStubTests: XCTestCase {
     
     func test_init() {
@@ -25,4 +24,3 @@ final class ActiveSessionAgentStubTests: XCTestCase {
         }
     }
 }
-#endif

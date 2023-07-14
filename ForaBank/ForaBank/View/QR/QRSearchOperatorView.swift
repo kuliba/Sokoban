@@ -31,7 +31,7 @@ struct QRSearchOperatorView: View {
                             QRSearchOperatorComponent(viewModel: singleOperator)
                         }
                         
-                        EmptySearchView(viewModel: viewModel)
+                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
                             .padding(.top, 48)
                         
                     case .noEmpty:
@@ -41,12 +41,12 @@ struct QRSearchOperatorView: View {
                             QRSearchOperatorComponent(viewModel: singleOperator)
                         }
                         
-                        EmptySearchView(viewModel: viewModel)
+                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
                             .padding(.top, 48)
                         
                     case .noResult:
                         
-                        EmptySearchView(viewModel: viewModel)
+                        NoCompanyInListView(viewModel: viewModel.noCompanyInListViewModel)
                             .padding(.top, 48)
                     }
                 }
@@ -62,6 +62,9 @@ struct QRSearchOperatorView: View {
                     InternetTVDetailsView(viewModel: viewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .edgesIgnoringSafeArea(.all)
+                case .payments(let viewModel):
+                    PaymentsView(viewModel: viewModel)
+                        .navigationBarHidden(true)
                 }
             }
         }.opacity(0))
@@ -77,50 +80,18 @@ struct QRSearchOperatorView: View {
     }
 }
 
-struct EmptySearchView: View {
-    
-    @ObservedObject var viewModel: QRSearchOperatorViewModel
-    
-    var body: some View {
-        
-        VStack(spacing: 28) {
-            
-            VStack(spacing: 16) {
-                
-                Text(viewModel.emptyViewTitle)
-                    .font(.textH3SB18240())
-                    .foregroundColor(.textSecondary)
-                
-                Text(viewModel.emptyViewContent)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.textPlaceholder)
-                
-            } .padding(.horizontal, 20)
-            
-            VStack(spacing: 20) {
-                
-                VStack(spacing: 8) {
-                    
-                    ForEach(viewModel.searchOperatorButton) { buttons in
-                        
-                        ButtonSimpleView(viewModel: buttons)
-                            .frame(height: 56)
-                            .padding(.horizontal, 20)
-                    }
-                }
-                
-                Text(viewModel.emptyViewSubtitle)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(Color.textPlaceholder)
-                    .padding(.horizontal, 20)
-                    .multilineTextAlignment(.center)
-            }
-        }
-    }
-}
-
 struct QRSearchOperatorView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        QRSearchOperatorView.init(viewModel: .init(searchBar: .init(textFieldPhoneNumberView: .init(.text("Введите ИНН"))), navigationBar: .init(title: "Все регионы"), model: .emptyMock, addCompanyAction: {}, requisitesAction: {}))
+        
+        QRSearchOperatorView(
+            viewModel: .init(
+                searchBar: .withText("Введите ИНН"),
+                navigationBar: .init(title: "Все регионы"),
+                model: .emptyMock,
+                addCompanyAction: {},
+                requisitesAction: {}
+            )
+        )
     }
 }

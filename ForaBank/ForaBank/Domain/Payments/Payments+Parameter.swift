@@ -50,38 +50,38 @@ extension Payments.Parameter {
     
     enum Identifier: String {
         
-        case category       = "ru.forabank.sense.category"
-        case service        = "ru.forabank.sense.service"
-        case `operator`     = "ru.forabank.sense.operator"
-        case header         = "ru.forabank.sense.header"
-        case product        = "ru.forabank.sense.product"
-        case amount         = "ru.forabank.sense.amount"
-        case code           = "ru.forabank.sense.code"
-        case fee            = "ru.forabank.sense.fee"
-        case `continue`     = "ru.forabank.sense.continue"
-        case mock           = "ru.forabank.sense.mock"
-        case subscribe      = "ru.forabank.sense.subscribe"
-        case productTemplate = "ru.forabank.sense.productTemplate"
-        case productTemplateName = "ru.forabank.sense.productTemplateName"
+        case category                        = "ru.forabank.sense.category"
+        case service                         = "ru.forabank.sense.service"
+        case `operator`                      = "ru.forabank.sense.operator"
+        case header                          = "ru.forabank.sense.header"
+        case product                         = "ru.forabank.sense.product"
+        case amount                          = "ru.forabank.sense.amount"
+        case code                            = "ru.forabank.sense.code"
+        case fee                             = "ru.forabank.sense.fee"
+        case `continue`                      = "ru.forabank.sense.continue"
+        case mock                            = "ru.forabank.sense.mock"
+        case subscribe                       = "ru.forabank.sense.subscribe"
+        case productTemplate                 = "ru.forabank.sense.productTemplate"
+        case productTemplateName             = "ru.forabank.sense.productTemplateName"
         
-        case sfpPhone       = "RecipientID"
-        case sfpBank        = "BankRecipientID"
-        case sftRecipient   = "RecipientNm"
-        case sfpAmount      = "SumSTrs"
-        case sfpMessage     = "Ustrd"
-        case sfpAntifraud   = "AFResponse"
+        case sfpPhone                        = "RecipientID"
+        case sfpBank                         = "BankRecipientID"
+        case sftRecipient                    = "RecipientNm"
+        case sfpAmount                       = "SumSTrs"
+        case sfpMessage                      = "Ustrd"
+        case sfpAntifraud                    = "AFResponse"
         
-        case requisitsBankBic                 = "requisitsBankBic"
-        case requisitsAccountNumber           = "requisitsAccountNumber"
-        case requisitsName                    = "requisitsName"
-        case requisitsMessage                 = "requisitsMessage"
-        case requisitsAmount                  = "requisitsAmount"
-        case requisitsInn                     = "requisitsInn"
-        case requisitsKpp                     = "requisitsKpp"
-        case requisitsCompanyName             = "requisitsCompanyName"
-        case requisitsCompanyNameHelper       = "requisitsCompanyName_Helper"
-        case requisitsCheckBox                = "requisitsCheckBox"
-        case requisitsType                    = "requisitsType"
+        case requisitsBankBic                = "requisitsBankBic"
+        case requisitsAccountNumber          = "requisitsAccountNumber"
+        case requisitsName                   = "requisitsName"
+        case requisitsMessage                = "requisitsMessage"
+        case requisitsAmount                 = "requisitsAmount"
+        case requisitsInn                    = "requisitsInn"
+        case requisitsKpp                    = "requisitsKpp"
+        case requisitsCompanyName            = "requisitsCompanyName"
+        case requisitsCompanyNameHelper      = "requisitsCompanyName_Helper"
+        case requisitsCheckBox               = "requisitsCheckBox"
+        case requisitsType                   = "requisitsType"
         
         case countryPhone                    = "RECP"
         case countrybPhone                   = "bPhone"
@@ -105,17 +105,24 @@ extension Payments.Parameter {
         case countryFamilyName               = "bSurName"
         case countryGivenName                = "bName"
         case countryMiddleName               = "bLastName"
+        case paymentSystem                   = "paymentSystem"
         
-        case countryReturnNumber                = "countryReturnNumber"
-        case countryReturnAmount                = "countryReturnAmount"
-        case countryReturnName                  = "countryReturnName"
-        case countryOperationId                 = "countryOperationId"
+        case countryReturnNumber             = "countryReturnNumber"
+        case countryReturnAmount             = "countryReturnAmount"
+        case countryReturnName               = "countryReturnName"
+        case countryOperationId              = "countryOperationId"
         
-        case c2bQrcId                         = "qrcId"
+        case c2bQrcId                        = "qrcId"
         
-        case mobileConnectionPhone = "MobileConnectionPhone"
-        case mobileConnectionAmount = "MobileConnectionAmount"
-        case mobileConnectionOperatorLogo = "MobileConnectionOperatorLogo"
+        case mobileConnectionPhone           = "MobileConnectionPhone"
+        case mobileConnectionAmount          = "MobileConnectionAmount"
+        case mobileConnectionOperatorLogo    = "MobileConnectionOperatorLogo"
+        
+        case paymentsServiceOperatorLogo     = "paymentsServiceOperatorLogo"
+        case paymentsServiceAmount           = "paymentsServiceAmount"
+
+        case p1                              = "P1"
+        case mosParking                      = "MosParking"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -169,6 +176,12 @@ extension Payments {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType.rawValue)
         }
+        
+        init(operatorType: String) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType)
+        }
+
     }
     
     struct ParameterContinue: PaymentsParameterRepresentable {
@@ -624,6 +637,7 @@ extension Payments {
         let limit: Int?
         let timerDelay: TimeInterval
         let errorMessage: String
+        //TODO: refactor to Payments.Validation.RulesSystem
         let validator: Validator
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
@@ -892,6 +906,7 @@ extension Payments {
         let filter: ProductData.Filter
         let isEditable: Bool
         let group: Payments.Parameter.Group?
+        let isAutoContinue: Bool = true
         var productId: ProductData.ID? {
             
             guard let value = value else {
@@ -1030,6 +1045,7 @@ extension Payments {
           enum ActionType {
 
             case scanQrCode
+            case editName(TemplatesListViewModel.RenameTemplateItemViewModel)
           }
        }
         
@@ -1201,7 +1217,7 @@ extension Payments {
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterMock(id: parameter.id, value: value, group: group)
+            ParameterMock(id: parameter.id, value: value, placement: placement, group: group)
         }
     }
 }
@@ -1224,4 +1240,90 @@ extension Payments.Validation.RulesSystem {
         
         return Payments.Validation.RulesSystem(rules: [minRule, maxRule, regExp])
     }()
+}
+
+
+extension Array where Element == PaymentsParameterRepresentable {
+
+    var parameterAmount: Payments.ParameterAmount? {
+        compactMap {
+            $0 as? Payments.ParameterAmount
+        }.first
+    }
+    
+    var parameterProduct: Payments.ParameterProduct? {
+        compactMap {
+            $0 as? Payments.ParameterProduct
+        }.first
+    }
+    
+    var phoneParameterValue: String {
+        get throws {
+            try value(forIdentifier: .mobileConnectionPhone)
+        }
+    }
+    
+    func parameter(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) throws -> Element {
+        
+        try parameter(forId: identifier.rawValue)
+    }
+    
+    func parameter(
+        forId parameterId: Payments.Parameter.ID
+    ) throws -> Element {
+        
+        guard let parameter = first(where: { $0.id == parameterId })
+        else {
+            throw Payments.Error.missingParameter(parameterId)
+        }
+        
+        return parameter
+    }
+    
+    func parameter<T: PaymentsParameterRepresentable>(
+        forIdentifier identifier: Payments.Parameter.Identifier,
+        as type: T.Type
+    ) throws -> T {
+        
+        try parameter(forId: identifier.rawValue, as: type)
+    }
+    
+    func parameter<T: PaymentsParameterRepresentable>(
+        forId parameterId: Payments.Parameter.ID,
+        as type: T.Type
+    ) throws -> T {
+        
+        guard let parameter = first(where: { $0.id == parameterId })
+        else {
+            throw Payments.Error.missingParameter(parameterId)
+        }
+        
+        guard let result = parameter as? T
+        else {
+            throw Payments.Error.unableCreateRepresentable(parameterId)
+        }
+        
+        return result
+    }
+    
+    func value(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) throws -> String {
+        
+        try value(forId: identifier.rawValue)
+    }
+    
+    func value(
+        forId parameterId: Payments.Parameter.ID
+    ) throws -> String {
+        
+        guard let value = try parameter(forId: parameterId).value
+        else {
+            throw Payments.Error.missingValueForParameter(parameterId)
+        }
+        
+        return value
+    }
 }

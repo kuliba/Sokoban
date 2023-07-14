@@ -35,6 +35,7 @@ extension PTSectionLatestPaymentsView {
             self.model = model
             super.init()
             bind()
+            bind(latestPayments)
         }
         
         func bind() {

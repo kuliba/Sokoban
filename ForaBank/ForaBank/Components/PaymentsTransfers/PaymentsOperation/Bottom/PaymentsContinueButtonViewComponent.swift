@@ -64,7 +64,7 @@ struct PaymentsContinueButtonView: View {
         ButtonSimpleView(viewModel: viewModel.button)
             .frame(height: 56)
             .padding(.vertical, 16)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
     }
 }
 

@@ -7,6 +7,46 @@
 
 import Foundation
 
+extension Array {
+    
+    /// Returns filtered array elements. Nil or empty filtering text has no effect.
+    /// - Parameters:
+    ///   - text: Text to filter by. It has no effect if nil or empty.
+    ///   - keyPath: A keyPath to use for comparison.
+    /// - Returns: Array of filtered elements.
+    func filtered(
+        with text: String?,
+        keyPath: KeyPath<Element, String>
+    ) -> Self {
+        
+        guard let text, !text.isEmpty else {
+            return self
+        }
+        
+        return filter {
+            
+            $0[keyPath: keyPath]
+                .localizedLowercase.hasPrefix(text.localizedLowercase)
+        }
+    }
+    
+    func filtered(
+        with text: String?,
+        keyPath: KeyPath<Element, String?>
+    ) -> Self {
+        
+        guard let text, !text.isEmpty else {
+            return self
+        }
+        
+        return filter {
+            
+            $0[keyPath: keyPath]?
+                .localizedLowercase.hasPrefix(text.localizedLowercase) ?? false
+        }
+    }
+}
+
 extension Array where Element: Equatable, Element: Identifiable {
     
     func update(with other: [Element]) -> (updates: [Element], additions: [Element], removals: [Element])? {

@@ -13,7 +13,7 @@ extension Payments {
         
         struct RulesSystem {
             
-            let rules: [Rule]
+            let rules: [any PaymentsValidationRulesSystemRule]
             
             func evaluate(_ value: Payments.Parameter.Value) -> Bool {
                 
@@ -31,21 +31,6 @@ extension Payments {
                 }
                 
                 return firstFailedRule.action
-            }
-        }
-
-        class Rule {
-            
-            let actions: [Stage: Action]
-            
-            init(actions: [Stage: Action]) {
-                
-                self.actions = actions
-            }
-            
-            func grade(_ value: Payments.Parameter.Value) -> Bool {
-                
-                fatalError("Implement in subclass")
             }
         }
         
@@ -79,17 +64,18 @@ extension Payments.Validation.RulesSystem: ValidatorProtocol {
 
 extension Payments.Validation {
     
-    class MinLengthRule: Rule {
+    struct MinLengthRule: PaymentsValidationRulesSystemRule {
         
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let minLength: UInt
         
         init(minLenght: UInt, actions: [Stage: Action]) {
             
             self.minLength = minLenght
-            super.init(actions: actions)
+            self.actions = actions
         }
         
-        override func grade(_ value: Payments.Parameter.Value) -> Bool {
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
             
             guard let value = value else {
                 return false
@@ -99,17 +85,18 @@ extension Payments.Validation {
         }
     }
     
-    class MaxLengthRule: Rule {
+    struct MaxLengthRule: PaymentsValidationRulesSystemRule {
         
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let maxLength: UInt
         
         init(maxLenght: UInt, actions: [Stage: Action]) {
             
             self.maxLength = maxLenght
-            super.init(actions: actions)
+            self.actions = actions
         }
         
-        override func grade(_ value: Payments.Parameter.Value) -> Bool {
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
             
             guard let value = value else {
                 return false
@@ -119,17 +106,18 @@ extension Payments.Validation {
         }
     }
     
-    class LengthLimitsRule: Rule {
+    struct LengthLimitsRule: PaymentsValidationRulesSystemRule {
         
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let lengthLimits: Set<UInt>
         
         init(lengthLimits: Set<UInt>, actions: [Stage: Action]) {
             
             self.lengthLimits = lengthLimits
-            super.init(actions: actions)
+            self.actions = actions
         }
         
-        override func grade(_ value: Payments.Parameter.Value) -> Bool {
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
             
             guard let value = value else {
                 return false
@@ -139,8 +127,9 @@ extension Payments.Validation {
         }
     }
     
-    class ContainsStringRule: Rule {
+    struct ContainsStringRule: PaymentsValidationRulesSystemRule {
         
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let start: UInt
         let expected: String
         
@@ -148,10 +137,10 @@ extension Payments.Validation {
             
             self.start = start
             self.expected = expected
-            super.init(actions: actions)
+            self.actions = actions
         }
         
-        override func grade(_ value: Payments.Parameter.Value) -> Bool {
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
             
             let minimumLength = Int(start) + expected.count
             guard let value = value, value.count >= minimumLength else {
@@ -166,21 +155,44 @@ extension Payments.Validation {
         }
     }
     
-    class RegExpRule: Rule {
+    struct RegExpRule: PaymentsValidationRulesSystemRule {
         
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
         let regExp: String
         
         init(regExp: String, actions: [Stage: Action]) {
             
             self.regExp = regExp
-            super.init(actions: actions)
+            self.actions = actions
         }
         
-        override func grade(_ value: Payments.Parameter.Value) -> Bool {
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
             
             let predicate = NSPredicate(format:"SELF MATCHES %@", regExp)
             
             return predicate.evaluate(with: value)
+        }
+    }
+    
+    struct OptionalRegExpRule: PaymentsValidationRulesSystemRule {
+        
+        let actions: [Payments.Validation.Stage : Payments.Validation.Action]
+        let regExp: String
+        
+        init(regExp: String, actions: [Stage: Action]) {
+            
+            self.regExp = regExp
+            self.actions = actions
+        }
+        
+        func grade(_ value: Payments.Parameter.Value) -> Bool {
+            
+            if value == nil {
+               return true
+            }
+            let predicateFirst = NSPredicate(format:"SELF MATCHES %@", regExp)
+            
+            return predicateFirst.evaluate(with: value)
         }
     }
 }

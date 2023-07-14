@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "14BEEB7F-55F0-4CC2-8595-20EA33D3F359",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -569,7 +569,7 @@ class ContactInputViewController: UIViewController {
             
             self.cardListView.cardList = filterProduct.filter({$0.ownerID == Model.shared.clientInfo.value?.id})
             if filterProduct.count > 0 {
-                if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
+                if let cardId = self.paymentTemplate?.parameterList.first?.payer?.cardId {
                     
                     let card = filterProduct.first(where: { $0.id == cardId })
                     self.cardFromField.model = card
@@ -577,7 +577,7 @@ class ContactInputViewController: UIViewController {
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
                     
-                } else if let accountId = self.paymentTemplate?.parameterList.first?.payer.accountId {
+                } else if let accountId = self.paymentTemplate?.parameterList.first?.payer?.accountId {
                     
                     let card = filterProduct.first(where: { $0.id == accountId })
                     self.cardFromField.model = card

@@ -372,12 +372,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             
             if productsFilterredMapped.count > 0 {
                 
-                if let cardId = self.template?.parameterList.first?.payer.cardId {
+                if let cardId = self.template?.parameterList.first?.payer?.cardId {
                     
                     let card = productsFilterredMapped.first(where: { $0.id == cardId })
                     self.footerView.cardFromField.model = card
                     
-                } else if let accountId = self.template?.parameterList.first?.payer.accountId {
+                } else if let accountId = self.template?.parameterList.first?.payer?.accountId {
                     
                     let card = productsFilterredMapped.first(where: { $0.id == accountId })
                     self.footerView.cardFromField.model = card

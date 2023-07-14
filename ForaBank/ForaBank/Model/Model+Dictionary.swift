@@ -497,6 +497,17 @@ extension Model {
 
         return regions
     }
+    
+    // Region + parent code
+    
+    func dictionaryRegion(for region: String, code: String) -> [OperatorGroupData.OperatorData] {
+        
+        guard let regionList = dictionaryAnywayOperators() else { return [] }
+        
+        let regions = regionList.filter{ $0.region == region && $0.parentCode == code }
+
+        return regions
+    }
         
     //Countries
     

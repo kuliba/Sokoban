@@ -38,6 +38,7 @@
         "regExp": "^\\d{10}$",
         "subTitle": "Пример: 9051111111",
         "svgImage": "string",
+        "inputFieldType": "PHONE",
         "title": "Номер телефона +7",
         "type": "Input",
         "viewType": "INPUT"

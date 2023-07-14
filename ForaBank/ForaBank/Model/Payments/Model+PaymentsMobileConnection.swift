@@ -20,10 +20,11 @@ extension Model {
                 operatorType: .mobileConnection
             )
             
-            let headerParameter = Payments.ParameterHeader(
-                title: "Оплата мобильной связи"
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(title: "Оплата мобильной связи")
             )
-            
+                
             let phoneParameterId = Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
             let phoneParameter = Payments.ParameterInputPhone(
                 .init(id: phoneParameterId, value: nil),
@@ -40,10 +41,11 @@ extension Model {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
             let amountParameter = Payments.ParameterAmount(
-                value: "0",
+                value: nil,
                 title: "Сумма перевода",
                 currencySymbol: currencySymbol,
                 transferButtonTitle: "Продолжить",
@@ -192,5 +194,20 @@ extension Model {
         ]
         
         return identifiers.map(\.rawValue)
+    }
+    
+    func parameterHeader(
+        source: Payments.Operation.Source?,
+        header: Payments.ParameterHeader
+    ) -> Payments.ParameterHeader {
+        
+        guard let source,
+              let templateHeader = templateHeader(
+            templates: self.paymentTemplates.value,
+            source: source) else {
+            return header
+        }
+            
+        return templateHeader
     }
 }

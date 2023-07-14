@@ -106,7 +106,7 @@ class PlacesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currentRegion in
                 
-                guard model.currentUserLoaction.value == nil else {
+                guard model.currentUserLocation.value == nil else {
                     return
                 }
                 
@@ -114,7 +114,7 @@ class PlacesViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        model.currentUserLoaction
+        model.currentUserLocation
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] location in
                 
@@ -147,7 +147,7 @@ class PlacesViewModel: ObservableObject {
                 case .list:
                     
                     let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
-                    let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, referenceLoaction: referenceLocation.coordinate)
+                    let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, referenceLocation: referenceLocation.coordinate)
                     
                     withAnimation {
                         self.list = listViewModel
@@ -189,7 +189,7 @@ class PlacesViewModel: ObservableObject {
                 
                 let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
                 map.update(with: filterredAtmList)
-                list?.update(with: filterredAtmList, metroStationsList: atmMetroStations, referenceLoaction: referenceLocation.coordinate)
+                list?.update(with: filterredAtmList, metroStationsList: atmMetroStations, referenceLocation: referenceLocation.coordinate)
                 
             }.store(in: &bindings)
     }

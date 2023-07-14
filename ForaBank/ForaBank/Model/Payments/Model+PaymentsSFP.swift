@@ -17,8 +17,13 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
-            // header
-            let headerParameter = Payments.ParameterHeader(title: "Перевод по номеру телефона", icon: .name("ic24Sbp"))
+            // header              
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Перевод по номеру телефона",
+                    icon: .name("ic24Sbp"))
+            )
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
@@ -38,7 +43,9 @@ extension Model {
                   let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
@@ -47,7 +54,7 @@ extension Model {
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
-            let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
+            let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: product.balance))
             
             return .init(parameters: [operatorParameter, headerParameter, phoneParameter, bankParameter, productParameter, messageParameter, amountParameter], front: .init(visible: [headerParameter.id, phoneParameterId, bankParameterId, productParameterId, messageParameterId, amountParameterId], isCompleted: false), back: .init(stage: .remote(.start), required: [phoneParameterId, bankParameterId], processed: nil))
             
@@ -298,11 +305,15 @@ extension Model {
     }
     
     // debug mock
-    func paymentsMockSFP() -> Payments.Mock {
+    static func paymentsMockSFP() -> Payments.Mock {
         
-        return .init(service: .sfp,
-                     parameters: [.init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: "+7 0115110217"),
-                                  .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "1crt88888881")])
+        return .init(
+            service: .sfp,
+            parameters: [
+                .init(id: Payments.Parameter.Identifier.sfpPhone.rawValue, value: "+7 0115110217"),
+                .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "1crt88888881")
+            ]
+        )
     }
 }
 
@@ -317,6 +328,20 @@ extension Payments.ParameterAmount {
         } else {
             
             return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, validator: .init(minAmount: 0.01, maxAmount: maxAmount), info: .action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo))
+        }
+    }
+}
+
+extension Model {
+    
+    static func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
+    
+        switch source {
+        case .some(.template):
+            return nil
+            
+        default:
+            return productId
         }
     }
 }

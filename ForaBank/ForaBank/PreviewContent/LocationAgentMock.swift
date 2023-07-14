@@ -12,7 +12,7 @@ import CoreLocation
 class LocationAgentMock: LocationAgentProtocol {
     
     let status: CurrentValueSubject<LocationAgentStatus, Never> = .init(.disabled)
-    let currentLoaction: CurrentValueSubject<CLLocationCoordinate2D?, Never> = .init(nil)
+    let currentLocation: CurrentValueSubject<CLLocationCoordinate2D?, Never> = .init(nil)
     
     func requestPermissions() {
         

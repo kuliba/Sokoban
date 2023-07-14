@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreText
 
 struct PaymentTemplateData: Identifiable, Equatable {
     
@@ -58,14 +57,17 @@ extension PaymentTemplateData {
             case .sfp: return "Перевод СБП"
             case .externalEntity: return "По реквизитам: компания"
             case .externalIndividual: return "По реквизитам: частный"
-            case .contactAdressless, .contactCash, .contactAddressing, .contactAddressless: return "Перевод Контакт"
+            case .contactAdressless,
+                 .contactCash,
+                 .contactAddressing,
+                 .contactAddressless: return "Перевод Контакт"
             case .direct, .newDirect: return "Перевод МИГ"
             case .housingAndCommunalService: return "Услуги ЖКХ"
             case .mobile: return "Мобильная связь"
             case .internet: return "Интернет, ТВ"
             case .transport: return "Транспорт"
             case .taxAndStateService: return "Налоги и госуслуги"
-            case.interestDeposit: return "Проценты по депозитам"
+            case .interestDeposit: return "Проценты по депозитам"
             case .unknown: return "Неизвестно"
             }
         }
@@ -131,117 +133,49 @@ extension PaymentTemplateData {
         
         return transfer.amountDouble
     }
-}
-
-//MARK: - Convenience SPF Properties
-
-//TODO: tests
-extension PaymentTemplateData {
     
-    var spfPhoneNumber: String? {
+    private var transferGeneralData: TransferGeneralData? {
         
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
-            return nil
-        }
-        
-        return phoneData.fieldvalue
+        return parameterList.first as? TransferGeneralData
     }
     
-    var spfBankId: String? {
+    var transferAnywayData: TransferAnywayData? {
         
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
-            return nil
-        }
-        
-        return bankData.fieldvalue
-    }
-    
-    var psfCardId: Int? {
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.payer.cardId else {
-            return nil
-        }
-        
-        return bankData
+        return parameterList.first as? TransferAnywayData
     }
 }
+
 
 //MARK: - Convenience Inside Bank by Phone Properties
 
-//TODO: tests
 extension PaymentTemplateData {
     
-    var insideByPhonePhoneNumber: String? {
+    var phoneNumber: String? {
         
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let phoneData = transfer.payeeInternal?.phoneNumber  else {
-            return nil
-        }
+        guard let transferGeneralData,
+              let phoneData = transferGeneralData.payeeInternal?.phoneNumber
+        else { return nil }
         
         return phoneData
     }
     
-    var insideByPhoneBankId: String? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              transfer.payeeInternal?.phoneNumber != nil  else {
-            return nil
-        }
+    var foraBankId: String? {
+        
+        guard let transferGeneralData,
+              transferGeneralData.payeeInternal?.phoneNumber != nil
+        else { return nil }
         
         return "100000000217"
     }
     
-    var insideByPhoneCardId: Int? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let bankData = transfer.payer.cardId else {
-            return nil
-        }
+    var payerProductId: Int? {
         
-        return bankData
-    }
-    
-    var insideByPhoneAccountId: Int? {
-        guard let transfer = parameterList.first as? TransferGeneralData,
-              let bankData = transfer.payer.accountId else {
-            return nil
-        }
+        let transfer = transferGeneralData ?? transferAnywayData
         
-        return bankData
-    }
-}
-
-//MARK: - Convenience Inside Bank by Card Properties
-
-//TODO: tests
-extension PaymentTemplateData {
-    
-    var insideByCardPhoneNumber: String? {
+        guard let transfer,
+              let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
+        else { return nil }
         
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
-            return nil
-        }
-        
-        return phoneData.fieldvalue
-    }
-    
-    var insideByCardBankId: String? {
-        
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
-            return nil
-        }
-        
-        return bankData.fieldvalue
-    }
-    
-    var insideByCardCardId: Int? {
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.payer.cardId else {
-            return nil
-        }
-        
-        return bankData
+        return productId
     }
 }

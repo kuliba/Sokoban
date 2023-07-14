@@ -11,7 +11,7 @@ import SwiftUI
 
 class ContactsSectionCollapsableViewModel: ContactsSectionViewModel, ObservableObject {
 
-    @Published var header: ContactsSectionHeaderView.ViewModel
+    let header: ContactsSectionHeaderView.ViewModel
     @Published var isCollapsed: Bool
 
     init(header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool = false, mode: Mode, model: Model) {

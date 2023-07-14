@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "63A4F57B-6980-4D9C-92AC-60264DFDE0ED",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

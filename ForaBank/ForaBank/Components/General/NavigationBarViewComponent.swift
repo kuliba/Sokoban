@@ -74,15 +74,30 @@ extension NavigationBarView {
                 for item in headerParameter.rightButton {
                     
                     switch item.action {
-                    case .scanQrCode:
-                        
-                        guard let icon = item.icon.image else {
-                            break
-                        }
-                        
-                        rightButton.append(ButtonItemViewModel(icon: icon, action: { [weak self] in
-                            self?.action.send(NavigationBarViewModelAction.ScanQrCode())
-                        }))
+                        case .scanQrCode:
+                            
+                            guard let icon = item.icon.image else {
+                                break
+                            }
+                            
+                            rightButton.append(ButtonItemViewModel(icon: icon, action: { [weak self] in
+                                self?.action.send(NavigationBarViewModelAction.ScanQrCode())
+                            }))
+                        case .editName:
+                            guard let icon = item.icon.image else {
+                                break
+                            }
+                            
+                            rightButton.append(ButtonItemViewModel(icon: icon, action: { [weak self] in
+                                if let action = headerParameter.rightButton.first?.action {
+                                    switch action {
+                                    case let .editName(viewModel):
+                                        self?.action.send(NavigationBarViewModelAction.EditName(viewModel: viewModel))
+                                    default:
+                                        break
+                                    }
+                                }
+                            }))
                     }
                 }
                 
@@ -115,6 +130,11 @@ extension NavigationBarView {
 struct NavigationBarViewModelAction {
     
     struct ScanQrCode: Action {}
+    
+    struct EditName: Action {
+        
+        let viewModel: TemplatesListViewModel.RenameTemplateItemViewModel
+    }
 }
 
 //MARK: - Types

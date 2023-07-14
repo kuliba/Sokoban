@@ -154,3 +154,27 @@ extension TransferGeneralData {
     }
 }
 
+extension TransferGeneralData {
+    
+    var suffixCardNumber: String? {
+        
+        guard let cardNumber = self.payeeInternal?.cardNumber?.suffix(4) else {
+            return nil
+        }
+        
+        return cardNumber.description
+    }
+}
+
+extension Array where Element == TransferGeneralData {
+
+    var lastPayeeCardNumber: String? {
+        
+        self.last?.payeeInternal?.cardNumber
+    }
+    
+    var lastPayeeProductId: Int? {
+        
+        self.last?.payeeInternal?.cardId ?? self.last?.payeeInternal?.accountId
+    }
+}

@@ -53,7 +53,8 @@ class ContactsBanksPrefferedSectionViewModel: ContactsSectionViewModel, Observab
                     
                     withAnimation {
                         
-                        items = Array(repeating: ContactsPlaceholderItemView.ViewModel(style: .bankPreffered), count: 8)
+                        items = (0..<8).map { _ in ContactsPlaceholderItemView.ViewModel(style: .bankPreffered)
+                        }
                     }
                 }
                 

@@ -32,7 +32,17 @@ extension Model {
     
     func firstProduct(with filter: ProductData.Filter) -> ProductData? {
         
-        filter.filterredProducts(allProducts).first
+        if let preferredProductID {
+            
+            let filterredProducts = filter.filterredProducts(allProducts)
+            let preferedProduct = filterredProducts.first(where: { $0.id == preferredProductID })
+            
+            return preferedProduct ?? filterredProducts.first
+
+        } else {
+            
+            return filter.filterredProducts(allProducts).first
+        }
     }
     
     var isAllProductsHidden: Bool {

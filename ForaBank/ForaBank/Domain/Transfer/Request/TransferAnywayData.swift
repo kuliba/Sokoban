@@ -103,3 +103,26 @@ extension TransferAnywayData {
         return super.debugDescription + ", puref: \(String(describing: puref))" + ", additional: " + additionsDescription
     }
 }
+
+extension Array where Element == TransferAnywayData.Additional {
+    
+    var sfpPhone: String? {
+        
+        guard let phone = value(forIdentifier: .sfpPhone)
+        else { return nil }
+        
+        return "7" + phone
+    }
+    
+    var sfpBank: String? {
+        
+        value(forIdentifier: .sfpBank)
+    }
+    
+    private func value(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) -> String? {
+        
+        first(where: { $0.fieldname == identifier.rawValue })?.fieldvalue
+    }
+}

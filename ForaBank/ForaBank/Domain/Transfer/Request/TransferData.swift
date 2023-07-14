@@ -12,10 +12,10 @@ class TransferData: Codable {
     let amount: Decimal?
     let check: Bool
     let comment: String?
-    let currencyAmount: String
-    let payer: Payer
+    let currencyAmount: String?
+    let payer: Payer?
     
-    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer) {
+    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String?, payer: Payer?) {
         
         self.amount = amount
         self.check = check
@@ -36,8 +36,8 @@ class TransferData: Codable {
         amount = try container.decodeIfPresent(Decimal.self, forKey: .amount)
         check = try container.decode(Bool.self, forKey: .check)
         comment = try container.decodeIfPresent(String.self, forKey: .comment)
-        currencyAmount = try container.decode(String.self, forKey: .currencyAmount)
-        payer = try container.decode(Payer.self, forKey: .payer)
+        currencyAmount = try container.decodeIfPresent(String.self, forKey: .currencyAmount)
+        payer = try container.decodeIfPresent(Payer.self, forKey: .payer)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -46,7 +46,7 @@ class TransferData: Codable {
         try container.encode(amount, forKey: .amount)
         try container.encode(check, forKey: .check)
         try container.encode(comment, forKey: .comment)
-        try container.encode(currencyAmount, forKey: .currencyAmount)
+        try container.encodeIfPresent(currencyAmount, forKey: .currencyAmount)
         try container.encode(payer, forKey: .payer)
     }
 }
@@ -65,6 +65,11 @@ extension TransferData {
         var debugDescription: String {
             
             "cardId: \(String(describing: cardId)), accountId: \(String(describing: accountId))"
+        }
+        
+        var productIdDescription: String? {
+            
+            cardId?.description ?? accountId?.description
         }
     }
 }

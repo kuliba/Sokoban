@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 import CombineSchedulers
-import TextFieldRegularComponent
+import TextFieldComponent
 
 extension PaymentsCodeView {
     
@@ -16,7 +16,7 @@ extension PaymentsCodeView {
         
         let icon: Image
         let description: String
-        let textField: TextFieldRegularView.ViewModel
+        let textField: RegularFieldViewModel
         @Published var title: String?
         @Published var editingState: EditingState
         @Published var resendState: ResendState?
@@ -26,7 +26,7 @@ extension PaymentsCodeView {
         var parameterCode: Payments.ParameterCode? { source as? Payments.ParameterCode }
         override var isValid: Bool { parameterCode?.validator.isValid(value: textField.text ?? "") ?? false }
 
-        init(icon: Image, description: String, title: String?, textField: TextFieldRegularView.ViewModel, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), scheduler: AnySchedulerOf<DispatchQueue> = .main) {
+        init(icon: Image, description: String, title: String?, textField: RegularFieldViewModel, editingState: EditingState, resendState: PaymentsCodeView.ViewModel.ResendState?, source: PaymentsParameterRepresentable = Payments.ParameterMock(id: UUID().uuidString), scheduler: AnySchedulerOf<DispatchQueue> = .main) {
             self.icon = icon
             self.description = description
             self.title = title
@@ -44,7 +44,13 @@ extension PaymentsCodeView {
             
             self.icon = parameterCode.icon.image ?? Image.ic24SmsCode
             self.description = parameterCode.title
-            self.textField = .init(text: parameterCode.parameter.value ?? "", placeholder: parameterCode.title, keyboardType: .number, limit: parameterCode.limit, needCloseButton: true, scheduler: scheduler)
+            self.textField = TextFieldFactory.makeTextField(
+                text: parameterCode.parameter.value ?? "",
+                placeholderText: parameterCode.title,
+                keyboardType: .number,
+                limit: parameterCode.limit,
+                scheduler: scheduler
+            )
             self.editingState = .idle
             self.resendState = nil
             self.scheduler = scheduler
@@ -149,9 +155,7 @@ extension PaymentsCodeView {
                 .store(in: &bindings)
         }
         
-        private func updateTitle(
-            with state: TextFieldRegularView.ViewModel.State
-        ) {
+        private func updateTitle(with state: TextFieldState) {
             
             title = state.isEditing || state.hasValue ? description : nil
         }
@@ -168,7 +172,7 @@ extension PaymentsCodeView {
     }
 }
 
-extension TextFieldRegularView.ViewModel.State {
+extension TextFieldState {
     
     var hasValue: Bool { text != "" && text != nil }
 }
@@ -327,14 +331,15 @@ struct PaymentsCodeView: View {
     
     private var textField: some View {
         
-        TextFieldRegularView(viewModel: viewModel.textField, font: .textH4M16240(), textColor: .textSecondary)
-            .onTapGesture {
-                viewModel.editingState = .idle
-            }
-            .foregroundColor(.textSecondary)
-            .textFieldStyle(DefaultTextFieldStyle())
-            .frame(height: 24)
-            .keyboardType(.numberPad)
+        RegularTextFieldView(
+            viewModel: viewModel.textField,
+            font: .textH4M16240(),
+            textColor: .textSecondary
+        )
+        .foregroundColor(.textSecondary)
+        .textFieldStyle(DefaultTextFieldStyle())
+        .frame(height: 24)
+        .keyboardType(.numberPad)
     }
     
     @ViewBuilder
@@ -442,11 +447,13 @@ struct PaymentCodeView_Previews: PreviewProvider {
 
 extension PaymentsCodeView.ViewModel {
     
-    static let sample = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: nil, textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
+    static let sample = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: nil, textField: sampleTextField, editingState: .idle, resendState: .timer(.init(delay: 5, completeAction: {})))
     
-    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleCorrect = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: sampleTextField, editingState: .editing, resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
+    static let sampleError = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: sampleTextField, editingState: .error("Код введен неправильно"), resendState: .timer(.init(delay: 60, completeAction: {})))
     
-    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: .init(text: nil, placeholder: "Введите код из смс", keyboardType: .number, limit: 6), editingState: .idle, resendState: .button(.init()))
+    static let sampleButton = PaymentsCodeView.ViewModel(icon: .ic24SmsCode, description: "Введите код из смс", title: "Введите код из смс", textField: sampleTextField, editingState: .idle, resendState: .button(.init()))
+    
+    private static let sampleTextField = TextFieldFactory.makeTextField(text: nil, placeholderText: "Введите код из смс", keyboardType: .number, limit: 6)
 }

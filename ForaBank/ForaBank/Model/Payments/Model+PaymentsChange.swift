@@ -39,6 +39,6 @@ extension Model {
         let command = ServerCommands.TransferController.ChangeOutgoing(token: token, payload: .init(bLastName: bLastName, bName: bName, bSurName: bSurName, transferReference: transferReference))
         let result = try await serverAgent.executeCommand(command: command)
             
-        return .init(operationDetailId: 0, status: .inProgress, productId: operation.productId ?? 0, amount: operation.amount ?? 0, service: .change, serviceData: .returnAbroadData(transferData: result, title: "Запрос на изменение перевода принят в обработку"))
+        return .init(operationDetailId: 0, status: .inProgress, productId: operation.productId ?? 0, amount: operation.amount ?? 0, service: .change, serviceData: .returnAbroadData(transferData: result, title: "Запрос на изменение перевода принят в обработку"), operation: operation)
     }
 }

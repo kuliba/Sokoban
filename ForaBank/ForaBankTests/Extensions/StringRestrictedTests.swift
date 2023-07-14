@@ -142,7 +142,9 @@ final class StringRestrictedTests: XCTestCase {
     private func makeSUT(
         _ string: String,
         limit: Int? = nil,
-        style: StringFilteringStyle
+        style: StringFilteringStyle,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> String {
         
         return string.restricted(withLimit: limit, forStyle: style)

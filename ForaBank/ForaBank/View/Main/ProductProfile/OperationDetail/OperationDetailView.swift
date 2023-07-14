@@ -26,6 +26,11 @@ struct OperationDetailView: View {
                 // template, document, details buttons
                 HStack(spacing: 52) {
                     
+                    if let template = viewModel.templateButton {
+                        
+                        TemplateButtonView(viewModel: template)
+                    }
+                    
                     ForEach(viewModel.featureButtons) { buttonViewModel in
                         
                         FeatureButtonView(viewModel: buttonViewModel)
@@ -61,7 +66,7 @@ struct OperationDetailView: View {
         .edgesIgnoringSafeArea(.bottom)
         .sheet(item: $viewModel.sheet) { item in
 
-            switch item.type {
+            switch item.kind {
             case .info(let operationDetailInfoViewModel):
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
                 
@@ -210,49 +215,8 @@ extension OperationDetailView {
             
             switch viewModel.kind {
             case .template(let selected):
-                if selected == true {
-                    
-                    Button {
-                        
-                        viewModel.action()
-                        
-                    } label: {
-                     
-                        VStack(spacing: 12) {
-                            
-                            Image(viewModel.icon)
-                                .resizable()
-                                .frame(width: 56, height: 56)
-                            
-                            HStack(spacing: 3) {
-                                
-                                Image("Operation Details Template Check Icon")
-                                Text(viewModel.name)
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundColor(Color(hex: "#22C183"))
-                            }
-                        }
-                    }
-                    
-                } else {
-                    
-                    VStack(spacing: 12) {
-                        
-                        Button {
-                            
-                            viewModel.action()
-                            
-                        } label: {
-                            
-                            Image(viewModel.icon)
-                                .resizable()
-                                .frame(width: 56, height: 56)
-                        }
-                        
-                        Text(viewModel.name)
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                }
+                EmptyView()
+                    .frame(width: 10, height: 10, alignment: .center)
                 
             default:
                 VStack(spacing: 12) {
@@ -319,7 +283,7 @@ extension OperationDetailViewModel {
         
         let featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
         
-        return OperationDetailViewModel(id: "1", header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, isLoading: false)
+        return OperationDetailViewModel(id: "1", header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, templateButton: .init(state: .idle, model: .emptyMock, tapAction: {}), isLoading: false)
         
     }()
 }

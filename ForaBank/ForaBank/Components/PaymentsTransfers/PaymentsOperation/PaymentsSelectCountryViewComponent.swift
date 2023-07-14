@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
-import TextFieldRegularComponent
+import TextFieldComponent
 
-//MARK: - ViewModel
+// MARK: - ViewModel
 
 extension PaymentsSelectCountryView {
     
@@ -24,34 +24,74 @@ extension PaymentsSelectCountryView {
         
         let model: Model
         
-        var parameterSelect: Payments.ParameterSelectCountry? { source as? Payments.ParameterSelectCountry }
-        override var isValid: Bool { model.countriesListWithSevice.value.contains(where: {$0.name.capitalized == selectedItem.textField.text?.capitalized}) == true && parameterSelect?.validator.isValid(value: value.current) ?? false }
+        var parameterSelect: Payments.ParameterSelectCountry? {
+            source as? Payments.ParameterSelectCountry
+        }
         
-        init(_ model: Model, selectedItem: SelectedItemViewModel, list: ListViewModel?, warning: String? = nil, source: PaymentsParameterRepresentable = Payments.ParameterMock()) {
-            
+        override var isValid: Bool {
+            model.isValid(countryName: selectedItem.textField.text)
+            && parameterSelect.isValid(value: value.current)
+        }
+        
+        private let scheduler: AnySchedulerOfDispatchQueue
+        
+        init(
+            _ model: Model,
+            selectedItem: SelectedItemViewModel,
+            list: ListViewModel?,
+            warning: String? = nil,
+            source: PaymentsParameterRepresentable = Payments.ParameterMock(),
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) {
             self.model = model
             self.selectedItem = selectedItem
             self.list = list
             self.warning = warning
+            self.scheduler = scheduler
             super.init(source: source)
         }
         
-        convenience init(with parameterSelect: Payments.ParameterSelectCountry, model: Model) throws {
+        convenience init(
+            with parameterSelect: Payments.ParameterSelectCountry,
+            model: Model,
+            scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        ) throws {
             
-            let selectedItem = SelectedItemViewModel(model, icon: .placeholder, textField: .init(text: nil, placeholder: parameterSelect.title, keyboardType: .default, limit: nil), action: {})
+            let textField = TextFieldFactory.makeTextField(
+                text: nil,
+                placeholderText: parameterSelect.title,
+                keyboardType: .default,
+                limit: nil,
+                scheduler: scheduler
+            )
+            let selectedItem = SelectedItemViewModel(icon: .placeholder, textField: textField, action: {})
             
-            self.init(model, selectedItem: selectedItem, list: nil, source: parameterSelect)
+            self.init(
+                model,
+                selectedItem: selectedItem,
+                list: nil,
+                source: parameterSelect,
+                scheduler: scheduler
+            )
             
-            if let country = model.countriesListWithSevice.value.first(where: {$0.code == parameterSelect.value}) {
+            if let country = model.country(for: parameterSelect) {
                 
-                let image = model.images.value.filter({$0.key == country.md5hash})
+                let image = model.image(forCountry: country) ?? .ic12ArrowDown
                 
-                self.selectedItem = SelectedItemViewModel(model, icon: .image(image.values.first?.image ?? .ic12ArrowDown), textField: .init(text: country.name.capitalized, placeholder: parameterSelect.title, keyboardType: .default, limit: nil), action: { [weak self] in
+                let textField = TextFieldFactory.makeTextField(
+                    text: country.name.capitalized,
+                    placeholderText: parameterSelect.title,
+                    keyboardType: .default,
+                    limit: nil,
+                    scheduler: scheduler
+                )
+                
+                self.selectedItem = SelectedItemViewModel(icon: .image(image), textField: textField, action: { [weak self] in
                     self?.action.send(PaymentsSelectCountryViewModelAction.ShowCountriesList())
                 })
             }
             
-            let imageIds = model.countriesListWithSevice.value.compactMap { $0.md5hash }
+            let imageIds = model.countriesListWithSevice.value.compactMap(\.md5hash)
             model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: imageIds))
             
             bind()
@@ -59,265 +99,144 @@ extension PaymentsSelectCountryView {
         
         override func updateValidationWarnings() {
             
-            if isValid == false,
-               let parameterSelect = parameterSelect,
-               let action = parameterSelect.validator.action(with: value.current, for: .post),
-               case .warning(let message) = action {
+            if !isValid,
+               let warning = parameterSelect.warning(forValue: value.current) {
                 
                 withAnimation {
                     
-                    self.warning = message
+                    self.warning = warning
                 }
             }
         }
     }
 }
 
-//MARK: Bindings
+// MARK: Bindings
 
 extension PaymentsSelectCountryView.ViewModel {
     
     private func bind() {
         
         model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .compactMap { $0 as? ModelAction.Dictionary.DownloadImages.Response }
+            .receive(on: scheduler)
+            .sink { [unowned self] response in
                 
-                switch action {
-                case let payload as ModelAction.Dictionary.DownloadImages.Response:
-                    switch payload.result {
-                    case let .success(data):
-                        
-                        var countryList: [ListViewModel.ItemViewModel] = []
-                        
-                        for item in data {
+                switch response.result {
+                case let .success(data):
+                    
+                    let countries = model.makeItemViewModels(
+                        with: data,
+                        action: { [weak self] itemId in
                             
-                            for country in self.model.countriesListWithSevice.value {
-                                
-                                if item.id == country.md5hash {
-                                    
-                                    if let icon = item.imageData.image {
-                                        
-                                        countryList.append(.init(id: country.id, icon: .icon(icon), name: country.name.capitalized, subtitle: nil, action: { itemId in
-                                            
-                                            self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
-                                        }))
-                                    } else {
-                                        countryList.append(.init(id: country.id, icon: .placeholder, name: country.name.capitalized, subtitle: nil, action: { itemId in
-                                            
-                                            self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
-                                        }))
-                                    }
-                                }
-                            }
+                            self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
                         }
-                        
-                        self.list?.items = countryList.sorted(by: {$0.name.lowercased() < $1.name.lowercased()}).sorted(by: {$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending})
-                        
-                    case let .failure(error):
-                        print(error) //TODO: send error action
-                    }
-                default:
-                    break
+                    )
+                    
+                    self.list?.items = countries
+                        .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
+                        .sorted(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
+                    
+                case let .failure(error):
+                    print(error) //TODO: send error action
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
-        selectedItem.textField.$text
-            .receive(on: DispatchQueue.main)
+        selectedItem.textField.textPublisher()
+            .receive(on: scheduler)
             .sink { [unowned self] text in
                 
-                if let country = model.countriesListWithSevice.value.first(where: {$0.name.lowercased() == text?.lowercased()}) {
-                    
-                    update(value: country.code)
-                    
-                    if let imageData = model.images.value.first(where: {$0.key == country.md5hash}),
-                       let image = imageData.value.image {
-                        
-                        withAnimation {
-                            
-                            self.selectedItem.icon = .image(image)
-                        }
-                        
-                    } else {
-                        
-                        withAnimation {
-                            
-                            self.selectedItem.icon = .placeholder
-                        }
-                    }
-                    
-                } else {
-                    
-                    update(value: nil)
-                    
-                    withAnimation {
-                        
-                        self.selectedItem.icon = .placeholder
-                    }
-                }
+                let country = model.country(withName: text)
+                update(value: country?.code)
                 
-                list?.updateFilteredItems(with: text)
-                
+                 withAnimation {
+                    
+                    self.selectedItem.icon = model.iconForCountry(country)
+                    
+                    list?.updateFilteredItems(with: text)
+                 }
             }.store(in: &bindings)
         
-        selectedItem.textField.$isEditing
-            .receive(on: DispatchQueue.main)
+        selectedItem.textField.isEditing()
+            .removeDuplicates()
+            .receive(on: scheduler)
             .sink { [unowned self] isEditing in
                 
-                if isEditing == true {
+                let warning = updatedWarning(isEditing: isEditing)
+                let title = updatedTitle(isEditing: isEditing)
+                
+                 withAnimation {
+                
+                    self.warning = warning
+                    self.selectedItem.title = title
                     
-                    withAnimation {
-                        
-                        self.selectedItem.title = parameterSelect?.title
-                        self.action.send(PaymentsSelectCountryViewModelAction.ShowCountriesList())
-                        self.warning = nil
-                    }
-                    
-                } else {
-                    
-                    withAnimation(.easeIn(duration: 0.2)) {
+                     if isEditing {
+                         
+                         let list = updatedList()
+                         
+                         withAnimation {
+                             
+                             self.list = list
+                         }
+                         
+                     } else {
                         
                         self.list = nil
-                        self.selectedItem.title = selectedItem.textField.hasValue ? parameterSelect?.title : nil
-                    }
-                    
-                    if let parameterSelect = parameterSelect,
-                       let action = parameterSelect.validator.action(with: value.current, for: .post),
-                       case .warning(let message) = action {
-                        
-                        withAnimation {
-                            
-                            self.warning = message
-                        }
-                        
-                    } else {
-                        
-                        let countries = self.model.countriesListWithSevice.value
-                        
-                        if let text = self.selectedItem.textField.text,
-                           text.count == parameterSelect?.limitator?.limit,
-                           countries.contains(where: {$0.name == text}) == false {
-                            
-                            withAnimation {
-                                
-                                self.warning = "Неверный БИК банка получателя"
-                            }
-                        } else {
-                            
-                            withAnimation {
-                                
-                                self.warning = nil
-                            }
-                        }
                         
                     }
-                }
-                
-            }.store(in: &bindings)
+                 }
+            }
+            .store(in: &bindings)
         
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
                     
                 case _ as PaymentsSelectCountryViewModelAction.ShowCountriesList:
                     
-                    guard list == nil else {
-                        
-                        withAnimation {
-                            
-                            self.list = nil
-                        }
-                        return
-                    }
-                    
-                    let countries = self.model.countriesListWithSevice.value
-                    
-                    var options: [ListViewModel.ItemViewModel] = Self.reduce(model, countriesData: countries) {{ itemId in
-                        
-                        self.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
-                    }}
-                    
-                    options.insert(ListViewModel.ItemViewModel(id: UUID().uuidString, icon: .overlay(Image.ic24MoreHorizontal), name: "См. все", subtitle: nil, lineLimit: 2, action: { [weak self] _ in
-                        
-                        guard let model = self?.model else {
-                            return
-                        }
-                        
-                        let contactViewModel = ContactsViewModel(model, mode: .select(.countries))
-                        self?.bind(contactsViewModel: contactViewModel)
-                        self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
-                    }), at: 0)
-                    
-                    let listViewModel = ListViewModel(items: options, filteredItems: options)
+                    let list = updatedList()
                     
                     withAnimation {
                         
-                        self.list = listViewModel
+                        self.list = list
                     }
+                    
                     
                 case let payload as PaymentsSelectCountryViewModelAction.DidSelectCountry:
                     
-                    let countries = model.countriesListWithSevice.value
-                    
-                    guard let country = countries.first(where: {$0.id == payload.id}) else{
-                        return
-                    }
-                    
-                    if let imageData = model.images.value.first(where: {$0.key == country.md5hash}),
-                       let image = imageData.value.image  {
-
-                        withAnimation {
-                            
-                            self.selectedItem.icon = .image(image)
-                            self.selectedItem.textField.setText(to: country.name.capitalized)
-                            self.list = nil
-
-                        }
-                        
-                    } else {
-                        
-                        withAnimation {
-                         
-                            self.selectedItem.icon = .placeholder
-                            self.selectedItem.textField.setText(to: country.name.capitalized)
-                            self.list = nil
-                        }
-                    }
+                    guard let country = model.country(withValue: payload.id, at: \.id)
+                    else { return }
                     
                     withAnimation {
                         
+                        self.selectedItem.icon = model.iconForCountry(country)
+                        self.selectedItem.textField.setText(to: country.name.capitalized)
+                        self.list = nil
                         self.warning = nil
                     }
                     
-                    withAnimation {
-                        
-                        self.list = nil
-                    }
-                    
-                default: break
+                default:
+                    break
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func bind(contactsViewModel: ContactsViewModel) {
         
         contactsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
+            .compactMap { $0 as? ContactsViewModelAction.CountrySelected }
+            .receive(on: scheduler)
+            .sink { [weak self] payload in
                 
-                switch action {
-                case let payload as ContactsViewModelAction.CountrySelected:
-                    self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: payload.countryId.description))
-                    //FIXME: action for country select required
-                    self?.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
+                self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: payload.countryId.description))
+                //FIXME: action for country select required
+                self?.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
+            }
+            .store(in: &bindings)
     }
     
     func update(warning: String) {
@@ -327,23 +246,66 @@ extension PaymentsSelectCountryView.ViewModel {
             self.warning = warning
         }
     }
+    
+    func updatedWarning(isEditing: Bool) -> String? {
+        
+        if isEditing {
+            
+            return nil
+            
+        } else {
+            
+            return parameterSelect.warning(forValue: value.current)
+        }
+    }
+    
+    func updatedTitle(isEditing: Bool) -> String? {
+        
+        return isEditing
+        ? parameterSelect?.title
+        : selectedItem.textField.hasValue ? parameterSelect?.title : nil
+    }
+    
+    func updatedList() -> ListViewModel? {
+        
+        let select: () -> (String) -> Void = {{ [weak self] itemId in
+            
+            self?.action.send(PaymentsSelectCountryViewModelAction.DidSelectCountry(id: itemId))
+        }}
+        
+        let showAll: (String) -> Void = { [weak self] _ in
+            
+            guard let self else { return }
+            
+            let contactViewModel = self.model.makeContactsViewModel(forMode: .select(.countries))
+            self.bind(contactsViewModel: contactViewModel)
+            self.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
+        }
+        
+        return Self.reduce(
+            countries: model.countriesListWithSevice.value,
+            filter: selectedItem.textField.text,
+            iconForCountry: model.iconForCountry(_:),
+            select: select,
+            showAll: showAll
+        )
+    }
 }
+
+// MARK: View Models
 
 extension PaymentsSelectCountryView.ViewModel {
     
     class SelectedItemViewModel: ObservableObject {
-        
-        var textField: TextFieldRegularView.ViewModel
+                
+        @Published var icon: IconViewModel
+
+        let textField: RegularFieldViewModel
         var title: String?
         let action: () -> Void
-        @Published var icon: IconViewModel
         
-        private let model: Model
-        private var bindings = Set<AnyCancellable>()
-        
-        init(_ model: Model, icon: IconViewModel, textField: TextFieldRegularView.ViewModel, title: String? = nil, action: @escaping () -> Void) {
+        init(icon: IconViewModel, textField: RegularFieldViewModel, title: String? = nil, action: @escaping () -> Void) {
             
-            self.model = model
             self.icon = icon
             self.textField = textField
             self.title = title
@@ -385,68 +347,277 @@ extension PaymentsSelectCountryView.ViewModel {
             }
         }
         
-        func updateFilteredItems(with value: String?) {
+        func updateFilteredItems(with text: String?) {
             
-            if let value = value?.lowercased(), value != "" {
-                
-                let updateItems = items.filter({ item in
-                    
-                    if item.name.lowercased().contained(in: [value]) {
-                        return true
-                    }
-                    
-                    return false
-                })
-                
-                withAnimation {
-                    
-                    filteredItems = updateItems
-                }
-                
-            } else {
-                
-                withAnimation {
-                    
-                    filteredItems = items
-                }
-            }
+            filteredItems = items.filtered(with: text, keyPath: \.name)
         }
     }
 }
 
-//MARK: - Reducers
+// MARK: - Helpers
+
+extension Model {
+    
+    typealias ListItemViewModel = PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel
+    typealias SelectedItemViewModel = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel
+    
+    func makeItemViewModels(
+        with data: ([(id: String, imageData: ImageData)]),
+        action: @escaping (String) -> Void
+    ) -> [ListItemViewModel] {
+        
+        countriesListWithSevice.value.makeItemViewModels(with: data, action: action)
+    }
+    
+    func isValid(countryName: String?) -> Bool {
+        
+        countriesListWithSevice.value.contains {
+            $0.name.capitalized == countryName?.capitalized
+        }
+    }
+    
+    func country(
+        for parameterSelect: Payments.ParameterSelectCountry
+    ) -> CountryWithServiceData? {
+        
+        country(withValue: parameterSelect.value, at: \.code)
+    }
+    
+    func country<Value: Equatable>(
+        withValue value: Value?,
+        at keyPath: KeyPath<CountryWithServiceData, Value>
+    )-> CountryWithServiceData? {
+        
+        countriesListWithSevice.value.first { $0[keyPath: keyPath] == value }
+    }
+    
+    func country(
+        withName name: String?
+    ) -> CountryWithServiceData? {
+        
+        countriesListWithSevice.value.first {
+            
+            $0.name.lowercased() == name?.lowercased()
+        }
+    }
+    
+    func iconForCountry(
+        _ country: CountryWithServiceData?
+    ) -> SelectedItemViewModel.IconViewModel {
+        
+        if let image = image(forCountry: country) {
+            
+            return .image(image)
+            
+        } else {
+            
+            return .placeholder
+        }
+    }
+    
+    func iconForCountry(
+        _ country: CountryWithServiceData?
+    ) -> ListItemViewModel.IconViewModel {
+        
+        if let image = image(forCountry: country) {
+            
+            return .icon(image)
+            
+        } else {
+            
+            return .placeholder
+        }
+    }
+    
+    func image(
+        forCountry country: CountryWithServiceData?
+    ) -> Image? {
+        
+        guard let country,
+              let key = country.md5hash,
+              let imageData = images.value[key]
+        else { return nil }
+        
+        return imageData.image
+    }
+}
+
+extension ImageData {
+    
+    var icon: PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel.IconViewModel {
+        
+        switch image {
+        case .none:
+            return .placeholder
+            
+        case let .some(image):
+            return .icon(image)
+        }
+    }
+}
+
+extension Optional where Wrapped == Payments.ParameterSelectCountry {
+    
+    func isValid(
+        value: Payments.Parameter.Value
+    ) -> Bool {
+        
+        switch self {
+        case .none:
+            return false
+            
+        case let .some(wrapped):
+            return wrapped.isValid(value: value)
+        }
+    }
+    
+    func warning(
+        forValue value: Payments.Parameter.Value
+    ) -> String? {
+        
+        switch self {
+        case .none:
+            return nil
+            
+        case let .some(wrapped):
+            return wrapped.warning(forValue: value)
+        }
+    }
+}
+
+extension Payments.ParameterSelectCountry {
+    
+    func isValid(
+        value: Payments.Parameter.Value
+    ) -> Bool {
+        
+        validator.isValid(value: value)
+    }
+    
+    func warning(
+        forValue value: Payments.Parameter.Value
+    ) -> String? {
+        
+        guard
+            let action = validator.action(with: value, for: .post),
+            case let .warning(message) = action
+        else { return nil }
+        
+        return message
+    }
+}
+
+// MARK: - Reducers
 
 extension PaymentsSelectCountryView.ViewModel {
     
-    static func reduce(_ model: Model, countriesData: [CountryWithServiceData], filter: String? = nil, action: @escaping () ->(String) -> Void) -> [ListViewModel.ItemViewModel] {
+    static func reduce(
+        countriesData countries: [CountryWithServiceData],
+        iconForCountry: @escaping (CountryWithServiceData?) -> ListViewModel.ItemViewModel.IconViewModel,
+        filter: String? = nil,
+        action: @escaping () -> (String) -> Void
+    ) -> [ListViewModel.ItemViewModel] {
         
-        var items = [ListViewModel.ItemViewModel]()
-        
-        for country in countriesData {
-            
-            let name = country.name.capitalized
-            
-            if let imageData = model.images.value.first(where: {$0.key == country.md5hash}), let image = imageData.value.image {
-                
-                items.append(ListViewModel.ItemViewModel(id: country.id, icon: .icon(image) ,name: name, subtitle: nil, action: action()))
-                
-            } else {
-                
-                items.append(ListViewModel.ItemViewModel(id: country.id, icon: .placeholder, name: name, subtitle: nil, action: action()))
+        countries
+            .map {
+                .init(
+                    with: $0,
+                    icon: iconForCountry($0),
+                    action: action
+                )
             }
-        }
+            .filtered(with: filter, keyPath: \.subtitle)
+    }
+    
+    static func reduce(
+        countries: [CountryWithServiceData],
+        filter: String?,
+        iconForCountry: @escaping (CountryWithServiceData?) -> ListViewModel.ItemViewModel.IconViewModel,
+        select: @escaping () -> (String) -> Void,
+        showAll: @escaping (String) -> Void
+    ) -> ListViewModel? {
         
-        if let filter = filter, filter != "" {
-            
-            let items = items.filter({$0.subtitle?.contained(in: [filter]) == true})
-            return items
-        }
+        let itemViewModel = ListViewModel.ItemViewModel.showAllItemViewModel(showAll: showAll)
         
-        return items
+        let itemViewModels = Self.reduce(
+            countriesData: countries,
+            iconForCountry: iconForCountry,
+            action: select
+        )
+        
+        let items = [itemViewModel] + itemViewModels
+        
+        return .init(
+            items: items,
+            filteredItems: items.filtered(with: filter, keyPath: \.name)
+        )
     }
 }
 
-//MARK: - Action
+extension PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel {
+    
+    static func showAllItemViewModel(
+        showAll: @escaping (String) -> Void
+    ) -> Self {
+        
+        .init(
+            id: UUID().uuidString,
+            icon: .overlay(Image.ic24MoreHorizontal),
+            name: "См. все",
+            subtitle: nil,
+            lineLimit: 2,
+            action: showAll
+        )
+    }
+}
+
+extension Array where Element == CountryWithServiceData {
+    
+    typealias ItemViewModel = PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel
+    
+    func makeItemViewModels(
+        with data: ([(id: String, imageData: ImageData)]),
+        action: @escaping (String) -> Void
+    ) -> [ItemViewModel] {
+        
+        let data = Dictionary(data, uniquingKeysWith: { a, b in a })
+
+        return compactMap { country in
+            
+            guard let key = country.md5hash,
+                  let imageData = data[key]
+            else { return nil }
+            
+            return .init(
+                id: country.id,
+                icon: imageData.icon,
+                name: country.name.capitalized,
+                subtitle: nil,
+                action: action
+            )
+        }
+    }
+}
+
+extension PaymentsSelectCountryView.ViewModel.ListViewModel.ItemViewModel {
+    
+    init(
+        with country: CountryWithServiceData,
+        icon: IconViewModel,
+        action: @escaping () -> (String) -> Void
+    ) {
+        
+        self.init(
+            id: country.id,
+            icon: icon,
+            name: country.name.capitalized,
+            subtitle: nil,
+            action: action()
+        )
+    }
+}
+
+// MARK: - Action
 
 extension PaymentsParameterViewModelAction {
     
@@ -464,7 +635,7 @@ extension PaymentsParameterViewModelAction {
     }
 }
 
-//MARK: - Action
+// MARK: - Action
 
 struct PaymentsSelectCountryViewModelAction {
     
@@ -476,7 +647,7 @@ struct PaymentsSelectCountryViewModelAction {
     struct ShowCountriesList: Action {}
     
 }
-//MARK: - View
+// MARK: - View
 
 struct PaymentsSelectCountryView: View {
     
@@ -484,7 +655,7 @@ struct PaymentsSelectCountryView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 13) {
             
             SelectedItemView(viewModel: viewModel.selectedItem, isExpanded: viewModel.isExpanded, isEditable: viewModel.isEditable, warning: viewModel.warning)
                 .allowsHitTesting(viewModel.isEditable)
@@ -543,7 +714,7 @@ struct PaymentsSelectCountryView: View {
                             .frame(width: 40, height: 40)
                         
                         Text(viewModel.name)
-                            .font(.textBodyXSR11140())
+                            .font(.textBodySR12160())
                             .foregroundColor(.textSecondary)
                             .multilineTextAlignment(.center)
                             .lineLimit(viewModel.lineLimit)
@@ -639,7 +810,7 @@ struct PaymentsSelectCountryView: View {
                         
                         HStack {
                             
-                            TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
+                            RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), textColor: .textSecondary)
                                 .font(.textH4M16240())
                                 .foregroundColor(.textSecondary)
                                 .frame(height: 24)
@@ -746,7 +917,7 @@ extension PaymentsSelectCountryView.SelectedItemView {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PaymentsSelectCountryView_Previews: PreviewProvider {
     
@@ -762,7 +933,7 @@ struct PaymentsSelectCountryView_Previews: PreviewProvider {
                 .previewLayout(.fixed(width: 375, height: 200))
                 .previewDisplayName("Parameter Complete State")
             
-            //MARK: Views
+            // MARK: Views
             PaymentsSelectCountryView.SelectedItemView(viewModel: .selectedViewModelSample, isExpanded: false, isEditable: false, warning: nil)
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Parameter Selected View")
@@ -774,7 +945,7 @@ struct PaymentsSelectCountryView_Previews: PreviewProvider {
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension PaymentsSelectCountryView.ViewModel {
     
@@ -790,6 +961,7 @@ extension PaymentsSelectCountryView.ViewModel.ListViewModel {
 
 extension PaymentsSelectCountryView.ViewModel.SelectedItemViewModel {
     
-    static let selectedViewModelSample = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel(.emptyMock, icon: .placeholder, textField: .init(text: nil, placeholder: "Бик банка получателя", keyboardType: .number, limit: 10), title: "", action: {})
+    static let selectedViewModelSample = PaymentsSelectCountryView.ViewModel.SelectedItemViewModel(icon: .placeholder, textField: sampleTextField, title: "", action: {})
+    
+    private static let sampleTextField = TextFieldFactory.makeTextField(text: nil, placeholderText: "Бик банка получателя", keyboardType: .number, limit: 10)
 }
-

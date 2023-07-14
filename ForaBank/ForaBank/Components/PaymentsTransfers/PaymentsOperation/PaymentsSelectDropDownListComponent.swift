@@ -273,7 +273,7 @@ struct PaymentSelectDropDownView: View {
             HStack(spacing: 16) {
                 
                 IconView(viewModel: viewModel.icon)
-                    .frame(width: 24, height: 24)
+                    .frame(width: 32, height: 32)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
@@ -318,7 +318,7 @@ struct PaymentSelectDropDownView: View {
                 HStack(spacing: 16) {
                     
                     IconView(viewModel: viewModel.icon, iconColor: .blurGray20)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 32, height: 32)
                     
                     VStack(alignment: .leading, spacing: 8) {
                         
@@ -378,7 +378,7 @@ struct PaymentSelectDropDownView: View {
                 HStack(spacing: 16) {
                     
                     IconView(viewModel: viewModel.icon)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 32, height: 32)
                     
                     Text(viewModel.name)
                         .foregroundColor(.textWhite)

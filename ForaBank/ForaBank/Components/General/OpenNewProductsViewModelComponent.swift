@@ -97,7 +97,7 @@ class OpenNewProductsViewModel: ObservableObject {
     private func description(for type: ProductType) -> String {
         
         switch type {
-        case .card: return "С кэшбэк"
+        case .card: return "С кешбэк"
         case .account: return "Бесплатно"
         case .deposit: return depositDescription(with: model.deposits.value)
         case .loan: return "Выгодно"

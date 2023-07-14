@@ -67,6 +67,30 @@ class TransferAnywayDataTests: XCTestCase {
         // then
         XCTAssertEqual(result, expectedResult)
     }
+    
+    func test_sfpBank_shouldReturnBankId() throws {
+        
+        // given
+        let sut = makeSutAdditional()
+        
+        // when
+        let result = sut.sfpBank
+        
+        // then
+        XCTAssertEqual(result, "bank")
+    }
+    
+    func test_sfpPhone_shouldReturnNil() throws {
+        
+        // given
+        let sut = makeSutAdditional()
+        
+        // when
+        let result = sut.sfpPhone
+        
+        // then
+        XCTAssertEqual(result, nil)
+    }
 }
 
 private extension TransferAnywayDataTests {
@@ -87,5 +111,14 @@ private extension TransferAnywayDataTests {
                 phoneNumber: nil),
             additional: [],
             puref: nil)
+    }
+    
+    func makeSutAdditional() -> [TransferAnywayData.Additional] {
+        
+        return [
+            .init(fieldid: 0,
+                  fieldname: "BankRecipientID",
+                  fieldvalue: "bank")
+        ]
     }
 }

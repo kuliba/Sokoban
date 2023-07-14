@@ -47,7 +47,8 @@ class InfoProductViewModel: ObservableObject {
             self.additionalList = self.setupAdditionalList(for: cardProductData)
         }
         
-        self.shareButton = .init(action: { self.isShareViewPresented.toggle() })
+        //TODO: refactor shareButton logic by removing isShareViewPresented
+        self.shareButton = .init(action: { [weak self] in self?.isShareViewPresented.toggle() })
         
         bind()
         setBasic(product: product, info: info)
@@ -113,7 +114,6 @@ class InfoProductViewModel: ObservableObject {
                 
                 model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
                 self.title = "Реквизиты счета вклада"
-                self.shareButton = nil
             }
         case .loan:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: .loan, id: product.id))
@@ -302,6 +302,7 @@ struct InfoProductModelAction {
 }
 
 
+//TODO: rename ActivityViewController -> ActivityView an remove in from ViewModel
 struct ActivityViewController: UIViewControllerRepresentable {
     
     var itemsToShare: [InfoProductViewModel.ItemViewModel]

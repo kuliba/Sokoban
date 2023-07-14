@@ -90,8 +90,7 @@ struct PaymentsInfoView: View {
                         .foregroundColor(.textSecondary)
                 }
             }
-            .padding(.leading, 13)
-            .padding(.trailing, 25)
+            .padding(.horizontal, 16)
             
         } else {
            

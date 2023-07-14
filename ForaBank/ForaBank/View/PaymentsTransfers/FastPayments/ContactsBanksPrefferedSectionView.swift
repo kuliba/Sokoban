@@ -24,6 +24,7 @@ struct ContactsBanksPrefferedSectionView: View {
                         switch item {
                         case let prefferedBank as ContactsBankPrefferedItemView.ViewModel:
                             ContactsBankPrefferedItemView(viewModel: prefferedBank)
+                                .accessibilityIdentifier("TransferByPhoneLatestBankItem")
                             
                         case let placeholderViewModel as ContactsPlaceholderItemView.ViewModel:
                             ContactsPlaceholderItemView(viewModel: placeholderViewModel)
@@ -35,6 +36,7 @@ struct ContactsBanksPrefferedSectionView: View {
                     
                 }.padding(.horizontal, 20)
             }
+            .accessibilityIdentifier("TransferByPhoneBankHorizontalSection")
             
             if viewModel.items.count > 0 {
                 

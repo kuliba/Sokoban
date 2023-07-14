@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "2F95B7FD-9A37-446E-914A-A85FD4E37E53",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CvvPinTests",
+        "name" : "CvvPinTests"
+      }
+    }
+  ],
+  "version" : 1
+}
