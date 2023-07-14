@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "26A03EAD-C4FD-46BD-99D4-90581A9C00AE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}

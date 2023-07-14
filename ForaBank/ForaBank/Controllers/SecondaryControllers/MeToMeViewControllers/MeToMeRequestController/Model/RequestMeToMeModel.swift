@@ -11,7 +11,7 @@ import RealmSwift
 struct RequestMeToMeModel {
     var amount: Double
     var fee: Double
-    var bank: BankFullInfoList?
+    var bank: String?
     var card: UserAllCardsModel?
     var RecipientID: String
     var RcvrMsgId: String
@@ -34,9 +34,8 @@ struct RequestMeToMeModel {
         
         self.amount = Double(amount) ?? 0
         self.fee = Double(fee) ?? 0
-        self.bank = findBank(with: bank)
+        self.bank = bank
         self.card = findProduct(with: Int(cardId), with: Int(accountId))
-        
         
     }
     
@@ -52,7 +51,7 @@ struct RequestMeToMeModel {
         self.RcvrMsgId = model.data?.rcvrMsgId ?? ""
         self.RecipientID = model.data?.recipientID ?? ""
         
-        self.bank = findBank(with: bank)
+        self.bank = bank
         self.card = findProduct(with: cardId, with: accountId)
         
     }
@@ -64,26 +63,8 @@ struct RequestMeToMeModel {
         self.RcvrMsgId =  ""
         self.RecipientID =  ""
         
-        self.bank = findBank(with: bank)
+        self.bank = bank
         self.card = findProduct(with: nil, with: nil)
-    }
-    
-    private func findBank(with bankId: String) -> BankFullInfoList? {
-        
-        let allBanks = Model.shared.dictionaryFullBankInfoList()
-        var bankForReturn: BankFullInfoList?
-        
-        allBanks.forEach({ bank in
-            
-            let bank = bank.fullBankInfoList
-            
-            if bank.memberID == bankId  {
-                    
-                bankForReturn = bank
-            }
-        })
-    
-        return bankForReturn
     }
     
     func cards() ->  [UserAllCardsModel] {

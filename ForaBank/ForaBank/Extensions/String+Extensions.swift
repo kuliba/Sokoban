@@ -22,7 +22,7 @@ extension String {
         
         return false
     }
-    
+        
     func masked(mask: StringValueMask) -> String {
 
         let value = self
@@ -227,5 +227,13 @@ extension Optional where Wrapped == String {
         return value
             .shouldChangeTextIn(range: range, with: update)
             .restricted(withLimit: limit, forStyle: style)
+    }
+}
+
+extension String {
+    var isOnlyDigits: Bool {
+        return self.range(
+            of: "^[0-9]*$",
+            options: .regularExpression) != nil
     }
 }

@@ -180,23 +180,23 @@ extension ServerAgentStub.Essence {
 
 extension ServerCommands.TransferController.CreateAnywayTransfer.Payload {
     
-    typealias Request = ServerCommands.TransferController.CreateAnywayTransfer.Payload
+    typealias Payload = ServerCommands.TransferController.CreateAnywayTransfer.Payload
     
-    static let iFora_4285_9rub: Request = try! decode(from: "createAnywayTransfer_iFora_4285_9rub_request")
+    static let iFora_4285_9rub: Payload = try! decode(from: "createAnywayTransfer_iFora_4285_9rub_request")
     
-    static let iFora_4285_10rub: Request = try! decode(from: "createAnywayTransfer_iFora_4285_10rub_request")
+    static let iFora_4285_10rub: Payload = try! decode(from: "createAnywayTransfer_iFora_4285_10rub_request")
     
-    static let iFora_4286: Request = try! decode(from: "createAnywayTransfer_iFora_4286_request")
+    static let iFora_4286: Payload = try! decode(from: "createAnywayTransfer_iFora_4286_request")
     
-    static let iFora_515A3_1rub: Request = try! decode(from: "createAnywayTransfer_iFora_515A3_1rub_request")
+    static let iFora_515A3_1rub: Payload = try! decode(from: "createAnywayTransfer_iFora_515A3_1rub_request")
     
-    static let iFora_515A3_10rub: Request = try! decode(from: "createAnywayTransfer_iFora_515A3_10rub_request")
+    static let iFora_515A3_10rub: Payload = try! decode(from: "createAnywayTransfer_iFora_515A3_10rub_request")
     
     // MARK: - Helpers
     
-    private static func decode(from filename: String) throws -> Request {
+    private static func decode(from filename: String) throws -> Payload {
         
-        try filename.decode(Request.self, bundle: .init(for: ServerAgentStub.self))
+        try filename.decode(Payload.self, bundle: .init(for: ServerAgentStub.self))
     }
 }
 

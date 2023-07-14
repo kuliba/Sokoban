@@ -26,7 +26,15 @@ extension Model {
             let operatorParameter = Payments.ParameterOperator(operatorType: .requisites)
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "Перевести", subtitle: "Человеку или организации", icon: nil, rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder, action: .scanQrCode)])
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Перевести",
+                    subtitle: "Человеку или организации",
+                    icon: nil,
+                    rightButton: [.init(icon: ImageData(named: "ic24BarcodeScanner2") ?? .iconPlaceholder,
+                                        action: .scanQrCode)])
+            )
             
             //MARK: Bic Bank Parameter            
             let banks = self.dictionaryFullBankInfoPrefferedFirstList()
@@ -37,7 +45,7 @@ extension Model {
             //MARK: Account Number Parameter
             let accountNumberValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [any PaymentsValidationRulesSystemRule]()
 
                 rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [20], actions: [.post: .warning("Должен состоять из 20 цифр.")]))
 
@@ -74,7 +82,7 @@ extension Model {
             //MARK: Inn Number Parameter
             let validator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [any PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.LengthLimitsRule.init(lengthLimits: [10, 12], actions: [.post: .warning("Должен состоять из 10 или 12 цифр.")]))
 
@@ -100,7 +108,7 @@ extension Model {
                 //MARK: Message parametr validation
                 let messageValidator: Payments.Validation.RulesSystem = {
                     
-                    var rules = [Payments.Validation.Rule]()
+                    var rules = [any PaymentsValidationRulesSystemRule]()
                     
                     rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (до 210 символов)")]))
 
@@ -108,7 +116,15 @@ extension Model {
                 }()
                 
                 //MARK: Message Parameter
-                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: "Перевод денежных средств. НДС не облагается"), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
+                var messageValue: String?
+                switch operation.source {
+                case .template:
+                    messageValue = nil
+                default:
+                    messageValue = "Перевод денежных средств. НДС не облагается"
+                }
+                
+                let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: messageValue), icon: messageParameterIcon, title: "Назначение платежа", validator: messageValidator, limitator: .init(limit: 210))
                 
                 //MARK: Product Parameter
                 let productParameterId = Payments.Parameter.Identifier.product.rawValue
@@ -117,7 +133,9 @@ extension Model {
                       let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                     throw Payments.Error.unableCreateRepresentable(productParameterId)
                 }
-                let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+                
+                let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+                let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
                 
                 //MARK: Amount Parameter
                 let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
@@ -156,7 +174,7 @@ extension Model {
             let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
             let kppParameterValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [any PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
                 
@@ -169,7 +187,7 @@ extension Model {
             let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
             let companyNameValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [any PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
                 rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
@@ -253,7 +271,7 @@ extension Model {
             //MARK: Message Parameter
             let messageValidator: Payments.Validation.RulesSystem = {
                 
-                var rules = [Payments.Validation.Rule]()
+                var rules = [any PaymentsValidationRulesSystemRule]()
                 
                 rules.append(Payments.Validation.MinLengthRule(minLenght: 25, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
                 rules.append(Payments.Validation.MaxLengthRule(maxLenght: 210, actions: [.post: .warning("Заполните поле (от 25 до 210 символов)")]))
@@ -271,7 +289,9 @@ extension Model {
                   let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
+            
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             parameters.append(productParameter)
 
             //MARK: Amount Parameter
@@ -524,6 +544,40 @@ extension Model {
                 return nil
             }
             
+        default:
+            return nil
+        }
+    }
+    
+    func paymentsProcessSourceTemplateReducerRequisites(templateData: PaymentTemplateData?, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+        
+        guard let templateData = templateData,
+              let parameters = templateData.parameterList.first as? TransferGeneralData else {
+            return nil
+        }
+        
+        switch parameterId {
+        case Payments.Parameter.Identifier.requisitsName.rawValue:
+            return parameters.payeeExternal?.name
+                
+        case Payments.Parameter.Identifier.requisitsInn.rawValue:
+            return parameters.payeeExternal?.inn
+            
+        case Payments.Parameter.Identifier.requisitsAccountNumber.rawValue:
+            return parameters.payeeExternal?.accountNumber
+
+        case Payments.Parameter.Identifier.requisitsBankBic.rawValue:
+            return parameters.payeeExternal?.bankBIC
+
+        case Payments.Parameter.Identifier.requisitsKpp.rawValue:
+            return parameters.payeeExternal?.kpp
+        
+        case Payments.Parameter.Identifier.requisitsCompanyName.rawValue:
+            return parameters.payeeExternal?.name
+        
+        case Payments.Parameter.Identifier.requisitsMessage.rawValue:
+            return parameters.comment
+                
         default:
             return nil
         }

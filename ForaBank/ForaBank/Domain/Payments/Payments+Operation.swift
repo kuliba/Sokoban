@@ -167,7 +167,7 @@ extension Payments.Operation {
             }
         }
         
-        let updatedVisible = Self.update(visible: visible, for: stepsUpdated)
+        let updatedVisible = Self.update(visible: [], for: stepsUpdated)
         let updatedOperation = Payments.Operation(service: service, source: source, steps: stepsUpdated, visible: updatedVisible)
 
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Operation: ROLLED BACK \(updatedOperation)")

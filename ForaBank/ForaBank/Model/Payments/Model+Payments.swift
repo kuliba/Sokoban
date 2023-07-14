@@ -88,22 +88,6 @@ extension Model {
                     throw Payments.Operation.Error.failedLoadServicesForCategory(category)
                 }
                 
-                //TODO: remove this when fssp payment will be implemented
-                //code to remove start
-                let services: [Payments.Service] = [.fns, .fms]
-                
-                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
-                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
-                let options = services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
-                
-                let selectServiceParameter = Payments.ParameterSelectService(category: category, options: options)
-                
-                LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
-                
-                return .select(selectServiceParameter)
-                //code to remove end
-                
-                /*
                 let operatorsCodes = category.services.compactMap{ $0.operators.first?.rawValue }
                 let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
                 let options = category.services.compactMap { paymentsParameterRepresentableSelectServiceOption(for: $0, with: anywayOperators)}
@@ -113,7 +97,6 @@ extension Model {
                 LoggerAgent.shared.log(level: .debug, category: .payments, message: "Select service parameter created with options: \(options.map({ $0.service })))")
                 
                 return .select(selectServiceParameter)
-                 */
                 
             } else {
                 
@@ -125,13 +108,12 @@ extension Model {
                 
                 return .selected(service)
             }
-            
         default:
             throw Payments.Error.unsupported
         }
     }
         
-    func paymentsService(for source: Payments.Operation.Source) async throws -> Payments.Service {
+    func paymentsService(for source: Payments.Operation.Source) throws -> Payments.Service {
         
         switch source {
         case let .mock(mock): return mock.service
@@ -141,7 +123,123 @@ extension Model {
         case .direct: return .abroad
         case .return: return .return
         case .change: return .change
+        case .template(let templateId):
+                
+            guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+                throw Payments.Error.unsupported
+            }
             
+            switch template.type {
+            case .newDirect,
+                    .direct,
+                    .contactCash,
+                    .contactAddressing,
+                    .contactAdressless,
+                    .contactAddressless:
+                
+                return .abroad
+                
+            case .sfp, .byPhone:
+                return .sfp
+                
+            case .externalEntity, .externalIndividual:
+                return .requisites
+                
+            case .mobile:
+                return .mobileConnection
+                
+            case .taxAndStateService:
+                guard let parameterList = template.parameterList as? [TransferAnywayData],
+                      let puref = parameterList.first?.puref,
+                      let `operator` = Payments.Operator(rawValue: puref) else {
+                    throw Payments.Error.unsupported
+                }
+                
+                switch `operator` {
+                case .fms:
+                    return .fms
+                    
+                case .fns, .fnsUin:
+                    return .fns
+                    
+                case .fssp:
+                    return .fssp
+                    
+                default:
+                    throw Payments.Error.unsupported
+                }
+                
+            case .insideBank:
+                return .toAnotherCard
+                
+            case .housingAndCommunalService:
+                return .utility
+                
+            case .internet:
+                return .internetTV
+                
+            case .transport:
+                return .transport
+                
+            default:
+                throw Payments.Error.unsupported
+            }
+            
+        case .servicePayment(let operatorCode, _, _):
+            guard let operatorData = self.dictionaryAnywayOperator(for: operatorCode) else {
+                throw Payments.Error.missingValueForParameter(operatorCode)
+            }
+            
+            let parentCode = operatorData.parentCode
+            switch parentCode {
+                
+            case Payments.Operator.internetTV.rawValue:
+                return .internetTV
+                
+            case Payments.Operator.utility.rawValue:
+                return .utility
+                
+            case Payments.Operator.transport.rawValue:
+                return .transport
+                
+            default:
+                throw Payments.Error.unsupported
+            }
+            
+        case .avtodor:
+            return .avtodor
+            
+        case .gibdd:
+            return .gibdd
+            
+        case let .latestPayment(latestPaymentId):
+            
+            guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
+                throw Payments.Error.unsupported
+            }
+            
+            switch latestPayment.type {
+            case .internet:
+                return .internetTV
+                
+            case .service:
+                return .utility
+                
+            case .mobile:
+                return .mobileConnection
+                
+            case .phone:
+                return .sfp
+                
+            case .outside:
+                return .abroad
+                
+            case .transport:
+                return .transport
+                
+            default:
+                throw Payments.Error.unsupported
+            }
         default:
             throw Payments.Error.unsupported
         }
@@ -172,9 +270,9 @@ extension Model {
     func paymentsOperation(with source: Payments.Operation.Source) async throws -> Payments.Operation {
         
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Initial operation requested for source: \(source))")
-        
+
         // try get service with source
-        let service = try await paymentsService(for: source)
+        let service = try paymentsService(for: source)
         
         // create empty operation
         let operation = Payments.Operation(service: service, source: source)
@@ -191,7 +289,7 @@ extension Model {
     
     /// Executes each time after appending step to operation.
     /// Return nil if no changes in parameters visibility and order required
-    /// Othewise return parameters ids that must be visible in exact order
+    /// Otherwise return parameters ids that must be visible in exact order
     func paymentsProcessOperationResetVisible(operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
         
         switch operation.service {
@@ -207,9 +305,18 @@ extension Model {
         case .toAnotherCard:
             return try await paymentsProcessOperationResetVisibleToAnotherCard(operation)
             
+        case .internetTV, .utility, .transport:
+            return paymentsProcessOperationResetVisibleToPaymentsServices(operation)
+        
         case .mobileConnection:
             return try await paymentsProcessOperationResetVisibleMobileConnection(operation)
 
+        case .fssp:
+            return try await paymentsProcessOperationResetVisibleTaxesFSSP(operation)
+            
+        case .avtodor:
+            return try await paymentsProcessOperationResetVisibleAvtodor(operation)
+            
         default:
             return nil
         }
@@ -232,7 +339,7 @@ extension Model {
             return try await paymentsStepFMS(operation, for: stepIndex)
             
         case .fssp:
-            return try await paymentsStepFSSP(operation, for: stepIndex)
+            return try paymentsStepFSSP(operation, for: stepIndex)
             
         case .sfp:
             return try await paymentsStepSFP(operation, for: stepIndex)
@@ -252,6 +359,21 @@ extension Model {
         case .mobileConnection:
             return try await paymentsProcessLocalStepMobileConnection(operation, for: stepIndex)
             
+        case .internetTV, .utility, .transport:
+            return try await paymentsProcessLocalStepServices(operation, for: stepIndex)
+            
+        case .avtodor:
+            return try await paymentsProcessLocalStepAvtodor(
+                parameters: operation.parameters,
+                for: stepIndex
+            )
+
+        case .gibdd:
+            return try await paymentsProcessLocalStepGibdd(
+                parameters: operation.parameters,
+                for: stepIndex
+            )
+
         case .change:
             return try await paymentsStepChangePayment(operation, for: stepIndex)
 
@@ -270,28 +392,57 @@ extension Model {
             switch operation.transferType {
             case .anyway:
                 
-                let next = try await paymentsTransferAnywayStepParameters(operation, response: anywayResponse)
+                return try await step(for: operation, with: anywayResponse)
                 
-                let duplicates = next.map({ $0.parameter }).filter({ operation.parametersIds.contains($0.id) })
-                if duplicates.count > 0 {
-                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
-                }
+            case .avtodor:
                 
-                // next parameters without duplicates
-                let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
+                return try await step(for: operation, with: anywayResponse)
                 
-                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: [])
+            case .gibdd:
                 
-                return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
-                
+                return try await paymentsProcessRemoteGibdd(
+                    operation,
+                    response: anywayResponse
+                )
+
             case .mobileConnection:
                 
                 return try await paymentsProcessRemoteStepMobileConnection(
                     operation,
                     response: anywayResponse
                 )
+                
+            case .internetTV, .utility, .transport:
+                
+                guard !anywayResponse.finalStep else {
+                    
+                    return try await paymentsProcessRemoteStepServices(operation: operation, response: response)
+                }
+                
+                let next = try await paymentsTransferPaymentsServicesStepParameters(operation, response: anywayResponse)
+                let duplicates = next.map(\.parameter).filter { operation.parametersIds.contains($0.id) }
+                if !duplicates.isEmpty {
+                    
+                    LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+                }
+                
+                // next parameters without duplicates
+                let nextParameters = next.filter { !operation.parametersIds.contains($0.id) }
+                
+                let visible = try paymentsServicesStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
+                let stepStage = try paymentsServicesStepStage(operation, response: anywayResponse)
+                let excludingParameters = try paymentsServicesStepExcludingParameters(response: anywayResponse)
+                let required = try paymentsServicesStepRequired(
+                    operation,
+                    visible: visible,
+                    nextStepParameters: nextParameters,
+                    operationParameters: operation.parameters,
+                    excludingParameters: excludingParameters)
+                
+                return Payments.Operation.Step(
+                    parameters: nextParameters,
+                    front: .init(visible: visible, isCompleted: false),
+                    back: .init(stage: stepStage, required: required, processed: nil))
 
             case .sfp:
                 let next = try paymentsTransferSFPStepParameters(operation, response: anywayResponse)
@@ -324,9 +475,13 @@ extension Model {
                 // next parameters without duplicates
                 let nextParameters = next.filter({ operation.parametersIds.contains($0.id) == false })
                 
-                let visible = try paymentsTransferAnywayStepVisible(operation, nextStepParameters: nextParameters, operationParameters: operation.parameters, response: anywayResponse)
-                let stepStage = try paymentsTransferAnywayStepStage(operation, response: anywayResponse)
-                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber"]
+                let visible = try paymentsTransferAnywayStepVisible(
+                    nextStepParametersIDs: nextParameters.map(\.id),
+                    operationParametersIDs: operation.parameters.map(\.id),
+                    needSum: anywayResponse.needSum
+                )
+                let stepStage = try paymentsTransferAnywayStepStage(operation, isFinalStep: anywayResponse.finalStep)
+                let restricted: [Payments.Parameter.ID] = ["bSurName", "bIDnumber", "CURR"]
                 let required = try paymentsTransferAnywayStepRequired(operation, visible: visible, nextStepParameters: nextParameters, operationParameters: operation.parameters, restrictedParameters: restricted)
                 
                 return Payments.Operation.Step(parameters: nextParameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: stepStage, required: required, processed: nil))
@@ -355,6 +510,91 @@ extension Model {
             }
         }
     }
+    
+    // MARK: - Helpers
+    
+    /// Create next step for operation using response.
+    func step(
+        for operation: Payments.Operation,
+        with response: TransferAnywayResponseData
+    ) async throws -> Payments.Operation.Step {
+
+        let nextParameters = try await uniqueNextParameters(
+            for: operation,
+            with: response
+        )
+        
+        return try step(
+            for: operation,
+            withNextParameters: nextParameters,
+            response: response
+        )
+    }
+    
+    /// Return next step parameters without duplication.
+    func uniqueNextParameters(
+        for operation: Payments.Operation,
+        with response: TransferAnywayResponseData
+    ) async throws -> [PaymentsParameterRepresentable] {
+        
+        let next = try await paymentsTransferAnywayStepParameters(operation, response: response)
+        
+        let duplicates = next
+            .map { $0.parameter }
+            .filter { operation.parametersIds.contains($0.id) }
+        
+        if duplicates.count > 0 {
+            
+            LoggerAgent.shared.log(level: .error, category: .payments, message: "Anyway transfer response duplicates detected end removed: \(duplicates) from operation: \(operation.shortDescription)")
+        }
+        
+        // next parameters without duplicates
+        let nextParameters = next.filter {
+            
+            !operation.parametersIds.contains($0.id)
+        }
+        
+        return nextParameters
+    }
+    
+    /// Create next step for operation using next step parameters and response.
+    func step(
+        for operation: Payments.Operation,
+        withNextParameters nextParameters: [PaymentsParameterRepresentable],
+        restrictedParameters: [Payments.Parameter.ID] = [],
+        response: TransferAnywayResponseData
+    ) throws -> Payments.Operation.Step {
+        
+        let visible = try paymentsTransferAnywayStepVisible(
+            nextStepParametersIDs: nextParameters.map(\.id),
+            operationParametersIDs: operation.parameters.map(\.id),
+            needSum: response.needSum
+        )
+        let stepStage = try paymentsTransferAnywayStepStage(
+            operation,
+            isFinalStep: response.finalStep
+        )
+        let required = try paymentsTransferStepRequired(
+            operation,
+            visible: visible,
+            nextStepParameters: nextParameters,
+            operationParameters: operation.parameters,
+            restrictedParameters: restrictedParameters
+        )
+        
+        return Payments.Operation.Step(
+            parameters: nextParameters,
+            front: .init(
+                visible: visible,
+                isCompleted: false
+            ),
+            back: .init(
+                stage: stepStage,
+                required: required,
+                processed: nil
+            )
+        )
+    }
 }
 
 //MARK: - Parameter Reducers
@@ -370,13 +610,36 @@ extension Model {
             
         case let .sfp(phone: phone, bankId: bankId):
             return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
-        
+            
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
-        
+            
         case let .direct(phone: phone, countryId: country, serviceData: serviceData):
             return paymentsProcessSourceReducerCountry(countryId: country, phone: phone, serviceData: serviceData, parameterId: parameterId)
-
+        
+        case .template(let templateId):
+            
+            guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+               return nil
+            }
+            
+            return paymentsTemplateParameterValue(
+                service: service,
+                parameterId: parameterId,
+                template: template
+            )
+            
+        case let .latestPayment(latestPaymentId):
+            
+            guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
+                return nil
+            }
+           
+            return latestsPaymentsParameterValue(
+                parameterId: parameterId,
+                latestPayment: latestPayment
+            )
+            
         default:
             return nil
         }
@@ -387,7 +650,7 @@ extension Model {
         
         switch operation.service {
         case .fssp:
-            return paymentsProcessDependencyReducerFSSP(service: operation.service, parameterId: parameterId, parameters: parameters)
+            return paymentsProcessDependencyReducerFSSP(parameterId: parameterId, parameters: parameters)
             
         case .sfp:
             return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
@@ -399,7 +662,14 @@ extension Model {
             return paymentsProcessDependencyReducerC2B(parameterId: parameterId, parameters: parameters)
 
         case .abroad:
-            return paymentsProcessDependencyReducerAbroad(parameterId: parameterId, parameters: parameters) 
+            return paymentsProcessDependencyReducerAbroad(
+                parameterId: parameterId,
+                parameters: parameters,
+                operation: operation
+            )
+            
+        case .internetTV, .utility, .transport:
+            return paymentsProcessDependencyReducerPaymentsServices(parameterId: parameterId, parameters: parameters)
             
         case .toAnotherCard:
             return paymentsProcessDependencyReducerToAnotherCard(parameterId: parameterId, parameters: parameters)
@@ -452,8 +722,11 @@ extension Model {
         LoggerAgent.shared.log(level: .debug, category: .payments, message: "Remote: START: parameters \(process) requested for operation: \(operation.shortDescription)")
         
         switch operation.transferType {
-        case .anyway:
+        case .anyway, .gibdd:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+            
+        case .avtodor:
+            return try await paymentsProcessRemoteStepAvtodor(parameters: operation.parameters, process: process, isNewPayment: true)
             
         case .sfp:
             return try await paymentsTransferSFPProcess(parameters: operation.parameters, process: process)
@@ -469,7 +742,10 @@ extension Model {
                
         case .mobileConnection:
             return try await paymentsTransferMobileConnectionProcess(parameters: operation.parameters, process: process)
-        
+            
+        case .internetTV, .utility, .transport:
+            return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: true)
+
         default:
             throw Payments.Error.unsupported
         }
@@ -484,8 +760,18 @@ extension Model {
         case .anyway:
             return try await paymentsTransferAnywayProcess(parameters: operation.parameters, process: process, isNewPayment: false)
         
+        case .avtodor:
+            return try await paymentsProcessRemoteStepAvtodor(parameters: operation.parameters, process: process, isNewPayment: false)
+        
+        case .gibdd:
+            return try await paymentsProcessRemoteNextGibdd(parameters: operation.parameters, process: process, isNewPayment: false)
+        
         case .abroad:
             return try await paymentsTransferAnywayAbroadProcess(parameters: operation.parameters, process: process, isNewPayment: false)
+            
+        case .internetTV, .utility, .transport:
+            return try await paymentsTransferPaymentsServicesProcess(parameters: operation.parameters, process: process, isNewPayment: false)
+
 
         default:
             throw Payments.Error.unsupported
@@ -514,6 +800,12 @@ extension Model {
                 operation: operation
             )
     
+        case .internetTV, .utility, .transport:
+            return try await paymentsProcessRemoteServicesComplete(
+                code: codeValue,
+                operation: operation
+            )
+            
         default:
             let response = try await paymentsTransferComplete(code: codeValue)
             let success = try Payments.Success(with: response, operation: operation)
@@ -560,8 +852,11 @@ extension Model {
         case .abroad:
             return try await paymentsParameterRepresentableCountries(operation: operation, parameterData: parameterData)
 
+        case .utility, .transport:
+            return try await paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
         default:
-            throw Payments.Error.unsupported
+            return try paymentsParameterRepresentable(parameterData: parameterData)
         }
     }
     
@@ -569,23 +864,25 @@ extension Model {
         
         switch parameterData.view {
         case .select:
-            guard let options = parameterData.options(style: .general) else {
-                return Payments.ParameterSelect(.init(id: parameterData.id,
-                                                      value: parameterData.value),
-                                                icon: .image(parameterData.iconData ?? .iconPlaceholder),
-                                                title: parameterData.title,
-                                                placeholder: "Выберете категорию",
-                                                options: [])
+            guard let options = parameterData.options(style: .general)
+            else {
+                return Payments.ParameterSelect(
+                    .init(id: parameterData.id, value: parameterData.value),
+                    icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                    title: parameterData.title,
+                    placeholder: "Выберете категорию",
+                    options: [])
             }
             
             let selectOptions = options.map({ Payments.ParameterSelect.Option(id: $0.id, name: $0.name, subname: $0.subtitle) })
             
-            return Payments.ParameterSelect(.init(id: parameterData.id,
-                                                  value: parameterData.value),
-                                            icon: .image(parameterData.iconData ?? .iconPlaceholder),
-                                            title: parameterData.title,
-                                            placeholder: "Выберете категорию",
-                                            options: selectOptions)
+            return Payments.ParameterSelect(
+                .init(id: parameterData.id,
+                      value: parameterData.value),
+                icon: .image(parameterData.iconData ?? .iconPlaceholder),
+                title: parameterData.title,
+                placeholder: "Выберете категорию",
+                options: selectOptions)
             
         case .selectSwitch:
             guard let value = parameterData.value else {
@@ -670,6 +967,207 @@ extension Model {
             return nil
         }
     }
+    
+    func latestsPaymentsParameterValue(
+        parameterId: Payments.Parameter.ID,
+        latestPayment: LatestPaymentData
+    ) -> Payments.Parameter.Value? {
+        
+        switch parameterId {
+                
+            case Payments.Operation.Parameter.Identifier.amount.rawValue:
+                switch latestPayment {
+                    case let latestPayment as PaymentGeneralData:
+                        return latestPayment.amount
+                        
+                    case let latestPayment as PaymentServiceData:
+                        return latestPayment.amount.description
+                        
+                    default:
+                        return nil
+                }
+                
+            default:
+            switch latestPayment.type {
+                
+            case .phone:
+                guard let paymentData = latestPayment as? PaymentGeneralData else {
+                    return nil
+                }
+                
+                let phoneNumber = paymentData.phoneNumberRu
+                let bankId = paymentData.bankId
+                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
+                                                       bankId: bankId,
+                                                       parameterId: parameterId)
+                
+            case .mobile:
+                guard let latestPayment = latestPayment as? PaymentServiceData else {
+                    return nil
+                }
+                
+                let puref = latestPayment.puref
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
+                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
+                    guard let value = latestPayment.additionalList.first(where: { $0.fieldName == operatorId })?.mobilePhone else {
+                        return nil
+                    }
+                    
+                    return value
+                    
+                default:
+                    return nil
+                }
+                
+            case .internet,
+                 .service,
+                 .outside,
+                 .transport:
+                
+                guard let paymentData = latestPayment  as? PaymentServiceData else {
+                    return nil
+                }
+                
+                let value = paymentData.additionalList.first(where: { $0.fieldName == parameterId })?.fieldValue
+                
+                return value
+                
+            default:
+                return nil
+            }
+        }
+    }
+    
+    func paymentsTemplateParameterValue(
+        service: Payments.Service,
+        parameterId: Payments.Parameter.ID,
+        template: PaymentTemplateData
+    ) -> Payments.Parameter.Value? {
+     
+        switch parameterId {
+        case Payments.Parameter.Identifier.sfpMessage.rawValue:
+            if let parameterList = template.parameterList as? [TransferGeneralData] {
+                
+                return parameterList.last?.comment
+            }
+            
+            return nil
+            
+        case Payments.Parameter.Identifier.amount.rawValue:
+            
+            if let amount = template.amount?.description {
+                return amount
+                
+            } else if let parameterList = template.parameterList as? [TransferAnywayData] {
+                
+                return parameterList.compactMap(\.amountDouble).first?.description
+            }
+            
+            return nil
+            
+        case Payments.Parameter.Identifier.product.rawValue:
+            return template.parameterList.last?.payer?.productIdDescription
+            
+        default:
+            switch service {
+            case .abroad, .sfp, .fms, .fns, .fssp, .utility, .internetTV, .transport:
+                
+                switch template.parameterList {
+                case let payload as [TransferAnywayData]:
+                    
+                    switch parameterId {
+                    case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                        return payload.last?.additional.sfpPhone
+                        
+                    default:
+                        return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                    }
+                    
+                case let payload as [TransferGeneralData]:
+                    switch parameterId {
+                    case Payments.Operation.Parameter.Identifier.sfpPhone.rawValue:
+                        return template.phoneNumber
+                        
+                    case Payments.Operation.Parameter.Identifier.sfpBank.rawValue:
+                        return template.foraBankId
+                        
+                    case Payments.Operation.Parameter.Identifier.sfpMessage.rawValue:
+                        return payload.last?.comment
+                        
+                    default:
+                        return nil
+                    }
+                    
+                default:
+                    return nil
+                }
+                
+            case .requisites:
+                return paymentsProcessSourceTemplateReducerRequisites(templateData: template,
+                                                                      parameterId: parameterId)
+            case .mobileConnection:
+                guard let anywayDataList = template.parameterList as? [TransferAnywayData],
+                      let puref = anywayDataList.last?.puref else {
+                    return nil
+                }
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.mobileConnectionPhone.rawValue:
+                    let operatorId = self.dictionaryAnywayOperator(for: puref)?.operatorID
+                    
+                    if let phone = anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue {
+                        
+                        return "7" + phone
+                    }
+                    
+                    return nil
+                    
+                default:
+                    return nil
+                }
+            case .toAnotherCard:
+                
+                switch parameterId {
+                case Payments.Parameter.Identifier.productTemplate.rawValue:
+                    
+                    guard let parameterList = template.parameterList as? [TransferGeneralData] else {
+                        return nil
+                    }
+                    
+                    var productId: String?
+                    
+                    switch parameterList.lastPayeeProductId {
+                    case let .some(payeeProductId):
+                        productId = self.productTemplates.value.first(where: { $0.id == payeeProductId })?.id.description
+                        
+                    default:
+                        
+                        if let suffixCardNumber = parameterList.last?.suffixCardNumber {
+                            
+                            productId = self.productTemplates.value.first(where: { $0.numberMaskSuffix == suffixCardNumber })?.id.description
+                            
+                        }
+                    }
+                    
+                    guard let productId else {
+                        return nil
+                    }
+                    
+                    let templateProductId = Payments.ParameterProductTemplate.ParametrValue.templateId(productId).stringValue
+                    
+                    return templateProductId
+                    
+                default:
+                    return nil
+                }
+                
+            default:
+                return nil
+            }
+        }
+    }
 }
 
 // MARK: - Transfer Complete
@@ -724,7 +1222,7 @@ extension Model {
         case .fns: return paymentsMockFNS()  
         case .fms: return paymentsMockFMS()  
         case .fssp: return paymentsMockFSSP()
-        case .sfp: return paymentsMockSFP()
+        case .sfp: return Model.paymentsMockSFP()
             
         default:
             return nil
@@ -733,22 +1231,45 @@ extension Model {
     
     func paymentsIsAutoContinueRequired(operation: Payments.Operation, updated: Payments.Parameter.ID) -> Bool {
         
-        guard let nextAction = try? operation.nextAction() else {
+        guard let parameter = operation.parameters.first(where: { $0.id == updated }) else {
             return false
         }
         
-        switch nextAction {
-        case .rollback:
-            switch updated {
-            case Payments.Parameter.Identifier.amount.rawValue:
-                return false
-                
-            default:
-                return true
-            }
+        switch parameter {
+        case _ as Payments.ParameterProduct,
+             _ as Payments.ParameterSelect,
+             _ as Payments.ParameterSelectBank,
+             _ as Payments.ParameterSelectCountry,
+             _ as Payments.ParameterSelectService,
+             _ as Payments.ParameterSelectDropDownList,
+             _ as Payments.ParameterCheck,
+             _ as Payments.ParameterSelectSimple,
+             _ as Payments.ParameterSelectSwitch:
+            return true
             
         default:
             return false
+        }
+    }
+    
+    func paymentsIsRollbackRequired(operation: Payments.Operation, updated: Payments.Parameter.ID) -> Int? {
+        
+        guard let nextAction = try? operation.nextAction() else {
+            return nil
+        }
+        
+        switch nextAction {
+        case let .rollback(step):
+            switch updated {
+            case Payments.Parameter.Identifier.amount.rawValue:
+                return nil
+                
+            default:
+                return step
+            }
+            
+        default:
+            return nil
         }
     }
     
@@ -780,5 +1301,41 @@ extension Model {
         default:
             return nil
         }
+    }
+    
+    func isSingleService(_ puref: String) async throws -> Bool {
+        
+        LoggerAgent.shared.log(category: .model, message: "isSingleService")
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let command = ServerCommands.TransferController.IsSingleService(token: token, payload: .init(puref: puref))
+        
+        LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                switch result{
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.isSingleService.emptyData(message: response.errorMessage)))
+                            return
+                        }
+                        
+                        continuation.resume(returning: (data))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.isSingleService.statusError(status: response.statusCode, message: response.errorMessage)))
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(Payments.Error.isSingleService.serverCommandError(error: error.localizedDescription)))
+                }
+            }
+        })
     }
 }

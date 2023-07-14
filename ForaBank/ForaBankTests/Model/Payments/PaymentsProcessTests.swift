@@ -8,13 +8,8 @@
 import XCTest
 @testable import ForaBank
 
-class PaymentsProcessTests: XCTestCase {
-    
-    
-}
+final class PaymentsProcessTests: XCTestCase {
 
-extension PaymentsProcessTests {
-    
     func testLocalMultistep_FirstStep_AutoComplete() async throws {
         
         // given
@@ -452,14 +447,14 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
                       parameters.first(where: { $0.id == "amount" })?.value == "100" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns)
+                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns, operation: operation)
                 
             case "fnsUin":
                 guard parameters.first(where: { $0.id == "code" })?.value == "555",
                       parameters.first(where: { $0.id == "amount" })?.value == "200" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns)
+                return Payments.Success(operationDetailId: 1, status: .complete, productId: 1, amount: 100, service: .fns, operation: operation)
                 
             default:
                 throw Payments.Error.unsupported
@@ -508,6 +503,6 @@ private extension ParameterData {
     
     init(id: String, value: String?) {
         
-        self.init(content: value, dataType: nil, id: id, isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "", type: "", inputFieldType: nil, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .constant)
+        self.init(content: value, dataType: nil, id: id, isPrint: nil, isRequired: nil, mask: nil, maxLength: nil, minLength: nil, order: nil, rawLength: 0, readOnly: nil, regExp: nil, subTitle: nil, title: "", type: "", inputFieldType: .unknown, dataDictionary: nil, dataDictionaryРarent: nil, group: nil, subGroup: nil, inputMask: nil, phoneBook: nil, svgImage: nil, viewType: .constant)
     }
 }

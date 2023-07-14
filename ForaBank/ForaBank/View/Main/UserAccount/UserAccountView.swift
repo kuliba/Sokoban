@@ -51,6 +51,14 @@ struct UserAccountView: View {
                     AccountCellFullButtonWithInfoView(viewModel: button)
                         .padding(.horizontal, 20)
                 }
+                
+                if let version = viewModel.appVersionFull {
+                    
+                    Text(version)
+                        .foregroundColor(Color.textPlaceholder)
+                        .lineLimit(1)
+                        .font(.textH4R16240())
+                }
             }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {

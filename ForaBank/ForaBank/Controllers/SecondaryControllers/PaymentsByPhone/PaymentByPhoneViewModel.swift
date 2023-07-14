@@ -69,10 +69,10 @@ class PaymentByPhoneViewModel {
         if filterProduct.count > 0 {
             if let template = self.template {
                 if template.type == .sfp {
-                    let card = filterProduct.first(where: { $0.id == template.psfCardId })
+                    let card = filterProduct.first(where: { $0.id == template.payerProductId })
                     return card
                 } else if template.type == .byPhone {
-                    let card = filterProduct.first(where: { $0.id == template.insideByPhoneCardId })
+                    let card = filterProduct.first(where: { $0.id == template.payerProductId })
                     return card
                 } else {
                     return filterProduct.first
@@ -91,20 +91,11 @@ class PaymentByPhoneViewModel {
         self.closeAction = closeAction
     }
     
-    // Init for SPF with Template
-    internal init(spf template: PaymentTemplateData, closeAction: @escaping () -> Void ) {
-        self.template = template
-        self.phoneNumber = template.spfPhoneNumber
-        self.bankId = template.spfBankId ?? ""
-        self.amount = template.amount
-        self.closeAction = closeAction
-    }
-    
     // Init for Inside bank by phone with Tamplate
     internal init(insideByPhone template: PaymentTemplateData, closeAction: @escaping () -> Void ) {
         self.template = template
-        self.phoneNumber = template.insideByPhonePhoneNumber
-        self.bankId = template.insideByPhoneBankId ?? ""
+        self.phoneNumber = template.phoneNumber
+        self.bankId = template.foraBankId ?? ""
         self.amount = template.amount
         self.closeAction = closeAction
     }

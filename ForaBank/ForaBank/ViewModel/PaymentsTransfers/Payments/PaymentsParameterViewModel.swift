@@ -31,7 +31,7 @@ class PaymentsParameterViewModel: Identifiable {
     
     init(source: PaymentsParameterRepresentable) {
         
-        self.id = UUID().uuidString
+        self.id = source.id
         self.value = .init(with: source)
         self.source = source
         self.isEditable = source.isEditable
@@ -71,7 +71,7 @@ class PaymentsParameterViewModel: Identifiable {
 
 extension PaymentsParameterViewModel {
     
-    struct Value {
+    struct Value: Equatable {
  
         let id: Payments.Parameter.ID
         let last: String?

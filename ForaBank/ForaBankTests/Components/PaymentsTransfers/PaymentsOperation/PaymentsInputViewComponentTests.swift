@@ -17,14 +17,14 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertEqual(currentValueSpy.values, [nil])
         XCTAssertEqual(titleSpy.values, [nil])
         XCTAssertEqual(warningSpy.values, [nil])
-        XCTAssertEqual(isEditingSpy.values, [false, false])
+        XCTAssertEqual(isEditingSpy.values, [false])
     }
     
     func test_init_shouldSetValues_onNil() {
@@ -33,14 +33,13 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
-        
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertEqual(currentValueSpy.values, [nil])
         XCTAssertEqual(titleSpy.values, [nil])
         XCTAssertEqual(warningSpy.values, [nil])
-        XCTAssertEqual(isEditingSpy.values, [false, false])
+        XCTAssertEqual(isEditingSpy.values, [false])
     }
         
     func test_init_shouldSetValues_onNonEmpty() {
@@ -49,14 +48,13 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
-        
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertEqual(currentValueSpy.values, ["abcde"])
         XCTAssertEqual(titleSpy.values, ["Enter message"])
         XCTAssertEqual(warningSpy.values, [nil])
-        XCTAssertEqual(isEditingSpy.values, [false, false])
+        XCTAssertEqual(isEditingSpy.values, [false])
     }
         
     func test_shouldChangeValues_onTextViewDidBeginEditing_onInitialValueEmpty() {
@@ -65,9 +63,8 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
-        
-        sut.textField.textViewDidBeginEditing()
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
+        sut.textField.startEditing()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -75,7 +72,7 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         XCTAssertEqual(titleSpy.values, [nil, "Enter message"])
         XCTAssertEqual(warningSpy.values, [nil, nil])
         XCTAssertEqual(isEditingSpy.values, [
-            false, false, true
+            false, true
         ])
     }
     
@@ -85,9 +82,8 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         let currentValueSpy = ValueSpy(sut.$value.map(\.current))
         let titleSpy = ValueSpy(sut.$title)
         let warningSpy = ValueSpy(sut.$warning)
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
-        
-        sut.textField.textViewDidBeginEditing()
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
+        sut.textField.startEditing()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -95,7 +91,7 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         XCTAssertEqual(titleSpy.values, ["Enter message", "Enter message"])
         XCTAssertEqual(warningSpy.values, [nil, nil])
         XCTAssertEqual(isEditingSpy.values, [
-            false, false, true
+            false, true
         ])
     }
         
@@ -120,32 +116,31 @@ final class PaymentsInputViewComponentTests: XCTestCase {
     func test_isEditing_should________onNonEmptyTextFiledInput() {
         
         let sut = makeSUT(initialValue: "abcde")
-        let isEditingSpy = ValueSpy(sut.textField.$isEditing)
-        
+        let isEditingSpy = ValueSpy(sut.textField.isEditing())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         XCTAssertEqual(isEditingSpy.values, [
-            false, false,
+            false,
         ])
                 
-        sut.textField.textViewDidBeginEditing()
+        sut.textField.startEditing()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         XCTAssertEqual(isEditingSpy.values, [
-            false, false, true,
+            false, true,
         ])
         
         sut.textField.setText(to: "ABC")
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         XCTAssertEqual(isEditingSpy.values, [
-            false, false, true,
+            false, true, true
         ])
 
-        sut.textField.textViewDidEndEditing()
+        sut.textField.finishEditing()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         XCTAssertEqual(isEditingSpy.values, [
-            false, false, true, false
+            false, true, true, false
         ])
     }
     
@@ -237,7 +232,7 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         )
         let sut = PaymentsInputView.ViewModel(with: parameterInput)
 
-        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
     }

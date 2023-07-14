@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import os
+import UserModel
 
 class Model {
     
@@ -70,9 +71,9 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let paymentTemplatesUpdating: CurrentValueSubject<Bool, Never>
     let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
-    //TODO: move to settings agent
-    let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
+ 
     
     //MARK: LatestAllPayments
     let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
@@ -93,8 +94,8 @@ class Model {
     //MARK: - User Settings
     let userSettings: CurrentValueSubject<[UserSettingData], Never>
 
-    //MARK: Loacation
-    let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
+    //MARK: Location
+    let currentUserLocation: CurrentValueSubject<LocationData?, Never>
 
     //MARK: Bank Client Info
     let bankClientsInfo: CurrentValueSubject<Set<BankClientInfo>, Never>
@@ -108,10 +109,6 @@ class Model {
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
     
-    //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .taxes]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet, .newDirect, .contactCash, .contactAddressless, .contactAddressing, .taxAndStateService]
-    
     // services
     internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol
@@ -124,6 +121,16 @@ class Model {
     internal let cameraAgent: CameraAgentProtocol
     internal let imageGalleryAgent: ImageGalleryAgentProtocol
     internal let networkMonitorAgent: NetworkMonitorAgentProtocol
+    
+    // Models
+    private let userModel: UserModel<ProductData.ID>
+    var preferredProductID: ProductData.ID? {
+        userModel.preferredProductValue
+    }
+    
+    var preferredProductIDPublisher: AnyPublisher<ProductData.ID?, Never> {
+        userModel.preferredProductPublisher
+    }
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -146,7 +153,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol, networkMonitorAgent: NetworkMonitorAgentProtocol, userModel: UserModel<ProductData.ID> = .init()) {
         
         self.action = .init()
         self.auth = keychainAgent.isStoredString(values: [.pincode, .serverDeviceGUID]) ? .init(.signInRequired) : .init(.registerRequired)
@@ -180,7 +187,7 @@ class Model {
         self.images = .init([:])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
-        self.paymentTemplatesViewSettings = .init(.initial)
+        self.paymentTemplatesUpdating = .init(false)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
         self.paymentsByPhone = .init([:])
@@ -190,7 +197,7 @@ class Model {
         self.clientPhoto = .init(nil)
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
-        self.currentUserLoaction = .init(nil)
+        self.currentUserLocation = .init(nil)
         self.notificationsTransition = nil
         self.dictionariesUpdating = .init([])
         self.userSettings = .init([])
@@ -214,6 +221,7 @@ class Model {
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
         self.networkMonitorAgent = networkMonitorAgent
+        self.userModel = userModel
         self.bindings = []
         
         LoggerAgent.shared.log(level: .debug, category: .model, message: "initialized")
@@ -434,12 +442,14 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
-                    if auth.value == .authorized, let deepLinkType = deepLinkType {
+                    if auth.value == .authorized,
+                       let deepLinkType = deepLinkType {
                         
                         self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
                     }
                     
-                    if auth.value == .authorized, let notification = notificationsTransition {
+                    if auth.value == .authorized,
+                       let notification = notificationsTransition {
                         
                         self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
@@ -757,6 +767,9 @@ class Model {
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                     handleTemplatesDeleteRequest(payload)
+                
+                case let payload as ModelAction.PaymentTemplate.Sort.Requested:
+                    handleTemplatesSortRequest(payload)
                     
                     //MARK: - Dictionaries Actions
                     
@@ -945,18 +958,28 @@ class Model {
                 
             }.store(in: &bindings)
         
-        locationAgent.currentLoaction.sink { [unowned self] coordinate in
+        locationAgent.currentLocation.sink { [unowned self] coordinate in
             
             if let coordinate = coordinate {
                 
-                currentUserLoaction.value = LocationData(with: coordinate)
+                currentUserLocation.value = LocationData(with: coordinate)
                 
             } else {
                 
-                currentUserLoaction.value = nil
+                currentUserLocation.value = nil
             }
             
         }.store(in: &bindings)
+    }
+}
+
+//MARK: - Public Methods
+
+extension Model {
+    
+    func setPreferredProductID(to productID: ProductData.ID?) {
+        
+        userModel.setPreferredProduct(to: productID)
     }
 }
 
@@ -1343,14 +1366,13 @@ private extension Model {
         statements.value = [:]
         statementsUpdating.value = [:]
         paymentTemplates.value = []
-        paymentTemplatesViewSettings.value = .initial
         latestPayments.value = []
         latestPaymentsUpdating.value = false
         notifications.value = []
         clientInfo.value = nil
         clientPhoto.value = nil
         clientName.value = nil
-        currentUserLoaction.value = nil
+        currentUserLocation.value = nil
         dictionariesUpdating.value = []
         currencyWalletList.value = []
         userSettings.value = []

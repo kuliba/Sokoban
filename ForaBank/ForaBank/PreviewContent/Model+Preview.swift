@@ -57,4 +57,5 @@ extension ImageData {
     static let parameterSMS = ImageData(with: UIImage(named: "Payments Icon SMS")!)!
     static let iconPlaceholder = ImageData(with: UIImage(named: "Payments Icon Placeholder")!)!
     static let iconClose = ImageData(with: UIImage(named: "Payments Icon Close")!)!
+    static let iconInput = ImageData(with: UIImage(named: "Payments Input Sample")!)!
 }

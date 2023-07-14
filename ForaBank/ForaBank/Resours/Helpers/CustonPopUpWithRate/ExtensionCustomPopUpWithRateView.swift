@@ -19,9 +19,9 @@ extension CustomPopUpWithRateView {
         
         if let template = paymentTemplate {
             
-            if let cardId = template.parameterList.first?.payer.cardId {
+            if let cardId = template.parameterList.first?.payer?.cardId {
                 updateObjectWithNotification(cardId: cardId)
-            } else if let accountId = template.parameterList.first?.payer.accountId {
+            } else if let accountId = template.parameterList.first?.payer?.accountId {
                 updateObjectWithNotification(cardId: accountId)
             }
             updateObjectWithTamplate(paymentTemplate: template)

@@ -51,90 +51,35 @@ class PaymentsServiceViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as PaymentsServiceViewModelAction.ServiceSelected:     
+                case let payload as PaymentsServiceViewModelAction.ServiceSelected:
+                    rootActions?.spinner.show()
                     
-#if DEBUG
-                    
-                    if let mock = model.paymentsMock(for: payload.service) {
-                        
-                        Task {
-                            
-                            do {
-                                
-                                let operation = try await model.paymentsOperation(with: .mock(mock))
-                                
-                                await MainActor.run {
-                                    
-                                    let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model) {[weak self] in
-                                        self?.action.send(PaymentsServiceViewModelAction.DissmissLink())
-                                    }
-                                    operationViewModel.rootActions = rootActions
-                                    link = .operation(operationViewModel)
-                                }
-                                
-                            } catch {
-                                
-                                await MainActor.run {
-                                    
-                                    self.rootActions?.alert(error.localizedDescription)
-                                }
-                            }
-                        }
-                        
-                    } else {
-                        
-                        Task {
-                            
-                            do {
-                                
-                                let operation = try await model.paymentsOperation(with: payload.service)
-                                
-                                await MainActor.run {
-                                    
-                                    let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model) { [weak self] in
-                                        self?.action.send(PaymentsServiceViewModelAction.DissmissLink())
-                                    }
-                                    operationViewModel.rootActions = rootActions
-                                    link = .operation(operationViewModel)
-                                }
-                                
-                            } catch {
-                                
-                                await MainActor.run {
-                                    
-                                    self.rootActions?.alert(error.localizedDescription)
-                                }
-                            }
-                        }
-                    }
-                    
-#else
                     Task {
-                        
-                        do {
-                            
-                            let operation = try await model.paymentsOperation(with: payload.service)
-                            
-                            await MainActor.run {
-                                
-                                let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model){ [weak self] in
-                                    self?.action.send(PaymentsServiceViewModelAction.DissmissLink())
-                                }
-                                operationViewModel.rootActions = rootActions
-                                link = .operation(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.rootActions?.alert(error.localizedDescription)
-                            }
-                        }
+
+                      do {
+                          
+                          let operation = try await requestOperation(for: payload.service)
+                          
+                          await MainActor.run {
+                              
+                              self.rootActions?.spinner.hide()
+                              
+                              let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model){ [weak self] in
+                                  self?.action.send(PaymentsServiceViewModelAction.DissmissLink())
+                              }
+                              operationViewModel.rootActions = rootActions
+                              link = .operation(operationViewModel)
+                          }
+                          
+                      } catch {
+                          
+                          await MainActor.run {
+                              
+                              self.rootActions?.spinner.hide()
+                              self.rootActions?.alert(error.localizedDescription)
+                          }
+                      }
                     }
-#endif
-                    
-                    
                     
                 case _ as PaymentsServiceViewModelAction.DissmissLink:
                     link = nil
@@ -144,6 +89,27 @@ class PaymentsServiceViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+}
+
+//MARK: - Helpers
+
+extension PaymentsServiceViewModel {
+    
+    func requestOperation(for service: Payments.Service) async throws -> Payments.Operation {
+        
+      #if DEBUG
+      if let mock = model.paymentsMock(for: service) {
+          
+          return try await model.paymentsOperation(with: .mock(mock))
+          
+      } else {
+          
+          return try await model.paymentsOperation(with: service)
+      }
+      #else
+      return try await model.paymentsOperation(with: service)
+      #endif
     }
 }
 

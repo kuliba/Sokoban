@@ -16,11 +16,11 @@ enum Payments {
         case general = "ru.forabank.sense.payments.category.general"
         case fast  = "ru.forabank.sense.payments.category.fast"
         case taxes = "iFora||1331001"
-        
+
         var services: [Service] {
             
             switch self {
-            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change]
+            case .general: return [.requisites, .c2b, .toAnotherCard, .mobileConnection, .return, .change, .internetTV, .utility, .transport]
             case .fast: return [.sfp, .abroad]
             case .taxes: return [.fns, .fms, .fssp]
             }
@@ -29,9 +29,10 @@ enum Payments {
         var name: String {
             
             switch self {
-            case .fast: return "Быстрые платежи"
-            case .taxes: return "Налоги и услуги"
+            case .fast:    return "Быстрые платежи"
+            case .taxes:   return "Налоги и услуги"
             case .general: return ""
+
             }
         }
         
@@ -62,9 +63,14 @@ enum Payments {
         case mobileConnection
         case `return`
         case change
+        case internetTV
+        case utility
+        case transport
+        case avtodor
+        case gibdd
     }
     
-    enum Operator : String {
+    enum Operator: String {
         
         case sfp               = "iFora||TransferC2CSTEP"
         case direct            = "iFora||MIG"
@@ -81,6 +87,39 @@ enum Payments {
         case mobileConnection  = "mobileConnection"
         case `return`          = "return"
         case change            = "change"
+        case internetTV        = "iFora||1051001"
+        case utility           = "iFora||1031001"
+        case transport         = "iFora||1051062"
+        case avtodor           = "AVD"
+        case cardTJ            = "iFora||DKM"
+        case cardHumoUZ        = "iFora||DKQ"
+        case cardUZ            = "iFora||DKR"
+        case cardKZ            = "iFora||PW0"
+#if DEBUG || MOCK
+        case gibdd             = "iFora||4811" // test
+#else
+        case gibdd             = "iFora||5173" // live
+#endif
+    }
+    
+    static var paymentsServicesOperators: [Operator] {
+        
+        [
+            .internetTV,
+            .utility,
+            .transport
+        ]
+    }
+    
+    static func operatorByPaymentsType(_ paymentsType: PTSectionPaymentsView.ViewModel.PaymentsType) -> Operator? {
+        
+        switch paymentsType {
+            
+        case .service:   return .utility
+        case .internet:  return .internetTV
+        case .transport: return .transport
+        default:         return .none
+        }
     }
 }
 
@@ -194,6 +233,12 @@ extension Payments.Operation {
         
         case c2bSubscribe(URL)
         
+        case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
+        
+        case avtodor
+        
+        case gibdd
+
         case mock(Payments.Mock)
         
         var debugDescription: String {
@@ -209,6 +254,9 @@ extension Payments.Operation {
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
+            case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
+            case .avtodor: return "Fake/Combined Avtodor"
+            case .gibdd: return "GIBDD Fines"
             }
         }
     }
@@ -216,7 +264,7 @@ extension Payments.Operation {
     /// Operation step
     struct Step {
         
-        let parameters: [PaymentsParameterRepresentable]
+        let parameters: [any PaymentsParameterRepresentable]
         let front: Front
         let back: Back
         
@@ -297,6 +345,11 @@ extension Payments.Operation {
         case mobileConnection
         case `return`
         case change
+        case internetTV
+        case utility
+        case transport
+        case avtodor
+        case gibdd
     }
     
     enum Action: Equatable {
@@ -330,9 +383,10 @@ extension Payments {
         let productId: ProductData.ID
         let amount: Double
         let service: Payments.Service
+        let operation: Payments.Operation?
         let serviceData: ServiceData?
         
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil) {
+        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil, operation: Payments.Operation?) {
             
             self.operationDetailId = operationDetailId
             self.status = status
@@ -340,6 +394,7 @@ extension Payments {
             self.amount = amount
             self.service = service
             self.serviceData = serviceData
+            self.operation = operation
         }
         
         init(
@@ -356,7 +411,7 @@ extension Payments {
                 throw Payments.Error.unsupported
             }
             
-            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData)
+            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData, operation: operation)
         }
         
         enum ServiceData {
@@ -365,6 +420,8 @@ extension Payments {
             case mobileConnectionData(MobileConnectionData)
             case abroadData(TransferResponseBaseData)
             case returnAbroadData(transferData: TransferResponseBaseData, title: String)
+            case paymentsServicesData(PaymentsServicesData)
+
         }
     }
 }
@@ -406,7 +463,7 @@ extension Payments {
 
 extension Payments {
     
-    struct Mock {
+    struct Mock: Equatable {
         
         let service: Payments.Service
         let parameters: [Payments.Parameter]
@@ -430,11 +487,16 @@ extension Payments {
         case missingValue(ParameterData)
         case missingSource(Service)
         
+        case missingOperator(forCode: String)
+        case missingParameterList(forCode: String)
+        case emptyParameterList(forType: String?)
+        
         case action(Action)
         case ui(UI)
 
         case notAuthorized
         case unsupported
+        case unexpectedIsSingleService
         
         enum Action {
             
@@ -446,6 +508,13 @@ extension Payments {
             
             case sourceParameterMissingOptions(Payments.Parameter.ID)
             case sourceParameterSelectedOptionInvalid(Payments.Parameter.ID)
+        }
+        
+        enum isSingleService: Swift.Error {
+            
+            case emptyData(message: String?)
+            case statusError(status: ServerStatusCode, message: String?)
+            case serverCommandError(error: String)
         }
         
         var errorDescription: String? {
@@ -474,7 +543,16 @@ extension Payments {
             
             case let .missingValueForParameter(parameterId):
                 return "Missing value for parameter: \(parameterId)"
-                
+
+            case let .missingOperator(forCode: code):
+                return "Missing operator for code: \(code)"
+            
+            case let .missingParameterList(forCode: code):
+                return "Missing parameterList for operator with code: \(code)"
+            
+            case .emptyParameterList:
+                return "Empty parameterList."
+            
             case let .action(action):
                 switch action {
                 case let .warning(parameterId: parameterId, message: message):
@@ -495,6 +573,9 @@ extension Payments {
 
             case .notAuthorized:
                 return "Not authorized request attempt"
+                
+            case .unexpectedIsSingleService:
+                return "Unexpected isSingleService response"
                 
             case let .missingSource(service):
                 return "Missing source for service: \(service)"

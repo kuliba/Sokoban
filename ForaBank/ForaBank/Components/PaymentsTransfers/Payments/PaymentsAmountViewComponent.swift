@@ -123,6 +123,21 @@ extension PaymentsAmountView {
                 
                 self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
                 
+            case let .templatePayment(templateId, _):
+                guard let (_, productFrom, amount) = model.productsTransfer(templateId: templateId) else {
+
+                    let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
+                    let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
+                    
+                    self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
+                    return
+                }
+
+                let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? ""
+                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
+                    
+                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+                    
             case let .makePaymentToDeposite(productData, amount), let .transferDeposit(productData, amount):
                 let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
                 let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
@@ -153,7 +168,7 @@ extension PaymentsAmountView {
                 return
             }
             
-            let currency = self.model.currencyList.value.first(where: {$0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description})
+            let currency = self.model.currencyList.value.first(where: { $0.code == parameterAmount.deliveryCurrency?.selectedCurrency.description })
             textField.update(parameterAmount.amount, currencySymbol: currency?.currencySymbol ?? parameterAmount.currencySymbol)
             actionTitle = parameterAmount.transferButtonTitle
             
@@ -226,9 +241,10 @@ extension PaymentsAmountView {
                         if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
                             
                             update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
+                        } else {
+                                                    
+                            update(value: nil)
                         }
-                        
-                        update(value: nil)
                     }
                     
                 }.store(in: &bindings)
@@ -360,11 +376,13 @@ struct PaymentsAmountView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(.textPlaceholder)
                             .padding(.top, 4)
+                            .accessibilityIdentifier("PaymentsAmountViewTitle")
                         
                         HStack {
                             
                             TextFieldFormatableView(viewModel: viewModel.textField, font: .systemFont(ofSize: 24, weight: .semibold), textColor: .white, keyboardType: .decimalPad)
                                 .frame(height: 24, alignment: .center)
+                                .accessibilityIdentifier("PaymentsAmountViewInputField")
                             
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
@@ -445,6 +463,7 @@ struct PaymentsAmountView: View {
                         .font(.textH4R16240())
                         .foregroundColor(.mainColorsWhite.opacity(0.5))
                 }
+                .accessibilityIdentifier("PaymentAmountViewTransferButtonInactive")
                 
             case .active(title: let title, action: let action):
                 Button(action: action) {
@@ -458,6 +477,7 @@ struct PaymentsAmountView: View {
                             .font(.textH4R16240())
                             .foregroundColor(.textWhite)
                     }
+                    .accessibilityIdentifier("PaymentAmountViewTransferButton")
                 }
                 
             case let .loading(icon: icon, iconSize: iconSize):
@@ -479,6 +499,7 @@ struct PaymentsAmountView: View {
                     Text(title)
                         .font(.textBodySR12160())
                         .foregroundColor(.textPlaceholder)
+                        .accessibilityIdentifier("PaymentsAmountViewFeeSubtitle")
                     
                     Button(action: action) {
                         
@@ -495,6 +516,7 @@ struct PaymentsAmountView: View {
                 Text(text)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
+                    .accessibilityIdentifier("PaymentsAmountViewCurrencySubtitle")
             }
         }
     }
@@ -543,14 +565,17 @@ struct PaymentsAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencyFrom")
                     
                     viewModel.icon
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencySwitchIcon")
                     
                     Text(viewModel.to)
                         .font(.textBodySR12160())
                         .foregroundColor(.textSecondary)
                         .frame(width: 16, height: 16)
+                        .accessibilityIdentifier("PaymentsAmountViewСurrencyTo")
                     
                 }
                 .padding(4)
@@ -561,6 +586,7 @@ struct PaymentsAmountView: View {
                 )
                 
             }.disabled(viewModel.isUserInteractionEnabled == false)
+                .accessibilityIdentifier("PaymentsAmountViewSwitchCurrencyButton")
         }
     }
     

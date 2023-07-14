@@ -26,6 +26,15 @@ class UserAccountViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     
+    var appVersionFull: String? {
+        
+        guard let version = model.authAppVersion else {
+            return nil
+        }
+        
+        return "Версия \(version)"
+    }
+    
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     

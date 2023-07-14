@@ -6,27 +6,95 @@ let package = Package(
     name: "swift-forabank",
     platforms: [
         .iOS(.v14),
+        .macOS(.v11),
     ],
     products: [
-        .textFieldRegularComponent,
+        .cvvPin,
+        .loadableResourceComponent,
+        .pickerWithPreviewComponent,
+        .pinCodeUI,
+        .searchBarComponent,
+        .textFieldComponent,
+        .textFieldModel,
         .uiKitHelpers,
+        .userModel,
     ],
     dependencies: [
         .combineSchedulers,
+        .customDump,
     ],
     targets: [
-        .textFieldRegularComponent,
-        .textFieldRegularComponentTests,
+        .cvvPin,
+        .cvvPinTests,
+        .loadableResourceComponent,
+        .loadableResourceComponentTests,
+        .pickerWithPreviewComponent,
+        .pickerWithPreviewComponentTests,
+        .pinCodeUI,
+        .searchBarComponent,
+        .textFieldComponent,
+        .textFieldComponentTests,
+        .textFieldDomain,
+        .textFieldDomainTests,
+        .textFieldModel,
+        .textFieldModelTests,
+        .textFieldUI,
+        .textFieldUITests,
         .uiKitHelpers,
+        .wipTests,
+        .userModel,
+        .userModelTests,
     ]
 )
 
 private extension Product {
     
-    static let textFieldRegularComponent = library(
-        name: .textFieldRegularComponent,
+    static let cvvPin = library(
+        name: .cvvPin,
         targets: [
-            .textFieldRegularComponent,
+            .cvvPin,
+        ]
+    )
+
+    static let loadableResourceComponent = library(
+        name: .loadableResourceComponent,
+        targets: [
+            .loadableResourceComponent,
+        ]
+    )
+
+    static let pickerWithPreviewComponent = library(
+        name: .pickerWithPreviewComponent,
+        targets: [
+            .pickerWithPreviewComponent,
+        ]
+    )
+
+    static let pinCodeUI = library(
+        name: .pinCodeUI,
+        targets: [
+            .pinCodeUI,
+        ]
+    )
+
+    static let searchBarComponent = library(
+        name: .searchBarComponent,
+        targets: [
+            .searchBarComponent,
+        ]
+    )
+    
+    static let textFieldComponent = library(
+        name: .textFieldComponent,
+        targets: [
+            .textFieldComponent,
+        ]
+    )
+    
+    static let textFieldModel = library(
+        name: .textFieldModel,
+        targets: [
+            .textFieldModel,
         ]
     )
     
@@ -36,45 +104,237 @@ private extension Product {
             .uiKitHelpers,
         ]
     )
+    
+    static let userModel = library(
+        name: .userModel,
+        targets: [
+            .userModel
+        ]
+    )
 }
 
 private extension Target {
     
-    static let textFieldRegularComponent = target(
-        name: .textFieldRegularComponent,
+    static let cvvPin = target(
+        name: .cvvPin,
         dependencies: [
+            // external packages
             .combineSchedulers,
+        ]
+    )
+    static let cvvPinTests = testTarget(
+        name: .cvvPinTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .cvvPin,
+        ]
+    )
+
+    static let loadableResourceComponent = target(
+        name: .loadableResourceComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableResourceComponentTests = testTarget(
+        name: .loadableResourceComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableResourceComponent,
+        ]
+    )
+
+    static let pickerWithPreviewComponent = target(
+        name: .pickerWithPreviewComponent,
+        dependencies: [
             .uiKitHelpers,
         ]
     )
-    static let textFieldRegularComponentTests = testTarget(
-        name: .textFieldRegularComponentTests,
+    static let pickerWithPreviewComponentTests = testTarget(
+        name: .pickerWithPreviewComponentTests,
+        dependencies: [
+            .pickerWithPreviewComponent,
+        ]
+    )
+
+    static let pinCodeUI = target(
+        name: .pinCodeUI
+    )
+    
+    static let searchBarComponent = target(
+        name: .searchBarComponent,
+        dependencies: [
+            .textFieldComponent,
+        ]
+    )
+    
+    static let textFieldComponent = target(
+        name: .textFieldComponent,
         dependencies: [
             .combineSchedulers,
-            .textFieldRegularComponent,
+            .textFieldDomain,
+            .textFieldModel,
+            .textFieldUI,
+            .uiKitHelpers,
+        ]
+    )
+    static let textFieldComponentTests = testTarget(
+        name: .textFieldComponentTests,
+        dependencies: [
+            .customDump,
+            .textFieldComponent,
+            .textFieldDomain,
+            .textFieldUI,
+        ]
+    )
+    
+    static let textFieldDomain = target(
+        name: .textFieldDomain,
+        dependencies: []
+    )
+    static let textFieldDomainTests = testTarget(
+        name: .textFieldDomainTests,
+        dependencies: [
+            .customDump,
+            .textFieldDomain,
+        ]
+    )
+    
+    static let textFieldModel = target(
+        name: .textFieldModel,
+        dependencies: [
+            .combineSchedulers,
+            .textFieldDomain,
+        ]
+    )
+    static let textFieldModelTests = testTarget(
+        name: .textFieldModelTests,
+        dependencies: [
+            .combineSchedulers,
+            .customDump,
+            .textFieldDomain,
+            .textFieldModel,
+        ]
+    )
+    
+    static let textFieldUI = target(
+        name: .textFieldUI,
+        dependencies: [
+            .textFieldDomain,
+            .uiKitHelpers,
+        ]
+    )
+    static let textFieldUITests = testTarget(
+        name: .textFieldUITests,
+        dependencies: [
+            .customDump,
+            .textFieldDomain,
+            .textFieldUI,
         ]
     )
     
     static let uiKitHelpers = target(name: .uiKitHelpers)
+    
+    static let wipTests = testTarget(
+        name: .wipTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .textFieldDomain,
+            .textFieldModel,
+        ]
+    )
+    
+    static let userModel = target(name: .userModel)
+    static let userModelTests = testTarget(
+        name: .userModelTests,
+        dependencies: [
+            .userModel
+        ]
+    )
 }
 
 private extension Target.Dependency {
     
-    static let textFieldRegularComponent = byName(
-        name: .textFieldRegularComponent
+    static let cvvPin = byName(
+        name: .cvvPin
+    )
+    
+    static let loadableResourceComponent = byName(
+        name: .loadableResourceComponent
+    )
+    
+    static let pickerWithPreviewComponent = byName(
+        name: .pickerWithPreviewComponent
+    )
+    
+    static let textFieldComponent = byName(
+        name: .textFieldComponent
+    )
+    
+    static let textFieldDomain = byName(
+        name: .textFieldDomain
+    )
+    
+    static let textFieldModel = byName(
+        name: .textFieldModel
+    )
+    
+    static let textFieldUI = byName(
+        name: .textFieldUI
     )
     
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
     )
+    
+    static let userModel = byName(
+        name: .userModel
+    )
 }
 
 private extension String {
     
-    static let textFieldRegularComponent = "TextFieldRegularComponent"
-    static let textFieldRegularComponentTests = "TextFieldRegularComponentTests"
+    static let cvvPin = "CvvPin"
+    static let cvvPinTests = "CvvPinTests"
+    
+    static let loadableResourceComponent = "LoadableResourceComponent"
+    static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
+    static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
+    
+    static let pinCodeUI = "PinCodeUI"
+    
+    static let searchBarComponent = "SearchBarComponent"
+    
+    static let textFieldComponent = "TextFieldComponent"
+    static let textFieldComponentTests = "TextFieldComponentTests"
+
+    static let textFieldDomain = "TextFieldDomain"
+    static let textFieldDomainTests = "TextFieldDomainTests"
+
+    static let textFieldModel = "TextFieldModel"
+    static let textFieldModelTests = "TextFieldModelTests"
+
+    static let textFieldUI = "TextFieldUI"
+    static let textFieldUITests = "TextFieldUITests"
     
     static let uiKitHelpers = "UIKitHelpers"
+    
+    static let wipTests = "WIPTests"
+    
+    static let userModel = "UserModel"
+    static let userModelTests = "UserModelTests"
 }
 
 // MARK: - Point-Free
@@ -88,6 +348,10 @@ private extension Package.Dependency {
     static let combineSchedulers = Package.Dependency.package(
         url: .pointFreeGitHub + .combine_schedulers,
         from: .init(0, 9, 1)
+    )
+    static let customDump = Package.Dependency.package(
+        url: .pointFreeGitHub + .swift_custom_dump,
+        from: .init(0, 10, 2)
     )
     static let identifiedCollections = Package.Dependency.package(
         url: .pointFreeGitHub + .swift_identified_collections,
@@ -117,6 +381,10 @@ private extension Target.Dependency {
         name: .combineSchedulers,
         package: .combine_schedulers
     )
+    static let customDump = product(
+        name: .customDump,
+        package: .swift_custom_dump
+    )
     static let identifiedCollections = product(
         name: .identifiedCollections,
         package: .swift_identified_collections
@@ -144,6 +412,9 @@ private extension String {
     
     static let combineSchedulers = "CombineSchedulers"
     static let combine_schedulers = "combine-schedulers"
+    
+    static let customDump = "CustomDump"
+    static let swift_custom_dump = "swift-custom-dump"
     
     static let identifiedCollections = "IdentifiedCollections"
     static let swift_identified_collections = "swift-identified-collections"

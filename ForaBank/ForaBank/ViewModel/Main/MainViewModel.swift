@@ -170,7 +170,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .fastPayments(.contacts))
+                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
@@ -182,7 +182,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] _ in
                 
-                let contactsViewModel = ContactsViewModel(model, mode: .abroad)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
@@ -472,8 +472,9 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         if let qrMapping = model.qrMapping.value {
 
-                            if let operators = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
-                                
+                            if let operatorsFromQr = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
+                                let validQrOperators = model.dictionaryQRAnewayOperator()
+                                let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
                                 guard operators.count > 0 else {
                                 
                                     self.fullScreenSheet = nil
@@ -482,16 +483,38 @@ class MainViewModel: ObservableObject, Resetable {
                                 }
                                 
                                 if operators.count == 1 {
-                                    
                                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
-                                        
-                                        let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
-                                        
-                                        self.link = .operatorView(viewModel)
+                                    if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                                        Task { [weak self] in
+                                                guard let self = self else { return }
+                                                let puref = operatorValue.code
+                                                let additionalList = self.model.additionalList(for: operatorValue, qrCode: qr)
+                                                let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
+                                                let paymentsViewModel = PaymentsViewModel(
+                                                    source: .servicePayment(puref: puref, additionalList: additionalList, amount: amount/100),
+                                                    model: self.model,
+                                                    closeAction: {
+                                                        self.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                                                        
+                                                    })
+                                                self.bind(paymentsViewModel)
+
+                                                await MainActor.run {
+                                                    self.link = .payments(paymentsViewModel)
+                                                }
+                                        }
                                     }
-                                    
-                                } else {
+                                    else {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                                            
+                                            let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
+                                            
+                                            self.link = .operatorView(viewModel)
+                                        }
+                                        
+                                    }
+                                }
+                                else {
                                     
                                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
@@ -500,7 +523,7 @@ class MainViewModel: ObservableObject, Resetable {
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
                                         }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
                                         
-                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .init(textFieldPhoneNumberView: .init(style: .general, placeHolder: .text("Название или ИНН")), state: .idle, icon: Image.ic24Search),
+                                        let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             
@@ -728,16 +751,14 @@ class MainViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as TemplatesListViewModelAction.AddTemplate:
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())
-
-                    if let productFirst = model.allProducts.first {
                 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: productFirst.id))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        self.action.send(MainViewModelAction.Show.ProductProfile
+                            .init(productId: payload.productId))
                         }
-                    }
                     
                 default:
                     break
@@ -879,6 +900,8 @@ extension MainViewModel {
         case openCard(AuthProductsViewModel)
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
+        case paymentsServices(PaymentsServicesViewModel)
+
     }
     
     struct BottomSheet: BottomSheetCustomizable {

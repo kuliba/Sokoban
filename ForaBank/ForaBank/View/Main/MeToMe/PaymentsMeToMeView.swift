@@ -19,11 +19,28 @@ struct PaymentsMeToMeView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                Text(viewModel.title)
-                    .font(.textH3SB18240())
-                    .foregroundColor(.mainColorsBlack)
-                    .padding(.horizontal, 20)
-                    .accessibilityIdentifier("BtwTheirTitle")
+                HStack {
+                    
+                    Text(viewModel.title)
+                        .font(.textH3SB18240())
+                        .foregroundColor(.mainColorsBlack)
+                        .accessibilityIdentifier("BtwTheirTitle")
+                    
+                    Spacer()
+                    
+                    switch viewModel.mode {
+                    case .templatePayment:
+                        Button(action: { viewModel.action.send(PaymentsMeToMeAction.Show.ChangeName()) }) {
+                            
+                            Image.ic24Edit2
+                                .foregroundColor(.iconBlack)
+                        }
+                        
+                    default:
+                        EmptyView()
+                            .frame(width: 0, height: 0)
+                    }
+                }.padding(.horizontal, 20)
                 
                 VStack {
                     
@@ -52,6 +69,8 @@ struct PaymentsMeToMeView: View {
             switch bottomSheet.type {
             case let .info(viewModel):
                 InfoView(viewModel: viewModel)
+            case let .rename(viewModel):
+                TemplatesListView.RenameTemplateItemView(viewModel: viewModel)
             }
         }
         .fixedSize(horizontal: false, vertical: true)

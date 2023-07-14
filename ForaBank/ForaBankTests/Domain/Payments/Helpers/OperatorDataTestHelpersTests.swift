@@ -107,10 +107,24 @@ final class OperatorDataTestHelpersTests: XCTestCase {
 
 extension OperatorGroupData.OperatorData {
     
-    static let iFora4285: Self = .data(for: "iFora||4285")!
-    static let iFora4286: Self = .data(for: "iFora||4286")!
+    static let iFora4285:  Self = .data(for: "iFora||4285")!
+    static let iFora4286:  Self = .data(for: "iFora||4286")!
     static let iFora515A3: Self = .data(for: "iFora||515A3")!
     
+    // transport
+    static let iForaGibdd:       Self = .data(for: Purefs.iForaGibdd)!
+    static let iForaMosParking:  Self = .data(for: Purefs.iForaMosParking)!
+    static let iForaPodorozhnik: Self = .data(for: Purefs.iForaPodorozhnik)!
+    static let iForaStrelka:     Self = .data(for: Purefs.iForaStrelka)!
+    // backend has  changes not reflected in local files
+    // TODO: change to `.data(for: Purefs.iForaTroika)!` after local resources update
+    static let iForaTroika:      Self = .data(for: "iFora||MMR")!
+    
+    // Avtodor
+    static let iForaAVDD: Self = .data(for: Purefs.avtodorContract)!
+    static let iForaAVDТ: Self = .data(for: Purefs.avtodorTransponder)!
+    
+    // helper
     static func data(for code: String) -> Self? {
         
         try? OperatorGroupData

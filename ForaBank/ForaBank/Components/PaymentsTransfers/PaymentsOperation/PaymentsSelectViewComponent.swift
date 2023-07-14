@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import TextFieldRegularComponent
+import TextFieldComponent
 
 //MARK: - ViewModel
 
@@ -228,14 +228,14 @@ extension PaymentsSelectView.ViewModel {
         
         let icon: IconViewModel
         let title: String
-        let textField: TextFieldRegularView.ViewModel
+        let textField: RegularFieldViewModel
         @Published var filterred: [OptionViewModel]
         let selected: OptionViewModel.ID?
         
         private let options: [OptionViewModel]
         private var bindings: Set<AnyCancellable> = []
         
-        init(icon: IconViewModel, title: String, textField: TextFieldRegularView.ViewModel, filterred: [OptionViewModel], options: [OptionViewModel], selected: OptionViewModel.ID?) {
+        init(icon: IconViewModel, title: String, textField: RegularFieldViewModel, filterred: [OptionViewModel], options: [OptionViewModel], selected: OptionViewModel.ID?) {
             
             self.icon = icon
             self.title = title
@@ -250,18 +250,32 @@ extension PaymentsSelectView.ViewModel {
             let optionsViewModels = parameterSelect.options.map { OptionViewModel(option: $0) }
             if let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId }) {
                 
-                self.init(icon: .init(with: selectedOption, and: parameterSelect.icon),
-                          title: parameterSelect.title,
-                          textField: .init(text: nil, placeholder: selectedOption.name, keyboardType: .default, limit: nil),
-                          filterred: optionsViewModels,
-                          options: optionsViewModels,
-                          selected: selectedOption.id)
+                let textField = TextFieldFactory.makeTextField(
+                    text: nil,
+                    placeholderText: selectedOption.name,
+                    keyboardType: .default,
+                    limit: nil
+                )
+                self.init(
+                    icon: .init(with: selectedOption, and: parameterSelect.icon),
+                    title: parameterSelect.title,
+                    textField: textField,
+                    filterred: optionsViewModels,
+                    options: optionsViewModels,
+                    selected: selectedOption.id)
+                
             } else {
                 
+                let textField = TextFieldFactory.makeTextField(
+                    text: nil,
+                    placeholderText: parameterSelect.placeholder,
+                    keyboardType: .default,
+                    limit: nil
+                )
                 self.init(
                     icon: .init(with: parameterSelect.icon),
                     title: parameterSelect.title,
-                    textField: .init(text: nil, placeholder: parameterSelect.placeholder, keyboardType: .default, limit: nil),
+                    textField: textField,
                     filterred: optionsViewModels,
                     options: optionsViewModels,
                     selected: nil)
@@ -272,7 +286,7 @@ extension PaymentsSelectView.ViewModel {
         
         func bind() {
             
-            textField.$text
+            textField.textPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] text in
                     
@@ -457,6 +471,7 @@ extension PaymentsSelectView {
                     
                     Text(viewModel.name)
                         .font(.textH4M16240())
+                        .lineLimit(1)
                         .foregroundColor(.textSecondary)
                 }
                 
@@ -501,7 +516,7 @@ extension PaymentsSelectView {
                             .font(.textBodyMR14180())
                             .matchedGeometryEffect(id: "title", in: namespace)
                         
-                        TextFieldRegularView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary, textColor: .textSecondary)
+                        RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary, textColor: .textSecondary)
                     }
                     
                     Spacer()

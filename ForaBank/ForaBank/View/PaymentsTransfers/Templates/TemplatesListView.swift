@@ -1,8 +1,9 @@
 //
-//  OperationTemplateView.swift
+//  TemplatesListView.swift
 //  ForaBank
 //
 //  Created by Mikhail on 19.01.2022.
+//  Full refactored by Dmitry Martynov 15.05.2023
 //
 
 import SwiftUI
@@ -11,213 +12,308 @@ struct TemplatesListView: View {
     
     @ObservedObject var viewModel: TemplatesListViewModel
     
-    @available(iOS 14.0, *)
-    var columns: [GridItem] {
-        switch viewModel.style {
-        case .list:
-            return [GridItem(.flexible(minimum:72))]
-        case .tiles:
-            return [GridItem(.flexible(), spacing: 16),GridItem(.flexible())]
-        }
-    }
-    
+    private let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
+  
     var body: some View {
         
-        ZStack {
-            
-            Group {
+        VStack {
+             
+            switch viewModel.state {
+            case .normal, .select:
                 
-                if let onboardingViewModel = viewModel.onboarding {
+                if let categorySelectorViewModel = viewModel.categorySelector {
                     
-                    OnboardingView(viewModel: onboardingViewModel)
-                    
-                } else {
-                    
-                    ZStack {
-                        
-                        VStack {
-                            
-                            if let categorySelectorViewModel = viewModel.categorySelector {
-                                
-                                OptionSelectorView(viewModel: categorySelectorViewModel)
-                                    .frame(height: 32)
-                                    .padding(.top, 16)
-                                    .padding(.horizontal, 20)
-                            }
-                            
-                            ScrollView {
-                                if #available(iOS 14, *) {
-                                    LazyVGrid(columns: columns, spacing: 16) {
-                                        ForEach(viewModel.items) { itemViewModel in
-                                            
-                                            switch itemViewModel.kind {
-                                            case .regular:
-                                                TemplateItemView(viewModel: itemViewModel, style: $viewModel.style)
-                                                
-                                            case .add:
-                                                AddNewItemView(viewModel: itemViewModel, style: $viewModel.style)
-                                            }
-                                        }
-                                    }
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 24)
-                                    
-                                } else {
-                                    
-                                    VStack(spacing: 12) {
-                                        ForEach(viewModel.items) { itemViewModel in
-                                            
-                                            switch itemViewModel.kind {
-                                            case .regular:
-                                                TemplateItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
-                                                
-                                            case .add:
-                                                AddNewItemViewLegacy(viewModel: itemViewModel, style: $viewModel.style)
-                                            }
-                                        }
-                                    }
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 24)
-                                }
-                            }
-                            
-                            if let deletePannelViewModel = viewModel.deletePannel {
-                                
-                                DeletePannelView(viewModel: deletePannelViewModel)
-                            }
-                        }
-                        
-                        if let contextMenuViewModel = viewModel.contextMenu {
-                            
-                            ZStack(alignment: .topTrailing) {
-                                
-                                Color.init(white: 1.0, opacity: 0.01)
-                                    .onTapGesture {
-                                        
-                                        viewModel.closeContextMenu()
-                                    }
-                                
-                                ContextMenuView(viewModel: contextMenuViewModel)
-                                    .frame(width: 260)
-                            }
-                        }
-                    }
+                    OptionSelectorView(viewModel: categorySelectorViewModel)
+                        .frame(height: 32)
+                        .padding(.top, 16)
+                        .padding(.horizontal)
                 }
                 
-                NavigationLink("", isActive: $viewModel.isLinkActive) {
+                switch viewModel.style {
+                case .list:
                     
-                    if let link = viewModel.link  {
+                    List {
                         
-                        switch link {
-                        case .byPhone(let paymentPhoneView):
-                            PaymentPhoneView(viewModel: paymentPhoneView)
-                                .edgesIgnoringSafeArea(.bottom)
+                        ForEach(viewModel.items) { item in
                             
-                        case .sfp(let paymentPhoneView):
-                            PaymentPhoneView(viewModel: paymentPhoneView)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                                .navigationBarBackButtonHidden(true)
+                            switch item.kind {
+                            case .regular, .deleting:
+                           
+                                TemplateItemView(viewModel: item,
+                                                 style: .constant(.list),
+                                                 editMode: $viewModel.editModeState)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowBackground(BackgroundListView())
+                                    .modifier(Self.listRowSeparatorTint())
+                                    .modifier(Self.trailingSwipeAction(
+                                                    viewModel: viewModel.getItemsMenuViewModel(),
+                                                    item: item))
+                            case .add:
+                               
+                                AddNewItemView(viewModel: item, style: .constant(.list))
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                                    .listRowBackground(BackgroundListView())
+                                    .modifier(Self.listRowSeparatorTint())
+                                
+                            case .placeholder:
+                                
+                                PlaceholderItemView(style: .constant(.list))
+                                    .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                                    .shimmering(active: true, bounce: true)
+
+                            } //swich kind
+                        }//ForEach
+                        .onMove { indexes, destination in
                             
-                        case .direct(let paymentTemplateData):
-                            CountryPaymentView(viewModel: paymentTemplateData)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .contactAdressless(let paymentTemplateData):
-                            CountryPaymentView(viewModel: paymentTemplateData)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .housingAndCommunalService(let internetTVDetailsViewModel):
-                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .mobile(let mobileViewModel):
-                            MobilePayView(viewModel: mobileViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .internet(let internetTVDetailsViewModel):
-                            InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .transport(let avtodorDetailsViewModel):
-                            OperatorsView(viewModel: avtodorDetailsViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .externalEntity(let transferByRequisitesView):
-                            TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .externalIndividual(let transferByRequisitesView):
-                            TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                .edgesIgnoringSafeArea(.bottom)
-                            
-                        case .betweenTheir(let meToMeViewModel):
-                            MeToMeView(viewModel: meToMeViewModel)
-                                .edgesIgnoringSafeArea(.bottom)
+                            guard let first = indexes.first else { return }
+                            viewModel.action.send(TemplatesListViewModelAction.ReorderItems.ItemMoved
+                                                    .init(move: (first, destination)))
                         }
+                        .moveDisabled(viewModel.editModeState != .active)
+                    } //List
+                    .listStyle(.plain)
+                    .environment(\.editMode, $viewModel.editModeState)
+                    .padding(.horizontal)
+                    .id(viewModel.idList) //FIXME: - Принудительное обновление вью в ЕдитМоде для показа блинчиков после снятия запрета на перемещение в 16 оси
+                    
+                // TilesView
+                case .tiles:
+                    
+                    ScrollView {
+                        
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            
+                            ForEach(viewModel.items) { item in
+                                
+                                switch item.kind {
+                                case .regular, .deleting:
+                                    
+                                    TemplateItemView(viewModel: item,
+                                                     style: .constant(.tiles),
+                                                     editMode: $viewModel.editModeState)
+                                        .contextMenu {
+                                        
+                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
+                                            
+                                                ForEach(itemsMenuViewModel) { button in
+                                                
+                                                    Button(action: { button.action(item.id) }) {
+                                                        Text(button.subTitle)
+                                                        button.icon.renderingMode(.original)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    
+                                case .add:
+                                    
+                                    AddNewItemView(viewModel: item, style: .constant(.tiles))
+                                
+                                case .placeholder:
+                                    
+                                    PlaceholderItemView(style: .constant(.tiles))
+                                        .shimmering(active: true, bounce: true)
+                                    
+                                } //kind swith
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.top)
+                    }//ScrollView
+                } //case style
+                
+                
+                if let deletePannelViewModel = viewModel.deletePannel {
+                    
+                    DeletePannelView(viewModel: deletePannelViewModel)
+                }
+                
+            case let .emptyList(emptyTemplateListViewModel):
+                
+                EmptyTemplateListView(viewModel: emptyTemplateListViewModel)
+                
+            case .placeholder:
+                
+                PlaceholderView(style: viewModel.style)
+                
+            } //main stateSwitch
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .payment(paymentViewModel):
+                        PaymentsView(viewModel: paymentViewModel)
                     }
+                }
+            }
+        } //mainVStack
+        .ignoresSafeArea(.container, edges: .bottom)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+
+            ToolbarItem(placement: .principal) {
+                    
+                switch viewModel.navBarState {
+                case let .regular(regViewModel):
+                    RegularNavBarView(viewModel: regViewModel)
+                   
+                case let .search(searchViewModel):
+                    SearchNavBarView(viewModel: searchViewModel)
+                
+                case let .delete(deleteViewModel):
+                    TwoButtonsNavBarView(viewModel: deleteViewModel)
+                
+                case let .reorder(reorderViewModel):
+                    TwoButtonsNavBarView(viewModel: reorderViewModel)
                 }
             }
         }
-        .transition(.identity)
-        .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: Button(action: viewModel.navButtonBack.action, label: {
-                viewModel.navButtonBack.icon
-                    .renderingMode(.template)
-                    .foregroundColor(.iconBlack)
-            }),
-            trailing:
+        .bottomSheet(item: $viewModel.sheet) { sheet in
+            
+            switch sheet.type {
+            case let .meToMe(viewModel):
+                
+                PaymentsMeToMeView(viewModel: viewModel)
+                    .fullScreenCover(item: $viewModel.success) { successViewModel in
+                
+                        PaymentsSuccessView(viewModel: successViewModel)
+                    }
+                    .transaction { transaction in
+
+                        transaction.disablesAnimations = false
+                    }
+                
+            case let .renameItem(renameViewModel):
+                
+                RenameTemplateItemView(viewModel: renameViewModel)
+            
+            case let .productList(productListViewModel):
+            
+                ProductListView(viewModel: productListViewModel)
+            }
+        }
+    }
+}
+ 
+extension TemplatesListView {
+    
+    struct RenameTemplateItemView: View {
+        
+        @ObservedObject var viewModel: TemplatesListViewModel.RenameTemplateItemViewModel
+        
+        var body: some View {
+            
+            VStack() {
+                
                 HStack {
-                    ForEach(viewModel.navButtonsRight) { element in
-                        Button {
-                            element.action()
-                        } label: {
-                            element.icon
-                                .renderingMode(.template)
-                                .foregroundColor(Color.init(hex: "1C1C1C"))
+                    
+                    TemplatesListView.SearchTextField(text: $viewModel.text)
+                    
+                    if let clearButton = viewModel.clearButton {
+                        
+                        Spacer()
+                        Button(action: clearButton.action, label: { clearButton.icon })
+                            .foregroundColor(.black)
+                    }
+                }
+                .overlay13 {
+                    
+                    VStack(alignment: .leading, spacing: 41) {
+                        
+                        Text(viewModel.textFieldLabel)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
+                        
+                        Rectangle().frame(height: 1)
+                    }
+                    .offset(y: -8)
+                }
+                
+                Spacer()
+                
+                Button(action: viewModel.saveButtonAction) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 56)
+                        .foregroundColor(viewModel.isNameNotValid ? Color.buttonPrimaryDisabled
+                                                                  : Color.buttonPrimary)
+                        .overlay13 {
+                            Text(viewModel.saveButtonText)
+                                .font(.textH3SB18240())
+                                .foregroundColor(.textWhite)
+                        }
+                }.disabled(viewModel.isNameNotValid)
+            }
+            .frame(height: 210)
+            .padding()
+    
+        }
+    }
+    
+    struct ProductListView: View {
+        
+        @ObservedObject var viewModel: TemplatesListViewModel.ProductListViewModel
+        @Environment(\.mainViewSize) var mainViewSize
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 15) {
+
+                Text(viewModel.title)
+                    .font(.textH3SB18240())
+                    .foregroundColor(.textSecondary)
+                    .padding(.leading)
+                
+                ScrollView {
+                
+                    VStack(spacing: 16) {
+                    
+                        ForEach(viewModel.sections) { sectionVM in
+                            
+                            MyProductsSectionView(viewModel: sectionVM,
+                                                  editMode: .constant(.inactive))
+                            .onAppear {
+                                
+                                if ProductType(rawValue: sectionVM.id) == .card {
+                                    sectionVM.isCollapsed = false
+                                }
+                            }
                         }
                     }
                 }
-    )
-        .bottomSheet(item: $viewModel.sheet, content: { sheet in
-            
-            switch sheet.type {
-            case .betweenTheir(let meToMeViewModel):
-                NavigationView {
-                    MeToMeView(viewModel: meToMeViewModel)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .navigationBarBackButtonHidden(true)
-                        .edgesIgnoringSafeArea(.all)
-                }
-            }
-        })
-    }
-}
-
-//MARK: - Views
-
-extension TemplatesListView {
+                .frame(height: mainViewSize.height - 70 > viewModel.containerHeight
+                                ? viewModel.containerHeight
+                                : mainViewSize.height - 70)
+            } //VStack section
+            .padding(.bottom, 16)
     
-    struct OnboardingView: View {
+        }
+    }
+    
+    struct EmptyTemplateListView: View {
         
-        let viewModel: TemplatesListViewModel.OnboardingViewModel
+        let viewModel: TemplatesListViewModel.EmptyTemplateListViewModel
         
         var body: some View {
             
             VStack(spacing: 0) {
                 
                 viewModel.icon
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 64, height: 64)
+                    .background(Circle().foregroundColor(.gray))
                 
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-SemiBold", size: 20))
+                    .font(.textH2SB20282())
                     .foregroundColor(.textSecondary)
                     .padding(.top, 20)
                 
                 Text(viewModel.message)
                     .multilineTextAlignment(.center)
-                    .font(Font.custom("Inter-Medium", size: 16))
+                    .font(.textH4R16240())
                     .foregroundColor(.textPlaceholder)
                     .lineSpacing(6)
                     .padding(.top, 16)
@@ -231,11 +327,11 @@ extension TemplatesListView {
                     
                     ZStack {
                         
-                        Color(hex: "#F6F6F7")
+                        Color.buttonSecondary
                             .cornerRadius(8)
                         
                         Text(viewModel.button.title)
-                            .font(Font.custom("Inter-Medium", size: 16))
+                            .font(.textH3SB18240())
                             .foregroundColor(.textSecondary)
                     }
                 }
@@ -246,760 +342,184 @@ extension TemplatesListView {
         }
     }
     
+    struct PlaceholderView: View {
+        
+        let style: TemplatesListViewModel.Style
+        let columns = [GridItem(.flexible(), spacing: 16), GridItem(.flexible())]
+        
+        var body: some View {
+                
+            VStack(alignment: .leading, spacing: 0) {
+                   
+                HStack(spacing: 8) {
+                        
+                    ForEach(0..<3) { _ in
+                           
+                        RoundedRectangle(cornerRadius: 90)
+                            .frame(width: 100, height: 32)
+                            .shimmering(active: true, bounce: true)
+                    }
+                }
+                .padding(.bottom, 20)
+                    
+                switch style {
+                case .list:
+                    
+                    ForEach(0..<3) { _ in
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(height: 72)
+                            .padding(.bottom, 12)
+                            .shimmering(active: true, bounce: true)
+                    }
+                    
+                case .tiles:
+                    
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        
+                        ForEach(0..<3) { _ in
+                            
+                            RoundedRectangle(cornerRadius: 12)
+                                .frame(height: 188)
+                                .shimmering(active: true, bounce: true)
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .foregroundColor(.mainColorsGrayMedium.opacity(0.9))
+            .padding()
+        }
+    }
+    
     struct DeletePannelView: View {
         
         let viewModel: TemplatesListViewModel.DeletePannelViewModel
         
         var body: some View {
+            
             ZStack(alignment: .bottom) {
                 
-                Color.init(hex: "#F8F8F8").opacity(0.82)
+                Color.barsBars.opacity(0.82)
                     .edgesIgnoringSafeArea(.bottom)
                 
                 HStack {
+                    
                     Text(viewModel.description)
-                        .font(.textBodyMM14200())
+                        .font(.textH4M16240())
+                        .padding(.leading, 20)
+                    
                     Spacer()
-                    Button {
-                        viewModel.button.action()
-                    } label: {
-                        VStack(spacing: 4) {
-                            viewModel.button.icon
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                            Text(viewModel.button.caption)
-                                .font(.textBodySR12160())
-                        }
-                        .foregroundColor(.black)
-                    }
-                    .padding(.trailing, 30)
-                    .disabled(viewModel.button.isEnabled == false)
-                    .opacity(viewModel.button.isEnabled ? 1.0 : 0.5)
+                    
+                    TemplatesListView
+                        .PanelButtonView(viewModel: viewModel.selectAllButton)
+                    
+                    Spacer()
+                    
+                    TemplatesListView
+                        .PanelButtonView(viewModel: viewModel.deleteButton)
+                            .padding(.trailing, 30)
+                    
                 }
-                .background(Color.init(hex: "#F8F8F8").opacity(0.82))
-                .padding(20)
+                .background(Color.barsBars.opacity(0.82))
             }
             .frame(height: 56)
         }
     }
     
-    struct SelectItemVew: View {
+    struct PanelButtonView: View {
         
-        let isSelected: Bool
+        let viewModel: TemplatesListViewModel.PanelButtonViewModel
+        
+        var body: some View {
+        
+            Button { viewModel.action()
+            } label: {
+                
+                VStack(spacing: 4) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .renderingMode(.template)
+                        .frame(width: 24, height: 24)
+                    
+                    Text(viewModel.title)
+                        .font(.textBodyMR14180())
+                }
+                .foregroundColor(.black)
+            }
+            .disabled(viewModel.isDisable)
+            .opacity(viewModel.isDisable ? 0.5 : 1.0)
+        }
+    }
+    
+    struct BackgroundListView: View {
+        
         var body: some View {
             
-            HStack {
-                
-                VStack {
-                    
-                    if isSelected == true {
-                        
-                        ZStack {
-                            
-                            Image("Template Item Select Button Background")
-                            Image("Template Item Select Button Checkmark")
-                        }
-                        
-                    } else {
-                        
-                        Image("Template Item Select Button Background")
-                    }
-                    
-                    Spacer()
-                }
-                
-                Spacer()
-            }
+            Color.mainColorsGrayLightest
+                .cornerRadius(16)
+                .padding(.vertical, 6)
+                .background(Color.white)
         }
     }
 
 }
 
-//MARK: - AddNewItemView
+//MARK: - Helpers
 
-@available(iOS 14.0, *)
 extension TemplatesListView {
     
-    struct AddNewItemView: View {
-        
-        let viewModel: TemplatesListViewModel.ItemViewModel
-        @Binding var style: TemplatesListViewModel.Style
-        @Namespace var namespace
-
-        var body: some View {
+    struct listRowSeparatorTint: ViewModifier {
+        func body(content: Content) -> some View {
             
-            ZStack {
-                
-                TemplatesListView.ItemBackgroundView()
-                
-                switch style {
-                case .list:
-                    
-                    HStack {
-                        
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                            .matchedGeometryEffect(id: "icon", in: namespace)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                .matchedGeometryEffect(id: "title", in: namespace)
-                            
-                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                                .matchedGeometryEffect(id: "subtitle", in: namespace)
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(16)
-                    .frame(height: 72)
-
-                case .tiles:
-                    
-                    VStack(spacing: 8) {
-                        
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                            .padding(.top, 16)
-                            .matchedGeometryEffect(id: "icon", in: namespace)
-                        
-                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                            .matchedGeometryEffect(id: "title", in: namespace)
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            .matchedGeometryEffect(id: "subtitle", in: namespace)
-                            .padding(.bottom, 34)
-                    }
-                }
-            }
-            .onTapGesture {
-                
-                viewModel.tapAction(0)
+            if #available(iOS 15.0, *) {
+                content
+                    .listRowSeparatorTint(.white)
+            } else { //iOS14
+                content
             }
         }
     }
-}
-
-//MARK: - TemplateItemView
-
-@available(iOS 14.0, *)
-extension TemplatesListView {
     
-    //TODO: - extract to separate file
-    struct TemplateItemView: View {
+    struct trailingSwipeAction: ViewModifier {
         
-        @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel
-        @Binding var style: TemplatesListViewModel.Style
-        @Namespace var namespace
+        let viewModel: [TemplatesListViewModel.ItemViewModel.ItemActionViewModel]?
+        let item: TemplatesListViewModel.ItemViewModel
         
-        private var roundButtonViewModel: TemplatesListViewModel.ItemViewModel.ToggleRoundButtonViewModel? {
+        func body(content: Content) -> some View {
             
-            guard case .select(let roundButtonViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return roundButtonViewModel
-        }
-        
-        private var deleteButtonViewModel: TemplatesListViewModel.ItemViewModel.DeleteButtonViewModel? {
-            
-            guard case .delete(let deleteButtonViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return deleteButtonViewModel
-        }
-        
-        private var deletingProgressViewModel: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel? {
-            
-            guard case .deleting(let deletingProgressViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return deletingProgressViewModel
-        }
-        
-        var mainViewOffset: CGFloat {
-            
-            switch viewModel.state {
-            case .delete: return -130
-            default: return 0
-            }
-        }
-        
-        var body: some View {
-            
-            ZStack {
-                
-                // bottom view
-                TemplatesListView.ItemBottomView {
-                    
-                    deleteButtonViewModel?.action(viewModel.id)
-                }
-                
-                // main view
-                ZStack {
-                    
-                    // background
-                    TemplatesListView.ItemBackgroundView()
-                    
-                    switch style {
-                    case .list:
+            if #available(iOS 15.0, *) {
+                content
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         
-                        HStack(spacing: 16) {
+                        if let viewModel, !item.state.isProcessing {
                             
-                            if let deletingProgressViewModel = deletingProgressViewModel {
+                            ForEach(viewModel) { button in
                                 
-                                // progress
-                                TemplatesListView.ItemProgressView(progress: deletingProgressViewModel.progress, title: deletingProgressViewModel.countTitle)
-                                    .matchedGeometryEffect(id: "icon", in: namespace)
-                                
-                                HStack {
+                                Button(action: { button.action(item.id) }) {
                                     
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        
-                                        // title
-                                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                            .matchedGeometryEffect(id: "title", in: namespace)
-                                        
-                                        // subtitle
-                                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                                            .matchedGeometryEffect(id: "subtitle", in: namespace)
-                                    }
+                                    button.icon
+                                        .renderingMode(.original)
+                                        .tint(.black)
                                 }
-                                
-                                Spacer()
-                                
-                                // cancel button
-                                TemplatesListView.ItemCancelButtonView(title: deletingProgressViewModel.cancelButton.title) {
-                                    
-                                    deletingProgressViewModel.cancelButton.action(viewModel.id)
-                                }
-                                .matchedGeometryEffect(id: "amount", in: namespace)
-                                
-                            } else {
-                                
-                                // icon
-                                TemplatesListView.ItemIconView(image: viewModel.image, logoImage: viewModel.logoImage, style: style)
-                                    .matchedGeometryEffect(id: "icon", in: namespace)
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    
-                                    HStack {
-                                        
-                                        // title
-                                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                            .matchedGeometryEffect(id: "title", in: namespace)
-                                        
-                                        Spacer()
-                                        
-                                        // amount
-                                        TemplatesListView.ItemAmountView(amount: viewModel.ammount)
-                                            .matchedGeometryEffect(id: "amount", in: namespace)
-                                    }
-                                    
-                                    // subtitle
-                                    TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                                        .matchedGeometryEffect(id: "subtitle", in: namespace)
-                                }
-                            }
-                        }
-                        .padding(16)
-                        .frame(height: 72)
-                        
-                    case .tiles:
-                        
-                        VStack(spacing: 8) {
-                            
-                            if let deletingProgressViewModel = deletingProgressViewModel {
-                                
-                                // progress
-                                TemplatesListView.ItemProgressView(progress: deletingProgressViewModel.progress, title: deletingProgressViewModel.countTitle)
-                                    .padding(.top, 16)
-                                    .matchedGeometryEffect(id: "icon", in: namespace)
-                                
-                            } else {
-                                
-                                // icon
-                                TemplatesListView.ItemIconView(image: viewModel.image, logoImage: viewModel.logoImage, style: style)
-                                    .padding(.top, 16)
-                                    .matchedGeometryEffect(id: "icon", in: namespace)
-                            }
-                            
-                            // title
-                            TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                .matchedGeometryEffect(id: "title", in: namespace)
-                            
-                            // subtitle
-                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                                .matchedGeometryEffect(id: "subtitle", in: namespace)
-                            
-                            if let deletingProgressViewModel = deletingProgressViewModel {
-
-                                // cancel button
-                                TemplatesListView.ItemCancelButtonView(title: deletingProgressViewModel.cancelButton.title) {
-                                    
-                                    deletingProgressViewModel.cancelButton.action(viewModel.id)
-                                }
-                                .padding(.top, 10)
-                                .padding(.bottom, 16)
-                                .matchedGeometryEffect(id: "amount", in: namespace)
-                                
-                            } else {
-
-                                // amount
-                                TemplatesListView.ItemAmountView(amount: viewModel.ammount)
-                                    .padding(.top, 10)
-                                    .padding(.bottom, 16)
-                                    .matchedGeometryEffect(id: "amount", in: namespace)
-                            }
-                        }
-                    }
-                    
-                    // round selection indicator
-                    if let  roundButtonViewModel = roundButtonViewModel {
-                        
-                        TemplatesListView.SelectItemVew(isSelected: roundButtonViewModel.isSelected)
-                            .offset(.init(width: 8, height: 8))
-                    }
-                }
-                .offset(.init(width: mainViewOffset, height: 0))
-                .onTapGesture {
-                    
-                    if let  roundButtonViewModel = roundButtonViewModel {
-                        
-                        roundButtonViewModel.action(viewModel.id)
-                        
-                    } else {
-                        
-                        viewModel.tapAction(viewModel.id)
-                    }
-                }
-            }
-            .modifier(SwipeSidesModifier(leftAction: {
-                
-                guard style == .list else {
-                    return
-                }
-                viewModel.swipeLeft()
-                
-            }, rightAction:viewModel.swipeRight))
-        }
-    }
-}
-
-//MARK: - TemplateItemViewLegacy
-
-extension TemplatesListView {
-    
-    //TODO: drop iOS 13 and remove it
-    struct TemplateItemViewLegacy: View {
-        
-        @ObservedObject var viewModel: TemplatesListViewModel.ItemViewModel
-        @Binding var style: TemplatesListViewModel.Style
-
-        private var roundButtonViewModel: TemplatesListViewModel.ItemViewModel.ToggleRoundButtonViewModel? {
-            
-            guard case .select(let roundButtonViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return roundButtonViewModel
-        }
-        
-        private var deleteButtonViewModel: TemplatesListViewModel.ItemViewModel.DeleteButtonViewModel? {
-            
-            guard case .delete(let deleteButtonViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return deleteButtonViewModel
-        }
-        
-        private var deletingProgressViewModel: TemplatesListViewModel.ItemViewModel.DeletingProgressViewModel? {
-            
-            guard case .deleting(let deletingProgressViewModel) = viewModel.state else {
-                return nil
-            }
-            
-            return deletingProgressViewModel
-        }
-        
-        var mainViewOffset: CGFloat {
-            
-            switch viewModel.state {
-            case .delete: return -130
-            default: return 0
-            }
-        }
-        
-        var body: some View {
-            
-            ZStack {
-                
-                // bottom view
-                TemplatesListView.ItemBottomView {
-                    
-                    deleteButtonViewModel?.action(viewModel.id)
-                }
-                
-                // main view
-                ZStack {
-                    
-                    // background
-                    TemplatesListView.ItemBackgroundView()
-                    
-                    HStack(spacing: 16) {
-                        
-                        if let deletingProgressViewModel = deletingProgressViewModel {
-                            
-                            // progress
-                            TemplatesListView.ItemProgressView(progress: deletingProgressViewModel.progress, title: deletingProgressViewModel.countTitle)
-                            
-                            HStack {
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    
-                                    // title
-                                    TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                    
-                                    // subtitle
-                                    TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            // cancel button
-                            TemplatesListView.ItemCancelButtonView(title: deletingProgressViewModel.cancelButton.title) {
-                                
-                                deletingProgressViewModel.cancelButton.action(viewModel.id)
+                                .tint(.white)
                             }
                             
                         } else {
                             
-                            // icon
-                            TemplatesListView.ItemIconView(image: viewModel.image, logoImage: viewModel.logoImage, style: style)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                
-                                HStack {
-                                    
-                                    // title
-                                    TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                                    
-                                    Spacer()
-                                    
-                                    // amount
-                                    TemplatesListView.ItemAmountView(amount: viewModel.ammount)
-                                }
-                                
-                                // subtitle
-                                TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            }
+                            EmptyView()
                         }
                     }
-                    .padding(16)
-                    .frame(height: 72)
-                    
-                    // round selection indicator
-                    if let  roundButtonViewModel = roundButtonViewModel {
-                        
-                        TemplatesListView.SelectItemVew(isSelected: roundButtonViewModel.isSelected)
-                            .offset(.init(width: 8, height: 8))
-                    }
-                }
-                .offset(.init(width: mainViewOffset, height: 0))
-                .onTapGesture {
-                    
-                    if let  roundButtonViewModel = roundButtonViewModel {
-                        
-                        roundButtonViewModel.action(viewModel.id)
-                        
-                    } else {
-                        
-                        viewModel.tapAction(viewModel.id)
-                    }
-                }
+                
+            } else { //iOS14
+                content //TODO: Swipe
             }
-            .modifier(SwipeSidesModifier(leftAction: {
-                
-                guard style == .list else {
-                    return
-                }
-                viewModel.swipeLeft()
-                
-            }, rightAction:viewModel.swipeRight))
         }
     }
+    
 }
-
-//MARK: - AddNewItemViewLegacy
-
-extension TemplatesListView {
-    
-    //TODO: drop iOS 13 and remove it
-    struct AddNewItemViewLegacy: View {
-        
-        let viewModel: TemplatesListViewModel.ItemViewModel
-        @Binding var style: TemplatesListViewModel.Style
-
-        var body: some View {
-            
-            ZStack {
-                
-                TemplatesListView.ItemBackgroundView()
-                
-                switch style {
-                case .list:
-                    
-                    HStack {
-                        
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            
-                            TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                            
-                            TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(16)
-                    .frame(height: 72)
-
-                case .tiles:
-                    
-                    VStack(spacing: 8) {
-                        
-                        TemplatesListView.ItemIconView(image: viewModel.image, style: style)
-                            .padding(.top, 16)
-                        
-                        TemplatesListView.ItemTitleView(title: viewModel.title, style: style)
-                        
-                        TemplatesListView.ItemSubtitleView(subtitle: viewModel.subTitle, style: style)
-                            .padding(.bottom, 34)
-                    }
-                }
-            }
-            .onTapGesture {
-                
-                viewModel.tapAction(0)
-            }
-        }
-    }
-}
-
-//MARK: - TemplateItemView components
-
-extension TemplatesListView {
-    
-    struct ItemBackgroundView: View {
-        
-        var body: some View {
-            
-            Color(hex: "F6F6F7")
-                .cornerRadius(16)
-        }
-    }
-    
-    struct ItemIconView: View {
-        
-        let image: Image
-        var logoImage: Image? = nil
-        var style: TemplatesListViewModel.Style = .list
-        
-        private var side: CGFloat {
-            
-            switch style {
-            case .list: return 40
-            case .tiles: return 56
-            }
-        }
- 
-        var body: some View {
-            
-            ZStack(alignment: .topTrailing) {
-                
-                image
-                    .resizable()
-                    .frame(width: side, height: side)
-                
-                if let logoImage = logoImage {
-                    
-                    logoImage
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .offset(.init(width: 8, height: 0))
-                }
-            }
-        }
-    }
-    
-    struct ItemTitleView: View {
-        
-        let title: String
-        var style: TemplatesListViewModel.Style = .list
-        
-        var body: some View {
-            
-            switch style {
-            case .list:
-                Text(title)
-                    .font(Font.custom("Inter-Medium", size: 16))
-                    .foregroundColor(.textSecondary)
-                    .lineLimit(1)
-                
-            case .tiles:
-                Text(title)
-                    .font(.textBodyMM14200())
-                    .foregroundColor(.textSecondary)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .padding(.horizontal)
-            }
-        }
-    }
-    
-    struct ItemSubtitleView: View {
-        
-        let subtitle: String
-        var style: TemplatesListViewModel.Style = .list
-        
-        var body: some View {
-            
-            switch style {
-            case .list:
-                Text(subtitle)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .lineLimit(1)
-                
-            case .tiles:
-                Text(subtitle)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                    .padding(.horizontal)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-            }
-        }
-    }
-    
-    struct ItemAmountView: View {
-        
-        let amount: String
-        
-        var body: some View {
-            
-            Text(amount)
-                .font(Font.custom("Inter-Medium", size: 16))
-                .foregroundColor(.textSecondary)
-        }
-    }
-    
-    struct ItemBottomView: View {
-        
-        let action: () -> Void
-        
-        var body: some View {
-            
-            Group {
-               
-                // bottom view background
-                Color.black.cornerRadius(17)
-                
-                // delete button
-                HStack {
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                        action()
-                        
-                    } label: {
-                        
-                        VStack(spacing: 4) {
-                            
-                            Image("trash_empty")
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("Удалить")
-                                .font(.textBodySM12160())
-                        }
-                        .foregroundColor(.white)
-                    }
-                    .padding(.trailing, 35)
-                }
-                .frame(height: 72)
-            }
-        }
-    }
-    
-    struct ItemProgressView: View {
-        
-        let progress: Double
-        let title: String
-        var style: TemplatesListViewModel.Style = .list
-        
-        private var height: CGFloat {
-            
-            switch style {
-            case .list: return 40
-            case .tiles: return 56
-            }
-        }
-        
-        private var width: CGFloat {
-            
-            switch style {
-            case .list: return 40
-            case .tiles: return 56
-            }
-        }
-        
-        var body: some View {
-            
-            ZStack {
-                
-                CircleProgressView(progress: .constant(progress), color: Color(hex: "#999999"), backgroundColor: Color(hex: "#EAEBEB"))
-                    .frame(width: width, height: height)
-                
-                Text(title)
-                    .font(Font.custom("Inter-Medium", size: 16))
-                    .foregroundColor(.textPlaceholder)
-            }
-        }
-    }
-    
-    struct ItemCancelButtonView: View {
-        
-        let title: String
-        let action: () -> Void
-        
-        var body: some View {
-            
-            Button {
-                
-                action()
-                
-            } label: {
-                
-                Text(title)
-                    .font(.textBodyMM14200())
-                    .foregroundColor(.textSecondary)
-            }
-        }
-    }
-}
-
-//MARK: - Helpers
 
 struct TemplatesListView_Previews: PreviewProvider {
     
@@ -1007,19 +527,39 @@ struct TemplatesListView_Previews: PreviewProvider {
         
         Group {
             
+            TemplatesListView
+                .ProductListView(viewModel: .init(sections: [.sample2]))
+                .previewDisplayName("Product List View")
+            
+            TemplatesListView
+                .RenameTemplateItemView(viewModel: .init(oldName: "Old Name", templateID: 1))
+                .previewDisplayName("Rename View")
+            
             NavigationView {
                 TemplatesListView(viewModel: .sampleComplete )
+                    .environment(\.mainViewSize, CGSize(width: 414, height: 800))
+                    
             }
+            .previewDisplayName("TemplatesView List")
             
             NavigationView {
                 TemplatesListView(viewModel: .sampleTiles )
             }
+            .previewDisplayName("TemplatesView Tiles")
             
             NavigationView {
                 TemplatesListView(viewModel: .sampleDeleting )
             }
             
-            TemplatesListView.OnboardingView(viewModel: .sample)
+            TemplatesListView.EmptyTemplateListView(viewModel: .sample)
+                .previewDisplayName("Empty State")
+            
+            TemplatesListView.PlaceholderView(style: .tiles)
+                .previewDisplayName("Placeholder")
         }
     }
 }
+
+
+
+

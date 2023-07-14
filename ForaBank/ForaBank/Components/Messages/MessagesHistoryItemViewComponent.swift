@@ -60,6 +60,7 @@ struct MessagesHistoryItemView: View {
                     Circle()
                         .frame(width: 40, height: 40)
                         .foregroundColor(.bGIconRedLight)
+                        .accessibilityIdentifier("MessageHistoryItemIconBackground")
                     
                     viewModel.icon
                         .resizable()
@@ -75,6 +76,7 @@ struct MessagesHistoryItemView: View {
                 Text(viewModel.title)
                     .font(.textH4M16240())
                     .foregroundColor(.textSecondary)
+                    .accessibilityIdentifier("MessageHistoryItemTitle")
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
@@ -82,10 +84,12 @@ struct MessagesHistoryItemView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.gray)
                         .lineLimit(2)
+                        .accessibilityIdentifier("MessageHistoryItemDescription")
                     
                     Text(viewModel.time)
                         .font(.textBodySR12160())
                         .foregroundColor(.gray)
+                        .accessibilityIdentifier("MessageHistoryItemTime")
                 }
             }
             Spacer()

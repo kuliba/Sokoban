@@ -78,9 +78,19 @@ extension Model {
 
 extension Model {
     
+    //TODO: remove async in proceess of refartoring Abroad payments
     func paymentsTransferAnywayStepParameters(_ operation: Payments.Operation, response: TransferAnywayResponseData) async throws -> [PaymentsParameterRepresentable] {
         
         var result = [PaymentsParameterRepresentable]()
+        for parameterData in response.parameterListForNextStep {
+            
+            if let parameter = try await paymentsParameterRepresentable(operation, parameterData: parameterData) {
+                
+                result.append(parameter)
+                
+            }
+        }
+        
         let spoilerGroup = Payments.Parameter.Group(id: UUID().uuidString, type: .spoiler)
         for additionalData in response.additionalList {
             
@@ -91,50 +101,14 @@ extension Model {
             
             result.append(parameter)
         }
-        
-        for parameterData in response.parameterListForNextStep {
-            
-            if let parameter = try await paymentsParameterRepresentable(operation, parameterData: parameterData) {
-                
-                result.append(parameter)
-                
-            }
-        }
-        
-        if response.needSum == true {
+
+        if response.needSum {
             
             // amount
-            let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard let productParameter = operation.parameters.first(where: { $0.id == productParameterId}) as? Payments.ParameterProduct,
-                  let productId = productParameter.productId,
-                  let product = product(productId: productId),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
-                throw Payments.Error.missingParameter(productParameterId)
-            }
-            
-            if let currencies = response.parameterListForNextStep.first(where: {$0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue}) {
-                
-                let currencies = currencies.options(style: .currency)?.compactMap({$0.id}).joined(separator: "-")
-                let currency = currencies?.components(separatedBy: "-")
-
-                var currencyArr: [Currency] = []
-                if let currency = currency {
-                    
-                    for item in currency {
-                        
-                        currencyArr.append(Currency(description: item))
-                    }
-                }
-                
-                if let first = currencyArr.first {
-                    
-                    let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), validator: .init(minAmount: 10, maxAmount: product.balance))
-                    result.append(amountParameter)
-                }
-                
-            } else {
-                
-                let amountParameter = Payments.ParameterAmount(value: "0", title: "Сумма", currencySymbol: currencySymbol, validator: .init(minAmount: 10, maxAmount: product.balance))
+            if let amountParameter = try? amountParameter(
+                parameters: operation.parameters,
+                parameterListForNextStep: response.parameterListForNextStep
+            ) {
                 result.append(amountParameter)
             }
         }
@@ -147,20 +121,48 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    // TODO: Add tests
+    func amountParameter(
+        parameters: [PaymentsParameterRepresentable],
+        parameterListForNextStep: [ParameterData]
+    ) throws -> Payments.ParameterAmount {
         
-        var result = [Payments.Parameter.ID]()
+        let productParameterId = Payments.Parameter.Identifier.product.rawValue
+        guard let productParameter = parameters.first(where: { $0.id == productParameterId }) as? Payments.ParameterProduct,
+              let productId = productParameter.productId,
+              let product = product(productId: productId),
+              let currencySymbol = dictionaryCurrencySymbol(for: product.currency)
+        else {
+            throw Payments.Error.missingParameter(productParameterId)
+        }
         
-        let nexStepParametersIds = nextStepParameters.map{ $0.id }
-        result.append(contentsOf: nexStepParametersIds)
+        return .init(
+            value: nil,
+            title: "Сумма",
+            currencySymbol: currencySymbol,
+            deliveryCurrency: parameterListForNextStep.deliveryCurrency,
+            validator: .init(
+                minAmount: 10,
+                maxAmount: product.balance
+            )
+        )
+    }
+    
+    func paymentsTransferAnywayStepVisible(
+        nextStepParametersIDs: [Payments.Parameter.ID],
+        operationParametersIDs: [Payments.Parameter.ID],
+        needSum: Bool
+    ) throws -> [Payments.Parameter.ID] {
         
-        if response.needSum == true {
+        var result = nextStepParametersIDs
+                
+        if needSum {
             
-            let operationParametersIds = operationParameters.map{ $0.id }
-            let allParametersIds = operationParametersIds + nexStepParametersIds
+            let allParametersIds = operationParametersIDs + nextStepParametersIDs
             
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
-            guard allParametersIds.contains(productParameterId) else {
+            guard allParametersIds.contains(productParameterId)
+            else {
                 throw Payments.Error.missingParameter(productParameterId)
             }
             
@@ -170,28 +172,44 @@ extension Model {
         return result
     }
     
-    func paymentsTransferAnywayStepStage(_ operation: Payments.Operation, response: TransferAnywayResponseData) throws -> Payments.Operation.Stage {
+    func paymentsTransferAnywayStepStage(
+        _ operation: Payments.Operation,
+        isFinalStep: Bool
+    ) throws -> Payments.Operation.Stage {
         
-        if response.finalStep == true {
+        if isFinalStep {
             
             return .remote(.confirm)
             
         } else {
             
-            let operationStepsStages = operation.steps.map{ $0.back.stage }
-            if operationStepsStages.count > 0 {
-                
-                return .remote(.next)
-                
-            } else {
-                
-                return .remote(.start)
-            }
+            let stepsStages = operation.steps.map(\.back.stage)
+       
+            return stepsStages.isEmpty ? .remote(.start) : .remote(.next)
         }
     }
     
     func paymentsTransferAnywayStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], restrictedParameters: [Payments.Parameter.ID]) throws -> [Payments.Parameter.ID] {
         
         try paymentsTransferStepRequired(operation, visible: visible, nextStepParameters: nextStepParameters, operationParameters: operationParameters, restrictedParameters: restrictedParameters)
+    }
+}
+
+extension Array where Element == ParameterData {
+    
+    typealias DeliveryCurrency = Payments.ParameterAmount.DeliveryCurrency
+    
+    var deliveryCurrency: DeliveryCurrency? {
+        
+        let currencyList = first(where: { $0.id == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })?
+            .options(style: .currency)?
+            .compactMap { Currency(description: $0.id) }
+        
+        return currencyList?
+            .first
+            .map {
+                
+                .init(selectedCurrency: $0, currenciesList: currencyList)
+            }
     }
 }

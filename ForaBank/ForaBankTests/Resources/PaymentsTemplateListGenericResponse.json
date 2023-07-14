@@ -1,6 +1,7 @@
 {
     "statusCode":0,
-    "data":[{
+    "data":{
+        "templateList": [{
         "paymentTemplateId": 2513,
         "name": "Перевод между счетами",
         "groupName": "Перевод МИГ",
@@ -75,4 +76,6 @@
                 
             }
             ]}]
-    }]}
+    }],
+    "serial": ""}
+}

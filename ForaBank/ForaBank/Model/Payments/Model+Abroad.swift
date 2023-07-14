@@ -17,17 +17,52 @@ extension Model {
             guard let source = operation.source else {
                 throw Payments.Error.missingSource(operation.service)
             }
-            
-            guard case let .direct(_, countryId: country, _) = source else {
                 
+            var country: String?
+            
+            switch source {
+            case let .direct(countryId: countryId):
+                country = countryId.countryId.description
+                    
+            case let .template(templateId):
+                        
+                let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                
+                guard let list = template?.parameterList as? [TransferAnywayData],
+                    let additional = list.last?.additional else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                        
+                country = additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countrySelect.rawValue })?.fieldvalue
+            
+            case let .latestPayment(latestPaymentId):
+                guard let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }),
+                      let latestPayment = latestPayment as? PaymentServiceData else {
+                    throw Payments.Error.missingSource(operation.service)
+                }
+                
+                country = latestPayment.additionalList.first(where: { $0.isCountry })?.fieldValue
+                
+            default:
                 throw Payments.Error.missingSource(operation.service)
             }
-            
+                
+            guard let country = country else {
+                throw Payments.Error.missingSource(operation.service)
+            }
+                
             let countryWithService = self.countriesListWithSevice.value.first(where: {($0.code == country || $0.contactCode == country)})
             let operatorsList = self.dictionaryAnywayOperators()
             
             // header
-            let headerParameter = Payments.ParameterHeader(title: "Переводы за рубеж", subtitle: "Денежные переводы МИГ", icon: .name("MigAvatar"), style: .large)
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Переводы за рубеж",
+                    subtitle: "Денежные переводы МИГ",
+                    icon: .image(.init(named: "ic24Edit2") ?? .iconPlaceholder),
+                    style: .large)
+            )
             
             let dropDownListId = Payments.Parameter.Identifier.countryDropDownList.rawValue
             
@@ -69,15 +104,54 @@ extension Model {
             guard let product = firstProduct(with: filter) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
-            let productParameter = Payments.ParameterProduct(value: String(product.id), filter: filter, isEditable: true)
             
-            if countryWithService?.servicesList.first(where: {$0.isDefault == true}) != nil {
+            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
+            
+            if countryWithService?.servicesList.first(where: { $0.isDefault == true }) != nil {
                 
-                let option = countryWithService?.servicesList.first(where: {$0.isDefault == true})?.code.rawValue
+                let option = countryWithService?.servicesList.first(where: { $0.isDefault == true })?.code.rawValue
                 
                 let dropDownListParameter = Payments.ParameterSelectDropDownList(.init(id: dropDownListId, value: option), title: "Перевести", options: options)
                 
-                return .init(parameters: [operatorParameter, headerParameter, dropDownListParameter, countryParameter, productParameter], front: .init(visible: [headerParameter.id, dropDownListId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
+                var parameters: [any PaymentsParameterRepresentable] = [operatorParameter,
+                                                                       headerParameter,
+                                                                       dropDownListParameter,
+                                                                       countryParameter,
+                                                                       productParameter]
+                
+                let paymentsSystemId = Payments.Parameter.Identifier.paymentSystem.rawValue
+
+                if case .template = source {
+                    
+                    let countrySwitch = try parameters.parameter(forIdentifier: .countryDropDownList)
+                    
+                    if let value = countrySwitch.value,
+                       let puref = Payments.Operator(rawValue: value) {
+                        
+                        let `operator` = self.dictionaryAnywayGroupOperatorData(for: value)
+                        
+                        if let parentCode = `operator`?.parentCode,
+                           let parentOperator = self.dictionaryAnywayOperatorGroup(for: parentCode) {
+                            
+                            if let svgImage = parentOperator.logotypeList.last?.svgImage,
+                               let icon = ImageData(with: svgImage) {
+                                
+                                switch puref {
+                                case .contact, .contactCash:
+                                    let value = "CONTACT"
+                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                    
+                                default:
+                                    let value = "МИГ"
+                                    parameters.append(Payments.ParameterInput(.init(id: paymentsSystemId, value: value), icon: icon, title: "Платежная система", validator: .anyValue, isEditable: false, inputType: .default))
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return .init(parameters: parameters, front: .init(visible: [headerParameter.id, dropDownListId, paymentsSystemId, countryId], isCompleted: true), back: .init(stage: .remote(.start), required: [dropDownListId, countryId], processed: nil))
                 
             } else {
                 
@@ -119,7 +193,11 @@ extension Model {
     }
     
     // update depependend parameters
-    func paymentsProcessDependencyReducerAbroad(parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducerAbroad(
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable],
+        operation: Payments.Operation
+    ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
         case Payments.Parameter.Identifier.operator.rawValue:
@@ -208,7 +286,7 @@ extension Model {
             
             if let countryDeliveryCurrency = try? parameters.parameter(forIdentifier: .countryDeliveryCurrency),
                let currencyValue = countryDeliveryCurrency.value,
-               let currency = self.currencyList.value.first(where: {$0.code == currencyValue}),
+               let currency = self.currencyList.value.first(where: { $0.code == currencyValue }),
                let symbol = currency.currencySymbol {
                 
                 currencySymbol = symbol
@@ -227,7 +305,26 @@ extension Model {
                     return nil
                 }
 
-                return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                switch operation.source {
+                case let .template(templateId):
+                    let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
+                    let parameterList = template?.parameterList.last as? TransferAnywayData
+                    let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
+                    let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
+                    
+                    if let currencySymbol = selectedCurrency?.currencySymbol,
+                       let code = selectedCurrency?.code{
+                        
+                        let updateAmount = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount) as? Payments.ParameterAmount
+                        return updateAmount?.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: .init(description: code), currenciesList: currenciesList))
+                 
+                    } else {
+                        
+                        return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                    }
+                default:
+                    return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
+                }
             }
             
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
@@ -546,10 +643,10 @@ extension Model {
             let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
             if let bankParameter = operation.parameters.first(where: { $0.id == countrySwitch }),
                let value = bankParameter.value,
-               let options = Payments.Operator.init(rawValue: value) {
+               let options = Payments.Operator(rawValue: value) {
                 
                 switch options {
-                case .direct:
+                case .direct, .cardKZ, .cardTJ, .cardUZ, .cardHumoUZ:
                     if let customerName = response.payeeName {
                         
                         let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
@@ -830,6 +927,28 @@ extension Model {
             
         } else {
             
+            return nil
+        }
+    }
+}
+
+extension Model {
+    
+    func templateHeader(
+        templates: [PaymentTemplateData],
+        source: Payments.Operation.Source
+        ) -> Payments.ParameterHeader? {
+            
+        if case let .template(templateId) = source,
+            let template = templates.first(where: { $0.id == templateId }) {
+            
+            return Payments.ParameterHeader(title: template.name,
+                                                       rightButton: [.init(icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
+                                                                           action: .editName(
+                                                                            .init(oldName: template.name,
+                                                                                  templateID: templateId)))])
+        } else {
+                
             return nil
         }
     }

@@ -40,6 +40,19 @@ extension PaymentsValidationRulesSystemTests {
         XCTAssertFalse(result)
     }
     
+    func testMinLengthRuleNilValue_InValid() throws {
+
+        // given
+        let rule = Payments.Validation.MinLengthRule(minLenght: 3, actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.evaluate(nil)
+        
+        // then
+        XCTAssertFalse(result)
+    }
+    
     func testMinLengthRule_InValid_Action() throws {
 
         // given
@@ -85,6 +98,19 @@ extension PaymentsValidationRulesSystemTests {
         XCTAssertFalse(result)
     }
     
+    func testMaxLengthRuleNilValue_InValid() throws {
+
+        // given
+        let rule = Payments.Validation.MaxLengthRule(maxLenght: 5, actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.evaluate(nil)
+        
+        // then
+        XCTAssertFalse(result)
+    }
+
     func testMaxLengthRule_InValid_Action() throws {
 
         // given
@@ -231,6 +257,63 @@ extension PaymentsValidationRulesSystemTests {
     }
 }
 
+//MARK: - Regular Expression Rule Tests for Optional field
+
+extension PaymentsValidationRulesSystemTests {
+
+    func testRegularExpressionOptionalField_Valid() throws {
+
+        // given
+        let rule = Payments.Validation.OptionalRegExpRule(regExp: "^[0-9]\\d*$", actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.evaluate("123456789")
+        
+        // then
+        XCTAssertTrue(result)
+    }
+    
+    func testRegularExpressionOptionalField_InValid() throws {
+        
+        // given
+        let rule = Payments.Validation.OptionalRegExpRule(regExp: "[0-9]", actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.evaluate("string")
+        
+        // then
+        XCTAssertFalse(result)
+    }
+    
+    func testRegularExpressionOptionalField_InValid_Action() throws {
+        
+        // given
+        let rule = Payments.Validation.OptionalRegExpRule(regExp: "[0-9]", actions: [.post: .warning("Warning: only digits")])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.action(with: "string", for: .post)
+        
+        // then
+        XCTAssertEqual(result, .warning("Warning: only digits"))
+    }
+    
+    func testRegularExpressionOptionalFieldEmptyValue_Valid() throws {
+
+        // given
+        let rule = Payments.Validation.OptionalRegExpRule(regExp: "^[0-9]\\d*$", actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.evaluate(nil)
+        
+        // then
+        XCTAssertTrue(result)
+    }
+}
+
 //MARK: - Action
 
 extension PaymentsValidationRulesSystemTests {
@@ -266,5 +349,23 @@ extension PaymentsValidationRulesSystemTests {
         
         // then
         XCTAssertTrue(result)
+    }
+}
+
+//MARK: - Validator Protocol
+
+extension PaymentsValidationRulesSystemTests {
+    
+    func testValidatorProtocol() throws {
+
+        // given
+        let rule = Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [:])
+        let ruleSystem = Payments.Validation.RulesSystem(rules: [rule])
+        
+        // when
+        let result = ruleSystem.isValid(value: "123456789")
+
+        // then
+        XCTAssertEqual(result, ruleSystem.evaluate("123456789"))
     }
 }

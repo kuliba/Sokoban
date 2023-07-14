@@ -8,55 +8,53 @@
 import Foundation
 import SwiftUI
 import Combine
+import TextFieldComponent
 
 class ContactsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
 
-    @Published var searchBar: SearchBarView.ViewModel
-    @Published var visible: [ContactsSectionViewModel]
-    @Published var mode: Mode
+    @Published private(set) var visible: [ContactsSectionViewModel]
+    @Published private(set) var mode: Mode
     
+    let searchFieldModel: RegularFieldViewModel
+
     private var sections: [ContactsSectionViewModel]
     
-    private let model: Model
+    private let makeRequest: (String) -> Void
+    private let bankFromID: (BankData.ID) -> BankData?
+    private let countryForBank: (BankData) -> CountryData?
+    private let validator: any Validator
+    private let scheduler: AnySchedulerOfDispatchQueue
+    
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
-    var title: String {
-        
-        switch mode {
-        case .fastPayments: return "Выберите контакт"
-        case .abroad: return "В какую страну?"
-        case let .select(select):
-            switch select {
-            case .contacts: return "Выберите контакт"
-            case .banks: return "Выберите банк"
-            case .banksFullInfo: return "Выберите банк"
-            case .countries: return "Выберите страну"
-            }
-        }
-    }
-
-    init(_ model: Model, searchBar: SearchBarView.ViewModel, visible: [ContactsSectionViewModel], sections: [ContactsSectionViewModel], mode: Mode) {
-        
-        self.model = model
-        self.searchBar = searchBar
+    init(
+        searchFieldModel: RegularFieldViewModel,
+        visible: [ContactsSectionViewModel],
+        sections: [ContactsSectionViewModel],
+        mode: ContactsViewModel.Mode,
+        makeRequest: @escaping (String) -> Void,
+        bankFromID: @escaping (BankData.ID) -> BankData?,
+        countryForBank: @escaping (BankData) -> CountryData?,
+        validator: any Validator,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) {
+        self.searchFieldModel = searchFieldModel
         self.visible = visible
         self.sections = sections
         self.mode = mode
-
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
-    }
-    
-    convenience init(_ model: Model, mode: Mode) {
- 
-        self.init(model, searchBar: Self.searchBar(for: mode), visible: [], sections: [], mode: mode)
+        self.makeRequest = makeRequest
+        self.bankFromID = bankFromID
+        self.countryForBank = countryForBank
+        self.validator = validator
+        self.scheduler = scheduler
         
-        sections = sections(for: mode, model: model)
-
         bind()
         bind(sections: sections)
+        
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "init")
     }
     
     deinit {
@@ -64,64 +62,58 @@ class ContactsViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "deinit")
     }
     
-    private func bind() {
+    func bind() {
         
         $mode
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] mode in
                 
                 withAnimation {
                     
-                    visible = visible(sections: sections, mode: mode)
+                    visible = sections.visible(forMode: mode)
                 }
 
             }.store(in: &bindings)
         
-        searchBar.textField.$text
-            .receive(on: DispatchQueue.main)
+        searchFieldModel.$state
+            .map(\.text)
+            .receive(on: scheduler)
             .sink { [unowned self] text in
                 
                 switch mode {
                 case let .fastPayments(phase):
                     
-                    contactsSection?.filter.value = text
-                    banksPrefferdSection?.phone.value = text
-                    banksSection?.phone.value = text
+                    sections.contactsSection?.filter.value = text
+                    sections.banksPrefferdSection?.phone.value = text
+                    sections.banksSection?.phone.value = text
                     
                     switch phase {
                     case .contacts:
 
-                        if let phone = searchBar.phone {
+                        if let validatedPhone {
                             
                             feedbackGenerator.notificationOccurred(.success)
-                            self.searchBar.action.send(SearchBarViewModelAction.Idle())
-                            mode = .fastPayments(.banksAndCountries(phone: phone))
-
-                            model.action.send(ModelAction.BankClient.Request(phone: phone.digits))
-                            model.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
+                            finishEditing()
+                            mode = .fastPayments(.banksAndCountries(phone: validatedPhone))
+                            makeRequest(validatedPhone)
 
                         } else {
  
                             withAnimation {
                                 
-                                if text != nil {
-                 
-                                    // hide latest payments
-                                    visible = visible.filter({ $0.type != .latestPayments })
-
-                                } else {
-                                    
-                                    // show latest payments
-                                    visible = visible(sections: sections, mode: mode)
-                                }
+                                visible = text != nil
+                                // hide latest payments
+                                ? visible.withoutLastPayments
+                                // show latest payments
+                                : sections.visible(forMode: mode)
                             }
                         }
                         
                     case .banksAndCountries:
                         
-                        if let phone = searchBar.phone {
+                        if let validatedPhone {
                             
-                            mode = .fastPayments(.banksAndCountries(phone: phone))
+                            mode = .fastPayments(.banksAndCountries(phone: validatedPhone))
                             
                         } else {
                             
@@ -130,21 +122,21 @@ class ContactsViewModel: ObservableObject {
                     }
                     
                 case .abroad:
-                    countriesSection?.filter.value = text
+                    sections.countriesSection?.filter.value = text
                     
                 case let .select(select):
                     switch select {
                     case .contacts:
-                        contactsSection?.filter.value = text
+                        sections.contactsSection?.filter.value = text
                         
                     case .banks:
-                        banksSection?.filter.value = text
+                        sections.banksSection?.filter.value = text
                    
                     case .banksFullInfo:
-                        banksSection?.filter.value = text
+                        sections.banksSection?.filter.value = text
                         
                     case .countries:
-                        countriesSection?.filter.value = text
+                        sections.countriesSection?.filter.value = text
                     }
                 }
 
@@ -156,7 +148,7 @@ class ContactsViewModel: ObservableObject {
         for section in sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self] action in
                     
                     switch action {
@@ -166,15 +158,13 @@ class ContactsViewModel: ObservableObject {
                     case let payload as ContactsSectionViewModelAction.Contacts.ItemDidTapped:
                         switch mode {
                         case .fastPayments:
-                            let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
-                            self.searchBar.textField.setText(to: formattedPhone)
+                            self.setText(to: payload.phone)
                         
                         case .abroad:
                             break
                             
                         case .select:
-                            let formattedPhone = searchBar.textField.phoneNumberFormatter.partialFormatter("+\(payload.phone)")
-                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: formattedPhone))
+                            self.action.send(ContactsViewModelAction.ContactPhoneSelected(phone: payload.phone))
                         }
                         
                     case let payload as ContactsSectionViewModelAction.BanksPreffered.ItemDidTapped:
@@ -201,7 +191,7 @@ class ContactsViewModel: ObservableObject {
                                 
                                 if case let .direct(phone: _, countryId: countryId, serviceData: _) = payload.source {
 
-                                    self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: self.searchBar.phone, countryId: countryId)))
+                                    self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: self.validatedPhone, countryId: countryId)))
 
                                 } else {
                                     
@@ -228,7 +218,7 @@ class ContactsViewModel: ObservableObject {
                         visible = visible.filter({ $0.type != .countries })
                         
                     case _ as ContactsSectionViewModelAction.Collapsable.ResetSections:
-                        visible = visible(sections: sections, mode: mode)
+                        visible = sections.visible(forMode: mode)
                     
                     case let payload as ContactsViewModelAction.ContactsDidScroll:
                         
@@ -236,7 +226,7 @@ class ContactsViewModel: ObservableObject {
                             
                             withAnimation(.linear(duration: 0.5)) {
                             
-                                visible = visible(sections: sections, mode: mode)
+                                visible = sections.visible(forMode: mode)
                             }
                         } else {
                             
@@ -255,186 +245,274 @@ class ContactsViewModel: ObservableObject {
     }
 }
 
+// MARK: - interaction
+
+extension ContactsViewModel {
+    
+    func cancelSearch() {
+        
+        setText(to: nil)
+    }
+    
+    func setMode(to mode: Mode) {
+        
+        self.mode = mode
+    }
+    
+    private func setText(to text: String?) {
+        
+        self.searchFieldModel.setText(to: text)
+    }
+    
+    private func finishEditing() {
+        
+        searchFieldModel.finishEditing()
+    }
+    
+    var title: String { mode.title }
+    
+    var validatedPhone: String? {
+        
+#if DEBUG
+        if searchFieldModel.text == "+7 0115110217" { return searchFieldModel.text }
+#endif
+        guard let text = searchFieldModel.text,
+              validator.isValid(text)
+        else { return nil }
+        
+        return text
+    }
+}
+
 //MARK: - Types
 
 extension ContactsViewModel {
     
-    enum Mode {
+    enum Mode: Equatable {
         
         case fastPayments(Phase)
         case select(Select)
         case abroad
         
-        enum Phase {
+        enum Phase: Equatable {
             
             case contacts
             case banksAndCountries(phone: String)
         }
         
-        enum Select {
+        enum Select: Equatable {
             
             case contacts
             case banks
             case banksFullInfo
             case countries
         }
+    }
+}
+
+extension ContactsViewModel.Mode {
+    
+    var visibleSectionsTypes: [ContactsSectionViewModel.Kind] {
         
-        var visibleSectionsTypes: [ContactsSectionViewModel.Kind] {
+        switch self {
+        case let .fastPayments(phase):
+            switch phase {
+            case .contacts:
+                return [.latestPayments, .contacts]
+                
+            case .banksAndCountries:
+                return [.banksPreferred, .banks, .countries]
+            }
             
-            switch self {
-            case let .fastPayments(phase):
-                switch phase {
-                case .contacts:
-                    return [.latestPayments, .contacts]
-                
-                case .banksAndCountries:
-                    return [.banksPreferred, .banks, .countries]
-                    
-                }
-                
-            case .abroad:
-                return [.latestPayments, .countries]
-                
-            case let .select(select):
-                switch select {
-                case .contacts: return [.contacts]
-                case .banks: return [.banks]
-                case .banksFullInfo: return [.banks]
-                case .countries: return [.countries]
-                }
+        case .abroad:
+            return [.latestPayments, .countries]
+            
+        case let .select(select):
+            switch select {
+            case .contacts: return [.contacts]
+            case .banks: return [.banks]
+            case .banksFullInfo: return [.banks]
+            case .countries: return [.countries]
+            }
+        }
+    }
+    
+    var title: String {
+        
+        switch self {
+        case .fastPayments: return "Выберите контакт"
+        case .abroad: return "В какую страну?"
+        case let .select(select):
+            switch select {
+            case .contacts: return "Выберите контакт"
+            case .banks: return "Выберите банк"
+            case .banksFullInfo: return "Выберите банк"
+            case .countries: return "Выберите страну"
             }
         }
     }
 }
 
-//MARK: - Reducers
+extension Model {
 
-extension ContactsViewModel {
+    // MARK: - Factory
     
-    static func searchBar(for mode: Mode) -> SearchBarView.ViewModel {
+    /// Factory method to create `ContactsViewModel` using `model`.
+    func makeContactsViewModel(
+        forMode mode: ContactsViewModel.Mode,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> ContactsViewModel {
         
-        switch mode {
-        case .fastPayments:
-            return .init(textFieldPhoneNumberView: .init(.contacts))
+        let model = self
         
-        case .abroad:
-            return .init(textFieldPhoneNumberView: .init(style: .abroad, placeHolder: .countries), state: .idle, icon: .ic24Search)
-
-        case let .select(select):
-            switch select {
-            case .contacts:
-                return .init(textFieldPhoneNumberView: .init(.contacts))
-                
-            case .banks:
-                return .init(textFieldPhoneNumberView: .init(.banks))
+        let makeRequest: (String) -> Void = { [weak model] phone in
             
-            case .banksFullInfo:
-                return .init(textFieldPhoneNumberView: .init(style: .banks, placeHolder: .banks))
-                
-            case .countries:
-                return .init(textFieldPhoneNumberView: .init(.countries))
-            }
+            model?.action.send(ModelAction.BankClient.Request(phone: phone.digits))
+            model?.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
         }
+        let bankFromID: (BankData.ID) -> BankData? = { [weak model] bankId in
+            
+            model?.bankList.value.first(where: { $0.id == bankId })
+        }
+        let countryForBank: (BankData) -> CountryData? = { [weak model] bank in
+            
+            model?.countriesList.value.first(where: { $0.id == bank.bankCountry})
+        }
+        
+        let searchFieldModel = SearchFactory.makeSearchFieldModel(
+            for: mode,
+            scheduler: scheduler
+        )
+        let sections = model.sections(for: mode)
+        let validator = PhoneValidator()
+        
+        return .init(searchFieldModel: searchFieldModel, visible: [], sections: sections, mode: mode, makeRequest: makeRequest, bankFromID: bankFromID, countryForBank: countryForBank, validator: validator, scheduler: scheduler)
     }
     
-    func sections(for mode: Mode, model: Model) -> [ContactsSectionViewModel] {
+    /// - Note: `internal` is for testing
+    internal func sections(
+        for mode: ContactsViewModel.Mode
+    ) -> [ContactsSectionViewModel] {
         
-        var result = [ContactsSectionViewModel]()
+        let model = self
         
         switch mode {
         case .fastPayments:
-            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]))
-            result.append(ContactsListSectionViewModel(model, mode: .fastPayment))
-            result.append(ContactsBanksPrefferedSectionViewModel(model, phone: nil))
-            result.append(ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil, bankDictionary: .banks))
-            result.append(ContactsCountriesSectionViewModel(model, mode: .fastPayment))
-
+            return [
+                ContactsLatestPaymentsSectionViewModel(model: model, including: [.phone]),
+                ContactsListSectionViewModel(model, mode: .fastPayment),
+                ContactsBanksPrefferedSectionViewModel(model, phone: nil),
+                ContactsBanksSectionViewModel(model, mode: .fastPayment, phone: nil, bankDictionary: .banks, searchTextFieldFactory: { .bank() }),
+                ContactsCountriesSectionViewModel(model, mode: .fastPayment)
+            ]
+            
         case .abroad:
-            result.append(ContactsLatestPaymentsSectionViewModel(model: model, including: [.outside]))
-            result.append(ContactsCountriesSectionViewModel(model, mode: .select))
-
+            return [
+                ContactsLatestPaymentsSectionViewModel(model: model, including: [.outside]),
+                ContactsCountriesSectionViewModel(model, mode: .select)
+            ]
+            
         case let .select(select):
             switch select {
             case .contacts:
-                result.append(ContactsListSectionViewModel(model, mode: .select))
+                return [
+                    ContactsListSectionViewModel(model, mode: .select)
+                ]
                 
             case .banks:
-                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banks))
+                return [
+                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banks, searchTextFieldFactory: { .bank() })
+                ]
                 
             case .banksFullInfo:
-                result.append(ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banksFullInfo))
-
+                return [
+                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banksFullInfo, searchTextFieldFactory: { .bank() })
+                ]
+                
             case .countries:
-                result.append(ContactsCountriesSectionViewModel(model, mode: .select))
+                return [
+                    ContactsCountriesSectionViewModel(model, mode: .select)
+                ]
             }
         }
-        
-        return result
-    }
-    
-    func visible(sections: [ContactsSectionViewModel], mode: Mode) -> [ContactsSectionViewModel] {
-        
-        sections.filter({ mode.visibleSectionsTypes.contains($0.type) })
     }
 }
 
-//MARK: - Helpers
+// MARK: - Helpers
+
+extension Array where Element == ContactsSectionViewModel {
+    
+    var latestPayments: ContactsLatestPaymentsSectionViewModel? {
+        
+        compactMap({ $0 as? ContactsLatestPaymentsSectionViewModel }).first
+    }
+    
+    var contactsSection: ContactsListSectionViewModel? {
+        
+        compactMap({ $0 as? ContactsListSectionViewModel }).first
+    }
+    
+    var banksSection: ContactsBanksSectionViewModel? {
+        
+        compactMap({ $0 as? ContactsBanksSectionViewModel }).first
+    }
+    
+    var countriesSection: ContactsCountriesSectionViewModel? {
+        
+        compactMap({ $0 as? ContactsCountriesSectionViewModel }).first
+    }
+    
+    var banksPrefferdSection: ContactsBanksPrefferedSectionViewModel? {
+        
+        compactMap({ $0 as? ContactsBanksPrefferedSectionViewModel }).first
+    }
+    
+    var withoutLastPayments: Self {
+        
+        filter { $0.type != .latestPayments }
+    }
+    
+    func visible(forMode mode: ContactsViewModel.Mode) -> Self {
+        
+        filter { mode.visibleSectionsTypes.contains($0.type) }
+    }
+}
+
+extension RegularFieldViewModel {
+    
+    static func bank() -> RegularFieldViewModel {
+        
+        TextFieldFactory.makeTextField(
+            text: nil,
+            placeholderText: "Введите название банка",
+            keyboardType: .default,
+            limit: nil
+        )
+    }
+}
 
 extension ContactsViewModel {
-    
-    private var contactsSection: ContactsListSectionViewModel? {
-        
-        guard let section = sections.compactMap({ $0 as? ContactsListSectionViewModel }).first else {
-            return nil
-        }
-        return section
-    }
-    
-    private var banksSection: ContactsBanksSectionViewModel? {
-        
-        guard let section = sections.compactMap({ $0 as? ContactsBanksSectionViewModel }).first else {
-            return nil
-        }
-        return section
-    }
-    
-    private var countriesSection: ContactsCountriesSectionViewModel? {
-        
-        guard let section = sections.compactMap({ $0 as? ContactsCountriesSectionViewModel }).first else {
-            return nil
-        }
-        return section
-    }
-    
-    private var banksPrefferdSection: ContactsBanksPrefferedSectionViewModel? {
-        
-        guard let section = sections.compactMap({ $0 as? ContactsBanksPrefferedSectionViewModel }).first else {
-            return nil
-        }
-        return section
-    }
     
     func handleBankDidTapped(bankId: BankData.ID) {
         
-        guard let phone = searchBar.phone,
-              let bank = model.bankList.value.first(where: { $0.id == bankId }) else {
-            
-            return
-        }
+        guard let validatedPhone,
+              let bank = bankFromID(bankId)
+        else { return }
         
         switch bank.bankType {
         case .sfp:
             #if DEBUG
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .mock(model.paymentsMockSFP())))
+            let source: Payments.Operation.Source = .mock(Model.paymentsMockSFP())
             #else
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .sfp(phone: phone, bankId: bank.id)))
+            let source: Payments.Operation.Source = .sfp(phone: validatedPhone, bankId: bank.id)
             #endif
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: source))
             
         case .direct:
-            guard let country = self.model.countriesList.value.first(where: { $0.id == bank.bankCountry}) else {
+            guard let country = countryForBank(bank) else {
                 return
             }
-            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: phone, countryId: country.id)))
+            self.action.send(ContactsViewModelAction.PaymentRequested(source: .direct(phone: validatedPhone, countryId: country.id)))
             
         default:
             return
@@ -472,3 +550,69 @@ enum ContactsViewModelAction {
     }
 }
 
+//MARK: - Preview Content
+
+extension ContactsViewModel {
+    
+    static let sampleFastContacts = ContactsViewModel.preview(
+        visible: [
+            ContactsLatestPaymentsSectionViewModel.sample,
+            ContactsListSectionViewModel.sample
+        ])
+    
+    static let sampleFastBanks = ContactsViewModel.preview(
+        visible: [
+            ContactsBanksPrefferedSectionViewModel.sample,
+            ContactsBanksSectionViewModel.sample,
+            ContactsCountriesSectionViewModel.sample
+        ])
+    
+    static func preview(
+        searchFieldModel: RegularFieldViewModel = SearchFactory.makeSearchContactsField(),
+        visible: [ContactsSectionViewModel],
+        sections: [ContactsSectionViewModel] = [],
+        mode: Mode = .fastPayments(.contacts)
+    ) -> ContactsViewModel {
+        
+        .init(
+            searchFieldModel: searchFieldModel,
+            visible: visible,
+            sections: sections,
+            mode: mode,
+            makeRequest: { _ in },
+            bankFromID: { _ in nil },
+            countryForBank: { _ in nil },
+            validator: Validate.always
+        )
+    }
+}
+
+// MARK: - DSL
+
+extension ContactsViewModel {
+    
+    var firstSection: ContactsSectionViewModel? {
+        
+        sections.first
+    }
+    
+    var contactsSection: ContactsListSectionViewModel? {
+        
+        sections.contactsSection
+    }
+    
+    var banksSection: ContactsBanksSectionViewModel? {
+        
+        sections.banksSection
+    }
+    
+    var countriesSection: ContactsCountriesSectionViewModel? {
+        
+        sections.countriesSection
+    }
+    
+    var banksPrefferdSection: ContactsBanksPrefferedSectionViewModel? {
+        
+        sections.banksPrefferdSection
+    }
+}

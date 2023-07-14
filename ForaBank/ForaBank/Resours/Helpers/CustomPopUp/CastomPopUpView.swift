@@ -62,7 +62,7 @@ class MemeDetailVC: UIViewController {
         if let template = paymentTemplate {
             addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)
-            let cardId = template.parameterList.first?.payer.cardId
+            let cardId = template.parameterList.first?.payer?.cardId
             updateObjectWithNotification(cardId: cardId)
         } else {
             updateObjectWithNotification()
