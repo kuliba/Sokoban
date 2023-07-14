@@ -46,8 +46,9 @@
       }
     },
     {
+      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "UserModelTests",
         "name" : "UserModelTests"
       }
@@ -58,6 +59,30 @@
         "containerPath" : "container:",
         "identifier" : "PickerWithPreviewComponentTests",
         "name" : "PickerWithPreviewComponentTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CvvPinTests",
+        "name" : "CvvPinTests"
       }
     }
   ],

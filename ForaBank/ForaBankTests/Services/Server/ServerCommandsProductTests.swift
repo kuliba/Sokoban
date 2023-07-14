@@ -22,7 +22,47 @@ class ServerCommandsProductTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetProductDetailsResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.ProductController.GetProductDetails.Response(statusCode: .ok, errorMessage: "string", data: .init(accountNumber: "4081781000000000001", bic: "044525341", corrAccount: "30101810300000000341", inn: "7704113772", kpp: "770401001", payeeName: "Иванов Иван Иванович"))
+        let expected = ServerCommands.ProductController.GetProductDetails.Response(
+            statusCode: .ok,
+            errorMessage: "string",
+            data: .init(
+                accountNumber: "4081781000000000001",
+                bic: "044525341",
+                corrAccount: "30101810300000000341",
+                inn: "7704113772",
+                kpp: "770401001",
+                payeeName: "Иванов Иван Иванович",
+                maskCardNumber: nil,
+                cardNumber: nil
+            )
+        )
+        
+        // when
+        let result = try decoder.decode(ServerCommands.ProductController.GetProductDetails.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetProductDetailsFull_Response_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetProductDetailsResponseGenericFull", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.ProductController.GetProductDetails.Response(
+            statusCode: .ok,
+            errorMessage: "string",
+            data: .init(
+                accountNumber: "4081781000000000001",
+                bic: "044525341",
+                corrAccount: "30101810300000000341",
+                inn: "7704113772",
+                kpp: "770401001",
+                payeeName: "Иванов Иван Иванович",
+                maskCardNumber: "4444 55** **** 1122",
+                cardNumber: "4444 5555 6666 1122"
+            )
+        )
         
         // when
         let result = try decoder.decode(ServerCommands.ProductController.GetProductDetails.Response.self, from: json)

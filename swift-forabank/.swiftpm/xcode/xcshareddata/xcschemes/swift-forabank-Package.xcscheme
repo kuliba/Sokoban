@@ -98,65 +98,51 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "WIPMoscowParkingMap"
-               BuildableName = "WIPMoscowParkingMap"
-               BlueprintName = "WIPMoscowParkingMap"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MoscowParkingMap"
-               BuildableName = "MoscowParkingMap"
-               BlueprintName = "MoscowParkingMap"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MPMap"
-               BuildableName = "MPMap"
-               BlueprintName = "MPMap"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MPMapComponent"
-               BuildableName = "MPMapComponent"
-               BlueprintName = "MPMapComponent"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "PickerWithPreviewComponent"
                BuildableName = "PickerWithPreviewComponent"
                BlueprintName = "PickerWithPreviewComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "UserModel"
+               BuildableName = "UserModel"
+               BlueprintName = "UserModel"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LoadableResourceComponent"
+               BuildableName = "LoadableResourceComponent"
+               BlueprintName = "LoadableResourceComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PinCodeUI"
+               BuildableName = "PinCodeUI"
+               BlueprintName = "PinCodeUI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -188,9 +174,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MPMapComponentTests"
-               BuildableName = "MPMapComponentTests"
-               BlueprintName = "MPMapComponentTests"
+               BlueprintIdentifier = "PickerWithPreviewComponentTests"
+               BuildableName = "PickerWithPreviewComponentTests"
+               BlueprintName = "PickerWithPreviewComponentTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -198,9 +184,19 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PickerWithPreviewComponentTests"
-               BuildableName = "PickerWithPreviewComponentTests"
-               BlueprintName = "PickerWithPreviewComponentTests"
+               BlueprintIdentifier = "LoadableResourceComponentTests"
+               BuildableName = "LoadableResourceComponentTests"
+               BlueprintName = "LoadableResourceComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TextFieldUITests"
+               BuildableName = "TextFieldUITests"
+               BlueprintName = "TextFieldUITests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

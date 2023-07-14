@@ -93,7 +93,7 @@ struct TemplatesListView: View {
                                                      editMode: $viewModel.editModeState)
                                         .contextMenu {
                                         
-                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel() {
+                                            if let itemsMenuViewModel =  viewModel.getItemsMenuViewModel(), !item.state.isProcessing {
                                             
                                                 ForEach(itemsMenuViewModel) { button in
                                                 
@@ -234,16 +234,17 @@ extension TemplatesListView {
                 
                 Spacer()
                 
-                Button(viewModel.saveButtonText, action: viewModel.saveButtonAction)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(viewModel.isNameNotValid ? Color.buttonPrimaryDisabled
-                                                         : Color.buttonPrimary)
-                    .foregroundColor(.textWhite)
-                    .font(.textH3SB18240())
-                    .cornerRadius(12)
-                    .disabled(viewModel.isNameNotValid)
-     
+                Button(action: viewModel.saveButtonAction) {
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 56)
+                        .foregroundColor(viewModel.isNameNotValid ? Color.buttonPrimaryDisabled
+                                                                  : Color.buttonPrimary)
+                        .overlay13 {
+                            Text(viewModel.saveButtonText)
+                                .font(.textH3SB18240())
+                                .foregroundColor(.textWhite)
+                        }
+                }.disabled(viewModel.isNameNotValid)
             }
             .frame(height: 210)
             .padding()
@@ -282,9 +283,9 @@ extension TemplatesListView {
                         }
                     }
                 }
-                .frame(height: mainViewSize.height - 40 > viewModel.containerHeight
+                .frame(height: mainViewSize.height - 70 > viewModel.containerHeight
                                 ? viewModel.containerHeight
-                                : mainViewSize.height - 40)
+                                : mainViewSize.height - 70)
             } //VStack section
             .padding(.bottom, 16)
     
@@ -493,7 +494,7 @@ extension TemplatesListView {
                 content
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         
-                        if let viewModel {
+                        if let viewModel, !item.state.isProcessing {
                             
                             ForEach(viewModel) { button in
                                 

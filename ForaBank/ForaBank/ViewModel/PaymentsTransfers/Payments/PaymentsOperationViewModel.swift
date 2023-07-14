@@ -49,7 +49,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     convenience init(navigationBar: NavigationBarView.ViewModel = .init(), operation: Payments.Operation, model: Model, closeAction: @escaping () -> Void) {
 
-        self.init(navigationBar: navigationBar, top: [], feed: [], bottom: [], link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
+        self.init(navigationBar: navigationBar, top: nil, feed: [], bottom: nil, link: nil, bottomSheet: nil, operation: operation, model: model, closeAction: closeAction)
         
         bind()
     }
@@ -149,18 +149,32 @@ class PaymentsOperationViewModel: ObservableObject {
                     // update operation with parameters
                     let updatedOperation = Self.reduce(operation: operation.value, items: items)
                     
-                    // check if auto continue required
-                    if isParameterValueValid(parameterId: payload.parameterId),
-                       model.paymentsIsAutoContinueRequired(operation: updatedOperation, updated: payload.parameterId) == true {
+                    // check if rollback required
+                    if let rollbackStep = model.paymentsIsRollbackRequired(operation: updatedOperation, updated: payload.parameterId) {
                         
-                        // update stage
-                        let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
-                        
-                        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
-                        
-                        // auto continue operation
-                        model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
-                        self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                        do {
+                            
+                            let rolledBackOperation = try updatedOperation.rollback(to: rollbackStep)
+                            
+                            if model.paymentsIsAutoContinueRequired(operation: rolledBackOperation, updated: payload.parameterId) {
+                                
+                                // update stage
+                                let updatedStageOperation = updatedOperation.updatedCurrentStepStage(reducer: model.paymentsProcessCurrentStepStageReducer(service:parameters:stepIndex:stepStage:))
+                                
+                                LoggerAgent.shared.log(level: .debug, category: .ui, message: "Continue operation: \(updatedStageOperation)")
+                                
+                                // auto continue operation
+                                model.action.send(ModelAction.Payment.Process.Request(operation: updatedStageOperation))
+                                self.action.send(PaymentsOperationViewModelAction.Spinner.Show())
+                            }
+                           
+                            operation.value = rolledBackOperation
+                            
+                        } catch {
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable rollback operation with error: \(error)")
+                            rootActions?.alert("Unable rollback operation with error: \(error)")
+                        }
                         
                     } else {
                         
@@ -230,6 +244,10 @@ class PaymentsOperationViewModel: ObservableObject {
                     withAnimation {
                         spinner = nil
                     }
+                    
+                case let changeName as PaymentsOperationViewModelAction.ChangeName:
+                    bottomSheet = .init(type: .changeName(changeName.viewModel))
+                    bindRename(rename: changeName.viewModel)
                     
                 default:
                     break
@@ -303,7 +321,7 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    //MARK: Bind Navigatoin Bar
+    //MARK: Bind Navigation Bar
     private func bindNavBar() {
         
         navigationBar.action
@@ -313,9 +331,33 @@ class PaymentsOperationViewModel: ObservableObject {
                 switch action {
                 case _ as NavigationBarViewModelAction.ScanQrCode:
                     self.action.send(PaymentsViewModelAction.ScanQrCode())
-                
+                    
+                case let editName as NavigationBarViewModelAction.EditName:
+                    self.action.send(PaymentsOperationViewModelAction.ChangeName(viewModel: editName.viewModel))
+                    
                 default: break
                 }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bindRename(
+        rename: TemplatesListViewModel.RenameTemplateItemViewModel
+    ) {
+        
+        rename.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                bottomSheet = nil
+                
+                navigationBar.title = payload.newName
+                model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                    .init(name: payload.newName,
+                          parameterList: nil,
+                          paymentTemplateId: payload.itemId))
+                model.action.send(ModelAction.PaymentTemplate.List.Requested())
                 
             }.store(in: &bindings)
     }
@@ -508,6 +550,7 @@ extension PaymentsOperationViewModel {
             case popUp(PaymentsPopUpSelectView.ViewModel)
             case antifraud(PaymentsAntifraudViewModel)
             case hint(HintViewModel)
+            case changeName(TemplatesListViewModel.RenameTemplateItemViewModel)
         }
     }
     
@@ -562,5 +605,10 @@ enum PaymentsOperationViewModelAction {
         
         let parameterId: Payments.Parameter.ID
         let message: String
+    }
+    
+    struct ChangeName: Action {
+        
+        let viewModel: TemplatesListViewModel.RenameTemplateItemViewModel
     }
 }

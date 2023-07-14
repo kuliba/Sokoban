@@ -154,17 +154,13 @@ extension ProductProfileDetailView {
             }
             .onTapGesture {
                 
-                guard let action = viewModel.action else {
-                    return
-                }
-                
-                action()
+                viewModel.action?()
             }
         }
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct ProductProfileDetailAmountViewComponent_Previews: PreviewProvider {
     
@@ -176,39 +172,45 @@ struct ProductProfileDetailAmountViewComponent_Previews: PreviewProvider {
             
             VStack(alignment: .leading) {
                 
-                ProductProfileDetailView.AmountView(viewModel: .sample)
-
-                ProductProfileDetailView.AmountView(viewModel: .sampleBackground)
-                
-                ProductProfileDetailView.AmountView(viewModel: .sampleLegend)
-                    
-                ProductProfileDetailView.AmountView(viewModel: .sampleLegendValue)
-     
-                ProductProfileDetailView.AmountView(viewModel: .sampleCheckmark)
-                
-                ProductProfileDetailView.AmountView(viewModel: .sampleInfo)
-                
-            }.padding(.horizontal, 20)
-            
-        }.previewLayout(.fixed(width: 300, height: 500))
+                amountView(.sample)
+                amountView(.sampleBackground)
+                amountView(.sampleLegend)
+                amountView(.sampleLegendValue)
+                amountView(.sampleCheckmark)
+                amountView(.sampleInfo)
+                amountView(.available)
+                amountView(.loanLimit)
+            }
+            .padding(.horizontal, 20)
+        }
+        .previewLayout(.fixed(width: 300, height: 500))
+    }
+    
+    private static func amountView(
+        _ viewModel: ProductProfileDetailView.ViewModel.AmountViewModel
+    ) -> some View {
+        
+        ProductProfileDetailView.AmountView(viewModel: viewModel)
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension ProductProfileDetailView.ViewModel.AmountViewModel {
     
-    static let sample = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "3 417.01 ₽")
+    static let sample: Self = .init(type: .minimalPayment, value: "3 417.01 ₽")
     
-    static let sampleLegend = ProductProfileDetailView.ViewModel.AmountViewModel(type: .debt, value: "60 056 ₽", prefix: .legend(.textPlaceholder))
+    static let sampleBackground: Self = .init(type: .minimalPayment, value: "3 417.01 ₽", backgroundColor: .mainColorsBlackMedium)
     
-    static let sampleLegendValue = ProductProfileDetailView.ViewModel.AmountViewModel(type: .repaid, value: "434 056,77 ₽", prefix: .legend(.mainColorsRed), postfix: .value("434 056,77 ₽"))
+    static let sampleLegend: Self = .init(type: .debt, value: "60 056 ₽", prefix: .legend(.textPlaceholder))
     
-    static let sampleCheckmark = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "Внесен", postfix: .checkmark)
+    static let sampleLegendValue: Self = .init(type: .repaid, value: "434 056,77 ₽", prefix: .legend(.mainColorsRed), postfix: .value("434 056,77 ₽"))
     
-    static let sampleInfo = ProductProfileDetailView.ViewModel.AmountViewModel(type: .includingDelay, value: "367.25 ₽", postfix: .info(color: .mainColorsRed, action: {}))
+    static let sampleCheckmark: Self = .init(type: .minimalPayment, value: "Внесен", postfix: .checkmark)
     
-    static let sampleBackground = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "3 417.01 ₽", backgroundColor: .mainColorsBlackMedium)
+    static let sampleInfo: Self = .init(type: .includingDelay, value: "367.25 ₽", postfix: .info(color: .mainColorsRed, action: {}))
+    
+    static let available: Self = .init(type: .available, value: "467 056,77 ₽", prefix: .legend(.red), postfix: .value("434 056,77 ₽"), action: {})
+    
+    static let loanLimit: Self = .init(type: .loanLimit, value: "467 056,77 ₽", prefix: .legend(.red), postfix: .value("434 056,77 ₽"), action: {})
 }
-
-

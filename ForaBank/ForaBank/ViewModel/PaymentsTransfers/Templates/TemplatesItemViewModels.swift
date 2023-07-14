@@ -15,11 +15,11 @@ extension TemplatesListViewModel {
         let id: Int
         var sortOrder: Int
         @Published var state: State
-        let avatar: Avatar?
+        @Published var avatar: Avatar
         @Published var title: String
         @Published var subTitle: String
         let topImage: Image?
-        let ammount: String
+        let amount: String
         
         var timer: DeletingTimer?
         
@@ -59,11 +59,11 @@ extension TemplatesListViewModel {
         init(id: Int = 0,
              sortOrder: Int = 0,
              state: TemplatesListViewModel.ItemViewModel.State = .normal,
-             avatar: Avatar? = nil,
+             avatar: Avatar = .placeholder,
              title: String = "",
              subTitle: String = "",
              topImage: Image? = nil,
-             ammount: String = "",
+             amount: String = "",
              tapAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
              deleteAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
              renameAction: @escaping (ItemViewModel.ID) -> Void = { _ in },
@@ -76,7 +76,7 @@ extension TemplatesListViewModel {
             self.title = title
             self.subTitle = subTitle
             self.topImage = topImage
-            self.ammount = ammount
+            self.amount = amount
             self.tapAction = tapAction
             self.deleteAction = deleteAction
             self.renameAction = renameAction
@@ -86,6 +86,7 @@ extension TemplatesListViewModel {
         enum State {
             
             case normal
+            case processing
             case select(ToggleRoundButtonViewModel)
             case delete(ItemActionViewModel)
             case deleting(DeletingProgressViewModel)
@@ -98,11 +99,40 @@ extension TemplatesListViewModel {
                 return viewModel
             }
             
+            var isProcessing: Bool {
+                
+                if case .processing = self { return true }
+                else { return false }
+            }
+            
+            var isDeleting: Bool {
+                
+                if case .deleting = self { return true }
+                else { return false }
+            }
+            
+            var isDeleteProcessing: Bool {
+                
+                if case .deleting(let viewModel) = self, viewModel.progress > 0 {
+                    
+                    return true }
+                else { return false }
+            }
+            
         }
         
         enum Avatar {
             case image(Image)
             case text(String)
+            case placeholder
+            
+            var isPlaceholder: Bool {
+                if case .placeholder = self {
+                    return true
+                } else {
+                    return false
+                }
+            }
         }
         
         struct ToggleRoundButtonViewModel {
@@ -208,23 +238,29 @@ extension TemplatesListViewModel {
                                   amountFormatted: model.amountFormatted(amount:currencyCode:style:))
         else { return nil }
         
-        var avatar: ItemViewModel.Avatar? = nil
+        var avatar: ItemViewModel.Avatar = .placeholder
         var topImage: Image? = nil
         
-        if let phoneNumber = getPhoneNumber(for: data),
-           let contact = model.contact(for: phoneNumber) {
-           
-            if let img = contact.avatar?.image {
-                avatar = .image(img)
-            } else {
-                avatar = .text(contact.initials ?? "")
-            }
+        var mainImage: Image? = nil
+        if let imgData = model.images.value["Template\(data.id)"],
+           let img = imgData.image {
             
-            topImage = data.svgImage.image
+            mainImage = img
+        }
+        
+        if let phoneNumber = getPhoneNumber(for: data),
+           let contact = model.contact(for: phoneNumber),
+           let img = contact.avatar?.image {
+           
+                avatar = .image(img)
+                topImage = mainImage
             
         } else {
             
-            if let image = data.svgImage.image { avatar = .image(image) }
+            if let img = mainImage {
+                
+                avatar = .image(img)
+            }
         }
         
         return .init(id: data.paymentTemplateId,
@@ -233,7 +269,7 @@ extension TemplatesListViewModel {
                      title: data.name,
                      subTitle: data.groupName,
                      topImage: topImage,
-                     ammount: amount,
+                     amount: amount,
                      tapAction: { [weak self] itemId in
                         self?.action.send(TemplatesListViewModelAction.Item.Tapped(itemId: itemId)) },
                      deleteAction: { [weak self] itemId in
@@ -248,7 +284,7 @@ extension TemplatesListViewModel {
                              sortOrder: Int.max,
                              avatar: .image(.ic40Star),
                              title: "Добавить шаблон",
-                             subTitle: "Из любой успешной операции\nв разделе «История»",
+                             subTitle: "Из любой успешной операции в разделе «История»",
                              tapAction: { [weak self] _ in  self?.action.send(TemplatesListViewModelAction.AddTemplateTapped()) },
                              kind: .add)
     }
@@ -319,7 +355,7 @@ extension TemplatesListViewModel {
     func amount(for template: PaymentTemplateData,
                 amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?) -> String? {
         
-        if template.type == .contactAdressless ,
+        if template.type == .contactAdressless,
            let parameterList = template.parameterList.first as? TransferAnywayData,
            let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
            let amount = template.amount {

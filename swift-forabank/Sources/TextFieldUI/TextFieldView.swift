@@ -63,30 +63,29 @@ public struct TextFieldView: UIViewRepresentable {
     
     public func updateUIView(_ textView: UITextView, context: Context) {
         
-        render(textView, for: state, with: textFieldConfig)
-    }
-    
-    private func render(
-        _ textView: UITextView,
-        for state: TextFieldState,
-        with config: TextFieldConfig
-    ) {
         switch state {
         case let .editing(textState):
             textView.text = textState.text
             textView.setCursorPosition(to: textState.cursorPosition)
-            textView.textColor = .init(config.textColor)
-            textView.becomeFirstResponder()
+            textView.textColor = .init(textFieldConfig.textColor)
             
         case let .noFocus(text):
             textView.text = text
-            textView.textColor = .init(config.textColor)
-            textView.resignFirstResponder()
+            textView.textColor = .init(textFieldConfig.textColor)
+            if textView.isFirstResponder {
+                DispatchQueue.main.async { [weak textView] in
+                    textView?.resignFirstResponder()
+                }
+            }
             
         case let .placeholder(placeholderText):
             textView.text = placeholderText
-            textView.textColor = .init(config.placeholderColor)
-            textView.resignFirstResponder()
+            textView.textColor = .init(textFieldConfig.placeholderColor)
+            if textView.isFirstResponder {
+                DispatchQueue.main.async { [weak textView] in
+                    textView?.resignFirstResponder()
+                }
+            }
         }
     }
     
@@ -95,7 +94,6 @@ public struct TextFieldView: UIViewRepresentable {
         coordinator: Coordinator,
         toolbar: ToolbarViewModel
     ) {
-        
         let doneButton = coordinator.makeDoneButton(label: toolbar.doneButton.label)
         let closeButton = toolbar.closeButton.map {
             coordinator.makeCloseButton(label: $0.label)
@@ -127,11 +125,13 @@ extension TextFieldView {
         }
         
         @objc func handleDoneAction() {
-            UIApplication.shared.endEditing()
+            
+            send(.finishEditing)
         }
         
         @objc func handleCloseAction() {
-            UIApplication.shared.endEditing()
+            
+            send(.finishEditing)
         }
         
         // title "Готово"
@@ -184,12 +184,12 @@ extension TextFieldView.Coordinator: UITextViewDelegate {
         
         send(.startEditing)
     }
-    
+        
     public func textViewDidEndEditing(_ textView: UITextView) {
         
         send(.finishEditing)
     }
-    
+        
     public func textView(
         _ textView: UITextView,
         shouldChangeTextIn range: NSRange,

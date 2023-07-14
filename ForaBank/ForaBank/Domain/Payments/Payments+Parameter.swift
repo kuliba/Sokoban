@@ -122,6 +122,7 @@ extension Payments.Parameter {
         case paymentsServiceAmount           = "paymentsServiceAmount"
 
         case p1                              = "P1"
+        case mosParking                      = "MosParking"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -905,6 +906,7 @@ extension Payments {
         let filter: ProductData.Filter
         let isEditable: Bool
         let group: Payments.Parameter.Group?
+        let isAutoContinue: Bool = true
         var productId: ProductData.ID? {
             
             guard let value = value else {
@@ -1043,6 +1045,7 @@ extension Payments {
           enum ActionType {
 
             case scanQrCode
+            case editName(TemplatesListViewModel.RenameTemplateItemViewModel)
           }
        }
         
@@ -1214,7 +1217,7 @@ extension Payments {
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterMock(id: parameter.id, value: value, group: group)
+            ParameterMock(id: parameter.id, value: value, placement: placement, group: group)
         }
     }
 }

@@ -19,7 +19,7 @@ extension ModelAction {
                 
                 let type: Kind
                 
-                enum Kind {
+                enum Kind: Equatable {
                     
                     case documentId(Int)
                     case paymentOperationDetailId(Int)

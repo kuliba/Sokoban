@@ -136,7 +136,7 @@ struct OperationDetailData: Codable, Equatable {
         case meToMeCredit = "ME2ME_CREDIT"
         case meToMeDebit = "ME2ME_DEBIT"
         case mobile = "MOBILE"
-        case oth = "OTH"
+        case other = "OTH"
         case returnOutgoing = "RETURN_OUTGOING"
         case sfp = "SFP"
         case transport = "TRANSPORT"
@@ -149,8 +149,8 @@ struct OperationDetailData: Codable, Equatable {
         case depositClose = "DEPOSIT_CLOSE"
         case accountClose = "ACCOUNT_CLOSE"
         case taxAndStateService = "TAX_AND_STATE_SERVICE"
-        case ctbQrData = "C2B_QR_DATA"
-        case ctbPayment = "C2B_PAYMENT"
+        case c2bQrData = "C2B_QR_DATA"
+        case c2bPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
         case unknown
     }
@@ -312,5 +312,77 @@ struct OperationDetailData: Codable, Equatable {
         case printData = "printDataForOperationDetailResponse"
         case mcc = "MCC"
         case paymentMethod
+    }
+}
+
+extension OperationDetailData {
+    
+    var templateName: String {
+        
+        switch transferEnum {
+        case .transport:
+            return payeeFullName ?? "Транспорт"
+        case .taxAndStateService:
+            return payeeFullName ?? "Налоги и госуслуги"
+        case .accountToAccount, .cardToAccount, .cardToCard:
+            return payeeFullName ?? "Перевод между своими"
+        case .accountToCard:
+            return payeeFullName ?? "Между своими"
+        case .accountToPhone, .cardToPhone:
+            return payeeFullName ?? "Перевод внутри банка"
+        case .contactAddressingCash, .contactAddressless:
+            return payeeFullName ?? "Перевод Contact"
+        case .direct:
+            return payeeFullName ?? "Перевод МИГ"
+        case .elecsnet:
+            return "В другой банк"
+        case .external:
+            return payeeFullName ?? "Перевод по реквизитам"
+        case .housingAndCommunalService:
+            return payeeFullName ?? "ЖКХ"
+        case .internet:
+            return payeeFullName ?? "Интернет и ТВ"
+        case .mobile:
+            return payeeFullName ?? "Мобильная связь"
+        case .sfp:
+            return payeeFullName ?? payeeBankName ?? "Исходящие СБП"
+        case .conversionAccountToAccount:
+            return payeeFullName ?? "Перевод между счетами"
+        case .conversionAccountToCard:
+            return payeeFullName ?? "Перевод со счета на карту"
+        case .conversionCardToAccount:
+            return payeeFullName ?? "Перевод с карты на счет"
+        case .conversionCardToCard:
+            return payeeFullName ?? "Перевод с карты на карту"
+        case .conversionAccountToPhone, .conversionCardToPhone:
+            return payeeFullName ?? payeePhone ?? "Перевод между счетами"
+        default:
+            return payeeFullName ?? "Шаблон по операции"
+        }
+    }
+}
+
+extension OperationDetailData {
+    
+    var restrictedTemplateButton: Bool {
+        
+        switch self.transferEnum {
+        case .interestDeposit,
+             .elecsnet,
+             .depositOpen,
+             .depositClose,
+             .accountClose,
+             .bestToPay,
+             .meToMeCredit,
+             .changeOutgoing,
+             .returnOutgoing,
+             .c2bQrData,
+             .c2bPayment,
+             .bankDef,
+             .other:
+            return false
+        default:
+            return true
+        }
     }
 }

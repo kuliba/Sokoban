@@ -15,39 +15,72 @@ extension ProductView {
     
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
+        @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
+        
         let action: PassthroughSubject<Action, Never> = .init()
-
+        
         let id: ProductData.ID
         let header: HeaderViewModel
-        @Published var name: String
+        @Published var cardInfo: CardInfo
         @Published var footer: FooterViewModel
         @Published var statusAction: StatusActionViewModel?
         @Published var isChecked: Bool
         @Published var isUpdating: Bool
+        
         var appearance: Appearance
         let productType: ProductType
-        
+        let copyCardNumber: (String) -> Void
+        let showCVV: () -> Void
         private var bindings = Set<AnyCancellable>()
+        private let pasteboard = UIPasteboard.general
         
-        internal init(id: ProductData.ID, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, isChecked: Bool = false, appearance: Appearance, isUpdating: Bool, productType: ProductType) {
+        internal init(
+            id: ProductData.ID,
+            header: HeaderViewModel,
+            cardInfo: CardInfo,
+            footer: FooterViewModel,
+            statusAction: StatusActionViewModel?,
+            isChecked: Bool = false,
+            appearance: Appearance,
+            isUpdating: Bool,
+            productType: ProductType,
+            copyCardNumber: @escaping (String) -> Void,
+            showCVV: @escaping () -> Void
+        ) {
             
             self.id = id
             self.header = header
-            self.name = name
+            self.cardInfo = cardInfo
             self.footer = footer
             self.statusAction = statusAction
             self.isChecked = isChecked
             self.appearance = appearance
             self.isUpdating = isUpdating
             self.productType = productType
+            self.copyCardNumber = copyCardNumber
+            self.showCVV = showCVV
         }
-       
+        
         convenience init(with productData: ProductData, isChecked: Bool = false, size: Appearance.Size, style: Appearance.Style, model: Model) {
             
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
+            let numberMasked = Self.maskedValue(
+                productData.numberMasked,
+                replacements: .replacements)
+            
             let period = Self.period(product: productData, style: style)
             let name = Self.name(product: productData, style: style)
+            let owner = Self.owner(from: productData)
+            let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
+            let cardInfo: CardInfo = .init(
+                name: name,
+                owner: owner,
+                cvvTitle: .init(value: cvvTitle),
+                cardWiggle: false,
+                fullNumber: .init(value: productData.number ?? ""),
+                numberMasked: .init(value: numberMasked)
+            )
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
             let backgroundColor = productData.backgroundColor
@@ -55,7 +88,37 @@ extension ProductView {
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
             
-            self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance, interestRate: interestRate), statusAction: statusAction, isChecked: isChecked, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType)
+            self.init(
+                id: productData.id,
+                header: .init(number: number, period: period),
+                cardInfo: cardInfo,
+                footer: .init(balance: balance, interestRate: interestRate),
+                statusAction: statusAction,
+                isChecked: isChecked,
+                appearance: .init(
+                    textColor: textColor,
+                    background: .init(
+                        color: backgroundColor,
+                        image: backgroundImage),
+                    size: size,
+                    style: style
+                ),
+                isUpdating: false,
+                productType: productType,
+                copyCardNumber: { message in
+                    
+                    model.action.send(ModelAction.Informer.Show(
+                        informer: .init(
+                            message: message,
+                            icon: .copy,
+                            type: .copyInfo
+                        )
+                    ))
+                },
+                showCVV: {
+                    //TODO: добавить проверку на необходимость запроса активации после реализации STEP2+STEP3
+                }
+            )
             
             bind()
             bind(statusAction)
@@ -111,10 +174,11 @@ extension ProductView {
                     
                 }).store(in: &bindings)
         }
-
+        
         func update(with productData: ProductData, model: Model) {
             
-            name = Self.name(product: productData, style: appearance.style)
+            cardInfo.name = Self.name(product: productData, style: appearance.style)
+            cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
             
@@ -122,19 +186,16 @@ extension ProductView {
         }
         
         static func rateFormatted(product: ProductData) -> String? {
-                    
-                    var rateValue: String? = nil
-                    
-                    switch product {
-                    case let depositProduct as ProductDepositData:
-                        rateValue = String(format: "%.2f", depositProduct.interestRate) + "%"
-                    default:
-                        break
-                    }
-                    
-                    return rateValue
-                }
-
+            
+            switch product {
+            case let depositProduct as ProductDepositData:
+                return String(format: "%.2f", depositProduct.interestRate) + "%"
+                
+            default:
+                return nil
+            }
+        }
+        
         static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
             
             switch product {
@@ -195,7 +256,6 @@ extension ProductView {
             }
         }
         
-        
         static func name(product: ProductData, style: Appearance.Style) -> String {
             
             switch product {
@@ -219,6 +279,18 @@ extension ProductView {
                 
             default:
                 return product.displayName
+            }
+        }
+        
+        static func owner(from productData: ProductData) -> String {
+            
+            switch productData {
+                
+            case let card as ProductCardData:
+                return card.holderName ?? ""
+                
+            default:
+                return ""
             }
         }
         
@@ -256,7 +328,7 @@ extension ProductView {
             guard let cardProduct = product as? ProductCardData else {
                 return nil
             }
-
+            
             if cardProduct.isActivated == false {
                 
                 return .init(status: .activation(.init(state: .notActivated)))
@@ -279,14 +351,32 @@ extension ProductView {
             case .small: return productData.mediumDesign.image
             }
         }
+        
+        static func maskedValue(_ value: String?, replacements: [(String, String)]) -> String {
+            
+            if let value {
+                
+                return replacements.reduce(value) { string, replacement in
+                    
+                    string.replacingOccurrences(
+                        of: replacement.0,
+                        with: replacement.1
+                    )
+                }
+            }
+            
+            return ""
+        }
     }
 }
 
 //MARK: - Action
 
 enum ProductViewModelAction {
-
+    
     struct ProductDidTapped: Action {}
+    
+    struct OnboardingShow: Action {}
     
     enum CardActivation {
         
@@ -324,7 +414,7 @@ extension ProductView.ViewModel {
     }
     
     class StatusActionViewModel {
-
+        
         let action: PassthroughSubject<Action, Never> = .init()
         
         let status: Status
@@ -423,7 +513,7 @@ extension ProductView.ViewModel {
     }
     
     enum StatusActionViewModelAction {
-    
+        
         enum CardActivation {
             
             struct Started: Action {}
@@ -461,6 +551,93 @@ extension ProductView.ViewModel {
             case profile
         }
     }
+    
+    struct CardInfo: Equatable {
+        
+        var name: String
+        var owner: String
+        
+        let cvvTitle: CVVTitle
+        var cardWiggle: Bool
+        let fullNumber: FullNumber
+        let numberMasked: MaskedNumber
+        var state: State = .showFront
+
+        enum State {
+            
+            case fullNumberMaskedCVV
+            case maskedNumberCVV
+            case maskedNumberMaskedCVV
+            case showFront
+        }
+        
+        struct FullNumber: Equatable {
+            
+            let value: String
+        }
+        
+        struct MaskedNumber: Equatable {
+            
+            let value: String
+        }
+        
+        struct CVV: Equatable {
+            
+            let value: String
+        }
+        
+        struct CVVTitle: Equatable {
+            
+            let value: String
+        }
+        
+        mutating func stateToggle() {
+            
+            switch state {
+                
+            case .showFront:
+                
+                state = .fullNumberMaskedCVV
+                
+            default:
+                
+                state = .showFront
+            }
+        }
+    }
+}
+
+extension ProductView.ViewModel.CardInfo {
+    
+    var numberToDisplay: String {
+        
+        switch state {
+            
+        case .maskedNumberCVV, .maskedNumberMaskedCVV:
+            return numberMasked.value
+            
+        case .fullNumberMaskedCVV, .showFront:
+            return fullNumber.value
+        }
+    }
+    
+    var cvvToDisplay: String {
+        
+        switch state {
+            
+        case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront:
+            return cvvTitle.value
+            
+            //TODO: добавить реальное значение CVV!!!
+        case .maskedNumberCVV:
+            return "111"
+        }
+    }
+    
+    var isShowingCardBack: Bool {
+        
+        return state != .showFront
+    }
 }
 
 extension ProductView.ViewModel {
@@ -478,167 +655,121 @@ extension ProductView.ViewModel {
 
 //MARK: - View
 
+private extension View {
+    
+    func card(
+        viewModel: ProductView.ViewModel,
+        config: ProductView.Config,
+        isFrontView: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        self
+            .modifier(
+                ProductView.CardModifier(
+                    viewModel: viewModel,
+                    isFrontView: isFrontView,
+                    config: config
+                )
+            )
+            .onTapGesture(perform: action)
+    }
+}
+
+private extension View {
+    
+    func animation(
+        isShowingCardBack: Bool,
+        cardWiggle: Bool,
+        opacity: Values,
+        radians: Values
+    ) -> some View {
+        
+        self
+            .modifier(ProductView.FlipOpacity(
+                percentage: isShowingCardBack ? opacity.startValue : opacity.endValue))
+            .rotation3DEffect(
+                .radians(isShowingCardBack ? radians.startValue : radians.endValue),
+                axis: (0,1,0),
+                perspective: 0.1)
+            .rotation3DEffect(
+                .degrees(cardWiggle ? -20 : 0),
+                axis: (0, 1, 0))
+    }
+}
+
 struct ProductView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    var headerPaddingLeading: CGFloat {
-        
-        switch viewModel.appearance.size {
-        case .large: return 43
-        case .normal: return 43
-        case .small: return 29
-        }
-    }
-    
-    var cardPadding: CGFloat {
-        
-        switch viewModel.appearance.size {
-        case .large: return 12
-        case .normal: return 12
-        case .small: return 8
-        }
-    }
-    
-    var nameFont: Font {
-        
-        switch viewModel.appearance.size {
-        case .large: return .textBodyMR14200()
-        case .normal: return .textBodyMR14200()
-        case .small: return .textBodyXSR11140()
-        }
-    }
-    
-    var nameSpacing: CGFloat {
-        
-        switch viewModel.appearance.size {
-        case .large: return 6
-        case .normal: return 6
-        case .small: return 4
-        }
-    }
-    
-    var cornerRadius: CGFloat {
-        
-        switch viewModel.appearance.size {
-        case .large: return 12
-        case .normal: return 12
-        case .small: return 8
-        }
-    }
-    
-    var checkPadding: CGFloat {
-        
-        switch viewModel.appearance.size {
-            
-        case .large: return 10
-        case .normal: return 10
-        case .small: return 8
-        }
-    }
-    
     var body: some View {
         
-        ZStack {
-            
-            VStack(alignment: .leading, spacing: 0) {
+        ProductFrontView(
+            name: $viewModel.cardInfo.name,
+            config: viewModel.config,
+            headerView: {
                 
-                ProductView.HeaderView(
-                    viewModel: viewModel.header,
-                    appearance: viewModel.appearance
+                ProductView.HeaderView.init(config: viewModel.config, header: viewModel.header)
+            },
+            footerView: {
+                
+                ProductView.FooterView.init(config: viewModel.config, footer: $viewModel.footer)
+            })
+        .card(
+            viewModel: viewModel,
+            config: viewModel.config,
+            isFrontView: true,
+            action: viewModel.productDidTapped
+        )
+        .animation(
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: viewModel.cardInfo.cardWiggle,
+            opacity: .init(
+                startValue: 0,
+                endValue: viewModel.appearance.opacity),
+            radians: .init(startValue: .pi, endValue: 2 * .pi)
+        )
+        .animation(
+            .linear(duration: 0.5),
+            value: viewModel.cardInfo.cardWiggle
+        )
+        .onAppear {
+            viewModel.animationAtFisrtShowCard()
+        }
+        .onDisappear {
+            
+            if viewModel.cardInfo.isShowingCardBack {
+                
+                viewModel.productDidTapped()
+            }
+        }
+        
+        ProductBackView(
+            backViewConfig: viewModel.backViewConfig,
+            headerView: {
+                
+                ProductView.HeaderBackView.init(
+                    cardInfo: $viewModel.cardInfo,
+                    action: viewModel.copyCardNumberToClipboard
                 )
-                .padding(.leading, headerPaddingLeading)
-                .padding(.top, viewModel.appearance.size == .small ? 4 : 6.2)
+            },
+            cvvView: {
                 
-                Spacer()
-                
-                VStack(alignment: .leading, spacing: nameSpacing) {
-                    
-                    Text(viewModel.name)
-                        .font(nameFont)
-                        .foregroundColor(viewModel.appearance.textColor)
-                        .opacity(0.5)
-                        .accessibilityIdentifier("productName")
-                    
-                    ProductView.FooterView(
-                        viewModel: viewModel.footer,
-                        appearance: viewModel.appearance
-                    )
-                }
+                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.openCVV)
             }
-            .opacity(viewModel.appearance.opacity)
-            .padding(cardPadding)
-            .background(background())
-            .overlay(checkView(), alignment: .topTrailing)
-            .overlay(statusActionView(), alignment: .center)
-            .overlay(updatingView(), alignment: .center)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .circular))
-        .onTapGesture {
-           
-            viewModel.action.send(ProductViewModelAction.ProductDidTapped())
-        }
-    }
-    
-    @ViewBuilder
-    private func background() -> some View {
-        
-        if let backgroundImage = viewModel.appearance.background.image {
-            
-            backgroundImage
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-            
-        } else {
-            
-            viewModel.appearance.background.color
-        }
-    }
-    
-    @ViewBuilder
-    private func checkView() -> some View {
-        
-        if viewModel.isChecked {
-            
-            CheckView(appearance: viewModel.appearance)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                .padding(checkPadding)
-        }
-    }
-    
-    @ViewBuilder
-    private func statusActionView() -> some View {
-        
-        if let statusActionViewModel = viewModel.statusAction {
-            
-            ProductView.StatusActionView(
-                viewModel: statusActionViewModel,
-                color: viewModel.appearance.textColor,
-                style: viewModel.appearance.style
-            )
-        }
-    }
-    
-    @ViewBuilder
-    private func updatingView() -> some View {
-        
-        if viewModel.isUpdating == true {
-            ZStack {
-                
-                HStack(spacing: 3) {
-                    
-                    ProductView.AnimatedDotView(duration: 0.6, delay: 0)
-                    ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
-                    ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
-                }
-                .zIndex(3)
-                
-                AnimatedGradientView(duration: 3.0)
-                    .blendMode(.colorDodge)
-                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                    .zIndex(4)
-            }
-        }
+        )
+        .card(
+            viewModel: viewModel,
+            config: viewModel.config,
+            isFrontView: false,
+            action: viewModel.productDidTapped
+        )
+        .animation(
+            isShowingCardBack: viewModel.cardInfo.isShowingCardBack,
+            cardWiggle: false,
+            opacity: .init(startValue: viewModel.appearance.opacity, endValue: 0),
+            radians: .init(startValue: 0, endValue: .pi)
+        )
     }
 }
 
@@ -648,38 +779,29 @@ extension ProductView {
     
     struct HeaderView: View {
         
-        let viewModel: ViewModel.HeaderViewModel
-        let appearance: ViewModel.Appearance
-        
-        var textFont: Font {
-            
-            switch appearance.size {
-            case .large: return .textBodySR12160()
-            case .normal: return .textBodySR12160()
-            case .small: return .textBodyXSR11140()
-            }
-        }
-        
+        let config: ProductView.Config
+        let header: ProductView.ViewModel.HeaderViewModel
         var body: some View {
             
             HStack(alignment: .center, spacing: 8) {
                 
-                if let number = viewModel.number {
+                if let number = header.number {
+                    
                     Text(number)
-                        .font(textFont)
-                        .foregroundColor(appearance.textColor)
+                        .font(config.fontConfig.nameFontForHeader)
+                        .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productNumber")
                 }
                 
-                if let period = viewModel.period {
+                if let period = header.period {
                     
                     Rectangle()
                         .frame(width: 1, height: 16)
-                        .foregroundColor(appearance.textColor)
+                        .foregroundColor(config.appearance.textColor)
                     
                     Text(period)
-                        .font(textFont)
-                        .foregroundColor(appearance.textColor)
+                        .font(config.fontConfig.nameFontForHeader)
+                        .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productPeriod")
                 }
             }
@@ -688,37 +810,19 @@ extension ProductView {
     
     struct FooterView: View {
         
-        @ObservedObject var viewModel: ViewModel.FooterViewModel
-        let appearance: ViewModel.Appearance
-        
-        var textFont: Font {
-            
-            switch appearance.size {
-            case .large: return .textBodyMSB14200()
-            case .normal: return .textBodyMSB14200()
-            case .small: return .textBodyXSR11140()
-            }
-        }
-        
-        var paymentSystemIconSize: CGSize {
-            
-            switch appearance.size {
-            case .large: return .init(width: 28, height: 28)
-            case .normal: return .init(width: 28, height: 28)
-            case .small: return .init(width: 20, height: 20)
-            }
-        }
+        let config: ProductView.Config
+        @Binding var footer: ProductView.ViewModel.FooterViewModel
         
         var body: some View {
             
-            if let paymentSystem = viewModel.paymentSystem {
+            if let paymentSystem = footer.paymentSystem {
                 
                 HStack {
                     
-                    Text(viewModel.balance)
-                        .font(textFont)
+                    Text(footer.balance)
+                        .font(config.fontConfig.nameFontForFooter)
                         .fontWeight(.semibold)
-                        .foregroundColor(appearance.textColor)
+                        .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productBalance")
                     
                     Spacer()
@@ -730,8 +834,8 @@ extension ProductView {
                         paymentSystem
                             .renderingMode(.template)
                             .resizable()
-                            .frame(width: paymentSystemIconSize.width, height: paymentSystemIconSize.height)
-                            .foregroundColor(appearance.textColor)
+                            .frame(width: config.sizeConfig.paymentSystemIconSize.width, height: config.sizeConfig.paymentSystemIconSize.height)
+                            .foregroundColor(config.appearance.textColor)
                             .accessibilityIdentifier("productPaymentSystemIcon")
                     }
                 )
@@ -740,14 +844,14 @@ extension ProductView {
                 
                 HStack {
                     
-                    Text(viewModel.balance)
-                        .font(textFont)
+                    Text(footer.balance)
+                        .font(config.fontConfig.nameFontForFooter)
                         .fontWeight(.semibold)
-                        .foregroundColor(appearance.textColor)
+                        .foregroundColor(config.appearance.textColor)
                         .accessibilityIdentifier("productBalance")
                     
                     Spacer()
-                    if let text = viewModel.interestRate {
+                    if let text = footer.interestRate {
                         
                         ZStack {
                             
@@ -812,39 +916,24 @@ extension ProductView {
     
     struct CheckView: View {
         
-        let appearance: ViewModel.Appearance
-        
-        var size: CGSize {
-            
-            switch appearance.size {
-            case .large: return .init(width: 18, height: 18)
-            case .normal: return .init(width: 18, height: 18)
-            case .small: return .init(width: 16, height: 16)
-            }
-        }
-        
-        var imageSize: CGSize {
-            
-            switch appearance.size {
-            case .large: return .init(width: 12, height: 12)
-            case .normal: return .init(width: 12, height: 12)
-            case .small: return .init(width: 10, height: 10)
-            }
-        }
+        let sizeConfig: SizeConfig
         
         var body: some View {
             
             ZStack {
-
+                
                 Circle()
-                    .frame(width: size.width, height: size.height)
+                    .frame(
+                        width: sizeConfig.checkViewSize.width,
+                        height: sizeConfig.checkViewSize.height
+                    )
                     .foregroundColor(.mainColorsBlack.opacity(0.12))
                 
                 Image.ic16Check
                     .resizable()
                     .foregroundColor(.mainColorsWhite)
                     .background(Color.clear)
-                    .frame(width: imageSize.width, height: imageSize.height)
+                    .frame(width: sizeConfig.checkViewImageSize.width, height: sizeConfig.checkViewImageSize.height)
             }
         }
     }
@@ -908,6 +997,163 @@ extension ProductView {
                         isAnimated = true
                     }
                 }
+        }
+    }
+}
+
+//MARK: - Modifiers
+
+extension ProductView {
+    
+    struct FlipOpacity: AnimatableModifier {
+        
+        var percentage: CGFloat = 0
+        
+        var animatableData: CGFloat {
+            get { percentage }
+            set { percentage = newValue }
+        }
+        
+        func body(content: Content) -> some View {
+            content
+                .opacity(percentage.rounded())
+        }
+    }
+}
+
+extension ProductView {
+    
+    struct CardModifier: ViewModifier {
+        
+        @ObservedObject var viewModel: ViewModel
+        
+        let isFrontView: Bool
+        let config: ProductView.Config
+        
+        @ViewBuilder
+        private func checkView() -> some View {
+            
+            if viewModel.isChecked {
+                CheckView(sizeConfig: config.sizeConfig)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .topTrailing
+                    )
+                    .padding(config.cardViewConfig.checkPadding)
+            }
+        }
+        
+        @ViewBuilder
+        private func statusActionView() -> some View {
+            
+            if let statusActionViewModel = viewModel.statusAction {
+                
+                ProductView.StatusActionView(
+                    viewModel: statusActionViewModel,
+                    color: config.appearance.textColor,
+                    style: config.appearance.style
+                )
+            }
+        }
+        
+        @ViewBuilder
+        private func updatingView() -> some View {
+            
+            if viewModel.isUpdating == true {
+                ZStack {
+                    
+                    HStack(spacing: 3) {
+                        
+                        ProductView.AnimatedDotView(duration: 0.6, delay: 0)
+                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
+                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
+                    }
+                    .zIndex(3)
+                    
+                    AnimatedGradientView(duration: 3.0)
+                        .blendMode(.colorDodge)
+                        .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius))
+                        .zIndex(4)
+                }
+            }
+        }
+        
+        @ViewBuilder
+        private func background() -> some View {
+            
+            if isFrontView, let backgroundImage = config.appearance.background.image {
+                
+                backgroundImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                
+            } else {
+                
+                config.appearance.background.color
+            }
+        }
+        
+        func body(content: Content) -> some View {
+            
+            content
+                .padding(config.cardViewConfig.cardPadding)
+                .background(background())
+                .overlay(checkView(), alignment: .topTrailing)
+                .overlay(statusActionView(), alignment: .center)
+                .overlay(updatingView(), alignment: .center)
+                .clipShape(RoundedRectangle(cornerRadius: config.cardViewConfig.cornerRadius, style: .circular))
+        }
+    }
+}
+
+extension ProductView.ViewModel {
+    
+    func productDidTapped() {
+        
+        if productType == .card, appearance.size == .large {
+            withAnimation(.spring(response: 1.0, dampingFraction: 1, blendDuration: 0)) {
+                self.cardInfo.stateToggle()
+            }
+        }
+        action.send(ProductViewModelAction.ProductDidTapped())
+    }
+    
+    func onboardingDidShow() {
+        
+        isNeedOnboardingShow = false
+    }
+    
+    func copyCardNumberToClipboard() {
+        
+        pasteboard.string = self.cardInfo.fullNumber.value
+        self.cardInfo.state = .fullNumberMaskedCVV
+        self.copyCardNumber("Номер карты скопирован")
+    }
+    
+    func openCVV() {
+        
+        self.showCVV()
+        self.cardInfo.state = .maskedNumberCVV
+    }
+    
+    func animationAtFisrtShowCard() {
+        
+        let animationDuration: Double = 0.5
+        
+        let shouldOnBoard = isNeedOnboardingShow
+        && productType == .card
+        && appearance.size == .large
+        
+        if shouldOnBoard {
+            
+            onboardingDidShow()
+            cardInfo.cardWiggle.toggle()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
+                
+                self.cardInfo.cardWiggle.toggle()
+            }
         }
     }
 }
@@ -982,235 +1228,10 @@ struct ProductView_Previews: PreviewProvider {
     }
 }
 
-//MARK: - Preview Content
-
-extension ProductView.ViewModel {
+extension Array where Element == (String, String) {
     
-    static let notActivate = ProductView.ViewModel(
-        id: 0,
-        header: .make(period: nil),
-        name: "Classic",
-        footer: .visa,
-        statusAction: .init(status: .activation(.init(state: .notActivated))),
-        appearance: .whiteSample(),
-        isUpdating: false,
-        productType: .card
-    )
-    
-    static let blocked = blockedCard(id: 1, .whiteSample())
-    static let blockedSmall = blockedCard(id: 11, .whiteSample(.small))
-
-    private static func blockedCard(
-        id: ProductData.ID,
-        _ appearance: Appearance
-    ) -> ProductView.ViewModel {
-        
-        .init(
-            id: id,
-            header: .make(period: nil),
-            name: "Classic",
-            footer: .mastercard,
-            statusAction: .init(status: .unblock),
-            appearance: appearance,
-            isUpdating: false,
-            productType: .card
-        )
-    }
-    
-    static let classic = classicCard(id: 2, .whiteOnRed())
-    static let classicSmall = classicCard(id: 12, .whiteOnRed(.small))
-    
-    private static func classicCard(
-        id: ProductData.ID,
-        _ appearance: Appearance
-    ) -> ProductView.ViewModel {
-        
-        .init(
-            id: id,
-            header: .make(period: nil),
-            name: "Classic",
-            footer: .mastercard,
-            statusAction: nil,
-            appearance: appearance,
-            isUpdating: false,
-            productType: .card
-        )
-    }
-    
-    static let account = ProductView.ViewModel(
-        id: 3,
-        header: .make(period: nil),
-        name: "Текущий зарплатный счет",
-        footer: .mastercard,
-        statusAction: nil,
-        appearance: .whiteRIO(),
-        isUpdating: false,
-        productType: .card
-    )
-    
-    static let accountSmall = ProductView.ViewModel(
-        id: 13,
-        header: .make(period: nil),
-        name: "Текущий зарплатный счет",
-        footer: .mastercard,
-        statusAction: nil,
-        isChecked: true,
-        appearance: .whiteRIO(.small),
-        isUpdating: false,
-        productType: .account
-    )
-    
-    static let notActivateProfile = ProductView.ViewModel(
-        id: 4, header: .make(),
-        name: "Classic",
-        footer: .visa,
-        statusAction: .init(status: .activation(.init(state: .notActivated))),
-        appearance: .init(
-            textColor: .white,
-            background: .infiniteLarge,
-            style: .profile
-        ),
-        isUpdating: false,
-        productType: .deposit
-    )
-    
-    static let blockedProfile = ProductView.ViewModel(
-        id: 5,
-        header: .make(),
-        name: "Classic",
-        footer: .mastercard,
-        statusAction: .init(status: .unblock),
-        appearance: .init(
-            textColor: .white,
-            background: .cardInfinite,
-            style: .profile),
-        isUpdating: false, productType: .card)
-    
-    static let classicProfile = ProductView.ViewModel(
-        id: 6,
-        header: .make(),
-        name: "Classic\nФОРА-Премиум",
-        footer: .mastercard,
-        statusAction: nil,
-        appearance: .whiteRIO(),
-        isUpdating: false,
-        productType: .card
-    )
-    
-    static let accountProfile = ProductView.ViewModel(
-        id: 7,
-        header: .make(),
-        name: "Текущий зарплатный счет",
-        footer: .mastercard,
-        statusAction: nil,
-        appearance: .whiteRIO(),
-        isUpdating: false, productType: .account
-    )
-    
-    static let depositProfile = ProductView.ViewModel(
-        id: 8,
-        header: .make(),
-        name: "Стандарный вклад",
-        footer: .mastercard,
-        statusAction: nil,
-        appearance: .init(
-            textColor: .mainColorsBlackMedium,
-            background: .init(color: .cardRIO, image: Image( "Cover Deposit"))),
-        isUpdating: false,
-        productType: .deposit
-    )
-    
-    static let updating = ProductView.ViewModel(
-        id: 9,
-        header: .make(period: nil),
-        name: "СБЕРЕГАТЕЛЬНЫЙ ОН-ЛАЙН",
-        footer: .visa,
-        statusAction: nil,
-        appearance: .whiteSample(),
-        isUpdating: true,
-        productType: .card
-    )
-}
-
-private extension Image {
-    
-    static let visa: Self = .init("Payment System Visa")
-    static let mastercard: Self = .init("Payment System Mastercard")
-}
-
-private extension ProductView.ViewModel.HeaderViewModel {
-    
-    static func make(period: String? = "12/24") -> Self {
-        .init(logo: .ic24LogoForaColor, number: "7854", period: period)
-    }
-}
-
-private extension ProductView.ViewModel.FooterViewModel {
- 
-    static let visa = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .visa)
-    static let mastercard = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .mastercard)
-}
-
-private extension ProductView.ViewModel.Appearance {
-    
-    static func whiteSample(_ size: Size = .normal) -> Self {
-        
-        .make(
-            textColor: .white,
-            background: .infiniteSample,
-            size: size
-        )
-    }
-    
-    static func whiteOnRed(_ size: Size = .normal) -> Self {
-        
-        .make(
-            textColor: .white,
-            background: .red,
-            size: size
-        )
-    }
-    
-    static func whiteRIO(_ size: Size = .normal) -> Self {
-        
-        .make(
-            textColor: .white,
-            background: .cardRIO,
-            size: size
-        )
-    }
-    
-    static func make(
-        textColor: Color = .white,
-        background: Background = .cardInfinite,
-        opacity: Double = 0.5,
-        size: Size,
-        style: Style = .main
-    ) -> Self {
-        
-        .init(
-            textColor: textColor,
-            background: background,
-            opacity: opacity,
-            size: size,
-            style: style
-        )
-    }
-}
-
-private extension ProductView.ViewModel.Appearance.Background {
-    
-    static let red: Self =          .init(color: .mainColorsRed, image: nil)
-    static let cardRIO: Self =      .init(color: .cardRIO,       image: nil)
-    static let cardInfinite: Self = .init(color: .cardInfinite,  image: nil)
-    
-    static let infiniteSample: Self = .init(
-        color: .cardInfinite,
-        image: Image("Product Background Sample")
-    )
-    
-    static let infiniteLarge: Self = .init(
-        color: .cardInfinite,
-        image: Image("Product Background Large Sample")
-    )
+    static let replacements = [
+        ("X", "*"),
+        ("-", " ")
+    ]
 }

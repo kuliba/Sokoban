@@ -18,21 +18,25 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     @Published var operation: OperationViewModel
     @Published var actionButtons: [ActionButtonViewModel]?
     @Published var featureButtons: [FeatureButtonViewModel]
+    @Published var templateButton: TemplateButtonView.ViewModel?
     @Published var isLoading: Bool
     @Published var sheet: Sheet?
     @Published var fullScreenSheet: FullScreenSheet?
 
-    private let model: Model
+    var templateAction: () -> Void = {}
+    
+    let model: Model
     private var bindings = Set<AnyCancellable>()
     private let animationDuration: Double = 0.5
     private var paymentTemplateId: Int?
     
-    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]? = nil, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
+    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]? = nil, featureButtons: [FeatureButtonViewModel], templateButton: TemplateButtonView.ViewModel?, isLoading: Bool, model: Model = .emptyMock) {
         
         self.id = id
         self.header = header
         self.operation = operation
         self.actionButtons = actionButtons
+        self.templateButton = templateButton
         self.featureButtons = featureButtons
         self.isLoading = isLoading
         self.model = model
@@ -54,7 +58,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         let header = HeaderViewModel(statement: productStatement, model: model)
         let operation = OperationViewModel(productStatement: productStatement, model: model)
         
-        self.init(id: productStatement.id, header: header, operation: operation, featureButtons: [], isLoading: false, model: model)
+        self.init(id: productStatement.id, header: header, operation: operation, featureButtons: [], templateButton: nil, isLoading: false, model: model)
         bind()
 
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
@@ -75,6 +79,18 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.model.action.send(ModelAction.Products.Update.Fast.All())
     }
     
+    func bindTemplateButton(with button: TemplateButtonView.ViewModel) {
+        
+        templateButton?.action
+            .compactMap({ $0 as? TemplateButtonView.ViewModel.ButtonAction })
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                
+                templateAction()
+                
+            }.store(in: &bindings)
+    }
+    
     private func bind() {
         
         model.action
@@ -83,6 +99,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Complete:
+                    
                     guard let statement = model.statement(statementId: id),
                           let documentId = statement.documentId else {
                         return
@@ -91,6 +108,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    
                     guard let statement = model.statement(statementId: id),
                           let documentId = statement.documentId else {
                         return
@@ -103,7 +121,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.isLoading = false
                     }
                     switch payload.result {
-                    case .success(details: let details):
+                    case let .success(details: details):
                         guard let statement = model.statement(statementId: id),
                               let product = model.product(statementId: id) else {
                             return
@@ -111,7 +129,21 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         
                         self.update(with: statement, product: product, operationDetail: details)
                         
+                        guard statement.paymentDetailType != .insideOther,
+                              details.restrictedTemplateButton else {
+                            return
+                        }
+                        
+                        self.templateButton = .init(model: model, operationDetail: details)
+                        if let templateButton = self.templateButton {
+                                
+                            bindTemplateButton(with: templateButton)
+                        }
+                        
                     case let .failure(error):
+                        //MARK: Informer Detail Error
+                        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка получения данных", icon: .check)))
+                        
                         LoggerAgent.shared.log(level: .error, category: .ui, message: "ModelAction.Operation.Detail.Response action error: \(error)")
                     }
                     
@@ -120,6 +152,24 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
             }.store(in: &bindings)
         
+        model.action
+            .compactMap({ $0 as? ModelAction.PaymentTemplate.Delete.Failed })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] payload in
+                //MARK: Informer Detail Error
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось удалить шаблон", icon: .check)))
+                
+            }).store(in: &bindings)
+        
+        model.action
+            .compactMap({ $0 as? ModelAction.PaymentTemplate.Save.Failed })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] payload in
+                //MARK: Informer Detail Error
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось добавить шаблон", icon: .check)))
+                
+            }).store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -127,12 +177,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 switch action {
                 case let payload as OperationDetailViewModelAction.ShowInfo:
                     if #available(iOS 14.5, *) {
-                        sheet = .init(type: .info(payload.viewModel))
+                        sheet = .init(kind: .info(payload.viewModel))
                     }
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
                     if #available(iOS 14.5, *) {
-                        sheet = .init(type: .printForm(payload.viewModel))
+                        sheet = .init(kind: .printForm(payload.viewModel))
                     }
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
@@ -177,9 +227,6 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         switch productStatement.paymentDetailType {
             
         case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes:
-            if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                featureButtonsUpdated.append(templateButtonViewModel)
-            }
             if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
@@ -282,48 +329,6 @@ private extension OperationDetailViewModel {
                 
             }
         })
-    }
-    
-    func templateButtonViewModel(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
-        
-        if let paymentTemplateId = operationDetail.paymentTemplateId {
-                
-                let action = ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [paymentTemplateId])
-                return FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: { [weak self] in self?.model.action.send(action)})
-            
-        } else {
-            
-            guard let name = templateName(with: productStatement, operationDetail: operationDetail) else {
-                return nil
-            }
-            let paymentOperationDetailId = operationDetail.paymentOperationDetailId
-            
-            let action = ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId)
-            return FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: { [weak self] in self?.model.action.send(action)})
-        }
-    }
-    
-    func templateName(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> String? {
-        
-        switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .taxes:
-            return productStatement.merchant
-            
-        case .mobile :
-            return operationDetail.payeePhone
-            
-        case .externalIndivudual, .externalEntity:
-            return operationDetail.payeeFullName
-            
-        case .otherBank:
-            return operationDetail.payeeCardNumber
-            
-        case .transport:
-            return productStatement.merchantNameRus
-            
-        default:
-            return nil
-        }
     }
     
     func actionButtons(with operationDetail: OperationDetailData, statement: ProductStatementData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
@@ -497,7 +502,7 @@ extension OperationDetailViewModel {
     struct Sheet: Identifiable, Equatable {
 
         let id = UUID()
-        let type: Kind
+        let kind: Kind
         
         enum Kind {
             
@@ -505,7 +510,11 @@ extension OperationDetailViewModel {
             case printForm(PrintFormView.ViewModel)
         }
         
-        static func == (lhs: OperationDetailViewModel.Sheet, rhs: OperationDetailViewModel.Sheet) -> Bool {
+        static func == (
+            lhs: OperationDetailViewModel.Sheet,
+            rhs: OperationDetailViewModel.Sheet
+        ) -> Bool {
+            
             lhs.id == rhs.id
         }
     }

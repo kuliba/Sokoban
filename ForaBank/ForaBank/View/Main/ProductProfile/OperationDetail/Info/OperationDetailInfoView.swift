@@ -98,10 +98,8 @@ extension OperationDetailInfoView {
             
             HStack(alignment: .bottom, spacing: 15) {
                 
-                viewModel.iconType?
-                    .resizable()
+                icon()
                     .frame(width: 32, height: 32, alignment: .bottom)
-                    .accessibilityIdentifier("OperationDetailInfoItemIcon")
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
@@ -119,7 +117,19 @@ extension OperationDetailInfoView {
                         .frame(height: 1)
                 }
             }.padding(.init(top: 10, leading: 20, bottom: 10, trailing: 20))
+        }
+
+        @ViewBuilder
+        private func icon() -> some View {
             
+            if let image = viewModel.iconType {
+                image
+                    .resizable()
+                    .accessibilityIdentifier("OperationDetailInfoItemIcon")
+            } else {
+                Color.clear
+                    .accessibilityIdentifier("OperationDetailInfoMissingIcon")
+            }
         }
     }
 
@@ -225,6 +235,6 @@ extension OperationDetailInfoView {
 
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        OperationDetailInfoView(viewModel: .detailMockData)
+        OperationDetailInfoView(viewModel: .detailMockData())
     }
 }

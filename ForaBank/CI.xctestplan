@@ -58,6 +58,27 @@
         "identifier" : "PickerWithPreviewComponentTests",
         "name" : "PickerWithPreviewComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CvvPinTests",
+        "name" : "CvvPinTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
     }
   ],
   "version" : 1

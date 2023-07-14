@@ -17,8 +17,13 @@ extension Model {
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
-            // header
-            let headerParameter = Payments.ParameterHeader(title: "Перевод по номеру телефона", icon: .name("ic24Sbp"))
+            // header              
+            let headerParameter: Payments.ParameterHeader = parameterHeader(
+                source: operation.source,
+                header: .init(
+                    title: "Перевод по номеру телефона",
+                    icon: .name("ic24Sbp"))
+            )
             
             // phone
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue

@@ -21,11 +21,7 @@ extension TextFieldComponent.TextFieldView {
         tintColor: Color = .black,
         textColor: Color
     ) {
-        let toolbar = ToolbarFactory.makeToolbarViewModel(
-            closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
-        )
-        
+
         self.init(
             viewModel: viewModel,
             textFieldConfig: .init(

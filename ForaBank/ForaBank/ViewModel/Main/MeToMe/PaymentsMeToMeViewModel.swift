@@ -22,7 +22,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
         
-    let title: String
+    var title: String
     let mode: Mode
     
     private let model: Model
@@ -61,7 +61,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
         
         let amountViewModel = PaymentsAmountView.ViewModel(mode: mode, model: model)
         
-        self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
+        switch mode {
+        case let .templatePayment(_, title):
+            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: title, mode: mode, state: .normal)
+            
+        default:
+            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
+        }
         
         bind()
     }
@@ -140,8 +146,40 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 switch response.documentStatus {
                                 case .complete:
                                     
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: response) {
-                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                    guard let payerProductId = swapViewModel.productIdFrom,
+                                          let payeeProductId = swapViewModel.productIdTo else {
+                                        return
+                                    }
+                                    
+                                    let meToMePayment = MeToMePayment(
+                                        payerProductId: payerProductId,
+                                        payeeProductId: payeeProductId,
+                                        amount: paymentsAmount.textField.value
+                                    )
+                                    
+                                    switch mode {
+                                    case let .templatePayment(templateId, _):
+                                        
+                                        if let successViewModel = PaymentsSuccessViewModel(
+                                            model,
+                                            mode: modeForSuccessView,
+                                            transferData: response,
+                                            meToMePayment: meToMePayment,
+                                            templateId: templateId
+                                        ) {
+                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                        }
+                                        
+                                    default:
+                                        if let successViewModel = PaymentsSuccessViewModel(
+                                            model,
+                                            mode: modeForSuccessView,
+                                            transferData: response,
+                                            meToMePayment: meToMePayment,
+                                            templateId: nil
+                                        ) {
+                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                        }
                                     }
 
                                 default:
@@ -171,7 +209,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     case let .success(transferData):
                         let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
 
-                        if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, transferData: transferData) {
+                        if let successViewModel = PaymentsSuccessViewModel(
+                            model,
+                            mode: modeForSuccessView,
+                            transferData: transferData,
+                            meToMePayment: nil,
+                            templateId: nil
+                        ) {
                             self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                         }
 
@@ -265,6 +309,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as PaymentsMeToMeAction.Show.ChangeName:
+                    guard case let .templatePayment(templateId, _) = mode else {
+                        return
+                    }
+
+                    renameBottomSheet(
+                        oldName: title,
+                        templateId: templateId
+                    )
+                    
                 case _ as PaymentsMeToMeAction.Show.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
                         return
@@ -500,7 +554,42 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+    func bindRename(
+        rename: TemplatesListViewModel.RenameTemplateItemViewModel
+    ) {
         
+        rename.action
+            .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payload in
+                
+                bottomSheet = nil
+                
+                title = payload.newName
+                model.action.send(ModelAction.PaymentTemplate.Update.Requested
+                    .init(name: payload.newName,
+                          parameterList: nil,
+                          paymentTemplateId: payload.itemId))
+                model.action.send(ModelAction.PaymentTemplate.List.Requested())
+                
+            }.store(in: &bindings)
+    }
+    
+    func renameBottomSheet(
+        oldName: String,
+        templateId: PaymentTemplateData.ID
+    ) {
+        
+        let viewModel = TemplatesListViewModel.RenameTemplateItemViewModel(
+            oldName: oldName,
+            templateID: templateId
+        )
+        
+        self.bottomSheet = .init(type: .rename(viewModel))
+        self.bindRename(rename: viewModel)
+    }
+    
     private func makeInformer(closeAccount: Bool) {
         
         if let productIdFrom = swapViewModel.productIdFrom,
@@ -901,6 +990,7 @@ enum PaymentsMeToMeAction {
     
     enum Show {
         struct PlacesMap: Action {}
+        struct ChangeName: Action {}
     }
     
 }
@@ -909,20 +999,17 @@ enum PaymentsMeToMeAction {
 
 extension PaymentsMeToMeViewModel {
     
-    enum Mode {
+    enum Mode: Equatable {
         
         case general
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
         case makePaymentTo(ProductData, Double)
-        case templatePayment(productFrom: ProductData,
-                             productTo: ProductData,
-                             amount: Double)
+        case templatePayment(PaymentTemplateData.ID, String)
         case makePaymentToDeposite(ProductData, Double)
         case transferDeposit(ProductData, Double)
         case transferAndCloseDeposit(ProductData, Double)
         case demandDeposit
-
 
         var isUserInterractionEnabled: Bool {
             
@@ -944,6 +1031,7 @@ extension PaymentsMeToMeViewModel {
         enum BottomSheetType {
 
             case info(InfoView.ViewModel)
+            case rename(TemplatesListViewModel.RenameTemplateItemViewModel)
         }
     }
     
@@ -957,4 +1045,11 @@ extension PaymentsMeToMeViewModel {
             case placesMap(PlacesViewModel)
         }
     }
+}
+
+struct MeToMePayment: Equatable {
+    
+    let payerProductId: Int
+    let payeeProductId: Int
+    let amount: Double
 }

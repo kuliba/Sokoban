@@ -308,14 +308,7 @@ class MeToMeViewController: UIViewController {
             }
         }
         
-        suggestBank("") { model, error in
-            if error != nil {
-                self.showAlert(with: "Ошибка", and: error ?? "")
-            } else {
-                guard let bankList = model else { return }
-                self.banks = bankList
-            }
-        }
+        self.banks = Model.shared.bankListFullInfo.value.map(\.fullBankInfoList)
     }
     
     private func openSearchBanksVC() {

@@ -59,6 +59,30 @@ extension ModelAction {
             let phone: String
         }
     }
+    
+    enum CVV {
+        
+        enum GetProcessingSessionCode {
+            
+            struct Request: Action {}
+            
+            struct Response: Action {
+                
+                let result: Result
+                
+                enum Result {
+                    
+                    case success(sessionCodeData: ProcessingSessionCodeData)
+                    case failure(message: String)
+                }
+            }
+        }
+        
+        enum Show {
+            
+            struct ActivateCertificateAlertShow: Action {}
+        }
+    }
 }
 
 //MARK: - Helpers
@@ -219,4 +243,43 @@ extension Model {
             }
         }
     }
+    
+    func handleProcessingSessionCodeRequest(_ payload: ModelAction.CVV.GetProcessingSessionCode.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        let command = ServerCommands.RegistrationContoller.GetProcessingSessionCode(token: token)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    self.action.send(ModelAction.CVV.GetProcessingSessionCode.Response(result: .success(sessionCodeData: data)))
+                    
+                default:
+                    if let errorMessage = response.errorMessage {
+                        
+                        self.action.send(ModelAction.CVV.GetProcessingSessionCode.Response(result: .failure(message: errorMessage)))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.CVV.GetProcessingSessionCode.Response(result: .failure(message: self.defaultErrorMessage)))
+                    }
+                    
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.action.send(ModelAction.CVV.GetProcessingSessionCode.Response(result: .failure(message: self.defaultErrorMessage)))
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+
 }

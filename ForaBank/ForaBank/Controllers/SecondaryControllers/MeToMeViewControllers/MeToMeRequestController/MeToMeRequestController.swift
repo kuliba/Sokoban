@@ -155,9 +155,10 @@ class MeToMeRequestController: UIViewController {
     func fillData(model: RequestMeToMeModel) {
         summTransctionField.text = model.amount.currencyFormatter(symbol: "RUB")
         taxTransctionField.text = model.fee.currencyFormatter(symbol: "RUB")
-        bankField.text = model.bank?.rusName ?? ""
-        bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-        labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(model.bank?.rusName ?? "bank") без подтверждения?"
+        let bank = findBank(bankId: model.bank)
+        bankField.text = bank?.memberNameRus ?? ""
+        bankField.imageView.image = bank?.svgImage.uiImage
+        labelSubTitle.text = "Денежные средства будут списываться по вашим запросам из \(bank?.memberNameRus ?? "") без подтверждения?"
         labelSubTitle.isHidden = true
         let cardId = model.userInfo?["cardId"] as? String ?? ""
         let accountId = model.userInfo?["accountId"] as? String ?? ""
@@ -165,6 +166,16 @@ class MeToMeRequestController: UIViewController {
 
             cardFromField.model = cardValue
         }
+    }
+    
+    func findBank(bankId: String?) -> BankData? {
+        
+        guard let bankId else {
+            return nil
+        }
+        
+        let bank = Model.shared.dictionaryBank(for: bankId)
+        return bank
     }
     
     func cards() ->  [UserAllCardsModel] {
@@ -380,13 +391,15 @@ class MeToMeRequestController: UIViewController {
     }
     
     private func createIsOneTimeConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
-        guard let memberID = viewModel?.bank?.memberID else { return }
+        guard let memberID = viewModel?.bank else { return }
         let body = ["bankId": memberID] as [String : AnyObject]
         NetworkManager<CreateIsOneTimeConsentMe2MePullDecodableModel>.addRequest(.createIsOneTimeConsentMe2MePull, [:], body) { model, error in
             if error != nil {
                 completion(error)
             }
-            if model?.statusCode == 0 {
+            if model?.statusCode == 0,
+               model?.errorMessage == nil {
+                
                 completion(nil)
             } else {
                 guard let error = model?.errorMessage else { return }
@@ -396,13 +409,15 @@ class MeToMeRequestController: UIViewController {
     }
     
     private func createPermanentConsentMe2Me(completion: @escaping (_ error: String?) -> () ) {
-        guard let memberID = viewModel?.bank?.memberID else { return }
+        guard let memberID = viewModel?.bank else { return }
         let body = ["bankId": memberID] as [String : AnyObject]
         NetworkManager<CreatePermanentConsentMe2MePullDecodableModel>.addRequest(.createPermanentConsentMe2MePull, [:], body) { model, error in
             if error != nil {
                 completion(error)
             }
-            if model?.statusCode == 0 {
+            if model?.statusCode == 0,
+               model?.errorMessage == nil {
+                
                 completion(nil)
             } else {
                 guard let error = model?.errorMessage else { return }
@@ -414,7 +429,7 @@ class MeToMeRequestController: UIViewController {
     private func createMe2MePullDebit(completion: @escaping (_ error: String?) -> ()) {
         DispatchQueue.main.async {
             guard let viewModel = self.viewModel else { return }
-            guard let bankRecipientID = viewModel.bank?.memberID else { return }
+            guard let bankRecipientID = viewModel.bank else { return }
             guard let card = viewModel.card else { return }
             
             var body = [
@@ -449,7 +464,9 @@ class MeToMeRequestController: UIViewController {
                 if error != nil {
                     completion(error)
                 }
-                if transferModel?.statusCode == 0 {
+                if transferModel?.statusCode == 0,
+                   transferModel?.errorMessage == nil {
+                    
                     NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], [:]) { model, error in
                         self.dismissActivity()
                         if error != nil {

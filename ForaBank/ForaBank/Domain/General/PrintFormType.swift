@@ -25,5 +25,7 @@ enum PrintFormType: String, Codable, Unknownable {
     case c2b
     case closeDeposit
     case closeAccount
+    case returnOutgoing
+    case changeOutgoing
     case unknown
 }

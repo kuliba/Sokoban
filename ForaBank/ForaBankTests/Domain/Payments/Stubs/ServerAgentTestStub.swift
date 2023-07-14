@@ -22,21 +22,29 @@ final class ServerAgentTestStub: ServerAgentProtocol {
     typealias IsSingleService = ServerCommands.TransferController.IsSingleService
     typealias IsSingleServiceResponse = IsSingleService.Response
     
+    typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
+    typealias MosParkingListData = GetMosParkingList.Response.MosParkingListData
+
     private let stubs: [Stub.Case: Stub]
     
     init(_ stubs: [Stub]) {
         
-        self.stubs = stubs.reduce(into: [Stub.Case: Stub]()) { dict, res in
+        self.stubs = stubs.reduce(
+            into: [Stub.Case: Stub]()
+        ) { dict, stub in
             
-            switch res {
+            switch stub {
             case .anywayTransfer:
-                dict[.anywayTransfer] = res
+                dict[.anywayTransfer] = stub
                 
             case .getPhoneInfo:
-                dict[.getPhoneInfo] = res
+                dict[.getPhoneInfo] = stub
                 
             case .isSingleService:
-                dict[.isSingleService] = res
+                dict[.isSingleService] = stub
+                
+            case .mosParking:
+                dict[.mosParking] = stub
             }
         }
     }
@@ -72,16 +80,19 @@ extension ServerAgentTestStub {
         typealias CreateAnywayTransferResult = Result<CreateAnywayTransfer, ServerAgentError>
         typealias GetPhoneInfoResult = Result<GetPhoneInfo, ServerAgentError>
         typealias IsSingleServiceResponseResult = Result<IsSingleService.Response, ServerAgentError>
+        typealias MosParkingResult = Result<GetMosParkingList.Response, ServerAgentError>
         
         case anywayTransfer(CreateAnywayTransferResult)
         case getPhoneInfo(GetPhoneInfoResult)
         case isSingleService(IsSingleServiceResponseResult)
+        case mosParking(MosParkingResult)
         
         enum Case {
             
             case anywayTransfer
             case getPhoneInfo
             case isSingleService
+            case mosParking
         }
     }
 }
@@ -99,6 +110,9 @@ extension ServerAgentTestStub.Stub.Case {
             
         case _ as ServerAgentTestStub.IsSingleService:
             self = .isSingleService
+            
+        case _ as ServerAgentTestStub.GetMosParkingList:
+            self = .mosParking
             
         default:
             
@@ -139,6 +153,20 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for isSingleService in \(result)", code: 0)
+                    completion(.failure(.curruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.curruptedData(error)))
+                return
+            }
+            
+        case let .mosParking(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for mosParking in \(result)", code: 0)
                     completion(.failure(.curruptedData(error)))
                 }
             } catch {

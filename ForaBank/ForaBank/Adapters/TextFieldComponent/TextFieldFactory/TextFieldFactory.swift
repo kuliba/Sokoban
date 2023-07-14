@@ -7,11 +7,51 @@
 
 import Foundation
 import TextFieldComponent
+import UIKit
 
 /// A namespace for factory methods used to create text input field.
 enum TextFieldFactory {}
 
 extension TextFieldFactory {
+    
+    /// Creates a view model for contact text field.
+    static func contactTextField(
+        placeholderText: String,
+        cleanup: @escaping (String) -> String,
+        substitutions: [CountryCodeSubstitution] = [],
+        format: @escaping (String) -> String,
+        keyboardType: KeyboardType = .default,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> RegularFieldViewModel {
+        
+        let initialState = TextFieldState.makeTextFieldState(
+            placeholderText: placeholderText
+        )
+        let reducer = ChangingReducer.contact(
+            placeholderText: placeholderText,
+            cleanup: cleanup,
+            substitutions: substitutions,
+            format: format
+        )
+        let toolbar = ToolbarFactory.makeToolbarViewModel(
+            closeButtonLabel: .image("Close Button"),
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {
+                UIApplication.shared.endEditing()
+            }
+        )
+        
+        return .init(
+            initialState: initialState,
+            reducer: reducer,
+            keyboardType: keyboardType,
+            toolbar: toolbar,
+            scheduler: scheduler
+        )
+    }
     
     /// Creates a view model for general purpose text field.
     static func makeTextField(
@@ -30,7 +70,13 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {
+                UIApplication.shared.endEditing()
+            }
         )
         
         return .init(
@@ -61,7 +107,14 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: .image("Close Button"),
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: {
+                UIApplication.shared.endEditing()
+            },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: {
+                UIApplication.shared.endEditing()
+                
+            }
         )
         
         return .init(
@@ -100,7 +153,9 @@ extension TextFieldFactory {
         )
         let toolbar = ToolbarFactory.makeToolbarViewModel(
             closeButtonLabel: needCloseButton ? .image("Close Button") : nil,
-            doneButtonLabel: .title("Готово")
+            closeButtonAction: { UIApplication.shared.endEditing() },
+            doneButtonLabel: .title("Готово"),
+            doneButtonAction: { UIApplication.shared.endEditing() }
         )
         
         return .init(

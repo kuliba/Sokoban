@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import PickerWithPreviewComponent
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
@@ -109,6 +110,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
+                    guard let product = model.product(productId: payload.productId),
+                          let productProfileViewModel = ProductProfileViewModel(
+                            model,
+                            product: product,
+                            rootView: "\(type(of: self))",
+                            dismissAction: {[weak self] in self?.link = nil })
+                    else { return }
+
+                    productProfileViewModel.rootActions = rootActions
+                    bind(productProfileViewModel)
+                    link = .productProfile(productProfileViewModel)
+                    
+                case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
+                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    })
+                    link = .openDepositsList(openDepositViewModel)
+                    
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value
                     else {return }
@@ -261,6 +280,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                         })
+                        bind(viewModel)
                         link = .template(viewModel)
                         
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
@@ -350,59 +370,46 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
                                 .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
                             
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                            let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+                                titleButtonAction: { [weak self] in
+                                    self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+                                },
+                                navLeadingAction: { [weak self] in
+                                    self?.link = nil },
+                                navTrailingAction: { [weak self] in
+                                    self?.link = nil
+                                    self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                                }
+                            )
+                            let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+                            let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                
-                                let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-                                    titleButtonAction: { [weak self] in
-                                        self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-                                    },
-                                    navLeadingAction: { [weak self] in
-                                        self?.link = nil },
-                                    navTrailingAction: { [weak self] in
-                                        self?.link = nil
-                                        self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+                            let paymentsServicesViewModel = PaymentsServicesViewModel(
+                                searchBar: .withText("Наименование или ИНН"),
+                                navigationBar: navigationBarViewModel,
+                                model: self.model,
+                                latestPayments: latestPayments,
+                                allOperators: operators,
+                                addCompanyAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                                        self?.rootActions?.switchTab(.chat)
                                     }
-                                )
-                                let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-                                let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
-                                
-                                let paymentsServicesViewModel = PaymentsServicesViewModel(
-                                    searchBar: .withText("Наименование или ИНН"),
-                                    navigationBar: navigationBarViewModel,
-                                    model: self.model,
-                                    latestPayments: latestPayments,
-                                    allOperators: operators,
-                                    addCompanyAction: { [weak self] in
-                                        
-                                        self?.link = nil
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                            self?.rootActions?.switchTab(.chat)
-                                        }
-                                        
-                                    },
-                                    requisitesAction: { [weak self] in
-                                        
-                                        self?.link = nil
-                                        self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
-                                    }
-                                )
-                                
-                                self.link = .paymentsServices(paymentsServicesViewModel)
-                            }
+                                    
+                                },
+                                requisitesAction: { [weak self] in
+                                    
+                                    self?.link = nil
+                                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
+                                }
+                            )
+                            
+                            self.link = .paymentsServices(paymentsServicesViewModel)
                             
                         case .transport:
                             
-                            guard let transportPaymentsViewModel = makeTransportPaymentsViewModel()
-                            else { return }
-                            
-                            self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                                
-                                self.link = .transportPayments(transportPaymentsViewModel)
-                            }
+                            bindTransport()
                             
                         case .taxAndStateService:
                             let paymentsViewModel = PaymentsViewModel(category: Payments.Category.taxes, model: model) { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -414,13 +421,86 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                             
                         }
+                        
                     default:
                         break
-                        
                     }
                     
                 }.store(in: &bindings)
         }
+    }
+    
+    private func bindTransport() {
+        
+        let transportPaymentsViewModel = model.makeTransportPaymentsViewModel(
+            type: .transport,
+            handleError: { [weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: $0))
+            }
+        )
+        
+        if let transportPaymentsViewModel {
+            
+            self.link = .transportPayments(transportPaymentsViewModel)
+            
+        } else {
+            
+            self.action.send(PaymentsTransfersViewModelAction.Show.Alert(title: "Ошибка", message: "Ошибка создания транспортных платежей"))
+        }
+    }
+    
+    private func bind(_ templatesListViewModel: TemplatesListViewModel) {
+        
+        templatesListViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
+                            .init(productId: payload.productId))
+                        }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ productProfile: ProductProfileViewModel) {
+        
+        productProfile.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        
+                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile(productId: payload.productId))
+                    }
+                    
+                case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                        
+                        self.action.send(PaymentsTransfersViewModelAction.Show.OpenDeposit())
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
@@ -462,13 +542,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    guard let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                          let productIdTo = viewModel.swapViewModel.productIdTo else {
+                    guard let productIdFrom = viewModel?.swapViewModel.productIdFrom,
+                          let productIdTo = viewModel?.swapViewModel.productIdTo else {
                         return
                     }
                     
@@ -845,25 +925,50 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
 }
 
-//MARK: - Helpers
+// MARK: - Helpers
 
-private extension PaymentsTransfersViewModel {
+extension PaymentsTransfersViewModel {
     
-    // TODO: rename `makeTransportPaymentsViewModel`
-    func makeTransportPaymentsViewModel() -> TransportPaymentsViewModel? {
+    func dismiss() {
         
-        model.makeTransportPaymentsViewModel(
-            type: .transport,
-            navLeadingAction: { [weak self] in
-                
-                self?.link = nil
-            },
-            navTrailingAction: { [weak self] in
-                
-                self?.link = nil
-                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-            }
+        self.link = nil
+    }
+    
+    func openScanner() {
+        
+        self.link = nil
+        self.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+    }
+    
+    func getMosParkingPickerData() async throws -> MosParkingPickerData {
+        
+        let (_, data) = try await model.getMosParkingListData()
+        let (state, options, refillID) = try MosParkingDataMapper.map(data: data)
+        
+        return .init(
+            state: state,
+            options: options,
+            refillID: refillID
         )
+    }
+}
+
+extension Model {
+    
+    func getMosParkingListData() async throws -> (serial: String, data: [MosParkingData]) {
+        
+        guard let token else {
+            
+            throw Payments.Error.notAuthorized
+        }
+        
+        typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
+        typealias MosParkingListData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingListData
+        
+        let command = GetMosParkingList(token: token, serial: nil)
+        let listData: MosParkingListData = try await serverAgent.executeCommand(command: command)
+
+        return (listData.serial, listData.mosParkingList)
     }
 }
 
@@ -871,10 +976,10 @@ private extension Model {
     
     // TODO: rename `makeTransportPaymentsViewModel`
     // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
+    // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
     func makeTransportPaymentsViewModel(
         type: PTSectionPaymentsView.ViewModel.PaymentsType,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
+        handleError: @escaping (String) -> Void
     ) -> TransportPaymentsViewModel? {
         
         guard let anywayOperators = dictionaryAnywayOperators(),
@@ -884,29 +989,30 @@ private extension Model {
         let operators = anywayOperators
             .filter { $0.parentCode == operatorValue.rawValue }
         // TODO: Remove filter after GIBDD & MosParking fix
-            .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
+        // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
             .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
-            .substitutingAvtodors(with: avtodorGroup)
+        // TODO: `replacingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
+            .replacingAvtodors(with: avtodorGroup)
         
-        let lastPaymentsKind = LatestPaymentData.Kind(rawValue: type.rawValue)
-        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(
-            model: self,
-            including: [lastPaymentsKind ?? .unknown]
-        )
-        
-        let navigationBarViewModel = NavigationBarView.ViewModel.with(
-            title: "Транспорт",
-            navLeadingAction: navLeadingAction,
-            navTrailingAction: navTrailingAction
-        )
+        let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
         
         return .init(
             operators: operators,
             latestPayments: latestPayments,
-            navigationBar: navigationBarViewModel,
-            makePaymentsViewModel: makePaymentsViewModel(source:)
+            makePaymentsViewModel: makePaymentsViewModel(source:),
+            handleError: handleError
         )
+    }
+    
+    func makeLatestPaymentsSectionViewModel(
+        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> PaymentsServicesLatestPaymentsSectionViewModel {
+        
+        let kind = LatestPaymentData.Kind(rawValue: type.rawValue)
+        let including = Set([kind].compactMap { $0 })
+        
+        return .init(model: self, including: including)
     }
 }
 
@@ -965,7 +1071,7 @@ extension NavigationBarView.ViewModel {
 
 extension Array where Element == OperatorGroupData.OperatorData {
     
-    func substitutingAvtodors(
+    func replacingAvtodors(
         with avtodor: OperatorGroupData.OperatorData?
     ) -> Self {
         
@@ -973,16 +1079,16 @@ extension Array where Element == OperatorGroupData.OperatorData {
         
         var copy = self
 
-        copy.removeAll { $0.synonymList == [INNs.avtodor] }
+        copy.removeAll { $0.synonymList == [TaxCodes.avtodor] }
         copy.insert(avtodor, at: 0)
         
         return copy
     }
 }
 
-extension Model {
+private extension Model {
     
-    fileprivate var avtodorGroup: OperatorGroupData.OperatorData? {
+    var avtodorGroup: OperatorGroupData.OperatorData? {
         
         guard let avtodorContract = dictionaryAnywayOperator(for: Purefs.avtodorContract)
         else { return nil }
@@ -992,7 +1098,7 @@ extension Model {
             code: Purefs.avtodorGroup,
             isGroup: true,
             logotypeList: avtodorContract.logotypeList,
-            name: "Автодор Платные дороги",
+            name: .avtodorGroupTitle,
             parameterList: avtodorContract.parameterList,
             parentCode: Purefs.transport,
             region: avtodorContract.region,
@@ -1006,21 +1112,13 @@ extension PaymentsTransfersViewModel {
     func handle(latestPayment: LatestPaymentData) {
         
         switch (latestPayment.type, latestPayment) {
-        //TODO: move case transport after refactoring
-        case (.transport, let paymentData as PaymentServiceData):
-            let operatorsViewModel = OperatorsViewModel(mode: .general, paymentServiceData: paymentData, model: model, closeAction: { [weak self] in
-                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-            }, requisitsViewAction: {}, qrAction: { [weak self] in
-                
-                self?.link = nil
-            })
-            link = .transport(operatorsViewModel)
-            
+       
         case (.internet, let paymentData),
             (.service, let paymentData),
             (.mobile, let paymentData),
             (.outside, let paymentData),
-            (.phone, let paymentData):
+            (.phone, let paymentData),
+            (.transport, let paymentData):
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
@@ -1139,6 +1237,9 @@ extension PaymentsTransfersViewModel {
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case transportPayments(TransportPaymentsViewModel)
+        case productProfile(ProductProfileViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
+        case openDepositsList(OpenDepositViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -1188,6 +1289,11 @@ enum PaymentsTransfersViewModelAction {
     
     enum Show {
         
+        struct ProductProfile: Action {
+            
+            let productId: ProductData.ID
+        }
+        
         struct Alert: Action {
             
             let title: String
@@ -1207,6 +1313,8 @@ enum PaymentsTransfersViewModelAction {
         struct Contacts: Action {}
         
         struct Countries: Action {}
+        
+        struct OpenDeposit: Action {}
     }
     
     struct ViewDidApear: Action {}

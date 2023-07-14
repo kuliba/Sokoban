@@ -46,18 +46,20 @@ public extension ToolbarFactory {
     
     static func makeToolbarViewModel(
         closeButtonLabel: ToolbarViewModel.ButtonViewModel.Label? = nil,
-        doneButtonLabel: ToolbarViewModel.ButtonViewModel.Label
+        closeButtonAction: @escaping () -> Void,
+        doneButtonLabel: ToolbarViewModel.ButtonViewModel.Label,
+        doneButtonAction: @escaping () -> Void
     ) -> ToolbarViewModel {
         
         return .init(
             doneButton: .init(
                 label: doneButtonLabel,
-                action: { UIApplication.shared.endEditing() }
+                action: doneButtonAction
             ),
             closeButton: closeButtonLabel.map {
                 .init(
                     label: $0,
-                    action: { UIApplication.shared.endEditing() }
+                    action: closeButtonAction
                 )
             }
         )

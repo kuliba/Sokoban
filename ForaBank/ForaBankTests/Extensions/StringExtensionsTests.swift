@@ -110,4 +110,58 @@ class StringExtensionsTests: XCTestCase {
         // then
         XCTAssertTrue(result)
     }
+    
+    func test_formatted_defaultValue_Equal() {
+        
+        // given
+        let cardNumberValue = "1234123467898990"
+        
+        // when
+        let result = cardNumberValue.formatted()
+        
+        // then
+        XCTAssertEqual(result, "1234 1234 6789 8990")
+    }
+    
+    func test_formatted_defaultValue_NotEqual() {
+        
+        // given
+        let cardNumberValue = "1234123467898990"
+        
+        // when
+        let result = cardNumberValue.formatted()
+        
+        // then
+        XCTAssertNotEqual(result, "1234 1234 67898990")
+    }
+    
+    func test_formatted_customValue_Equal() {
+        
+        // given
+        let cardNumberValue = "1234123467898990"
+        
+        // when
+        let result = cardNumberValue.formatted(
+            withChunkSize: 3,
+            withSeparator: "*"
+        )
+        
+        // then
+        XCTAssertEqual(result, "123*412*346*789*899*0")
+    }
+    
+    func test_formatted_customValue_NotEqual() {
+        
+        // given
+        let cardNumberValue = "1234123467898990"
+        
+        // when
+        let result = cardNumberValue.formatted(
+            withChunkSize: 3,
+            withSeparator: "/"
+        )
+        
+        // then
+        XCTAssertNotEqual(result, "1234 1234 67898990")
+    }
 }

@@ -73,8 +73,7 @@ class Model {
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     let paymentTemplatesUpdating: CurrentValueSubject<Bool, Never>
     let productTemplates: CurrentValueSubject<[ProductTemplateData], Never>
-    //TODO: move to settings agent
-    let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
+ 
     
     //MARK: LatestAllPayments
     let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
@@ -189,7 +188,6 @@ class Model {
         self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesUpdating = .init(false)
-        self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.latestPaymentsUpdating = .init(false)
         self.paymentsByPhone = .init([:])
@@ -365,6 +363,8 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Start.Request")
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
+                    self.action.send(ModelAction.Settings.ResetProfileOnboardSettings())
+
                     self.action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case _ as SessionAgentAction.Session.Extend:
@@ -444,12 +444,14 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent SessionAgentAction.App.Activated")
                     sessionAgent.action.send(SessionAgentAction.App.Activated())
                     
-                    if auth.value == .authorized, let deepLinkType = deepLinkType {
+                    if auth.value == .authorized,
+                       let deepLinkType = deepLinkType {
                         
                         self.action.send(ModelAction.DeepLink.Process(type: deepLinkType))
                     }
                     
-                    if auth.value == .authorized, let notification = notificationsTransition {
+                    if auth.value == .authorized,
+                       let notification = notificationsTransition {
                         
                         self.action.send(ModelAction.Notification.Transition.Process(transition: notification))
                     }
@@ -548,6 +550,11 @@ class Model {
                     
                 case let payload as ModelAction.Auth.VerifyPhone.Request:
                     handleVerifyPhoneRequest(payload)
+                    
+        //MARK: - CVV Actions
+                    
+                case let payload as ModelAction.CVV.GetProcessingSessionCode.Request:
+                    handleProcessingSessionCodeRequest(payload)
                     
         //MARK: - Products Actions
                     
@@ -714,7 +721,10 @@ class Model {
                     
                 case _ as ModelAction.Settings.ApplicationSettings.Request:
                     handleAppSettingsRequest()
-                    
+               
+                case _ as ModelAction.Settings.ResetProfileOnboardSettings:
+                    handleResetProfileOnboardingSettings()
+
                     //MARK: - BankClients
                 
                 case let payload as ModelAction.BankClient.Request:
@@ -1366,7 +1376,6 @@ private extension Model {
         statements.value = [:]
         statementsUpdating.value = [:]
         paymentTemplates.value = []
-        paymentTemplatesViewSettings.value = .initial
         latestPayments.value = []
         latestPaymentsUpdating.value = false
         notifications.value = []

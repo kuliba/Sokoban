@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 //MARK: - Actions
 
@@ -14,6 +15,8 @@ extension ModelAction {
     enum Settings {
         
         struct GetUserSettings: Action {}
+        
+        struct ResetProfileOnboardSettings: Action {}
         
         struct UpdateUserSettingPush: Action {
 
@@ -78,6 +81,19 @@ extension Model {
         
     }
     
+    var settingsPaymentTemplates: PaymentTemplatesSettings {
+        
+        do {
+    
+            let settings: PaymentTemplatesSettings = try settingsAgent.load(type: .interface(.paymentTemplates))
+            return settings
+        
+        } catch {
+            
+            return PaymentTemplatesSettings(style: .list)
+        }
+    }
+    
     var settingsProductsSections: ProductsSectionsSettings {
         
         do {
@@ -114,6 +130,18 @@ extension Model {
         } catch {
             
             LoggerAgent.shared.log(level: .error, category: .model, message: "Updating MainSectionsSettings failed with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func settingsPaymentTemplatesUpdate(_ settings: PaymentTemplatesSettings) {
+        
+        do {
+            
+            try settingsAgent.store(settings, type: .interface(.paymentTemplates))
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Updating PaymentTemplatesSettings failed with error: \(error.localizedDescription)")
         }
     }
     
@@ -299,6 +327,12 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
             }
         }
+    }
+    
+    func handleResetProfileOnboardingSettings() {
+                
+        @AppStorage(.isNeedOnboardingShow) var value: Bool = true
+        value = true
     }
     
     static func reduceSettings(userSettings: [UserSettingData], data: UserSettingData) -> [UserSettingData] {

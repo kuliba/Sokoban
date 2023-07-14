@@ -219,7 +219,16 @@ extension ProductProfileCardView {
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Failed())
                             self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
                         }
-                        
+                    case let payload as ModelAction.CVV.GetProcessingSessionCode.Response:
+                        switch payload.result {
+                        case .success:
+                           //TODO: реализовать Step2+Step3
+                            print("")
+                        case .failure(message: let message):
+                            self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
+                        }
+
+
                     default:
                         break
                     }
@@ -257,7 +266,7 @@ extension ProductProfileCardView {
                             return
                         }
                         model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
-                        
+                    
                     default:
                         break
                     }

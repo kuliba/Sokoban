@@ -130,11 +130,22 @@ struct PaymentsTransfersView: View {
                         PaymentsServicesOperatorsView(viewModel: viewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
-
+                        
                     case let .transportPayments(transportPaymentsViewModel):
-                        TransportPaymentsView(viewModel: transportPaymentsViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
+                        
+                        transportPaymentsView(
+                            viewModel: viewModel,
+                            transportPaymentsViewModel: transportPaymentsViewModel
+                        )
+                        
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                        
+                    case .openDeposit(let depositListViewModel):
+                        OpenDepositDetailView(viewModel: depositListViewModel)
+                        
+                    case .openDepositsList(let openDepositViewModel):
+                        OpenDepositView(viewModel: openDepositViewModel)
                     }
                 }
             }
@@ -229,6 +240,52 @@ struct PaymentsTransfersView: View {
         })
         
         .tabBar(isHidden: $viewModel.isTabBarHidden)
+    }
+    
+    private func transportPaymentsView(
+        viewModel: PaymentsTransfersViewModel,
+        transportPaymentsViewModel: TransportPaymentsViewModel
+    ) -> some View {
+        
+        TransportPaymentsView(viewModel: transportPaymentsViewModel) {
+            
+            MosParkingView(
+                viewModel: .init(
+                    operation: viewModel.getMosParkingPickerData
+                ),
+                stateView: { state in
+                    
+                    MosParkingStateView(
+                        state: state,
+                        mapper: DefaultMosParkingPickerDataMapper(select: transportPaymentsViewModel.selectMosParkingID(id:)),
+                        errorView: {
+                            Text($0.localizedDescription).foregroundColor(.red)
+                        }
+                    )
+                }
+            )
+            // TODO: fix navigation bar
+            // .navigationBar(
+            //     with: .init(
+            //         title: "Московский паркинг",
+            //         rightItems: [
+            //             NavigationBarView.ViewModel.IconItemViewModel(
+            //                 icon: .init("ic40Transport"),
+            //                 style: .large
+            //             )
+            //         ]
+            //     )
+            // )
+        }
+        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBar(
+            with: .with(
+                title: "Транспорт",
+                navLeadingAction: viewModel.dismiss,
+                navTrailingAction: viewModel.openScanner
+            )
+        )
     }
 }
 

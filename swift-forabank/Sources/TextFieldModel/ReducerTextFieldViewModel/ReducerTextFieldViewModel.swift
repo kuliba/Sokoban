@@ -77,5 +77,3 @@ public extension ReducerTextFieldViewModel {
         reduce(.setTextTo(text))
     }
 }
-
-extension TransformingReducer: Reducer {}

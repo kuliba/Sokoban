@@ -131,6 +131,11 @@ extension Model {
     
     func paymentsTransferStepRequired(_ operation: Payments.Operation, visible: [Payments.Parameter.ID], nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], restrictedParameters: [Payments.Parameter.ID]) throws -> [Payments.Parameter.ID] {
         
-        nextStepParameters.filter({ visible.contains($0.id) && !restrictedParameters.contains($0.id) }).map({ $0.id })
+        nextStepParameters
+            .filter {
+                visible.contains($0.id)
+                && !restrictedParameters.contains($0.id)
+            }
+            .map(\.id)
     }
 }

@@ -8,7 +8,7 @@
 public extension TransformingReducer {
     
     /// Create Text State `Reducer` with `contact` transformer.
-    static func contacts(
+    static func contact(
         placeholderText: String,
         substitutions: [CountryCodeSubstitution],
         format: @escaping (String) -> String

@@ -9,7 +9,10 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .cvvPin,
+        .loadableResourceComponent,
         .pickerWithPreviewComponent,
+        .pinCodeUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldModel,
@@ -21,8 +24,13 @@ let package = Package(
         .customDump,
     ],
     targets: [
+        .cvvPin,
+        .cvvPinTests,
+        .loadableResourceComponent,
+        .loadableResourceComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
+        .pinCodeUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -31,6 +39,7 @@ let package = Package(
         .textFieldModel,
         .textFieldModelTests,
         .textFieldUI,
+        .textFieldUITests,
         .uiKitHelpers,
         .wipTests,
         .userModel,
@@ -40,10 +49,31 @@ let package = Package(
 
 private extension Product {
     
+    static let cvvPin = library(
+        name: .cvvPin,
+        targets: [
+            .cvvPin,
+        ]
+    )
+
+    static let loadableResourceComponent = library(
+        name: .loadableResourceComponent,
+        targets: [
+            .loadableResourceComponent,
+        ]
+    )
+
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
             .pickerWithPreviewComponent,
+        ]
+    )
+
+    static let pinCodeUI = library(
+        name: .pinCodeUI,
+        targets: [
+            .pinCodeUI,
         ]
     )
 
@@ -85,6 +115,42 @@ private extension Product {
 
 private extension Target {
     
+    static let cvvPin = target(
+        name: .cvvPin,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let cvvPinTests = testTarget(
+        name: .cvvPinTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .cvvPin,
+        ]
+    )
+
+    static let loadableResourceComponent = target(
+        name: .loadableResourceComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableResourceComponentTests = testTarget(
+        name: .loadableResourceComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableResourceComponent,
+        ]
+    )
+
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
@@ -98,6 +164,10 @@ private extension Target {
         ]
     )
 
+    static let pinCodeUI = target(
+        name: .pinCodeUI
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -161,10 +231,11 @@ private extension Target {
             .uiKitHelpers,
         ]
     )
-    static let textFieldUITests = target(
+    static let textFieldUITests = testTarget(
         name: .textFieldUITests,
         dependencies: [
             .customDump,
+            .textFieldDomain,
             .textFieldUI,
         ]
     )
@@ -194,19 +265,30 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let cvvPin = byName(
+        name: .cvvPin
+    )
+    
+    static let loadableResourceComponent = byName(
+        name: .loadableResourceComponent
+    )
+    
     static let pickerWithPreviewComponent = byName(
         name: .pickerWithPreviewComponent
     )
-
+    
     static let textFieldComponent = byName(
         name: .textFieldComponent
     )
+    
     static let textFieldDomain = byName(
         name: .textFieldDomain
     )
+    
     static let textFieldModel = byName(
         name: .textFieldModel
     )
+    
     static let textFieldUI = byName(
         name: .textFieldUI
     )
@@ -222,8 +304,16 @@ private extension Target.Dependency {
 
 private extension String {
     
+    static let cvvPin = "CvvPin"
+    static let cvvPinTests = "CvvPinTests"
+    
+    static let loadableResourceComponent = "LoadableResourceComponent"
+    static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
+    
+    static let pinCodeUI = "PinCodeUI"
     
     static let searchBarComponent = "SearchBarComponent"
     
