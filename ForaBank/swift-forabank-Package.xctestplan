@@ -84,6 +84,14 @@
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
       }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
     }
   ],
   "version" : 1

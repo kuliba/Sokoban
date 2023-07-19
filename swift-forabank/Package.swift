@@ -31,6 +31,7 @@ let package = Package(
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
+        .pinCodeUITests,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -167,7 +168,13 @@ private extension Target {
     static let pinCodeUI = target(
         name: .pinCodeUI
     )
-    
+    static let pinCodeUITests = testTarget(
+        name: .pinCodeUITests,
+        dependencies: [
+            .pinCodeUI,
+        ]
+    )
+
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -277,6 +284,10 @@ private extension Target.Dependency {
         name: .pickerWithPreviewComponent
     )
     
+    static let pinCodeUI = byName(
+        name: .pinCodeUI
+    )
+
     static let textFieldComponent = byName(
         name: .textFieldComponent
     )
@@ -314,7 +325,8 @@ private extension String {
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
     static let pinCodeUI = "PinCodeUI"
-    
+    static let pinCodeUITests = "PinCodeUITests"
+
     static let searchBarComponent = "SearchBarComponent"
     
     static let textFieldComponent = "TextFieldComponent"

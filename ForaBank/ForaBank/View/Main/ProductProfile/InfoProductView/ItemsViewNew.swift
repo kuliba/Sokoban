@@ -41,7 +41,6 @@ struct ItemsViewNew: View {
             .padding(.horizontal, 16)
         }
         .padding(.horizontal, 16)
-        .padding(.top, -16)
     }
 }
 

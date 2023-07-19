@@ -16,7 +16,7 @@ struct ProductProfileView: View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
     }
-
+    
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -60,7 +60,7 @@ struct ProductProfileView: View {
                                 .padding(.horizontal, 20)
                             
                             if let detailAccount = viewModel.detail {
-
+                                
                                 ProductProfileDetailView(viewModel: detailAccount)
                                     .padding(.horizontal, 20)
                             }
@@ -78,7 +78,7 @@ struct ProductProfileView: View {
                     
                     Color.clear
                         .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-           
+                    
                 })
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
@@ -95,6 +95,14 @@ struct ProductProfileView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
+                    case .changePin(let pinCodeViewModel):
+                        PinCodeChangeView(
+                            viewModel: pinCodeViewModel
+                        )
+                        .edgesIgnoringSafeArea(.bottom)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationBarTitle("")
+                        
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
                             .edgesIgnoringSafeArea(.bottom)
@@ -125,7 +133,7 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-
+            
             if let closeAccountSpinner = viewModel.closeAccountSpinner {
                 CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }
@@ -142,7 +150,7 @@ struct ProductProfileView: View {
             Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
                     PaymentsSuccessView(viewModel: successViewModel.viewModel)
-
+                    
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
                 }
@@ -161,7 +169,7 @@ struct ProductProfileView: View {
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
-
+                
             case let .placesMap(placesViewModel):
                 PlacesView(viewModel: placesViewModel)
             }
@@ -186,13 +194,13 @@ struct ProductProfileView: View {
             case let .meToMe(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
                     .fullScreenCover(item: $viewModel.success) { successViewModel in
-
+                        
                         PaymentsSuccessView(viewModel: successViewModel)
-
+                        
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
-                                
+                
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
                 
@@ -250,7 +258,7 @@ extension ProductProfileViewModel {
 }
 
 extension NavigationBarView.ViewModel {
-
+    
     static let sampleNoActionButton = NavigationBarView.ViewModel(
         title: "Platinum", subtitle: "· 4329",
         leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],

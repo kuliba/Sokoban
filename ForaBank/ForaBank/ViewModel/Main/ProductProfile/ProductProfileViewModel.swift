@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 import PDFKit
+import PinCodeUI
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -763,15 +764,10 @@ private extension ProductProfileViewModel {
                             guard let productCard = productData as? ProductCardData else {
                                 return
                             }
-                            
-                            if productCard.isBlocked {
-                                
-                                self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
-                                
-                            } else {
-                                
-                                self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
-                            }
+
+                            let buttonType: ProductProfileOptionsPannelView.ViewModel.ButtonType = productCard.isBlocked ? .card(.unblock) : .card(.block)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [buttonType, .card(.changePin)], productType: product.productType)
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         case .account:
                             
@@ -996,6 +992,34 @@ private extension ProductProfileViewModel {
                             
                             if let productData = productData as? ProductAccountData {
                                 self.openLinkURL(productData.detailedConditionUrl)
+                            }
+                          
+                        case let .card(type):
+                            
+                            switch type {
+                                
+                            case .block:
+                                
+                                if let productCard = productData as? ProductCardData {
+                                    
+                                    self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
+                                }
+                                
+                            case .unblock:
+                                
+                                if let productCard = productData as? ProductCardData {
+                                    
+                                    self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
+                                }
+                                
+                            case .changePin:
+                                
+                                if let productCard = productData as? ProductCardData {
+                                    
+                                    let pinCodeViewModel = self.createPinCodeViewModel(displayNumber: productCard.displayNumber)
+                                    
+                                    self.link = .changePin(pinCodeViewModel)
+                                }
                             }
                         }
                         
@@ -1351,6 +1375,34 @@ private extension ProductProfileViewModel {
         )
         self.alert = .init(alertViewModel)
     }
+    
+    func createPinCodeViewModel(displayNumber: String?) -> PinCodeViewModel {
+        
+        let buttonConfig: ButtonConfig = .init(
+            font: .textH1R24322(),
+            textColor: .textSecondary,
+            buttonColor: .mainColorsGrayLightest
+        )
+        
+        let pinConfig: PinCodeView.PinCodeConfig = .init(
+            font: .textH4M16240(),
+            foregroundColor: .textSecondary,
+            colorsForPin: .init(
+                normal: .mainColorsGrayMedium,
+                incorrect: .systemColorError,
+                correct: .systemColorActive,
+                printing: .mainColorsBlack)
+        )
+        
+        return .init(
+            title: "Введите новый PIN-код для\nкарты *\(displayNumber ?? "")",
+            pincodeLength: 4,
+            config: .init(
+                buttonConfig: buttonConfig,
+                pinCodeConfig: pinConfig
+            )
+        )
+    }
 }
 
 //MARK: - Types
@@ -1390,6 +1442,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
+        case changePin(PinCodeViewModel)
     }
     
     struct Sheet: Identifiable {

@@ -20,11 +20,12 @@ struct ItemView: View {
             if let image = item.icon {
                 
                 image
+                    .renderingMode(.template)
+                    .foregroundColor(.textPlaceholder)
                     .frame(width: 24, height: 24, alignment: .center)
                     .onTapGesture {
                         
                         item.actionForIcon()
-                        
                     }
             }
         }
