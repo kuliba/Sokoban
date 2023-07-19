@@ -23,7 +23,7 @@ struct InfoProductView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack {
+                VStack(spacing: 20) {
                     
                     if !viewModel.list.isEmpty {
                         
@@ -48,7 +48,6 @@ struct InfoProductView: View {
                             showCheckbox: viewModel.needShowCheckbox,
                             isCheck: $viewModel.cardInfoSelected
                         )
-                        .padding(.top, 20)
                     }
                 }
                 .padding(.top, 20)
@@ -58,14 +57,16 @@ struct InfoProductView: View {
                 Button(action: buttonViewModel.action) {
                     
                     Text(buttonViewModel.title)
+                        .font(.textH3M18240())
                         .frame (height: 48,
                                 alignment: .center)
                         .frame(maxWidth:.infinity)
                         .padding(.leading, 16)
                         .padding(.trailing, 15)
                 }
+                .frame(height: 56, alignment: .center)
                 .background(Color.mainColorsGrayLightest)
-                .cornerRadius(8)
+                .cornerRadius(12)
                 .foregroundColor(buttonForegroundColor)
                 .padding()
                 .disabled(viewModel.isDisableShareButton)
@@ -81,11 +82,11 @@ struct InfoProductView: View {
             isPresented: $viewModel.isShareViewPresented,
             onDismiss: viewModel.hideCheckBox,
             content: {
-            
-            ActivityView(viewModel: .init(
-                activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
-            )
-        })
+                
+                ActivityView(viewModel: .init(
+                    activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
+                )
+            })
         .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
             if let sendAll = viewModel.sendAllButtonVM,
                let sendSelected = viewModel.sendSelectedButtonVM {
@@ -121,9 +122,8 @@ struct InfoProductView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 HStack {
-                    Image("back_button")
-                        .aspectRatio(contentMode: .fit)
-                }
+                    Image.ic24ChevronLeft
+                    .frame(width: 24, height: 24)                }
             }
         }
     }
