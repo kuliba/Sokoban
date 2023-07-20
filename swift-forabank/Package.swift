@@ -10,6 +10,7 @@ let package = Package(
     ],
     products: [
         .cvvPin,
+        .landingComponents,
         .loadableResourceComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -26,6 +27,7 @@ let package = Package(
     targets: [
         .cvvPin,
         .cvvPinTests,
+        .landingComponents,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
         .pickerWithPreviewComponent,
@@ -56,6 +58,13 @@ private extension Product {
         ]
     )
 
+    static let landingComponents = library(
+        name: .landingComponents,
+        targets: [
+            .landingComponents,
+        ]
+    )
+    
     static let loadableResourceComponent = library(
         name: .loadableResourceComponent,
         targets: [
@@ -133,6 +142,11 @@ private extension Target {
         ]
     )
 
+    static let landingComponents = target(
+        name: .landingComponents,
+        dependencies: []
+    )
+    
     static let loadableResourceComponent = target(
         name: .loadableResourceComponent,
         dependencies: [
@@ -269,6 +283,10 @@ private extension Target.Dependency {
         name: .cvvPin
     )
     
+    static let landingComponents = byName(
+        name: .landingComponents
+    )
+    
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
     )
@@ -306,6 +324,8 @@ private extension String {
     
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
+    
+    static let landingComponents = "landingComponents"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
