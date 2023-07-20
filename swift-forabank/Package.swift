@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .cvvPin,
         .loadableResourceComponent,
+        .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .searchBarComponent,
@@ -28,6 +29,7 @@ let package = Package(
         .cvvPinTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
+        .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -64,6 +66,13 @@ private extension Product {
         ]
     )
 
+    static let manageSubscriptionsUI = library(
+        name: .manageSubscriptionsUI,
+        targets: [
+            .manageSubscriptionsUI,
+        ]
+    )
+    
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
@@ -152,6 +161,10 @@ private extension Target {
         ]
     )
 
+    static let manageSubscriptionsUI = target(
+        name: .manageSubscriptionsUI
+    )
+    
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
@@ -320,6 +333,8 @@ private extension String {
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
