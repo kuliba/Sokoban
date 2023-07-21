@@ -7,23 +7,19 @@
 
 public final class CvvPinController {
     
+    public typealias PublicKeyAPIClient = CryptoAPIClient<APISymmetricKey, (SessionID, APISymmetricKey)>
+    
     private let sessionCodeLoader: SessionCodeLoader
-    private let secretRequestCrypto: SecretRequestCrypto
-    private let publicServerSessionKeyAPIClient: PublicServerSessionKeyAPIClient
-    private let symmetricCrypto: SymmetricCrypto
-    private let publicKeyAPIClient: PublicKeyAPIClient
+    private let symmetricKeyMaker: SymmetricKeyMaker
+    private let publicKeyAPIClient: any PublicKeyAPIClient
     
     public init(
         sessionCodeLoader: SessionCodeLoader,
-        secretRequestCrypto: SecretRequestCrypto,
-        publicServerSessionKeyAPIClient: PublicServerSessionKeyAPIClient,
-        symmetricCrypto: SymmetricCrypto,
-        publicKeyAPIClient: PublicKeyAPIClient
+        symmetricKeyMaker: SymmetricKeyMaker,
+        publicKeyAPIClient: any PublicKeyAPIClient
     ) {
         self.sessionCodeLoader = sessionCodeLoader
-        self.secretRequestCrypto = secretRequestCrypto
-        self.publicServerSessionKeyAPIClient = publicServerSessionKeyAPIClient
-        self.symmetricCrypto = symmetricCrypto
+        self.symmetricKeyMaker = symmetricKeyMaker
         self.publicKeyAPIClient = publicKeyAPIClient
     }
     
@@ -43,65 +39,16 @@ public final class CvvPinController {
                 
             case let .success(sessionCode):
                 
-                makeSecretRequest(
-                    sessionCode: sessionCode.cryptoSessionCode,
-                    completion: completion
-                )
+                makeSecretRequest(sessionCode.cryptoSessionCode, completion)
             }
         }
     }
     
     private func makeSecretRequest(
-        sessionCode: CryptoSessionCode,
-        completion: @escaping AuthCompletion
+        _ sessionCode: CryptoSessionCode,
+        _ completion: @escaping AuthCompletion
     ) {
-        secretRequestCrypto.makeSecretRequest(sessionCode: sessionCode) { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-                
-            case let .failure(error):
-                completion(.failure(error))
-                
-            case let .success(secretRequest):
-                
-                getPublicServerSessionKey(
-                    secretRequest: secretRequest.secretRequest,
-                    completion: completion
-                )
-            }
-        }
-    }
-    
-    private func getPublicServerSessionKey(
-        secretRequest: SecretRequest,
-        completion: @escaping AuthCompletion
-    ) {
-        publicServerSessionKeyAPIClient.get(secretRequest) { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-                
-            case let .failure(error):
-                completion(.failure(error))
-                
-            case let .success(payload):
-                
-                makeSymmetricKey(
-                    payload: payload.symmetricCryptoPayload,
-                    completion: completion
-                )
-            }
-        }
-    }
-    
-    private func makeSymmetricKey(
-        payload: SymmetricCrypto.Payload,
-        completion: @escaping AuthCompletion
-    ) {
-        symmetricCrypto.makeSymmetricKey(with: payload) { [weak self] in
+        symmetricKeyMaker.makeSymmetricKey(with: sessionCode) { [weak self] in
             
             guard let self else { return }
             
@@ -111,19 +58,16 @@ public final class CvvPinController {
                 
             case let .success(symmetricKey):
                 
-                self.sendPublicKey(
-                    symmetricKey: symmetricKey.apiSymmetricKey,
-                    completion: completion
-                )
+                self.sendPublicKey(symmetricKey.apiSymmetricKey, completion)
             }
         }
     }
     
     private func sendPublicKey(
-        symmetricKey: APISymmetricKey,
-        completion: @escaping AuthCompletion
+        _ symmetricKey: APISymmetricKey,
+        _ completion: @escaping AuthCompletion
     ) {
-        publicKeyAPIClient.sendPublicKey(symmetricKey) { [weak self] result in
+        publicKeyAPIClient.get(symmetricKey) { [weak self] result in
             
             guard self != nil else { return }
             
@@ -159,26 +103,6 @@ private extension SessionCode {
     var cryptoSessionCode: CryptoSessionCode {
         
         .init(value: value)
-    }
-}
-
-private extension CryptoSecretRequest {
-    
-    var secretRequest: SecretRequest {
-        
-        .init()
-    }
-}
-
-private extension PublicServerSessionKeyPayload {
-    
-    var symmetricCryptoPayload: SymmetricCrypto.Payload {
-        
-        .init(
-            publicServerSessionKey: publicServerSessionKey.value,
-            eventID: eventID.value,
-            sessionTTL: sessionTTL
-        )
     }
 }
 
