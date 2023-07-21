@@ -27,33 +27,6 @@ final class PinCodeViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.dots)
         XCTAssertEqual(viewModel.state, .init(state: .empty, title: "title"))
     }
-          
-    //MARK: - test update dots
-    
-    func test_updateDots_setFillByValue() {
-        
-        let sut = makeSUT()
-         
-        let defaultDots = Array.defaultDotsValue
-        
-        XCTAssertEqual(sut.dots.count, defaultDots.count)
-        
-        // all dots isFilled = false
-        for index in 0..<sut.dots.count {
-            
-            XCTAssertEqual(sut.dots[index].isFilled, defaultDots[index].isFilled)
-        }
-        
-        // set two digits -> two dots isFilled = true, two dots isFilled = false
-        sut.update(with: "12", pincodeLength: 4)
-        
-        let defaultDotsFilled = Array.dotsWithTwoFilledValue
-
-        for index in 0..<sut.dots.count {
-            
-            XCTAssertEqual(sut.dots[index].isFilled, defaultDotsFilled[index].isFilled)
-        }
-    }
     
     //MARK: - test changeState
     
@@ -65,45 +38,87 @@ final class PinCodeViewModelTests: XCTestCase {
         
         sut.changeState(codeValue: "1")
         
-        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "1"), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "1"), title: "title", code: "1"))
     
         sut.changeState(codeValue: "12")
         
-        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "12"), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "12"), title: "title", code: "12"))
 
         sut.changeState(codeValue: "1234")
         
-        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: ""), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: ""), title: "title", code: ""))
     
         sut.changeState(codeValue: "2")
         
-        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: "2"), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: "2"), title: "title", code: "2"))
 
         sut.changeState(codeValue: "2341")
         
-        XCTAssertEqual(sut.state, .init(state: .checkValue(first: "1234", second: "2341"), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .checkValue(first: "1234", second: "2341"), title: "title", code: "2341"))
         
         sut.changeState(codeValue: "234")
         
-        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: "234"), title: "title"))
+        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1234", second: "234"), title: "title", code: "234"))
     }
     
-    //TODO: дописать тесты
-
     //MARK: - test needClearDots
     
     func test_needClearDots() {
         
-        let sut = makeSUT()
+        let sut = makeSUT(pincodeLength: 1)
         
+        XCTAssertEqual(sut.state, .init(state: .empty, title: "title"))
+        
+        XCTAssertFalse(sut.needClearDots)
+
+        sut.changeState(codeValue: "1")
+        
+        XCTAssertTrue(sut.needClearDots)
     }
 
+    //TODO: дописать тесты
     //MARK: - test updateView
     
     func test_updateView() {
         
         let sut = makeSUT()
         
+    }
+    
+    //MARK: - test resetState
+    
+    func test_resetState() {
+        
+        let sut = makeSUT()
+        
+        XCTAssertEqual(sut.state, .init(state: .empty, title: "title"))
+        
+        sut.changeState(codeValue: "1")
+        
+        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "1"), title: "title", code: "1"))
+
+        sut.resetState()
+        
+        XCTAssertEqual(sut.state, .init(state: .empty, title: "title"))
+    }
+
+    //MARK: - test clearCodeAndUpdateState
+    
+    func test_clearCodeAndUpdateState_shouldSetCodeEmptyStateConfirm() {
+        
+        let sut = makeSUT(pincodeLength: 1)
+        
+        XCTAssertEqual(sut.state, .init(state: .empty, title: "title"))
+        
+        sut.changeState(codeValue: "1")
+        
+        XCTAssertEqual(sut.state, .init(state: .firstSet(first: "1"), title: "title", code: "1"))
+
+        sut.changeState(codeValue: "1")
+
+        sut.clearCodeAndUpdateState()
+        
+        XCTAssertEqual(sut.state, .init(state: .confirmSet(first: "1", second: ""), title: "title", code: ""))
     }
 
     //MARK: - Helpers

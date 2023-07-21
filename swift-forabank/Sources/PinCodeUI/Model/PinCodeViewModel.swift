@@ -8,14 +8,15 @@
 import Foundation
 
 public class PinCodeViewModel: ObservableObject {
-
+    
     public let title: String
     public let pincodeLength: Int
     public let config: PinCodeView.Config
-
+    
     @Published public var state: CodeState
+    
     private(set) var dots: [DotViewModel] = []
-
+    
     public init(
         title: String,
         pincodeLength: Int,
@@ -28,7 +29,7 @@ public class PinCodeViewModel: ObservableObject {
         self.state = .init(state: .empty, title: title)
     }
     
-    public func update(with pincodeValue: String, pincodeLength: Int) {
+    private func update(with pincodeValue: String, pincodeLength: Int) {
         
         dots = Self.dots(pincodeValue, pincodeLength)
     }
@@ -45,31 +46,31 @@ public class PinCodeViewModel: ObservableObject {
             
         case .empty:
             
-            state.updateState(.firstSet(first: codeValue))
+            state.updateState(.firstSet(first: codeValue), newCode: codeValue)
             
         case .firstSet:
             
             if codeValue.count == pincodeLength {
-                state.updateState(.confirmSet(first: codeValue, second: ""))
+                state.updateState(.confirmSet(first: codeValue, second: ""), newCode: "")
             } else {
                 
-                state.updateState(.firstSet(first: codeValue))
+                state.updateState(.firstSet(first: codeValue), newCode: codeValue)
             }
         case .confirmSet(let first, _):
             
             if codeValue.count == pincodeLength {
                 
-                state.updateState(.checkValue(first: first, second: codeValue))
+                state.updateState(.checkValue(first: first, second: codeValue), newCode: codeValue)
             } else {
                 
-                state.updateState(.confirmSet(first: first, second: codeValue))
+                state.updateState(.confirmSet(first: first, second: codeValue), newCode: codeValue)
             }
             
         case .checkValue(let first, _):
             
             if codeValue.count < pincodeLength {
                 
-                state.updateState(.confirmSet(first: first, second: codeValue))
+                state.updateState(.confirmSet(first: first, second: codeValue), newCode: codeValue)
             }
         }
     }
@@ -81,6 +82,43 @@ public class PinCodeViewModel: ObservableObject {
             pincodeLength: codeLength
         )
         changeState(codeValue: codeValue)
+    }
+    
+    public func clearCodeAndUpdateState() {
+        
+        state.code = ""
+        updateView(codeValue: state.code, codeLength: pincodeLength)
+    }
+    
+    public func resetState() {
+        
+        state.updateState(.empty, newCode: "")
+
+        update(
+            with: state.code,
+            pincodeLength: pincodeLength
+        )
+    }
+    
+    public func confirm() {
+        
+        updateView(
+            codeValue: state.code,
+            codeLength: pincodeLength
+        )
+        
+        if needClearDots {
+            
+            clearCodeAndUpdateState()
+        }
+        
+        if state.currentStyle == .incorrect {
+            //TODO: добавить обработку ошибок для аннимации
+        }
+        if state.currentStyle == .correct {
+            
+            //TODO: добавить обработку успешного состояния
+        }
     }
     
     public enum Style {
@@ -107,7 +145,7 @@ extension PinCodeViewModel {
     
     public var needClearDots: Bool {
         
-        return state.firstValue.count == pincodeLength && state.secondValue.isEmpty
+        return state.firstValue.count == pincodeLength && state.confirmValue.isEmpty
     }
 }
 

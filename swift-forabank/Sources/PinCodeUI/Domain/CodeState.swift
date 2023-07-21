@@ -9,14 +9,17 @@ public struct CodeState: Equatable {
     
     public var state: State
     public let title: String
+    public var code = ""
     
     public init(
         state: State,
-        title: String
+        title: String,
+        code: String = ""
     ) {
         
         self.state = state
         self.title = title
+        self.code = code
     }
     
     public enum State: Equatable {
@@ -49,7 +52,7 @@ public struct CodeState: Equatable {
         }
     }
     
-    public var secondValue: String {
+    public var confirmValue: String {
         
         switch state {
         case .empty, .firstSet(_):
@@ -76,8 +79,9 @@ public struct CodeState: Equatable {
         }
     }
     
-    public mutating func updateState(_ newState: State) {
+    public mutating func updateState(_ newState: State, newCode: String) {
         
         state = newState
+        code = newCode
     }
 }
