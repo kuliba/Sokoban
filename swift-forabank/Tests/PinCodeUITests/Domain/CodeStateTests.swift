@@ -21,7 +21,7 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .empty)
         XCTAssertEqual(state.firstValue, "")
-        XCTAssertEqual(state.secondValue, "")
+        XCTAssertEqual(state.confirmValue, "")
         XCTAssertEqual(state.currentStyle, .normal)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "title")
@@ -36,7 +36,7 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .firstSet(first: "first"))
         XCTAssertEqual(state.firstValue, "first")
-        XCTAssertEqual(state.secondValue, "")
+        XCTAssertEqual(state.confirmValue, "")
         XCTAssertEqual(state.currentStyle, .printing)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "title")
@@ -51,7 +51,7 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .confirmSet(first: "1", second: "2"))
         XCTAssertEqual(state.firstValue, "1")
-        XCTAssertEqual(state.secondValue, "2")
+        XCTAssertEqual(state.confirmValue, "2")
         XCTAssertEqual(state.currentStyle, .printing)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "Подтвердите PIN-код\n")
@@ -66,7 +66,7 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .checkValue(first: "1", second: "2"))
         XCTAssertEqual(state.firstValue, "1")
-        XCTAssertEqual(state.secondValue, "2")
+        XCTAssertEqual(state.confirmValue, "2")
         XCTAssertEqual(state.currentStyle, .incorrect)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "Подтвердите PIN-код\n")
@@ -81,7 +81,7 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .checkValue(first: "1", second: "1"))
         XCTAssertEqual(state.firstValue, "1")
-        XCTAssertEqual(state.secondValue, "1")
+        XCTAssertEqual(state.confirmValue, "1")
         XCTAssertEqual(state.currentStyle, .correct)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "Подтвердите PIN-код\n")
@@ -98,16 +98,17 @@ final class CodeStateTests: XCTestCase {
         
         XCTAssertEqual(state.state, .firstSet(first: "first"))
         XCTAssertEqual(state.firstValue, "first")
-        XCTAssertEqual(state.secondValue, "")
+        XCTAssertEqual(state.confirmValue, "")
         XCTAssertEqual(state.currentStyle, .printing)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "title")
         
-        state.updateState(.confirmSet(first: "first", second: "2"))
+        state.updateState(.confirmSet(first: "first", second: "2"), newCode: "2")
         
         XCTAssertEqual(state.state, .confirmSet(first: "first", second: "2"))
         XCTAssertEqual(state.firstValue, "first")
-        XCTAssertEqual(state.secondValue, "2")
+        XCTAssertEqual(state.confirmValue, "2")
+        XCTAssertEqual(state.code, "2")
         XCTAssertEqual(state.currentStyle, .printing)
         XCTAssertEqual(state.title, "title")
         XCTAssertEqual(state.titleForView, "Подтвердите PIN-код\n")

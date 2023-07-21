@@ -11,9 +11,21 @@ import PinCodeUI
 struct PinCodeChangeView: View {
     
     let viewModel: PinCodeViewModel
-    @State private var string = ""
     @State private var showingConfirmView = false
+    private var string: Binding<String>
     
+    init(
+        viewModel: PinCodeViewModel
+    ) {
+        self.viewModel = viewModel
+        self.string = Binding(
+            get: { viewModel.state.code },
+            set: { newValue in
+           
+                viewModel.state.code = newValue
+        })
+    }
+
     var body: some View {
         
         VStack(alignment: .center, spacing: 52) {
@@ -22,31 +34,22 @@ struct PinCodeChangeView: View {
                 viewModel: viewModel,
                 config: viewModel.config.pinCodeConfig)
             KeyPad(
-                string: $string,
+                string: string,
                 config: viewModel.config.buttonConfig,
                 deleteImage: .ic40Delete,
                 pinCodeLength: viewModel.pincodeLength,
                 action: {
-                    //TODO: упростить!!!
-                    viewModel.updateView(codeValue: string, codeLength: viewModel.pincodeLength)
                     
-                    if viewModel.needClearDots {
-                        string = ""
-                        viewModel.updateView(codeValue: string, codeLength: viewModel.pincodeLength)
-                    }
-                    if viewModel.state.currentStyle == .incorrect {
-                        //TODO: добавить обработку ошибок для аннимации
-                    }
-                    //TODO: - исправить!!! сделано для показа
+                    viewModel.confirm()
                     if viewModel.state.currentStyle == .correct {
                         
                         showingConfirmView.toggle()
                     }
+                    
                 }
             )
             .fixedSize()
             .fullScreenCover(isPresented: $showingConfirmView) {
-                //TODO: - исправить!!! сделано для показа
                 NavigationView {
                     
                     PinCodeUI.ConfirmView()
@@ -57,9 +60,7 @@ struct PinCodeChangeView: View {
                                 Button(
                                     action: {
                                         showingConfirmView.toggle()
-                                        string = ""
-                                        viewModel.updateView(codeValue: string, codeLength: viewModel.pincodeLength)
-                                        viewModel.state = .init(state: .empty, title: viewModel.title)
+                                        viewModel.resetState()
                                     },
                                     label: {
                                         Image.ic24ChevronLeft                .aspectRatio(contentMode: .fit)
