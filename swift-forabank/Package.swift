@@ -339,7 +339,7 @@ private extension String {
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
     
-    static let landingComponents = "landingComponents"
+    static let landingComponents = "LandingComponents"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
