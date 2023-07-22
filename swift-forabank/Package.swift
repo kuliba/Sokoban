@@ -15,6 +15,7 @@ let package = Package(
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pinCodeUI,
+        .productUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldModel,
@@ -36,6 +37,7 @@ let package = Package(
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
         .pinCodeUITests,
+        .productUI,
         .searchBarComponent,
         .textFieldComponent,
         .textFieldComponentTests,
@@ -96,6 +98,13 @@ private extension Product {
         ]
     )
 
+    static let productUI = library(
+        name: .productUI,
+        targets: [
+            .productUI,
+        ]
+    )
+    
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
@@ -202,6 +211,9 @@ private extension Target {
         ]
     )
 
+    static let productUI = target(
+        name: .productUI
+    )
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -362,6 +374,8 @@ private extension String {
     static let pinCodeUI = "PinCodeUI"
     static let pinCodeUITests = "PinCodeUITests"
 
+    static let productUI = "ProductUI"
+    
     static let searchBarComponent = "SearchBarComponent"
     
     static let textFieldComponent = "TextFieldComponent"
