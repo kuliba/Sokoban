@@ -39,6 +39,16 @@ public struct CodeState: Equatable {
             return "Подтвердите PIN-код\n"
         }
     }
+    
+    public var hideHint: Bool {
+        
+        switch state {
+        case .empty, .firstSet:
+            return false
+        default:
+            return true
+        }
+    }
 
     public var firstValue: String {
         

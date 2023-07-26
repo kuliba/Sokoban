@@ -617,7 +617,7 @@ extension ProductView.ViewModel.CardInfo {
             return numberMasked.value
             
         case .fullNumberMaskedCVV, .showFront:
-            return fullNumber.value
+            return fullNumber.value.formatted()
         }
     }
     

@@ -235,7 +235,10 @@ class MyProductsViewModel: ObservableObject {
                         guard let productProfileViewModel = ProductProfileViewModel
                             .init(model,
                                   product: product,
-                                  rootView: "\(type(of: self))", dismissAction: {[weak self] in self?.link = nil })
+                                  rootView: "\(type(of: self))",
+                                  certificateClient: HappyCertificateClient(),
+                                  dismissAction: {[weak self] in self?.link = nil }
+                            )
                         else { return }
                         
                         productProfileViewModel.rootActions = rootActions

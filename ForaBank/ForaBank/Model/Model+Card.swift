@@ -244,7 +244,7 @@ extension Model {
         }
     }
     
-    func handleProcessingSessionCodeRequest(_ payload: ModelAction.CVV.GetProcessingSessionCode.Request) {
+    func handleProcessingSessionCodeRequest() {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()

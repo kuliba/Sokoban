@@ -240,6 +240,7 @@ struct ProfileView_Previews: PreviewProvider {
         Group {
             
             ProductProfileView(viewModel: .sample)
+            ProductProfileView(viewModel: .sadSample)
         }
     }
 }
@@ -254,7 +255,19 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        rootView: "")
+        rootView: "",
+        certificateClient: HappyCertificateClient()
+    )
+    
+    static let sadSample = ProductProfileViewModel(
+        navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
+        product: .sample,
+        buttons: .sample,
+        detail: .sample,
+        history: .sampleHistory,
+        rootView: "",
+        certificateClient: SadCertificateClient()
+    )
 }
 
 extension NavigationBarView.ViewModel {

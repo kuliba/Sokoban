@@ -28,11 +28,12 @@ struct PinCodeChangeView: View {
 
     var body: some View {
         
-        VStack(alignment: .center, spacing: 52) {
+        VStack(alignment: .center) {
             
             PinCodeView(
                 viewModel: viewModel,
                 config: viewModel.config.pinCodeConfig)
+            .padding(.bottom, 16)
             KeyPad(
                 string: string,
                 config: viewModel.config.buttonConfig,
@@ -49,10 +50,11 @@ struct PinCodeChangeView: View {
                 }
             )
             .fixedSize()
+            .animationsDisabled()
             .fullScreenCover(isPresented: $showingConfirmView) {
                 NavigationView {
                     
-                    PinCodeUI.ConfirmView()
+                    PinCodeUI.ConfirmView(viewModel: .init(handler: { _, _ in }))
                         .toolbar {
                             
                             ToolbarItem(placement: .navigationBarLeading) {
@@ -73,6 +75,16 @@ struct PinCodeChangeView: View {
             }
             Spacer()
         }
+    }
+}
+
+private extension View {
+     
+    func animationsDisabled() -> some View {
+        return self.transaction { (tx: inout Transaction) in
+            tx.disablesAnimations = true
+            tx.animation = nil
+        }.animation(nil)
     }
 }
 

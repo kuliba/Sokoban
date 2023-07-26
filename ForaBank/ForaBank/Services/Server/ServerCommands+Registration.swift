@@ -215,15 +215,15 @@ extension ServerCommands {
             }
         }
         
-        //TODO: доработать в рамках реализации запросов по CVV+PIN
+        //TODO: удалить!!! новый контракт
         /*
          https://<DBO_server_url>/registration/{version}/getProcessingSessionCode
          */
         struct GetProcessingSessionCode: ServerCommand {
             
             let token: String
-            let endpoint = "/registration/getProcessingSessionCode"
-            let method: ServerCommandMethod = .post
+            let endpoint = "/processing/registration/v1/getProcessingSessionCode"
+            let method: ServerCommandMethod = .get
                     
             struct Payload: Encodable {}
             

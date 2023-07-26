@@ -22,14 +22,22 @@ public struct PinCodeView: View {
     
     public var body: some View {
         
-        VStack(spacing: 28) {
+        VStack(spacing: 0) {
             
             Text(viewModel.state.titleForView)
                 .font(config.font)
                 .foregroundColor(config.foregroundColor)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
+                .padding(.leading, 46)
+                .padding(.trailing, 45)
+                .padding(.bottom, 12)
 
+            if !viewModel.state.hideHint {
+                
+                HintView()
+            }
+            
             HStack(spacing: 16) {
                 
                 ForEach(viewModel.dots.indices, id: \.self) { index in
@@ -42,10 +50,11 @@ public struct PinCodeView: View {
                 }
             }
             .modifier(PinCodeView.Shake(animatableData: CGFloat(0)))
+            .padding(.top, 32)
         }
         .frame(maxWidth: .infinity)
-        .padding(.leading, 62)
-        .padding(.trailing, 61)
+        .padding(.trailing, 15)
+        .padding(.leading, 16)
     }
     
     public struct DotView: View {

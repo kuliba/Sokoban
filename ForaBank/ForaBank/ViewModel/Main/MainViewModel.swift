@@ -86,7 +86,8 @@ class MainViewModel: ObservableObject, Resetable {
                             model,
                             product: product,
                             rootView: "\(type(of: self))",
-                            dismissAction: {[weak self] in self?.link = nil })
+                            certificateClient: HappyCertificateClient(),
+                            dismissAction: { [weak self] in self?.link = nil } )
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions
