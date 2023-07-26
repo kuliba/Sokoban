@@ -10,11 +10,14 @@ import SwiftUI
 public struct ConfirmView: View {
     
     let config: ConfirmView.Config
+    let viewModel: ConfirmViewModel
     
     public init(
-        config: ConfirmView.Config = .defaultConfig
+        config: ConfirmView.Config = .defaultConfig,
+        viewModel: ConfirmViewModel
     ) {
         self.config = config
+        self.viewModel = viewModel
     }
     
     public var body: some View {
@@ -27,19 +30,7 @@ public struct ConfirmView: View {
                     .font(config.font)
                     .multilineTextAlignment(.center)
                     .foregroundColor(config.foregroundColor)
-                
-                HStack(spacing: 16){
-                    
-                    ForEach(Array.code.indices, id: \.self) { index in
-                        
-                        DigitView(
-                            value: Array.code[index],
-                            config: .defaultValue
-                        )
-                    }
-                }
-                .padding(.top, 40)
-                
+                PasscodeField(viewModel: viewModel)
                 TimerView(
                     viewModel: .sample,
                     config: .defaultConfig
@@ -58,28 +49,14 @@ struct ConfirmView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ConfirmView(config: .defaultConfig)
+        ConfirmView(viewModel: .defaultViewModel)
     }
 }
 
 //MARK: - Preview Content
 
-private extension DigitView.Config {
+private extension ConfirmViewModel {
     
-    static let defaultValue: Self = .init(
-        foregroundColor: Color(red: 0.6, green: 0.6, blue: 0.6),
-        font: Font.custom("Inter", size: 32)
-            .weight(.bold),
-        filColor: .grayMedium
-    )
+    static let defaultViewModel = ConfirmViewModel.init(handler: { _, _ in })
 }
 
-private extension Color {
-    
-    static let grayMedium = Color(red: 0.83, green: 0.83, blue: 0.83)
-}
-
-extension Array where Element == String? {
-    
-    static let code: Self = ["1","7", nil, nil, nil, nil]
-}

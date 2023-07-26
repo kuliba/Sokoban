@@ -551,10 +551,10 @@ class Model {
                 case let payload as ModelAction.Auth.VerifyPhone.Request:
                     handleVerifyPhoneRequest(payload)
                     
-        //MARK: - CVV Actions
+        //MARK: - CVV Actions - удалить!!! новый контракт!!!
                     
-                case let payload as ModelAction.CVV.GetProcessingSessionCode.Request:
-                    handleProcessingSessionCodeRequest(payload)
+                case _ as ModelAction.CVV.GetProcessingSessionCode.Request:
+                    handleProcessingSessionCodeRequest()
                     
         //MARK: - Products Actions
                     

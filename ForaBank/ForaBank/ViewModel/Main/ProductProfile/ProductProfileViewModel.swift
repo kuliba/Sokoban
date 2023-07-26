@@ -11,6 +11,61 @@ import SwiftUI
 import PDFKit
 import PinCodeUI
 
+enum PinError: Error {
+    
+    case certificate
+    case connectivity
+}
+
+typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient
+
+protocol CheckCertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void)
+}
+
+protocol ActivateCertificateClient {
+    
+    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+final class HappyCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+        completion(.success(()))
+    }
+
+    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class HappyCheckSadActivateCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+        completion(.success(()))
+    }
+
+    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        struct ActivationError: Error {}
+        completion(.failure(ActivationError()))
+    }
+}
+
+final class SadCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+        
+        completion(.failure(PinError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        completion(.success(()))
+    }
+}
+
 class ProductProfileViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -47,6 +102,8 @@ class ProductProfileViewModel: ObservableObject {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
+    private let certificateClient: CertificateClient
+    
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
          buttons: ProductProfileButtonsView.ViewModel,
@@ -56,7 +113,9 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         rootView: String) {
+         rootView: String,
+         certificateClient: CertificateClient
+    ) {
         
         self.navigationBar = navigationBar
         self.product = product
@@ -68,6 +127,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.rootView = rootView
+        self.certificateClient = certificateClient
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -77,7 +137,13 @@ class ProductProfileViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
     
-    convenience init?(_ model: Model, product: ProductData, rootView: String, dismissAction: @escaping () -> Void) {
+    convenience init?(
+        _ model: Model,
+        product: ProductData,
+        rootView: String,
+        certificateClient: CertificateClient,
+        dismissAction: @escaping () -> Void
+    ) {
         
         guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
             return nil
@@ -88,7 +154,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, rootView: rootView, certificateClient: certificateClient)
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -173,20 +239,11 @@ private extension ProductProfileViewModel {
                     
                 case _ as ProductProfileViewModelAction.Product.Block:
                     
-                    guard let productData = productData else {
-                        return
-                    }
-                    
-                    alert = alertBlockedCard(with: productData)
-                    
+                    blockCard(with: productData)
                 case _ as ProductProfileViewModelAction.Product.Unblock:
                     
-                    guard let productData = productData else {
-                        return
-                    }
-                    
-                    alert = alertBlockedCard(with: productData)
-                    
+                    unblockCard(with: productData)
+
                 case _ as ProductProfileViewModelAction.Show.PlacesMap:
                     guard let placesViewModel = PlacesViewModel(model) else {
                         return
@@ -429,9 +486,6 @@ private extension ProductProfileViewModel {
                         
                     }
                     
-                case _ as ModelAction.CVV.Show.ActivateCertificateAlertShow:
-                    self.showActivateCertificateAlert()
-
                 default: break
                 }
                 
@@ -820,6 +874,8 @@ private extension ProductProfileViewModel {
                 
             }.store(in: &bindings)
     }
+            
+    
     
     func bind(optionsPannel: ProductProfileOptionsPannelView.ViewModel) {
         
@@ -996,31 +1052,9 @@ private extension ProductProfileViewModel {
                           
                         case let .card(type):
                             
-                            switch type {
-                                
-                            case .block:
-                                
-                                if let productCard = productData as? ProductCardData {
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
-                                }
-                                
-                            case .unblock:
-                                
-                                if let productCard = productData as? ProductCardData {
-                                    
-                                    self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
-                                }
-                                
-                            case .changePin:
-                                
-                                if let productCard = productData as? ProductCardData {
-                                    
-                                    let pinCodeViewModel = self.createPinCodeViewModel(displayNumber: productCard.displayNumber)
-                                    
-                                    self.link = .changePin(pinCodeViewModel)
-                                }
-                            }
+                            guard let productCard = productData as? ProductCardData else { return }
+
+                            self.handleCardType(type, productCard)
                         }
                         
                     default:
@@ -1357,7 +1391,7 @@ fileprivate extension NavigationBarView.ViewModel {
 //MARK: - Helpers
 private extension ProductProfileViewModel {
     
-    func showActivateCertificateAlert() {
+    func showActivateCertificateAlert(action: @escaping () -> Void) {
         
         let alertViewModel = Alert.ViewModel(
             title: "Активируйте сертификат",
@@ -1370,7 +1404,7 @@ private extension ProductProfileViewModel {
             secondary: .init(
                 type: .default,
                 title: "Активируйте",
-                action: { [weak self] in self?.model.action.send(ModelAction.CVV.GetProcessingSessionCode.Request())}
+                action: action
             )
         )
         self.alert = .init(alertViewModel)
@@ -1552,4 +1586,92 @@ enum ProductProfileViewModelAction {
     }
     
     struct TransferButtonDidTapped: Action {}
+}
+
+extension ProductProfileViewModel {
+    
+    private func blockCard(with productData: ProductData?) {
+        
+        guard let productData = productData else {
+            return
+        }
+        
+        alert = alertBlockedCard(with: productData)
+    }
+    
+    private func unblockCard(with productData: ProductData?) {
+        
+        blockCard(with: productData)
+    }
+    
+    func handleCardType(
+        _ type: ProductProfileOptionsPannelView.ViewModel.ButtonType.Card,
+        _ productCard: ProductCardData
+    ) {
+        
+        switch type {
+            
+        case .block:
+            self.action.send(ProductProfileViewModelAction.Product.Block(productId: productCard.id))
+            
+        case .unblock:
+            self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
+            
+        case .changePin:
+            
+            self.certificateClient.checkCertificate { [weak self] result in
+                
+                guard let self else { return }
+                
+                handleCheckCertificateResult(result, displayNumber: productCard.displayNumber)
+            }
+        }
+    }
+    
+    func handleCheckCertificateResult(
+        _ result: Result<Void, PinError>,
+        displayNumber: String?
+    ) {
+        switch result {
+            
+        case let .failure(pinError):
+            handlePinError(pinError)
+            
+        case .success:
+            link = .changePin(createPinCodeViewModel(displayNumber: displayNumber))
+        }
+    }
+    
+    func handlePinError(_ pinError: (PinError)) {
+        
+        switch pinError {
+            
+        case .certificate:
+            // TODO: extract
+            let action: () -> Void = {
+                
+                self.certificateClient.activateCertificate { [weak self] result in
+                    
+                    guard let self else { return }
+                    
+                    switch result {
+                        
+                    case let .failure(error):
+                        
+                        makeAlert(error.localizedDescription)
+                        
+                    case .success:
+                        
+                        // экран ввода сообщения
+                        makeAlert("Показать ввод кода!!!!")
+                    }
+                }
+            }
+            
+            self.showActivateCertificateAlert(action: action)
+
+        case .connectivity:
+            makeAlert("Истеклo время\nожидания ответа")
+        }
+    }
 }

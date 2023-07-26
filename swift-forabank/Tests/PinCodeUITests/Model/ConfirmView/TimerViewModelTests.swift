@@ -16,62 +16,85 @@ final class TimerViewModelTests: XCTestCase {
     
     func test_init_shouldSetAllValue() {
         
-        let timerViewModel = makeSUT(delay: 60)
+        let sut = makeSUT(delay: 60)
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
 
-        XCTAssertEqual(timerViewModel.delay, 60)
-        XCTAssertEqual(timerViewModel.description, "description")
-        XCTAssertNotNil(timerViewModel.completeAction)
-        XCTAssertEqual(timerViewModel.value, formatter.string(from: 60))
+        XCTAssertEqual(sut.delay, 60)
+        XCTAssertEqual(sut.description, "description")
+        XCTAssertNotNil(sut.completeAction)
+        XCTAssertEqual(sut.value, formatter.string(from: 60))
     }
     
     //MARK: - test update value
     
     func test_updateValue_shouldSetNewValue() {
         
-        let timerViewModel = makeSUT(delay: 5)
+        let sut = makeSUT(delay: 5)
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
 
         let startTime = Date.timeIntervalSinceReferenceDate
-        XCTAssertEqual(timerViewModel.delay, 5)
-        XCTAssertEqual(timerViewModel.value, formatter.string(from: 5))
+        XCTAssertEqual(sut.delay, 5)
+        XCTAssertEqual(sut.value, formatter.string(from: 5))
 
         XCTWaiter().wait(for: [.init()], timeout: 2)
         let time = Date()
 
-        timerViewModel.updateValue(
+        sut.updateValue(
             startTime: startTime,
             delay: 5,
             time: time
         )
         
-        XCTAssertEqual(timerViewModel.value, formatter.string(from: 3))
+        XCTAssertEqual(sut.value, formatter.string(from: 3))
     }
     
     func test_updateValue_notUpdateValueIfTimeEnd() {
         
         let delay: TimeInterval = 2
         
-        let timerViewModel = makeSUT(delay: delay)
+        let sut = makeSUT(delay: delay)
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
 
         let startTime = Date.timeIntervalSinceReferenceDate
-        XCTAssertEqual(timerViewModel.delay, delay)
-        XCTAssertEqual(timerViewModel.value, formatter.string(from: delay))
+        XCTAssertEqual(sut.delay, delay)
+        XCTAssertEqual(sut.value, formatter.string(from: delay))
 
         XCTWaiter().wait(for: [.init()], timeout: delay + 1)
         let time = Date()
 
-        timerViewModel.updateValue(
+        sut.updateValue(
             startTime: startTime,
             delay: delay,
             time: time
         )
         
-        XCTAssertEqual(timerViewModel.value, formatter.string(from: 2))
+        XCTAssertEqual(sut.value, formatter.string(from: 2))
+    }
+    
+    func test_updateValue_IfTimeEnd_shouldShowRepeatButton() {
+        
+        let delay: TimeInterval = 2
+        
+        let sut = makeSUT(delay: delay)
+
+        let startTime = Date.timeIntervalSinceReferenceDate
+
+        XCTAssertFalse(sut.needRepeatButton)
+
+        XCTWaiter().wait(for: [.init()], timeout: delay)
+        
+        let time = Date()
+
+        sut.updateValue(
+            startTime: startTime,
+            delay: delay,
+            time: time
+        )
+        
+        XCTAssertTrue(sut.needRepeatButton)
     }
     
     //MARK: - Helpers

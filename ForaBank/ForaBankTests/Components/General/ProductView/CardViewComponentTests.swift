@@ -377,7 +377,7 @@ final class CardViewComponentTests: XCTestCase {
         
         XCTAssertEqual(sut.cardInfo.state, .fullNumberMaskedCVV)
         XCTAssertEqual(sut.cardInfo.fullNumber.value, UIPasteboard.general.string)
-        XCTAssertEqual(sut.cardInfo.numberToDisplay, FullNumber.number.value)
+        XCTAssertEqual(sut.cardInfo.numberToDisplay, FullNumber.number.value.formatted())
     }
     
     func test_copyToClipboardCVVOpen() {

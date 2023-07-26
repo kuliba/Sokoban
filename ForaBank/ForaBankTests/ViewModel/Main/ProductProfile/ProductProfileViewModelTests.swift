@@ -7,9 +7,11 @@
 
 import XCTest
 @testable import ForaBank
+import SwiftUI
+import PinCodeUI
 
 final class ProductProfileViewModelTests: XCTestCase {
-
+    
     func test_initWithEmptyModel_nil() {
         
         let sut = makeSUT(product: anyProduct(id: 0, productType: .card))
@@ -28,45 +30,45 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     //FIXME: test fails for some reason but should not
     /*
-    func test_transferButtonDidTappedAction_firesOnceInResponseToButtonsViewModelActionButtonDidTapped() throws {
-        
-        // given
-        let model = makeModelWithProducts()
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
-        let sut = try XCTUnwrap(makeSUT(model: model, product: product))
-        let spy = ValueSpy(sut.action)
-    
-        // wait for bindings
-        _ = XCTWaiter.wait(for: [], timeout: 0.1)
-        
-        // when
-        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .topRight))
-        _ = XCTWaiter.wait(for: [], timeout: 0.1)
-
-        // then
-        XCTAssertEqual(spy.values.count, 1)
-        XCTAssertNotNil(spy.values.first as? ProductProfileViewModelAction.TransferButtonDidTapped)
-    }
+     func test_transferButtonDidTappedAction_firesOnceInResponseToButtonsViewModelActionButtonDidTapped() throws {
+     
+     // given
+     let model = makeModelWithProducts()
+     let product = try XCTUnwrap(model.products.value[.card]?.first)
+     let sut = try XCTUnwrap(makeSUT(model: model, product: product))
+     let spy = ValueSpy(sut.action)
+     
+     // wait for bindings
+     _ = XCTWaiter.wait(for: [], timeout: 0.1)
+     
+     // when
+     sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .topRight))
+     _ = XCTWaiter.wait(for: [], timeout: 0.1)
+     
+     // then
+     XCTAssertEqual(spy.values.count, 1)
+     XCTAssertNotNil(spy.values.first as? ProductProfileViewModelAction.TransferButtonDidTapped)
+     }
      */
     
     //FIXME: test fails for some reason but should not
     /*
-    func test_preferredProductID_setValueAfrerTransferButtonDidTappedActionTriggered() throws {
-        
-        let model = makeModelWithProducts()
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
-        let sut = try XCTUnwrap(makeSUT(model: model, product: product))
-        
-        // wait for bindings
-        _ = XCTWaiter().wait(for: [], timeout: 0.1)
-        
-        // when
-        sut.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
-        _ = XCTWaiter.wait(for: [], timeout: 0.1)
-        
-        XCTAssertEqual(model.preferredProductID, product.id)
-    }
-    */
+     func test_preferredProductID_setValueAfrerTransferButtonDidTappedActionTriggered() throws {
+     
+     let model = makeModelWithProducts()
+     let product = try XCTUnwrap(model.products.value[.card]?.first)
+     let sut = try XCTUnwrap(makeSUT(model: model, product: product))
+     
+     // wait for bindings
+     _ = XCTWaiter().wait(for: [], timeout: 0.1)
+     
+     // when
+     sut.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
+     _ = XCTWaiter.wait(for: [], timeout: 0.1)
+     
+     XCTAssertEqual(model.preferredProductID, product.id)
+     }
+     */
     
     func test_preferredProductID_setToNilAfrerIsLinkActiveBecomeFalse() throws {
         
@@ -86,20 +88,20 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(model.preferredProductID)
     }
     
-    //MARK: - test showActivateCertificateAlert
+    //MARK: - test handlePinError
     
-    func test_showActivateCertificateAlert_setAlert() throws {
+    func test_handlePinError_certificateError_showActivateCertificateAlert() throws {
         
         let (sut, model) = try makeSUT()
-
+        
         XCTAssertNil(sut.alert)
         
-        model.action.send(ModelAction.CVV.Show.ActivateCertificateAlertShow())
-
+        sut.handlePinError(.certificate)
+        
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
+        
         XCTAssertNotNil(sut.alert)
-
+        
         XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
         XCTAssertNoDiff(sut.alert?.message, model.activateCertificateMessage)
         
@@ -110,20 +112,194 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
         XCTAssertNoDiff(sut.alert?.secondary?.title, "Активируйте")
         XCTAssertNotNil(sut.alert?.secondary?.action)
+        
+        sut.action.send(ProductProfileViewModelAction.Close.Alert())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(sut.alert)
     }
-
+    
+    func test_handlePinError_connectivityError_showActivateCertificateAlert() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.handlePinError(.connectivity)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Ошибка")
+        XCTAssertNoDiff(sut.alert?.message, "Истеклo время\nожидания ответа")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "ОК")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNil(sut.alert?.secondary)
+    }
+    
+    func test_optionsPannelAction_blockCard_showAlert() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.optionsPannel)
+        
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.optionsPannel)
+        
+        XCTAssertNil(sut.alert)
+        
+        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.block))
+        
+        sut.optionsPannel?.action.send(action)
+        
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Заблокировать карту?")
+        XCTAssertNoDiff(sut.alert?.message, "Карту можно будет разблокировать в приложении или в колл-центре")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
+        XCTAssertNoDiff(sut.alert?.secondary?.title, "Oк")
+        XCTAssertNotNil(sut.alert?.secondary?.action)
+        
+        sut.action.send(ProductProfileViewModelAction.Close.Alert())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(sut.alert)
+    }
+    
+    func test_optionsPannelAction_unBlockCard_showAlert() throws {
+        
+        let (sut, _) = try makeSUT(
+            status: .blockedByClient,
+            statusPC: .blockedByClient
+        )
+        
+        XCTAssertNil(sut.optionsPannel)
+        
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelUnBlockCardChangePin))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.optionsPannel)
+        
+        XCTAssertNil(sut.alert)
+        
+        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.unblock))
+        
+        sut.optionsPannel?.action.send(action)
+        
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Разблокировать карту?")
+        XCTAssertNil(sut.alert?.message)
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
+        XCTAssertNoDiff(sut.alert?.secondary?.title, "Oк")
+        XCTAssertNotNil(sut.alert?.secondary?.action)
+        
+        sut.action.send(ProductProfileViewModelAction.Close.Alert())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(sut.alert)
+    }
+    
+    func test_optionsPannelAction_changePin_sadPath_showActivateCertificateAlert() throws {
+        
+        let (sut, _) = try makeSUT(certificateClient: SadCertificateClient())
+        
+        XCTAssertNil(sut.optionsPannel)
+        
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.optionsPannel)
+        
+        XCTAssertNil(sut.alert)
+        
+        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
+        
+        sut.optionsPannel?.action.send(action)
+        
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
+        // см test_handlePinError_certificateError_showActivateCertificateAlert
+        
+        sut.action.send(ProductProfileViewModelAction.Close.Alert())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(sut.alert)
+    }
+    
+    func test_optionsPannelAction_changePin_happyPath_showPinCodeView() throws {
+        
+        let (sut, _) = try makeSUT(certificateClient: HappyCertificateClient())
+        
+        XCTAssertNil(sut.optionsPannel)
+        
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.optionsPannel)
+        
+        XCTAssertNil(sut.link)
+        
+        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
+        
+        sut.optionsPannel?.action.send(action)
+        
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.link)
+        XCTAssertTrue(sut.viewModelByLink is PinCodeViewModel)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
         model: Model = .mockWithEmptyExcept(),
         product: ProductData,
-        rootView: String = "")
-    -> ProductProfileViewModel? {
+        rootView: String = ""
+    ) -> ProductProfileViewModel? {
         
-        .init(model, product: product, rootView: rootView, dismissAction: {})
+        .init(model, product: product, rootView: rootView, certificateClient: HappyCertificateClient(), dismissAction: {})
     }
     
     private func makeSUT(
+        status: ProductData.Status = .active,
+        statusPC: ProductData.StatusPC = .active,
+        certificateClient: CertificateClient = HappyCertificateClient(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> (
@@ -131,14 +307,21 @@ final class ProductProfileViewModelTests: XCTestCase {
         model: Model
     ) {
         let model = Model.mockWithEmptyExcept()
-        model.products.value = makeProductsData([(.card, 1)])
+        model.products.value = [.card: [
+            ProductCardData(
+                status: status,
+                statusPc: statusPC
+            )
+        ]]
+        
         let product = try XCTUnwrap(model.products.value[.card]?.first)
-
+        
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
                 product: product,
                 rootView: "",
+                certificateClient: certificateClient,
                 dismissAction: {}
             )
         )
@@ -155,5 +338,126 @@ final class ProductProfileViewModelTests: XCTestCase {
         model.products.value = makeProductsData(counts)
         
         return model
+    }
+}
+
+private extension ProductProfileViewModel {
+    
+    var optionsPannel: ProductProfileOptionsPannelView.ViewModel? {
+        
+        switch bottomSheet?.type {
+            
+        case let .optionsPannel(optionsPannel):
+            
+            return optionsPannel
+            
+        default:
+            return nil
+        }
+    }
+    
+    var panelViewModelBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
+        .init(
+            buttonsTypes: [
+                .card(.block),
+                .card(.changePin)
+            ],
+            productType: .card
+        )
+    }
+    
+    var panelViewModelUnBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
+        .init(
+            buttonsTypes: [
+                .card(.unblock),
+                .card(.changePin)
+            ],
+            productType: .card
+        )
+    }
+    
+    var viewModelByLink: Any? {
+        
+        guard let link = link else { return nil }
+        
+        switch link {
+            
+        case let .productInfo(viewModel):
+            return viewModel
+        case let .productStatement(viewModel):
+            return viewModel
+        case let .meToMeExternal(viewModel):
+            return viewModel
+        case let .myProducts(viewModel):
+            return viewModel
+        case let .paymentsTransfers(viewModel):
+            return viewModel
+        case let .changePin(viewModel):
+            return viewModel
+        }
+    }
+}
+
+private extension ProductCardData {
+    
+    convenience init(
+        id: Int = 1,
+        currency: Currency = .init(description: "RUB"),
+        number: String = "4444 4444 4444 4444",
+        numberMasked: String = "4444 **** **** **44",
+        ownerId: Int = 0,
+        holderName: String? = "Иванов",
+        allowCredit: Bool = true,
+        allowDebit: Bool = true,
+        status: ProductData.Status = .active,
+        loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil,
+        statusPc: ProductData.StatusPC = .active,
+        isMain: Bool = true
+    ) {
+        
+        self.init(
+            id: id,
+            productType: .card,
+            number: number,
+            numberMasked: numberMasked,
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: currency.description,
+            mainField: "Visa",
+            additionalField: nil,
+            customName: nil,
+            productName: "",
+            openDate: nil,
+            ownerId: ownerId,
+            branchId: nil,
+            allowCredit: allowCredit,
+            allowDebit: allowDebit,
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
+            fontDesignColor: .init(description: ""),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "",
+            validThru: Date(),
+            status: status,
+            expireDate: nil,
+            holderName: holderName,
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: loanBaseParam,
+            statusPc: statusPc,
+            isMain: isMain,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "")
     }
 }
