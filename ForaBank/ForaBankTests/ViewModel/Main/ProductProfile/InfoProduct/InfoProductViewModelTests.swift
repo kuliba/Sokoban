@@ -322,7 +322,7 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertNoDiff(itemOne.hashValue, itemTwo.hashValue)
     }
     
-    //MARK: - test cvv, expireData
+    //MARK: - test cvv
     
     func test_init_cvv_shouldSetEmptyCurrentValueString() {
         
@@ -361,26 +361,7 @@ final class InfoProductViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(item.currentValueString, "")
     }
-    
-    func test_init_expireDate_shouldSetEmptyCurrentValueString() {
         
-        let item: ItemViewModelForList = .single(
-            .init(
-                id: .expireDate,
-                title: "title",
-                titleForInformer: "titleForInformer",
-                subtitle: "subtitle",
-                valueForCopy: "valueForCopy",
-                actionForLongPress: { _,_ in },
-                actionForIcon: {}
-            )
-        )
-        
-        XCTAssertEqual(item.currentValues.count, 1)
-        
-        XCTAssertNoDiff(item.currentValueString, "")
-    }
-    
     //MARK: - test makeItemViewModelSingle
     
     func test_makeItemViewModelSingle_shouldSetAllValue() {
@@ -1052,8 +1033,8 @@ private extension InfoProductViewModel.DocumentItemModel {
         subtitle: cardInfo.numberMasked!,
         valueForCopy: "valueForCopy"
     )
-    static let expireDate: Self = .init(
-        id: .expireDate,
+    static let expirationDate: Self = .init(
+        id: .expirationDate,
         subtitle: cardInfo.expireDate!,
         valueForCopy: "valueForCopy"
     )
@@ -1196,7 +1177,7 @@ private extension String {
     static let stringForMultiple = "title: valueForCopy\ntitle1: valueForCopy"
     static let stringForSingle = "title: valueForCopy"
     static let stringForShare = """
-item1 : subtitle1\nitem2 : subtitle2\nitem3 : subtitle3\n\n\n\nДержатель: valueForCopy\nНомер карты: valueForCopy\n
+item1 : subtitle1\nitem2 : subtitle2\nitem3 : subtitle3\n\n\n\nДержатель: valueForCopy\nНомер карты: valueForCopy\nКарта действует до: valueForCopy
 """
 }
 
@@ -1229,7 +1210,7 @@ extension Array where Element == InfoProductViewModel.DocumentItemModel {
     ]
     
     static let cardItemsMultiple: Self = [
-        .expireDate,
+        .expirationDate,
         .cvv
     ]
 }

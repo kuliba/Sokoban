@@ -61,8 +61,6 @@ public struct KeyPad: View {
             }
         }
         action()
-
-        print("string: \(string)")
     }
 }
 

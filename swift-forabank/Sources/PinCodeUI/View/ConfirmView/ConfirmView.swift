@@ -11,13 +11,16 @@ public struct ConfirmView: View {
     
     let config: ConfirmView.Config
     let viewModel: ConfirmViewModel
+    let phoneNumber: String
     
     public init(
         config: ConfirmView.Config = .defaultConfig,
-        viewModel: ConfirmViewModel
+        viewModel: ConfirmViewModel,
+        phoneNumber: String
     ) {
         self.config = config
         self.viewModel = viewModel
+        self.phoneNumber = phoneNumber
     }
     
     public var body: some View {
@@ -30,9 +33,15 @@ public struct ConfirmView: View {
                     .font(config.font)
                     .multilineTextAlignment(.center)
                     .foregroundColor(config.foregroundColor)
-                PasscodeField(viewModel: viewModel)
+                
+                PasscodeField(
+                    viewModel: viewModel)
+                
                 TimerView(
-                    viewModel: .sample,
+                    viewModel: .init(
+                        delay: 10,
+                        phoneNumber: phoneNumber,
+                        completeAction: { }),
                     config: .defaultConfig
                 )
                 .padding(.top, 32)
@@ -49,7 +58,10 @@ struct ConfirmView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ConfirmView(viewModel: .defaultViewModel)
+        ConfirmView(
+            viewModel: .defaultViewModel,
+            phoneNumber: "Описание для таймера"
+        )
     }
 }
 

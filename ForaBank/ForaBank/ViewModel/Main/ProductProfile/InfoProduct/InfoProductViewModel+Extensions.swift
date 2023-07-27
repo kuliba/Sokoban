@@ -24,7 +24,7 @@ extension InfoProductViewModel {
             case payeeName
             case holderName
             case numberMasked
-            case expireDate
+            case expirationDate
             case number
             case cvvMasked
             case cvv
@@ -50,7 +50,7 @@ extension InfoProductViewModel {
                 return "Номер карты"
             case .holderName:
                 return "Держатель карты"
-            case .expireDate:
+            case .expirationDate:
                 return "Карта действует до"
             case .cvvMasked, .cvv:
                 return .cvvTitle
@@ -60,7 +60,7 @@ extension InfoProductViewModel {
         var titleForInformer: String {
             switch id {
                 
-            case .expireDate:
+            case .expirationDate:
                 return "Срок действия карты"
                 
             default:
@@ -131,7 +131,7 @@ extension InfoProductViewModel {
                 
                 switch $0.id {
                     
-                case .cvv, .cvvMasked, .expireDate:
+                case .cvv, .cvvMasked:
                     return nil
                     
                 default:
@@ -324,13 +324,13 @@ extension InfoProductViewModel {
         
         var list: [DocumentItemModel] = []
         
-        if let expireDate = data.expireDate {
+        if let expirationDate = data.expireDate {
             
             list.append(
                 .init(
-                    id: .expireDate,
-                    subtitle: expireDate,
-                    valueForCopy: "" //не копируем
+                    id: .expirationDate,
+                    subtitle: expirationDate,
+                    valueForCopy: expirationDate
                 )
             )
             if needShowCvv {

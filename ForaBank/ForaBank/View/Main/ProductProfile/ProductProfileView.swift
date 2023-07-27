@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PinCodeUI
 
 struct ProductProfileView: View {
     
@@ -95,13 +96,9 @@ struct ProductProfileView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-                    case .changePin(let pinCodeViewModel):
-                        PinCodeChangeView(
-                            viewModel: pinCodeViewModel
-                        )
-                        .edgesIgnoringSafeArea(.bottom)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationBarTitle("")
+                    case let .changePin(pinCodeViewModel):
+                        
+                        pinCodeChangeView(pinCodeViewModel)
                         
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
@@ -126,6 +123,10 @@ struct ProductProfileView: View {
                         
                     case let .paymentsTransfers(paymentsTransfersViewModel):
                         PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
+                        
+                    case .confirmCode:
+                        
+                        confirmCodeView()
                     }
                 }
             }
@@ -214,6 +215,54 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+    
+    private func pinCodeChangeView(
+        _ viewModel: PinCodeViewModel
+    ) -> some View {
+        
+        let buttonConfig: ButtonConfig = .init(
+            font: .textH1R24322(),
+            textColor: .textSecondary,
+            buttonColor: .mainColorsGrayLightest
+        )
+        
+        let pinConfig: PinCodeView.PinCodeConfig = .init(
+            font: .textH4M16240(),
+            foregroundColor: .textSecondary,
+            colorsForPin: .init(
+                normal: .mainColorsGrayMedium,
+                incorrect: .systemColorError,
+                correct: .systemColorActive,
+                printing: .mainColorsBlack)
+        )
+        
+        return PinCodeChangeView(
+            config: .init(
+                buttonConfig: buttonConfig,
+                pinCodeConfig: pinConfig
+            ),
+            viewModel: viewModel,
+            confirmationView: {
+                
+                ConfirmCodeView(
+                    phoneNumber: $0.value,
+                    reset: viewModel.resetState
+                )
+            }
+        )
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("")
+    }
+    
+    private func confirmCodeView() -> some View {
+        
+        ConfirmCodeView(
+            phoneNumber: "+1...30",
+            reset: {},
+            hasDefaultBackButton: true
+        )
     }
 }
 

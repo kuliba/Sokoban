@@ -16,12 +16,15 @@ final class TimerViewModelTests: XCTestCase {
     
     func test_init_shouldSetAllValue() {
         
-        let sut = makeSUT(delay: 60)
+        let sut = makeSUT(
+            delay: 60,
+            phoneNumber: "+1.."
+        )
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
 
         XCTAssertEqual(sut.delay, 60)
-        XCTAssertEqual(sut.description, "description")
+        XCTAssertEqual(sut.phoneNumber, "+1..")
         XCTAssertNotNil(sut.completeAction)
         XCTAssertEqual(sut.value, formatter.string(from: 60))
     }
@@ -101,14 +104,14 @@ final class TimerViewModelTests: XCTestCase {
 
     private func makeSUT(
         delay: TimeInterval = 2,
-        description: String = "description",
+        phoneNumber: String = "+1...11",
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel.TimerViewModel {
         
         let sut: ConfirmViewModel.TimerViewModel = .init(
             delay: delay,
-            description: description,
+            phoneNumber: phoneNumber,
             completeAction: {})
         
         trackForMemoryLeaks(sut, file: file, line: line)

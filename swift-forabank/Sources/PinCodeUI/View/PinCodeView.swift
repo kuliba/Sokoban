@@ -10,11 +10,11 @@ import SwiftUI
 public struct PinCodeView: View {
     
     @ObservedObject public var viewModel: PinCodeViewModel
-    public let config: PinCodeView.PinCodeConfig
+    public let config: PinCodeConfig
     
     public init(
         viewModel: PinCodeViewModel,
-        config: PinCodeView.PinCodeConfig
+        config: PinCodeConfig
     ) {
         self.viewModel = viewModel
         self.config = config
