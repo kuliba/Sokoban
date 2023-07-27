@@ -13,7 +13,7 @@ extension ConfirmViewModel {
     class TimerViewModel: ObservableObject {
         
         let delay: TimeInterval
-        let description: String
+        let phoneNumber: String
         let completeAction: () -> Void
         
         @Published var value: String
@@ -27,12 +27,12 @@ extension ConfirmViewModel {
         
         init(
             delay: TimeInterval,
-            description: String,
+            phoneNumber: String,
             completeAction: @escaping () -> Void
         ) {
             
             self.delay = delay
-            self.description = description
+            self.phoneNumber = phoneNumber
             self.value = ""
             self.completeAction = completeAction
 
@@ -102,7 +102,7 @@ extension ConfirmViewModel.TimerViewModel {
     
     static let sample = ConfirmViewModel.TimerViewModel.init(
         delay: 10,
-        description: .timerViewDescription,
+        phoneNumber: .testNumber,
         completeAction: {
             
             print("completeAction")
@@ -112,9 +112,5 @@ extension ConfirmViewModel.TimerViewModel {
 
 extension String {
     
-    static let timerViewDescription =
-            """
-            Код отправлен на +7 ... ... 54 15
-            Запросить повторно можно через
-            """
+    static let testNumber = "+7 ... ... 54 15"
 }

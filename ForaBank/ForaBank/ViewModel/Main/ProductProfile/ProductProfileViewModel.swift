@@ -66,6 +66,24 @@ final class SadCertificateClient: CertificateClient {
     }
 }
 
+// MARK: - getPinConfirmationCode
+
+func getPinConfirmationCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
+    
+    Just(.init(value: "+1...90"))
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+}
+
+// MARK: - getPinConfirmationCode
+
+func getProcessingSessionCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
+    
+    Just(.init(value: "+1...80"))
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+}
+
 class ProductProfileViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -1412,29 +1430,11 @@ private extension ProductProfileViewModel {
     
     func createPinCodeViewModel(displayNumber: String?) -> PinCodeViewModel {
         
-        let buttonConfig: ButtonConfig = .init(
-            font: .textH1R24322(),
-            textColor: .textSecondary,
-            buttonColor: .mainColorsGrayLightest
-        )
-        
-        let pinConfig: PinCodeView.PinCodeConfig = .init(
-            font: .textH4M16240(),
-            foregroundColor: .textSecondary,
-            colorsForPin: .init(
-                normal: .mainColorsGrayMedium,
-                incorrect: .systemColorError,
-                correct: .systemColorActive,
-                printing: .mainColorsBlack)
-        )
         
         return .init(
             title: "Введите новый PIN-код для\nкарты *\(displayNumber ?? "")",
             pincodeLength: 4,
-            config: .init(
-                buttonConfig: buttonConfig,
-                pinCodeConfig: pinConfig
-            )
+            confirmationPublisher: getPinConfirmationCodePublisher
         )
     }
 }
@@ -1477,6 +1477,7 @@ extension ProductProfileViewModel {
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
         case changePin(PinCodeViewModel)
+        case confirmCode
     }
     
     struct Sheet: Identifiable {
@@ -1662,8 +1663,8 @@ extension ProductProfileViewModel {
                         
                     case .success:
                         
-                        // экран ввода сообщения
-                        makeAlert("Показать ввод кода!!!!")
+                        self.alert = nil
+                        self.link = .confirmCode
                     }
                 }
             }

@@ -16,14 +16,13 @@ struct TimerView: View {
         
         VStack(spacing: 32) {
             
-            
             if viewModel.needRepeatButton {
-               
-                Text("Код отправлен на +7 ... ... 54 15")
+                
+                Text("Код отправлен на \(viewModel.phoneNumber)")
                     .font(config.descFont)
                     .foregroundColor(config.descForegroundColor)
                     .multilineTextAlignment(.center)
-
+                
                 RepeatButtonView(config:
                         .init(
                             font: Font.custom("Inter", size: 12),
@@ -34,11 +33,11 @@ struct TimerView: View {
                 )
             } else {
                 
-                Text(viewModel.description)
+                Text("Код отправлен на \(viewModel.phoneNumber)\nЗапросить повторно можно через")
                     .font(config.descFont)
                     .foregroundColor(config.descForegroundColor)
                     .multilineTextAlignment(.center)
-
+                
                 Text(viewModel.value)
                     .font(config.valueFont)
                     .foregroundColor(config.valueForegroundColor)
@@ -54,20 +53,17 @@ struct TimerView: View {
                 delay: viewModel.delay,
                 time: newTime
             )
-        }        
+        }
     }
 }
 
 struct TimerView_Previews : PreviewProvider {
     
     static var previews: some View {
-                
-        Group {
-            
-            TimerView.init(
-                viewModel: .sample,
-                config: .defaultConfig
-            )
-        }
+        
+        TimerView.init(
+            viewModel: .sample,
+            config: .defaultConfig
+        )
     }
 }

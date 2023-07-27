@@ -394,6 +394,8 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .changePin(viewModel):
             return viewModel
+        case .confirmCode:
+            return nil
         }
     }
 }

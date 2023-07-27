@@ -299,7 +299,7 @@ extension Array where Element == InfoProductViewModel.ItemViewModelForList {
         .multiple(
             [
                 .init(
-                    id: .expireDate,
+                    id: .expirationDate,
                     title: "Карта действует до",
                     titleForInformer: "Срок действия карты",
                     subtitle: "01/01",

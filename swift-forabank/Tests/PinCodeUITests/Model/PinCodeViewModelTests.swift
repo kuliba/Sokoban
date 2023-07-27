@@ -7,8 +7,8 @@
 
 @testable import PinCodeUI
 
+import Combine
 import XCTest
-import Foundation
 
 final class PinCodeViewModelTests: XCTestCase {
     
@@ -23,7 +23,6 @@ final class PinCodeViewModelTests: XCTestCase {
                 
         XCTAssertEqual(viewModel.title, "title")
         XCTAssertEqual(viewModel.pincodeLength, 4)
-        XCTAssertEqual(viewModel.config, PinCodeView.Config.defaultConfig)
         XCTAssertNotNil(viewModel.dots)
         XCTAssertEqual(viewModel.state, .init(state: .empty, title: "title"))
     }
@@ -133,7 +132,12 @@ final class PinCodeViewModelTests: XCTestCase {
         let sut: PinCodeViewModel = .init(
             title: title,
             pincodeLength: pincodeLength,
-            config: .defaultConfig
+            confirmationPublisher: {
+                
+                Just(.init(value: "+1...90"))
+                    .setFailureType(to: Error.self)
+                    .eraseToAnyPublisher()
+            }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

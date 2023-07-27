@@ -322,12 +322,6 @@ class InfoProductViewModel: ObservableObject {
                         }
                     )
                     
-                case .expireDate:
-                    return Self.makeItemViewModel(
-                        from: $0,
-                        with: {_,_ in }
-                    )
-
                 default:
                     return Self.makeItemViewModel(
                         from: $0,

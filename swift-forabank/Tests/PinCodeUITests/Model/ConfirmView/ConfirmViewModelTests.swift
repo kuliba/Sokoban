@@ -101,8 +101,9 @@ final class ConfirmViewModelTests: XCTestCase {
 
     func test_submint_correctCode_shouldSetIsDisableTrue() {
         
-        let sut = makeSUT(maxDigits: 6) { _, completionHandler in
+        let sut = makeSUT(maxDigits: 6) { pin, completionHandler in
             
+            XCTAssertEqual(pin, "123456")
             completionHandler(true)
         }
         
@@ -116,7 +117,6 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertEqual(sut.pin, "123456")
         XCTAssertTrue(sut.isDisabled)
     }
-
     
     //MARK: - test getDigit
     

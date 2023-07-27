@@ -5,81 +5,67 @@
 //  Created by Andryusina Nataly on 13.07.2023.
 //
 
+import Combine
 import SwiftUI
 import PinCodeUI
 
-struct PinCodeChangeView: View {
+struct PinCodeChangeView<ConfirmationView: View>: View {
     
-    let viewModel: PinCodeViewModel
-    @State private var showingConfirmView = false
-    private var string: Binding<String>
+    @ObservedObject private var viewModel: PinCodeViewModel
+    
+    private let config: PinCodeView.Config
+    private let confirmationView: (PinCodeViewModel.PhoneNumber) -> ConfirmationView
     
     init(
-        viewModel: PinCodeViewModel
+        config: PinCodeView.Config,
+        viewModel: PinCodeViewModel,
+        confirmationView: @escaping (PinCodeViewModel.PhoneNumber) -> ConfirmationView
     ) {
+        self.config = config
         self.viewModel = viewModel
-        self.string = Binding(
-            get: { viewModel.state.code },
-            set: { newValue in
-           
-                viewModel.state.code = newValue
-        })
+        self.confirmationView = confirmationView
     }
-
+    
     var body: some View {
         
         VStack(alignment: .center) {
             
             PinCodeView(
                 viewModel: viewModel,
-                config: viewModel.config.pinCodeConfig)
+                config: config.pinCodeConfig)
             .padding(.bottom, 16)
+            
             KeyPad(
-                string: string,
-                config: viewModel.config.buttonConfig,
+                string: $viewModel.state.code,
+                config: config.buttonConfig,
                 deleteImage: .ic40Delete,
                 pinCodeLength: viewModel.pincodeLength,
-                action: {
-                    
-                    viewModel.confirm()
-                    if viewModel.state.currentStyle == .correct {
-                        
-                        showingConfirmView.toggle()
-                    }
-                    
-                }
+                action: viewModel.confirm
             )
             .fixedSize()
             .animationsDisabled()
-            .fullScreenCover(isPresented: $showingConfirmView) {
-                NavigationView {
+            .fullScreenCover(
+                item: .init(
+                    get: { viewModel.phoneNumber },
+                    set: viewModel.dismissFullCover
+                ),
+                onDismiss: { },
+                content: { phoneNumber in
                     
-                    PinCodeUI.ConfirmView(viewModel: .init(handler: { _, _ in }))
-                        .toolbar {
-                            
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                
-                                Button(
-                                    action: {
-                                        showingConfirmView.toggle()
-                                        viewModel.resetState()
-                                    },
-                                    label: {
-                                        Image.ic24ChevronLeft                .aspectRatio(contentMode: .fit)
-                                    }
-                                )
-                                .buttonStyle(.plain)
-                            }
-                        }
+                    NavigationView {
+                        
+                        confirmationView(.init(value: phoneNumber.value))
+                    }
                 }
-            }
+            )
+            
             Spacer()
         }
     }
 }
 
 private extension View {
-     
+    
     func animationsDisabled() -> some View {
         return self.transaction { (tx: inout Transaction) in
             tx.disablesAnimations = true
@@ -107,13 +93,20 @@ struct PinCodeChangeView_Previews: PreviewProvider {
         )
         
         PinCodeChangeView(
+            config: .init(
+                buttonConfig: buttonConfig,
+                pinCodeConfig: pinConfig),
             viewModel: .init(
                 title: "String",
                 pincodeLength: 4,
-                config: .init(
-                    buttonConfig: buttonConfig,
-                    pinCodeConfig: pinConfig)
-            )
+                confirmationPublisher: {
+                    
+                    Just(.init(value: "+1...90"))
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            ),
+            confirmationView: { Text($0.value) }
         )
     }
 }

@@ -101,9 +101,9 @@ final class DocumentItemModelTests: XCTestCase {
         XCTAssertNoDiff(sut.titleForInformer, "Держатель карты")
     }
     
-    func test_init_documentItemModel_shouldSetValuesForExpireDate() {
+    func test_init_documentItemModel_shouldSetValuesForExpirationDate() {
         
-        let sut = makeSUT(id: .expireDate)
+        let sut = makeSUT(id: .expirationDate)
         
         XCTAssertNoDiff(sut.title, "Карта действует до")
         XCTAssertNoDiff(sut.titleForInformer, "Срок действия карты")

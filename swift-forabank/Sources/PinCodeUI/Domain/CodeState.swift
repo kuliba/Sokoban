@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 17.07.2023.
 //
 
+import SwiftUI
+
 public struct CodeState: Equatable {
     
     public var state: State
