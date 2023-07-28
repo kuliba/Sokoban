@@ -1,0 +1,83 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "qrcId": "AS10006QJQ2789N79JVP19G0KEK4LSGU",
+        "parameters": [{
+            "type": "HEADER",
+            "id": "title",
+            "value": "Оплата через СБП"
+        },
+            {
+                "type": "PRODUCT_SELECT",
+                "id": "debit_account",
+                "value": null,
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "brandName",
+                "value": "Кофейня у Артема",
+                "title": "Получатель",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "c896aba73a67de2bfc69de70209eb3f3"
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "paymentPurpose",
+                "value": "Букет цветов (paymentPurpos)",
+                "title": "Назначение платежа",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            },
+            {
+                "type": "INFO",
+                "id": "recipientBank",
+                "value": "Сбер",
+                "title": "Банк получателя",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "c896aba73a67de2bfc69de70209eb3f3"
+                }
+            },
+            {
+                "type": "ICON",
+                "id": "sfp_logo",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            },
+            {
+                "id": "payment_amount",
+                "type": "AMOUNT",
+                "value": null,
+                "title": "Сумма перевода",
+                "validationRules": [{
+                    "type": "LESS",
+                    "value": "1000000",
+                    "warning": "Сумма операции должна быть меньше 1 000 000 ₽"
+                }],
+                "button": {
+                    "title": "Оплатить",
+                    "action": "PAY",
+                    "color": "RED"
+                }
+            },
+            {
+                "type": "DATA",
+                "id": "currency",
+                "value": "RUB"
+            }
+        ],
+        "required": ["debit_account", "payment_amount", "currency"]
+    }
+}

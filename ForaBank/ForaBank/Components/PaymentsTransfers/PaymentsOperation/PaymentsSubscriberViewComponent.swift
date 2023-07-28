@@ -15,16 +15,18 @@ extension PaymentsSubscriberView {
     class ViewModel: PaymentsParameterViewModel, ObservableObject  {
         
         @Published var icon: Icon
-        @Published var name: String
-        @Published var description: String
+        let name: String
+        let description: String?
+        let style: Style
         
         private let model: Model
         
-        init(icon: Icon, name: String, description: String, model: Model, source: PaymentsParameterRepresentable) {
+        init(icon: Icon, name: String, description: String?, style: Style, model: Model, source: PaymentsParameterRepresentable) {
             
             self.icon = icon
             self.name = name
             self.description = description
+            self.style = style
             self.model = model
             super.init(source: source)
         }
@@ -32,7 +34,7 @@ extension PaymentsSubscriberView {
         convenience init(with parameterSubscriber: Payments.ParameterSubscriber, model: Model) {
             
             let name = parameterSubscriber.value ?? ""
-            self.init(icon: .shimmer(parameterSubscriber.icon), name: name, description: parameterSubscriber.description, model: model, source: parameterSubscriber)
+            self.init(icon: .shimmer(parameterSubscriber.icon), name: name, description: parameterSubscriber.description, style: .init(with: parameterSubscriber.style), model: model, source: parameterSubscriber)
             
             bind()
         }
@@ -64,54 +66,6 @@ extension PaymentsSubscriberView {
                     }
                     
                 }.store(in: &bindings)
-            
-            model.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case let payload as ModelAction.Dictionary.DownloadImages.Response:
-                        
-                        guard case .shimmer(let imageId) = icon else {
-                            return
-                        }
-                        
-                        switch payload.result {
-                        case .success(let images):
-                            
-                            if let imageData = images.first(where: { $0.id == imageId })?.imageData {
-                                
-                                if let image = imageData.image {
-                                    
-                                    withAnimation {
-                                        
-                                        icon = .image(image)
-                                    }
-                                } else {
-                                    
-                                    withAnimation {
-                                        icon = .placeholder
-                                    }
-                                }
-                                
-                            } else {
-                                
-                                withAnimation {
-                                    icon = .placeholder
-                                }
-                            }
-                            
-                        case .failure:
-                            withAnimation {
-                                icon = .placeholder
-                            }
-                        }
-                        
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
         }
     }
 }
@@ -126,6 +80,20 @@ extension PaymentsSubscriberView.ViewModel {
         case shimmer(String)
         case placeholder
     }
+    
+    enum Style {
+        
+        case normal
+        case success
+        
+        init(with parameter: Payments.ParameterSubscriber.Style) {
+            
+            switch parameter {
+            case .regular: self = .normal
+            case .small: self = .success
+            }
+        }
+    }
 }
 
 //MARK: - View
@@ -136,24 +104,53 @@ struct PaymentsSubscriberView: View {
     
     var body: some View {
         
-        VStack(spacing: 24) {
-            
-            IconView(viewModel: viewModel.icon)
-            
-            VStack(spacing: 8) {
+        switch viewModel.style {
+        case .normal:
+            VStack(spacing: 24) {
                 
-                Text(viewModel.name)
-                    .font(.textH3SB18240())
-                    .foregroundColor(.textSecondary)
-                
-                Text(viewModel.description)
-                    .font(.textBodyMR14180())
-                    .foregroundColor(.textPlaceholder)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
+                IconView(viewModel: viewModel.icon)
+                    .frame(width: 64, height: 64)
+            
+                VStack(spacing: 8) {
+                    
+                    Text(viewModel.name)
+                        .font(.textH3SB18240())
+                        .foregroundColor(.textSecondary)
+                    
+                    if let description = viewModel.description {
+                        
+                        Text(description)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                }
             }
             
-        }.padding(.vertical, 20)
+        case .success:
+            VStack(spacing: 10) {
+                
+                IconView(viewModel: viewModel.icon)
+                    .frame(width: 35, height: 35)
+            
+                VStack(spacing: 8) {
+                    
+                    Text(viewModel.name)
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+                    
+                    if let description = viewModel.description {
+                        
+                        Text(description)
+                            .font(.textBodyMR14180())
+                            .foregroundColor(.textPlaceholder)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -172,13 +169,11 @@ extension PaymentsSubscriberView {
                 
                 image
                     .resizable()
-                    .frame(width: 64, height: 64)
                     .clipShape(Circle())
                 
             case .shimmer:
                 
                 Circle()
-                    .frame(width: 64, height: 64)
                     .foregroundColor(.mainColorsGrayMedium)
                     .shimmering()
                 
@@ -187,21 +182,46 @@ extension PaymentsSubscriberView {
                 Image.ic64Goods
                     .resizable()
                     .renderingMode(.original)
-                    .frame(width: 64, height: 64)
             }
         }
     }
 }
+
+//MARK: - Preview
 
 struct PaymentsSubscriberView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
-        PaymentsSubscriberView(viewModel: .init(icon: .shimmer(""), name: "Цветы у дома", description: "Еженедельная доставка букета (subscriptionPurspose)", model: .emptyMock, source: Payments.ParameterMock()))
-            .previewLayout(.fixed(width: 375, height: 200))
-            PaymentsSubscriberView(viewModel: .init(icon: .placeholder, name: "Цветы у дома", description: "Еженедельная доставка букета (subscriptionPurspose)", model: .emptyMock, source: Payments.ParameterMock()))
+            
+            PaymentsSubscriberView(viewModel: .sampleShimmerNormal)
                 .previewLayout(.fixed(width: 375, height: 200))
+            
+            PaymentsSubscriberView(viewModel: .samplePlaceholderNormal)
+                .previewLayout(.fixed(width: 375, height: 200))
+            
+            PaymentsSubscriberView(viewModel: .samplePlaceholderSuccess)
+                .previewLayout(.fixed(width: 375, height: 200))
+            
+            PaymentsSubscriberView(viewModel: .sampleC2BSub)
+                .previewLayout(.fixed(width: 375, height: 200))
+                .previewDisplayName("C2B sucscribe success")
         }
     }
+}
+
+//MARK: - Preview Content
+
+extension PaymentsSubscriberView.ViewModel {
+    
+    static let sampleShimmerNormal = PaymentsSubscriberView.ViewModel(icon: .shimmer(""), name: "Цветы у дома", description: "Еженедельная доставка букета (subscriptionPurspose)", style: .normal, model: .emptyMock, source: Payments.ParameterMock())
+    
+    static let samplePlaceholderNormal = PaymentsSubscriberView.ViewModel(icon: .placeholder, name: "Цветы у дома", description: "Еженедельная доставка букета (subscriptionPurspose)", style: .normal, model: .emptyMock, source: Payments.ParameterMock())
+    
+    static let samplePlaceholderSuccess = PaymentsSubscriberView.ViewModel(icon: .placeholder, name: "Цветы у дома", description: "Еженедельная доставка букета (subscriptionPurspose)", style: .success, model: .emptyMock, source: Payments.ParameterMock())
+    
+    static let sampleC2BSub = PaymentsSubscriberView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Цветы у дома"), icon: "", description: nil, style: .small), model: .emptyMock)
+    
+    static let sampleC2B = PaymentsSubscriberView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Цветы у дома"), icon: "", description: "Еженедельная доставка букета (subscriptionPurspose)", style: .small), model: .emptyMock)
 }

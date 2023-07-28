@@ -16,6 +16,13 @@ extension Model {
         case clipped
     }
     
+    func amountFormatted(amount: Double, productID: ProductData.ID, style: AmountFormatStyle) -> String? {
+        
+        let product = product(productId: productID)
+        
+        return amountFormatted(amount: amount, currencyCode: product?.currency, style: style)
+    }
+    
     func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? {
         
         guard let currencyCode = currencyCode,

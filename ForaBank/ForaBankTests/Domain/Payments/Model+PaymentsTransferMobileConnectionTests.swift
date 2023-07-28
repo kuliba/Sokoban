@@ -224,8 +224,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.endpoint, "/rest/transfer/createAnywayTransfer")
         XCTAssertEqual(anywayTransfer.method, .post)
         
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -254,8 +254,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.endpoint, "/rest/transfer/createAnywayTransfer")
         XCTAssertEqual(anywayTransfer.method, .post)
         
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -284,8 +284,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         XCTAssertEqual(anywayTransfer.endpoint, "/rest/transfer/createAnywayTransfer")
         XCTAssertEqual(anywayTransfer.method, .post)
         
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.name), ["isNewPayment"])
-        XCTAssertEqual(anywayTransfer.parameters?.map(\.value), ["true"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.name), ["isNewPayment"])
+        XCTAssertEqual(anywayTransfer.parameters?.makeSections(\.value), ["true"])
         
         let anywayPayload = anywayTransfer.payload
         
@@ -469,8 +469,8 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         let responseData: TransferAnywayResponseData = makeAnywayResponseData()
         let step = try await sut.paymentsProcessRemoteStep(response: responseData)
         
-        XCTAssertNotEqual(step.parameters.map(\.id), [])
-        XCTAssertEqual(step.parameters.map(\.id), [])
+        XCTAssertNotEqual(step.parameters.makeSections(\.id), [])
+        XCTAssertEqual(step.parameters.makeSections(\.id), [])
     }
     
     // MARK: - Helpers Tests

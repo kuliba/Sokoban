@@ -159,13 +159,12 @@ extension Model {
             forIdentifier: .mobileConnectionOperatorLogo,
             as: Payments.ParameterOperatorLogo.self
         )
-        let data = MobileConnectionData(
-            svgImageData: .init(description: operatorLogo.svgImage)
-        )
+
         let success = try Payments.Success(
             with: response,
             operation: operation,
-            serviceData: .mobileConnectionData(data)
+            logoImage: .init(description: operatorLogo.svgImage),
+            amountFormatter: amountFormatted(amount:productID:style:)
         )
         
         return success

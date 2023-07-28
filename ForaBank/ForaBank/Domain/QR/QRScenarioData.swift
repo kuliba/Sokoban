@@ -9,10 +9,9 @@ import Foundation
 
 struct QRScenarioData: Equatable {
     
-    let scenario: Scenario
     let qrcId: String
     //FIXME: refactor to [any QRScenarioParameter] after switch to Xcode 14+
-    let parameters: [AnyQRScenarioParameter]
+    let parameters: [AnyPaymentParameter]
     let required: [String]
 }
 
@@ -42,32 +41,8 @@ extension QRScenarioData: Decodable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        var parametersContainer = try container.nestedUnkeyedContainer(forKey: .parameters)
-        var parameters = [AnyQRScenarioParameter]()
-        
-        while parametersContainer.isAtEnd == false {
-            
-            if let subscriber = try? parametersContainer.decode(QRScenarioParameterSubscriber.self) {
-                
-                parameters.append(.init(subscriber))
-                
-            } else if let productSelect = try? parametersContainer.decode(QRScenarioParameterProductSelect.self) {
-                
-                parameters.append(.init(productSelect))
-                
-            } else if let check = try? parametersContainer.decode(QRScenarioParameterCheck.self) {
-                
-                parameters.append(.init(check))
-                
-            } else {
-                
-                throw DecodingError.dataCorruptedError(in: parametersContainer, debugDescription: "Unknown parameter type")
-            }
-        }
-        
-        self.scenario = try container.decode(Scenario.self, forKey: .scenario)
         self.qrcId = try container.decode(String.self, forKey: .qrcId)
-        self.parameters = parameters
+        self.parameters = try AnyPaymentParameter.decode(container: try container.nestedUnkeyedContainer(forKey: .parameters))
         self.required = try container.decode([String].self, forKey: .required)
     }
 }

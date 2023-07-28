@@ -19,7 +19,7 @@ struct PaymentsOperationView: View {
             // top
             if let topItems = viewModel.top {
                 
-                ForEach(topItems, content: groupView(for:))
+                ForEach(topItems, content: PaymentsGroupView.groupView(for:))
                     .padding(.bottom, 16)
             }
             
@@ -30,9 +30,8 @@ struct PaymentsOperationView: View {
                     
                     VStack(spacing: 16) {
                         
-                        ForEach(viewModel.feed, content: groupView(for:))
+                        ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
                         
-                        //TODO: move id to Vstack
                         Color.clear
                             .frame(height: 0)
                             .id("bottom")
@@ -56,7 +55,8 @@ struct PaymentsOperationView: View {
             // bottom
             if let bottomItems = viewModel.bottom {
                 
-                ForEach(bottomItems, content: groupView(for:))
+                ForEach(bottomItems, content: PaymentsGroupView.groupView(for:))
+                    .padding(.bottom, 24)
             }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
@@ -106,7 +106,8 @@ struct PaymentsOperationView: View {
     }
 }
 
-//MARK: - View Builders
+
+//MARK: - Modifiers
 
 extension PaymentsOperationView {
     
@@ -176,14 +177,14 @@ extension PaymentsOperationViewModel {
         
         let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        let contentItems = [PaymentsSelectView.ViewModel.selectedParameter, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedDisabled, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
         
-        let bottomItems = [PaymentsContinueButtonView.ViewModel.sampleParam]
+        let bottomItems = [PaymentsButtonView.ViewModel.sampleParam]
         
         return PaymentsOperationViewModel(
             navigationBar: .init(title: "Налоги и услуги"),
             top: [PaymentsGroupViewModel(items: topItems)],
-            feed: [PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sampleParameter]), PaymentsGroupViewModel(items: contentItems)],
+            feed: [PaymentsGroupViewModel(items: contentItems)],
             bottom: [PaymentsGroupViewModel(items: bottomItems)],
             closeAction: {})
     }()
@@ -192,7 +193,7 @@ extension PaymentsOperationViewModel {
         
         let topItems = [PaymentSelectDropDownView.ViewModel.sample]
         
-        let contentItems = [PaymentsSelectView.ViewModel.selectedParameter, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
+        let contentItems = [PaymentsSelectView.ViewModel.selectedDisabled, PaymentsInfoView.ViewModel.sample,  PaymentsProductView.ViewModel.sample]
         
         let bottomItems = [PaymentsAmountView.ViewModel.amountParameter]
         

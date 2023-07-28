@@ -25,7 +25,7 @@ final class PaymentsOperationViewModelTests: XCTestCase {
         let bottomGroups = try XCTUnwrap(sut.bottom)
         let bottomGroupsItems = bottomGroups.flatMap(\.items)
         XCTAssertEqual(bottomGroupsItems.count, 1)
-        XCTAssertNotNil(bottomGroupsItems.first as? PaymentsContinueButtonView.ViewModel)
+        XCTAssertNotNil(bottomGroupsItems.first as? PaymentsButtonView.ViewModel)
     }
     
     func test_initWithOperationOneStepOneParam_oneFeedGroupWithOneItem() throws {

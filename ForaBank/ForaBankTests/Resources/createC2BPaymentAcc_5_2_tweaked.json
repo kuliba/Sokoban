@@ -1,0 +1,64 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "parameters": [
+            {
+                "type": "DATA",
+                "id": "paymentOperationDetailId",
+                "value": "43511"
+            },
+            {
+                "type": "SUCCESS_STATUS_ICON",
+                "id": "success_status",
+                "value": "REJECTED"
+            },
+            {
+                "type": "SUCCESS_TEXT",
+                "id": "success_title",
+                "value": "Платеж отклонен",
+                "style": "TITLE"
+            },
+            {
+                "type": "SUCCESS_TEXT",
+                "id": "success_amount",
+                "value": "10 000 ₽",
+                "style": "AMOUNT"
+            },
+            {
+                "type": "SUBSCRIBER",
+                "id": "brandName",
+                "style": "SMALL",
+                "icon": "c896aba73a67de2bfc69de70209eb3f3",
+                "value": "Кофейня у Артема",
+                "purpose": "Букет цветов (paymentPurpos)"
+            },
+            {
+                "type": "SUCCESS_LINK",
+                "id": "redirect_store_link",
+                "value": "https://sbp.nspk.ru/test_link_tiv.html",
+                "title": "вернуться в магазин"
+            },
+            {
+                "type": "SUCCESS_OPTION_BUTTONS",
+                "id": "success_option_buttons",
+                "value": ["DETAILS"]
+            },
+            {
+                "type": "BUTTON",
+                "id": "button_pay",
+                "value": "На главный",
+                "action": "MAIN",
+                "color": "red",
+                "placement": "BOTTOM"
+            },
+            {
+                "type": "ICON",
+                "id": "sfp_logo",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            }
+        ]
+    }
+}

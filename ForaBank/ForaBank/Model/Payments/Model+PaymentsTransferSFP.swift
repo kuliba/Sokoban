@@ -161,7 +161,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия", placement: .feed)
             
             result.append(feeParameter)

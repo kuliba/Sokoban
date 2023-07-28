@@ -628,7 +628,7 @@ extension Model {
         case .info:
             return Payments.ParameterInfo(
                 .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterLocation,
+                icon: .image(parameterData.iconData ?? .parameterLocation),
                 title: parameterData.title, group: .init(id: "info", type: .info))
             
         case .selectSwitch:
@@ -652,7 +652,7 @@ extension Model {
                         let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
                         let countryTransferNumber = Payments.ParameterInfo(
                             .init(id: countryTransferNumberId, value: customerName),
-                            icon: .init(named: "ic24User") ?? .parameterDocument,
+                            icon: .local("ic24User"),
                             title: "Получатель", placement: .feed, group: .init(id: "confirm", type: .info))
                         
                         parameters.append(countryTransferNumber)
@@ -667,7 +667,7 @@ extension Model {
                         let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
                         let amountParameter = Payments.ParameterInfo(
                             .init(id: amountParameterId, value: amount),
-                            icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                            icon: .local("ic24Coins"),
                             title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
                         
                         parameters.append(amountParameter)
@@ -679,7 +679,7 @@ extension Model {
                         let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
                         let countryTransferNumber = Payments.ParameterInfo(
                             .init(id: countryTransferNumberId, value: customerName),
-                            icon: .init(named: "ic24User") ?? .parameterDocument,
+                            icon: .local("ic24User"),
                             title: "Получатель", placement: .feed)
                         
                         parameters.append(countryTransferNumber)
@@ -693,7 +693,7 @@ extension Model {
                         let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
                         let amountParameter = Payments.ParameterInfo(
                             .init(id: amountParameterId, value: amount),
-                            icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                            icon: .local("ic24Coins"),
                             title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
                         
                         parameters.append(amountParameter)
@@ -709,7 +709,7 @@ extension Model {
             let countryTransferNumberId = Payments.Parameter.Identifier.countryPayeeAmount.rawValue
             let countryTransferNumber = Payments.ParameterInfo(
                 .init(id: countryTransferNumberId, value: amount),
-                icon: .init(named: "ic24User") ?? .parameterDocument,
+                icon: .local("ic24User"),
                 title: "Сумма зачисления в валюте", placement: .feed, group: .init(id: "confirm", type: .info))
             
             parameters.append(countryTransferNumber)
@@ -730,7 +730,7 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
                 .init(id: amountParameterId, value: amountFormatted),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                icon: .local("ic24Coins"),
                 title: "Сумма списания", placement: .feed, group: .init(id: "confirm", type: .info))
             
             parameters.append(amountParameter)
@@ -742,7 +742,7 @@ extension Model {
             let countryTransferNumberId = Payments.Parameter.Identifier.countryTransferNumber.rawValue
             let countryTransferNumber = Payments.ParameterInfo(
                 .init(id: countryTransferNumberId, value: trnReference.fieldValue),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: trnReference.fieldTitle ?? "Номер перевода", placement: .feed, group: .init(id: "confirm", type: .info))
             
             parameters.append(countryTransferNumber)
@@ -754,7 +754,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия", placement: .feed, group: .init(id: "confirm", type: .info))
             
             parameters.append(feeParameter)
@@ -780,8 +780,7 @@ extension Model {
         
         let success = try Payments.Success(
             with: response,
-            operation: operation,
-            serviceData: .abroadData(response)
+            operation: operation
         )
         
         return success

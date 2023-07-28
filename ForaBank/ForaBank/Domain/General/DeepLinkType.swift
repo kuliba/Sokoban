@@ -10,8 +10,8 @@ import Foundation
 enum DeepLinkType {
     
     case me2me(String)
-    case c2b(String)
-    case c2bSubscriprion(URL)
+    case c2b(URL)
+    case c2bSubscribe(URL)
     case sbpPay(String)
     
     init?(url: URL) {
@@ -22,12 +22,10 @@ enum DeepLinkType {
             self = .sbpPay(tokenIntent)
         
         case let c2bUrlString where c2bUrlString.contains("qr.nspk.ru"):
-            var strUrl = url.absoluteString.replacingOccurrences(of: "https2", with: "https")
-            strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
-            self = .c2b(strUrl)
+            self = .c2b(url)
             
         case let c2bSubscribeUrlString where c2bSubscribeUrlString.contains("sub.nspk.ru"):
-            self = .c2bSubscriprion(url)
+            self = .c2bSubscribe(url)
 
         default:
             guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),

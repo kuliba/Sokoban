@@ -1,0 +1,93 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "parameters": [{
+            "type": "DATA",
+            "id": "paymentOperationDetailId",
+            "value": "43511"
+        },
+            {
+                "type": "DATA",
+                "id": "printFormType",
+                "value": "c2b"
+            },
+            {
+                "type": "SUCCESS_STATUS_ICON",
+                "id": "success_status",
+                "value": "COMPLETE"
+            },
+            {
+                "type": "SUCCESS_TEXT",
+                "id": "success_title",
+                "value": "Покупка оплачена",
+                "style": "TITLE"
+            },
+            {
+                "type": "SUCCESS_TEXT",
+                "id": "success_amount",
+                "value": "10 000 ₽",
+                "style": "AMOUNT"
+            },
+            {
+                "type": "SUBSCRIBER",
+                "id": "brandName",
+                "style": "SMALL",
+                "icon": "c896aba73a67de2bfc69de70209eb3f3",
+                "value": "Кофейня у Артема",
+                "purpose": "Букет цветов (paymentPurpos)"
+            },
+            {
+                "type": "SUCCESS_LINK",
+                "id": "redirect_store_link",
+                "value": "https://sbp.nspk.ru/test_link_tiv.html",
+                "title": "вернуться в магазин"
+            },
+            {
+                "type": "PRODUCT_SELECT",
+                "id": "debit_account",
+                "value":"12345677889900",
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": ["CARD", "ACCOUNT"],
+                    "currencies": ["RUB"],
+                    "additional": false
+                }
+            },
+            {
+                "type": "SUCCESS_TEXT",
+                "id": "success_link_message",
+                "value": "Привяжите счет, деньги будут списываться автоматически. Счет можно будет изменить в настройках приложения",
+                "style": "MESSAGE"
+            },
+            {
+                "type": "SUCCESS_OPTION_BUTTONS",
+                "id": "success_option_buttons",
+                "value": ["DOCUMENT", "DETAILS"]
+            },
+            {
+                "type": "BUTTON",
+                "id": "button_save",
+                "value": "Привязать счет",
+                "action": "SAVE",
+                "color": "RED",
+                "placement": "BOTTOM"
+            },
+            {
+                "type": "BUTTON",
+                "id": "button_cancel",
+                "value": "Отказаться",
+                "action": "CANCEL",
+                "color": "WHITE",
+                "placement": "BOTTOM"
+            },
+            {
+                "type": "ICON",
+                "id": "sfp_logo",
+                "value": "ic72Sbp",
+                "iconType": "LOCAL",
+                "placement": "BOTTOM"
+            }
+        ]
+    }
+}
