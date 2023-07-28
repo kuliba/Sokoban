@@ -214,30 +214,5 @@ extension ServerCommands {
                 self.token = token
             }
         }
-        
-        //TODO: удалить!!! новый контракт
-        /*
-         https://<DBO_server_url>/registration/{version}/getProcessingSessionCode
-         */
-        struct GetProcessingSessionCode: ServerCommand {
-            
-            let token: String
-            let endpoint = "/processing/registration/v1/getProcessingSessionCode"
-            let method: ServerCommandMethod = .get
-                    
-            struct Payload: Encodable {}
-            
-            struct Response: ServerResponse {
-                
-                let statusCode: ServerStatusCode
-                let errorMessage: String?
-                let data: ProcessingSessionCodeData?
-            }
-            
-            internal init(token: String) {
-                
-                self.token = token
-            }
-        }
     }
 }

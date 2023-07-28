@@ -11,58 +11,84 @@ import SwiftUI
 import PDFKit
 import PinCodeUI
 
-enum PinError: Error {
+struct CVVPinError {
     
-    case certificate
-    case connectivity
+    enum PinError: Error {
+        
+        case certificate
+        case connectivity
+    }
+    
+    struct ActivationError: Error {
+        
+        let message: String
+    }
+    
+    struct BindPublicKeyError: Error {
+        
+        let errorMessage: String
+        let retryAttempts: Int
+    }
 }
 
 typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient
 
 protocol CheckCertificateClient {
     
-    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void)
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void)
 }
 
 protocol ActivateCertificateClient {
     
-    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void)
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void)
 }
 
 final class HappyCertificateClient: CertificateClient {
     
-    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
         completion(.success(()))
     }
 
-    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
         completion(.success(()))
     }
 }
 
 final class HappyCheckSadActivateCertificateClient: CertificateClient {
     
-    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
         completion(.success(()))
     }
 
-    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
         
-        struct ActivationError: Error {}
-        completion(.failure(ActivationError()))
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!!")))
     }
 }
 
 final class SadCertificateClient: CertificateClient {
     
-    func checkCertificate(completion: @escaping (Result<Void, PinError>) -> Void) {
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
         
-        completion(.failure(PinError.certificate))
+        completion(.failure(CVVPinError.PinError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<Void, Error>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
         
         completion(.success(()))
+    }
+}
+
+final class SadCheckSadActivateCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
+        
+        completion(.failure(CVVPinError.PinError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
     }
 }
 
@@ -75,13 +101,21 @@ func getPinConfirmationCodePublisher() -> PinCodeViewModel.ConfirmationPublisher
         .eraseToAnyPublisher()
 }
 
-// MARK: - getPinConfirmationCode
-
-func getProcessingSessionCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
+func failedChangeCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
     
-    Just(.init(value: "+1...80"))
-        .setFailureType(to: Error.self)
-        .eraseToAnyPublisher()
+    Fail(
+        error: NSError(
+            domain: "",
+            code: 500,
+            userInfo: [
+                "statusCode": 7506,
+                "errorMessage":
+"""
+    Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения
+"""
+            ]
+        )
+    ).eraseToAnyPublisher()
 }
 
 class ProductProfileViewModel: ObservableObject {
@@ -1421,7 +1455,7 @@ private extension ProductProfileViewModel {
             ),
             secondary: .init(
                 type: .default,
-                title: "Активируйте",
+                title: "Активировать",
                 action: action
             )
         )
@@ -1630,7 +1664,7 @@ extension ProductProfileViewModel {
     }
     
     func handleCheckCertificateResult(
-        _ result: Result<Void, PinError>,
+        _ result: Result<Void, CVVPinError.PinError>,
         displayNumber: String?
     ) {
         switch result {
@@ -1643,7 +1677,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func handlePinError(_ pinError: (PinError)) {
+    func handlePinError(_ pinError: (CVVPinError.PinError)) {
         
         switch pinError {
             
@@ -1659,7 +1693,7 @@ extension ProductProfileViewModel {
                         
                     case let .failure(error):
                         
-                        makeAlert(error.localizedDescription)
+                        makeAlert(error.message)
                         
                     case .success:
                         

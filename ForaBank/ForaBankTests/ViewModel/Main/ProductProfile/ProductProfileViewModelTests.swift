@@ -110,7 +110,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.alert?.primary.action)
         
         XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
-        XCTAssertNoDiff(sut.alert?.secondary?.title, "Активируйте")
+        XCTAssertNoDiff(sut.alert?.secondary?.title, "Активировать")
         XCTAssertNotNil(sut.alert?.secondary?.action)
         
         sut.action.send(ProductProfileViewModelAction.Close.Alert())
