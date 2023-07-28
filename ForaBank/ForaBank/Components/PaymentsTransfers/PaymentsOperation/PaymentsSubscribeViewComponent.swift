@@ -46,7 +46,7 @@ extension PaymentsSubscribeView {
                     case let payload as PaymentsParameterViewModelAction.Subscribe.ButtonDidTapped:
                         update(value: payload.action.rawValue)
                         
-                        self.action.send(PaymentsParameterViewModelAction.ContinueButton.DidTapped())
+                        self.action.send(PaymentsParameterViewModelAction.Button.DidTapped(action: .continue))
                         
                     default:
                         break
@@ -74,22 +74,18 @@ extension PaymentsSubscribeView {
             
             parameterSubscribe.buttons.map { button in
                 
-                var isPreconditionPassed = true
-                if let precondition = button.precondition {
+                let isPreconditionPassed = button.precondition.map { precondition in
                     
-                    if let parameterValueCallback = parameterValue,
-                       let value = parameterValueCallback(precondition.parameterId),
-                       precondition.value == value {
-                        
-                        isPreconditionPassed = true
-                        
-                    } else {
-                        
-                        isPreconditionPassed = false
-                    }
+                    guard
+                        let parameterValueCallback = parameterValue,
+                        let value = parameterValueCallback(precondition.parameterId),
+                        precondition.value == value
+                    else { return false }
+                    
+                    return true
                 }
                 
-                let buttonStyle = ButtonSimpleView.ViewModel.ButtonStyle(style: button.style, isPreconditionPassed: isPreconditionPassed)
+                let buttonStyle = ButtonSimpleView.ViewModel.ButtonStyle(style: button.style, isPreconditionPassed: isPreconditionPassed ?? true)
 
                 let buttonViewModel = ButtonSimpleView.ViewModel(title: button.title, style: buttonStyle) {[weak self] in
                     
@@ -155,8 +151,8 @@ struct PaymentsSubscribeView: View {
             
             viewModel.icon
                 .renderingMode(.original)
+                .padding(.top, 10)
         }
-        .padding(.horizontal, 16)
         .padding(.bottom, 32)
     }
 }

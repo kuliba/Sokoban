@@ -33,6 +33,26 @@ extension ModelAction {
                 }
             }
         }
+        
+        enum Subscribtion {
+            
+            struct Request: Action {
+                
+                let parameters: [PaymentsParameterRepresentable]
+                let action: SubscribtionAction
+            
+                enum SubscribtionAction {
+                    
+                    case link
+                    case deny
+                }
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<Payments.Success, Error>
+            }
+        }
     }
 }
 
@@ -63,6 +83,39 @@ extension Model {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
+            }
+        }
+    }
+    
+    func handlePaymentSubscribtionRequest(_ payload: ModelAction.Payment.Subscribtion.Request) {
+        
+        switch payload.action {
+        case .link:
+            Task {
+                
+                do {
+                    
+                    let result = try await paymentsC2BSubscribe(parameters: payload.parameters)
+                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .success(result)))
+                    
+                } catch {
+                    
+                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .failure(error)))
+                }
+            }
+            
+        case .deny:
+            Task {
+                
+                do {
+                    
+                    let result = try await paymentsC2BDeny(parameters: payload.parameters)
+                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .success(result)))
+                    
+                } catch {
+                    
+                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .failure(error)))
+                }
             }
         }
     }
@@ -119,6 +172,7 @@ extension Model {
         case let .mock(mock): return mock.service
         case .sfp: return .sfp
         case .requisites: return .requisites
+        case .c2b: return .c2b
         case .c2bSubscribe: return .c2b
         case .direct: return .abroad
         case .return: return .return
@@ -808,7 +862,7 @@ extension Model {
             
         default:
             let response = try await paymentsTransferComplete(code: codeValue)
-            let success = try Payments.Success(with: response, operation: operation)
+            let success = try Payments.Success(with: response, operation: operation, amountFormatter: amountFormatted(amount:productID:style:))
             
             return success
         }
@@ -821,7 +875,7 @@ extension Model {
         switch operation.service {
         case .sfp:
             let response = try await paymentsTransferSFPProcessFora(parameters: operation.parameters, process: process)
-            let success = try Payments.Success(with: response, operation: operation)
+            let success = try Payments.Success(with: response, operation: operation, amountFormatter: amountFormatted(amount:productID:style:))
             return success
             
         case .c2b:
@@ -905,7 +959,7 @@ extension Model {
         case .info:
             return Payments.ParameterInfo(
                 .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterLocation,
+                icon: .image(parameterData.iconData ?? .parameterLocation),
                 title: parameterData.title)
         }
     }
@@ -919,7 +973,7 @@ extension Model {
         default:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: adittionalData.iconData ?? .parameterDocument,
+                icon: .image(adittionalData.iconData ?? .parameterDocument),
                 title: adittionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
         }
     }

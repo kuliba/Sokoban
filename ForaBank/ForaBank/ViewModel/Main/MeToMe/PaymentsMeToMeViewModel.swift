@@ -142,52 +142,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             // For ruble transfers
                             if response.needOTP == false {
-                                let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
-                                switch response.documentStatus {
-                                case .complete:
-                                    
-                                    guard let payerProductId = swapViewModel.productIdFrom,
-                                          let payeeProductId = swapViewModel.productIdTo else {
-                                        return
-                                    }
-                                    
-                                    let meToMePayment = MeToMePayment(
-                                        payerProductId: payerProductId,
-                                        payeeProductId: payeeProductId,
-                                        amount: paymentsAmount.textField.value
-                                    )
-                                    
-                                    switch mode {
-                                    case let .templatePayment(templateId, _):
-                                        
-                                        if let successViewModel = PaymentsSuccessViewModel(
-                                            model,
-                                            mode: modeForSuccessView,
-                                            transferData: response,
-                                            meToMePayment: meToMePayment,
-                                            templateId: templateId
-                                        ) {
-                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                        }
-                                        
-                                    default:
-                                        if let successViewModel = PaymentsSuccessViewModel(
-                                            model,
-                                            mode: modeForSuccessView,
-                                            transferData: response,
-                                            meToMePayment: meToMePayment,
-                                            templateId: nil
-                                        ) {
-                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                        }
-                                    }
-
-                                default:
-
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response) {
-                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                    }
+                                
+                                let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response)
+                                
+                                guard let success = Payments.Success(mode: mode, amountFormatter: model.amountFormatted(amount:currencyCode:style:)) else {
+                                    return
                                 }
+                                
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 
                             } else {
                                 
@@ -207,17 +170,14 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                     switch payload.result {
                     case let .success(transferData):
-                        let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
-
-                        if let successViewModel = PaymentsSuccessViewModel(
-                            model,
-                            mode: modeForSuccessView,
-                            transferData: transferData,
-                            meToMePayment: nil,
-                            templateId: nil
-                        ) {
-                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                        let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: transferData)
+                        
+                        guard let success = Payments.Success(mode: mode, amountFormatter: model.amountFormatted(amount:currencyCode:style:)) else {
+                            return
                         }
+                        
+                        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
 
                     case let .failure(error):
                         makeAlert(error)
@@ -234,8 +194,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch mode {
                         case let .closeAccount(productData, balance):
                             
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccount(productData.id), currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                            let currency = Currency(description: productData.currency)
+                            if let success = Payments.Success(mode: .closeAccount(productData.id, currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
                                 
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 makeInformer(closeAccount: true)
                             }
@@ -260,23 +222,32 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                         switch mode {
                         case let .closeDeposit(productData, balance):
-                            
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                            let currency = Currency(description: productData.currency)
+                            if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
                                 
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
+                            
                         case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
-                            
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
-                                
+                            let currency = Currency(description: productData.currency)
+                            let balance = productData.balanceValue
+                            if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                               
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
+                            
                         case .demandDeposit:
                             if let productIdFrom = swapViewModel.productIdFrom,
                                let productData = model.product(productId: productIdFrom) {
                                 
-                                if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
-                                    
+                                let currency = Currency(description: productData.currency)
+                                let balance = productData.balanceValue
+                                
+                                if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                                   
+                                    let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                     self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 }
                             }
@@ -629,16 +600,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: value))
     }
     
-    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?) -> PaymentsSuccessViewModel.Mode{
+    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, transferData: TransferResponseData) -> PaymentsSuccessViewModel.Mode{
         if let productIdFrom = productIdFrom,
            let _ = model.product(productId: productIdFrom) as? ProductDepositData {
-            return .makePaymentToDeposite
+            return .makePaymentFromDeposit(from: productIdFrom, to: productIdTo, transferData)
         }
         else if let productIdTo = productIdTo,
                 let _ = model.product(productId: productIdTo) as? ProductDepositData {
-                 return .makePaymentToDeposite
+                 return .makePaymentToDeposit(from: productIdFrom, to: productIdTo, transferData)
              }
-        return .meToMe
+        return .meToMe(from: productIdFrom, to: productIdTo, transferData)
     }
     
     private func isSwapEnabled(isSwapButtonEnabled: Bool, productFrom: ProductData?, productTo: ProductData?) -> Bool {

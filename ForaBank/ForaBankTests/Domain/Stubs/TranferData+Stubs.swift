@@ -12,14 +12,15 @@ extension TransferGeneralData {
     
     static func generalStub(
         amount: Decimal? = 0,
-        phoneNumber: String? = "number"
+        phoneNumber: String? = "number",
+        cardId: Int = 1
     ) -> [TransferGeneralData] {
         
         let payer = TransferData.Payer(
             inn: nil,
             accountId: nil,
             accountNumber: nil,
-            cardId: 1,
+            cardId: cardId,
             cardNumber: nil,
             phoneNumber: "number"
         )

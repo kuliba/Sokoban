@@ -60,34 +60,32 @@ struct RootView: View {
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
+            }
+            
+            //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.
+            if let link = viewModel.link  {
                 
-                if let link = viewModel.link  {
+                switch link {
+                case .messages(let messagesHistoryViewModel):
+                    //FIXME: looks like NavigationView required
+                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                    //FIXME: looks like zIndex not needed
+                        .zIndex(.greatestFiniteMagnitude)
+
+                case .me2me(let requestMeToMeModel):
+                    //FIXME: looks like NavigationView required
+                    MeToMeRequestView(viewModel: requestMeToMeModel)
+                    //FIXME: looks like zIndex not needed
+                        .zIndex(.greatestFiniteMagnitude)
+
+                case .userAccount(let viewModel):
+                    NavigationView {
+                          UserAccountView(viewModel: viewModel)
+                      }
                     
-                    switch link {
-                    case .messages(let messagesHistoryViewModel):
-                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                            .zIndex(.greatestFiniteMagnitude)
-                        
-                    case .me2me(let requestMeToMeModel):
-                        MeToMeRequestView(viewModel: requestMeToMeModel)
-                            .zIndex(.greatestFiniteMagnitude)
-                        
-                    case .c2b(let viewModel):
-                        
-                        NavigationView {
-                            
-                            C2BDetailsView(viewModel: viewModel)
-                                .navigationBarTitle("", displayMode: .inline)
-                                .navigationBarBackButtonHidden(true)
-                                .edgesIgnoringSafeArea(.all)
-                        }
-                        
-                    case .userAccount(let viewModel):
-                        
-                        NavigationView {
-                            
-                            UserAccountView(viewModel: viewModel)
-                        }
+                case let .payments(paymentsViewModel):
+                    NavigationView {
+                        PaymentsView(viewModel: paymentsViewModel)
                     }
                 }
             } //geo

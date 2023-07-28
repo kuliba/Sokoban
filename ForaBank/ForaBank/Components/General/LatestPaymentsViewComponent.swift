@@ -264,6 +264,15 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             self.avatar = operatorData.avatar ?? icon
             self.description = operatorData.description ?? name
             self.topIcon = nil
+
+        case (.internet, let paymentData as PaymentServiceData),             (.service, let paymentData as PaymentServiceData)
+:
+            
+            let operatorData = Self.reduceAnywayOperator(anywayOperators: model.dictionaryAnywayOperators(), puref: paymentData.puref)
+            
+            self.avatar = operatorData.avatar ?? icon
+            self.description = operatorData.description ?? name
+            self.topIcon = nil
             
         case (.mobile, let paymentData as PaymentServiceData):
             

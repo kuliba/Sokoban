@@ -56,7 +56,7 @@ extension Model {
             case "a3_address_2_2", "a3_address_10_1", "a3_address_4_2", "a3_address_4_3":
                 return Payments.ParameterInfo(
                     .init(id: parameterData.id, value: parameterData.value),
-                    icon: parameterData.iconData ?? .parameterLocation,
+                    icon: .image(parameterData.iconData ?? .parameterLocation),
                     title: "Адрес проживания")
                 
             case "a3_docType_3_2", "a3_docName_1_1":

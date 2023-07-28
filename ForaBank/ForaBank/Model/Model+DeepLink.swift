@@ -30,12 +30,14 @@ extension ModelAction {
 extension Model {
  
     func handleDeepLinkSet(_ payload: ModelAction.DeepLink.Set) {
-        
-        deepLinkType = payload.type
-        
+
         if auth.value == .authorized {
             
             self.action.send(ModelAction.DeepLink.Process(type: payload.type))
+            
+        } else {
+            
+            deepLinkType = payload.type
         }
     }
     

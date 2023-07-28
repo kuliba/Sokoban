@@ -156,7 +156,7 @@ class PaymentsViewModel: ObservableObject {
                     
                     switch payload.result {
                     case let .complete(paymentSuccess):
-                        let successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess)
+                        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: paymentSuccess, model)
                         self.successViewModel = successViewModel
                         bind(successViewModel: successViewModel)
                         // update products balances
@@ -288,6 +288,10 @@ class PaymentsViewModel: ObservableObject {
                     self.action.send(PaymentsViewModelAction.ContactAbroad(source: payload.source))
                     self.action.send(PaymentsViewModelAction.CloseSuccessView())
                     
+                case _ as PaymentsSuccessAction.Button.Repeat:
+                    //TODO: correct implementation required
+                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    
                 default:
                     break
                 }
@@ -313,12 +317,16 @@ class PaymentsViewModel: ObservableObject {
                 case let payload as PaymentsOperationViewModelAction.CancelOperation:
 
                     //TODO: move to convenience init
-                    let successViewModel = PaymentsSuccessViewModel(model, warningTitle: "Перевод отменен!", amount: payload.amount, iconType: .accepted, logo: .init(title: "сбп", image: .ic40Sbp), actionButton: .init(title: "На главный", style: .red, action: { [weak self] in
-                        
-                        self?.action.send(PaymentsViewModelAction.Dismiss())
-                        
-                    }), optionButtons: [])
-                    self.successViewModel = successViewModel
+                    let succes = Payments.Success(
+                        parameters: [
+                            Payments.ParameterSuccessStatus(status: .accepted),
+                            Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                            //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
+                            //TODO: amount
+                            Payments.ParameterButton.actionButtonMain()
+                        ])
+                    
+                    self.successViewModel = .init(paymentSuccess: succes, model)
 
                 default:
                     break
