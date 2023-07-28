@@ -78,23 +78,46 @@ extension ProductView {
         
         @Binding var cardInfo: ProductView.ViewModel.CardInfo
         let action: () -> Void
+        @State private var showDotsAnimation: Bool = false
         
         var body: some View {
             
             VStack {
                 
-                Button(cardInfo.cvvToDisplay, action: action)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.mainColorsWhite)
-                    .frame(CGSize(width: 76, height: 40))
-                    .background(RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.textPlaceholder)
-                        .opacity(0.5)
-                    )
-                    .padding(.trailing, 12 / UIScreen.main.scale)
+                ZStack {
+                    
+                    Button(cardInfo.cvvToDisplay, action: action)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.mainColorsWhite)
+                    if showDotsAnimation {
+                        
+                        DotsAnimations()
+                    }
+                }
+                .frame(CGSize(width: 76, height: 40))
+                .background(RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(.textPlaceholder)
+                    .opacity(0.5)
+                )
+                .padding(.trailing, 12 / UIScreen.main.scale)
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }
 
+private extension ProductView {
+    
+    struct DotsAnimations : View {
+        
+        var body: some View {
+            
+            HStack(spacing: 3) {
+                
+                AnimatedDotView(duration: 0.6, delay: 0)
+                AnimatedDotView(duration: 0.6, delay: 0.2)
+                AnimatedDotView(duration: 0.6, delay: 0.4)
+            }
+        }
+    }
+}

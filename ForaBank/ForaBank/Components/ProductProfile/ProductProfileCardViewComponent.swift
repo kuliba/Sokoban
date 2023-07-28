@@ -219,15 +219,6 @@ extension ProductProfileCardView {
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Failed())
                             self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
                         }
-                            // TODO: удалить!!! новый контракт!!!
-                    case let payload as ModelAction.CVV.GetProcessingSessionCode.Response:
-                        switch payload.result {
-                        case .success:
-                           //TODO: удалить!!!
-                            print("")
-                        case .failure(message: let message):
-                            self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
-                        }
 
                     default:
                         break

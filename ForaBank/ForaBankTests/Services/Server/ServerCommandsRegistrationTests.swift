@@ -10,8 +10,6 @@ import XCTest
 
 class ServerCommandsRegistrationTests: XCTestCase {
     
-    typealias Response = ServerCommands.RegistrationContoller.GetProcessingSessionCode.Response
-    
     let bundle = Bundle(for: ServerCommandsRegistrationTests.self)
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
@@ -85,7 +83,7 @@ class ServerCommandsRegistrationTests: XCTestCase {
     }
     
     //MARK: - GetCode
-    
+
     func testGetCode_Response_Decoding() throws {
         
         // given
@@ -156,43 +154,5 @@ class ServerCommandsRegistrationTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
-    }
-    
-    func testGetProcessingSessionCode_Response_Decoding() throws {
-        
-        let response: Response = try decode(from: "GetProcessingSessionCodeGeneric")
-        
-        XCTAssertEqual(response.statusCode, .ok)
-        XCTAssertNil(response.errorMessage)
-        XCTAssertEqual(response.data?.code, "22345200-abe8-4f60-90c8-0d43c5f6c0f6")
-        XCTAssertEqual(response.data?.phone, "71234567890")
-    }
-    
-    func testGetProcessingSessionCodeWithError_Response_Decoding() throws {
-        
-        let response: Response = try decode(from: "GetProcessingSessionCodeError")
-        
-        XCTAssertEqual(response.statusCode, .userNotAuthorized)
-        XCTAssertEqual(response.errorMessage, "Клиент не найден")
-        XCTAssertNil(response.data)
-    }
-    
-    // MARK: - Helpers
-    
-    private func decode(from filename: String) throws -> Response {
-        
-        try Response.decode(from: filename)
-    }
-}
- 
-// MARK: - Helpers
-
-private extension ServerCommands.RegistrationContoller.GetProcessingSessionCode.Response {
-    
-    typealias Response = ServerCommands.RegistrationContoller.GetProcessingSessionCode.Response
-    
-    static func decode(from filename: String) throws -> Response {
-        
-        try filename.decode(Response.self, bundle: .init(for: ServerAgentStub.self))
     }
 }
