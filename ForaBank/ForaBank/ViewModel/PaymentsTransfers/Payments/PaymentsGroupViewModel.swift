@@ -53,7 +53,7 @@ final class PaymentsContactGroupViewModel: PaymentsGroupViewModel, ObservableObj
     var collapsedItem: PaymentsInfoView.ViewModel {
        
         let content = items.compactMap({ $0.value.current }).joined(separator: " ")
-        return .init(icon: .ic24User, title: "Получатель", content: content, iconStyle: .small, lineLimit: 1)
+        return .init(icon: .local(.ic24User), title: "Получатель", content: content)
     }
     
     init(id: String = UUID().uuidString, items: [PaymentsParameterViewModel], isCollapsed: Bool) {

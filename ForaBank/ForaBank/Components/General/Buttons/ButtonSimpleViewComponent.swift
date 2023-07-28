@@ -29,6 +29,7 @@ extension ButtonSimpleView {
             
             case red
             case gray
+            //FIXME: refactor into isEnabled published property
             case inactive
             
             var backgroundColor: Color {

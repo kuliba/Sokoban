@@ -570,17 +570,30 @@ class MainViewModel: ObservableObject, Resetable {
                             }
                         }
 
-                    case .c2bURL(let c2bURL):
+                    case .c2bURL(let url):
                         
-                        // show c2b payment after delay required to finish qr scanner close animation
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                    
-                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
-                                self?.action.send(MainViewModelAction.Close.Link())
-                            })
+                        Task.detached(priority: .high) { [self] in
                             
-                            self.link = .c2b(c2bViewModel)
+                            do {
+                                
+                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: {})
+                                bind(operationViewModel)
+                                
+                                await MainActor.run {
+                                    
+                                    self.link = .payments(operationViewModel)
+                                }
+                                
+                            } catch {
+                                
+                                await MainActor.run {
+                                    
+                                    self.alert = .init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                                }
+                                
+                                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            }
                         }
                         
                     case .c2bSubscribeURL(let url):
@@ -895,7 +908,6 @@ extension MainViewModel {
         case country(CountryPaymentView.ViewModel)
         case serviceOperators(OperatorsViewModel)
         case failedView(QRFailedViewModel)
-        case c2b(C2BViewModel)
         case searchOperators(QRSearchOperatorViewModel)
         case openCard(AuthProductsViewModel)
         case payments(PaymentsViewModel)

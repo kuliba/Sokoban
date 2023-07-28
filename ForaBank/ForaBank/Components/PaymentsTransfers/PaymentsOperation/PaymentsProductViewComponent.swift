@@ -110,7 +110,7 @@ struct PaymentsCardView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsProductView(viewModel: .sample)            
+            PaymentsProductView(viewModel: .sample)
             PaymentsProductView(viewModel: .sampleExpanded)
         }
     }

@@ -181,32 +181,91 @@ class RootViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
 
         model.action
+            .compactMap { $0 as? ModelAction.DeepLink.Process }
+            .map(\.type)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] deepLink in
+                
+                switch deepLink {
+                case let .me2me(bankId):
+                    self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
+
+                case let .c2b(url):
+                  
+                    Task {
+                        
+                        do {
+                            
+                            let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
+                                
+                                self?.action.send(RootViewModelAction.CloseLink())
+                            })
+                            
+                            await MainActor.run {
+                                
+                                self.link = .payments(operationViewModel)
+                            }
+                            
+                        } catch {
+                            
+                            await MainActor.run {
+                                
+                                self.alert = .init(title: "Ошибка оплаты", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                                    
+                                    self?.action.send(RootViewModelAction.CloseAlert())
+                                    
+                                }))
+                            }
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                        }
+                    }
+                    
+                case let .c2bSubscribe(url):
+                  
+                    Task {
+                        
+                        do {
+                            
+                            let operationViewModel = try await PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
+                                
+                                self?.action.send(RootViewModelAction.CloseLink())
+                            })
+                            
+                            await MainActor.run {
+                                
+                                self.link = .payments(operationViewModel)
+                            }
+                            
+                        } catch {
+                            
+                            await MainActor.run {
+                                
+                                self.alert = .init(title: "Ошибка привязки счета", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                                    
+                                    self?.action.send(RootViewModelAction.CloseAlert())
+                                    
+                                }))
+                            }
+                            
+                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                        }
+                    }
+
+                case let .sbpPay(tokenIntent):
+                    self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
+                    self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
+                }
+                
+                model.action.send(ModelAction.DeepLink.Clear())
+                
+            }.store(in: &bindings)
+        
+        model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                
-                case let payload as ModelAction.DeepLink.Process:
-                    
-                    switch payload.type {
-                    case let .me2me(bankId):
-                        self.model.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
-                        model.action.send(ModelAction.DeepLink.Clear())
-
-                    case let .c2b(urlString):
-                        link = .c2b(.init(urlString: urlString, closeAction: {[weak self] in
-                            self?.action.send(RootViewModelAction.CloseLink())
-                        }))
-                        model.action.send(ModelAction.DeepLink.Clear())
-                        
-                    case let .c2bSubscriprion(url):
-                        break
-
-                    case let .sbpPay(tokenIntent):
-                        self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
-                        self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
-                    }
-                    
                 case let payload as ModelAction.Notification.Transition.Process:
                     
                     switch payload.transition {
@@ -363,8 +422,8 @@ extension RootViewModel {
         
         case messages(MessagesHistoryViewModel)
         case me2me(RequestMeToMeModel)
-        case c2b(C2BViewModel)
         case userAccount(UserAccountViewModel)
+        case payments(PaymentsViewModel)
     }
 }
 

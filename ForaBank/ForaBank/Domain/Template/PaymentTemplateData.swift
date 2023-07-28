@@ -134,7 +134,7 @@ extension PaymentTemplateData {
         return transfer.amountDouble
     }
     
-    private var transferGeneralData: TransferGeneralData? {
+    private var transfer: TransferGeneralData? {
         
         return parameterList.first as? TransferGeneralData
     }
@@ -152,8 +152,8 @@ extension PaymentTemplateData {
     
     var phoneNumber: String? {
         
-        guard let transferGeneralData,
-              let phoneData = transferGeneralData.payeeInternal?.phoneNumber
+        guard let transfer,
+              let phoneData = transfer.payeeInternal?.phoneNumber
         else { return nil }
         
         return phoneData
@@ -161,16 +161,14 @@ extension PaymentTemplateData {
     
     var foraBankId: String? {
         
-        guard let transferGeneralData,
-              transferGeneralData.payeeInternal?.phoneNumber != nil
+        guard let transfer,
+              transfer.payeeInternal?.phoneNumber != nil
         else { return nil }
         
         return "100000000217"
     }
     
     var payerProductId: Int? {
-        
-        let transfer = transferGeneralData ?? transferAnywayData
         
         guard let transfer,
               let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
