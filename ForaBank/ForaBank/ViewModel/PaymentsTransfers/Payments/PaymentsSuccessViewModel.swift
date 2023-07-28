@@ -337,6 +337,9 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         let printFormViewModel = adapter.makePrintFormViewModel(type: .closeAccountEmpty(id: productId))
                         
                         self.sheet = .init(type: .printForm(printFormViewModel))
+                        
+                    case .changePin:
+                        return
                     }
                     
                 case .details:
@@ -445,6 +448,7 @@ extension PaymentsSuccessViewModel {
         case closeAccountEmpty(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
         case makePaymentToDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
+        case changePin
     }
     
     struct FullScreenCover: Identifiable {

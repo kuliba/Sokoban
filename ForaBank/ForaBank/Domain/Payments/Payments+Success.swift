@@ -82,6 +82,23 @@ extension Payments.Success {
             self.init(parameters: params.compactMap{ $0 })
         }
     }
+    
+    init(
+        status: Payments.ParameterSuccessStatus.Status,
+        title: String,
+        subTitle: String? = nil,
+        titleForActionButton: String
+    ) {
+        
+        let params: [PaymentsParameterRepresentable?] = [
+            Payments.ParameterSuccessStatus(status: status),
+            Payments.ParameterSuccessText.title(with: title),
+            Payments.ParameterSuccessText.subTitle(with: subTitle),
+            Payments.ParameterButton.actionButtonMain(title: titleForActionButton)
+        ]
+        
+        self.init(parameters: params.compactMap{ $0 })
+    }
 }
 
 //MARK: - Mode
@@ -314,12 +331,15 @@ extension Payments.ParameterSuccessText {
                 
             case .closeAccountEmpty:
                 return .init(id: paramId, value: "Счет успешно закрыт", style: .title)
+                
+            case .changePin:
+                return .init(id: paramId, value: "PIN-код успешно изменен", style: .title)
             }
             
         case .inProgress:
             
             switch mode {
-            case .normal, .meToMe:
+            case .normal, .meToMe, .changePin:
                 return .init(id: paramId, value: "Операция в обработке!", style: .title)
                 
             case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit:
@@ -334,6 +354,9 @@ extension Payments.ParameterSuccessText {
                 
             case .closeAccountEmpty, .closeDeposit, .closeAccount:
                 return .init(id: paramId, value: "Отказ", style: .title)
+                
+            case .changePin:
+                return .init(id: paramId, value: "Не удалось изменить PIN-код.\nПовторите попытку позднее", style: .title)
             }
         }
     }
@@ -387,6 +410,11 @@ extension Payments.ParameterSuccessText {
         .init(id: Payments.Parameter.Identifier.successTitle.rawValue, value: text, style: .title)
     }
     
+    static func subTitle(with text: String?) -> Payments.ParameterSuccessText? {
+        
+        .init(id: Payments.Parameter.Identifier.successTitle.rawValue, value: text ?? "", style: .subtitle)
+    }
+
     static func amount(amount: String?) -> Payments.ParameterSuccessText? {
         
         guard let amount else { return nil }
@@ -411,6 +439,9 @@ extension Payments.ParameterSuccessOptionButtons {
                 
             case .closeAccountEmpty:
                 return .init(options: [.document])
+                
+            case .changePin:
+                return nil
             }
             
         case .inProgress:
@@ -422,7 +453,7 @@ extension Payments.ParameterSuccessOptionButtons {
             case .makePaymentToDeposit, .makePaymentFromDeposit, .closeDeposit:
                 return .init(options: [.details])
                 
-            case .closeAccount, .closeAccountEmpty:
+            case .closeAccount, .closeAccountEmpty, .changePin:
                 return nil
             }
             
@@ -463,9 +494,9 @@ extension Payments.ParameterButton {
         }
     }
     
-    static func actionButtonMain() -> Payments.ParameterButton {
+    static func actionButtonMain(title: String = "На главный") -> Payments.ParameterButton {
         
-        .init(parameterId: Payments.Parameter.Identifier.successActionButton.rawValue, title: "На главный", style: .primary, acton: .main, placement: .bottom)
+        .init(parameterId: Payments.Parameter.Identifier.successActionButton.rawValue, title: title, style: .primary, acton: .main, placement: .bottom)
     }
 }
 

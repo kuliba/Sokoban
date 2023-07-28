@@ -140,6 +140,7 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var success: PaymentsSuccessViewModel?
     @Published var successZeroAccount: ZeroAccount?
+    @Published var successChangePin: PaymentsSuccessViewModel?
 
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
 
@@ -1708,5 +1709,34 @@ extension ProductProfileViewModel {
         case .connectivity:
             makeAlert("Истеклo время\nожидания ответа")
         }
+    }
+    
+    private func successScreenForChangePin() {
+        
+        let success = Payments.Success(
+            status: .success,
+            title: "PIN-код успешно изменен",
+            titleForActionButton: "Готово"
+        )
+        
+        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+        self.successChangePin = successViewModel
+        bind(successViewModel)
+        self.success = successViewModel
+    }
+    
+    private func errorScreenForChangePin() {
+        
+        let success = Payments.Success(
+            status: .error,
+            title: "Ошибка",
+            subTitle: "Не удалось изменить PIN-код.\nПовторите попытку позднее",
+            titleForActionButton: "Готово"
+        )
+        
+        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+        self.successChangePin = successViewModel
+        bind(successViewModel)
+        self.success = successViewModel
     }
 }
