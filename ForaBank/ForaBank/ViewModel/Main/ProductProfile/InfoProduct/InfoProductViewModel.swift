@@ -81,7 +81,7 @@ class InfoProductViewModel: ObservableObject {
             )
         }
         
-        createShareButtons()
+        createShareButtons(isCard: product is ProductCardData)
         bind()
         setBasic(product: product, info: info)
     }
@@ -153,20 +153,23 @@ class InfoProductViewModel: ObservableObject {
         }
     }
     
-    private func createShareButtons() {
+    private func createShareButtons(isCard: Bool) {
         
         //TODO: refactor shareButton logic by removing isShareViewPresented
         self.shareButton = .init(action: { [weak self] in
             
             guard let self = self else { return }
-
-            if self.needShowCheckbox {
+            
+            if isCard {
                 
-                self.isShareViewPresented.toggle()
-            } else {
-                
-                self.bottomSheet = .init(type: .share)
-            }
+                if self.needShowCheckbox {
+                    
+                    self.isShareViewPresented.toggle()
+                } else {
+                    
+                    self.bottomSheet = .init(type: .share)
+                }
+            } else { self.isShareViewPresented.toggle() }
         })
 
         self.sendAllButtonVM = .init(id: .sendAll, action: { [weak self] in
