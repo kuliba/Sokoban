@@ -17,8 +17,8 @@ public protocol APIClient<Payload, ServerStatusCode> {
     
     /// The completion handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropriate threads, if needed.
-    func get(
-        _ request: APIRequest,
+    func data(
+        _ data: APIRequest,
         completion: @escaping Completion
     )
 }
@@ -27,15 +27,14 @@ public extension APIClient {
     
     /// The completion handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropriate threads, if needed.
-    func get(
-        from url: URL,
+    func data(
         completion: @escaping Completion
     ) {
-        get(.url(url), completion: completion)
+        data(.empty, completion: completion)
     }
 }
 
 public enum APIRequest: Equatable {
     
-    case url(URL)
+    case empty
 }

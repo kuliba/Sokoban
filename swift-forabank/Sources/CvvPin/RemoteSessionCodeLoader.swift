@@ -12,16 +12,13 @@ public final class RemoteSessionCodeLoader<APISessionCode: Decodable> {
     public typealias SessionCodeAPIClient = APIClient<APISessionCode, Int>
     public typealias SessionCodeMapper = (APISessionCode) -> SessionCode
     
-    private let url: URL
     private let api: any SessionCodeAPIClient
     private let sessionCodeMapper: SessionCodeMapper
     
     public init(
-        url: URL,
         api: any SessionCodeAPIClient,
         sessionCodeMapper: @escaping SessionCodeMapper
     ) {
-        self.url = url
         self.api = api
         self.sessionCodeMapper = sessionCodeMapper
     }
@@ -31,7 +28,7 @@ extension RemoteSessionCodeLoader: SessionCodeLoader {
     
     public func load(completion: @escaping LoadCompletion) {
         
-        api.get(from: url) { [weak self] result in
+        api.data { [weak self] result in
             
             guard let self else { return }
             

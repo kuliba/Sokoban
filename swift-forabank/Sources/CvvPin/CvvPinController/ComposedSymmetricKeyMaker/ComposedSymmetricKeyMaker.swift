@@ -74,9 +74,7 @@ public final class ComposedSymmetricKeyMaker: SymmetricKeyMaker {
             
             guard self != nil else { return }
             
-            completion(.init {
-                try result.get()
-            })
+            completion(result)
         }
     }
 }
