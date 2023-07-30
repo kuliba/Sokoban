@@ -21,6 +21,8 @@ let package = Package(
         .textFieldModel,
         .uiKitHelpers,
         .userModel,
+        // services
+        .getProcessingSessionCodeService,
     ],
     dependencies: [
         .combineSchedulers,
@@ -50,6 +52,9 @@ let package = Package(
         .wipTests,
         .userModel,
         .userModelTests,
+        // services
+        .getProcessingSessionCodeService,
+        .getProcessingSessionCodeServiceTests,
     ]
 )
 
@@ -59,6 +64,13 @@ private extension Product {
         name: .cvvPin,
         targets: [
             .cvvPin,
+        ]
+    )
+
+    static let getProcessingSessionCodeService = library(
+        name: .getProcessingSessionCodeService,
+        targets: [
+            .getProcessingSessionCodeService,
         ]
     )
 
@@ -158,6 +170,18 @@ private extension Target {
             // internal modules
             .cvvPin,
         ]
+    )
+    
+    static let getProcessingSessionCodeService = target(
+        name: .getProcessingSessionCodeService,
+        path: "Sources/Services/\(String.getProcessingSessionCodeService)"
+    )
+    static let getProcessingSessionCodeServiceTests = testTarget(
+        name: .getProcessingSessionCodeServiceTests,
+        dependencies: [
+            .getProcessingSessionCodeService,
+        ],
+        path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
     )
 
     static let landingComponents = target(
@@ -310,6 +334,10 @@ private extension Target.Dependency {
         name: .cvvPin
     )
     
+    static let getProcessingSessionCodeService = byName(
+        name: .getProcessingSessionCodeService
+    )
+    
     static let landingComponents = byName(
         name: .landingComponents
     )
@@ -351,6 +379,9 @@ private extension String {
     
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
+    
+    static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
+    static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
     
     static let landingComponents = "LandingComponents"
     

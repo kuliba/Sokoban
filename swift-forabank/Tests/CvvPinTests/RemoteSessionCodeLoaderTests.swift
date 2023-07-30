@@ -12,32 +12,30 @@ private typealias RemoteLoader = RemoteSessionCodeLoader<DecodableSessionCode>
 
 final class RemoteSessionCodeLoaderTests: XCTestCase {
     
-    func test_init_shouldNotRequestDataFromURL() {
+    func test_init_shouldNotRequestData() {
         
         let (_, api) = makeSUT()
         
         XCTAssertEqual(api.requests, [])
     }
     
-    func test_load_shouldRequestDataFromURL() {
+    func test_load_shouldRequestData() {
         
-        let url = URL(string: "some-url")!
-        let (sut, api) = makeSUT(url: url)
+        let (sut, api) = makeSUT()
         
         sut.load { _ in }
         
-        XCTAssertEqual(api.requests, [.url(url)])
+        XCTAssertEqual(api.requests, [.empty])
     }
     
-    func test_loadTwice_shouldRequestDataFromURLTwice() {
+    func test_loadTwice_shouldRequestDataTwice() {
         
-        let url = URL(string: "some-url")!
-        let (sut, api) = makeSUT(url: url)
+        let (sut, api) = makeSUT()
         
         sut.load { _ in }
         sut.load { _ in }
         
-        XCTAssertEqual(api.requests, [.url(url), .url(url)])
+        XCTAssertEqual(api.requests, [.empty, .empty])
     }
     
     func test_load_shouldDeliverErrorOnAPIClientError() {
@@ -99,9 +97,8 @@ final class RemoteSessionCodeLoaderTests: XCTestCase {
     
     func test_load_shouldNotDeliverResultAfterSUTHasBeenDeallocated() {
         
-        let url = anyURL()
         let api = APIClientSpy()
-        var sut: RemoteLoader? = .init(url: url, api: api) {
+        var sut: RemoteLoader? = .init(api: api) {
             .init(value: $0.value)
         }
         var receivedResults = [LoadResult]()
@@ -116,7 +113,6 @@ final class RemoteSessionCodeLoaderTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        url: URL = anyURL(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -124,7 +120,7 @@ final class RemoteSessionCodeLoaderTests: XCTestCase {
         api: APIClientSpy
     ) {
         let api = APIClientSpy()
-        let sut = RemoteLoader(url: url, api: api) {
+        let sut = RemoteLoader(api: api) {
             .init(value: $0.value)
         }
         
@@ -143,7 +139,7 @@ final class RemoteSessionCodeLoaderTests: XCTestCase {
         
         var requests: [APIRequest] { messages.map(\.request) }
         
-        func get(
+        func data(
             _ request: APIRequest,
             completion: @escaping Completion
         ) {

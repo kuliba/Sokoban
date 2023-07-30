@@ -72,11 +72,7 @@ public final class CvvPinController {
             guard self != nil else { return }
             
             completion(.init {
-                let (sessionID, apiSymmetricKey) = try result.get()
-                return .init(
-                    sessionID: sessionID,
-                    symmetricKey: apiSymmetricKey.symmetricKey
-                )
+                try result.map(Auth.init).get()
             })
         }
     }
@@ -97,6 +93,19 @@ public final class CvvPinController {
 }
 
 // MARK: - Mappers
+
+private extension CvvPinController.Auth {
+    
+    init(
+        sessionID: SessionID,
+        apiSymmetricKey: APISymmetricKey
+    ) {
+        self.init(
+            sessionID: sessionID,
+            symmetricKey: apiSymmetricKey.symmetricKey
+        )
+    }
+}
 
 private extension SessionCode {
     
