@@ -86,6 +86,13 @@
         "identifier" : "PinCodeUITests",
         "name" : "PinCodeUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
     }
   ],
   "version" : 1

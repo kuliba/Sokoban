@@ -89,6 +89,14 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "PinCodeUITests",
         "name" : "PinCodeUITests"
       }
