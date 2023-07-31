@@ -216,6 +216,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SymmetricEncryption"
+               BuildableName = "SymmetricEncryption"
+               BlueprintName = "SymmetricEncryption"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SharedAPIInfra"
+               BuildableName = "SharedAPIInfra"
+               BlueprintName = "SharedAPIInfra"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -277,6 +305,26 @@
                BlueprintIdentifier = "GetProcessingSessionCodeServiceTests"
                BuildableName = "GetProcessingSessionCodeServiceTests"
                BlueprintName = "GetProcessingSessionCodeServiceTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SymmetricEncryptionTests"
+               BuildableName = "SymmetricEncryptionTests"
+               BlueprintName = "SymmetricEncryptionTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SharedAPIInfraTests"
+               BuildableName = "SharedAPIInfraTests"
+               BlueprintName = "SharedAPIInfraTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

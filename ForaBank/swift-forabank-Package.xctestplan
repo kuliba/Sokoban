@@ -92,6 +92,20 @@
         "identifier" : "GetProcessingSessionCodeServiceTests",
         "name" : "GetProcessingSessionCodeServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
     }
   ],
   "version" : 1
