@@ -17,6 +17,7 @@ let package = Package(
         .pinCodeUI,
         .productUI,
         .searchBarComponent,
+        .symmetricEncryption,
         .textFieldComponent,
         .textFieldModel,
         .uiKitHelpers,
@@ -41,6 +42,8 @@ let package = Package(
         .pinCodeUITests,
         .productUI,
         .searchBarComponent,
+        .symmetricEncryption,
+        .symmetricEncryptionTests,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldDomain,
@@ -121,6 +124,13 @@ private extension Product {
         name: .searchBarComponent,
         targets: [
             .searchBarComponent,
+        ]
+    )
+    
+    static let symmetricEncryption = library(
+        name: .symmetricEncryption,
+        targets: [
+            .symmetricEncryption,
         ]
     )
     
@@ -245,6 +255,17 @@ private extension Target {
         ]
     )
     
+    static let symmetricEncryption = target(
+        name: .symmetricEncryption
+    )
+    
+    static let symmetricEncryptionTests = testTarget(
+        name: .symmetricEncryptionTests,
+        dependencies: [
+            .symmetricEncryption,
+        ]
+    )
+    
     static let textFieldComponent = target(
         name: .textFieldComponent,
         dependencies: [
@@ -359,6 +380,10 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
 
+    static let symmetricEncryption = byName(
+        name: .symmetricEncryption
+    )
+    
     static let textFieldComponent = byName(
         name: .textFieldComponent
     )
@@ -408,6 +433,9 @@ private extension String {
     static let productUI = "ProductUI"
     
     static let searchBarComponent = "SearchBarComponent"
+    
+    static let symmetricEncryption = "SymmetricEncryption"
+    static let symmetricEncryptionTests = "SymmetricEncryptionTests"
     
     static let textFieldComponent = "TextFieldComponent"
     static let textFieldComponentTests = "TextFieldComponentTests"
