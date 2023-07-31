@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "177733FF-FB25-4EC6-B4EE-BA4791F668C4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    }
+  ],
+  "version" : 1
+}

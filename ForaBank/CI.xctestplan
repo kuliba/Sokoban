@@ -93,6 +93,13 @@
         "identifier" : "GetProcessingSessionCodeServiceTests",
         "name" : "GetProcessingSessionCodeServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
     }
   ],
   "version" : 1
