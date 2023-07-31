@@ -189,6 +189,9 @@ private extension Target {
     static let getProcessingSessionCodeServiceTests = testTarget(
         name: .getProcessingSessionCodeServiceTests,
         dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
             .getProcessingSessionCodeService,
         ],
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
