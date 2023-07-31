@@ -29,9 +29,8 @@ struct ItemsViewNew: View {
                     showCheckbox: showCheckbox,
                     isCheck: $isCheck)
                 
-                Divider()
-                    .foregroundColor(.mainColorsGrayLightest)
-                
+                CustomDivider()
+
                 ForEach(items, id: \.self) { value in
                     
                     ItemViewNew(value: value)
@@ -55,8 +54,7 @@ struct ItemViewNew: View {
         case let .single(item):
             
             ItemView(item: item)
-            Divider()
-                .foregroundColor(.mainColorsGrayLightest)
+            CustomDivider()
             
         case let .multiple(items):
             
@@ -70,12 +68,31 @@ struct ItemViewNew: View {
                         .padding(.leading, (isFirst ? 0 : 16))
                     if isFirst {
                         
-                        Divider()
-                            .foregroundColor(.mainColorsGrayLightest)
+                        CustomDivider()
                     }
                 }
             }
         }
+    }
+}
+
+struct CustomDivider: View {
+    
+    let color: Color
+    
+    init(
+        color: Color = Color(red: 0.83, green: 0.83, blue: 0.83).opacity(0.3)
+    ) {
+        self.color = color
+    }
+    
+    var body: some View {
+        
+        Rectangle()
+          .foregroundColor(.clear)
+          .frame(height: 0.5)
+          .frame(maxWidth: .infinity)
+          .background(color)
     }
 }
 

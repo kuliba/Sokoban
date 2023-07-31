@@ -295,7 +295,9 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             amount: amount,
                             productId: productID)))
                     
-                   
+                case .close:
+                    self.action.send(PaymentsSuccessAction.Button.Ready())
+
                 default:
                     break
                 }
@@ -484,6 +486,7 @@ enum PaymentsSuccessAction {
         
         struct Close: Action {}
         struct Repeat: Action {}
+        struct Ready: Action {}
     }
     
     struct Payment: Action {

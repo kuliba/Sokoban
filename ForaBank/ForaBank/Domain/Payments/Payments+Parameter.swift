@@ -71,6 +71,7 @@ extension Payments.Parameter {
         case successTitle = "ru.forabank.sense.success.title"
         case successAmount = "ru.forabank.sense.success.amount"
         case successActionButton = "ru.forabank.sense.success.actionButton"
+        case successCloseButton = "ru.forabank.sense.success.closeButton"
         case successRepeatButton = "ru.forabank.sense.success.repeatButton"
         case successLogo = "ru.forabank.sense.success.successLogo"
         case successAdditionalButtons = "ru.forabank.sense.success.successAdditionalButtons"
@@ -237,6 +238,7 @@ extension Payments {
             case `repeat`
             case additionalChange
             case additionalReturn
+            case close
         }
     }
     

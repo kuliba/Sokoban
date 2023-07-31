@@ -101,7 +101,7 @@ struct PinCodeChangeView_Previews: PreviewProvider {
                 pincodeLength: 4,
                 confirmationPublisher: {
                     
-                    Just(.init(value: "+1...90"))
+                    Just(.init(value: "71234567899"))
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }

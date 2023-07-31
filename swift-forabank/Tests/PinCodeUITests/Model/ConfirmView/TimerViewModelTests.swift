@@ -18,13 +18,13 @@ final class TimerViewModelTests: XCTestCase {
         
         let sut = makeSUT(
             delay: 60,
-            phoneNumber: "+1.."
+            phoneNumber: "71234567890"
         )
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
 
         XCTAssertEqual(sut.delay, 60)
-        XCTAssertEqual(sut.phoneNumber, "+1..")
+        XCTAssertEqual(sut.phoneNumber, "+7 ... ... 78 90")
         XCTAssertNotNil(sut.completeAction)
         XCTAssertEqual(sut.value, formatter.string(from: 60))
     }
@@ -104,7 +104,7 @@ final class TimerViewModelTests: XCTestCase {
 
     private func makeSUT(
         delay: TimeInterval = 2,
-        phoneNumber: String = "+1...11",
+        phoneNumber: String = "71234567891",
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel.TimerViewModel {

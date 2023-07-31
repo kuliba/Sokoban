@@ -32,7 +32,7 @@ extension ConfirmViewModel {
         ) {
             
             self.delay = delay
-            self.phoneNumber = phoneNumber
+            self.phoneNumber = phoneNumber.formattedPhoneNumber()
             self.value = ""
             self.completeAction = completeAction
 
@@ -112,5 +112,21 @@ extension ConfirmViewModel.TimerViewModel {
 
 extension String {
     
-    static let testNumber = "+7 ... ... 54 15"
+    static let testNumber = "71234567890"
 }
+
+private extension String {
+    
+    func separate(
+        every stride: Int = 2,
+        with separator: Character = " "
+    ) -> String {
+        return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
+    }
+    
+    func formattedPhoneNumber() -> String {
+        
+        return "+" + self.prefix(1) + " ... ... " + String(self.suffix(4)).separate(every:2, with: " ")
+    }
+}
+

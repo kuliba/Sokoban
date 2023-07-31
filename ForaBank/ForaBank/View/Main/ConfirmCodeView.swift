@@ -13,11 +13,12 @@ struct ConfirmCodeView: View {
     let phoneNumber: String
     let reset: () -> Void
     var hasDefaultBackButton: Bool = false
+    var handler: (String, @escaping (Bool) -> Void) -> Void
     
     var body: some View {
         
         PinCodeUI.ConfirmView(
-            viewModel: .init(handler: {_, _ in }),
+            viewModel: .init(handler: handler),
             phoneNumber: phoneNumber
         )
         .if(!hasDefaultBackButton) { view in
@@ -59,7 +60,7 @@ struct ConfirmCodeView_Previews: PreviewProvider {
     }
     
     private static func preview (
-        phoneNumber: String = "+1...78",
+        phoneNumber: String = "71234567899",
         reset: @escaping () -> Void = { },
         hasDefaultBackButton: Bool = false,
         previewDisplayName: String
@@ -70,7 +71,8 @@ struct ConfirmCodeView_Previews: PreviewProvider {
             ConfirmCodeView(
                 phoneNumber: phoneNumber,
                 reset: reset,
-                hasDefaultBackButton: hasDefaultBackButton
+                hasDefaultBackButton: hasDefaultBackButton,
+                handler: { _, _ in }
             )
         }
         .previewDisplayName(previewDisplayName)

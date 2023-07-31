@@ -13,6 +13,7 @@ public class ConfirmViewModel: ObservableObject {
     
     @Published var pin: String
     @Published var isDisabled: Bool
+    @Published var showAlert: Bool
 
     var handler: (String, @escaping (Bool) -> Void) -> Void
     
@@ -20,12 +21,14 @@ public class ConfirmViewModel: ObservableObject {
         maxDigits: Int = 6,
         pin: String = "",
         isDisable: Bool = false,
+        showAlert: Bool = false,
         handler: @escaping (String, @escaping (Bool) -> Void) -> Void
     ) {
         
         self.maxDigits = maxDigits
         self.pin = pin
         self.isDisabled = isDisable
+        self.showAlert = showAlert
         self.handler = handler
     }
 
@@ -47,6 +50,7 @@ public class ConfirmViewModel: ObservableObject {
                     
                     self.pin = ""
                     self.isDisabled = false
+                    self.showAlert = true
                 }
             }
         }
