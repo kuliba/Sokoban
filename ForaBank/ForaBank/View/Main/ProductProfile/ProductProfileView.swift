@@ -256,7 +256,10 @@ struct ProductProfileView: View {
                 ConfirmCodeView(
                     phoneNumber: $0.value,
                     reset: viewModel.resetState
-                )
+                ) { otp, action in
+                    
+                    action("123456" == otp)
+                }
             }
         )
         .edgesIgnoringSafeArea(.bottom)
@@ -267,10 +270,13 @@ struct ProductProfileView: View {
     private func confirmCodeView() -> some View {
         
         ConfirmCodeView(
-            phoneNumber: "+1...30",
+            phoneNumber: "71234567899",
             reset: {},
             hasDefaultBackButton: true
-        )
+        ) { otp, action in
+            
+            action("123456" == otp)
+        }
     }
 }
 

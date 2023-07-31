@@ -94,7 +94,7 @@ extension Payments.Success {
             Payments.ParameterSuccessStatus(status: status),
             Payments.ParameterSuccessText.title(with: title),
             Payments.ParameterSuccessText.subTitle(with: subTitle),
-            Payments.ParameterButton.actionButtonMain(title: titleForActionButton)
+            Payments.ParameterButton.actionButtonClose(title: titleForActionButton)
         ]
         
         self.init(parameters: params.compactMap{ $0 })
@@ -498,6 +498,12 @@ extension Payments.ParameterButton {
         
         .init(parameterId: Payments.Parameter.Identifier.successActionButton.rawValue, title: title, style: .primary, acton: .main, placement: .bottom)
     }
+    
+    static func actionButtonClose(title: String = "Готово") -> Payments.ParameterButton {
+        
+        .init(parameterId: Payments.Parameter.Identifier.successCloseButton.rawValue, title: title, style: .primary, acton: .close, placement: .bottom)
+    }
+
 }
 
 extension Payments.ParameterDataValue {

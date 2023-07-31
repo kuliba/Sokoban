@@ -96,7 +96,7 @@ final class SadCheckSadActivateCertificateClient: CertificateClient {
 
 func getPinConfirmationCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
     
-    Just(.init(value: "+1...90"))
+    Just(.init(value: "71234567899"))
         .setFailureType(to: Error.self)
         .eraseToAnyPublisher()
 }
@@ -343,6 +343,7 @@ private extension ProductProfileViewModel {
                 case _ as ProductProfileViewModelAction.Close.Success:
                     successZeroAccount = nil
                     success = nil
+                    successChangePin = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
                     closeAccountSpinner = nil
@@ -1197,7 +1198,10 @@ private extension ProductProfileViewModel {
                     self.action.send(ProductProfileViewModelAction.Close.Success())
                     self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
                     self.rootActions?.switchTab(.main)
-                    
+                 
+                case _ as PaymentsSuccessAction.Button.Ready:
+                    successChangePin = nil
+
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
                     self.action.send(ProductProfileViewModelAction.Close.Success())
@@ -1722,7 +1726,6 @@ extension ProductProfileViewModel {
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
         self.successChangePin = successViewModel
         bind(successViewModel)
-        self.success = successViewModel
     }
     
     private func errorScreenForChangePin() {
@@ -1737,6 +1740,5 @@ extension ProductProfileViewModel {
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
         self.successChangePin = successViewModel
         bind(successViewModel)
-        self.success = successViewModel
     }
 }

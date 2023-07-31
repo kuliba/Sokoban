@@ -10,8 +10,9 @@ import SwiftUI
 public struct ConfirmView: View {
     
     let config: ConfirmView.Config
-    let viewModel: ConfirmViewModel
+    @ObservedObject var viewModel: ConfirmViewModel
     let phoneNumber: String
+    private var timerViewModel: ConfirmViewModel.TimerViewModel
     
     public init(
         config: ConfirmView.Config = .defaultConfig,
@@ -21,6 +22,11 @@ public struct ConfirmView: View {
         self.config = config
         self.viewModel = viewModel
         self.phoneNumber = phoneNumber
+        self.timerViewModel = .init(
+            delay: 10,
+            phoneNumber: phoneNumber,
+            completeAction: { }
+        )
     }
     
     public var body: some View {
@@ -38,10 +44,7 @@ public struct ConfirmView: View {
                     viewModel: viewModel)
                 
                 TimerView(
-                    viewModel: .init(
-                        delay: 10,
-                        phoneNumber: phoneNumber,
-                        completeAction: { }),
+                    viewModel: timerViewModel,
                     config: .defaultConfig
                 )
                 .padding(.top, 32)
@@ -50,6 +53,12 @@ public struct ConfirmView: View {
             .padding(.leading, 19)
             .padding(.top, 16)
             .frame(maxHeight: .infinity)
+        }
+        .alert(isPresented: $viewModel.showAlert) {
+            .init(
+                title: Text("Ошибка"),
+                message: Text("Введен некорректный код.\nПопробуйте еще раз")
+            )
         }
     }
 }

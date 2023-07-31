@@ -164,24 +164,25 @@ class InfoProductViewModel: ObservableObject {
                 
                 if self.needShowCheckbox {
                     
-                    self.isShareViewPresented.toggle()
+                    self.isShareViewPresented = true
                 } else {
                     
+                    self.isShareViewPresented = false
                     self.bottomSheet = .init(type: .share)
                 }
-            } else { self.isShareViewPresented.toggle() }
+            } else { self.isShareViewPresented = true }
         })
 
         self.sendAllButtonVM = .init(id: .sendAll, action: { [weak self] in
             
             self?.bottomSheet = nil
-            self?.isShareViewPresented.toggle()
+            self?.isShareViewPresented = true
         })
         
         self.sendSelectedButtonVM = .init(id: .sendSelected, action: { [weak self] in
             
             self?.bottomSheet = nil
-            self?.needShowCheckbox.toggle()
+            self?.needShowCheckbox = true
         })
     }
     

@@ -65,7 +65,8 @@ struct InfoProductSheet: View {
             .foregroundColor(Color.mainColorsBlack)
             .padding(.top, 8)
         }
-        .frame(width: 375, height: 397)
+        .frame(height: 397)
+        .frame(maxWidth: .infinity)
     }
 }
 

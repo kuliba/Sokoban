@@ -134,7 +134,7 @@ final class PinCodeViewModelTests: XCTestCase {
             pincodeLength: pincodeLength,
             confirmationPublisher: {
                 
-                Just(.init(value: "+1...90"))
+                Just(.init(value: "71234567899"))
                     .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
             }
