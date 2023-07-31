@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import os
 import UserModel
+import SymmetricEncryption
 
 class Model {
     
@@ -239,16 +240,33 @@ class Model {
         let enviroment = Config.serverAgentEnvironment
         let serverAgent = ServerAgent(enviroment: enviroment)
 
-        // local agent
-        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
-        let localAgent = LocalAgent(context: localContext)
-        
         // keychain agent
         let keychainAgent = ValetKeychainAgent(valetName: "ru.forabank.sense.valet")
         
         // settings agent
         let settingsAgent = UserDefaultsSettingsAgent()
         
+        // remove old cache symmetric key from a keychain on a first app launch
+        do {
+            let cleaner = LocalAgentOldSymmetricKeyCleaner(settingsAgent: settingsAgent, keychainAgent: keychainAgent)
+            try cleaner.clean()
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .cache, message: "Unable remove old cache symmetric key data from keychain with error: \(error)")
+        }
+        
+        // local agent
+        let localAgent: LocalAgent = {
+            
+            let localAgentContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: .default)
+            let symmetricKeyProvider = KeychainSymmetricKeyProviderAdapter(keychainAgent: keychainAgent, keyProvider: SymmetricKeyProvider(keySize: .bits256), keychainValueType: .symmetricKeyCache)
+            let localAgentSymmetricKeyData = symmetricKeyProvider.getSymmetricKeyRawRepresentation()
+            let encryptionAgent = ChaChaPolyEncryptionAgent(with: localAgentSymmetricKeyData)
+            
+            return EncryptionLocalAgent(context: localAgentContext, encryptionAgent: encryptionAgent)
+        }()
+                
         // biometric agent
         let biometricAgent = BiometricAgent()
         
@@ -1387,3 +1405,7 @@ private extension Model {
         LoggerAgent.shared.log(category: .model, message: "Memory data cleaned")
     }
 }
+
+//MARK: - Extensions
+
+extension ChaChaPolyEncryptionAgent: EncryptionAgent {}
