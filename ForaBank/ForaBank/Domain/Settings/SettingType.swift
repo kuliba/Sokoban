@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SettingType {
+enum SettingType: Equatable {
     
     case general(General)
     case transfers(Transfers)

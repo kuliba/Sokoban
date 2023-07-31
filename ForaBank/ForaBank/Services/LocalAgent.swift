@@ -9,8 +9,8 @@ import Foundation
 
 class LocalAgent: LocalAgentProtocol {
     
-    private let context: Context
-    private var serials: [String: String]
+    internal let context: Context
+    internal var serials: [String: String]
     
     init(context: Context) {
         

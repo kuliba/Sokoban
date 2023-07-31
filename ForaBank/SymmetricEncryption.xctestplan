@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "7BE55D70-48E2-41EF-ADD3-F663AB00D15D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
+    }
+  ],
+  "version" : 1
+}

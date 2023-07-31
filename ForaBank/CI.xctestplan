@@ -79,6 +79,13 @@
         "identifier" : "TextFieldUITests",
         "name" : "TextFieldUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
     }
   ],
   "version" : 1

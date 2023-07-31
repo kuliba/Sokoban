@@ -11,4 +11,5 @@ enum KeychainValueType: String {
     
     case pincode
     case serverDeviceGUID
+    case symmetricKeyCache
 }
