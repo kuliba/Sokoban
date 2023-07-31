@@ -17,6 +17,7 @@ let package = Package(
         .pinCodeUI,
         .productUI,
         .searchBarComponent,
+        .sharedAPIInfra,
         .symmetricEncryption,
         .textFieldComponent,
         .textFieldModel,
@@ -42,6 +43,8 @@ let package = Package(
         .pinCodeUITests,
         .productUI,
         .searchBarComponent,
+        .sharedAPIInfra,
+        .sharedAPIInfraTests,
         .symmetricEncryption,
         .symmetricEncryptionTests,
         .textFieldComponent,
@@ -124,6 +127,13 @@ private extension Product {
         name: .searchBarComponent,
         targets: [
             .searchBarComponent,
+        ]
+    )
+    
+    static let sharedAPIInfra = library(
+        name: .sharedAPIInfra,
+        targets: [
+            .sharedAPIInfra,
         ]
     )
     
@@ -258,6 +268,16 @@ private extension Target {
         ]
     )
     
+    static let sharedAPIInfra = target(
+        name: .sharedAPIInfra
+    )
+    static let sharedAPIInfraTests = testTarget(
+        name: .sharedAPIInfraTests,
+        dependencies: [
+            .sharedAPIInfra,
+        ]
+    )
+    
     static let symmetricEncryption = target(
         name: .symmetricEncryption
     )
@@ -383,6 +403,10 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
 
+    static let sharedAPIInfra = byName(
+        name: .sharedAPIInfra
+    )
+    
     static let symmetricEncryption = byName(
         name: .symmetricEncryption
     )
@@ -436,6 +460,9 @@ private extension String {
     static let productUI = "ProductUI"
     
     static let searchBarComponent = "SearchBarComponent"
+    
+    static let sharedAPIInfra = "SharedAPIInfra"
+    static let sharedAPIInfraTests = "SharedAPIInfraTests"
     
     static let symmetricEncryption = "SymmetricEncryption"
     static let symmetricEncryptionTests = "SymmetricEncryptionTests"
