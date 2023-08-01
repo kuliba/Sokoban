@@ -429,6 +429,9 @@
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
 		2AA555702A3E603B00B13D47 /* Model+PaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556F2A3E603B00B13D47 /* Model+PaymentsTests.swift */; };
 		2AA68E822A179C200063BBB0 /* CountryCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA68E812A179C200063BBB0 /* CountryCodes.swift */; };
+		2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */ = {isa = PBXBuildFile; productRef = 2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */; };
+		2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */; };
+		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
 		2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */; };
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
@@ -2202,10 +2205,10 @@
 		2A2E32F829A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsMobileConnection.swift"; sourceTree = "<group>"; };
 		2A2E32FA29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferMobileConnection.swift"; sourceTree = "<group>"; };
 		2A2E32FF29A3CDC9008B9626 /* Sequence+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
+		2A2E330129A3E5C6008B9626 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A3011DC2A6A85FB00560B98 /* ServerAgentSessionCodeAPIClientAdapterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentSessionCodeAPIClientAdapterTests.swift; sourceTree = "<group>"; };
 		2A3011E02A6AB2A500560B98 /* ServerCommands+CvvPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+CvvPin.swift"; sourceTree = "<group>"; };
 		2A3011E32A6AB4FC00560B98 /* ServerAgentSessionCodeAPIClientAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentSessionCodeAPIClientAdapter.swift; sourceTree = "<group>"; };
-		2A2E330129A3E5C6008B9626 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A3039272A17D2150008701D /* PhoneKitTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneKitTransformerTests.swift; sourceTree = "<group>"; };
 		2A3039292A17D25E0008701D /* PhoneTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTransformerTests.swift; sourceTree = "<group>"; };
 		2A30392F2A17D2AC0008701D /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
@@ -2287,6 +2290,8 @@
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
 		2AA5556F2A3E603B00B13D47 /* Model+PaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTests.swift"; sourceTree = "<group>"; };
 		2AA68E812A179C200063BBB0 /* CountryCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodes.swift; sourceTree = "<group>"; };
+		2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegateTests.swift; sourceTree = "<group>"; };
+		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
@@ -3701,6 +3706,7 @@
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
+				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
@@ -5020,6 +5026,22 @@
 				2A3039462A17D6A50008701D /* TextFieldComponent */,
 			);
 			path = Adapters;
+			sourceTree = "<group>";
+		};
+		2AA7EDBA2A783C9A00F5B00D /* SharedAPIInfra */ = {
+			isa = PBXGroup;
+			children = (
+				2AA7EDBB2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift */,
+			);
+			path = SharedAPIInfra;
+			sourceTree = "<group>";
+		};
+		2AA7EDBD2A783D0800F5B00D /* SharedAPIInfra */ = {
+			isa = PBXGroup;
+			children = (
+				2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */,
+			);
+			path = SharedAPIInfra;
 			sourceTree = "<group>";
 		};
 		2AA9F30A2A52148C00D2C435 /* Helpers */ = {
@@ -7100,6 +7122,7 @@
 				ED2D8A00286DB4AA0000B391 /* ImageGalleryAgent.swift */,
 				68CB588D28ABCB15003064B0 /* LoggerAgent.swift */,
 				0C5D7D9B2982FE1C00BC0CCF /* NetworkMonitorAgent.swift */,
+				2AA7EDBD2A783D0800F5B00D /* SharedAPIInfra */,
 				2A3011E22A6AB4CE00560B98 /* CVV-PIN */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
@@ -7540,6 +7563,7 @@
 		77EC58CE2771D4440054D75C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2AA7EDBA2A783C9A00F5B00D /* SharedAPIInfra */,
 				7757DB532A711E4D00745EFF /* Helpers */,
 				77EC58CF2771D45F0054D75C /* Server */,
 				7792557A279AF6C900A85723 /* Encryption */,
@@ -9726,6 +9750,7 @@
 				2A3F1B172A47768A00D8FE55 /* LoadableResourceComponent */,
 				2A3011E52A6AB53B00560B98 /* CvvPin */,
 				779511A82A6AA15A00A570F8 /* SymmetricEncryption */,
+				2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -10590,6 +10615,7 @@
 				83FAD89B29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				8362FB0529DEFA050094457E /* SearchCityView.swift in Sources */,
+				2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */,
 				77D0386C2988441D00FBE5AB /* C2BSubscriptionData.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
@@ -11724,6 +11750,7 @@
 				C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
+				2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */,
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
 				2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */,
 				2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */,
@@ -12077,7 +12104,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -12089,7 +12115,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12156,7 +12181,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -12169,7 +12193,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12187,7 +12210,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -12200,7 +12222,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12218,7 +12239,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -12231,7 +12251,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12313,7 +12332,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -12324,7 +12342,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12390,7 +12407,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -12403,7 +12419,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12673,7 +12688,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -12685,7 +12699,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				"OTHER_SWIFT_FLAGS[sdk=*]" = "-Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=400";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
@@ -12710,7 +12723,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -12721,7 +12733,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13145,6 +13156,10 @@
 		2A8142602A0B9237005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedAPIInfra;
 		};
 		2AB766BF29EA89AB00501DD2 /* UIKitHelpers */ = {
 			isa = XCSwiftPackageProductDependency;
