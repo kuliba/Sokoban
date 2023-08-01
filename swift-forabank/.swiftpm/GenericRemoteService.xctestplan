@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "0D11FC99-8C88-498C-B6E4-C0E34C47065C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

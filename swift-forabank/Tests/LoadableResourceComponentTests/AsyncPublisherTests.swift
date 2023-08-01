@@ -108,7 +108,7 @@ final class AsyncPublisherTests: XCTestCase {
         XCTAssertTrue(spy.events.isEmpty)
         
         try await Task.sleep(nanoseconds: .ms50)
-        await Task.megaYield()
+        await Task.megaYield(count: 100)
 
         assert(spy.events, [.failure])
     }
