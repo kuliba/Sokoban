@@ -1,0 +1,78 @@
+//
+//  Services+Endpoint.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 31.07.2023.
+//
+
+import Foundation
+
+extension Services {
+    
+    struct Endpoint {
+        
+        let pathPrefix: PathPrefix
+        let version: Version
+        let serviceName: ServiceName
+        
+        enum PathPrefix: String {
+            
+            case processingRegistration = "processing/registration"
+        }
+        
+        enum Version: String {
+            
+            case v1
+        }
+        
+        enum ServiceName: String {
+            
+            case getProcessingSessionCode
+        }
+    }
+}
+
+extension Services.Endpoint {
+    
+    private var path: String {
+        
+        "/\(pathPrefix.rawValue)/\(version.rawValue)/\(serviceName.rawValue)"
+    }
+    
+    func url(withBase base: String) throws -> URL {
+        
+        guard let baseURL = URL(string: base)
+        else {
+            
+            throw URLConstructionError()
+        }
+        
+        return try url(withBaseURL: baseURL)
+    }
+    
+    func url(withBaseURL baseURL: URL) throws -> URL {
+        
+        var components = URLComponents()
+        components.scheme = baseURL.scheme
+        components.host = baseURL.host
+        components.path = baseURL.path + path
+        
+        guard let url = components.url(relativeTo: baseURL)
+        else {
+            throw URLConstructionError()
+        }
+        
+        return url
+    }
+    
+    struct URLConstructionError: Error {}
+}
+
+extension Services.Endpoint {
+    
+    static let getProcessingSessionCode: Self = .init(
+        pathPrefix: .processingRegistration,
+        version: .v1,
+        serviceName: .getProcessingSessionCode
+    )
+}
