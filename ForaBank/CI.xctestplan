@@ -107,6 +107,13 @@
         "identifier" : "SharedAPIInfraTests",
         "name" : "SharedAPIInfraTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
     }
   ],
   "version" : 1

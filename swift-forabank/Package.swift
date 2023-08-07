@@ -24,6 +24,7 @@ let package = Package(
         .uiKitHelpers,
         .userModel,
         // services
+        .genericRemoteService,
         .getProcessingSessionCodeService,
     ],
     dependencies: [
@@ -60,6 +61,8 @@ let package = Package(
         .userModel,
         .userModelTests,
         // services
+        .genericRemoteService,
+        .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
     ]
@@ -74,6 +77,13 @@ private extension Product {
         ]
     )
 
+    static let genericRemoteService = library(
+        name: .genericRemoteService,
+        targets: [
+            .genericRemoteService,
+        ]
+    )
+    
     static let getProcessingSessionCodeService = library(
         name: .getProcessingSessionCodeService,
         targets: [
@@ -191,6 +201,21 @@ private extension Target {
             // internal modules
             .cvvPin,
         ]
+    )
+    
+    static let genericRemoteService = target(
+        name: .genericRemoteService,
+        path: "Sources/Services/\(String.genericRemoteService)"
+    )
+    static let genericRemoteServiceTests = testTarget(
+        name: .genericRemoteServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .genericRemoteService,
+        ],
+        path: "Tests/Services/\(String.genericRemoteServiceTests)"
     )
     
     static let getProcessingSessionCodeService = target(
@@ -383,6 +408,10 @@ private extension Target.Dependency {
         name: .cvvPin
     )
     
+    static let genericRemoteService = byName(
+        name: .genericRemoteService
+    )
+    
     static let getProcessingSessionCodeService = byName(
         name: .getProcessingSessionCodeService
     )
@@ -440,6 +469,9 @@ private extension String {
     
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
+    
+    static let genericRemoteService = "GenericRemoteService"
+    static let genericRemoteServiceTests = "GenericRemoteServiceTests"
     
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"

@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "7BE55D70-48E2-41EF-ADD3-F663AB00D15D",
+      "id" : "0D11FC99-8C88-498C-B6E4-C0E34C47065C",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -13,10 +13,11 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "SymmetricEncryptionTests",
-        "name" : "SymmetricEncryptionTests"
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
       }
     }
   ],
