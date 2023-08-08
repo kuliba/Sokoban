@@ -7,8 +7,8 @@
 
 public protocol SessionCodeLoader {
     
-    typealias Result = Swift.Result<SessionCode, Error>
-    typealias LoadCompletion = (Result) -> Void
+    typealias Result = GetProcessingSessionCodeDomain.Result
+    typealias LoadCompletion = GetProcessingSessionCodeDomain.Completion
     
     func load(completion: @escaping LoadCompletion)
 }

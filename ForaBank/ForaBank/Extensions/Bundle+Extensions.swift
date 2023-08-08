@@ -23,4 +23,23 @@ extension Bundle {
         let versionNumber = buildVersionNumber ?? ""
         return (releaseVersionNumber ?? "") + (versionNumber.isEmpty ? "" : ".\(versionNumber)")
     }
+    
+    func url(
+        forFilename filename: String,
+        withExtension ext: String
+    ) throws -> URL {
+        
+        guard let url = Bundle.main.url(forResource: filename, withExtension: ext)
+        else {
+            struct MissingResourceError: Error {
+                
+                let filename: String
+                let ext: String
+            }
+            
+            throw MissingResourceError(filename: filename, ext: ext)
+        }
+
+        return url
+    }
 }

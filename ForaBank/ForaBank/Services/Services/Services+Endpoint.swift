@@ -27,6 +27,8 @@ extension Services {
         
         enum ServiceName: String {
             
+            case bindPublicKeyWithEventId
+            case formSessionKey
             case getProcessingSessionCode
         }
     }
@@ -69,6 +71,18 @@ extension Services.Endpoint {
 }
 
 extension Services.Endpoint {
+    
+    static let bindPublicKeyWithEventID: Self = .init(
+        pathPrefix: .processingRegistration,
+        version: .v1,
+        serviceName: .bindPublicKeyWithEventId
+    )
+    
+    static let formSessionKey: Self = .init(
+        pathPrefix: .processingRegistration,
+        version: .v1,
+        serviceName: .formSessionKey
+    )
     
     static let getProcessingSessionCode: Self = .init(
         pathPrefix: .processingRegistration,

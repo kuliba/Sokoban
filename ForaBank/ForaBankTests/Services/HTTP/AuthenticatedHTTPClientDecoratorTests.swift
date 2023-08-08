@@ -17,7 +17,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         let unsignedRequest = anyRequest()
         let signedRequest = unsignedRequest.signed(with: token)
         
-        sut.perform(unsignedRequest) { _ in }
+        sut.performRequest(unsignedRequest) { _ in }
         tokenProvider.complete(with: .success(token))
         
         XCTAssertEqual(httpClient.requests, [signedRequest])
@@ -27,7 +27,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         
         let (sut, tokenProvider, httpClient) = makeSUT()
         
-        sut.perform(anyRequest()) { _ in }
+        sut.performRequest(anyRequest()) { _ in }
         tokenProvider.complete(with: .failure(anyError()))
         
         XCTAssertEqual(httpClient.requests, [])
@@ -38,14 +38,14 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         let (sut, tokenProvider, _) = makeSUT()
         XCTAssertEqual(tokenProvider.completions.count, 0)
         
-        sut.perform(anyRequest()) { _ in }
-        sut.perform(anyRequest()) { _ in }
+        sut.performRequest(anyRequest()) { _ in }
+        sut.performRequest(anyRequest()) { _ in }
         
         XCTAssertEqual(tokenProvider.completions.count, 1)
         
         tokenProvider.complete(with: .failure(anyError()))
         
-        sut.perform(anyRequest()) { _ in }
+        sut.performRequest(anyRequest()) { _ in }
         
         XCTAssertEqual(tokenProvider.completions.count, 2)
     }
@@ -56,10 +56,10 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         XCTAssertEqual(tokenProvider.completions.count, 0)
         
         var result1: HTTPClient.Result?
-        sut.perform(anyRequest()) { result1 = $0 }
+        sut.performRequest(anyRequest()) { result1 = $0 }
         
         var result2: HTTPClient.Result?
-        sut.perform(anyRequest()) { result2 = $0 }
+        sut.performRequest(anyRequest()) { result2 = $0 }
         
         tokenProvider.complete(with: .success(anyToken()))
         
@@ -78,9 +78,9 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         
         let (sut, tokenProvider, _) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(anyError(domain: "token error"))], on: {
+        expect(sut, toDeliver: [.failure(anyError("token error"))], on: {
             
-            tokenProvider.complete(with: .failure(anyError(domain: "token error")))
+            tokenProvider.complete(with: .failure(anyError("token error")))
         })
     }
     
@@ -118,7 +118,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         )
         var receivedResults = [HTTPClient.Result]()
         
-        sut?.perform(.init(url: anyURL()), completion: {
+        sut?.performRequest(.init(url: anyURL()), completion: {
             
             receivedResults.append($0)
         })
@@ -139,7 +139,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         )
         var receivedResults = [HTTPClient.Result]()
         
-        sut?.perform(.init(url: anyURL()), completion: {
+        sut?.performRequest(.init(url: anyURL()), completion: {
             
             receivedResults.append($0)
         })
@@ -186,7 +186,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         var receivedResults = [HTTPClient.Result]()
         let exp = expectation(description: "wait for data")
         
-        sut.perform(request) {
+        sut.performRequest(request) {
             
             receivedResults.append($0)
             exp.fulfill()
@@ -264,11 +264,6 @@ private func anyRequest() -> URLRequest {
 private func anyToken() -> TokenProvider.Token {
     
     "any token"
-}
-
-private func anyError(domain: String = "", code: Int = 0) -> Error {
-    
-    NSError(domain: domain, code: code)
 }
 
 private func anyURL() -> URL {
