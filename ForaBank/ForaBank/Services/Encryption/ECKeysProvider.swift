@@ -14,12 +14,14 @@ struct ECKeysProvider: EncryptionKeysProvider {
         
         var publicKey, privateKey: SecKey?
         
-        let parameters = [kSecAttrKeySizeInBits as String: 384,
-                          kSecAttrKeyType as String: kSecAttrKeyTypeEC,
-                          SecKeyKeyExchangeParameter.requestedSize.rawValue as String: 32,
-                          kSecPrivateKeyAttrs as String: [kSecAttrIsPermanent as String: false]] as CFDictionary
+        let parameters: [String : Any] = [
+            kSecAttrKeySizeInBits as String: 384,
+            kSecAttrKeyType as String: kSecAttrKeyTypeEC,
+            SecKeyKeyExchangeParameter.requestedSize.rawValue as String: 32,
+            kSecPrivateKeyAttrs as String: [kSecAttrIsPermanent as String: false]
+        ]
         
-        SecKeyGeneratePair(parameters, &publicKey, &privateKey)
+        SecKeyGeneratePair(parameters as CFDictionary, &publicKey, &privateKey)
         
         guard let publicKey = publicKey, let privateKey = privateKey else {
             throw ECKeysProviderError.unableGenerateKeysPair

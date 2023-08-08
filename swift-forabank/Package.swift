@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .bindPublicKeyWithEventID,
         .cvvPin,
         .landingComponents,
         .loadableResourceComponent,
@@ -32,6 +33,8 @@ let package = Package(
         .customDump,
     ],
     targets: [
+        .bindPublicKeyWithEventID,
+        .bindPublicKeyWithEventIDTests,
         .cvvPin,
         .cvvPinTests,
         .landingComponents,
@@ -70,13 +73,20 @@ let package = Package(
 
 private extension Product {
     
+    static let bindPublicKeyWithEventID = library(
+        name: .bindPublicKeyWithEventID,
+        targets: [
+            .bindPublicKeyWithEventID,
+        ]
+    )
+    
     static let cvvPin = library(
         name: .cvvPin,
         targets: [
             .cvvPin,
         ]
     )
-
+    
     static let genericRemoteService = library(
         name: .genericRemoteService,
         targets: [
@@ -90,7 +100,7 @@ private extension Product {
             .getProcessingSessionCodeService,
         ]
     )
-
+    
     static let landingComponents = library(
         name: .landingComponents,
         targets: [
@@ -104,7 +114,7 @@ private extension Product {
             .loadableResourceComponent,
         ]
     )
-
+    
     static let manageSubscriptionsUI = library(
         name: .manageSubscriptionsUI,
         targets: [
@@ -118,14 +128,14 @@ private extension Product {
             .pickerWithPreviewComponent,
         ]
     )
-
+    
     static let pinCodeUI = library(
         name: .pinCodeUI,
         targets: [
             .pinCodeUI,
         ]
     )
-
+    
     static let productUI = library(
         name: .productUI,
         targets: [
@@ -185,6 +195,21 @@ private extension Product {
 
 private extension Target {
     
+    static let bindPublicKeyWithEventID = target(
+        name: .bindPublicKeyWithEventID,
+        path: "Sources/Services/\(String.bindPublicKeyWithEventID)"
+    )
+    static let bindPublicKeyWithEventIDTests = testTarget(
+        name: .bindPublicKeyWithEventIDTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .bindPublicKeyWithEventID,
+        ],
+        path: "Tests/Services/\(String.bindPublicKeyWithEventIDTests)"
+    )
+    
     static let cvvPin = target(
         name: .cvvPin,
         dependencies: [
@@ -232,7 +257,7 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
     )
-
+    
     static let landingComponents = target(
         name: .landingComponents,
         dependencies: []
@@ -255,7 +280,7 @@ private extension Target {
             .loadableResourceComponent,
         ]
     )
-
+    
     static let manageSubscriptionsUI = target(
         name: .manageSubscriptionsUI
     )
@@ -272,7 +297,7 @@ private extension Target {
             .pickerWithPreviewComponent,
         ]
     )
-
+    
     static let pinCodeUI = target(
         name: .pinCodeUI
     )
@@ -404,6 +429,10 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let bindPublicKeyWithEventID = byName(
+        name: .bindPublicKeyWithEventID
+    )
+    
     static let cvvPin = byName(
         name: .cvvPin
     )
@@ -467,6 +496,9 @@ private extension Target.Dependency {
 
 private extension String {
     
+    static let bindPublicKeyWithEventID = "BindPublicKeyWithEventID"
+    static let bindPublicKeyWithEventIDTests = "BindPublicKeyWithEventIDTests"
+    
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
     
@@ -501,13 +533,13 @@ private extension String {
     
     static let textFieldComponent = "TextFieldComponent"
     static let textFieldComponentTests = "TextFieldComponentTests"
-
+    
     static let textFieldDomain = "TextFieldDomain"
     static let textFieldDomainTests = "TextFieldDomainTests"
-
+    
     static let textFieldModel = "TextFieldModel"
     static let textFieldModelTests = "TextFieldModelTests"
-
+    
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     

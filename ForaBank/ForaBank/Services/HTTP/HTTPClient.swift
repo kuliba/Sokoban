@@ -14,7 +14,7 @@ public protocol HTTPClient {
     typealias Result = Swift.Result<Response, Error>
     typealias Completion = (Result) -> Void
     
-    func perform(
+    func performRequest(
         _ request: Request,
         completion: @escaping Completion
     )

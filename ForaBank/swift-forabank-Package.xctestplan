@@ -117,9 +117,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "GenericRemoteServiceTests",
         "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BindPublicKeyWithEventIDTests",
+        "name" : "BindPublicKeyWithEventIDTests"
       }
     }
   ],

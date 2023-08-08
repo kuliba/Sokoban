@@ -588,6 +588,7 @@ private extension ProductDepositData {
             endDate: nil,
             endDateNf: true,
             isDemandDeposit: true,
+            isDebitInterestAvailable: false,
             order: 0,
             visibility: true,
             smallDesignMd5hash: "",

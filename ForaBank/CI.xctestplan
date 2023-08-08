@@ -27,8 +27,64 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "TextFieldModelTests",
-        "name" : "TextFieldModelTests"
+        "identifier" : "BindPublicKeyWithEventIDTests",
+        "name" : "BindPublicKeyWithEventIDTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CvvPinTests",
+        "name" : "CvvPinTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
       }
     },
     {
@@ -48,29 +104,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "UserModelTests",
-        "name" : "UserModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PickerWithPreviewComponentTests",
-        "name" : "PickerWithPreviewComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "LoadableResourceComponentTests",
-        "name" : "LoadableResourceComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CvvPinTests",
-        "name" : "CvvPinTests"
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
       }
     },
     {
@@ -83,36 +118,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PinCodeUITests",
-        "name" : "PinCodeUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "SymmetricEncryptionTests",
-        "name" : "SymmetricEncryptionTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "GetProcessingSessionCodeServiceTests",
-        "name" : "GetProcessingSessionCodeServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "SharedAPIInfraTests",
-        "name" : "SharedAPIInfraTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "GenericRemoteServiceTests",
-        "name" : "GenericRemoteServiceTests"
+        "identifier" : "UserModelTests",
+        "name" : "UserModelTests"
       }
     }
   ],
