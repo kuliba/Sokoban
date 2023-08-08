@@ -1397,6 +1397,7 @@
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
 		833764FD2A385DF700F7C1AB /* CardViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */; };
 		833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */; };
+		83339E2D2A80F0620017C777 /* GetProductListByTypeResponseOnlyDeposits.json in Resources */ = {isa = PBXBuildFile; fileRef = 83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */; };
 		833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */; };
 		834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */; };
 		834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DE2A13746B002590A3 /* NoCompanyInListView.swift */; };
@@ -3280,6 +3281,7 @@
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
 		833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewComponentTests.swift; sourceTree = "<group>"; };
 		833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingSessionCodeData.swift; sourceTree = "<group>"; };
+		83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductListByTypeResponseOnlyDeposits.json; sourceTree = "<group>"; };
 		833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingSelectorView.swift; sourceTree = "<group>"; };
 		833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PickerWithPreviewComponent.xctestplan; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
@@ -7576,6 +7578,7 @@
 				77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */,
 				77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */,
 				77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */,
+				83339E2C2A80F0610017C777 /* GetProductListByTypeResponseOnlyDeposits.json */,
 				77517FE327A98E8F005CFB77 /* BlockAccountResponseGeneric.json */,
 				77517FE527A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json */,
 				77517FE727A98EE8005CFB77 /* SetUserSettingResponseGeneric.json */,
@@ -10343,6 +10346,7 @@
 				77EC58D52771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json in Resources */,
 				68AD340727997E6F00647665 /* BlockCardResponseGeneric.json in Resources */,
 				6820923C27A97BAC003DCAFD /* GetFullBankInfoListResponseGeneric.json in Resources */,
+				83339E2D2A80F0620017C777 /* GetProductListByTypeResponseOnlyDeposits.json in Resources */,
 				68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */,
 				5A5ABFBE27ABCF1E00D548AA /* GetDepositInfoMin.json in Resources */,
 				77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */,
@@ -12312,6 +12316,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -12325,6 +12330,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -12393,6 +12399,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -12407,6 +12414,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -12426,6 +12434,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -12440,6 +12449,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -12459,6 +12469,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -12473,6 +12484,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -12556,6 +12568,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -12568,6 +12581,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -12635,6 +12649,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -12649,6 +12664,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -12920,6 +12936,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -12933,6 +12950,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				"OTHER_SWIFT_FLAGS[sdk=*]" = "-Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=400";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12959,6 +12977,7 @@
 				CURRENT_PROJECT_VERSION = 16;
 				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -12971,6 +12990,7 @@
 				MARKETING_VERSION = 9.4;
 				MARKETING_VERSION = 9.4.1;
 				MARKETING_VERSION = 9.4;
+				MARKETING_VERSION = 9.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
