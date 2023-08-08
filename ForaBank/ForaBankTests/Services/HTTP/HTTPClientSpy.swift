@@ -16,7 +16,7 @@ final class HTTPClientSpy: HTTPClient {
     
     var requests: [Request] { messages.map(\.request) }
     
-    func perform(
+    func performRequest(
         _ request: Request,
         completion: @escaping Completion
     ) {

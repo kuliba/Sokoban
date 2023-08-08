@@ -41,7 +41,7 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
         
         XCTAssertNoDiff(spy.events.map(\.level), [.error])
         XCTAssertNoDiff(spy.events.map(\.category), [.network])
-        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any-url.com) did complete with error: session error"])
+        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any.url) did complete with error: session error"])
     }
     
     func test_didCompleteWithError_nil_shouldLogEvent() {
@@ -53,7 +53,7 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
 
         XCTAssertNoDiff(spy.events.map(\.level), [.error])
         XCTAssertNoDiff(spy.events.map(\.category), [.network])
-        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any-url.com) did complete with error: no error"])
+        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any.url) did complete with error: no error"])
     }
     
     // MARK: - Helpers
