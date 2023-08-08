@@ -18,9 +18,9 @@ class ProductDepositData: ProductData {
     let endDate: Date?
     let endDateNf: Bool
     let isDemandDeposit: Bool
+    let isDebitInterestAvailable: Bool?
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, isDemandDeposit: Bool, order: Int, visibility: Bool,
-         smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, isDemandDeposit: Bool, isDebitInterestAvailable: Bool?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.depositProductId = depositProductId
         self.depositId = depositId
@@ -31,13 +31,14 @@ class ProductDepositData: ProductData {
         self.endDate = endDate
         self.endDateNf = endDateNf
         self.isDemandDeposit = isDemandDeposit
+        self.isDebitInterestAvailable = isDebitInterestAvailable
         
         super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
     }
     
     private enum CodingKeys : String, CodingKey {
         
-        case interestRate, creditMinimumAmount, minimumBalance, endDate
+        case interestRate, creditMinimumAmount, minimumBalance, endDate, isDebitInterestAvailable
         case isDemandDeposit = "demandDeposit"
         case depositProductId = "depositProductID"
         case depositId = "depositID"
@@ -54,6 +55,16 @@ class ProductDepositData: ProductData {
         creditMinimumAmount = try container.decodeIfPresent(Double.self, forKey: .creditMinimumAmount)
         minimumBalance = try container.decodeIfPresent(Double.self, forKey: .minimumBalance)
         isDemandDeposit = try container.decode(Bool.self, forKey: .isDemandDeposit)
+        
+        if let debitInterestAvailable = try container.decodeIfPresent(Bool.self, forKey: .isDebitInterestAvailable) {
+            
+            isDebitInterestAvailable = debitInterestAvailable
+            
+        } else {
+            
+            isDebitInterestAvailable = false
+        }
+        
         if let endDateValue = try container.decodeIfPresent(Int.self, forKey: .endDate) {
             
             endDate = Date.dateUTC(with: endDateValue)
@@ -76,6 +87,8 @@ class ProductDepositData: ProductData {
         try container.encodeIfPresent(creditMinimumAmount, forKey: .creditMinimumAmount)
         try container.encodeIfPresent(minimumBalance, forKey: .minimumBalance)
         try container.encodeIfPresent(isDemandDeposit, forKey: .isDemandDeposit)
+        try container.encodeIfPresent(isDebitInterestAvailable, forKey: .isDebitInterestAvailable)
+
         if let endDate = endDate {
             
             try container.encode(endDate.secondsSince1970UTC, forKey: .endDate)
@@ -95,7 +108,8 @@ class ProductDepositData: ProductData {
         lhs.accountId == rhs.accountId &&
         lhs.creditMinimumAmount == rhs.creditMinimumAmount &&
         lhs.minimumBalance == rhs.minimumBalance &&
-        lhs.isDemandDeposit == rhs.isDemandDeposit
+        lhs.isDemandDeposit == rhs.isDemandDeposit &&
+        lhs.isDebitInterestAvailable == rhs.isDebitInterestAvailable
     }
 }
 
@@ -111,7 +125,7 @@ extension ProductDepositData {
             
         } else {
             
-            if depositType == .forahit {
+            if isDebitInterestAvailable == true {
                 
                 // Fora Hit Deposit
                 
