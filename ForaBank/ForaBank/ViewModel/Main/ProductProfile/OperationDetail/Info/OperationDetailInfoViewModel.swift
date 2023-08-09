@@ -41,31 +41,41 @@ final class OperationDetailInfoViewModel: Identifiable {
     static func logo(model: Model, operation: OperationDetailData) -> Image? {
         
         switch operation.transferEnum {
-            case .sfp:
-                return .ic24Sbp
+        case .sfp:
+            return .ic24Sbp
+            
+        case .internet:
+            guard let puref = operation.puref,
+                  let operatorValue = model.dictionaryAnywayOperator(for: puref),
+                  let image = operatorValue.iconImageData?.image else {
                 
-            case .internet:
-                guard let puref = operation.puref,
-                      let operatorValue = model.dictionaryAnywayOperator(for: puref),
-                      let image = operatorValue.iconImageData?.image else {
-                    
-                    return .ic40TvInternet
-                }
+                return .ic40TvInternet
+            }
+            
+            return image
+            
+        case .housingAndCommunalService:
+            guard let puref = operation.puref,
+                  let operatorValue = model.dictionaryAnywayOperator(for: puref),
+                  let image = operatorValue.iconImageData?.image else {
                 
-                return image
+                return .ic40ZKXServices
+            }
+            
+            return image
+            
+        case .transport:
+            guard let puref = operation.puref,
+                  let operatorValue = model.dictionaryAnywayOperator(for: puref),
+                  let image = operatorValue.iconImageData?.image else {
                 
-            case .housingAndCommunalService:
-                guard let puref = operation.puref,
-                      let operatorValue = model.dictionaryAnywayOperator(for: puref),
-                      let image = operatorValue.iconImageData?.image else {
-                    
-                    return .ic40ZKXServices
-                }
-                
-                return image
-                
-            default:
-                return nil
+                return .ic40Transport
+            }
+            
+            return image
+            
+        default:
+            return nil
         }
     }
     
@@ -749,7 +759,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 
             case .notFinance:
                 return nil
-                
+           
             case .outsideCash:
                 
                 if let debitAccounCell = Self.accountCell(with: product,
@@ -1578,7 +1588,19 @@ extension OperationDetailInfoViewModel {
             }
             
             return cells.compactMap {$0}
-                
+           
+        case .transport:
+            
+            return Self.makeItemsForTransport(
+                dictionaryAnywayOperator: model.dictionaryAnywayOperator,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                payeeViewModel,
+                dateViewModel
+            )
+            
             default:
                 
                 return [
@@ -1672,6 +1694,52 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             ].compactMap { $0 }
         }
+    }
+    
+    static func makeItemsForTransport(
+        dictionaryAnywayOperator: @escaping (String) -> OperatorGroupData.OperatorData?,
+        _ operation: OperationDetailData,
+        _ amountViewModel: PropertyCellViewModel?,
+        _ commissionViewModel: PropertyCellViewModel?,
+        _ payerViewModel: ProductCellViewModel?,
+        _ payeeViewModel: ProductCellViewModel?,
+        _ dateViewModel: PropertyCellViewModel?
+    ) -> [DefaultCellViewModel] {
+        
+        var cells = [
+            amountViewModel,
+            commissionViewModel,
+            payerViewModel,
+            payeeViewModel,
+            dateViewModel].compactMap { $0 }
+        
+        if let accountTitle = operation.accountTitle,
+           let account =  operation.account, !account.isEmpty {
+            
+            if operation.isTrafficPoliceService {
+                
+                cells.insert(PropertyCellViewModel(title: accountTitle,
+                                                   iconType: IconType.account.icon,
+                                                   value: account), at: 0)
+            } else {
+                
+                cells.insert(PropertyCellViewModel(title: accountTitle,
+                                                   iconType: IconType.operationNumber.icon,
+                                                   value: account), at:0)
+            }
+        }
+        
+        if let puref = operation.puref,
+           let payeeFullName = operation.payeeFullName {
+            
+            let operatorValue = dictionaryAnywayOperator(puref)
+            let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
+                                                          iconType: operatorValue?.iconImageData?.image ?? .ic40Transport,
+                                                          value: payeeFullName)
+            cells.insert(operatorViewModel, at: 0)
+        }
+        
+        return cells
     }
     
     func makePropertyViewModel(productId: Int?, operation: OperationDetailData, iconType: PropertyIconType) -> PropertyCellViewModel? {

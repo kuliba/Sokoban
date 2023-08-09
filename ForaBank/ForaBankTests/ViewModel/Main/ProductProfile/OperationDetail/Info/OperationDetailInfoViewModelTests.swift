@@ -190,7 +190,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .payeeAccountNumber,
             .payeeBankBIC,
             .property(title: "purpose", value: "Payment Purpose")
-,
+            ,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -349,6 +349,228 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertEqual(detail.externalTransferType, .individual)
     }
     
+    // MARK: - makeItemsForTransport
+    
+    func test_makeItemsForTransport_shouldReturnEmpty_onNilTransferType() {
+        
+        let detail = makeOperationDetail(transferEnum: nil)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .none)
+    }
+    
+    func test_makeItemsForTransport_transport_shouldReturnEmpty_onNil() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_shouldReturnAmount() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Сумма", value: "100")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_shouldReturnCommission() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, .init(title: "Commission", iconType: nil, value: "0.01"), nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Commission", value: "0.01")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnPayer() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"), nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnPayee() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payee description"), nil)
+        
+        XCTAssertNoDiff(cells, [
+            .product(title: "Payee", name: "Ivanov", balance: "100", description: "Payee description"),
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnDate() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, .init(title: "Date", iconType: nil, value: "10:30"))
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Date", value: "10:30")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_isTrafficPoliceServiceIsFalse_shouldAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            transferEnum: .transport,
+            account: "1111",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Номер карты", value: "1111")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_isTrafficPoliceServiceIsTrue_shouldAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            isTrafficPoliceService: true,
+            transferEnum: .transport,
+            account: "1111",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Номер карты", value: "1111")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_accountIsEmpty_shouldReturnEmptyAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            isTrafficPoliceService: true,
+            transferEnum: .transport,
+            account: "",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldName() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
+        
+        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iForaMosParking}, detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Наименование получателя", value: "Паркинг")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnCells() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
+        
+        let cells = makeItemsForTransport(
+            detail,
+            .init(title: "Сумма", iconType: nil, value: "100"),
+            .init(title: "Commission", iconType: nil, value: "0.01"),
+            .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"),
+            .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "101", description: "Payee description"),
+            .init(title: "Date", iconType: nil, value: "10:30"))
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Наименование получателя", value: "Паркинг"),
+            .property(title: "Сумма", value: "100"),
+            .property(title: "Commission", value: "0.01"),
+            .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
+            .product(title: "Payee", name: "Ivanov", balance: "101", description: "Payee description"),
+            .property(title: "Date", value: "10:30")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    // MARK: - test logo
+    
+    func test_logo_sfp() {
+        
+        let detail = makeOperationDetail(transferEnum: .sfp)
+        
+        let (_, model) = makeSUT(transferEnum: .sfp)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic24Sbp)
+    }
+    
+    func test_logo_internet() {
+        
+        let detail = makeOperationDetail(transferEnum: .internet)
+        
+        let (_, model) = makeSUT(transferEnum: .internet)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40TvInternet)
+    }
+    
+    func test_logo_housingAndCommunalService() {
+        
+        let detail = makeOperationDetail(transferEnum: .housingAndCommunalService)
+        
+        let (_, model) = makeSUT(transferEnum: .housingAndCommunalService)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40ZKXServices)
+    }
+    
+    func test_logo_transport() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let (_, model) = makeSUT(transferEnum: .transport)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40Transport)
+    }
+    
+    func test_logo_otherTransfer_shouldReturnLogoNil() {
+        
+        let detail = makeOperationDetail(transferEnum: .depositClose)
+        
+        let (_, model) = makeSUT(transferEnum: .depositClose)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNil(logo)
+    }
+    
     // MARK: - Helpers
     
     private func makeItemsForExternal(
@@ -411,7 +633,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         return (sut, model)
     }
-     
+    
     private func makeExternal(
         externalTransferType: OperationDetailData.ExternalTransferType?,
         productID: Int = 123,
@@ -463,6 +685,110 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек"
         )
     }
+    
+    private func makeItemsForTransport(
+        dictionaryAnywayOperator: @escaping (String) -> OperatorGroupData.OperatorData? = { _ in nil },
+        _ operation: OperationDetailData,
+        _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ payerViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
+        _ payeeViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
+        _ dateViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?
+    ) -> [OperationDetailInfoViewModel.TestCell] {
+        
+        OperationDetailInfoViewModel
+            .makeItemsForTransport(
+                dictionaryAnywayOperator: dictionaryAnywayOperator,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                payeeViewModel,
+                dateViewModel
+            ).map(\.testCell)
+    }
+
+    private func makeSUT(
+        transferEnum: OperationDetailData.TransferEnum?,
+        detail: OperationDetailData? = nil,
+        products: ProductsData = [:],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: OperationDetailInfoViewModel,
+        model: Model
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        model.products.value = products
+        
+        let sut = OperationDetailInfoViewModel(
+            model: model,
+            operation: detail ?? makeOperationDetail(transferEnum: transferEnum),
+            dismissAction: {}
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
+    private func makeOperationDetail(
+        externalTransferType: OperationDetailData.ExternalTransferType? = nil,
+        isTrafficPoliceService: Bool = false,
+        transferEnum: OperationDetailData.TransferEnum? = nil,
+        account: String? = nil,
+        accountTitle: String? = nil,
+        payeeFullName: String? = nil,
+        productID: Int = 123
+    ) -> OperationDetailData {
+        
+        .stub(
+            account: account,
+            accountTitle: accountTitle,
+            amount: 1111.0,
+            claimId: "6e9f2bcf-5cfe-408a-b908-8babc48cb658",
+            comment: "Lorem ipsum dolor sit amet",
+            currencyAmount: "RUB",
+            dateForDetail: "30 июня 2023, 12:32",
+            externalTransferType: externalTransferType,
+            isForaBank: false,
+            isTrafficPoliceService: isTrafficPoliceService,
+            operation: "Перевод юридическому лицу в сторонний банк",
+            payeeAccountId: 111,
+            payeeAccountNumber: "40802810938050002771",
+            payeeBankBIC: "044525225",
+            payeeBankCorrAccount: "30101810400000000225",
+            payeeBankName: "ПАО СБЕРБАНК",
+            payeeCurrency: "RUB",
+            payeeFullName: payeeFullName,
+            payeeINN: nil,
+            payeeKPP: nil,
+            payerAccountId: 111,
+            payerAccountNumber: "40817810152005001180",
+            payerAddress: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 117546, Москва г, Медынская ул ,  д. 4,  корп. 1,  кв. 12",
+            payerAmount: 1141.0,
+            payerCardId: productID,
+            payerCardNumber: "**** **** **56 7803",
+            payerCurrency: "RUB",
+            payerFee: 30.0,
+            payerFirstName: "Александра",
+            payerFullName: "Меньшикова Александра Андреевна",
+            payerINN: "290219523205",
+            payerMiddleName: "Андреевна",
+            paymentOperationDetailId: 65329,
+            printFormType: .transport,
+            puref: Purefs.iForaMosParking,
+            requestDate: "30.06.2023 12:32:41",
+            responseDate: "30.06.2023 12:33:28",
+            returned: false,
+            transferDate: "30.06.2023",
+            transferEnum: transferEnum,
+            cursivePayerAmount: "Одна тысяча сто сорок один рубль 00 копеек",
+            cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек"
+        )
+    }
+    
 }
 
 private extension OperationDetailInfoViewModel.DefaultCellViewModel {
