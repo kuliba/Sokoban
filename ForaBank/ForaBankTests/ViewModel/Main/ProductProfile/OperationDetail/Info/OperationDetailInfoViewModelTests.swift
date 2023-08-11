@@ -513,6 +513,294 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         ])
         XCTAssertEqual(detail.transferEnum, .transport)
     }
+    
+    // MARK: - makeItemsForHistoryExternal
+        
+    func test_makeItemsForHistoryExternal_entity_shouldReturnEmpty_onNil() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnEmpty_onNil() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnAmount() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Сумма", value: "100"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnAmount() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Сумма", value: "100"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCommission() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Commission", value: "1"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCommission() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Commission", value: "1"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnDebitAccount() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .default(title: "DebitAccount"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnDebitAccount() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .default(title: "DebitAccount"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCommentAndDate() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "Comment", "10:10")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCommentAndDate() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "Comment", "10:10")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCells() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(
+            .entity,
+            detail,
+            .init(title: "Amount", iconType: nil, value: "1234"),
+            .init(title: "Fee", iconType: nil, value: "345"),
+            .init(title: "DebitAccount"),
+            "Comment",
+            "10:10"
+        )
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Amount", value: "1234"),
+            .property(title: "Fee", value: "345"),
+            .default(title: "DebitAccount"),
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCells() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(
+            .individual,
+            detail,
+            .init(title: "Amount", iconType: nil, value: "1234"),
+            .init(title: "Fee", iconType: nil, value: "345"),
+            .init(title: "DebitAccount"),
+            "Comment",
+            "10:10"
+        )
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Amount", value: "1234"),
+            .property(title: "Fee", value: "345"),
+            .default(title: "DebitAccount"),
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnPayeeKPP() {
+        
+        let detail = makeExternal(
+            externalTransferType: .entity,
+            payeeINN: "772016190450",
+            payeeKPP: "770801001"
+        )
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeKPP,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertNotNil(detail.payeeINN)
+        XCTAssertNotNil(detail.payeeKPP)
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+
+    func test_makeItemsForHistoryExternal_individual_shouldNotReturnPayeeKPP() {
+        
+        let detail = makeExternal(
+            externalTransferType: .individual,
+            payeeINN: "772016190450",
+            payeeKPP: "770801001"
+        )
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertNotNil(detail.payeeINN)
+        XCTAssertNotNil(detail.payeeKPP)
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCardNumberIfAccountNumberEmpty() {
+        
+        let detail = makeExternal(
+            externalTransferType: .entity,
+            payeeAccountNumber: nil
+        )
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeCardNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
 
     // MARK: - test logo
     
@@ -640,7 +928,8 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         payeeAccountId: Int = 234,
         payeeINN: String? = nil,
         payeeKPP: String? = nil,
-        payerAccountId: Int = 345
+        payerAccountId: Int = 345,
+        payeeAccountNumber: String? = "40802810938050002771"
     ) -> OperationDetailData {
         
         .stub(
@@ -654,10 +943,11 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             isTrafficPoliceService: false,
             operation: "Перевод юридическому лицу в сторонний банк",
             payeeAccountId: payeeAccountId,
-            payeeAccountNumber: "40802810938050002771",
+            payeeAccountNumber: payeeAccountNumber,
             payeeBankBIC: "044525225",
             payeeBankCorrAccount: "30101810400000000225",
             payeeBankName: "ПАО СБЕРБАНК",
+            payeeCardNumber: "44444",
             payeeCurrency: "RUB",
             payeeFullName: "ИП Домрачев Сергей Николаевич",
             payeeINN: payeeINN,
@@ -789,6 +1079,28 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         )
     }
     
+    private func makeHistoryItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData? = { _ in nil },
+        _ type: OperationDetailData.ExternalTransferType,
+        _ operation: OperationDetailData,
+        _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ debitAccountViewModel: OperationDetailInfoViewModel.DefaultCellViewModel?,
+        _ comment: String,
+        _ dateString: String
+    ) -> [OperationDetailInfoViewModel.TestCell] {
+        
+        OperationDetailInfoViewModel
+            .makeHistoryItemsForExternal(
+                dictionaryFullBankInfoBank: dictionaryFullBankInfoBank,
+                type,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                debitAccountViewModel,
+                comment,
+                dateString).map(\.testCell)
+    }
 }
 
 private extension OperationDetailInfoViewModel.DefaultCellViewModel {
@@ -813,6 +1125,7 @@ private extension OperationDetailInfoViewModel {
 private extension OperationDetailInfoViewModel.TestCell {
     
     static let payee: Self = .property(title: "Получатель", value: "ИП Домрачев Сергей Николаевич")
+    static let payeeName: Self = .property(title: "Наименование получателя", value: "ИП Домрачев Сергей Николаевич")
     static let payeeAccountNumber: Self = .property(title: "Номер счета получателя", value: "40802810938050002771")
     static let payeeBankBIC: Self = .bank(title: "Бик банка получателя", name: "044525225")
     static let payeeINN: Self = .property(title: "ИНН получателя", value: "772016190450")
@@ -822,6 +1135,9 @@ private extension OperationDetailInfoViewModel.TestCell {
     static let fee: Self = .property(title: "Fee", value: "345")
     static let payer: Self = .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription")
     static let date: Self = .property(title: "Дата и время операции (МСК)", value: "30.06.2023 12:33:28")
+    static let dateEmpty: Self = .property(title: "Дата и время операции (МСК)", value: "")
+    static let commentEmpty: Self = .property(title: "Назначение платежа", value: "")
+    static let payeeCardNumber: Self = .property(title: "Номер счета получателя",value: "44444")
 }
 
 private extension OperationDetailInfoViewModel.TestCell {
@@ -1028,4 +1344,9 @@ private extension OperationDetailData {
             paymentMethod: paymentMethod
         )
     }
+}
+
+private extension BankFullInfoData {
+    
+    static let bank: Self = .init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: "16.06.2016 00:00:00", regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525225", engName: "TINKOFF BANK", fiasId: "string", fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: "string", kpp: "string", latitude: 0, longitude: 0, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: "100000000004", name: "Tinkoff Bank", receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: "2673", rusName: "Тинькофф Банк", senderList: ["string"], svgImage: .init(description: "string"), swiftList: [.init(default: true, swift: "TICSRUMMXXX")])
 }
