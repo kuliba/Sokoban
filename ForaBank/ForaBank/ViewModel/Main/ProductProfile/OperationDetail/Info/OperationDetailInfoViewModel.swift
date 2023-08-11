@@ -409,137 +409,35 @@ final class OperationDetailInfoViewModel: Identifiable {
                                                    iconType: IconType.date.icon,
                                                    value: dateString))
                 
-            case .externalIndivudual:
+        case .externalIndivudual, .externalEntity:
                 
-                if let payeeFullName = operation?.payeeFullName {
-                    
-                    cells.append(PropertyCellViewModel(title: "Получатель",
-                                                       iconType: IconType.user.icon,
-                                                       value: payeeFullName))
+            let amountCell = Self.amountCell(with: model,
+                                             amount: statement.amount,
+                                             currency: currency)
+            
+            let comissionCell = {
+                if let fee = operation?.payerFee {
+                    return Self.commissionCell(with: model,
+                                        fee: fee,
+                                        currency: currency)
                 }
-                
-                if let payeeAccountNumber = operation?.payeeAccountNumber {
-                    
-                    cells.append(PropertyCellViewModel(title: "Номер счета получателя",
-                                                       iconType: IconType.account.icon,
-                                                       value: payeeAccountNumber))
-                    
-                } else if let payeeCardNumber = operation?.payeeCardNumber {
-                    
-                    cells.append(PropertyCellViewModel(title: "Номер счета получателя",
-                                                       iconType: IconType.account.icon,
-                                                       value: payeeCardNumber))
-                }
-                
-                if let bankBic = operation?.payeeBankBIC,
-                   let bank = model.dictionaryFullBankInfoBank(for: bankBic),
-                   let bankLogoImage = bank.svgImage.image {
-                    
-                    cells.append(BankCellViewModel(title: "Бик банка получателя",
-                                                   icon: bankLogoImage,
-                                                   name: bankBic))
-                }
-                
-                if let amountCell = Self.amountCell(with: model,
-                                                    amount: statement.amount,
-                                                    currency: currency) {
-                    
-                    cells.append(amountCell)
-                }
-                
-                if let fee = operation?.payerFee,
-                   let comissionCell = Self.commissionCell(with: model,
-                                                           fee: fee,
-                                                           currency: currency) {
-                    
-                    cells.append(comissionCell)
-                }
-                
-                if let debitAccounCell = Self.accountCell(with: product,
-                                                          model: model,
-                                                          currency: currency,
-                                                          operationType: statement.operationType) {
-                    
-                    cells.append(debitAccounCell)
-                }
-                
-                cells.append(PropertyCellViewModel(title: "Назначение платежа",
-                                                   iconType: IconType.purpose.icon,
-                                                   value: statement.comment))
-                
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                   iconType: IconType.date.icon,
-                                                   value: dateString))
-                
-            case .externalEntity:
-                
-                if let payeeFullName = operation?.payeeFullName {
-                    
-                    cells.append(PropertyCellViewModel(title: "Наименование получателя",
-                                                       iconType: nil,
-                                                       value: payeeFullName))
-                }
-                
-                if let payeeAccountNumber = operation?.payeeAccountNumber {
-                    
-                    cells.append(PropertyCellViewModel(title: "Номер счета получателя",
-                                                       iconType: IconType.account.icon,
-                                                       value: payeeAccountNumber))
-                }
-                
-                if let payeeINN = operation?.payeeINN  {
-                    
-                    cells.append(PropertyCellViewModel(title: "ИНН получателя",
-                                                       iconType: nil,
-                                                       value: payeeINN))
-                }
-                
-                if let payeeKPP = operation?.payeeKPP {
-                    
-                    cells.append(PropertyCellViewModel(title: "КПП получателя",
-                                                       iconType: nil,
-                                                       value: payeeKPP))
-                }
-                
-                if let bankBic = operation?.payeeBankBIC,
-                   let bank = model.dictionaryFullBankInfoBank(for: bankBic),
-                   let bankLogoImage = bank.svgImage.image {
-                    
-                    cells.append(BankCellViewModel(title: "Банк получателя",
-                                                   icon: bankLogoImage,
-                                                   name: bankBic))
-                }
-                
-                if let amountCell = Self.amountCell(with: model,
-                                                    amount: statement.amount,
-                                                    currency: currency) {
-                    
-                    cells.append(amountCell)
-                }
-                
-                if let fee = operation?.payerFee,
-                   let comissionCell = Self.commissionCell(with: model,
-                                                           fee: fee,
-                                                           currency: currency) {
-                    
-                    cells.append(comissionCell)
-                }
-                
-                if let debitAccounCell = Self.accountCell(with: product,
-                                                          model: model,
-                                                          currency: currency,
-                                                          operationType: statement.operationType) {
-                    
-                    cells.append(debitAccounCell)
-                }
-                
-                cells.append(PropertyCellViewModel(title: "Назначение платежа",
-                                                   iconType: IconType.purpose.icon,
-                                                   value: statement.comment))
-                
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                   iconType: IconType.date.icon,
-                                                   value: dateString))
+                return nil
+            }
+            
+            let debitAccounCell = Self.accountCell(with: product,
+                                                   model: model,
+                                                   currency: currency,
+                                                   operationType: statement.operationType)
+            let type: OperationDetailData.ExternalTransferType = statement.paymentDetailType == .externalEntity ? .entity : .individual
+            cells = Self.makeHistoryItemsForExternal(
+                dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank,
+                type,
+                operation,
+                amountCell,
+                comissionCell(),
+                debitAccounCell,
+                statement.comment,
+                dateString)
                 
             case .insideOther:
                 
@@ -575,11 +473,11 @@ final class OperationDetailInfoViewModel: Identifiable {
                     cells.append(BankCellViewModel(title: "Наименование операции",
                                                    icon: image,
                                                    name: statement.merchant))
+                    
+                    cells.append(PropertyCellViewModel(title: "Категория операции",
+                                                       iconType: image,
+                                                       value: statement.groupName))
                 }
-                
-                cells.append(PropertyCellViewModel(title: "Категория операции",
-                                                   iconType: nil,
-                                                   value: statement.groupName))
                 
                 if let amountCell = Self.amountCell(with: model,
                                                     amount: statement.amount,
@@ -1741,6 +1639,94 @@ extension OperationDetailInfoViewModel {
         
         return cells
     }
+        
+    static func makeHistoryItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData?,
+        _ type: OperationDetailData.ExternalTransferType,
+        _ operation: OperationDetailData?,
+        _ amountCell: PropertyCellViewModel?,
+        _ comissionCell: PropertyCellViewModel?,
+        _ debitAccounCell: DefaultCellViewModel?,
+        _ comment: String,
+        _ dateString: String
+    ) -> [DefaultCellViewModel] {
+        
+        func accountNumber() -> PropertyCellViewModel? {
+            
+            let payeeAccountNumber = operation?.payeeAccountNumber.map {
+                
+                PropertyCellViewModel(title: "Номер счета получателя",
+                                      iconType: IconType.account.icon,
+                                      value: $0)
+            }
+            
+            if type == .entity {
+                if (payeeAccountNumber != nil) {
+                    
+                    return payeeAccountNumber
+                    
+                } else {
+                    return operation?.payeeCardNumber.map {
+                        PropertyCellViewModel(title: "Номер счета получателя",
+                                              iconType: IconType.account.icon,
+                                              value: $0)
+                    }
+                }
+            } else { return payeeAccountNumber }
+        }
+        return [
+            
+            operation?.payeeFullName.map {
+                
+                PropertyCellViewModel(title: "Наименование получателя",
+                                      iconType: IconType.customer.icon,
+                                      value: $0)
+            },
+            
+            accountNumber(),
+            
+            operation?.payeeINN.map  {
+                
+                PropertyCellViewModel(title: "ИНН получателя",
+                                      iconType: IconType.account.icon,
+                                      value: $0)
+            },
+            
+            (type == .entity) ? operation?.payeeKPP.map {
+                
+                PropertyCellViewModel(
+                    title: "КПП получателя",
+                    iconType: IconType.account.icon,
+                    value: $0
+                )
+            } : nil,
+            
+            operation?.payeeBankBIC.map { bankBic in
+                
+                let bank = dictionaryFullBankInfoBank(bankBic)
+                
+                return BankCellViewModel(
+                    title: "Бик банка получателя",
+                    icon: bank?.svgImage.image ?? IconType.account.icon,
+                    name: bankBic
+                )
+            },
+            
+            amountCell.map { $0 },
+            
+            comissionCell.map { $0 },
+            
+            debitAccounCell.map { $0 },
+            
+            PropertyCellViewModel(title: "Назначение платежа",
+                                  iconType: IconType.purpose.icon,
+                                  value: comment),
+            
+            PropertyCellViewModel(title: "Дата и время операции (МСК)",
+                                  iconType: IconType.date.icon,
+                                  value: dateString),
+        ].compactMap { $0 }
+    }
     
     func makePropertyViewModel(productId: Int?, operation: OperationDetailData, iconType: PropertyIconType) -> PropertyCellViewModel? {
         
@@ -1752,7 +1738,8 @@ extension OperationDetailInfoViewModel {
         switch iconType {
             case .balance:
                 
-                let formattedAmount = model.amountFormatted(amount: operation.payerAmount,
+                let amount = operation.transferEnum == .external ? operation.payerAmount - operation.payerFee : operation.payerAmount
+                let formattedAmount = model.amountFormatted(amount: amount,
                                                             currencyCode: operation.payerCurrency,
                                                             style: .fraction)
                 
@@ -2019,7 +2006,8 @@ extension OperationDetailInfoViewModel {
         case account
         case file
         case cash
-        
+        case customer
+
         var icon: Image {
             
             switch self {
@@ -2027,15 +2015,15 @@ extension OperationDetailInfoViewModel {
                 case .phone: return Image("smartphone", bundle: nil)
                 case .user: return Image("person", bundle: nil)
                 case .bank: return Image("BankIcon", bundle: nil)
-                case .commission: return Image("percent", bundle: nil)
+                case .commission: return Image("percent-commission", bundle: nil)
                 case .purpose: return Image("message", bundle: nil)
                 case .operationNumber: return Image("hash", bundle: nil)
                 case .date: return Image("date", bundle: nil)
                 case .geo: return Image("map-pin", bundle: nil)
-                case .account: return Image("accaunt", bundle: nil)
+                case .account: return Image("file-hash", bundle: nil)
                 case .file: return Image("file", bundle: nil)
                 case .cash: return Image("Frame 579", bundle: nil)
-                    
+                case .customer: return Image("customer", bundle: nil)
             }
         }
     }
