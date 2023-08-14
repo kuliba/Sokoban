@@ -68,6 +68,7 @@ public struct TextFieldView: UIViewRepresentable {
             textView.text = textState.text
             textView.setCursorPosition(to: textState.cursorPosition)
             textView.textColor = .init(textFieldConfig.textColor)
+            textView.becomeFirstResponder()
             
         case let .noFocus(text):
             textView.text = text
