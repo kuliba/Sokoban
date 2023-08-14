@@ -86,6 +86,30 @@ extension Model {
         return additional
     }
     
+    func abroadAmountParameter(
+        _ currencySymbol: String,
+        _ selectedCurrency: Currency,
+        _ currenciesList: [Currency],
+        _ maxAmount: Double?
+    ) -> Payments.ParameterAmount
+    {
+        let amountParameter = Payments.ParameterAmount(
+            value: "0",
+            title: "Сумма перевода",
+            currencySymbol: currencySymbol,
+            deliveryCurrency: .init(
+                selectedCurrency: selectedCurrency,
+                currenciesList: currenciesList
+            ),
+            transferButtonTitle: "Продолжить",
+            validator: .init(
+                minAmount: 0.1,
+                maxAmount: maxAmount
+            )
+        )
+        return amountParameter
+    }
+    
     func paymentsTransferAbroadStepParameters(
         _ operation: Payments.Operation,
         response: TransferAnywayResponseData
@@ -180,8 +204,18 @@ extension Model {
                         
                         let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: Currency.init(description: currency?.fieldvalue ?? "RUB"), currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
                         result.append(amountParameter)
+                       
+                    case .latestPayment:
+                        let amountParameter = abroadAmountParameter(
+                            currencySymbol,
+                            first,
+                            currencyArr,
+                            product.balance
+                        )
+                        result.append(amountParameter)
                         
                     default:
+                       
                         let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
                         result.append(amountParameter)
                     }
