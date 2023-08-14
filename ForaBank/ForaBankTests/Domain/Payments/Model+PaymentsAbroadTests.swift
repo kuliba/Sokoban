@@ -23,6 +23,24 @@ final class Model_PaymentsAbroadTests: XCTestCase {
         // then
         XCTAssertTrue(result.isEmpty)
     }
+    
+        // MARK: - test abroadAmountParameter
+    
+    func test_abroadAmountParameter_shouldReturnAmountZero() {
+        
+        // given
+        let sut = makeSut()
+        
+        // when
+        let result = sut.abroadAmountParameter(
+            "RUB",
+            .rub,
+            [.rub],
+            100)
+        
+        // then
+        XCTAssertNoDiff(result.amount, 0)
+    }
 }
 
 //MARK: Process Tests

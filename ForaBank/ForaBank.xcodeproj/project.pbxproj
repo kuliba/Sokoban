@@ -1445,6 +1445,7 @@
 		83B377462A0D2F9E00A8618E /* GetProcessingSessionCodeGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 83B377452A0D2F9200A8618E /* GetProcessingSessionCodeGeneric.json */; };
 		83B377482A0D2FDC00A8618E /* GetProcessingSessionCodeError.json in Resources */ = {isa = PBXBuildFile; fileRef = 83B377472A0D2FDC00A8618E /* GetProcessingSessionCodeError.json */; };
 		83B5DBF32A54B192006B0D6C /* ProductViewComponentPreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DBF22A54B192006B0D6C /* ProductViewComponentPreviewContent.swift */; };
+		83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */; };
 		83C139D32A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */; };
 		83C2DEDE2A04043700497674 /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C2DEDD2A04043700497674 /* CGFloat+Extension.swift */; };
 		83C8F4432A443A10008203E3 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4422A443A10008203E3 /* ItemView.swift */; };
@@ -3358,6 +3359,7 @@
 		83B377452A0D2F9200A8618E /* GetProcessingSessionCodeGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProcessingSessionCodeGeneric.json; sourceTree = "<group>"; };
 		83B377472A0D2FDC00A8618E /* GetProcessingSessionCodeError.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProcessingSessionCodeError.json; sourceTree = "<group>"; };
 		83B5DBF22A54B192006B0D6C /* ProductViewComponentPreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewComponentPreviewContent.swift; sourceTree = "<group>"; };
+		83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift"; sourceTree = "<group>"; };
 		83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponentTests.swift; sourceTree = "<group>"; };
 		83C2DEDD2A04043700497674 /* CGFloat+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		83C8F4422A443A10008203E3 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
@@ -6992,6 +6994,7 @@
 				2A7325EB2A304A6E00C35022 /* Model+PaymentsTransportTests.swift */,
 				2A90069E2A3EF2FD00CB81D5 /* Transport */,
 				2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */,
+				83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -12113,6 +12116,7 @@
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */,
+				83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */,
 				2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */,
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
 				2A4593D52A7CFA74008593A3 /* URL+StaticString.swift in Sources */,
