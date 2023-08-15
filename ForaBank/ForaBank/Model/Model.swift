@@ -639,7 +639,7 @@ class Model {
                 case let payload as ModelAction.Payment.Process.Request:
                     handlePaymentsProcessRequest(payload)
                     
-                case let payload as ModelAction.Payment.Subscribtion.Request:
+                case let payload as ModelAction.Payment.Subscription.Request:
                     handlePaymentSubscribtionRequest(payload)
                     
                     //MARK: - Operation

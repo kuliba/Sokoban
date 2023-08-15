@@ -48,7 +48,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .save))
         scheduler.advance()
         
-        let action = try XCTUnwrap(modelActionSpy.values.first as? ModelAction.Payment.Subscribtion.Request)
+        let action = try XCTUnwrap(modelActionSpy.values.first as? ModelAction.Payment.Subscription.Request)
         XCTAssertEqual(action.parameters.map(\.id), sut.parameters.map(\.id))
         XCTAssertEqual(action.action, .link)
         XCTAssertNotNil(sut.spinner)
@@ -58,12 +58,13 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let section = makeSection(.feed, ["one", "two", "three"])
         let (sut, model, scheduler, _) = makeSUT(with: [section])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         let modelActionSpy = ValueSpy(model.action)
 
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .cancel))
         scheduler.advance()
         
-        let action = try XCTUnwrap(modelActionSpy.values.first as? ModelAction.Payment.Subscribtion.Request)
+        let action = try XCTUnwrap(modelActionSpy.values.first as? ModelAction.Payment.Subscription.Request)
         XCTAssertEqual(action.parameters.map(\.id), sut.parameters.map(\.id))
         XCTAssertEqual(action.action, .deny)
         XCTAssertNotNil(sut.spinner)
@@ -73,7 +74,10 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let (sut, model, scheduler, _) = makeSUT()
         
-        model.action.send(ModelAction.Payment.Subscribtion.Response(result: .success(Payments.Success(parameters: []))))
+        model.action.send(ModelAction.Payment.Subscription.Response(result: .success(Payments.Success(
+            operation: nil,
+            parameters: []
+        ))))
         scheduler.advance()
         
         XCTAssertNotNil(sut.fullScreenCover)
@@ -84,7 +88,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let (sut, model, scheduler, _) = makeSUT()
         
-        model.action.send(ModelAction.Payment.Subscribtion.Response(result: .failure(NSError(domain: "", code: 0))))
+        model.action.send(ModelAction.Payment.Subscription.Response(result: .failure(NSError(domain: "", code: 0))))
         scheduler.advance()
         
         XCTAssertNotNil(sut.alert)
@@ -166,7 +170,12 @@ private extension PaymentsSuccessViewModelTests {
         let scheduler = DispatchQueue.test
         let model: Model = .mockWithEmptyExcept()
         let adapter = PaymentsSuccessViewModelAdapterSpy(model: model, scheduler: scheduler.eraseToAnyScheduler())
-        let sut = PaymentsSuccessViewModel(sections: sections, adapter: adapter, scheduler: scheduler.eraseToAnyScheduler())
+        let sut = PaymentsSuccessViewModel(
+            sections: sections,
+            adapter: adapter,
+            operation: nil,
+            scheduler: scheduler.eraseToAnyScheduler()
+        )
         
         trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -259,6 +268,7 @@ private extension PaymentsSuccessViewModelTests {
     ) -> Payments.Success {
         
         .init(
+            model: .emptyMock,
             mode: mode,
             paymentOperationDetailId: paymentOperationDetailId,
             documentStatus: status,

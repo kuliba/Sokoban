@@ -143,9 +143,17 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             // For ruble transfers
                             if response.needOTP == false {
                                 
-                                let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response)
+                                let mode = modeForSuccessView(
+                                    productIdFrom: swapViewModel.productIdFrom,
+                                    productIdTo: swapViewModel.productIdTo,
+                                    transferData: response
+                                )
                                 
-                                guard let success = Payments.Success(mode: mode, amountFormatter: model.amountFormatted(amount:currencyCode:style:)) else {
+                                guard let success = Payments.Success(
+                                    model: model,
+                                    mode: mode,
+                                    amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                                ) else {
                                     return
                                 }
                                 
@@ -172,7 +180,11 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     case let .success(transferData):
                         let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: transferData)
                         
-                        guard let success = Payments.Success(mode: mode, amountFormatter: model.amountFormatted(amount:currencyCode:style:)) else {
+                        guard let success = Payments.Success(
+                            model: model,
+                            mode: mode,
+                            amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                        ) else {
                             return
                         }
                         
@@ -195,7 +207,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         case let .closeAccount(productData, balance):
                             
                             let currency = Currency(description: productData.currency)
-                            if let success = Payments.Success(mode: .closeAccount(productData.id, currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeAccount(
+                                    productData.id,
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                 
                                 let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
@@ -223,7 +244,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch mode {
                         case let .closeDeposit(productData, balance):
                             let currency = Currency(description: productData.currency)
-                            if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeDeposit(
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                 
                                 let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
@@ -232,7 +261,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
                             let currency = Currency(description: productData.currency)
                             let balance = productData.balanceValue
-                            if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeDeposit(
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                
                                 let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
@@ -245,7 +282,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                                 let currency = Currency(description: productData.currency)
                                 let balance = productData.balanceValue
                                 
-                                if let success = Payments.Success(mode: .closeDeposit(currency, balance: balance, transferData), amountFormatter: model.amountFormatted(amount:currencyCode:style:)) {
+                                if let success = Payments.Success(
+                                    model: model,
+                                    mode: .closeDeposit(
+                                        currency,
+                                        balance: balance,
+                                        transferData
+                                    ),
+                                    amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                                ) {
                                    
                                     let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                     self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))

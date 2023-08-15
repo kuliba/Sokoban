@@ -316,6 +316,14 @@ extension Payments.Operation {
         
         steps.last?.back.stage
     }
+    
+    var isLastProcessStep: Payments.Operation.Step? {
+        
+        self.steps.filter({
+            
+            !$0.contains(parameterId: Payments.Parameter.Identifier.code.rawValue)
+        }).last
+    }
 }
 
 //MARK: - Error

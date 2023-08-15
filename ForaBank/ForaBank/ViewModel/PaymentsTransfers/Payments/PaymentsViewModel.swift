@@ -314,10 +314,11 @@ class PaymentsViewModel: ObservableObject {
                     break
                 //TODO: setup open edit name sheet action
                         
-                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+                case _ as PaymentsOperationViewModelAction.CancelOperation:
 
                     //TODO: move to convenience init
                     let succes = Payments.Success(
+                        operation: operationViewModel.operation.value,
                         parameters: [
                             Payments.ParameterSuccessStatus(status: .accepted),
                             Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),

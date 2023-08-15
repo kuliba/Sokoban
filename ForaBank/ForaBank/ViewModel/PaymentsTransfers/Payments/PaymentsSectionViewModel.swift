@@ -228,7 +228,11 @@ extension PaymentsSectionViewModel {
 
         for placement in Payments.Parameter.Placement.allCases {
             
-            let items = Self.reduce(parameters: success.parameters, placement: placement, model: model)
+            let items = Self.reduce(
+                parameters: success.parameters,
+                placement: placement,
+                model: model
+            )
             result.append(PaymentsSectionViewModel(placement: placement, items: items))
         }
         
@@ -281,8 +285,8 @@ extension PaymentsSectionViewModel {
         case let parameterInputPhone as Payments.ParameterInputPhone:
             return PaymentsInputPhoneView.ViewModel(with: parameterInputPhone, model: model)
             
-        case let paremeterName as Payments.ParameterName:
-            return PaymentsNameView.ViewModel(with: paremeterName)
+        case let parameterName as Payments.ParameterName:
+            return PaymentsNameView.ViewModel(with: parameterName)
             
         case let parameterDropDownList as Payments.ParameterSelectDropDownList:
             return try? PaymentSelectDropDownView.ViewModel(with: parameterDropDownList)
@@ -329,7 +333,7 @@ extension PaymentsSectionViewModel {
             return PaymentsSuccessIconView.ViewModel(successIcon)
             
         case let successOptionButtons as Payments.ParameterSuccessOptionButtons:
-            return PaymentsSuccessOptionButtonsView.ViewModel(model, successOptionButtons)
+            return PaymentsSuccessOptionButtonsView.ViewModel(model, buttons: [], source: successOptionButtons)
             
         case let successLink as Payments.ParameterSuccessLink:
             return PaymentsSuccessLinkView.ViewModel(successLink)
