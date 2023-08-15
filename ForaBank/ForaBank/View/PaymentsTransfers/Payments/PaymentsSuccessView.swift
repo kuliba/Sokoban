@@ -122,7 +122,7 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsSuccessOptionButtonsView.ViewModel.sample]),
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam])
             ])
-    ], adapter: .init(model: .emptyMock))
+    ], adapter: .init(model: .emptyMock), operation: nil)
     
     static let sampleC2BSub = PaymentsSuccessViewModel(sections: [
         PaymentsSectionViewModel(
@@ -139,7 +139,7 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam]),
                 .init(items: [PaymentsSuccessIconView.ViewModel.sampleName])
             ])
-    ], adapter: .init(model: .emptyMock))
+    ], adapter: .init(model: .emptyMock), operation: nil)
     
     static let sampleC2B = PaymentsSuccessViewModel(sections: [
         PaymentsSectionViewModel(
@@ -160,5 +160,5 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam]),
                 .init(items: [PaymentsSuccessIconView.ViewModel.sampleName])
             ])
-    ], adapter: .init(model: .emptyMock))
+    ], adapter: .init(model: .emptyMock), operation: nil)
 }

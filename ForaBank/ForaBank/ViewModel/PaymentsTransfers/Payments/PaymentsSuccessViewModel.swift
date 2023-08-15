@@ -29,15 +29,19 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     private let scheduler: AnySchedulerOfDispatchQueue
     private var operationDetailData: OperationDetailData?
 
+    private let operation: Payments.Operation?
+    
     init(
         sections: [PaymentsSectionViewModel],
         adapter: PaymentsSuccessViewModelAdapter,
+        operation: Payments.Operation?,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
             
         self.sections = sections
         self.adapter = adapter
         self.scheduler = scheduler
+        self.operation = operation
         
         bind()
         sections.forEach { section in
@@ -60,6 +64,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             self.init(
                 sections: mapper(paymentSuccess, model),
                 adapter: .init(model: model, mapper: mapper, scheduler: scheduler),
+                operation: paymentSuccess.operation,
                 scheduler: scheduler)
     }
     
@@ -90,9 +95,22 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(with: mode, documentStatus: documentStatus, operationDetail: fakeOperationDetailData) {
+                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                        with: mode,
+                        documentStatus: documentStatus,
+                        operationDetail: fakeOperationDetailData,
+                        operation: self.operation,
+                        meToMePayment: .init(
+                            payerProductId: productIdFrom,
+                            payeeProductId: productIdTo,
+                            amount: amount
+                        )
+                    ) {
                         let updatedParameters = PaymentsParametersReducer.reduce(self.parameters, ([optionButtonsParam], mode))
-                        updateSections(with: updatedParameters)
+                        updateSections(
+                            with: self.operation,
+                            parameters: updatedParameters
+                        )
                     }
                     
                 case let .makePaymentToDeposit(from: productFromID, to: productToID, transferData):
@@ -109,9 +127,18 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(with: mode, documentStatus: documentStatus, operationDetail: fakeOperationDetailData) {
+                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                        with: mode,
+                        documentStatus: documentStatus,
+                        operationDetail: fakeOperationDetailData,
+                        operation: self.operation,
+                        meToMePayment: nil
+                    ) {
                         let updatedParameters = PaymentsParametersReducer.reduce(self.parameters, ([optionButtonsParam], mode))
-                        updateSections(with: updatedParameters)
+                        updateSections(
+                            with: self.operation,
+                            parameters: updatedParameters
+                        )
                     }
                     
                 case let .makePaymentFromDeposit(from: productFromID, to: productToID, transferData):
@@ -128,23 +155,36 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     operationDetailData = fakeOperationDetailData
                     
                     // options buttons
-                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(with: mode, documentStatus: documentStatus, operationDetail: fakeOperationDetailData) {
+                    if let optionButtonsParam = Payments.ParameterSuccessOptionButtons.buttons(
+                        with: mode,
+                        documentStatus: documentStatus,
+                        operationDetail: fakeOperationDetailData,
+                        operation: self.operation,
+                        meToMePayment: nil
+                    ) {
                         let updatedParameters = PaymentsParametersReducer.reduce(self.parameters, ([optionButtonsParam], mode))
-                        updateSections(with: updatedParameters)
+                        updateSections(
+                            with: self.operation,
+                            parameters: updatedParameters
+                        )
                     }
                     
                 default:
-                    
                     guard let result = Payments.Success.parameters(
                         with: detailData,
                         amountFormatter: adapter.amountFormatted(amount:currencyCode:style:),
                         mode: mode,
-                        documentStatus: documentStatus) else {
+                        documentStatus: documentStatus,
+                        operation: self.operation
+                    ) else {
                         break
                     }
                     
                     let updatedParameters = PaymentsParametersReducer.reduce(self.parameters, (result.parameters, result.transferType))
-                    updateSections(with: updatedParameters)
+                    updateSections(
+                        with: self.operation,
+                        parameters: updatedParameters
+                    )
                 }
                   
             case let .failure(error):
@@ -155,8 +195,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             }
         }
         
-        // subscribtion response
-        adapter.subscribtionResponseHandler = { [weak self] result in
+        // subscription response
+        adapter.subscriptionResponseHandler = { [weak self] result in
             
             guard let self = self else { return }
             
@@ -173,7 +213,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             }
         }
         
-        //MARK: - PaymetnsSuccessViewModel Actions
+        //MARK: - PaymentsSuccessViewModel Actions
         
         // PaymentsSuccessAction.Button.Close
         action
@@ -251,11 +291,11 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     
                 case .save:
                     self.spinner = .init()
-                    adapter.requestSubscribtion(parameters: parameters, action: .link)
+                    adapter.requestSubscription(parameters: parameters, action: .link)
                     
                 case .cancel:
                     self.spinner = .init()
-                    adapter.requestSubscribtion(parameters: parameters, action: .deny)
+                    adapter.requestSubscription(parameters: parameters, action: .deny)
                     
                 case .repeat:
                     self.action.send(PaymentsSuccessAction.Button.Repeat())
@@ -295,7 +335,6 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             amount: amount,
                             productId: productID)))
                     
-                   
                 default:
                     break
                 }
@@ -309,10 +348,6 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             .sink { [unowned self] option in
                 
                 switch option {
-                case .template:
-                    break
-                    // implemented in template button component
-                   
                 case .document:
                     
                     switch mode {
@@ -344,20 +379,28 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    let viewModel = adapter.makeOpetationDetailInfoViewModel(operationDetailData: operationDetailData) { [weak self] in
+                    let viewModel = adapter.makeOperationDetailInfoViewModel(operationDetailData: operationDetailData) { [weak self] in
                         
                         self?.sheet = nil
                     }
    
                     self.action.send(PaymentsSuccessAction.ShowOperationDetailInfo(viewModel: viewModel))
+                default:
+                    break
                 }
                 
             }.store(in: &sectionsBindings)
     }
     
-    func updateSections(with parameters: [PaymentsParameterRepresentable]) {
+    func updateSections(
+        with operation: Payments.Operation?,
+        parameters: [PaymentsParameterRepresentable]
+    ) {
         
-        let success = Payments.Success(parameters: parameters)
+        let success = Payments.Success(
+            operation: operation,
+            parameters: parameters
+        )
         let updatedSections = adapter.makeSections(success)
         sectionsBindings = Set<AnyCancellable>()
         updatedSections.forEach { section in

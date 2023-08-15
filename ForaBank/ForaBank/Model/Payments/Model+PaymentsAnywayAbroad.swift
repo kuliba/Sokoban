@@ -39,10 +39,12 @@ extension Model {
         
         var parameters = parameters.filter({!restrictedParameters.contains($0.id)})
         
-        if parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryCitySearch.rawValue }),
-            parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryBankSearch.rawValue }) {
+        if parameters.hasValue(forIdentifier: .countryCitySearch),
+           parameters.hasValue(forIdentifier: .countryBankSearch) {
             
-            parameters = parameters.filter({ $0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue })
+            parameters = parameters.filter {
+                $0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue
+            }
         }
                 
         var additional = [TransferAnywayData.Additional]()
@@ -50,11 +52,11 @@ extension Model {
                 
             switch parameter.id {
             case Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue:
-                guard let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }),
-                      let amount = amount as? Payments.ParameterAmount else {
-                    continue
+                guard let amount = parameters.parameterAmount else {
+                    break
                 }
                 
+                //TODO: simplify using helpers
                 let currencies = self.currencyList.value.filter({ $0.currencySymbol == amount.currencySymbol })
                 
                 if let currency = amount.deliveryCurrency?.currenciesList?.first(where: { $0.description.contained(in: currencies.map(\.code)) }) {

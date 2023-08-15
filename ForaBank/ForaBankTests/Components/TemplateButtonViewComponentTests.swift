@@ -92,7 +92,7 @@ extension TemplateButtonViewComponentTests {
     
     func test_computedPropertyTitle_loadingState_shouldReturnTemplate() throws {
 
-        let sut = makeSUT(state: .loading(isComplete: true))
+        let sut = makeSUT(state: .loading)
         
         XCTAssertEqual(sut.title, "Шаблон")
     }

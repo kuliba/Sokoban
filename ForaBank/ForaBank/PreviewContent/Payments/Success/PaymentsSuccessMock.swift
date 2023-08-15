@@ -18,48 +18,73 @@ extension PaymentsSuccessViewModel {
     
     static let sample1: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .success),
                 Payments.ParameterSuccessText(value: "Успешный перевод", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.template, .document, .details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.template, .document, .details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let sample2: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Платеж принят в обработку", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.template, .details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.template, .details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let sample3: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Операция неуспешна!", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton(title: "Повторить", style: .secondary, acton: .repeat, placement: .bottom),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let sample4: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Платеж принят в обработку", style: .title),
                 Payments.ParameterSuccessLogo(icon: .name("ic40Sbp"), title: "сбп"),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let sample5: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Операция в обработке!", style: .title),
@@ -70,12 +95,18 @@ extension PaymentsSuccessViewModel {
                         .init(icon: .name("ic24Clock"), title: "Получатель", subTitle: "Тестовый QR Static для теста №501", description: "Цветы у дома"),
                         .init(icon: .name("ic24Coins"), title: "Сумма операции", subTitle: nil, description: "16 006,22 ₽")
                     ]),
-                Payments.ParameterSuccessOptionButtons(options: [.details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let sample6: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
@@ -92,6 +123,7 @@ extension PaymentsSuccessViewModel {
     
     static let sample7: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Перевод отменен!", style: .title),
@@ -102,6 +134,7 @@ extension PaymentsSuccessViewModel {
     
     static let sample8: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Запрос на пополнение со своего счета принят", style: .title),
@@ -113,6 +146,7 @@ extension PaymentsSuccessViewModel {
     
     static let sample9: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Запрос на пополнение со своего счета принят", style: .title),
@@ -124,6 +158,7 @@ extension PaymentsSuccessViewModel {
     
     static let sample10: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .success),
                 Payments.ParameterSuccessText(value: "Привязка счета оформлена", style: .title),
@@ -135,33 +170,51 @@ extension PaymentsSuccessViewModel {
     
     static let previewMobileConnectionOk: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .success),
                 Payments.ParameterSuccessText(value: "Успешный перевод", style: .title),
                 Payments.ParameterSuccessLogo(icon: .name("ic40Sbp"), title: "сбп"),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.template, .document, .details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.template, .document, .details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let previewMobileConnectionAccepted: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .accepted),
                 Payments.ParameterSuccessText(value: "Операция в обработке!", style: .title),
                 Payments.ParameterSuccessLogo(icon: .name("ic40Sbp"), title: "сбп"),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.template, .details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.template, .details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
     static let previewMobileConnectionFailed: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
+            operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .error),
                 Payments.ParameterSuccessText(value: "Операция неуспешна!", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
-                Payments.ParameterSuccessOptionButtons(options: [.details]),
+                Payments.ParameterSuccessOptionButtons(
+                    options: [.details],
+                    templateID: nil,
+                    meToMePayment: nil,
+                    operation: nil
+                ),
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
 }

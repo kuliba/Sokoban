@@ -447,7 +447,9 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
                       parameters.first(where: { $0.id == "amount" })?.value == "100" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return .init(parameters: [
+                return .init(
+                    operation: nil,
+                    parameters: [
                     Payments.ParameterSuccessStatus(status: .success)
                 ])
                 
@@ -456,7 +458,9 @@ private func remoteConfirm(parameters: [Payments.Parameter], operation: Payments
                       parameters.first(where: { $0.id == "amount" })?.value == "200" else {
                     throw Payments.Error.missingParameter("code")
                 }
-                return .init(parameters: [
+                return .init(
+                    operation: nil,
+                    parameters: [
                     Payments.ParameterSuccessStatus(status: .success)
                 ])
                 

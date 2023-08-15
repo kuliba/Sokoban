@@ -377,6 +377,52 @@ extension OperationDetailData {
 
 extension OperationDetailData {
     
+    var payerTransferData: TransferData.Payer {
+    
+        return .init(
+            inn: payerINN,
+            accountId: payerAccountId,
+            accountNumber: payerAccountNumber,
+            cardId: payerCardId,
+            cardNumber: payerCardNumber,
+            phoneNumber: payerPhone
+        )
+    }
+    
+    var payeeExternal: TransferGeneralData.PayeeExternal? {
+        
+        guard let payeeAccountNumber,
+              let payeeFullName else {
+            return nil
+        }
+        
+        return .init(
+            inn: payeeINN,
+            kpp: payeeKPP,
+            accountId: payeeAccountId,
+            accountNumber: payeeAccountNumber,
+            bankBIC: payeeBankBIC,
+            cardId: payeeCardId,
+            cardNumber: payeeCardNumber,
+            compilerStatus: nil,
+            date: nil,
+            name: payeeFullName,
+            tax: nil
+        )
+    }
+    
+    var payeeInternal: TransferGeneralData.PayeeInternal {
+        
+        return .init(
+            accountId: payeeAccountId,
+            accountNumber: payeeAccountNumber,
+            cardId: payeeCardId,
+            cardNumber: payeeCardNumber,
+            phoneNumber: payeePhone,
+            productCustomName: nil
+        )
+    }
+    
     var restrictedTemplateButton: Bool {
         
         switch self.transferEnum {

@@ -377,21 +377,101 @@ final class OperationDetailDataTests: XCTestCase {
         
         XCTAssertEqual(detail.templateName, "Шаблон по операции")
     }
+    
+    //MARK: PayerTransferData
+    
+    func test_payerTransferData_withOperationDetailStub_shouldReturnPayerTransferData() {
+        
+        let sut = Detail.stub()
+        
+        XCTAssertNoDiff(sut.payerTransferData, .init(
+            inn: nil,
+            accountId: 10,
+            accountNumber: "payerAccountNumber",
+            cardId: 1,
+            cardNumber: "payerCardNumber",
+            phoneNumber: nil)
+        )
+    }
+    
+    //MARK: PayeeExternal
+
+    func test_payeeExternal_withOperationDetailStub_accountNumberNil_shouldReturnNil() {
+        
+        let sut = Detail.stub()
+        
+        XCTAssertNil(sut.payeeExternal)
+    }
+    
+    func test_payeeExternal_withOperationDetailStub_shouldReturnPayerExternal() {
+        
+        let sut = Detail.stub(payeeFullName: "payeeFullName")
+        
+        XCTAssertNoDiff(sut.payeeExternal, .init(
+            inn: nil,
+            kpp: nil,
+            accountId: nil,
+            accountNumber: "payeeAccountNumber",
+            bankBIC: nil,
+            cardId: nil,
+            cardNumber: nil,
+            compilerStatus: nil,
+            date: nil,
+            name: "payeeFullName",
+            tax: nil
+        ))
+    }
+    
+    //MARK: PayeeInternal
+
+    func test_payeeInternal_withOperationDetailStub_shouldReturnPayeeInternal() {
+        
+        let sut = Detail.stub(payeePhone: "payeePhone")
+        
+        XCTAssertNoDiff(sut.payeeInternal, .init(
+            accountId: nil,
+            accountNumber: "payeeAccountNumber",
+            cardId: nil,
+            cardNumber: nil,
+            phoneNumber: "payeePhone",
+            productCustomName: nil
+        ))
+    }
+    
+    //MARK: RestrictedTemplateButton
+    
+    func test_restrictedTemplateButton_withOperationDetailStub_forAccountClose_shouldReturnFalse() {
+        
+        let sut = Detail.stub(transferEnum: .accountClose)
+        
+        XCTAssertFalse(sut.restrictedTemplateButton)
+    }
+    
+    func test_restrictedTemplateButton_withOperationDetailStub_forCardToCard_shouldReturnTrue() {
+        
+        let sut = Detail.stub(transferEnum: .cardToCard)
+        
+        XCTAssertTrue(sut.restrictedTemplateButton)
+    }
 }
 
 extension OperationDetailData {
     
     static func stub(
+        cardId: Int? = 1,
+        amount: Double = 100,
         paymentTemplateId: Int? = 1,
         transferEnum: OperationDetailData.TransferEnum? = .accountClose,
         payeeFullName: String? = nil,
-        payeePhone: String? = nil) -> OperationDetailData {
+        payeePhone: String? = nil,
+        payeeAccountNumber: String = "payeeAccountNumber"
+    ) -> OperationDetailData {
         
         return .init(
             oktmo: nil,
             account: nil,
             accountTitle: nil,
-            amount: 100,
+            amount: amount,
             billDate: nil,
             billNumber: nil,
             claimId: "",
@@ -407,7 +487,7 @@ extension OperationDetailData {
             memberId: nil,
             operation: nil,
             payeeAccountId: nil,
-            payeeAccountNumber: nil,
+            payeeAccountNumber: payeeAccountNumber,
             payeeAmount: nil,
             payeeBankBIC: nil,
             payeeBankCorrAccount: nil,
@@ -423,11 +503,11 @@ extension OperationDetailData {
             payeePhone: payeePhone,
             payeeSurName: nil,
             payerAccountId: 10,
-            payerAccountNumber: ":",
+            payerAccountNumber: "payerAccountNumber",
             payerAddress: "",
             payerAmount: 11,
-            payerCardId: nil,
-            payerCardNumber: nil,
+            payerCardId: cardId,
+            payerCardNumber: "payerCardNumber",
             payerCurrency: "",
             payerDocument: nil,
             payerFee: 10,

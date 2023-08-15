@@ -21,8 +21,8 @@ class PaymentsSuccessViewModelAdapter {
     typealias OperationDetailResponseHandler = (Result<OperationDetailData, ModelError>) -> Void
     var operationDetailResponseHandler: OperationDetailResponseHandler?
     
-    typealias SubscribtionResponseHandler = (Result<Payments.Success, Error>) -> Void
-    var subscribtionResponseHandler: SubscribtionResponseHandler?
+    typealias SubscriptionResponseHandler = (Result<Payments.Success, Error>) -> Void
+    var subscriptionResponseHandler: SubscriptionResponseHandler?
     
     init(
         model: Model,
@@ -49,14 +49,14 @@ class PaymentsSuccessViewModelAdapter {
                 
             }.store(in: &bindings)
         
-        // ModelAction.Payment.Subscribtion.Response
+        // ModelAction.Payment.Subscription.Response
         model.action
-            .compactMap( { $0 as? ModelAction.Payment.Subscribtion.Response })
+            .compactMap( { $0 as? ModelAction.Payment.Subscription.Response })
             .map(\.result)
             .receive(on: scheduler)
             .sink { [unowned self] result in
                 
-               subscribtionResponseHandler?(result)
+               subscriptionResponseHandler?(result)
                 
             }.store(in: &bindings)
     }
@@ -68,9 +68,9 @@ class PaymentsSuccessViewModelAdapter {
         model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailID)))
     }
     
-    func requestSubscribtion(parameters: [PaymentsParameterRepresentable], action: ModelAction.Payment.Subscribtion.Request.SubscribtionAction) {
+    func requestSubscription(parameters: [PaymentsParameterRepresentable], action: ModelAction.Payment.Subscription.Request.SubscriptionAction) {
         
-        model.action.send(ModelAction.Payment.Subscribtion.Request(parameters: parameters, action: action))
+        model.action.send(ModelAction.Payment.Subscription.Request(parameters: parameters, action: action))
     }
     
     //MARK: - View Models Helpers
@@ -85,7 +85,7 @@ class PaymentsSuccessViewModelAdapter {
         .init(type: type, model: model)
     }
     
-    func makeOpetationDetailInfoViewModel(operationDetailData: OperationDetailData, dissmissAction: @escaping () -> Void) -> OperationDetailInfoViewModel {
+    func makeOperationDetailInfoViewModel(operationDetailData: OperationDetailData, dissmissAction: @escaping () -> Void) -> OperationDetailInfoViewModel {
         
         .init(model: model, operation: operationDetailData, dismissAction: dissmissAction)
     }

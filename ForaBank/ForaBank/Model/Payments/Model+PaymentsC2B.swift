@@ -119,7 +119,10 @@ extension Model {
                 var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters)
                 resultParameters.append(Payments.ParameterDataValue(parameter: .init(id: qrcIdParamId, value: qrcParamValue)))
                 
-                return .init(parameters: resultParameters)
+                return .init(
+                    operation: operation,
+                    parameters: resultParameters
+                )
                 
             case _ as ProductAccountData:
                 let command = ServerCommands.SBPPaymentController.CreateC2BPaymentAcc(token: token, payload: .init(parameters: parameters))
@@ -127,7 +130,10 @@ extension Model {
                 var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters)
                 resultParameters.append(Payments.ParameterDataValue(parameter: .init(id: qrcIdParamId, value: qrcParamValue)))
                 
-                return .init(parameters: resultParameters)
+                return .init(
+                    operation: operation,
+                    parameters: resultParameters
+                )
                 
             default:
                 throw Payments.Error.unexpectedProductType(product.productType)
@@ -267,7 +273,12 @@ extension Model {
                 parameters.append(Payments.ParameterSuccessText(with: text))
                 
             case let optionButtons as PaymentParameterOptionButtons:
-                parameters.append(Payments.ParameterSuccessOptionButtons(with: optionButtons))
+                parameters.append(Payments.ParameterSuccessOptionButtons(
+                    with: optionButtons,
+                    templateID: nil,
+                    operation: nil,
+                    meToMePayment: nil
+                ))
                 
             case let icon as PaymentParameterIcon:
                 parameters.append(Payments.ParameterSuccessIcon(with: icon))
