@@ -230,7 +230,17 @@ extension Model {
                 
             } else {
                 
-                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
+                let amount: String? = {
+                    
+                    switch operation.source {
+                    case .latestPayment:
+                        return "0"
+                    default:
+                        return nil
+                    }
+                }()
+
+                let amountParameter = Payments.ParameterAmount(value: amount, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
                 result.append(amountParameter)
             }
         }
