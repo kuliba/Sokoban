@@ -333,7 +333,7 @@ extension PaymentsSectionViewModel {
             return PaymentsSuccessIconView.ViewModel(successIcon)
             
         case let successOptionButtons as Payments.ParameterSuccessOptionButtons:
-            return PaymentsSuccessOptionButtonsView.ViewModel(model, buttons: [], source: successOptionButtons)
+            return PaymentsSuccessOptionButtonsView.ViewModel(model, source: successOptionButtons)
             
         case let successLink as Payments.ParameterSuccessLink:
             return PaymentsSuccessLinkView.ViewModel(successLink)

@@ -503,7 +503,16 @@ extension Payments.ParameterSuccessOptionButtons {
                 meToMePayment: meToMePayment
             )
             
-        case .makePaymentToDeposit, .makePaymentFromDeposit, .closeDeposit, .closeAccount:
+        case .closeAccount:
+            return .init(
+                options: [.document, operationDetail.map { _ in .details }].compactMap { $0 },
+                operationDetail: operationDetail,
+                templateID: nil,
+                meToMePayment: meToMePayment,
+                operation: operation
+            )
+            
+        case .makePaymentToDeposit, .makePaymentFromDeposit, .closeDeposit:
             return .init(
                 options: [.document, .details],
                 templateID: nil,

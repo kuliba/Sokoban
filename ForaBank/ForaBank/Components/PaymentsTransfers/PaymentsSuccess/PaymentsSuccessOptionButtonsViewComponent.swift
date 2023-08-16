@@ -21,7 +21,6 @@ extension PaymentsSuccessOptionButtonsView {
         
         init(
             _ model: Model,
-            buttons: [any PaymentsSuccessOptionButtonsButtonViewModel],
             source: Payments.ParameterSuccessOptionButtons
         ) {
             
@@ -63,12 +62,12 @@ private extension Model {
 
         let buttons: [(any PaymentsSuccessOptionButtonsButtonViewModel)?] = source.options.map { option in
             
-            guard let operationDetail = source.operationDetail else {
-                return nil
-            }
-            
             switch option {
             case .template:
+                
+                guard let operationDetail = source.operationDetail else {
+                    return nil
+                }
                 
                 switch source.templateID {
                 case let .some(templateID):
@@ -93,6 +92,9 @@ private extension Model {
                     
                     
                 default:
+                    guard let operationDetail = source.operationDetail else {
+                        return nil
+                    }
                     if let meToMePayment = source.meToMePayment,
                        let templateID = source.templateID,
                        let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) {
@@ -251,7 +253,6 @@ extension PaymentsSuccessOptionButtonsView.ViewModel {
     
     static let sample = PaymentsSuccessOptionButtonsView.ViewModel(
         .emptyMock,
-        buttons: [],
         source: .init(
             options: [.template, .document, .details],
             templateID: nil,
@@ -262,7 +263,6 @@ extension PaymentsSuccessOptionButtonsView.ViewModel {
     
     static let sampleC2B = PaymentsSuccessOptionButtonsView.ViewModel(
         .emptyMock,
-        buttons: [],
         source: .init(
             options: [.document, .details],
             templateID: nil,

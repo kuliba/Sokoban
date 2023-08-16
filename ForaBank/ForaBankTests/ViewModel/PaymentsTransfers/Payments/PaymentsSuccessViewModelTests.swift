@@ -31,6 +31,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let section = makeSection(.feed, ["one", "two", "three"])
         let (sut, _, scheduler, _) = makeSUT(with: [section])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let sutActionSpy = ValueSpy(sut.action)
 
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .main))
@@ -43,6 +44,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let section = makeSection(.feed, ["one", "two", "three"])
         let (sut, model, scheduler, _) = makeSUT(with: [section])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
 
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .save))
@@ -58,7 +60,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         
         let section = makeSection(.feed, ["one", "two", "three"])
         let (sut, model, scheduler, _) = makeSUT(with: [section])
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
 
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .cancel))
