@@ -445,3 +445,32 @@ extension OperationDetailData {
         }
     }
 }
+
+extension OperationDetailData {
+    
+    var payerProductId: Int? {
+        [
+            self.payerCardId,
+            self.payerAccountId
+        ].compactMap { $0 }.first
+        
+    }
+    var payerProductNumber: String? {
+        [
+            self.payerCardNumber,
+            self.payerAccountNumber
+        ].compactMap { $0 }.first
+    }
+    var payeeProductId: Int? {
+        [
+            self.payeeCardId,
+            self.payeeAccountId
+        ].compactMap { $0 }.first
+    }
+    var payeeProductNumber: String? {
+        [
+            self.payeeCardNumber,
+            self.payeeAccountNumber
+        ].compactMap { $0 }.first
+    }
+}
