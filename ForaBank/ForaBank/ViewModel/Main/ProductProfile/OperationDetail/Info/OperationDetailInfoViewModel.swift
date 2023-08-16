@@ -835,62 +835,50 @@ final class OperationDetailInfoViewModel: Identifiable {
                                                value: dateString))
                 
             case .transport:
+            
+            guard let operation else {
+                return nil
+            }
+            
+            if let image = model.images.value[statement.md5hash]?.image {
                 
-                if let image = model.images.value[statement.md5hash]?.image {
-                    
-                    logo = image
-                    
-                    cells.append(BankCellViewModel(title: "Наименование получателя",
-                                                   icon: image,
-                                                   name: statement.merchant))
-                }
-                
-                if let accountTitle = operation?.accountTitle,
-                   let account =  operation?.account {
-                    
-                    if let isTrafficPoliceService = operation?.isTrafficPoliceService,
-                       isTrafficPoliceService {
+                logo = image
+            }
                         
-                        cells.append(PropertyCellViewModel(title: accountTitle,
-                                                           iconType: IconType.account.icon,
-                                                           value: account))
-                    } else {
-                        
-                        cells.append(PropertyCellViewModel(title: accountTitle,
-                                                           iconType: IconType.operationNumber.icon,
-                                                           value: account))
-                    }
-                }
-                
-                if let formattedAmount = model.amountFormatted(amount: statement.amount,
-                                                               currencyCode: currency,
-                                                               style: .fraction) {
-                    
-                    let amount = statement.operationType == .credit ? "+ \(formattedAmount)" : formattedAmount
-                    cells.append(PropertyCellViewModel(title: "Сумма перевода",
-                                                       iconType: IconType.balance.icon,
-                                                       value: amount))
-                }
-                
-                if let fee = operation?.payerFee,
-                   let comissionCell = Self.commissionCell(with: model,
-                                                           fee: fee,
-                                                           currency: currency) {
-                    
-                    cells.append(comissionCell)
-                }
-                
-                if let debitAccounCell = Self.accountCell(with: product,
-                                                          model: model,
-                                                          currency: currency,
-                                                          operationType: statement.operationType) {
-                    
-                    cells.append(debitAccounCell)
-                }
-                
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
-                                                   iconType: IconType.date.icon,
-                                                   value: dateString))
+            let payerViewModel = makeProductViewModel(
+                title: "Счет списания",
+                productId: operation.payerProductId,
+                productNumber: operation.payerProductNumber)
+
+            let amountViewModel = makePropertyViewModel(
+                productId: operation.payerProductId,
+                operation: operation,
+                iconType: .balance)
+
+            let commissionViewModel = makePropertyViewModel(
+                productId: operation.payerProductId,
+                operation: operation,
+                iconType: .commission)
+            
+            let payeeViewModel = makeProductViewModel(
+                title: "Счет зачисления",
+                productId: operation.payeeProductId,
+                productNumber: operation.payeeProductNumber)
+            
+            let dateViewModel = makePropertyViewModel(
+                productId: operation.payerProductId,
+                operation: operation,
+                iconType: .date)
+
+            cells = Self.makeItemsForTransport(
+                dictionaryAnywayOperator: model.dictionaryAnywayOperator,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                payeeViewModel,
+                dateViewModel
+            )
                 
             case .c2b:
                 logo = Image("sbp-logo")

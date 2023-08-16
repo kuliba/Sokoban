@@ -96,7 +96,7 @@ extension ProductData {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "Rub",
+            currency: "RUB",
             mainField: "",
             additionalField: nil,
             customName: nil,
