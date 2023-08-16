@@ -384,7 +384,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         self?.sheet = nil
                     }
    
-                    self.action.send(PaymentsSuccessAction.ShowOperationDetailInfo(viewModel: viewModel))
+                    self.sheet = .init(type: .detailInfo(viewModel))
+                
                 default:
                     break
                 }
