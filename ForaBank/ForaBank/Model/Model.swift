@@ -102,6 +102,7 @@ class Model {
     let bankClientsInfo: CurrentValueSubject<Set<BankClientInfo>, Never>
     
     //MARK: DeepLink
+    //TODO: remove deepLinkType because shared mutable state
     var deepLinkType: DeepLinkType?
     
     //MARK: QR

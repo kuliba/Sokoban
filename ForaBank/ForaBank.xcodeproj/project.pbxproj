@@ -1555,6 +1555,7 @@
 		C1A4D38C2A67CFAF001DD9E4 /* ManageSubscriptionsUI in Frameworks */ = {isa = PBXBuildFile; productRef = C1A4D38B2A67CFAF001DD9E4 /* ManageSubscriptionsUI */; };
 		C1A4D3912A694D72001DD9E4 /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1A4D3902A694D72001DD9E4 /* SearchBarComponent */; };
 		C1A4D3932A694EF2001DD9E4 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1A4D3922A694EF2001DD9E4 /* TextFieldComponent */; };
+		C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */; };
 		C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
@@ -3441,6 +3442,7 @@
 		C1A4D37F2A67CDFC001DD9E4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C1A4D3812A67CDFD001DD9E4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1A4D3842A67CDFD001DD9E4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SbpPayTests.swift"; sourceTree = "<group>"; };
 		C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTemplateDataTests.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
@@ -6928,6 +6930,7 @@
 				77B243DD2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift */,
 				0CAB7B522A45DE99001B8C93 /* Model+PaymentTemplates.swift */,
 				C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */,
+				C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -12063,6 +12066,7 @@
 				2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */,
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
+				C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
 				2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */,
 				7757DB522A711BDA00745EFF /* LocalAgentOldSymmetricKeyCleanerTests.swift in Sources */,
