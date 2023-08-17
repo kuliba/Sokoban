@@ -48,7 +48,12 @@ class UserAccountViewModel: ObservableObject {
         self.deleteAccountButton = deleteAccountButton
     }
     
-    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void, action: Action? = nil) {
+    init(
+        model: Model,
+        clientInfo: ClientInfoData,
+        dismissAction: @escaping () -> Void,
+        action: Action? = nil
+    ) {
         
         self.model = model
         sections = []
@@ -117,7 +122,6 @@ class UserAccountViewModel: ObservableObject {
                     
                 }
             }.store(in: &bindings)
-        
     }
     
     func bind() {
