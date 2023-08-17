@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-//MARK: - ViewModel
+// MARK: - ViewModel
 
 extension PaymentsAmountView {
     
@@ -63,93 +63,41 @@ extension PaymentsAmountView {
             }
             
             if let deliveryCurrencyParams = parameterAmount.deliveryCurrency,
-               let currency = model.currencyList.value.first(where: {$0.code == deliveryCurrencyParams.selectedCurrency.description}),
+               let currency = model.currencyList.value.first(where: { $0.code == deliveryCurrencyParams.selectedCurrency.description }),
                let symbol = currency.currencySymbol {
                 
                 self.deliveryCurrency = .init(currency: symbol, action: { [weak self] in
                     
                     var items: [Option] = []
                     if let currencyList = deliveryCurrencyParams.currenciesList {
-                     
+                        
                         for currency in currencyList {
-                         
-                            let currency = model.currencyList.value.first(where: {$0.code == currency.description})
+                            
+                            let currency = model.currencyList.value.first(where: { $0.code == currency.description })
                             items.append(.init(id: currency?.currencySymbol ?? "", name: currency?.name ?? ""))
                         }
                     }
                     
-                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
-                        
-                        if let currency = model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
-                           let symbol = currency.currencySymbol {
+                    let viewModel = PaymentsPopUpSelectView.ViewModel(
+                        title: "Выберите валюту выдачи",
+                        description: nil,
+                        options: items,
+                        action: { [weak self] currency in
                             
-                            self?.deliveryCurrency?.currency = symbol
-                            self?.bind()
-                            self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                            if let currency = model.currencyList.value.first(where: { $0.currencySymbol == currency.description }),
+                               let symbol = currency.currencySymbol {
+                                
+                                self?.deliveryCurrency?.currency = symbol
+                                self?.bind()
+                                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                            }
                         }
-                    })))
+                    )
+                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: viewModel))
                 })
             }
             
             bind(textField: textField)
-        }
-
-        convenience init(mode: PaymentsMeToMeViewModel.Mode, model: Model, action: @escaping () -> Void = {}) {
- 
-            switch mode {
-            case .general, .demandDeposit:
-                let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
-                let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
- 
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
-                
-            case let .closeAccount(productData, balance):
-                
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currencySymbol)
-                
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
-                
-            case let .closeDeposit(productData, balance):
-                
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(balance, isEnabled: false, currencySymbol: currencySymbol)
-                
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
-                
-            case let .makePaymentTo(productData, amount):
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
-                
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
-                
-            case let .templatePayment(templateId, _):
-                guard let (_, productFrom, amount) = model.productsTransfer(templateId: templateId) else {
-
-                    let currencySymbol = model.dictionaryCurrencySymbol(for: Currency.rub.description) ?? ""
-                    let textField = TextFieldFormatableView.ViewModel(0, currencySymbol: currencySymbol)
-                    
-                    self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"))
-                    return
-                }
-
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productFrom.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
-                    
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
-                    
-            case let .makePaymentToDeposite(productData, amount), let .transferDeposit(productData, amount):
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: true, currencySymbol: currencySymbol)
-                
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
-                
-            case let .transferAndCloseDeposit(productData, amount):
-                let currencySymbol = model.dictionaryCurrencySymbol(for: productData.currency) ?? ""
-                let textField: TextFieldFormatableView.ViewModel = .init(amount, isEnabled: false, currencySymbol: currencySymbol)
-                
-                self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
-            }
         }
         
         override var isValid: Bool {
@@ -173,33 +121,39 @@ extension PaymentsAmountView {
             actionTitle = parameterAmount.transferButtonTitle
             
             if let deliveryCurrencyParams = parameterAmount.deliveryCurrency,
-               let currency = model.currencyList.value.first(where: {$0.code == deliveryCurrencyParams.selectedCurrency.description}),
+               let currency = model.currencyList.value.first(where: { $0.code == deliveryCurrencyParams.selectedCurrency.description }),
                let symbol = currency.currencySymbol {
                 
                 self.deliveryCurrency = .init(currency: symbol, action: { [weak self] in
                     
                     var items: [Option] = []
                     if let currencyList = deliveryCurrencyParams.currenciesList {
-                     
+                        
                         for currency in currencyList {
-                         
-                            let currency = self?.model.currencyList.value.first(where: {$0.code == currency.description})
+                            
+                            let currency = self?.model.currencyList.value.first(where: { $0.code == currency.description })
                             items.append(.init(id: currency?.currencySymbol ?? "", name: currency?.name ?? ""))
                         }
                     }
                     
                     if items.count > 1 {
-                     
-                        self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: .init(title: "Выберите валюту выдачи", description: nil, options: items, action: { [weak self] currency in
-                            
-                            if let currency = self?.model.currencyList.value.first(where: {$0.currencySymbol == currency.description}),
-                               let symbol = currency.currencySymbol {
+                        
+                        let viewModel = PaymentsPopUpSelectView.ViewModel(
+                            title: "Выберите валюту выдачи",
+                            description: nil,
+                            options: items,
+                            action: { [weak self] currency in
                                 
-                                self?.deliveryCurrency?.currency = symbol
-                                self?.bind()
-                                self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                                if let currency = self?.model.currencyList.value.first(where: { $0.currencySymbol == currency.description }),
+                                   let symbol = currency.currencySymbol {
+                                    
+                                    self?.deliveryCurrency?.currency = symbol
+                                    self?.bind()
+                                    self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
+                                }
                             }
-                        })))
+                        )
+                        self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: viewModel))
                     }
                 })
             }
@@ -218,7 +172,7 @@ extension PaymentsAmountView {
             
             deliveryCurrency?.$currency
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] currency in
+                .sink { [unowned self] currency in
                     
                     guard let source = self.source as? Payments.ParameterAmount,
                           source.currencySymbol != self.deliveryCurrency?.currency else {
@@ -238,16 +192,17 @@ extension PaymentsAmountView {
                        let currencySymbol = currency.currencySymbol {
                         
                         textField.update(source.amount, currencySymbol: currencySymbol)
+                        
                         if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
                             
                             update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
                         } else {
-                                                    
+                            
                             update(value: nil)
                         }
                     }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
         
         func bind(textField: TextFieldFormatableView.ViewModel) {
@@ -255,24 +210,27 @@ extension PaymentsAmountView {
             textField.$text
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] _ in
+                .sink { [unowned self] _ in
                     
                     update(value: String(textField.value))
                     
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
         
         func update(isContinueEnabled: Bool) {
             
-            if isContinueEnabled == true {
+            if isContinueEnabled {
                 
-                transferButton = .active(title: actionTitle, action: { [weak self] in
-                    
-                    //TODO: remove
-                    self?.buttonAction()
-                    self?.action.send(PaymentsParameterViewModelAction.Amount.ContinueDidTapped())
-                })
-                
+                transferButton = .active(
+                    title: actionTitle,
+                    action: { [weak self] in
+                        
+                        //TODO: remove
+                        self?.buttonAction()
+                        self?.action.send(PaymentsParameterViewModelAction.Amount.ContinueDidTapped())
+                    }
+                )
             } else {
                 
                 transferButton = .inactive(title: actionTitle)
@@ -281,7 +239,139 @@ extension PaymentsAmountView {
     }
 }
 
-//MARK: - Types
+extension PaymentsAmountView.ViewModel {
+    
+    convenience init(
+        mode: PaymentsMeToMeViewModel.Mode,
+        model: Model,
+        action: @escaping () -> Void = {}
+    ) {
+        func textFieldFactory(
+            _ value: Double,
+            isEnabled: Bool,
+            currencySymbol: String
+        ) -> TextFieldFormatableView.ViewModel {
+            
+            .init(value, isEnabled: isEnabled, currencySymbol: currencySymbol)
+        }
+        
+        let currencySymbol = mode.currencySymbol(
+            dictionaryCurrencySymbol: model.dictionaryCurrencySymbol(for:),
+            productsTransfer: model.productsTransfer(templateId:)
+        ) ?? ""
+        let balance = mode.balance(
+            productsTransfer: model.productsTransfer(templateId:)
+        )
+        let isEnabled = mode.isEnabled()
+        let action = mode.shouldPassAction() ? action : {}
+        
+        let textField = textFieldFactory(balance, isEnabled: isEnabled, currencySymbol: currencySymbol)
+        
+        self.init(model, title: "Сумма перевода", textField: textField, transferButton: .inactive(title: "Перевести"), action: action)
+    }
+}
+
+extension PaymentsMeToMeViewModel.Mode {
+    
+    typealias DictionaryCurrencySymbol = (String) -> String?
+    typealias ProductsTransfer = (PaymentTemplateData.ID) -> (productTo: ProductData, productFrom: ProductData, amount: Double)?
+    
+    func currencySymbol(
+        dictionaryCurrencySymbol: @escaping DictionaryCurrencySymbol,
+        productsTransfer: @escaping ProductsTransfer
+    ) -> String? {
+        
+        switch self {
+        case .general, .demandDeposit:
+            return dictionaryCurrencySymbol(Currency.rub.description)
+            
+        case
+            let .closeAccount(productData, _),
+            let .closeDeposit(productData, _),
+            let .makePaymentTo(productData, _),
+            let .makePaymentToDeposite(productData, _),
+            let .transferAndCloseDeposit(productData, _),
+            let .transferDeposit(productData, _):
+            return dictionaryCurrencySymbol(productData.currency)
+            
+        case let .templatePayment(templateId, _):
+            guard let (_, productFrom, _) = productsTransfer(templateId)
+            else {
+                return dictionaryCurrencySymbol(Currency.rub.description)
+            }
+            
+            return dictionaryCurrencySymbol(productFrom.currency)
+        }
+    }
+    
+    func balance(
+        productsTransfer: @escaping ProductsTransfer
+    ) -> Double {
+        
+        switch self {
+        case .general, .demandDeposit:
+            return 0
+            
+        case
+            let .closeAccount(_, balance),
+            let .closeDeposit(_, balance),
+            let .makePaymentTo(_, balance),
+            let .makePaymentToDeposite(_, balance),
+            let .transferDeposit(_, balance),
+            let .transferAndCloseDeposit(_, balance):
+            return balance
+            
+        case let .templatePayment(templateId, _):
+            guard let (_, _, balance) = productsTransfer(templateId) else {
+                return 0
+            }
+            
+            return balance
+        }
+    }
+    
+    func isEnabled() -> Bool {
+        
+        switch self {
+        case
+                .demandDeposit,
+                .general,
+                .makePaymentTo,
+                .makePaymentToDeposite,
+                .templatePayment,
+                .transferDeposit:
+            return true
+            
+        case
+                .closeAccount,
+                .closeDeposit,
+                .transferAndCloseDeposit:
+            return false
+        }
+    }
+    
+    func shouldPassAction() -> Bool {
+        
+        switch self {
+        case
+                .closeAccount,
+                .general,
+                .demandDeposit:
+            return false
+            
+        case
+                .closeDeposit,
+                .makePaymentTo,
+                .makePaymentToDeposite,
+                .templatePayment,
+                .transferDeposit,
+                .transferAndCloseDeposit:
+            return true
+        }
+    }
+}
+
+// MARK: - Types
 
 extension PaymentsAmountView.ViewModel {
     
@@ -340,7 +430,7 @@ extension PaymentsAmountView.ViewModel {
     }
 }
 
-//MARK: - Action
+// MARK: - Action
 
 extension PaymentsParameterViewModelAction {
     
@@ -350,7 +440,7 @@ extension PaymentsParameterViewModelAction {
     }
 }
 
-//MARK: - View
+// MARK: - View
 
 struct PaymentsAmountView: View {
     
@@ -380,19 +470,17 @@ struct PaymentsAmountView: View {
                         
                         HStack {
                             
-                            TextFieldFormatableView(viewModel: viewModel.textField, font: .systemFont(ofSize: 24, weight: .semibold), textColor: .white, keyboardType: .decimalPad)
-                                .frame(height: 24, alignment: .center)
-                                .accessibilityIdentifier("PaymentsAmountViewInputField")
+                            TextFieldFormatableView(
+                                viewModel: viewModel.textField,
+                                font: .systemFont(ofSize: 24, weight: .semibold),
+                                textColor: .white,
+                                keyboardType: .decimalPad
+                            )
+                            .frame(height: 24, alignment: .center)
+                            .accessibilityIdentifier("PaymentsAmountViewInputField")
                             
-                            if let currencySwitchViewModel = viewModel.currencySwitch {
-                                
-                                CurrencySwitchView(viewModel: currencySwitchViewModel)
-                            }
-                            
-                            if let deliveryCurrency = viewModel.deliveryCurrency {
-                                
-                                DeliveryCurrency(viewModel: deliveryCurrency)
-                            }
+                            viewModel.currencySwitch.map(CurrencySwitchView.init)
+                            viewModel.deliveryCurrency.map(DeliveryCurrency.init)
                         }
                         
                         Divider()
@@ -416,13 +504,13 @@ struct PaymentsAmountView: View {
                     Color.clear
                         .frame(height: 32)
                 }
-                
-            }.padding(.horizontal, 20)
-             
+            }
+            .padding(.horizontal, 20)
         }
         .background(
             Color.mainColorsBlackMedium
-                .ignoresSafeArea(.container, edges: .bottom))
+                .ignoresSafeArea(.container, edges: .bottom)
+        )
     }
     
     struct TitleView: View {
@@ -431,18 +519,9 @@ struct PaymentsAmountView: View {
         
         var body: some View {
             
-            if let title = title {
-                
-                Text(title)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-                
-            } else {
-                
-                Text("")
-                    .font(.textBodySR12160())
-                    .foregroundColor(.textPlaceholder)
-            }
+            Text(title ?? "")
+                .font(.textBodySR12160())
+                .foregroundColor(.textPlaceholder)
         }
     }
     
@@ -584,9 +663,9 @@ struct PaymentsAmountView: View {
                     Capsule()
                         .foregroundColor(.white)
                 )
-                
-            }.disabled(viewModel.isUserInteractionEnabled == false)
-                .accessibilityIdentifier("PaymentsAmountViewSwitchCurrencyButton")
+            }
+            .disabled(!viewModel.isUserInteractionEnabled)
+            .accessibilityIdentifier("PaymentsAmountViewSwitchCurrencyButton")
         }
     }
     
@@ -607,44 +686,30 @@ struct PaymentsAmountView: View {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PaymentsAmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
-
+            
             PaymentsAmountView(viewModel: .amountParameter)
-                .previewLayout(.fixed(width: 375, height: 160))
-                .previewDisplayName("Parameter Amount")
-            
             PaymentsAmountView(viewModel: .empty)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
             PaymentsAmountView(viewModel: .emptyInfo)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
             PaymentsAmountView(viewModel: .amount)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
             PaymentsAmountView(viewModel: .amountZeroCurrencyInfo)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
             PaymentsAmountView(viewModel: .amountCurrencyInfo)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
             PaymentsAmountView(viewModel: .amountCurrencyInfoAlert)
-                .previewLayout(.fixed(width: 375, height: 160))
-            
         }
+        .previewLayout(.fixed(width: 375, height: 160))
+        .previewDisplayName("Parameter Amount")
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension PaymentsAmountView.ViewModel {
-    
     
     static let empty = PaymentsAmountView.ViewModel(.emptyMock, title: "Сумма перевода", textField: .init(0, currencySymbol: "₽"), transferButton: .inactive(title: "Перевести"))
     

@@ -86,7 +86,10 @@ extension PaymentsMeToMeViewModelTests {
 extension ProductData {
     
     //TODO: remove stub after merge DBSNEW-8883
-    static func stub(productId: Int = UUID().hashValue) -> ProductData {
+    static func stub(
+        productId: Int = UUID().hashValue,
+        currency: String = "RUB"
+    ) -> ProductData {
         
         return .init(
             id: productId,
@@ -96,7 +99,7 @@ extension ProductData {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "RUB",
+            currency: currency,
             mainField: "",
             additionalField: nil,
             customName: nil,
