@@ -880,13 +880,17 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     
     func test_makePropertyViewModel_commission_shouldReturnCommission() {
         
-        let (detail, products) = makeStubs(transferEnum: .transport)
+        let currency: CurrencyData = .rub
+        let (detail, products) = makeStubs(
+            transferEnum: .transport,
+            currency: currency.code
+        )
         
         let (sut, model) =  makeSUT(
             transferEnum: .transport,
             detail: detail,
             products: products,
-            currencyList: [.rub]
+            currencyList: [currency]
         )
         
         let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .commission)
@@ -1101,6 +1105,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         payeeFullName: String? = nil,
         payeePhone: String? = nil,
         productID: Int = 123,
+        currency: String = "Rub",
         comment: String? = "Lorem ipsum dolor sit amet"
     ) -> (
         detail: OperationDetailData,
@@ -1119,7 +1124,12 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
                 productID: productID,
                 comment: comment
             ),
-            [.card: [.stub(productId: productID)]]
+            [.card: [
+                .stub(
+                    productId: productID,
+                    currency: currency
+                )
+            ]]
         )
     }
     
