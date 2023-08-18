@@ -156,7 +156,10 @@ extension ProductsSwapView {
                 }
                 
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
-                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: false, filter: .init(rules: []))
+                
+                let filterTo = ProductData.Filter.generalToWithDeposit
+                
+                let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, filter: filterTo)
 
                 let from = ProductSelectorView.ViewModel(model, productData: productFromData, context: contextFrom)
                 let to = ProductSelectorView.ViewModel(model, productData: productToData, context: contextTo)
@@ -175,11 +178,12 @@ extension ProductsSwapView {
                                                                         direction: .from,
                                                                         style: .me2me,
                                                                         filter: filterFrom)
+                let filterTo = ProductData.Filter.generalToWithDeposit
+
                 let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда",
                                                                       direction: .to,
                                                                       style: .me2me,
-                                                                      isUserInteractionEnabled: false,
-                                                                      filter: .init(rules: []))
+                                                                      filter: filterTo)
 
                 let from = ProductSelectorView.ViewModel(model,
                                                          productData: productFrom,

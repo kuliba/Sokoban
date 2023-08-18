@@ -798,20 +798,117 @@ class PaymentsMeToMeViewModel: ObservableObject {
         }
     }
     
+    // TODO: надо упростить
+    // TODO: форматирование в отдельный компонент
+    
+    static func updatePaymentInfo(
+        currencyFrom: Currency,
+        currencyTo: Currency,
+        rateDataTo: ExchangeRateData?,
+        currencySymbolFrom: String,
+        currencySymbolTo: String,
+        amount: Double,
+        rateDataFrom: ExchangeRateData?,
+        setDefaultInfoButton: @escaping () -> Void,
+        setText: @escaping (String) -> Void
+    ) {
+        
+        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
+            
+            setDefaultInfoButton()
+        } else if currencyFrom == Currency.rub {
+            
+            if let rateDataTo = rateDataTo {
+                
+                let rateSell = rateDataTo.rateSell.currencyFormatter(currencySymbolFrom)
+                let text = "1 \(currencySymbolTo)  -  \(rateSell)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateSellCurrency = amount / rateDataTo.rateSell
+                    let currencyAmount = rateSellCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+                
+            } else {
+                
+                setDefaultInfoButton()
+            }
+            
+        } else if currencyTo == Currency.rub {
+            
+            if let rateDataFrom = rateDataFrom {
+                
+                let rateBuy = rateDataFrom.rateBuy.currencyFormatter(currencySymbolTo)
+                let text = "1 \(currencySymbolFrom)  -  \(rateBuy)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = amount * rateDataFrom.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+                
+            } else {
+                
+                setDefaultInfoButton()
+            }
+            
+        } else {
+            
+            if let rateDataFrom = rateDataFrom, let rateDataTo = rateDataTo {
+                
+                let rateBuy = rateDataTo.rateBuy / rateDataFrom.rateBuy
+                let rateBuyCurrency = rateBuy.currencyFormatter(currencySymbolFrom)
+                
+                let text = "1 \(currencySymbolTo)  -  \(rateBuyCurrency)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = (amount * rateDataFrom.rateBuy) / rateDataTo.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+            }
+        }
+    }
+    
+    // TODO: нужен рефакторинг!!!
     private func updateInfoButton(_ rates: [ExchangeRateData]) {
         
         guard let productIdFrom = swapViewModel.productIdFrom,
               let productIdTo = swapViewModel.productIdTo,
               let products = Self.products(model, from: productIdFrom, to: productIdTo) else {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
         if productIdFrom == productIdTo,
            products.from.currency == products.to.currency {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
@@ -832,92 +929,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
               let currencySymbolFrom = currencyDataFrom.currencySymbol,
               let currencySymbolTo = currencyDataTo.currencySymbol else {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
-        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
-            paymentsAmount.info = nil
-            
-        } else if currencyFrom == Currency.rub {
-            
-            if let rateDataTo = rateDataTo {
-                
-                let rateSell = rateDataTo.rateSell.currencyFormatter(currencySymbolFrom)
-                let text = "1 \(currencySymbolTo)  -  \(rateSell)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                                    
-                } else {
-                    
-                    let rateSellCurrency = amount / rateDataTo.rateSell
-                    let currencyAmount = rateSellCurrency.currencyFormatter(currencySymbolTo)
-                    
-                    let text = "\(currencyAmount)   |   \(text)"
-                    
-                    paymentsAmount.info = .text(text)
-                }
-                
-            } else {
-                
-                defaultInfoButton()
-            }
-            
-        } else if currencyTo == Currency.rub {
-         
-            if let rateDataFrom = rateDataFrom {
-                
-                let rateBuy = rateDataFrom.rateBuy.currencyFormatter(currencySymbolTo)
-                let text = "1 \(currencySymbolFrom)  -  \(rateBuy)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                    
-                } else {
-                    
-                    let rateBuyCurrency = amount * rateDataFrom.rateBuy
-                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
-                    
-                    let text = "\(currencyAmount)   |   \(text)"
-                    
-                    paymentsAmount.info = .text(text)
-                }
-                
-            } else {
-                
-                defaultInfoButton()
-            }
-            
-        } else {
-
-            if let rateDataFrom = rateDataFrom, let rateDataTo = rateDataTo {
-                
-                let rateBuy = rateDataTo.rateBuy / rateDataFrom.rateBuy
-                let rateBuyCurrency = rateBuy.currencyFormatter(currencySymbolFrom)
-                
-                let text = "1 \(currencySymbolTo)  -  \(rateBuyCurrency)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                    
-                } else {
-                    
-                    let rateBuyCurrency = (amount * rateDataFrom.rateBuy) / rateDataTo.rateBuy
-                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
-
-                    let text = "\(currencyAmount)   |   \(text)"
-
-                    paymentsAmount.info = .text(text)
-                }
-            }
-        }
+        Self.updatePaymentInfo(
+            currencyFrom: currencyFrom,
+            currencyTo: currencyTo,
+            rateDataTo: rateDataTo,
+            currencySymbolFrom: currencySymbolFrom,
+            currencySymbolTo: currencySymbolTo,
+            amount: amount,
+            rateDataFrom: rateDataFrom,
+            setDefaultInfoButton: setDefaultInfoButton,
+            setText: { [weak self] in self?.paymentsAmount.info = .text($0) })
     }
     
-    private func defaultInfoButton() {
+    private func setDefaultInfoButton() {
         paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: { [weak self] in
             self?.action.send(PaymentsMeToMeAction.Button.Info.Tap())
         })
