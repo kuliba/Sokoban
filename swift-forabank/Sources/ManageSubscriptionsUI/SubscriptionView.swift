@@ -6,34 +6,61 @@
 //
 
 import SwiftUI
+import Combine
 
-public struct SubscriptionViewModel: Identifiable {
+public class SubscriptionViewModel: ObservableObject, Identifiable {
     
     public typealias Token = String
     
     let token: Token
-    let name: String
-    let image: Image
+    public let name: String
+    @Published public private(set) var image: Icon
     let subtitle: String
+    let purposeTitle: String
     let trash: Image
-    let onDelete: (Token) -> Void
+    let config: ConfigSubscription
+    let onDelete: (Token, String) -> Void
+    let detailAction: (Token) -> Void
     
     public var id: Token { token }
     
     public init(
         token: SubscriptionViewModel.Token,
         name: String,
-        image: Image,
+        image: Icon,
         subtitle: String,
+        purposeTitle: String,
         trash: Image,
-        onDelete: @escaping (Token) -> Void
+        config: ConfigSubscription,
+        onDelete: @escaping (Token, String) -> Void,
+        detailAction: @escaping (Token) -> Void
     ) {
         self.token = token
         self.name = name
         self.image = image
         self.subtitle = subtitle
+        self.purposeTitle = purposeTitle
         self.trash = trash
+        self.config = config
         self.onDelete = onDelete
+        self.detailAction = detailAction
+    }
+    
+    public enum Icon {
+        
+        case `default`(Image)
+        case image(Image)
+    }
+}
+
+public struct ConfigSubscription {
+
+    let headerFont: Font
+    let subtitle: Font
+    
+    public init(headerFont: Font, subtitle: Font) {
+        self.headerFont = headerFont
+        self.subtitle = subtitle
     }
 }
 
@@ -43,67 +70,95 @@ struct SubscriptionView: View {
     
     var body: some View {
         
-        HStack(spacing: 12) {
+        Button(action: { viewModel.detailAction(viewModel.token) }) {
             
-            logo()
-            
-            VStack(spacing: 4) {
+            VStack {
                 
-                header()
-                
-                subtitle()
+                HStack(spacing: 12) {
+                    
+                    switch viewModel.image {
+                    case let .default(image):
+                        logo(with: image)
+                        
+                    case let .image(image):
+                        
+                        image
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 32, height: 32)
+                    }
+                    
+                    VStack(spacing: 8) {
+                        
+                        header(font: viewModel.config.headerFont)
+                        
+                        subtitle(font: viewModel.config.subtitle)
+                    }
+                    
+                    Spacer()
+                    
+                    deleteButton(viewModel: viewModel)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.leading, 12)
+                .padding(.trailing, 16)
             }
-            
-            Spacer()
-            
-            deleteButton(token: viewModel.token)
+            .frame(height: 72)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.leading, 12)
-        .padding(.trailing, 16)
-        .padding(.vertical, 16)
     }
     
-    private func header() -> some View {
+    private func header(font: Font) -> some View {
         
         HStack {
             
             Text(viewModel.name)
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
+                .font(font)
+                .foregroundColor(.black)
             
             Spacer()
         }
     }
     
-    private func subtitle() -> some View {
+    private func subtitle(font: Font) -> some View {
         
         HStack {
             
             Text(viewModel.subtitle)
-                .font(.system(size: 16))
-                .foregroundColor(.gray.opacity(0.3))
+                .font(font)
+                .foregroundColor(.gray)
                 .frame(alignment: .leading)
+                .lineLimit(1)
             
             Spacer()
         }
     }
     
-    private func deleteButton(token: SubscriptionViewModel.Token) -> some View {
+    private func deleteButton(viewModel: SubscriptionViewModel) -> some View {
         
-        Button(action: { viewModel.onDelete(token) }) {
+        Button(action: { viewModel.onDelete(viewModel.token, viewModel.purposeTitle) }) {
             
             viewModel.trash
-                .foregroundColor(.gray.opacity(0.3))
+                .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundColor(.gray)
         }
     }
     
-    private func logo() -> some View {
+    private func logo(with image: Image) -> some View {
         
         VStack {
             
-            viewModel.image
-                .frame(width: 32, height: 32)
+            ZStack {
+                
+                Circle()
+                    .frame(width: 32, height: 32)
+                    .foregroundColor(Color.green.opacity(0.4))
+                
+                image
+                    .resizable()
+                    .foregroundColor(.white)
+                    .frame(width: 20, height: 20)
+            }
         }
     }
 }
@@ -115,10 +170,13 @@ struct SubscriptionView_Preview: PreviewProvider {
         SubscriptionView(viewModel: .init(
             token: "Token",
             name: "Name",
-            image: .init(systemName: "image"),
+            image: .default(.init(systemName: "trash")),
             subtitle: "Subtitle",
+            purposeTitle: "PurposeTitle",
             trash: .init(systemName: "trash"),
-            onDelete: { token in })
+            config: .init(headerFont: .body, subtitle: .callout),
+            onDelete: { token, title  in },
+            detailAction: { _ in })
         )
     }
 }

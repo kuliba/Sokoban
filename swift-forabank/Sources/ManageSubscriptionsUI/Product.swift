@@ -7,5 +7,5 @@
 
 public protocol Product: Identifiable {
     
-    var subscriptions: [SubscriptionViewModel] { get }
+    var subscriptions: [SubscriptionViewModel] { get set }
 }

@@ -36,7 +36,7 @@ final class ServerAgentSpy: ServerAgentProtocol {
         case _ as ServerAgentTestStub.GetMosParkingList:
             
             getMosParkingListRequestCount += 1
-            completion(.failure(.curruptedData(anyNSError())))
+            completion(.failure(.corruptedData(anyNSError())))
             
         case let processToken as ServerCommands.SbpPayController.ProcessToken:
             processSbpPayTokens.append(processToken)

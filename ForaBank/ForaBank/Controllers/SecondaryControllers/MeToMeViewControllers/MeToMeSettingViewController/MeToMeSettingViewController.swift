@@ -7,6 +7,9 @@
 
 import UIKit
 import Combine
+import SwiftUI
+import TextFieldModel
+import ManageSubscriptionsUI
 
 class MeToMeSettingViewController: UIViewController {
 
@@ -25,6 +28,8 @@ class MeToMeSettingViewController: UIViewController {
     var cardListView = CardListView(onlyMy: false)
     var banksView: BanksView = BanksView()
     var defaultBank = DefaultBankView()
+    var linkAccountButton = UIButton()
+    
     var stackView = UIStackView(arrangedSubviews: [])
     var logo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "sfpBig"))
@@ -152,6 +157,7 @@ class MeToMeSettingViewController: UIViewController {
     
     func setupStackView() {
         banksView.anchor(height: 150)
+        defaultBank.anchor(height: 100)
 //        DispatchQueue.main.async {
 //            self.banksView.sizeToFit()
 //            self.banksView.content = { [weak self] height in
@@ -172,7 +178,28 @@ class MeToMeSettingViewController: UIViewController {
 //
 //        }
         
-        stackView = UIStackView(arrangedSubviews: [topSwitch, cardFromField, cardListView, banksView, defaultBank])
+        let viewModel = AccountCellButtonView.ViewModel(
+            icon: .ic24Subscriptions,
+            content: "Настройки привязки счета",
+            button: .init(
+                icon: nil,
+                action: { [weak self] in
+                    self?.accountSettingsTapped()
+                }),
+            style: .regular
+        )
+        let buttonView = AccountCellButtonView(viewModel: viewModel).padding(.horizontal, 16)
+        let hostingView = UIHostingController(rootView: buttonView)
+        
+        stackView = UIStackView(arrangedSubviews: [
+            topSwitch,
+            cardFromField,
+            cardListView,
+            banksView,
+            defaultBank,
+            hostingView.view
+        ])
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -236,6 +263,132 @@ class MeToMeSettingViewController: UIViewController {
             let navVC = UINavigationController(rootViewController: settingVC)
             self.present(navVC, animated: true, completion: nil)
         }
+    }
+    
+    fileprivate func reduceProducts(
+        _ list: [C2BSubscription.ProductSubscription],
+        _ products: inout [SubscriptionsViewModel.Product]
+    ) {
+        
+        for list in list {
+            
+            let product = newModel.allProducts.first(where: { $0.id.description == list.productId })
+            
+            let subscriptions = list.subscriptions.map({
+                
+                
+                var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
+                
+                let brandIcon = $0.brandIcon
+                
+                if let icon = newModel.images.value[brandIcon]?.image {
+                    
+                    image = .image(icon)
+                    
+                } else {
+                    
+                    image = .default(.ic24ShoppingCart)
+                    newModel.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
+                    
+                }
+                
+                return ManageSubscriptionsUI.SubscriptionViewModel(
+                    token: $0.subscriptionToken,
+                    name: $0.brandName,
+                    image: image,
+                    subtitle: $0.subscriptionPurpose,
+                    purposeTitle: $0.cancelAlert,
+                    trash: .ic24Trash2,
+                    config: .init(
+                        headerFont: .textH4M16240(),
+                        subtitle: .textBodySR12160()
+                    ),
+                    onDelete: { token, title in
+                        
+                        self.showAlertWithCancel(with: title, and: "", buttonTitle: "Отключить") {
+                            self.newModel.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
+                        }
+                    },
+                    detailAction: { token in
+                        
+                        self.newModel.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                    })
+            })
+            
+            if let product,
+               let balance = newModel.amountFormatted(
+                amount: product.balanceValue,
+                currencyCode: product.currency,
+                style: .fraction
+               ),
+               let icon = product.smallDesign.image {
+                
+                if let product = product as? ProductCardData {
+                    
+                    
+                    products.append(.init(image: icon, title: list.productTitle, paymentSystemIcon: nil, name: product.displayName, balance: balance, descriptions: product.description, isLocked: product.isBlocked, subscriptions: subscriptions))
+                } else {
+                    products.append(.init(image: icon, title: list.productTitle, paymentSystemIcon: nil, name: product.displayName, balance: balance, descriptions: product.description, isLocked: false, subscriptions: subscriptions))
+                }
+            }
+        }
+    }
+    
+    @objc func accountSettingsTapped() {
+        
+        guard let list = newModel.subscriptions.value?.list else {
+            return
+        }
+        
+        var products: [SubscriptionsViewModel.Product] = []
+        
+        reduceProducts(list, &products)
+        
+        let reducer = TransformingReducer(
+            placeholderText: "Поиск",
+            transform: {
+                .init(
+                    $0.text,
+                    cursorPosition: $0.cursorPosition
+                )
+            }
+        )
+        
+        let emptyTitle = newModel.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+        let emptySearchTitle = newModel.subscriptions.value?.emptySearch ?? "Нет совпадений"
+        let titleCondition = (products.count == 0)
+        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
+            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
+        )
+        
+        let swiftUIView = ManagingSubscriptionView(
+            subscriptionViewModel: .init(
+                products: products,
+                searchViewModel: .init(
+                    initialState: .placeholder("Поиск"),
+                    reducer: reducer,
+                    keyboardType: .default
+                ),
+                emptyViewModel: emptyViewModel,
+                configurator: .init(
+                    backgroundColor: .mainColorsGrayLightest
+                )
+            ),
+            configurator: .init(
+                titleFont: .textBodyMR14180(),
+                titleColor: .textPlaceholder,
+                nameFont: .textH4M16240(),
+                nameColor: .mainColorsBlack,
+                descriptionFont: .textBodyMR14180()
+            ),
+            footerImage: Image.ic72Sbp,
+            searchCancelAction: dismissKeyboard
+        )
+        
+        let viewCtrl = UIHostingController(rootView: swiftUIView)
+        let navVC = UINavigationController(rootViewController: viewCtrl)
+        self.present(navVC, animated: true, completion: nil)
     }
     
     private func setupCardList(after completion: @escaping ( _ error: String?) ->() ) {

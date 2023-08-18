@@ -175,27 +175,6 @@ extension ProductView {
             }
         }
         
-        static func createSubtitle(from data: ProductData) -> String? {
-            
-            switch data {
-                
-            case let cardProduct as ProductCardData:
-                guard let subtitle = cardProduct.additionalField else { return nil }
-                return subtitle
-                
-            case let depositProduct as ProductDepositData:
-                let subtitle = depositProduct.interestRate
-                return "Ставка \(subtitle)%"
-                
-            case let loanProduct as ProductLoanData:
-                let subtitle = loanProduct.currentInterestRate
-                return "Ставка \(subtitle)%"
-                
-            default: return nil
-            }
-        }
-        
-        
         static func name(product: ProductData, style: Appearance.Style) -> String {
             
             switch product {
@@ -219,21 +198,6 @@ extension ProductView {
                 
             default:
                 return product.displayName
-            }
-        }
-        
-        static func dateLong(from data: ProductData) -> String? {
-            
-            switch data {
-                
-            case let depositProduct as ProductDepositData:
-                guard let endDate = depositProduct.endDate else { return nil }
-                return DateFormatter.shortDate.string(from: endDate)
-                
-            case let loanProduct as ProductLoanData:
-                return DateFormatter.shortDate.string(from: loanProduct.dateLong)
-                
-            default: return nil
             }
         }
         

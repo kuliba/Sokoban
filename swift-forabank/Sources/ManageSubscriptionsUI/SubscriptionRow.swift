@@ -18,7 +18,23 @@ struct SubscriptionRow<P: Product, ProductView: View>: View {
             
             productView(product)
             
-            ForEach(product.subscriptions, content: SubscriptionView.init(viewModel:))
+            Rectangle()
+                .frame(height: 1)
+                .foregroundColor(.gray.opacity(0.3))
+                .opacity(0.3)
+            
+            ForEach(product.subscriptions) { subscription in
+                
+                SubscriptionView(viewModel: subscription)
+                
+                if product.subscriptions.last?.id != subscription.id {
+                    
+                    Rectangle()
+                        .frame(height: 1)
+                        .foregroundColor(.gray.opacity(0.3))
+                        .opacity(0.3)
+                }
+            }
         }
     }
 }
