@@ -19,28 +19,14 @@ extension PaymentsSuccessOptionButtonsView {
         
         private let model: Model
         
-        init(_ model: Model, buttons: [any PaymentsSuccessOptionButtonsButtonViewModel], source: PaymentsParameterRepresentable) {
+        init(
+            _ model: Model,
+            source: Payments.ParameterSuccessOptionButtons
+        ) {
             
             self.model = model
-            self.buttons = buttons
+            self.buttons = model.makePaymentsSuccessOptionButtonsButtonViewModels(withSource: source)
             super.init(source: source)
-        }
-        
-        convenience init(_ model: Model, _ source: Payments.ParameterSuccessOptionButtons) {
-            
-            let buttons: [ButtonViewModel?] = source.options.map { option in
-                
-                switch option {
-                case .template:
-                    guard source.operationDetail != nil else { return nil }
-                    return ButtonViewModel(with: option)
-                    
-                default:
-                    return ButtonViewModel(with: option)
-                }
-            }
-        
-            self.init(model, buttons: buttons.compactMap { $0 }, source: source)
         }
         
         func buttonDidTapped(for option: Option) {
@@ -65,6 +51,84 @@ extension PaymentsSuccessOptionButtonsView {
             
             self.init(id: option, icon: option.icon, title: option.title)
         }
+    }
+}
+
+private extension Model {
+  
+    func makePaymentsSuccessOptionButtonsButtonViewModels(
+        withSource source: Payments.ParameterSuccessOptionButtons
+    ) -> [any PaymentsSuccessOptionButtonsButtonViewModel] {
+
+        let buttons: [(any PaymentsSuccessOptionButtonsButtonViewModel)?] = source.options.map { option in
+            
+            switch option {
+            case .template:
+                
+                guard let operationDetail = source.operationDetail else {
+                    return nil
+                }
+                
+                switch source.templateID {
+                case let .some(templateID):
+                    
+                    guard let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) else {
+                        return nil
+                    }
+                    
+                    let state = TemplateButton.templateButtonState(
+                        model: self,
+                        template: template,
+                        operation: source.operation,
+                        meToMePayment: source.meToMePayment,
+                        detail: operationDetail
+                    )
+                    
+                    return TemplateButtonView.ViewModel(
+                        model: self,
+                        state: state,
+                        operationDetail: operationDetail
+                    )
+                    
+                    
+                default:
+                    guard let operationDetail = source.operationDetail else {
+                        return nil
+                    }
+                    if let meToMePayment = source.meToMePayment,
+                       let templateID = source.templateID,
+                       let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) {
+                
+                        let state = TemplateButton.templateButtonState(
+                            model: self,
+                            template: template,
+                            operation: nil,
+                            meToMePayment: meToMePayment,
+                            detail: operationDetail
+                        )
+                        
+                       return TemplateButtonView.ViewModel(
+                            model: self,
+                            state: state,
+                            operationDetail: operationDetail
+                        )
+                        
+                    } else {
+                     
+                        return TemplateButtonView.ViewModel(
+                            model: self,
+                            operationDetail: operationDetail
+                        )
+                    }
+                }
+                
+            default:
+            
+                return PaymentsSuccessOptionButtonsView.ButtonViewModel(with: option)
+            }
+        }
+        
+        return buttons.compactMap { $0 }
     }
 }
 
@@ -120,6 +184,9 @@ struct PaymentsSuccessOptionButtonsView: View {
             ForEach(viewModel.buttons, id: \.id) { button in
                 
                 switch button {
+                case let viewModel as TemplateButtonView.ViewModel:
+                    TemplateButtonView(viewModel: viewModel)
+                    
                 case let simpleButton as ButtonViewModel:
                     ButtonView(viewModel: simpleButton) {
                         viewModel.buttonDidTapped(for: button.id)
@@ -184,9 +251,25 @@ struct PaymentsSuccessOptionsButtonsView_Previews: PreviewProvider {
 
 extension PaymentsSuccessOptionButtonsView.ViewModel {
     
-    static let sample = PaymentsSuccessOptionButtonsView.ViewModel(.emptyMock, .init(options: [.template, .document, .details]))
+    static let sample = PaymentsSuccessOptionButtonsView.ViewModel(
+        .emptyMock,
+        source: .init(
+            options: [.template, .document, .details],
+            templateID: nil,
+            meToMePayment: nil,
+            operation: nil
+        )
+    )
     
-    static let sampleC2B = PaymentsSuccessOptionButtonsView.ViewModel(.emptyMock, .init(options: [.document, .details]))
+    static let sampleC2B = PaymentsSuccessOptionButtonsView.ViewModel(
+        .emptyMock,
+        source: .init(
+            options: [.document, .details],
+            templateID: nil,
+            meToMePayment: nil,
+            operation: nil
+        )
+    )
 }
 
 extension PaymentsSuccessOptionButtonsView.ButtonViewModel {

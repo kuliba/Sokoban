@@ -69,13 +69,19 @@ class SbpPayViewModel: ObservableObject {
         bind()
     }
     
-    convenience init(_ model: Model, personAgreements: [PersonAgreement], rootActions: RootViewModel.RootActions?) {
+    convenience init(
+        _ model: Model,
+        personAgreements: [PersonAgreement],
+        rootActions: RootViewModel.RootActions?,
+        tokenIntent: String
+    ) {
         
         let paymentProduct = Self.makeProductCardSelector(model: model)
         let personAgreements: [ConditionViewModel] = Self.personAgreements(personAgreements)
             
         self.init(model, paymentProduct: paymentProduct, conditions: personAgreements, rootActions: rootActions)
         
+ 
         self.footer = .init(state: .button(.init(title: "Подключить", style: .red, action: { [weak self] in
             
             self?.footer = .init(state: .spinner)
@@ -83,18 +89,27 @@ class SbpPayViewModel: ObservableObject {
             switch paymentProduct?.content {
             case let .product(productViewModel):
                 
-                guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productViewModel.id }) else {
+                guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == productViewModel.id })
+                else {
                     return
                 }
                 
                 if let product = product as? ProductCardData, let accountId = product.accountId?.description {
                     
-                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(
+                        accountId: accountId,
+                        tokenIntent: tokenIntent,
+                        result: .success
+                    ))
                     
                 } else {
                     
                     let accountId = productViewModel.id.description
-                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(accountId: accountId, status: .success))
+                    self?.model.action.send(ModelAction.SbpPay.ProcessTokenIntent.Request(
+                        accountId: accountId,
+                        tokenIntent: tokenIntent,
+                        result: .success
+                     ))
                 }
                 
             default:
@@ -113,24 +128,18 @@ class SbpPayViewModel: ObservableObject {
                 case let payload as ModelAction.SbpPay.ProcessTokenIntent.Response:
                     
                     rootActions?.dismissAll()
-                    switch model.deepLinkType {
-                        
-                    case let .sbpPay(tokenIntentId):
-                        
-                        guard let url = URL(string: "sbpay://tokenIntent/\(tokenIntentId)/\(payload.result)") else {
-                            return
-                        }
-                       
-                        guard UIApplication.shared.canOpenURL(url) else {
-                            return
-                        }
-                        
-                        model.action.send(ModelAction.DeepLink.Clear())
-                        
-                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                        
-                    default: break
+                    
+                    guard let url = URL(string: "sbpay://tokenIntent/\(payload.tokenIntent)/\(payload.result)") else {
+                        return
                     }
+                    
+                    guard UIApplication.shared.canOpenURL(url) else {
+                        return
+                    }
+                    
+                    model.action.send(ModelAction.DeepLink.Clear())
+                    
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     
                 default:
                     break

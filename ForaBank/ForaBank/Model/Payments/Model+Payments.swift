@@ -34,14 +34,14 @@ extension ModelAction {
             }
         }
         
-        enum Subscribtion {
+        enum Subscription {
             
             struct Request: Action {
                 
                 let parameters: [PaymentsParameterRepresentable]
-                let action: SubscribtionAction
+                let action: SubscriptionAction
             
-                enum SubscribtionAction {
+                enum SubscriptionAction {
                     
                     case link
                     case deny
@@ -87,7 +87,7 @@ extension Model {
         }
     }
     
-    func handlePaymentSubscribtionRequest(_ payload: ModelAction.Payment.Subscribtion.Request) {
+    func handlePaymentSubscribtionRequest(_ payload: ModelAction.Payment.Subscription.Request) {
         
         switch payload.action {
         case .link:
@@ -96,11 +96,11 @@ extension Model {
                 do {
                     
                     let result = try await paymentsC2BSubscribe(parameters: payload.parameters)
-                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .success(result)))
+                    self.action.send(ModelAction.Payment.Subscription.Response(result: .success(result)))
                     
                 } catch {
                     
-                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Subscription.Response(result: .failure(error)))
                 }
             }
             
@@ -110,11 +110,11 @@ extension Model {
                 do {
                     
                     let result = try await paymentsC2BDeny(parameters: payload.parameters)
-                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .success(result)))
+                    self.action.send(ModelAction.Payment.Subscription.Response(result: .success(result)))
                     
                 } catch {
                     
-                    self.action.send(ModelAction.Payment.Subscribtion.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Subscription.Response(result: .failure(error)))
                 }
             }
         }

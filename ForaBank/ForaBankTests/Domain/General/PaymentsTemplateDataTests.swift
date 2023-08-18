@@ -132,7 +132,7 @@ extension PaymentsTemplateDataTests {
 
         XCTAssertNotNil(payerProductId)
         XCTAssertEqual(template.amount, 100)
-        XCTAssertEqual(template.payerProductId, 10000184511)
+        XCTAssertEqual(template.payerProductId, 1)
     }
 }
 

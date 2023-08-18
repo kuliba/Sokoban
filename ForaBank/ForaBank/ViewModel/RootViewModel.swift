@@ -162,9 +162,20 @@ class RootViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in
-                        self?.action.send(RootViewModelAction.CloseLink())
-                    }, action: UserAccountViewModelAction.OpenSbpPay(sbpPay: .init(model, personAgreements: payload.conditions, rootActions: rootActions))))
+                    link = .userAccount(.init(
+                        model: model,
+                        clientInfo: clientInfo,
+                        dismissAction: {[weak self] in
+                            self?.action.send(RootViewModelAction.CloseLink())
+                        },
+                        action: UserAccountViewModelAction.OpenSbpPay(
+                            sbpPay: .init(
+                                model,
+                                personAgreements: payload.conditions,
+                                rootActions: rootActions,
+                                tokenIntent: payload.tokenIntent
+                            )))
+                    )
                 
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
@@ -325,7 +336,11 @@ class RootViewModel: ObservableObject, Resetable {
                     switch payload.result {
                     case .success:
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.SbpPay.Register.Response, success")
-                        self.model.action.send(ModelAction.GetPersonAgreement.Request(system: .sbp, type: nil))
+                        self.model.action.send(ModelAction.GetPersonAgreement.Request(
+                            tokenIntent: payload.tokenIntent,
+                            system: .sbp,
+                            type: nil
+                        ))
                     case .failed:
                         LoggerAgent.shared.log(level: .error, category: .ui, message: "received ModelAction.SbpPay.Register.Response, failed")
                     }
@@ -337,7 +352,10 @@ class RootViewModel: ObservableObject, Resetable {
                         self.action.send(RootViewModelAction.DismissAll())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
 
-                            self.action.send(RootViewModelAction.ShowUserProfile(conditions: personAgreement))
+                            self.action.send(RootViewModelAction.ShowUserProfile(
+                                tokenIntent: payload.tokenIntent,
+                                conditions: personAgreement
+                            ))
                         }
                         
                     case let .failure(error):
@@ -477,6 +495,7 @@ enum RootViewModelAction {
     
     struct ShowUserProfile: Action {
         
+        let tokenIntent: String
         let conditions: [PersonAgreement]
     }
 }

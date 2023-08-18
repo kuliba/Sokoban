@@ -1388,7 +1388,7 @@ extension Payments {
         
         init(with parameter: PaymentParameterText) {
             
-            self.init(id: parameter.id, value: parameter.value ?? "", style: parameter.style)
+            self.init(id: parameter.id, value: parameter.value, style: parameter.style)
         }
         
         enum Style: String, Decodable {
@@ -1448,18 +1448,42 @@ extension Payments {
         let options: [Option]
         let operationDetail: OperationDetailData?
         let placement: Payments.Parameter.Placement
+        let templateID: PaymentTemplateData.ID?
+        let meToMePayment: MeToMePayment?
+        let operation: Payments.Operation?
         
-        init(options: [Option], operationDetail: OperationDetailData? = nil, placement: Payments.Parameter.Placement = .bottom) {
+        init(
+            options: [Option],
+            operationDetail: OperationDetailData? = nil,
+            placement: Payments.Parameter.Placement = .bottom,
+            templateID: PaymentTemplateData.ID?,
+            meToMePayment: MeToMePayment?,
+            operation: Payments.Operation?
+        ) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.successOptionButtons.rawValue, value: nil)
             self.options = options
             self.operationDetail = operationDetail
             self.placement = placement
+            self.templateID = templateID
+            self.meToMePayment = meToMePayment
+            self.operation = operation
         }
         
-        init(with parameter: PaymentParameterOptionButtons) {
+        init(
+            with parameter: PaymentParameterOptionButtons,
+            templateID: PaymentTemplateData.ID?,
+            operation: Payments.Operation?,
+            meToMePayment: MeToMePayment?
+        ) {
             
-            self.init(options: parameter.value, placement: .feed)
+            self.init(
+                options: parameter.value,
+                placement: .feed,
+                templateID: templateID,
+                meToMePayment: meToMePayment,
+                operation: operation
+            )
         }
 
         enum Option: String, Decodable, CaseIterable {
@@ -1702,6 +1726,13 @@ extension Array where Element == PaymentsParameterRepresentable {
         }
         
         return value
+    }
+    
+    func hasValue(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) -> Bool {
+        
+        (try? value(forIdentifier: identifier)) != nil
     }
 }
 

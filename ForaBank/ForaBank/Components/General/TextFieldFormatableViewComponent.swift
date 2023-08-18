@@ -117,6 +117,11 @@ struct TextFieldFormatableView: UIViewRepresentable {
         
         uiView.text = viewModel.text
         uiView.isUserInteractionEnabled = viewModel.isEnabled
+        
+        if viewModel.isEditing && !uiView.isFirstResponder {
+            
+            uiView.becomeFirstResponder()
+        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -153,7 +158,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
         func textFieldDidEndEditing(_ textField: UITextField) {
          
             DispatchQueue.main.async { [weak self] in
-                
+
                 self?.viewModel.isEditing = false
             }
         }

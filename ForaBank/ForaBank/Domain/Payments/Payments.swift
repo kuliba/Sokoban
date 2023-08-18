@@ -388,6 +388,7 @@ extension Payments {
     
     struct Success {
  
+        let operation: Payments.Operation?
         let parameters: [PaymentsParameterRepresentable]
     }
 }
