@@ -75,41 +75,6 @@ final class Model_PaymentsC2BTests: XCTestCase {
         )
     }
     
-    private func c2bOperationWithParameter(
-        amountValue: String?,
-        amountComplete: Bool
-    ) -> Payments.Operation {
-        
-        let parameters: [PaymentsParameterRepresentable] = [
-            Payments.ParameterMock(id: Payments.Parameter.Identifier.product.rawValue, value: "1"),
-            Payments.ParameterMock(id: Payments.Parameter.Identifier.c2bIsAmountComplete.rawValue, value: amountComplete.description),
-            Payments.ParameterAmount(
-                value: amountValue,
-                title: "",
-                currencySymbol: "",
-                validator: .init(minAmount: 0, maxAmount: 10)
-            )
-        ]
-        
-        return .init(
-            service: .c2b,
-            source: .c2b(anyURL()),
-            steps: [
-                .init(
-                    parameters: parameters,
-                    front: .init(
-                        visible: [],
-                        isCompleted: true
-                    ),
-                    back: .init(
-                        stage: .remote(.complete),
-                        required: [],
-                        processed: [])
-                )
-            ],
-            visible: [])
-    }
-    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -124,7 +89,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
     }
 }
 
-private extension ProductData {
+extension ProductData {
     
     static func cardStub() -> ProductCardData{
         

@@ -332,6 +332,9 @@ extension Model {
             case let link as PaymentParameterLink:
                 parameters.append(Payments.ParameterSuccessLink(with: link))
                 
+            case let dataInt as PaymentParameterDataInt:
+                parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.successOperationDetailID.rawValue, value: dataInt.value.description)))
+                
             default:
                 continue
             }
