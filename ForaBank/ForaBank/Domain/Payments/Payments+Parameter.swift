@@ -127,6 +127,7 @@ extension Payments.Parameter {
         case countryOperationId              = "countryOperationId"
         
         case c2bQrcId                        = "qrcId"
+        case c2bIsAmountComplete             = "c2bIsAmountComplete"
         
         case mobileConnectionPhone           = "MobileConnectionPhone"
         case mobileConnectionAmount          = "MobileConnectionAmount"

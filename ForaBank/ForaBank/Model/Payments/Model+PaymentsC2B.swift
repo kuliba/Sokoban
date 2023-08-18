@@ -30,6 +30,18 @@ extension Model {
                 let visible = parameters.map{ $0.id }
     
                 parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: response.qrcId)))
+                
+                let amount = response.parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue })
+                
+                if let amount = amount?.parameter as? PaymentParameterAmount,
+                   amount.value == nil {
+                    
+                    parameters.append(Payments.ParameterDataValue(parameter: .init(
+                        id: Payments.Parameter.Identifier.c2bIsAmountComplete.rawValue,
+                        value: "false"))
+                    )
+                }
+                
                 var required = [Payments.Parameter.ID]()
                 required.append(Payments.Parameter.Identifier.product.rawValue)
                 required.append(Payments.Parameter.Identifier.c2bQrcId.rawValue)
@@ -108,10 +120,8 @@ extension Model {
                 throw Payments.Error.missingValueForParameter(productParamId)
             }
             
-            var parameters = [PaymentC2BParameter]()
-            parameters.append(.init(id: qrcIdParamId, value: qrcParamValue))
-            parameters.append(.init(id: "debit_account", value: productIdString))
-
+            let parameters = getC2bPayloadParameters(qrcParamValue, operation, product)
+            
             switch product {
             case _ as ProductCardData:
                 let command = ServerCommands.SBPPaymentController.CreateC2BPaymentCard(token: token, payload: .init(parameters: parameters))
@@ -162,6 +172,30 @@ extension Model {
         default:
             throw Payments.Error.unsupported
         }
+    }
+    
+    internal func getC2bPayloadParameters(
+        _ c2bId: String,
+        _ operation: Payments.Operation,
+        _ product: ProductData
+    ) -> [PaymentC2BParameter] {
+        
+        var parameters = [PaymentC2BParameter]()
+        
+        parameters.append(.init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: c2bId))
+        parameters.append(.init(id: "debit_account", value: product.id.description))
+        
+        let amount = Payments.Parameter.Identifier.amount.rawValue
+        if let amount = try? operation.parameters.parameter(forId: amount, as: Payments.ParameterAmount.self),
+           let amountComplete = try? operation.parameters.value(forIdentifier: .c2bIsAmountComplete),
+           amountComplete == "false",
+           let amountValue = amount.value {
+            
+            parameters.append(.init(id: "payment_amount", value: amountValue))
+            parameters.append(.init(id: "currency", value: product.currency))
+        }
+        
+        return parameters
     }
     
     func paymentsC2BSubscribe(parameters: [PaymentsParameterRepresentable]) async throws -> Payments.Success {
