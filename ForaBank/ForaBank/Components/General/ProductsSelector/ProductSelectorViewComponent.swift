@@ -60,7 +60,7 @@ extension ProductSelectorView {
         convenience init(_ model: Model, productData: ProductData, context: Context, isListOpen: Bool = false) {
             
             let productViewModel: ProductViewModel = .init(model, productData: productData, context: context)
-
+            
             if isListOpen == false {
                 
                 self.init(model, content: .product(productViewModel), productCarouselViewModel: nil, context: context)
@@ -112,7 +112,7 @@ extension ProductSelectorView {
                     self?.toggleCarousel()
                 }
                 .store(in: &bindings)
-
+            
             context
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] context in
@@ -330,9 +330,9 @@ enum ProductSelectorAction {
         
         let id: ProductData.ID
     }
-
+    
     enum Product {
-
+        
         struct Tap: Action {
             
             let id: UUID
@@ -396,43 +396,47 @@ extension ProductSelectorView {
     struct SelectedProductView: View {
         
         @ObservedObject var viewModel: ViewModel.ProductViewModel
-
+        
         var body: some View {
             
-            HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                cardIconView
-                    .frame(width: 32, height: 22)
+                titleView
                 
-                VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 12) {
                     
-                    titleView
+                    cardIconView
+                        .frame(width: 32, height: 22)
                     
-                    HStack(spacing: 8) {
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        paymentIconView
-                            .frame(width: 24, height: 24)
                         
-                        HStack(spacing: 0) {
+                        HStack(spacing: 8) {
                             
-                            Text(viewModel.name)
-                                .lineLimit(1)
-                                .accessibilityIdentifier("ProductSelectorProductName")
+                            paymentIconView
+                                .frame(width: 24, height: 24)
                             
-                            Spacer(minLength: 8)
+                            HStack(spacing: 0) {
+                                
+                                Text(viewModel.name)
+                                    .lineLimit(1)
+                                    .accessibilityIdentifier("ProductSelectorProductName")
+                                
+                                Spacer(minLength: 8)
+                                
+                                Text(viewModel.balance)
+                                    .layoutPriority(1)
+                                    .accessibilityIdentifier("ProductSelectorProductBalance")
+                            }
+                            .font(.textH4M16240())
+                            .foregroundColor(.textSecondary)
                             
-                            Text(viewModel.balance)
-                                .layoutPriority(1)
-                                .accessibilityIdentifier("ProductSelectorProductBalance")
+                            chevron
+                                .frame(width: 24, height: 24)
                         }
-                        .font(.textH4M16240())
-                        .foregroundColor(.textSecondary)
                         
-                        chevron
-                            .frame(width: 24, height: 24)
+                        productDetailView
                     }
-                    
-                    productDetailView
                 }
             }
         }
@@ -557,9 +561,9 @@ extension ProductSelectorView {
 struct ProductSelectorView_Previews: PreviewProvider {
     
     static func previewsGroup() -> some View {
-
+        
         Group {
-
+            
             ProductSelectorView(viewModel: .sampleRegularCollapsed)
             ProductSelectorView(
                 viewModel: .sampleRegularCollapsed(
