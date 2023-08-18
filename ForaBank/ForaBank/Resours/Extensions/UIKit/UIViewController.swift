@@ -45,10 +45,10 @@ extension UIViewController {
         }
     }
     
-    func showAlertWithCancel(with title: String, and message: String, completion: @escaping () -> Void = { }) {
+    func showAlertWithCancel(with title: String, and message: String, buttonTitle: String = "OK", completion: @escaping () -> Void = { }) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            let okAction = UIAlertAction(title: buttonTitle, style: .default) { (_) in
                 completion()
             }
             let cancel = UIAlertAction(title: "Отмена", style: .cancel)

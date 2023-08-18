@@ -288,10 +288,20 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 switch action {
                 case .main:
                     self.action.send(PaymentsSuccessAction.Button.Close())
-                    
+                    withAnimation {
+                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
+                    }
                 case .save:
                     self.spinner = .init()
                     adapter.requestSubscription(parameters: parameters, action: .link)
+                
+                case .update:
+                    self.spinner = .init()
+                    adapter.requestSubscription(parameters: parameters, action: .update)
+                    
+                case .cancelSubscribe:
+                    self.spinner = .init()
+                    adapter.requestSubscription(parameters: parameters, action: .cancel)
                     
                 case .cancel:
                     self.spinner = .init()

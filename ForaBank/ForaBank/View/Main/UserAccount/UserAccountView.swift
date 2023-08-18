@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Presentation
+import ManageSubscriptionsUI
+import SearchBarComponent
 
 struct UserAccountView: View {
     
@@ -83,6 +85,23 @@ struct UserAccountView: View {
                             .edgesIgnoringSafeArea(.all)
                             .navigationBarBackButtonHidden(false)
                             .navigationBarTitle("Выберите фото", displayMode: .inline)
+                        
+                    case let .managingSubscription(subscriptionViewModel):
+                        ManagingSubscriptionView(
+                            subscriptionViewModel: subscriptionViewModel,
+                            configurator: .init(
+                                titleFont: .textBodyMR14180(),
+                                titleColor: .textPlaceholder,
+                                nameFont: .textH4M16240(),
+                                nameColor: .mainColorsBlack,
+                                descriptionFont: .textBodyMR14180()
+                            ),
+                            footerImage: Image.ic72Sbp,
+                            searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard
+                        )
+                        
+                    case let .successView(successViewModel):
+                        PaymentsSuccessView(viewModel: successViewModel)
                     }
                 }
             }

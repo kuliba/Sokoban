@@ -34,7 +34,8 @@ extension UserAccountContactsView {
                     title: "Имя",
                     button: .init(icon: .ic24Edit2, action: { [weak self] in
                         self?.action.send(UserAccountViewModelAction.ChangeUserName())
-                    })
+                    }),
+                    style: .rounded
                 ),
                 
                 AccountCellInfoView.ViewModel(

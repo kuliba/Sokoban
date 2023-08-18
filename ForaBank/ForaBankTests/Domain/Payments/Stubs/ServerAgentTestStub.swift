@@ -66,14 +66,14 @@ final class ServerAgentTestStub: ServerAgentProtocol {
             guard let stub = stubs[`case`] else {
                 
                 let error = NSError(domain: "Missing stub for case \(`case`)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             
             stub.complete(with: completion)
             
         } catch {
-            completion(.failure(.curruptedData(error)))
+            completion(.failure(.corruptedData(error)))
             return
         }
     }
@@ -144,7 +144,7 @@ extension ServerAgentTestStub.Stub {
             guard let response = try? result.get() as? Response
             else {
                 let error = NSError(domain: "Bad data for anywayTransfer in \(result)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             completion(.success(response))
@@ -153,7 +153,7 @@ extension ServerAgentTestStub.Stub {
             guard let response = try? result.get() as? Response
             else {
                 let error = NSError(domain: "Bad data for getPhoneInfo in \(result)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             completion(.success(response))
@@ -165,10 +165,10 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for isSingleService in \(result)", code: 0)
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
             } catch {
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             
@@ -179,10 +179,10 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for mosParking in \(result)", code: 0)
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
             } catch {
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             
@@ -193,10 +193,10 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for c2bPaymentCard in \(result)", code: 0)
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
             } catch {
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
         }

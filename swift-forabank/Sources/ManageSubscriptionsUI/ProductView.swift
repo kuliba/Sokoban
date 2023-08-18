@@ -15,6 +15,7 @@ public struct ProductViewModel {
     let name: String
     let balance: String
     let descriptions: [String]
+    let isLocked: Bool
     
     public init(
         image: Image,
@@ -22,7 +23,8 @@ public struct ProductViewModel {
         paymentSystemIcon: Image? = nil,
         name: String,
         balance: String,
-        descriptions: [String]
+        descriptions: [String],
+        isLocked: Bool
     ) {
         self.image = image
         self.title = title
@@ -30,15 +32,45 @@ public struct ProductViewModel {
         self.name = name
         self.balance = balance
         self.descriptions = descriptions
+        self.isLocked = isLocked
+    }
+}
+
+public struct ProductViewConfig {
+    
+    let titleFont: Font
+    let titleColor: Color
+    let nameFont: Font
+    let nameColor: Color
+    let descriptionFont: Font
+    
+    public init(
+        titleFont: Font,
+        titleColor: Color,
+        nameFont: Font,
+        nameColor: Color,
+        descriptionFont: Font
+    ) {
+        
+        self.titleFont = titleFont
+        self.titleColor = titleColor
+        self.nameFont = nameFont
+        self.nameColor = nameColor
+        self.descriptionFont = descriptionFont
     }
 }
 
 public struct ProductView: View {
     
     let viewModel: ProductViewModel
+    let configurator: ProductViewConfig
     
-    public init(viewModel: ProductViewModel) {
+    public init(
+        viewModel: ProductViewModel,
+        configurator: ProductViewConfig
+    ) {
         self.viewModel = viewModel
+        self.configurator = configurator
     }
     
     public var body: some View {
@@ -47,16 +79,40 @@ public struct ProductView: View {
             
             HStack(alignment: .center ,spacing: 16) {
                 
-                viewModel.image
+                ZStack {
+                    
+                    viewModel.image
+                    
+                    if viewModel.isLocked {
+                        
+                        Image(systemName: "lock")
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 32, height: 12)
+                    }
+                }
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
                     
-                    header()
+                    header(
+                        font: configurator.titleFont,
+                        foreground: configurator.titleColor
+                    )
                     
-                    middleRow()
-                    
-                    description()
-                    
+                    VStack(alignment: .leading, spacing: 4) {
+                     
+                        middleRow(
+                            foregroundColor: configurator.nameColor,
+                            font: configurator.nameFont
+                        )
+                        
+                        description(
+                            font: configurator.descriptionFont,
+                            foreground: configurator.titleColor
+                        )
+                    }
                 }
                 .padding(.top, 12)
                 .padding(.trailing, 12)
@@ -67,15 +123,15 @@ public struct ProductView: View {
         .background(Color.clear)
     }
     
-    private func header() -> some View {
+    private func header(font: Font, foreground: Color) -> some View {
         
         Text(viewModel.title)
-            .font(.system(size: 18))
-            .foregroundColor(Color.gray.opacity(0.3))
+            .font(font)
+            .foregroundColor(foreground)
         
     }
     
-    private func middleRow() -> some View {
+    private func middleRow(foregroundColor: Color, font: Font) -> some View {
         
         HStack {
             
@@ -86,18 +142,20 @@ public struct ProductView: View {
             }
             
             Text(viewModel.name)
+                .font(font)
+                .foregroundColor(foregroundColor)
                 .lineLimit(1)
             
             Spacer()
             
             Text(viewModel.balance)
+                .font(font)
+                .foregroundColor(foregroundColor)
             
         }
-        .font(.system(size: 16))
-        .foregroundColor(.black.opacity(0.1))
     }
     
-    private func description() -> some View {
+    private func description(font: Font, foreground: Color) -> some View {
         
         HStack(spacing: 8) {
             
@@ -107,10 +165,9 @@ public struct ProductView: View {
                     .frame(width: 3)
                 
                 Text(description)
-                    .font(.system(size: 18))
+                    .font(font)
             }
-            .foregroundColor(.gray.opacity(0.3))
-            
+            .foregroundColor(foreground)
         }
         .padding(.bottom, 12)
     }
@@ -126,7 +183,15 @@ struct ProductView_Preview: PreviewProvider {
             paymentSystemIcon: .init("personalhotspot"),
             name: "Name",
             balance: "Balance",
-            descriptions: ["Description"])
+            descriptions: ["Description"],
+            isLocked: false),
+            configurator: .init(
+                titleFont: .body,
+                titleColor: .red,
+                nameFont: .body,
+                nameColor: .blue,
+                descriptionFont: .caption2
+            )
         )
     }
 }

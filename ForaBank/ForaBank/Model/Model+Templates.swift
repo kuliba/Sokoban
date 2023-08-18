@@ -497,5 +497,4 @@ extension Model {
 
         let message: String?
     }
-    
 }

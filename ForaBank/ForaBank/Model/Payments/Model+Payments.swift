@@ -45,6 +45,8 @@ extension ModelAction {
                     
                     case link
                     case deny
+                    case cancel
+                    case update
                 }
             }
             
@@ -60,63 +62,216 @@ extension ModelAction {
 
 extension Model {
 
-    func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) {
+    func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) async {
         
-        Task {
-
             do {
 
                 let result = try await paymentsProcess(operation: payload.operation)
-                
-                switch result {
-                case let .step(operation):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .step(operation)))
-                    
-                case let .confirm(operation):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
-                    
-                case let .complete(success):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .complete(success)))
-                }
+                self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
                 
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
             }
-        }
     }
     
-    func handlePaymentSubscribtionRequest(_ payload: ModelAction.Payment.Subscription.Request) {
+    func handlePaymentSubscriptionRequest(_ payload: ModelAction.Payment.Subscription.Request) async {
         
         switch payload.action {
         case .link:
-            Task {
-                
-                do {
-                    
-                    let result = try await paymentsC2BSubscribe(parameters: payload.parameters)
-                    self.action.send(ModelAction.Payment.Subscription.Response(result: .success(result)))
-                    
-                } catch {
-                    
-                    self.action.send(ModelAction.Payment.Subscription.Response(result: .failure(error)))
-                }
-            }
+            
+            await handlePaymentSubscriptionLinkRequest(payload)
             
         case .deny:
-            Task {
+            
+            await handlePaymentSubscriptionDenyRequest(payload)
+            
+        case .cancel:
+            
+            await handlePaymentSubscriptionCancelRequest(payload)
+            
+        case .update:
+            
+            do {
                 
-                do {
-                    
-                    let result = try await paymentsC2BDeny(parameters: payload.parameters)
-                    self.action.send(ModelAction.Payment.Subscription.Response(result: .success(result)))
-                    
-                } catch {
-                    
-                    self.action.send(ModelAction.Payment.Subscription.Response(result: .failure(error)))
-                }
+                try await handlePaymentSubscriptionUpdateRequest(payload)
+
+            } catch(let error) {
+                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation with error: \(error.localizedDescription)")
+                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
             }
+        }
+    }
+    
+    internal func handlePaymentSubscriptionDenyRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BDeny(parameters: payload.parameters)
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionLinkRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BSubscribe(parameters: payload.parameters)
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionUpdateRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async throws {
+        
+        guard let productId = try? payload.parameters.value(forIdentifier: .product),
+              let productIdInt = Int(productId),
+              let product = product(productId: productIdInt)
+        else {
+            throw Payments.Error.missingParameter(Payments.Parameter.Identifier.product.rawValue)
+        }
+        
+        switch product.productType {
+        case .card:
+            let makeCardCommend = { (token: String) in
+                
+                let (tokenSubscription, product) = try self.getRequestUpdatePayload(
+                    parameters: payload.parameters
+                )
+                
+                let command = ServerCommands.SubscriptionController.UpdateC2bSubscriptionCard(
+                    token: token,
+                    payload: .init(
+                        subscriptionToken: tokenSubscription,
+                        productId: product.id
+                    )
+                )
+                
+                return command
+            }
+            
+            await updateSubscription(
+                makeCommand: makeCardCommend,
+                parameters: payload.parameters
+            )
+            
+        default:
+            
+            let makeAccCommand = { (token: String) in
+                
+                let (tokenSubscription, product) = try self.getRequestUpdatePayload(
+                    parameters: payload.parameters
+                )
+                
+                let command = ServerCommands.SubscriptionController.UpdateC2bSubscriptionAcc(
+                    token: token,
+                    payload: .init(
+                        subscriptionToken: tokenSubscription,
+                        productId: product.id
+                    )
+                )
+                
+                return command
+            }
+            
+            await updateSubscription(
+                makeCommand: makeAccCommand,
+                parameters: payload.parameters
+            )
+        }
+    }
+    
+    internal func updateSubscription<Command: ServerCommand>(
+        makeCommand: @escaping (String) throws -> Command,
+        parameters: [PaymentsParameterRepresentable]
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BActionSubscribe(
+                makeCommand: makeCommand,
+                parameters: parameters
+            )
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionCancelRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let makeCommandCancel = { (token: String) in
+            
+            guard let tokenSubscription = try? payload.parameters.parameter(
+                forIdentifier: .successSubscriptionToken).value
+            else {
+                throw Payments.Error.missingValueForParameter(
+                    Payments.Parameter.Identifier.successSubscriptionToken.rawValue
+                )
+            }
+            
+            let command = ServerCommands.SubscriptionController.CancelC2bSubscriptions(
+                token: token,
+                payload: .init(
+                    subscriptionToken: tokenSubscription
+                )
+            )
+            
+            return command
+        }
+        
+        let result = await Result {
+            try await paymentsC2BActionSubscribe(
+                makeCommand: makeCommandCancel,
+                parameters: payload.parameters
+            )
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    private func getRequestUpdatePayload(
+        parameters: [PaymentsParameterRepresentable]
+    ) throws -> (tokenSubscription: String, ProductData) {
+        
+        guard let tokenSubscription = try? parameters.parameter(forIdentifier: .successSubscriptionToken).value,
+              let productParam = try? parameters.value(forIdentifier: .product),
+              let productIdInt = Int(productParam)
+        else {
+            throw Payments.Error.missingValueForParameter(
+                Payments.Parameter.Identifier.successSubscriptionToken.rawValue
+            )
+        }
+        
+        guard let product = self.product(productId: productIdInt)
+        else {
+            throw Payments.Error.missingValueForParameter(
+                Payments.Parameter.Identifier.product.rawValue
+            )
+        }
+        
+        return (tokenSubscription: tokenSubscription, product)
+    }
+}
+
+private extension ModelAction.Payment.Process.Response.Result {
+    
+    init(_ result: Payments.ProcessResult) {
+        
+        switch result {
+        case let .step(operation):
+            self = .step(operation)
+        case let .confirm(operation):
+            self = .confirm(operation)
+        case let .complete(success):
+            self = .complete(success)
         }
     }
 }

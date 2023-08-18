@@ -77,6 +77,7 @@ extension Payments.Parameter {
         case successTransferNumber = "ru.forabank.sense.success.successTransferNumber"
         case successOptions = "ru.forabank.sense.success.successOptions"
         case successService = "ru.forabank.sense.success.successService"
+        case successSubscriptionToken = "ru.forabank.sense.success.successSubscriptionToken"
 
         case sfpPhone       = "RecipientID"
         case sfpBank        = "BankRecipientID"
@@ -234,6 +235,8 @@ extension Payments {
             case `continue` = "PAY"
             case save = "SAVE"
             case cancel = "CANCEL"
+            case update = "UPDATE"
+            case cancelSubscribe = "CANCEL_SUB"
             case main = "MAIN"
             case `repeat`
             case additionalChange

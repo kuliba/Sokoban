@@ -1,0 +1,10 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "operationStatus": "COMPLETE",
+    "title": "Привязка счета оформлена",
+    "brandIcon": "12123344",
+    "brandName": "Тестовый ТСП ТИВ"
+  }
+}

@@ -68,9 +68,41 @@ class PaymentsSuccessViewModelAdapter {
         model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailID)))
     }
     
-    func requestSubscription(parameters: [PaymentsParameterRepresentable], action: ModelAction.Payment.Subscription.Request.SubscriptionAction) {
+    func requestSubscription(
+        parameters: [PaymentsParameterRepresentable],
+        action: ModelAction.Payment.Subscription.Request.SubscriptionAction
+    ) {
         
         model.action.send(ModelAction.Payment.Subscription.Request(parameters: parameters, action: action))
+    }
+    
+    func requestUpdateSubscription(
+        parameters: [PaymentsParameterRepresentable],
+        action: ModelAction.C2B.UpdateC2BSub.Request
+    ) {
+        
+        guard let id = try? parameters.value(forIdentifier: .product),
+              let token = try? parameters.value(forIdentifier: .successSubscriptionToken),
+              let productId = Int(id) else {
+            return
+        }
+        
+        model.action.send(ModelAction.C2B.UpdateC2BSub.Request(
+            token: token,
+            productId: productId)
+        )
+    }
+    
+    func requestCancelSubscription(
+        parameters: [PaymentsParameterRepresentable],
+        action: ModelAction.C2B.CancelC2BSub.Request
+    ) {
+        
+        guard let token = parameters.first(where: { $0.id == Payments.Parameter.Identifier.successSubscriptionToken.rawValue })?.value else {
+            return
+        }
+        
+        model.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
     }
     
     //MARK: - View Models Helpers

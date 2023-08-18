@@ -180,7 +180,6 @@ extension ProductData {
         
         self.order = order
     }
-    
 }
 
 extension ProductData {
@@ -189,38 +188,37 @@ extension ProductData {
         
         switch self {
         case let loanProduct as ProductLoanData:
-            return String(loanProduct.settlementAccount.suffix(4))
+            return loanProduct.settlementAccount.suffix(4).description
             
         case let depositProduct as ProductDepositData:
             guard let accountNumber = depositProduct.accountNumber else {
                return nil
             }
             
-            return String(accountNumber.suffix(4))
+            return accountNumber.suffix(4).description
             
         default:
             guard let number = number else {
                 return nil
             }
             
-            return String(number.suffix(4))
+            return number.suffix(4).description
         }
     }
     
     var displayPeriod: String? {
         
-        if let cardProduct = self as? ProductCardData {
+        switch self {
+        case let card as ProductCardData:
+            return card.expireDate
             
-            return cardProduct.expireDate
-            
-        } else if let loanProduct = self as? ProductLoanData {
-            
+        case let loan as ProductLoanData:
             let formatter = DateFormatter.loanProductPeriod
-            return formatter.string(from: loanProduct.dateLong)
+            return formatter.string(from: loan.dateLong)
             
-        } else {
-            
+        default:
             return nil
+
         }
     }
     
@@ -411,5 +409,46 @@ extension ProductData {
         }
         
         return paymentSystem.paymentSystemImage?.image
+    }
+    
+    var description: [String] {
+        
+        [
+            displayNumber,
+            subtitle,
+            dateLongString
+        ].compactMap { $0 }
+    }
+    
+    var subtitle: String? {
+        
+        switch self {
+        case let cardProduct as ProductCardData:
+            return cardProduct.additionalField
+            
+        case let depositProduct as ProductDepositData:
+            return "Ставка \(depositProduct.interestRate)%"
+            
+        case let loanProduct as ProductLoanData:
+            return "Ставка \(loanProduct.currentInterestRate)%"
+            
+        default: return nil
+        }
+    }
+    
+    var dateLongString: String? {
+        
+        switch self {
+        case let depositProduct as ProductDepositData:
+            guard let endDate = depositProduct.endDate else { return nil }
+            return depositProduct.endDate.map {
+              DateFormatter.shortDate.string(from: $0)
+            }
+            
+        case let loanProduct as ProductLoanData:
+            return DateFormatter.shortDate.string(from: loanProduct.dateLong)
+            
+        default: return nil
+        }
     }
 }

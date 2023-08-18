@@ -151,7 +151,7 @@ final class Model_PaymentsTransportMosParkingTests: XCTestCase {
         let parameters = parametersForStep0()
         let sut = try makeSUT(serverStubs: [
             .isSingleService(.success(data: true)),
-            .mosParking(.failure(.curruptedData(NSError(domain: "Bad server data", code: 0))))
+            .mosParking(.failure(.corruptedData(NSError(domain: "Bad server data", code: 0))))
         ])
         
         try await assertThrowsAsNSError(
@@ -159,7 +159,7 @@ final class Model_PaymentsTransportMosParkingTests: XCTestCase {
                 parameters: parameters,
                 for: 0
             ),
-            error: ServerAgentError.curruptedData(NSError(domain: "Bad server data", code: 0))
+            error: ServerAgentError.corruptedData(NSError(domain: "Bad server data", code: 0))
         )
     }
     

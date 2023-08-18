@@ -14,13 +14,20 @@ extension AccountCellButtonView {
     class ViewModel: AccountCellDefaultViewModel, ObservableObject {
         
         let button: ButtonView.ViewModel
+        let style: Style
         
-        internal init(icon: Image, content: String, title: String? = nil, button: ButtonView.ViewModel) {
+        internal init(icon: Image, content: String, title: String? = nil, button: ButtonView.ViewModel, style: Style) {
             
             self.button = button
+            self.style = style
             super.init(id: UUID(), icon: icon, content: content, title: title)
         }
         
+        enum Style {
+            
+            case rounded
+            case regular
+        }
     }
 }
 
@@ -40,17 +47,27 @@ struct AccountCellButtonView: View {
             
             HStack(spacing: 20) {
                 
-                ZStack {
-                    
-                    RoundedRectangle(cornerRadius: 20)
-                        .foregroundColor(.mainColorsGrayLightest)
-                        .frame(width: 40, height: 40)
-                    
+                switch viewModel.style {
+                case .regular:
                     viewModel.icon
                         .resizable()
                         .scaledToFill()
                         .frame(width: 24, height: 24)
                         .foregroundColor(.black)
+                    
+                case .rounded:
+                    ZStack {
+                        
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundColor(.mainColorsGrayLightest)
+                            .frame(width: 40, height: 40)
+                        
+                        viewModel.icon
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.black)
+                    }
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -70,11 +87,14 @@ struct AccountCellButtonView: View {
                 
                 Spacer()
                 
-                viewModel.button.icon
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.black)
+                if let icon = viewModel.button.icon {
+                    
+                    icon
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.black)
+                }
             }
         }
         .frame(height: 56, alignment: .leading)
@@ -88,10 +108,10 @@ extension AccountCellButtonView {
         
         class ViewModel: ObservableObject {
             
-            let icon: Image
+            let icon: Image?
             let action: () -> Void
             
-            internal init(icon: Image, action: @escaping () -> Void) {
+            internal init(icon: Image?, action: @escaping () -> Void) {
                 
                 self.icon = icon
                 self.action = action
@@ -138,13 +158,13 @@ extension AccountCellButtonView.ViewModel {
         icon: .ic24User,
         content: "Николай",
         title: "Имя",
-        button: .init(icon: .ic24Edit2, action: {} )
+        button: .init(icon: .ic24Edit2, action: {} ), style: .rounded
     )
     
     static let paymentSPF =  AccountCellButtonView.ViewModel(
         icon: Image("sbp-logo"),
         content: "Система быстрых платежей",
-        button: .init(icon: .ic24ChevronRight, action: {} )
+        button: .init(icon: .ic24ChevronRight, action: {} ), style: .rounded
     )
     
 }

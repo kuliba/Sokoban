@@ -21,6 +21,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
     func test_init_withSections_feedAndBottomItems_correct() {
         
         let sections = [makeSection(.feed, ["one"]), makeSection(.bottom, ["two"])]
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.07)
         let (sut, _, _, _) = makeSUT(with: sections)
         
         XCTAssertEqual(sut.feed.flatMap(\.items).map(\.source.id), ["one"])
@@ -30,10 +31,11 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
     func test_sectionActionMainButtonDidTapped_sutAction_buttonClose() throws {
         
         let section = makeSection(.feed, ["one", "two", "three"])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let (sut, _, scheduler, _) = makeSUT(with: [section])
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let sutActionSpy = ValueSpy(sut.action)
-
+        
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .main))
         scheduler.advance()
         
@@ -46,6 +48,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
         let (sut, model, scheduler, _) = makeSUT(with: [section])
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.07)
 
         section.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .save))
         scheduler.advance()
@@ -59,6 +62,7 @@ final class PaymentsSuccessViewModelTests: XCTestCase {
     func test_sectionActionCancelButtonDidTapped_modelActionPaymentSubscribtionRequest_withAllParameters() throws {
         
         let section = makeSection(.feed, ["one", "two", "three"])
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let (sut, model, scheduler, _) = makeSUT(with: [section])
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let modelActionSpy = ValueSpy(model.action)
@@ -174,6 +178,7 @@ private extension PaymentsSuccessViewModelTests {
     ) {
         let scheduler = DispatchQueue.test
         let model: Model = .mockWithEmptyExcept()
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let adapter = PaymentsSuccessViewModelAdapterSpy(model: model, scheduler: scheduler.eraseToAnyScheduler())
         let sut = PaymentsSuccessViewModel(
             sections: sections,

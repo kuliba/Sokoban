@@ -92,7 +92,7 @@ enum ServerAgentError: LocalizedError {
     case emptyResponse
     case emptyResponseData
     case unexpectedResponseStatus(Int)
-    case curruptedData(Error)
+    case corruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)
     case notAuthorized
 
@@ -114,7 +114,7 @@ enum ServerAgentError: LocalizedError {
         case .unexpectedResponseStatus(let statusCode):
             return "Server: unexpected response status code: \(statusCode)"
 
-        case .curruptedData(let error):
+        case .corruptedData(let error):
             return "Server: data corrupted: \(error.localizedDescription)"
 
         case .serverStatus(let serverStatusCode, let errorMessage):

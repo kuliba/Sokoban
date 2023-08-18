@@ -38,7 +38,7 @@ final class Model_getMosParkingListDataTests: XCTestCase {
         
         try await assertThrowsAsNSError(
             _ = try await sut.getMosParkingListData(),
-            error: ServerAgentError.curruptedData(ServerAgentError.unexpectedResponseStatus(-1))
+            error: ServerAgentError.corruptedData(ServerAgentError.unexpectedResponseStatus(-1))
         )
     }
     
