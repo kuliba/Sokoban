@@ -195,6 +195,7 @@ extension ProductsSwapView {
                 self.init(model: model,
                           items: [from, to],
                           divider: .init())
+                setupSwapButton()
                     
             case let .makePaymentToDeposite(productToData, _):
                 var filterFrom = ProductData.Filter(
