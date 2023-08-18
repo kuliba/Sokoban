@@ -99,5 +99,4 @@ private extension ServerCommands.SbpPayController.ProcessToken {
         let endpoint: String
         let tokenIntentId: String?
     }
-    
 }
