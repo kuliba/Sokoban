@@ -65,7 +65,8 @@ private extension Model {
             switch option {
             case .template:
                 
-                guard let operationDetail = source.operationDetail else {
+                guard let operationDetail = source.operationDetail,
+                      operationDetail.restrictedTemplateButton else {
                     return nil
                 }
                 

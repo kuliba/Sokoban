@@ -1513,6 +1513,8 @@
 		C113225E28D2169300F90072 /* BankClientInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C113225D28D2169300F90072 /* BankClientInfo.swift */; };
 		C11389AB2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
+		C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3732A8FBE11002F99BC /* PaymentsTests.swift */; };
+		C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3752A8FC184002F99BC /* C2BOperation.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
 		C14303FA2A85F0BB00FAD5AA /* Model+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F92A85F0BB00FAD5AA /* Model+Success.swift */; };
 		C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1434566295B76DD007AAD2E /* Payments+Limitation.swift */; };
@@ -3404,6 +3406,8 @@
 		C113225D28D2169300F90072 /* BankClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankClientInfo.swift; sourceTree = "<group>"; };
 		C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeViewModelTests.swift; sourceTree = "<group>"; };
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
+		C130E3732A8FBE11002F99BC /* PaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTests.swift; sourceTree = "<group>"; };
+		C130E3752A8FC184002F99BC /* C2BOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BOperation.swift; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
 		C14303F92A85F0BB00FAD5AA /* Model+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Success.swift"; sourceTree = "<group>"; };
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
@@ -4838,6 +4842,7 @@
 		2A2E32F529A39596008B9626 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
+				C130E3722A8FBDF0002F99BC /* PaymentsTests */,
 				2AED64282A40AF3500A52C35 /* Payments+Parameter */,
 				2A0F2F6329AE3ED40054B920 /* Resources */,
 				2A01BAF329A89B4D0021833F /* Stubs */,
@@ -6936,6 +6941,7 @@
 				C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */,
 				C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */,
 				C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */,
+				C130E3752A8FC184002F99BC /* C2BOperation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -8303,6 +8309,14 @@
 				C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */,
 			);
 			path = PaymentsMeToMe;
+			sourceTree = "<group>";
+		};
+		C130E3722A8FBDF0002F99BC /* PaymentsTests */ = {
+			isa = PBXGroup;
+			children = (
+				C130E3732A8FBE11002F99BC /* PaymentsTests.swift */,
+			);
+			path = PaymentsTests;
 			sourceTree = "<group>";
 		};
 		C14093F72A43D2E600B82E1F /* OperationDetail */ = {
@@ -12036,6 +12050,7 @@
 				0CCE2DE12A2D071C0016C81A /* TemplatesListViewModelTests.swift in Sources */,
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				2A5457592A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift in Sources */,
+				C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */,
 				834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */,
 				779CF7AD2A6E6CB500011812 /* EncryptionLocalAgentTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
@@ -12057,6 +12072,7 @@
 				7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */,
 				2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */,
 				2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */,
+				C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */,
 				2A1F08492A79040B00C5B11B /* Model+signRequestTests.swift in Sources */,
 				83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */,
 				C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */,
