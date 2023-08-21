@@ -326,7 +326,6 @@
 		2A0702792A19F89B009B704A /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0702782A19F89B009B704A /* TextFieldComponent */; };
 		2A0776F82A02515600118373 /* XCTestCase+getJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */; };
 		2A0776FC2A0252F100118373 /* getScenarioQRData_1_1_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */; };
-		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
 		2A14A8592A2750460018511E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A8582A2750460018511E /* Assets.xcassets */; };
@@ -3826,7 +3825,6 @@
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
-				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
 				2A1F08532A79057500C5B11B /* GetProcessingSessionCodeService in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
@@ -10118,7 +10116,6 @@
 				ED374CEB2863C5CD00A97219 /* Presentation */,
 				ED0AF884286B24DF00F86B68 /* AnyImageKit */,
 				2AB766BF29EA89AB00501DD2 /* UIKitHelpers */,
-				2A12674729EFE53200461884 /* CombineSchedulers */,
 				77B243DB2A2F658500CDCEC6 /* UserModel */,
 				2A8142602A0B9237005CF83F /* SearchBarComponent */,
 				2A3947172A19E84500EB9757 /* TextFieldComponent */,
@@ -10148,7 +10145,6 @@
 			);
 			dependencies = (
 				2A3039382A17D4A90008701D /* PBXTargetDependency */,
-				2A12674A29EFE56200461884 /* PBXTargetDependency */,
 				EDB14395265FDA430028EF5A /* PBXTargetDependency */,
 			);
 			name = ForaBankTests;
@@ -12237,10 +12233,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2A12674A29EFE56200461884 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 2A12674929EFE56200461884 /* CombineSchedulers */;
-		};
 		2A3039382A17D4A90008701D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 2A3039372A17D4A90008701D /* CustomDump */;
@@ -12541,8 +12533,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 31;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -12771,8 +12761,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -13129,8 +13117,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 31;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -13166,8 +13152,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -13559,15 +13543,6 @@
 		2A0702782A19F89B009B704A /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
-		};
-		2A12674729EFE53200461884 /* CombineSchedulers */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
-			productName = CombineSchedulers;
-		};
-		2A12674929EFE56200461884 /* CombineSchedulers */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CombineSchedulers;
 		};
 		2A14A8612A2751760018511E /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
