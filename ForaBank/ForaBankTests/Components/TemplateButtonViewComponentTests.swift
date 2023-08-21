@@ -217,11 +217,11 @@ extension ProductStatementData {
 
 extension ProductData {
     
-    static func stub() -> ProductData {
+    static func stub(productType: ProductType = .account) -> ProductData {
         
         return .init(
             id: 1,
-            productType: .account,
+            productType: productType,
             number: nil,
             numberMasked: nil,
             accountNumber: nil,

@@ -26,10 +26,22 @@ extension Model {
                 let command = ServerCommands.SBPController.GetScenarioQRData(token: token, payload: .init(QRLink: url.absoluteString))
                 let response = try await serverAgent.executeCommand(command: command)
                 
-                var parameters = try paymentsC2BReduceScenarioData(data: response.parameters)
+                var parameters = try paymentsC2BReduceScenarioData(data: response.parameters, c2b: .default)
                 let visible = parameters.map{ $0.id }
-    
+                
                 parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: response.qrcId)))
+                
+                let amount = response.parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue })
+                
+                if let amount = amount?.parameter as? PaymentParameterAmount,
+                   amount.value == nil {
+                    
+                    parameters.append(Payments.ParameterDataValue(parameter: .init(
+                        id: Payments.Parameter.Identifier.c2bIsAmountComplete.rawValue,
+                        value: "false"))
+                    )
+                }
+                
                 var required = [Payments.Parameter.ID]()
                 required.append(Payments.Parameter.Identifier.product.rawValue)
                 required.append(Payments.Parameter.Identifier.c2bQrcId.rawValue)
@@ -48,7 +60,7 @@ extension Model {
                 
                 //FIXME: rewrite all this. Real buttons parameters must be used instead of ParameterSubscribe.
                 // response parameters
-                let responseParameters = try paymentsC2BReduceScenarioData(data: response.parameters)
+                let responseParameters = try paymentsC2BReduceScenarioData(data: response.parameters, c2b: .default)
                     .filter({ ["button_save", "button_cancel", "sfp_logo"].contains($0.id) == false })
                 
                 parameters.append(contentsOf: responseParameters)
@@ -70,7 +82,7 @@ extension Model {
                 parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: response.qrcId)))
                 
                 return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .remote(.complete), required: [Payments.Parameter.Identifier.product.rawValue], processed: nil))
-  
+                
             default:
                 throw Payments.Error.unsupported
             }
@@ -108,15 +120,13 @@ extension Model {
                 throw Payments.Error.missingValueForParameter(productParamId)
             }
             
-            var parameters = [PaymentC2BParameter]()
-            parameters.append(.init(id: qrcIdParamId, value: qrcParamValue))
-            parameters.append(.init(id: "debit_account", value: productIdString))
-
+            let parameters = getC2bPayloadParameters(qrcParamValue, operation, product)
+            
             switch product {
             case _ as ProductCardData:
                 let command = ServerCommands.SBPPaymentController.CreateC2BPaymentCard(token: token, payload: .init(parameters: parameters))
                 let result = try await serverAgent.executeCommand(command: command)
-                var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters)
+                var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters, c2b: .default)
                 resultParameters.append(Payments.ParameterDataValue(parameter: .init(id: qrcIdParamId, value: qrcParamValue)))
                 
                 return .init(
@@ -127,7 +137,7 @@ extension Model {
             case _ as ProductAccountData:
                 let command = ServerCommands.SBPPaymentController.CreateC2BPaymentAcc(token: token, payload: .init(parameters: parameters))
                 let result = try await serverAgent.executeCommand(command: command)
-                var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters)
+                var resultParameters = try paymentsC2BReduceScenarioData(data: result.parameters, c2b: .default)
                 resultParameters.append(Payments.ParameterDataValue(parameter: .init(id: qrcIdParamId, value: qrcParamValue)))
                 
                 return .init(
@@ -138,7 +148,7 @@ extension Model {
             default:
                 throw Payments.Error.unexpectedProductType(product.productType)
             }
-
+            
         case .c2bSubscribe:
             
             let subscribeParamId = Payments.Parameter.Identifier.subscribe.rawValue
@@ -154,7 +164,7 @@ extension Model {
             switch actionType {
             case .confirm:
                 return try await paymentsC2BSubscribe(parameters: operation.parameters)
-
+                
             case .deny:
                 return try await paymentsC2BDeny(parameters: operation.parameters)
             }
@@ -162,6 +172,30 @@ extension Model {
         default:
             throw Payments.Error.unsupported
         }
+    }
+    
+    internal func getC2bPayloadParameters(
+        _ c2bId: String,
+        _ operation: Payments.Operation,
+        _ product: ProductData
+    ) -> [PaymentC2BParameter] {
+        
+        var parameters = [PaymentC2BParameter]()
+        
+        parameters.append(.init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: c2bId))
+        parameters.append(.init(id: "debit_account", value: product.id.description))
+        
+        let amount = Payments.Parameter.Identifier.amount.rawValue
+        if let amount = try? operation.parameters.parameter(forId: amount, as: Payments.ParameterAmount.self),
+           let amountComplete = try? operation.parameters.value(forIdentifier: .c2bIsAmountComplete),
+           amountComplete == "false",
+           let amountValue = amount.value {
+            
+            parameters.append(.init(id: "payment_amount", value: amountValue))
+            parameters.append(.init(id: "currency", value: product.currency))
+        }
+        
+        return parameters
     }
     
     func paymentsC2BSubscribe(parameters: [PaymentsParameterRepresentable]) async throws -> Payments.Success {
@@ -189,7 +223,7 @@ extension Model {
               let product = product(productId: productId) else {
             throw Payments.Error.missingValueForParameter(productParamId)
         }
-
+        
         switch product {
         case let card as ProductCardData:
             let command = ServerCommands.SubscriptionController.ConfirmC2BSubCard(token: token, payload: .init(qrcId: qrcIdParamValue, productId: String(card.id)))
@@ -229,7 +263,30 @@ extension Model {
         return .init(with: result)
     }
     
-    func paymentsC2BReduceScenarioData(data: [AnyPaymentParameter]) throws -> [PaymentsParameterRepresentable] {
+    func paymentsC2BActionSubscribe<Command: ServerCommand>(
+        makeCommand: @escaping (String) throws -> Command,
+        parameters: [PaymentsParameterRepresentable]
+    ) async throws -> Payments.Success {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let command = try makeCommand(token)
+        guard let result = try await serverAgent.executeCommand(command: command) as? C2BSubscriptionData else {
+            throw ServerAgentError.emptyResponseData
+        }
+
+        return .init(with: result)
+    }
+    
+    enum C2B {
+        
+        case `default`
+        case success
+    }
+    
+    func paymentsC2BReduceScenarioData(data: [AnyPaymentParameter], c2b: C2B) throws -> [PaymentsParameterRepresentable] {
         
         var parameters = [PaymentsParameterRepresentable]()
         
@@ -261,7 +318,38 @@ extension Model {
                 parameters.append(Payments.ParameterCheck(with: check))
                 
             case let button as PaymentParameterButton:
-                parameters.append(Payments.ParameterButton(with: button))
+                
+                switch c2b {
+                case .default:
+                    parameters.append(Payments.ParameterButton(with: button))
+
+                case .success:
+                    
+                    switch button.action {
+                    case .cancel:
+                        parameters.append(
+                            Payments.ParameterButton(with: .init(
+                                id: button.id,
+                                value: button.value,
+                                color: button.color,
+                                action: .cancelSubscribe,
+                                placement: button.placement
+                            ))
+                        )
+                    case .save:
+                        parameters.append(
+                            Payments.ParameterButton(with: .init(
+                                id: button.id,
+                                value: button.value,
+                                color: button.color,
+                                action: .update,
+                                placement: button.placement
+                            ))
+                        )
+                    default:
+                        break
+                    }
+                }
                 
             case let info as PaymentParameterInfo:
                 parameters.append(Payments.ParameterInfo(with: info))
@@ -297,6 +385,9 @@ extension Model {
                 
             case let link as PaymentParameterLink:
                 parameters.append(Payments.ParameterSuccessLink(with: link))
+                
+            case let dataInt as PaymentParameterDataInt:
+                parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.successOperationDetailID.rawValue, value: dataInt.value.description)))
                 
             default:
                 continue
@@ -384,5 +475,20 @@ func paymentsProcessDependencyReducerC2B(parameterId: Payments.Parameter.ID, par
     
     default:
         return nil
+    }
+}
+
+//MARK: Helpers
+
+extension Result {
+    
+    init(catching body: () async throws -> Success) async where Failure == Error {
+        
+        do {
+            let success = try await body()
+            self = .success(success)
+        } catch {
+            self = .failure(error)
+        }
     }
 }

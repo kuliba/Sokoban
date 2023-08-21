@@ -50,7 +50,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData)
         let name = ProductView.ViewModel.name(product: productData, style: .profile)
         let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
-        let descriptions = Self.descriptions(with: productData)
+        let descriptions = productData.description
         var orderModePadding: CGFloat = 0
         
         if #available(iOS 16, *) {
@@ -76,25 +76,6 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         set {
             model.action.send(ModelAction.Products.UpdateVisibility(productId: self.id, visibility: !newValue))
         }
-    }
-    
-    static func descriptions(with productData: ProductData) -> [String] {
-        
-        var value: [String] = []
-        
-        if let displayNumber = productData.displayNumber {
-            value.append(displayNumber)
-        }
-        
-        if let subtitle = ProductView.ViewModel.createSubtitle(from: productData) {
-            value.append(subtitle)
-        }
-        
-        if let dateLong = ProductView.ViewModel.dateLong(from: productData) {
-            value.append(dateLong)
-        }
-  
-        return value
     }
     
     func update(with productData: ProductData) {

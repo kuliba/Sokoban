@@ -12,6 +12,8 @@ struct ProductListView<P: Product, ProductView: View>: View {
     let products: [P]
     let productView: (P) -> ProductView
     
+    let backgroundColor: Color
+    
     var body: some View {
     
         ScrollView(showsIndicators: false) {
@@ -21,7 +23,7 @@ struct ProductListView<P: Product, ProductView: View>: View {
                 ForEach(products) { product in
                     
                     SubscriptionRow(product: product, productView: productView)
-                        .background(Color.gray.opacity(0.2))
+                        .background(backgroundColor)
                         .cornerRadius(12)
                 }
             }

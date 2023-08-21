@@ -275,6 +275,15 @@ extension ProductData.Filter  {
                 CardAdditionalNotOwnedRetrictedRule(),
                 AccountActiveRule()])
     
+    // TODO: преобразовать filter в Data Type и добавить тесты
+    
+    static let generalToWithDeposit = ProductData.Filter(
+        rules: [CreditRule(),
+                ProductTypeRule([.card, .account, .deposit]),
+                CardActiveRule(),
+                CardAdditionalNotOwnedRetrictedRule(),
+                AccountActiveRule()])
+    
     //MARK: Currency Wallet
     
     static let currencyWalletFrom = ProductData.Filter(

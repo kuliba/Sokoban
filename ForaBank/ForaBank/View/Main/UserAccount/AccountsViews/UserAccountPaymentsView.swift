@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TextFieldModel
 
 extension UserAccountPaymentsView {
     
@@ -25,12 +26,28 @@ extension UserAccountPaymentsView {
             self.items = []
             super.init(isCollapsed: isCollapsed)
             
-            self.items = [AccountCellButtonView.ViewModel(
-                icon: Image("sbp-logo"),
-                content: "Система быстрых платежей",
-                button: .init(icon: .ic24ChevronRight, action: { [weak self] in
-                    self?.action.send(UserAccountViewModelAction.OpenFastPayment())
-                }))]
+            self.items = [
+                AccountCellButtonView.ViewModel(
+                    icon: Image("sbp-logo"),
+                    content: "Система быстрых платежей",
+                    button: .init(
+                        icon: nil,
+                        action: { [weak self] in
+                            self?.action.send(UserAccountViewModelAction.OpenFastPayment())
+                        }),
+                    style: .rounded
+                ),
+                AccountCellButtonView.ViewModel(
+                    icon: .ic24Subscriptions,
+                    content: "Управление подписками",
+                    button: .init(
+                        icon: nil,
+                        action: { [weak self] in
+                            self?.action.send(UserAccountViewModelAction.OpenManagingSubscription())
+                        }),
+                    style: .rounded
+                )
+            ]
         }
     }
 }

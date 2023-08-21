@@ -352,7 +352,7 @@ extension PaymentsSectionViewModel {
             
         case let successService as Payments.ParameterSuccessService:
             return PaymentsSuccessServiceView.ViewModel(successService)
-            
+        
         default:
             return PaymentsParameterViewModel(source: parameter)
         }

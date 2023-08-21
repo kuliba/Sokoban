@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import Combine
+import ManageSubscriptionsUI
+import TextFieldModel
 
 class UserAccountViewModel: ObservableObject {
     
@@ -154,6 +156,12 @@ class UserAccountViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case let payload as ModelAction.C2B.CancelC2BSub.Response:
+                    let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
+                    self.link = .successView(paymentSuccessViewModel)
+
+                case let payload as ModelAction.C2B.GetC2BDetail.Response:
+                    self.link = .successView(.init(paymentSuccess: .init(operation: nil, parameters: payload.params), model))
                     
                 case let payload as ModelAction.Media.CameraPermission.Response:
                     
@@ -210,6 +218,9 @@ class UserAccountViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                    
+                case _ as PaymentsSuccessAction.Button.Close:
+                    self.action.send(PaymentsViewModelAction.Dismiss())
                     
                 case _ as UserAccountViewModelAction.CloseLink:
                     link = nil
@@ -316,8 +327,43 @@ class UserAccountViewModel: ObservableObject {
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
                             }))
                         
-                    case _ as UserAccountViewModelAction.OpenFastPayment:
+                    case _ as UserAccountViewModelAction.OpenManagingSubscription:
+                        model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+                            
+                        let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
+                        let reducer = TransformingReducer(
+                            placeholderText: "Поиск",
+                            transform: {
+                                .init(
+                                    $0.text,
+                                    cursorPosition: $0.cursorPosition
+                                )
+                            }
+                        )
+                        
+                        let emptyTitle = model.subscriptions.value?.emptyList?.compactMap({ $0 }).joined(separator: "\n")
+                        let emptySearchTitle = model.subscriptions.value?.emptySearch ?? "Нет совпадений"
+                        let titleCondition = (products.count == 0)
+                        let emptyViewModel = SubscriptionsViewModel.EmptyViewModel(
+                            icon: titleCondition ? Image.ic24Trello : Image.ic24Search,
+                            title: titleCondition ? (emptyTitle ?? "Нет совпадений") : emptySearchTitle
+                        )
+                        
+                        link = .managingSubscription(
+                            .init(products: products,
+                                  searchViewModel: .init(
+                                    initialState: .placeholder("Поиск"),
+                                    reducer: reducer,
+                                    keyboardType: .default
+                                  ),
+                                  emptyViewModel: emptyViewModel,
+                                  configurator: .init(
+                                    backgroundColor: .mainColorsGrayLightest
+                                ))
+                        )
+                        
+                    case _ as UserAccountViewModelAction.OpenFastPayment:
                         link = .fastPaymentSettings(MeToMeSettingView.ViewModel(
                             model: model.fastPaymentContractFullInfo.value
                                 .map { $0.getFastPaymentContractFindListDatum() },
@@ -393,6 +439,106 @@ class UserAccountViewModel: ObservableObject {
         return sections
     }
     
+    
+    func getSubscriptions(
+        with items: [C2BSubscription.ProductSubscription]?
+    ) -> [SubscriptionsViewModel.Product] {
+        
+        var products: [SubscriptionsViewModel.Product] = []
+        
+        guard let items else {
+            return []
+        }
+        
+        for item in items {
+            
+            let product = model.allProducts.first(where: { $0.id.description == item.productId })
+            
+            let subscriptions = item.subscriptions.map({
+                
+                var image: SubscriptionViewModel.Icon = .default(.ic24ShoppingCart)
+                
+                let brandIcon = $0.brandIcon
+                
+                if let icon = model.images.value[brandIcon]?.image {
+                    
+                    image = .image(icon)
+                    
+                } else {
+                    
+                    image = .default(.ic24ShoppingCart)
+                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [brandIcon]))
+                    
+                }
+                
+                return ManageSubscriptionsUI.SubscriptionViewModel(
+                    token: $0.subscriptionToken,
+                    name: $0.brandName,
+                    image: image,
+                    subtitle: $0.subscriptionPurpose,
+                    purposeTitle: $0.cancelAlert,
+                    trash: .ic24Trash2,
+                    config: .init(
+                        headerFont: .textH4M16240(),
+                        subtitle: .textBodySR12160()
+                    ),
+                    onDelete: { token, title in
+                        
+                        self.alert = .init(
+                            title: title,
+                            message: nil,
+                            primary: .init(
+                                type: .cancel, title: "Отмена", action: {}),
+                            secondary: .init(type: .default, title: "Отключить", action: {
+                                
+                                self.model.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
+                            }))
+                    },
+                    detailAction: { token in
+                        
+                        self.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                    })
+            })
+            
+            if let product,
+               let balance = model.amountFormatted(
+                amount: product.balanceValue,
+                currencyCode: product.currency,
+                style: .fraction
+               ),
+               let icon = product.smallDesign.image {
+                
+                if let product = product as? ProductCardData {
+                    
+                    products.append(.init(
+                        image: icon,
+                        title: item.productTitle,
+                        paymentSystemIcon: nil,
+                        name: product.displayName,
+                        balance: balance,
+                        descriptions: product.description,
+                        isLocked: product.isBlocked,
+                        subscriptions: subscriptions
+                    ))
+                    
+                } else {
+                    
+                    products.append(.init(
+                        image: icon,
+                        title: item.productTitle,
+                        paymentSystemIcon: nil,
+                        name: product.displayName,
+                        balance: balance,
+                        descriptions: product.description,
+                        isLocked: false,
+                        subscriptions: subscriptions
+                    ))
+                }
+            }
+        }
+        
+        return products
+    }
 }
 
 extension UserAccountViewModel {
@@ -452,6 +598,8 @@ extension UserAccountViewModel {
         case fastPaymentSettings(MeToMeSettingView.ViewModel)
         case deleteUserInfo(DeleteAccountView.DeleteAccountViewModel)
         case imagePicker(ImagePickerViewModel)
+        case managingSubscription(SubscriptionsViewModel)
+        case successView(PaymentsSuccessViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -512,6 +660,7 @@ enum UserAccountViewModelAction {
         let image: UIImage?
     }
     
+    struct OpenManagingSubscription: Action {}
     struct OpenFastPayment: Action {}
     
     struct Switch: Action {
