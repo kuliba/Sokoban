@@ -274,8 +274,15 @@ class PaymentsOperationViewModel: ObservableObject {
                         }
                         self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))
                         
-                    case _ as PaymentsSectionViewModelAction.Continue.DidTapped:
-                        self.action.send(PaymentsOperationViewModelAction.Continue())
+                    case let payload as PaymentsSectionViewModelAction.Button.DidTapped:
+                        switch payload.action {
+                        case .continue:
+                            self.action.send(PaymentsOperationViewModelAction.Continue())
+                            
+                        default:
+                            //TODO: implement other actions if required
+                            break
+                        }
  
                     case let payload as PaymentsSectionViewModelAction.PopUpSelector.Show:
                         bottomSheet = .init(type: .popUp(payload.viewModel))
@@ -449,7 +456,7 @@ extension PaymentsOperationViewModel {
             return
         }
         
-        bottomSection.action.send(PaymentsSectionViewModelAction.Continue.EnabledChanged(isEnabled: isContinueEnabled))
+        bottomSection.action.send(PaymentsSectionViewModelAction.Button.EnabledChanged(isEnabled: isContinueEnabled))
     }
     
     func updateParameterValueCallback(items: [PaymentsParameterViewModel]) {

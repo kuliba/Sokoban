@@ -39,10 +39,12 @@ extension Model {
         
         var parameters = parameters.filter({!restrictedParameters.contains($0.id)})
         
-        if parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryCitySearch.rawValue }),
-            parameters.contains(where: { $0.id == Payments.Parameter.Identifier.countryBankSearch.rawValue }) {
+        if parameters.hasValue(forIdentifier: .countryCitySearch),
+           parameters.hasValue(forIdentifier: .countryBankSearch) {
             
-            parameters = parameters.filter({ $0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue })
+            parameters = parameters.filter {
+                $0.id != Payments.Parameter.Identifier.countryCitySearch.rawValue
+            }
         }
                 
         var additional = [TransferAnywayData.Additional]()
@@ -50,11 +52,11 @@ extension Model {
                 
             switch parameter.id {
             case Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue:
-                guard let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }),
-                      let amount = amount as? Payments.ParameterAmount else {
-                    continue
+                guard let amount = parameters.parameterAmount else {
+                    break
                 }
                 
+                //TODO: simplify using helpers
                 let currencies = self.currencyList.value.filter({ $0.currencySymbol == amount.currencySymbol })
                 
                 if let currency = amount.deliveryCurrency?.currenciesList?.first(where: { $0.description.contained(in: currencies.map(\.code)) }) {
@@ -84,6 +86,30 @@ extension Model {
         }
         
         return additional
+    }
+    
+    func abroadAmountParameter(
+        _ currencySymbol: String,
+        _ selectedCurrency: Currency,
+        _ currenciesList: [Currency],
+        _ maxAmount: Double?
+    ) -> Payments.ParameterAmount
+    {
+        let amountParameter = Payments.ParameterAmount(
+            value: "0",
+            title: "Сумма перевода",
+            currencySymbol: currencySymbol,
+            deliveryCurrency: .init(
+                selectedCurrency: selectedCurrency,
+                currenciesList: currenciesList
+            ),
+            transferButtonTitle: "Продолжить",
+            validator: .init(
+                minAmount: 0.1,
+                maxAmount: maxAmount
+            )
+        )
+        return amountParameter
     }
     
     func paymentsTransferAbroadStepParameters(
@@ -180,8 +206,18 @@ extension Model {
                         
                         let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: Currency.init(description: currency?.fieldvalue ?? "RUB"), currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
                         result.append(amountParameter)
+                       
+                    case .latestPayment:
+                        let amountParameter = abroadAmountParameter(
+                            currencySymbol,
+                            first,
+                            currencyArr,
+                            product.balance
+                        )
+                        result.append(amountParameter)
                         
                     default:
+                       
                         let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, deliveryCurrency: .init(selectedCurrency: first, currenciesList: currencyArr), transferButtonTitle: "Продолжить", validator: .init(minAmount: 0.1, maxAmount: product.balance))
                         result.append(amountParameter)
                     }
@@ -194,7 +230,17 @@ extension Model {
                 
             } else {
                 
-                let amountParameter = Payments.ParameterAmount(value: nil, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
+                let amount: String? = {
+                    
+                    switch operation.source {
+                    case .latestPayment:
+                        return "0"
+                    default:
+                        return nil
+                    }
+                }()
+
+                let amountParameter = Payments.ParameterAmount(value: amount, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: .init(minAmount: 10, maxAmount: product.balance))
                 result.append(amountParameter)
             }
         }

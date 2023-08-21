@@ -33,6 +33,28 @@ extension ModelAction {
                 }
             }
         }
+        
+        enum Subscription {
+            
+            struct Request: Action {
+                
+                let parameters: [PaymentsParameterRepresentable]
+                let action: SubscriptionAction
+            
+                enum SubscriptionAction {
+                    
+                    case link
+                    case deny
+                    case cancel
+                    case update
+                }
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<Payments.Success, Error>
+            }
+        }
     }
 }
 
@@ -40,30 +62,216 @@ extension ModelAction {
 
 extension Model {
 
-    func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) {
+    func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) async {
         
-        Task {
-
             do {
 
                 let result = try await paymentsProcess(operation: payload.operation)
-                
-                switch result {
-                case let .step(operation):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .step(operation)))
-                    
-                case let .confirm(operation):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
-                    
-                case let .complete(success):
-                    self.action.send(ModelAction.Payment.Process.Response(result: .complete(success)))
-                }
+                self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
                 
             } catch {
                 
                 LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
                 self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
             }
+    }
+    
+    func handlePaymentSubscriptionRequest(_ payload: ModelAction.Payment.Subscription.Request) async {
+        
+        switch payload.action {
+        case .link:
+            
+            await handlePaymentSubscriptionLinkRequest(payload)
+            
+        case .deny:
+            
+            await handlePaymentSubscriptionDenyRequest(payload)
+            
+        case .cancel:
+            
+            await handlePaymentSubscriptionCancelRequest(payload)
+            
+        case .update:
+            
+            do {
+                
+                try await handlePaymentSubscriptionUpdateRequest(payload)
+
+            } catch(let error) {
+                
+                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation with error: \(error.localizedDescription)")
+                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
+            }
+        }
+    }
+    
+    internal func handlePaymentSubscriptionDenyRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BDeny(parameters: payload.parameters)
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionLinkRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BSubscribe(parameters: payload.parameters)
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionUpdateRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async throws {
+        
+        guard let productId = try? payload.parameters.value(forIdentifier: .product),
+              let productIdInt = Int(productId),
+              let product = product(productId: productIdInt)
+        else {
+            throw Payments.Error.missingParameter(Payments.Parameter.Identifier.product.rawValue)
+        }
+        
+        switch product.productType {
+        case .card:
+            let makeCardCommend = { (token: String) in
+                
+                let (tokenSubscription, product) = try self.getRequestUpdatePayload(
+                    parameters: payload.parameters
+                )
+                
+                let command = ServerCommands.SubscriptionController.UpdateC2bSubscriptionCard(
+                    token: token,
+                    payload: .init(
+                        subscriptionToken: tokenSubscription,
+                        productId: product.id
+                    )
+                )
+                
+                return command
+            }
+            
+            await updateSubscription(
+                makeCommand: makeCardCommend,
+                parameters: payload.parameters
+            )
+            
+        default:
+            
+            let makeAccCommand = { (token: String) in
+                
+                let (tokenSubscription, product) = try self.getRequestUpdatePayload(
+                    parameters: payload.parameters
+                )
+                
+                let command = ServerCommands.SubscriptionController.UpdateC2bSubscriptionAcc(
+                    token: token,
+                    payload: .init(
+                        subscriptionToken: tokenSubscription,
+                        productId: product.id
+                    )
+                )
+                
+                return command
+            }
+            
+            await updateSubscription(
+                makeCommand: makeAccCommand,
+                parameters: payload.parameters
+            )
+        }
+    }
+    
+    internal func updateSubscription<Command: ServerCommand>(
+        makeCommand: @escaping (String) throws -> Command,
+        parameters: [PaymentsParameterRepresentable]
+    ) async {
+        
+        let result = await Result {
+            try await paymentsC2BActionSubscribe(
+                makeCommand: makeCommand,
+                parameters: parameters
+            )
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    internal func handlePaymentSubscriptionCancelRequest(
+        _ payload: ModelAction.Payment.Subscription.Request
+    ) async {
+        
+        let makeCommandCancel = { (token: String) in
+            
+            guard let tokenSubscription = try? payload.parameters.parameter(
+                forIdentifier: .successSubscriptionToken).value
+            else {
+                throw Payments.Error.missingValueForParameter(
+                    Payments.Parameter.Identifier.successSubscriptionToken.rawValue
+                )
+            }
+            
+            let command = ServerCommands.SubscriptionController.CancelC2bSubscriptions(
+                token: token,
+                payload: .init(
+                    subscriptionToken: tokenSubscription
+                )
+            )
+            
+            return command
+        }
+        
+        let result = await Result {
+            try await paymentsC2BActionSubscribe(
+                makeCommand: makeCommandCancel,
+                parameters: payload.parameters
+            )
+        }
+        
+        self.action.send(ModelAction.Payment.Subscription.Response(result: result))
+    }
+    
+    private func getRequestUpdatePayload(
+        parameters: [PaymentsParameterRepresentable]
+    ) throws -> (tokenSubscription: String, ProductData) {
+        
+        guard let tokenSubscription = try? parameters.parameter(forIdentifier: .successSubscriptionToken).value,
+              let productParam = try? parameters.value(forIdentifier: .product),
+              let productIdInt = Int(productParam)
+        else {
+            throw Payments.Error.missingValueForParameter(
+                Payments.Parameter.Identifier.successSubscriptionToken.rawValue
+            )
+        }
+        
+        guard let product = self.product(productId: productIdInt)
+        else {
+            throw Payments.Error.missingValueForParameter(
+                Payments.Parameter.Identifier.product.rawValue
+            )
+        }
+        
+        return (tokenSubscription: tokenSubscription, product)
+    }
+}
+
+private extension ModelAction.Payment.Process.Response.Result {
+    
+    init(_ result: Payments.ProcessResult) {
+        
+        switch result {
+        case let .step(operation):
+            self = .step(operation)
+        case let .confirm(operation):
+            self = .confirm(operation)
+        case let .complete(success):
+            self = .complete(success)
         }
     }
 }
@@ -119,6 +327,7 @@ extension Model {
         case let .mock(mock): return mock.service
         case .sfp: return .sfp
         case .requisites: return .requisites
+        case .c2b: return .c2b
         case .c2bSubscribe: return .c2b
         case .direct: return .abroad
         case .return: return .return
@@ -808,7 +1017,7 @@ extension Model {
             
         default:
             let response = try await paymentsTransferComplete(code: codeValue)
-            let success = try Payments.Success(with: response, operation: operation)
+            let success = try Payments.Success(with: response, operation: operation, amountFormatter: amountFormatted(amount:productID:style:))
             
             return success
         }
@@ -821,7 +1030,7 @@ extension Model {
         switch operation.service {
         case .sfp:
             let response = try await paymentsTransferSFPProcessFora(parameters: operation.parameters, process: process)
-            let success = try Payments.Success(with: response, operation: operation)
+            let success = try Payments.Success(with: response, operation: operation, amountFormatter: amountFormatted(amount:productID:style:))
             return success
             
         case .c2b:
@@ -905,7 +1114,7 @@ extension Model {
         case .info:
             return Payments.ParameterInfo(
                 .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterLocation,
+                icon: .image(parameterData.iconData ?? .parameterLocation),
                 title: parameterData.title)
         }
     }
@@ -919,7 +1128,7 @@ extension Model {
         default:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: adittionalData.iconData ?? .parameterDocument,
+                icon: .image(adittionalData.iconData ?? .parameterDocument),
                 title: adittionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
         }
     }

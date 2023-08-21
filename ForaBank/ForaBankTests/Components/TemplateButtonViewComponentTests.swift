@@ -92,7 +92,7 @@ extension TemplateButtonViewComponentTests {
     
     func test_computedPropertyTitle_loadingState_shouldReturnTemplate() throws {
 
-        let sut = makeSUT(state: .loading(isComplete: true))
+        let sut = makeSUT(state: .loading)
         
         XCTAssertEqual(sut.title, "Шаблон")
     }
@@ -217,11 +217,11 @@ extension ProductStatementData {
 
 extension ProductData {
     
-    static func stub() -> ProductData {
+    static func stub(productType: ProductType = .account) -> ProductData {
         
         return .init(
             id: 1,
-            productType: .account,
+            productType: productType,
             number: nil,
             numberMasked: nil,
             accountNumber: nil,

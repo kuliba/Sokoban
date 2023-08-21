@@ -291,7 +291,7 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
                 .init(id: amountParameterId, value: amountFormatted),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                icon: .local("ic24Coins"),
                 title: "Сумма списания",
                 placement: .feed,
                 group: group)
@@ -305,7 +305,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия",
                 placement: .feed,
                 group: group)
@@ -449,13 +449,12 @@ extension Model {
             forIdentifier: .paymentsServiceOperatorLogo,
             as: Payments.ParameterOperatorLogo.self
         )
-        let data = PaymentsServicesData(
-            svgImageData: .init(description: operatorLogo.svgImage)
-        )
+
         let success = try Payments.Success(
             with: response,
             operation: operation,
-            serviceData: .paymentsServicesData(data)
+            logoImage: .init(description: operatorLogo.svgImage),
+            amountFormatter: amountFormatted(amount:productID:style:)
         )
         
         return success
@@ -614,7 +613,7 @@ extension Model {
         case .info:
             return Payments.ParameterInfo(
                 .init(id: parameterData.id, value: parameterData.value),
-                icon: parameterData.iconData ?? .parameterDocument,
+                icon: .image(parameterData.iconData ?? .parameterDocument),
                 title: parameterData.title,
                 group: .init(id: "info", type: .info))
             

@@ -47,6 +47,10 @@ extension Model {
         let command = ServerCommands.TransferController.ReturnOutgoing(token: token, payload: .init(paymentOperationDetailId: operationDetailId, transferReference: transferRefence))
         let result = try await serverAgent.executeCommand(command: command)
         
-        return .init(operationDetailId: 0, status: .inProgress, productId: operation.productId ?? 0, amount: operation.amount ?? 0, service: .change, serviceData: .returnAbroadData(transferData: result, title: "Запрос на возврат перевода принят в обработку"), operation: operation)
+        return try .init(
+            with: result,
+            operation: operation,
+            title: "Запрос на возврат перевода принят в обработку"
+        )
     }
 }

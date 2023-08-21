@@ -28,7 +28,7 @@ extension PaymentComponents {
     typealias CheckView = ForaBank.PaymentsCheckView
     typealias CodeView = ForaBank.PaymentsCodeView
     @available(*, deprecated, message: "Use PaymentsButtonView instead")
-    typealias ContinueButtonView = ForaBank.PaymentsContinueButtonView
+    typealias ContinueButtonView = ForaBank.PaymentsButtonView
     typealias InfoView = ForaBank.PaymentsInfoView
     typealias InputPhoneView = ForaBank.PaymentsInputPhoneView
     typealias InputView = ForaBank.PaymentsInputView

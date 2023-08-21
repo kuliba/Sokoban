@@ -97,7 +97,10 @@ extension Model {
         try paymentsTransferComment(parameters)
     }
     
-    func paymentsTransferSFPAdditional(_ parameters: [Payments.Parameter], allParameters: [PaymentsParameterRepresentable]) throws -> [TransferAnywayData.Additional] {
+    func paymentsTransferSFPAdditional(
+        _ parameters: [Payments.Parameter],
+        allParameters: [PaymentsParameterRepresentable]
+    ) throws -> [TransferAnywayData.Additional] {
         
         var additional = [TransferAnywayData.Additional]()
         for (index, parameter) in parameters.enumerated() {
@@ -161,7 +164,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия", placement: .feed)
             
             result.append(feeParameter)

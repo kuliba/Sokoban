@@ -122,17 +122,17 @@ extension PaymentsTemplateDataTests {
     
     func test_paymentsTemplate_shouldReturnPayerProductId() throws {
         
-        let transferData = AnywayData.anywayStub()
+        let transferData = GeneralData.generalStub(amount: 100, cardId: 10000184511)
         let template = PaymentTemplateData.templateStub(
             type: .betweenTheir,
             parameterList: transferData
         )
         
         let payerProductId = try XCTUnwrap(template.payerProductId)
-        
+
         XCTAssertNotNil(payerProductId)
         XCTAssertEqual(template.amount, 100)
-        XCTAssertEqual(template.payerProductId, 10000184511)
+        XCTAssertEqual(template.payerProductId, 1)
     }
 }
 

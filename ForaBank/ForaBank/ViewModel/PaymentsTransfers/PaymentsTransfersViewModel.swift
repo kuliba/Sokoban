@@ -812,18 +812,18 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                         }
                         
-                    case .c2bURL(let c2bURL):
-                        
-                        // show c2b payment after delay required to finish qr scanner close animation
+                    case .c2bURL(let url):
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                        let paymentsViewModel = PaymentsViewModel(source: .c2b(url), model: model, closeAction: {[weak self] in
                             
-                            let c2bViewModel = C2BViewModel(urlString: c2bURL.absoluteString, closeAction: { [weak self] in
-                                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            })
-                            
-                            self.link = .c2b(c2bViewModel)
-                        }
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        })
+                        bind(paymentsViewModel)
+                        
+                        self.action.send(DelayWrappedAction(
+                            delayMS: 700,
+                            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                        )
                         
                     case .c2bSubscribeURL(let url):
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())

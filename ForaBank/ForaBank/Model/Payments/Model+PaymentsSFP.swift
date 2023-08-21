@@ -196,7 +196,7 @@ extension Model {
             let customerParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let customerParameter = Payments.ParameterInfo(
                 .init(id: customerParameterId, value: customerName),
-                icon: ImageData(named: "ic24Customer") ?? .parameterDocument,
+                icon: .local("ic24Customer"),
                 title: "Получатель", placement: .feed)
             
             parameters.append(customerParameter)
@@ -208,7 +208,7 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
                 .init(id: amountParameterId, value: amountFormatted),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                icon: .local("ic24Coins"),
                 title: "Сумма перевода", placement: .feed)
             
             parameters.append(amountParameter)
@@ -220,7 +220,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия", placement: .feed)
             
             parameters.append(feeParameter)
@@ -245,7 +245,7 @@ extension Model {
         case Payments.Parameter.Identifier.sftRecipient.rawValue:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: ImageData(named: "ic24Customer") ?? .parameterDocument,
+                icon: .local("ic24Customer"),
                 title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAmount.rawValue:
@@ -257,13 +257,13 @@ extension Model {
 
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: amountFormatted),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                icon: .local("ic24Coins"),
                 title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAntifraud.rawValue:
             return Payments.ParameterInfo(
                 .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: .parameterDocument,
+                icon: .image(.parameterDocument),
                 title: adittionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
 
         default:

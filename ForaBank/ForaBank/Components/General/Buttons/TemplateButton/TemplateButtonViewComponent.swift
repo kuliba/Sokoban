@@ -10,8 +10,10 @@ import Combine
 
 extension TemplateButtonView {
     
-    class ViewModel: ObservableObject {
+    //TODO: https://git.inn4b.ru/dbs/ios/-/merge_requests/1277#note_19249
+    class ViewModel: ObservableObject, PaymentsSuccessOptionButtonsButtonViewModel {
         
+        let id: Payments.ParameterSuccessOptionButtons.Option = .template
         let action: PassthroughSubject<Action, Never> = .init()
         private var bindings = Set<AnyCancellable>()
 
@@ -68,7 +70,8 @@ extension TemplateButtonView {
                     let action = ModelAction.PaymentTemplate.Update.Requested(
                         name: name,
                         parameterList: [],
-                        paymentTemplateId: paymentTemplateId)
+                        paymentTemplateId: paymentTemplateId
+                    )
                     return { model.action.send(action) }
                     
                 case .complete:
@@ -190,17 +193,23 @@ extension TemplateButtonView.ViewModel {
         Publishers.Merge3(complete, idle, refresh)
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
-
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { action in
                 
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Requested:
-                    self.state = .loading(isComplete: false)
+                    self.state = .loading
+                    
+                case _ as ModelAction.PaymentTemplate.Save.Complete:
+                    self.state = .complete
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    self.state = .idle
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Requested:
-                    self.state = .loading(isComplete: true)
+                    self.state = .loading
 
                 default:
                     break
@@ -209,7 +218,7 @@ extension TemplateButtonView.ViewModel {
             }.store(in: &bindings)
     }
 }
-
+ 
 // MARK: Sub Type's
 
 extension TemplateButtonView.ViewModel {
@@ -217,7 +226,7 @@ extension TemplateButtonView.ViewModel {
     enum State {
         
         case idle
-        case loading(isComplete: Bool)
+        case loading
         case refresh
         case complete
     }
@@ -270,24 +279,30 @@ extension TemplateButtonView {
     
     struct LoadingView: View {
         
-        let state: State
+        @State private var isAnimating = false
         
         var body: some View {
             
             ZStack {
                 
                 Circle()
-                    .fill(state == .idle ? Color.mainColorsGrayLightest : .systemColorActive)
+                    .fill(fillColor)
                     .frame(width: 56, height: 56)
                 
-                ThreeBounceAnimationView(color: state == .idle ? .black : .white)
+                ThreeBounceAnimationView(color: isAnimating ? .black : .white)
+            }
+            .onAppear {
+             
+                withAnimation(.linear(duration: 0.5)) {
+                    
+                    self.isAnimating = true
+                }
             }
         }
         
-        enum State {
+        private var fillColor: Color {
             
-            case idle
-            case complete
+            isAnimating ? .mainColorsGrayLightest : .systemColorActive
         }
     }
 }
@@ -472,8 +487,8 @@ struct TemplateButtonView: View {
             case .idle:
                 IdleView(tapAction: viewModel.tapAction)
                 
-            case let .loading(isComplete: isComplete):
-                LoadingView(state: isComplete ? .complete : .idle)
+            case .loading:
+                LoadingView()
                 
             case .refresh:
                 RefreshView(tapAction: viewModel.tapAction)
@@ -498,7 +513,7 @@ struct TemplateButtonView_Previews: PreviewProvider {
         TemplateButtonView(viewModel: .preview(state: .refresh))
             .previewDisplayName("refresh state")
         
-        TemplateButtonView(viewModel: .preview(state: .loading(isComplete: true)))
+        TemplateButtonView(viewModel: .preview(state: .loading))
             .previewDisplayName("loading state")
         
         TemplateButtonView(viewModel: .preview(state: .complete))

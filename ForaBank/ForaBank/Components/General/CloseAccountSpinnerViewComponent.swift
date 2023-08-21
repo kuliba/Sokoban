@@ -42,8 +42,20 @@ extension CloseAccountSpinnerView {
                         switch payload {
                         case let .success(data: transferData):
                             
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccountEmpty(productData.id), currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
+                            let currency = Currency(description: productData.currency)
+                            let balance = productData.balanceValue
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeAccountEmpty(
+                                    productData.id,
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                 
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(CloseAccountSpinnerAction.Response.Success(viewModel: successViewModel))
                             }
                             

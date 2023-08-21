@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "EFD08D98-D4EA-468B-A4DC-9FD39E3E9EE9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

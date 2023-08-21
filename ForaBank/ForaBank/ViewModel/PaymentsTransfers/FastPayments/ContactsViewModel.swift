@@ -376,7 +376,7 @@ extension Model {
         }
         let countryForBank: (BankData) -> CountryData? = { [weak model] bank in
             
-            model?.countriesList.value.first(where: { $0.id == bank.bankCountry})
+            model?.countriesList.value.first(where: { $0.id == bank.bankCountry })
         }
         
         let searchFieldModel = SearchFactory.makeSearchFieldModel(

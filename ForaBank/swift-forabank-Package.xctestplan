@@ -84,6 +84,42 @@
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
       }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BindPublicKeyWithEventIDTests",
+        "name" : "BindPublicKeyWithEventIDTests"
+      }
     }
   ],
   "version" : 1

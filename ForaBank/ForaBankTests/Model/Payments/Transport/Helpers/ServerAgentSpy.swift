@@ -14,6 +14,7 @@ final class ServerAgentSpy: ServerAgentProtocol {
     private let isSingleService: Bool?
     
     private(set) var getMosParkingListRequestCount = 0
+    private(set) var processSbpPayTokens = [ServerCommands.SbpPayController.ProcessToken]()
     
     init(isSingleService: Bool? = nil) {
         self.isSingleService = isSingleService
@@ -35,7 +36,10 @@ final class ServerAgentSpy: ServerAgentProtocol {
         case _ as ServerAgentTestStub.GetMosParkingList:
             
             getMosParkingListRequestCount += 1
-            completion(.failure(.curruptedData(anyNSError())))
+            completion(.failure(.corruptedData(anyNSError())))
+            
+        case let processToken as ServerCommands.SbpPayController.ProcessToken:
+            processSbpPayTokens.append(processToken)
             
         default:
             

@@ -72,7 +72,7 @@ extension Model {
             let amountParameterId = Payments.Parameter.Identifier.mobileConnectionAmount.rawValue
             let amountParameter = Payments.ParameterInfo(
                 .init(id: amountParameterId, value: amountFormatted),
-                icon: ImageData(named: "ic24Coins") ?? .parameterDocument,
+                icon: .local("ic24Coins"),
                 title: "Сумма перевода", placement: .feed, group: group)
             
             result.append(amountParameter)
@@ -84,7 +84,7 @@ extension Model {
             let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
             let feeParameter = Payments.ParameterInfo(
                 .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .init(named: "ic24PercentCommission") ?? .parameterDocument,
+                icon: .local("ic24PercentCommission"),
                 title: "Комиссия", placement: .feed, group: group)
             
             result.append(feeParameter)

@@ -190,7 +190,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             .payeeAccountNumber,
             .payeeBankBIC,
             .property(title: "purpose", value: "Payment Purpose")
-,
+            ,
         ])
         XCTAssertEqual(detail.externalTransferType, .entity)
     }
@@ -349,6 +349,714 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertEqual(detail.externalTransferType, .individual)
     }
     
+    // MARK: - makeItemsForTransport
+    
+    func test_makeItemsForTransport_shouldReturnEmpty_onNilTransferType() {
+        
+        let detail = makeOperationDetail(transferEnum: nil)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .none)
+    }
+    
+    func test_makeItemsForTransport_transport_shouldReturnEmpty_onNil() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_shouldReturnAmount() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Сумма", value: "100")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_shouldReturnCommission() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, .init(title: "Commission", iconType: nil, value: "0.01"), nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Commission", value: "0.01")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnPayer() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"), nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnPayee() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payee description"), nil)
+        
+        XCTAssertNoDiff(cells, [
+            .product(title: "Payee", name: "Ivanov", balance: "100", description: "Payee description"),
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnDate() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, .init(title: "Date", iconType: nil, value: "10:30"))
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Date", value: "10:30")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_isTrafficPoliceServiceIsFalse_shouldAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            transferEnum: .transport,
+            account: "1111",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Номер карты", value: "1111")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_isTrafficPoliceServiceIsTrue_shouldAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            isTrafficPoliceService: true,
+            transferEnum: .transport,
+            account: "1111",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Номер карты", value: "1111")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    func test_makeItemsForTransport_accountIsEmpty_shouldReturnEmptyAccountTitle() {
+        
+        let detail = makeOperationDetail(
+            isTrafficPoliceService: true,
+            transferEnum: .transport,
+            account: "",
+            accountTitle: "Номер карты"
+        )
+        
+        let cells = makeItemsForTransport(detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldName() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
+        
+        let cells = makeItemsForTransport(dictionaryAnywayOperator: {_ in .iForaMosParking}, detail, nil, nil, nil, nil, nil)
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Наименование получателя", value: "Паркинг")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+
+    func test_makeItemsForTransport_shouldReturnCells() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport, payeeFullName: "Паркинг")
+        
+        let cells = makeItemsForTransport(
+            detail,
+            .init(title: "Сумма", iconType: nil, value: "100"),
+            .init(title: "Commission", iconType: nil, value: "0.01"),
+            .init(title: "Payer", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "100", description: "Payer description"),
+            .init(title: "Payee", icon: .checkImage, name: "Ivanov", iconPaymentService: nil, balance: "101", description: "Payee description"),
+            .init(title: "Date", iconType: nil, value: "10:30"))
+        
+        XCTAssertNoDiff(cells, [
+            .property(title: "Наименование получателя", value: "Паркинг"),
+            .property(title: "Сумма", value: "100"),
+            .property(title: "Commission", value: "0.01"),
+            .product(title: "Payer", name: "Ivanov", balance: "100", description: "Payer description"),
+            .product(title: "Payee", name: "Ivanov", balance: "101", description: "Payee description"),
+            .property(title: "Date", value: "10:30")
+        ])
+        XCTAssertEqual(detail.transferEnum, .transport)
+    }
+    
+    // MARK: - makeItemsForHistoryExternal
+        
+    func test_makeItemsForHistoryExternal_entity_shouldReturnEmpty_onNil() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnEmpty_onNil() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnAmount() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Сумма", value: "100"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnAmount() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, .init(title: "Сумма", iconType: nil, value: "100"), nil, nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Сумма", value: "100"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCommission() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Commission", value: "1"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCommission() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, .init(title: "Commission", iconType: nil, value: "1"), nil, "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Commission", value: "1"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnDebitAccount() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .default(title: "DebitAccount"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnDebitAccount() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, .init(title: "DebitAccount"), "", "")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .default(title: "DebitAccount"),
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCommentAndDate() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "Comment", "10:10")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+    
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCommentAndDate() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "Comment", "10:10")
+
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCells() {
+        
+        let detail = makeExternal(externalTransferType: .entity)
+        
+        let cells = makeHistoryItemsForExternal(
+            .entity,
+            detail,
+            .init(title: "Amount", iconType: nil, value: "1234"),
+            .init(title: "Fee", iconType: nil, value: "345"),
+            .init(title: "DebitAccount"),
+            "Comment",
+            "10:10"
+        )
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Amount", value: "1234"),
+            .property(title: "Fee", value: "345"),
+            .default(title: "DebitAccount"),
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+
+    func test_makeItemsForHistoryExternal_individual_shouldReturnCells() {
+        
+        let detail = makeExternal(externalTransferType: .individual)
+        
+        let cells = makeHistoryItemsForExternal(
+            .individual,
+            detail,
+            .init(title: "Amount", iconType: nil, value: "1234"),
+            .init(title: "Fee", iconType: nil, value: "345"),
+            .init(title: "DebitAccount"),
+            "Comment",
+            "10:10"
+        )
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeBankBIC,
+            .property(title: "Amount", value: "1234"),
+            .property(title: "Fee", value: "345"),
+            .default(title: "DebitAccount"),
+            .property(title: "Назначение платежа", value: "Comment"),
+            .property(title: "Дата и время операции (МСК)", value: "10:10")
+        ])
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+
+    func test_makeItemsForHistoryExternal_entity_shouldReturnPayeeKPP() {
+        
+        let detail = makeExternal(
+            externalTransferType: .entity,
+            payeeINN: "772016190450",
+            payeeKPP: "770801001"
+        )
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeKPP,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertNotNil(detail.payeeINN)
+        XCTAssertNotNil(detail.payeeKPP)
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+
+    func test_makeItemsForHistoryExternal_individual_shouldNotReturnPayeeKPP() {
+        
+        let detail = makeExternal(
+            externalTransferType: .individual,
+            payeeINN: "772016190450",
+            payeeKPP: "770801001"
+        )
+        
+        let cells = makeHistoryItemsForExternal(.individual, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeAccountNumber,
+            .payeeINN,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertNotNil(detail.payeeINN)
+        XCTAssertNotNil(detail.payeeKPP)
+        XCTAssertEqual(detail.externalTransferType, .individual)
+    }
+    
+    func test_makeItemsForHistoryExternal_entity_shouldReturnCardNumberIfAccountNumberEmpty() {
+        
+        let detail = makeExternal(
+            externalTransferType: .entity,
+            payeeAccountNumber: nil
+        )
+        
+        let cells = makeHistoryItemsForExternal(.entity, detail, nil, nil, nil, "", "")
+        
+        XCTAssertNoDiff(cells, [
+            .payeeName,
+            .payeeCardNumber,
+            .payeeBankBIC,
+            .commentEmpty,
+            .dateEmpty
+        ])
+        XCTAssertEqual(detail.externalTransferType, .entity)
+    }
+
+    // MARK: - test logo
+    
+    func test_logo_sfp() {
+        
+        let detail = makeOperationDetail(transferEnum: .sfp)
+        
+        let (_, model) = makeSUT(transferEnum: .sfp)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic24Sbp)
+    }
+    
+    func test_logo_internet() {
+        
+        let detail = makeOperationDetail(transferEnum: .internet)
+        
+        let (_, model) = makeSUT(transferEnum: .internet)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40TvInternet)
+    }
+    
+    func test_logo_housingAndCommunalService() {
+        
+        let detail = makeOperationDetail(transferEnum: .housingAndCommunalService)
+        
+        let (_, model) = makeSUT(transferEnum: .housingAndCommunalService)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40ZKXServices)
+    }
+    
+    func test_logo_transport() {
+        
+        let detail = makeOperationDetail(transferEnum: .transport)
+        
+        let (_, model) = makeSUT(transferEnum: .transport)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNoDiff(logo, .ic40Transport)
+    }
+    
+    func test_logo_otherTransfer_shouldReturnLogoNil() {
+        
+        let detail = makeOperationDetail(transferEnum: .depositClose)
+        
+        let (_, model) = makeSUT(transferEnum: .depositClose)
+        
+        let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
+        
+        XCTAssertNil(logo)
+    }
+    
+    // MARK: - test makePropertyViewModel
+        
+    func test_makePropertyViewModel_balance_shouldReturnAmount() {
+        
+        let (detail, products) = makeStubs(transferEnum: .internet)
+        
+        let (sut, model) =  makeSUT(
+            transferEnum: .internet,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .balance)
+        
+        XCTAssertNoDiff(cell?.title, "Сумма перевода")
+        XCTAssertNoDiff(cell?.value, model.amount)
+    }
+    
+    func test_makePropertyViewModel_commission_shouldReturnCommission() {
+        
+        let currency: CurrencyData = .rub
+        let (detail, products) = makeStubs(
+            transferEnum: .transport,
+            currency: currency.code
+        )
+        
+        let (sut, model) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [currency]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .commission)
+
+        XCTAssertNoDiff(cell?.title, "Комиссия")
+        XCTAssertNoDiff(cell?.value, model.commission)
+    }
+    
+    func test_makePropertyViewModel_purpose_commentNil_shouldReturnNil() {
+        
+        let detail = makeOperationDetail(
+            comment: nil
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .purpose)
+        
+        XCTAssertNil(cell)
+    }
+
+    func test_makePropertyViewModel_purpose_commentEmpty_shouldReturnNil() {
+        
+        let (detail, products) = makeStubs(
+            comment: ""
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .purpose)
+        
+        XCTAssertNil(cell)
+    }
+    
+    func test_makePropertyViewModel_date_notDepositClose_shouldReturnDate() {
+        
+        let (detail, products) = makeStubs()
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .date)
+        
+        XCTAssertNoDiff(cell?.title, "Дата и время операции (МСК)")
+        XCTAssertNoDiff(cell?.value, "30.06.2023 12:33:28")
+    }
+    
+    func test_makePropertyViewModel_date_depositClose_shouldReturnType() {
+        
+        let (detail, products) = makeStubs(
+            transferEnum: .depositClose
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .depositClose,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .date)
+        
+        XCTAssertNoDiff(cell?.title, "Тип платежа")
+        XCTAssertNoDiff(cell?.value, "Закрытие вклада")
+    }
+    
+    func test_makePropertyViewModel_phone_notSfp_shouldReturnPhone() {
+        
+        let (detail, products) = makeStubs(
+            payeePhone: "+9998887766"
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .phone)
+        
+        XCTAssertNoDiff(cell?.title, "Номер телефона получателя")
+        XCTAssertNoDiff(cell?.value, "+1 999-888-7766")
+    }
+    
+    func test_makePropertyViewModel_phone_sfp_shouldReturnPhone() {
+        
+        let (detail, products) = makeStubs(
+            transferEnum: .sfp,
+            payeePhone: "9998887766"
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .sfp,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .phone)
+        
+        XCTAssertNoDiff(cell?.title, "Номер телефона получателя")
+        XCTAssertNoDiff(cell?.value, "+7 999 888-77-66")
+    }
+    
+    func test_makePropertyViewModel_operationNumber_transferNumberNil_shouldReturnNil() {
+        
+        let (detail, products) = makeStubs()
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .operationNumber)
+        
+        XCTAssertNil(cell)
+    }
+
+    func test_makePropertyViewModel_operationNumber_transferNumberNotNil_shouldReturNumber() {
+        
+        let (detail, products) = makeStubs(transferNumber: "111")
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .operationNumber)
+        
+        XCTAssertNoDiff(cell?.title, "Номер операции СБП")
+        XCTAssertNoDiff(cell?.value, "111")
+    }
+    
+    func test_makePropertyViewModel_default_shouldReturNil() {
+        
+        let (detail, products) = makeStubs(transferNumber: "111")
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .transport,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .file)
+        
+        XCTAssertNil(cell)
+    }
+
     // MARK: - Helpers
     
     private func makeItemsForExternal(
@@ -387,6 +1095,44 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         )
     }
     
+    private func makeStubs(
+        externalTransferType: OperationDetailData.ExternalTransferType? = nil,
+        isTrafficPoliceService: Bool = false,
+        transferEnum: OperationDetailData.TransferEnum? = nil,
+        transferNumber: String? = nil,
+        account: String? = nil,
+        accountTitle: String? = nil,
+        payeeFullName: String? = nil,
+        payeePhone: String? = nil,
+        productID: Int = 123,
+        currency: String = "Rub",
+        comment: String? = "Lorem ipsum dolor sit amet"
+    ) -> (
+        detail: OperationDetailData,
+        products: ProductsData
+    ) {
+        return (
+            makeOperationDetail(
+                externalTransferType: externalTransferType,
+                isTrafficPoliceService: isTrafficPoliceService,
+                transferEnum: transferEnum,
+                transferNumber: transferNumber,
+                account: account,
+                accountTitle: accountTitle,
+                payeeFullName: payeeFullName,
+                payeePhone: payeePhone,
+                productID: productID,
+                comment: comment
+            ),
+            [.card: [
+                .stub(
+                    productId: productID,
+                    currency: currency
+                )
+            ]]
+        )
+    }
+    
     private func makeSUT(
         detail: OperationDetailData? = nil,
         externalTransferType: OperationDetailData.ExternalTransferType = .entity,
@@ -411,14 +1157,15 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         return (sut, model)
     }
-     
+    
     private func makeExternal(
         externalTransferType: OperationDetailData.ExternalTransferType?,
         productID: Int = 123,
         payeeAccountId: Int = 234,
         payeeINN: String? = nil,
         payeeKPP: String? = nil,
-        payerAccountId: Int = 345
+        payerAccountId: Int = 345,
+        payeeAccountNumber: String? = "40802810938050002771"
     ) -> OperationDetailData {
         
         .stub(
@@ -432,10 +1179,11 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             isTrafficPoliceService: false,
             operation: "Перевод юридическому лицу в сторонний банк",
             payeeAccountId: payeeAccountId,
-            payeeAccountNumber: "40802810938050002771",
+            payeeAccountNumber: payeeAccountNumber,
             payeeBankBIC: "044525225",
             payeeBankCorrAccount: "30101810400000000225",
             payeeBankName: "ПАО СБЕРБАНК",
+            payeeCardNumber: "44444",
             payeeCurrency: "RUB",
             payeeFullName: "ИП Домрачев Сергей Николаевич",
             payeeINN: payeeINN,
@@ -463,6 +1211,139 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек"
         )
     }
+    
+    private func makeItemsForTransport(
+        dictionaryAnywayOperator: @escaping (String) -> OperatorGroupData.OperatorData? = { _ in nil },
+        _ operation: OperationDetailData,
+        _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ payerViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
+        _ payeeViewModel: OperationDetailInfoViewModel.ProductCellViewModel?,
+        _ dateViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?
+    ) -> [OperationDetailInfoViewModel.TestCell] {
+        
+        OperationDetailInfoViewModel
+            .makeItemsForTransport(
+                dictionaryAnywayOperator: dictionaryAnywayOperator,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                payeeViewModel,
+                dateViewModel
+            ).map(\.testCell)
+    }
+
+    private func makeSUT(
+        transferEnum: OperationDetailData.TransferEnum?,
+        detail: OperationDetailData? = nil,
+        products: ProductsData = [:],
+        currencyList: [CurrencyData] = [],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: OperationDetailInfoViewModel,
+        model: Model
+    ) {
+        let model: Model = .mockWithEmptyExcept()
+        model.products.value = products
+        model.currencyList.value = currencyList
+        
+        let sut = OperationDetailInfoViewModel(
+            model: model,
+            operation: detail ?? makeOperationDetail(transferEnum: transferEnum),
+            dismissAction: {}
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
+    private func makeOperationDetail(
+        externalTransferType: OperationDetailData.ExternalTransferType? = nil,
+        isTrafficPoliceService: Bool = false,
+        transferEnum: OperationDetailData.TransferEnum? = nil,
+        transferNumber: String? = nil,
+        account: String? = nil,
+        accountTitle: String? = nil,
+        payeeFullName: String? = nil,
+        payeePhone: String? = nil,
+        productID: Int = 123,
+        comment: String? = "Lorem ipsum dolor sit amet"
+    ) -> OperationDetailData {
+        
+        .stub(
+            account: account,
+            accountTitle: accountTitle,
+            amount: 1111.0,
+            claimId: "6e9f2bcf-5cfe-408a-b908-8babc48cb658",
+            comment: comment,
+            currencyAmount: "RUB",
+            dateForDetail: "30 июня 2023, 12:32",
+            externalTransferType: externalTransferType,
+            isForaBank: false,
+            isTrafficPoliceService: isTrafficPoliceService,
+            operation: "Перевод юридическому лицу в сторонний банк",
+            payeeAccountId: 111,
+            payeeAccountNumber: "40802810938050002771",
+            payeeBankBIC: "044525225",
+            payeeBankCorrAccount: "30101810400000000225",
+            payeeBankName: "ПАО СБЕРБАНК",
+            payeeCurrency: "RUB",
+            payeeFullName: payeeFullName,
+            payeeINN: nil,
+            payeeKPP: nil,
+            payeePhone: payeePhone,
+            payerAccountId: 111,
+            payerAccountNumber: "40817810152005001180",
+            payerAddress: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 117546, Москва г, Медынская ул ,  д. 4,  корп. 1,  кв. 12",
+            payerAmount: 1141.0,
+            payerCardId: productID,
+            payerCardNumber: "**** **** **56 7803",
+            payerCurrency: "RUB",
+            payerFee: 30.0,
+            payerFirstName: "Александра",
+            payerFullName: "Меньшикова Александра Андреевна",
+            payerINN: "290219523205",
+            payerMiddleName: "Андреевна",
+            paymentOperationDetailId: 65329,
+            printFormType: .transport,
+            puref: Purefs.iForaMosParking,
+            requestDate: "30.06.2023 12:32:41",
+            responseDate: "30.06.2023 12:33:28",
+            returned: false,
+            transferDate: "30.06.2023",
+            transferEnum: transferEnum,
+            transferNumber: transferNumber,
+            cursivePayerAmount: "Одна тысяча сто сорок один рубль 00 копеек",
+            cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек"
+        )
+    }
+    
+    private func makeHistoryItemsForExternal(
+        dictionaryFullBankInfoBank: @escaping (String) -> BankFullInfoData? = { _ in nil },
+        _ type: OperationDetailData.ExternalTransferType,
+        _ operation: OperationDetailData,
+        _ amountViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ commissionViewModel: OperationDetailInfoViewModel.PropertyCellViewModel?,
+        _ debitAccountViewModel: OperationDetailInfoViewModel.DefaultCellViewModel?,
+        _ comment: String,
+        _ dateString: String
+    ) -> [OperationDetailInfoViewModel.TestCell] {
+        
+        OperationDetailInfoViewModel
+            .makeHistoryItemsForExternal(
+                dictionaryFullBankInfoBank: dictionaryFullBankInfoBank,
+                type,
+                operation,
+                amountViewModel,
+                commissionViewModel,
+                debitAccountViewModel,
+                comment,
+                dateString).map(\.testCell)
+    }
 }
 
 private extension OperationDetailInfoViewModel.DefaultCellViewModel {
@@ -487,6 +1368,7 @@ private extension OperationDetailInfoViewModel {
 private extension OperationDetailInfoViewModel.TestCell {
     
     static let payee: Self = .property(title: "Получатель", value: "ИП Домрачев Сергей Николаевич")
+    static let payeeName: Self = .property(title: "Наименование получателя", value: "ИП Домрачев Сергей Николаевич")
     static let payeeAccountNumber: Self = .property(title: "Номер счета получателя", value: "40802810938050002771")
     static let payeeBankBIC: Self = .bank(title: "Бик банка получателя", name: "044525225")
     static let payeeINN: Self = .property(title: "ИНН получателя", value: "772016190450")
@@ -496,6 +1378,9 @@ private extension OperationDetailInfoViewModel.TestCell {
     static let fee: Self = .property(title: "Fee", value: "345")
     static let payer: Self = .product(title: "payer", name: "Payer", balance: "9876", description: "PayerDescription")
     static let date: Self = .property(title: "Дата и время операции (МСК)", value: "30.06.2023 12:33:28")
+    static let dateEmpty: Self = .property(title: "Дата и время операции (МСК)", value: "")
+    static let commentEmpty: Self = .property(title: "Назначение платежа", value: "")
+    static let payeeCardNumber: Self = .property(title: "Номер счета получателя",value: "44444")
 }
 
 private extension OperationDetailInfoViewModel.TestCell {
@@ -702,4 +1587,15 @@ private extension OperationDetailData {
             paymentMethod: paymentMethod
         )
     }
+}
+
+private extension BankFullInfoData {
+    
+    static let bank: Self = .init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: "16.06.2016 00:00:00", regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525225", engName: "TINKOFF BANK", fiasId: "string", fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: "string", kpp: "string", latitude: 0, longitude: 0, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: "100000000004", name: "Tinkoff Bank", receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: "2673", rusName: "Тинькофф Банк", senderList: ["string"], svgImage: .init(description: "string"), swiftList: [.init(default: true, swift: "TICSRUMMXXX")])
+}
+
+private extension Model {
+    
+    var amount: String? { self.amountFormatted(amount: 1141, currencyCode: "RUB", style: .fraction) }
+    var commission: String? { self.amountFormatted(amount: 30, currencyCode: "RUB", style: .fraction) }
 }

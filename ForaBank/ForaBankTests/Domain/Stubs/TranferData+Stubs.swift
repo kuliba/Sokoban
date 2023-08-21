@@ -8,18 +8,36 @@
 import Foundation
 @testable import ForaBank
 
+extension TransferGeneralData.PayeeExternal {
+    static let stub = TransferGeneralData.PayeeExternal(
+        inn: "7733126977",
+        kpp: "773301001",
+        accountId: nil,
+        accountNumber: "40702810238170103538",
+        bankBIC: "044525225",
+        cardId: nil,
+        cardNumber: nil,
+        compilerStatus: nil,
+        date: nil,
+        name: "Эстейт Сервис",
+        tax: nil
+    )
+}
+
 extension TransferGeneralData {
     
     static func generalStub(
+        payeeExternal: TransferGeneralData.PayeeExternal? = .stub,
         amount: Decimal? = 0,
-        phoneNumber: String? = "number"
+        phoneNumber: String? = "number",
+        cardId: Int = 1
     ) -> [TransferGeneralData] {
         
         let payer = TransferData.Payer(
-            inn: nil,
-            accountId: nil,
-            accountNumber: nil,
-            cardId: 1,
+            inn: "inn",
+            accountId: 1,
+            accountNumber: "accountNumber",
+            cardId: cardId,
             cardNumber: nil,
             phoneNumber: "number"
         )
@@ -31,19 +49,7 @@ extension TransferGeneralData {
                 comment: "comment",
                 currencyAmount: "RUB",
                 payer: payer,
-                payeeExternal: .init(
-                    inn: "7733126977",
-                    kpp: "773301001",
-                    accountId: nil,
-                    accountNumber: "40702810238170103538",
-                    bankBIC: "044525225",
-                    cardId: nil,
-                    cardNumber: nil,
-                    compilerStatus: nil,
-                    date: nil,
-                    name: "Эстейт Сервис",
-                    tax: nil
-                ),
+                payeeExternal: payeeExternal,
                 payeeInternal: .init(
                     accountId: nil,
                     accountNumber: nil,

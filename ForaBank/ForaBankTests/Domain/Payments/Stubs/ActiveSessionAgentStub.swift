@@ -30,7 +30,7 @@ final class ActiveSessionAgentStub: SessionAgentProtocol {
     }
 }
 
-private final class CSRFAgentDummy: CSRFAgentProtocol {
+final class CSRFAgentDummy: CSRFAgentProtocol {
     
     let publicKeyData = "CSRFAgentDummy"
     
@@ -52,7 +52,7 @@ private final class CSRFAgentDummy: CSRFAgentProtocol {
     )
 }
 
-private final class EncryptionAgentDummy: EncryptionAgent {
+final class EncryptionAgentDummy: EncryptionAgent {
     
     init(with keyData: Data) {}
     

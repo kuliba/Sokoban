@@ -24,9 +24,50 @@ class ProductDepositDataTests: XCTestCase {
         }
         return expirationDate
     }
-}
-
-extension ProductDepositDataTests {
+    
+    //MARK: - test encode
+    
+    func test_encoding_endDateNil() throws {
+        
+        // given
+        let command = ServerCommands.ProductController.GetProductListByType.Response.List(
+            serial: "",
+            productList: [Self.interestDeposit(
+                endDate: nil,
+                demandDeposit: true)]
+        )
+        
+        // when
+        let encoder = JSONEncoder.serverDate
+        
+        let result = try encoder.encode(command.productList)
+        let resultString = String(decoding: result, as: UTF8.self)
+        
+        // then
+        XCTAssertEqual(resultString, .interestDeposit)
+    }
+    
+    func test_encoding_endDateNotNil() throws {
+        
+        let endDate = Date()
+        
+        // given
+        let command = ServerCommands.ProductController.GetProductListByType.Response.List(
+            serial: "",
+            productList: [Self.interestDeposit(
+                endDate: endDate,
+                demandDeposit: true)]
+        )
+        
+        // when
+        let encoder = JSONEncoder.serverDate
+        
+        let result = try encoder.encode(command.productList)
+        let resultString = String(decoding: result, as: UTF8.self)
+        
+        // then
+        XCTAssertNoDiff(resultString, .interestDeposit(by: endDate))
+    }
     
     func test_demandDeposit_shouldSetup_valueAllowCredit() {
         
@@ -116,11 +157,7 @@ extension ProductDepositDataTests {
         XCTAssertEqual(deposit.depositType, .forahit)
     }
     
-}
-
-//MARK: test availableTransferType
-
-extension ProductDepositDataTests {
+    //MARK: test availableTransferType
     
     //MARK: tests DemanDeposit
     func test_demandDeposits_shouldAvailableTransferType_onRemains() {
@@ -141,121 +178,6 @@ extension ProductDepositDataTests {
         XCTAssertEqual(transferType, .remains)
     }
   
-    //MARK: tests ForaHit
-    func test_forahitDeposits_shouldAvailableTransferType_onClose() {
-        
-        // given
-        let endDateNf = true
-        let endDate: Date? = nil
-        let demandDeposit = false
-        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
-        
-        // when
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .close(balance))
-    }
-    
-    func test_forahitDeposits_shouldAvailableTransferType_onInterest() {
-        
-        // given
-        let endDateNf = true
-        let endDate: Date? = nil
-        let demandDeposit = false
-        let depositInfo: DepositInfoDataItem? = nil
-        
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .interest(0))
-    }
-    
-    func test_forahitDeposits_shouldAvailableTransferType_ForaHit_onEndDate_ValueNil() {
-        
-        // given
-        let endDateNf = false
-        let endDate: Date? = nil
-        let demandDeposit = false
-        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
-        
-        // when
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .remains)
-    }
-    
-    func test_forahitDeposits_shouldAvailableTransferType_ForaHit_onEndDateExpired_withPercents() {
-        
-        // given
-        let endDateNf = false
-        let endDate = expirationDate
-        let demandDeposit = false
-        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
-        
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .interest(sumPayPrc))
-    }
-    
-    func test_forahitDeposits_shouldAvailableTransferType_ForaHit_onEndDateNorExpired_withPercents() {
-        
-        // given
-        let endDateNf = false
-        let endDate = expirationDate
-        let demandDeposit = false
-        let depositInfo: DepositInfoDataItem? = nil
-
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .interest(0))
-    }
-    
-    func test_forahitDeposits_shouldAvailableTransferType_ForaHit_onEndDateNotExpired_withPercents() {
-        
-        // given
-        let endDateNf = false
-        let endDate = pastDate
-        let demandDeposit = false
-        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
-
-        let deposit = Self.mutableDeposit(endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
-        
-        // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
-        
-        //then
-        XCTAssertEqual(transferType, .remains)
-    }
-    
     //MARK: tests otherDeposits
     
     func test_otherDeposits_shouldAvailableTransferType_onEndDateNf() {
@@ -299,9 +221,124 @@ extension ProductDepositDataTests {
         //then
         XCTAssertEqual(transferType, nil)
     }
+    
+    //MARK: tests interestDeposit
+    func test_interestDeposits_shouldAvailableTransferType_onClose() {
+        
+        // given
+        let endDateNf = true
+        let endDate: Date? = nil
+        let demandDeposit = false
+        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
+        
+        // when
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .close(balance))
+    }
+    
+    func test_interestDeposit_shouldAvailableTransferType_onInterest() {
+        
+        // given
+        let endDateNf = true
+        let endDate: Date? = nil
+        let demandDeposit = false
+        let depositInfo: DepositInfoDataItem? = nil
+        
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        // when
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .interest(0))
+    }
+    
+    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDate_ValueNil() {
+        
+        // given
+        let endDateNf = false
+        let endDate: Date? = nil
+        let demandDeposit = false
+        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
+        
+        // when
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .remains)
+    }
+    
+    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateExpired_withPercents() {
+        
+        // given
+        let endDateNf = false
+        let endDate = expirationDate
+        let demandDeposit = false
+        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
+        
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        // when
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .interest(sumPayPrc))
+    }
+    
+    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateNorExpired_withPercents() {
+        
+        // given
+        let endDateNf = false
+        let endDate = expirationDate
+        let demandDeposit = false
+        let depositInfo: DepositInfoDataItem? = nil
+        
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        // when
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .interest(0))
+    }
+    
+    func test_interestDeposit_shouldAvailableTransferType_ForaHit_onEndDateNotExpired_withPercents() {
+        
+        // given
+        let endDateNf = false
+        let endDate = pastDate
+        let demandDeposit = false
+        let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
+        
+        let deposit = Self.interestDeposit(endDateNf: endDateNf,
+                                           endDate: endDate,
+                                           demandDeposit: demandDeposit)
+        
+        // when
+        let transferType = deposit.availableTransferType(with: depositInfo)
+        
+        //then
+        XCTAssertEqual(transferType, .remains)
+    }
 }
 
-extension ProductDepositDataTests {
+private extension ProductDepositDataTests {
     
     static func mutableDepositInfo(sumPayPrc: Double) -> DepositInfoDataItem {
         
@@ -320,10 +357,16 @@ extension ProductDepositDataTests {
                                    dateNext: nil)
     }
     
-    static func mutableDeposit(depositId: Int = 10000003792, endDateNf: Bool = false, endDate: Date?, demandDeposit: Bool) -> ProductDepositData {
+    static func mutableDeposit(
+        depositId: Int = 10000003792,
+        endDateNf: Bool = false,
+        endDate: Date?,
+        demandDeposit: Bool,
+        isDebitInterestAvailable: Bool? = false
+    ) -> ProductDepositData {
         
         return ProductDepositData(id: 30,
-                                  productType: .loan,
+                                  productType: .deposit,
                                   number: nil,
                                   numberMasked: nil,
                                   accountNumber: nil,
@@ -354,9 +397,39 @@ extension ProductDepositDataTests {
                                   endDate: endDate,
                                   endDateNf: endDateNf,
                                   isDemandDeposit: demandDeposit,
+                                  isDebitInterestAvailable: isDebitInterestAvailable,
                                   order: 0,
                                   visibility: true,
                                   smallDesignMd5hash: "",
                                   smallBackgroundDesignHash: "")
+    }
+    
+    static func interestDeposit(
+        depositId: Int = 111111111,
+        endDateNf: Bool = false,
+        endDate: Date?,
+        demandDeposit: Bool,
+        isDebitInterestAvailable: Bool? = true
+    ) -> ProductDepositData {
+        
+        return mutableDeposit(
+            depositId: depositId,
+            endDateNf: endDateNf,
+            endDate: endDate,
+            demandDeposit: demandDeposit,
+            isDebitInterestAvailable: isDebitInterestAvailable
+        )
+    }
+}
+
+private extension String {
+    
+    static let interestDeposit = "[{\"XLDesign\":\"\",\"mainField\":\"Dep\",\"branchId\":0,\"allowCredit\":true,\"allowDebit\":true,\"largeDesign\":\"\",\"mediumDesign\":\"\",\"minimumBalance\":0,\"smallDesignMd5hash\":\"\",\"endDate_nf\":false,\"currency\":\"RUB\",\"ownerID\":0,\"background\":[],\"depositProductID\":111111111,\"depositID\":0,\"smallDesign\":\"\",\"productType\":\"DEPOSIT\",\"isDebitInterestAvailable\":true,\"demandDeposit\":true,\"visibility\":true,\"smallBackgroundDesignHash\":\"\",\"id\":30,\"accountID\":0,\"accountNumber\":null,\"creditMinimumAmount\":0,\"interestRate\":0,\"productName\":\"Dep\",\"fontDesignColor\":\"\",\"order\":0}]"
+    
+    static func interestDeposit(
+        by endDate: Date
+    ) -> String {
+        
+        return "[{\"allowCredit\":true,\"mainField\":\"Dep\",\"branchId\":0,\"allowDebit\":true,\"XLDesign\":\"\",\"largeDesign\":\"\",\"mediumDesign\":\"\",\"minimumBalance\":0,\"smallDesignMd5hash\":\"\",\"endDate_nf\":false,\"currency\":\"RUB\",\"ownerID\":0,\"background\":[],\"depositProductID\":111111111,\"depositID\":0,\"smallDesign\":\"\",\"productType\":\"DEPOSIT\",\"isDebitInterestAvailable\":true,\"endDate\":\(endDate.secondsSince1970UTC),\"demandDeposit\":true,\"visibility\":true,\"id\":30,\"accountID\":0,\"smallBackgroundDesignHash\":\"\",\"accountNumber\":null,\"creditMinimumAmount\":0,\"interestRate\":0,\"productName\":\"Dep\",\"fontDesignColor\":\"\",\"order\":0}]"
     }
 }

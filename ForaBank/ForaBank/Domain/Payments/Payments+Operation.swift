@@ -295,11 +295,11 @@ extension Payments.Operation {
     
     var productId: ProductData.ID? {
         
-        guard let productParameter = parameters.first(where: { $0.id == Payments.Parameter.Identifier.product.rawValue }) as? Payments.ParameterProduct else {
+        guard let productParameter = try? parameters.value(forIdentifier: .product) else {
             return nil
         }
         
-        return productParameter.productId
+        return Int(productParameter)
     }
     
     var isConfirmCurrentStage: Bool {
@@ -315,6 +315,14 @@ extension Payments.Operation {
     private var currentStage: Payments.Operation.Stage? {
         
         steps.last?.back.stage
+    }
+    
+    var isLastProcessStep: Payments.Operation.Step? {
+        
+        self.steps.filter({
+            
+            !$0.contains(parameterId: Payments.Parameter.Identifier.code.rawValue)
+        }).last
     }
 }
 

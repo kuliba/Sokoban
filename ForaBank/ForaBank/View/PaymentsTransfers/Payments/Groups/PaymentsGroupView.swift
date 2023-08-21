@@ -19,7 +19,7 @@ struct PaymentsGroupView: View {
             ForEach(viewModel.items) { itemViewModel in
                 
                 itemView(for: itemViewModel)
-                    .frame(minHeight: 72)
+                    .frame(minHeight: frameMinHeight(for: itemViewModel))
                     .background(
                         RoundedCorner(radius: 12, corners: backgroundCorners(for: itemViewModel))
                             .foregroundColor(backgroundColor(for: itemViewModel)))
@@ -39,16 +39,7 @@ extension PaymentsGroupView {
         switch itemViewModel.source {
         case _ as Payments.ParameterMessage:
             return []
-            
-        case _ as Payments.ParameterAmount:
-            return []
-         
-        case _ as Payments.ParameterCheck:
-            return []
-            
-        case _ as Payments.ParameterContinue:
-            return []
-            
+
         default:
             if viewModel.items.count > 1 {
                 
@@ -77,15 +68,21 @@ extension PaymentsGroupView {
         case _ as Payments.ParameterMessage:
             return .mainColorsBlack
             
-        case _ as Payments.ParameterAmount:
-            return .clear
-        
-        case _ as Payments.ParameterCheck:
+        case _ as Payments.ParameterAmount,
+            _ as Payments.ParameterButton,
+            _ as Payments.ParameterCheck,
+            _ as Payments.ParameterSuccessStatus,
+            _ as Payments.ParameterSuccessText,
+            _ as Payments.ParameterSuccessIcon,
+            _ as Payments.ParameterSuccessOptionButtons,
+            _ as Payments.ParameterSuccessLink,
+            _ as Payments.ParameterSubscriber,
+            _ as Payments.ParameterSubscribe,
+            _ as Payments.ParameterSuccessLogo,
+            _ as Payments.ParameterSuccessOptions,
+            _ as Payments.ParameterSuccessService:
             return .clear
             
-        case _ as Payments.ParameterContinue:
-            return .clear
-
         default:
             switch itemViewModel.source.style {
             case .light:
@@ -100,17 +97,31 @@ extension PaymentsGroupView {
     func horizontalPadding(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
         
         switch itemViewModel.source {
-        case _ as Payments.ParameterMessage:
-            return 0
-            
-        case _ as Payments.ParameterAmount:
-            return 0
-            
-        case _ as Payments.ParameterContinue:
+        case _ as Payments.ParameterMessage,
+            _ as Payments.ParameterAmount:
             return 0
             
         default:
             return 16
+        }
+    }
+    
+    func frameMinHeight(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
+        
+        switch itemViewModel.source {
+        case _ as Payments.ParameterSuccessStatus,
+            _ as Payments.ParameterSuccessText,
+            _ as Payments.ParameterSuccessIcon,
+            _ as Payments.ParameterSuccessOptionButtons,
+            _ as Payments.ParameterSuccessLink,
+            _ as Payments.ParameterSubscriber,
+            _ as Payments.ParameterSuccessService,
+            _ as Payments.ParameterSuccessLogo,
+            _ as Payments.ParameterButton:
+            return 0
+            
+        default:
+            return 72
         }
     }
     
@@ -158,14 +169,11 @@ extension PaymentsGroupView {
             PaymentsCodeView(viewModel: codeViewModel)
                 .onAppear {
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        //FIXME: get rid of this!!!
-                        IQKeyboardManager.shared.enable = true
-                        IQKeyboardManager.shared.enableAutoToolbar = true
-                        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-                        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
-                    }
+                    //FIXME: get rid of this!!!
+                    IQKeyboardManager.shared.enable = true
+                    IQKeyboardManager.shared.enableAutoToolbar = true
+                    IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+                    IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
                 }
                 .onDisappear {
                     
@@ -173,12 +181,49 @@ extension PaymentsGroupView {
                     IQKeyboardManager.shared.enableAutoToolbar = false
                 }
             
-        case let continueButtonViewModel as PaymentsContinueButtonView.ViewModel:
-            PaymentsContinueButtonView(viewModel: continueButtonViewModel)
+        case let continueButtonViewModel as PaymentsButtonView.ViewModel:
+            PaymentsButtonView(viewModel: continueButtonViewModel)
                 .padding(.bottom, 16)
+            
+        case let subscriberViewModel as PaymentsSubscriberView.ViewModel:
+            PaymentsSubscriberView(viewModel: subscriberViewModel)
+            
+        case let subscribeVewModel as PaymentsSubscribeView.ViewModel:
+            PaymentsSubscribeView(viewModel: subscribeVewModel)
             
         case let amountViewModel as PaymentsAmountView.ViewModel:
             PaymentsAmountView(viewModel: amountViewModel)
+            
+        case let successStatus as PaymentsSuccessStatusView.ViewModel:
+            PaymentsSuccessStatusView(viewModel: successStatus)
+                .padding(.top, 130)
+            
+        case let successText as PaymentsSuccessTextView.ViewModel:
+            PaymentsSuccessTextView(viewModel: successText)
+            
+        case let successIcon as PaymentsSuccessIconView.ViewModel:
+            PaymentsSuccessIconView(viewModel: successIcon)
+            
+        case let successOptionButtons as PaymentsSuccessOptionButtonsView.ViewModel:
+            PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
+            
+        case let successLink as PaymentsSuccessLinkView.ViewModel:
+            PaymentsSuccessLinkView(viewModel: successLink)
+            
+        case let successAdditionalButtons as PaymentsSuccessAdditionalButtonsView.ViewModel:
+            PaymentsSuccessAdditionalButtonsView(viewModel: successAdditionalButtons)
+            
+        case let successTransferNumber as PaymentsSuccessTransferNumberView.ViewModel:
+            PaymentsSuccessTransferNumberView(viewModel: successTransferNumber)
+            
+        case let successLogo as PaymentsSuccessLogoView.ViewModel:
+            PaymentsSuccessLogoView(viewModel: successLogo)
+            
+        case let successOptions as PaymentsSuccessOptionsView.ViewModel:
+            PaymentsSuccessOptionsView(viewModel: successOptions)
+            
+        case let successService as PaymentsSuccessServiceView.ViewModel:
+            PaymentsSuccessServiceView(viewModel: successService)
             
         default:
             EmptyView()
@@ -199,6 +244,29 @@ extension PaymentsGroupView {
         } else  {
             
             EmptyView()
+        }
+    }
+}
+
+//MARK: - Factory
+
+extension PaymentsGroupView {
+    
+    @ViewBuilder
+    static func groupView(for groupViewModel: PaymentsGroupViewModel) -> some View {
+        
+        switch groupViewModel {
+        case let contactGroupViewModel as PaymentsContactGroupViewModel:
+            PaymentsContactGroupView(viewModel: contactGroupViewModel)
+            
+        case let infoGroupViewModel as PaymentsInfoGroupViewModel:
+            PaymentsInfoGroupView(viewModel: infoGroupViewModel)
+            
+        case let spoilerGroupViewModel as PaymentsSpoilerGroupViewModel:
+            PaymentsSpoilerGroupView(viewModel: spoilerGroupViewModel)
+            
+        default:
+            PaymentsGroupView(viewModel: groupViewModel)
         }
     }
 }
@@ -255,6 +323,12 @@ struct PaymentsGroupView_Previews: PreviewProvider {
             PaymentsGroupView(viewModel: .sampleSingleAmount)
                 .previewDisplayName("Amount")
             
+            PaymentsGroupView(viewModel: .sampleSuccessStatus)
+                .previewDisplayName("Success status")
+            
+            PaymentsGroupView(viewModel: .sampleSuccessText)
+                .previewDisplayName("Success text")
+            
         }.previewLayout(.fixed(width: 375, height: 120))
         
         PaymentsGroupView(viewModel: .sampleGroup)
@@ -269,7 +343,7 @@ extension PaymentsGroupViewModel {
     
     static let sampleSingleMessage = PaymentsGroupViewModel(items: [PaymentsMessageView.ViewModel.sample])
     
-    static let sampleSingleSelect = PaymentsGroupViewModel(items: [PaymentsSelectView.ViewModel.selectedParameter])
+    static let sampleSingleSelect = PaymentsGroupViewModel(items: [PaymentsSelectView.ViewModel.selectedDisabled])
     
     static let sampleSingleSelectBank = PaymentsGroupViewModel(items: [PaymentsSelectBankView.ViewModel.sampleParameter])
     
@@ -277,7 +351,7 @@ extension PaymentsGroupViewModel {
     
     static let sampleSingleSelectDropDown = PaymentsGroupViewModel(items: [PaymentSelectDropDownView.ViewModel.sample])
     
-    static let sampleSingleInput = PaymentsGroupViewModel(items: [PaymentsInputView.ViewModel.sampleValue])
+    static let sampleSingleInput = PaymentsGroupViewModel(items: [PaymentsInputView.ViewModel.sample])
     
     static let sampleSingleInputPhone = PaymentsGroupViewModel(items: [PaymentsInputPhoneView.ViewModel.samplePhone])
     
@@ -291,15 +365,19 @@ extension PaymentsGroupViewModel {
     
     static let sampleSingleCode = PaymentsGroupViewModel(items: [PaymentsCodeView.ViewModel.sample])
     
-    static let sampleSingleContinue = PaymentsGroupViewModel(items: [PaymentsContinueButtonView.ViewModel.sampleParam])
+    static let sampleSingleContinue = PaymentsGroupViewModel(items: [PaymentsButtonView.ViewModel.sampleParam])
     
     static let sampleSingleAmount = PaymentsGroupViewModel(items: [PaymentsAmountView.ViewModel.amountParameter])
+    
+    static let sampleSuccessStatus = PaymentsGroupViewModel(items: [PaymentsSuccessStatusView.ViewModel.sampleSuccess])
+    
+    static let sampleSuccessText = PaymentsGroupViewModel(items: [PaymentsSuccessTextView.ViewModel.sampleTitle])
     
     static let sampleGroup = PaymentsGroupViewModel(items: [
         PaymentsSelectBankView.ViewModel.sampleParameter,
         PaymentsSelectCountryView.ViewModel.sample,
         PaymentSelectDropDownView.ViewModel.sample,
-        PaymentsInputView.ViewModel.sampleValue,
+        PaymentsInputView.ViewModel.sample,
         PaymentsInputPhoneView.ViewModel.samplePhone,
         PaymentsCheckView.ViewModel.sample,
         PaymentsInfoView.ViewModel.sampleParameter,
@@ -307,17 +385,4 @@ extension PaymentsGroupViewModel {
         PaymentsProductView.ViewModel.sample,
         PaymentsCodeView.ViewModel.sample
     ])
-}
-
-extension PaymentsInputView.ViewModel {
-    
-    static let sampleEmpty = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: .init(limit: 9)))
-    
-    static let sampleValue = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil))
-    
-    static let sampleValueNotEditable = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .anyValue, limitator: nil, isEditable: false))
-    
-    static let samplePhone = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "+9 925 555-5555"), icon: .init(named: "ic24Smartphone")!, title: "Номер телефона получателя", validator: .anyValue, limitator: nil, isEditable: false))
-    
-    static let sampleWarning = PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "123"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(rules: [Payments.Validation.MinLengthRule(minLenght: 5, actions: [.post: .warning("Минимальная длинна 5 символов")])]), limitator: nil))
 }

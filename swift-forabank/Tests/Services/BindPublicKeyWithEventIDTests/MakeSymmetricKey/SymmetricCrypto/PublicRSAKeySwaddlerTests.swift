@@ -1,0 +1,286 @@
+//
+//  PublicRSAKeySwaddlerTests.swift
+//  
+//
+//  Created by Igor Malyarov on 07.08.2023.
+//
+
+import BindPublicKeyWithEventID
+import XCTest
+
+final class PublicRSAKeySwaddlerTests: XCTestCase {
+    
+    func test_init_shouldNotCallSaveKey() {
+        
+        let (_, spy, _) = makeSUT()
+        
+        XCTAssertEqual(spy.saveKeyCallCount, 0)
+    }
+    
+    func test_init_shouldNotCallEncryption() {
+        
+        let (_, _, spy) = makeSUT()
+        
+        XCTAssertEqual(spy.generateRSA4096BitKeysCallCount, 0)
+        XCTAssertEqual(spy.encryptOTPWithRSAKeyCallCount, 0)
+        XCTAssertEqual(spy.aesEncrypt128bitChunksCallCount, 0)
+    }
+    
+    func test_swaddle_shouldDeliverDataOnSuccessfulEncryptionAndKeySaving() throws {
+        
+        let sut = makeSUT().sut
+        
+        XCTAssertNoThrow(try sut.swaddle(with: anyOTP()))
+    }
+    
+    func test_swaddle_shouldDeliverSaveKeyErrorOnFailingStorage() throws {
+        
+        let saveError = anyError("save error")
+        let (sut, _, _) = makeSUT(
+            saveResult: .failure(saveError)
+        )
+        
+        try XCTAssertThrowsError(sut.swaddle(with: anyOTP())) {
+            
+            XCTAssertNoDiff(
+                $0 as NSError,
+                saveError as NSError
+            )
+        }
+    }
+    
+    func test_swaddle_shouldRetryAndDeliverGenerateKeysErrorOnFailingKeyGeneration() throws {
+        
+        let generateKeysError = anyError("generate keys error")
+        let (sut, _, spy) = makeSUT(
+            generateRSA4096BitKeysResults: [
+                .failure(generateKeysError),
+                .failure(generateKeysError)
+            ])
+        
+        try XCTAssertThrowsError(sut.swaddle(with: anyOTP())) {
+            
+            XCTAssertNoDiff(
+                $0 as NSError,
+                generateKeysError as NSError
+            )
+        }
+        XCTAssertEqual(spy.generateRSA4096BitKeysCallCount, 2)
+    }
+    
+    func test_swaddle_shouldRetryOnFailingKeyGeneration() throws {
+        
+        let generateKeysError = anyError("generate keys error")
+        let (sut, _, spy) = makeSUT(
+            generateRSA4096BitKeysResults: [
+                .failure(generateKeysError),
+                success()
+            ])
+        
+        try XCTAssertNoThrow(sut.swaddle(with: anyOTP()))
+        XCTAssertEqual(spy.generateRSA4096BitKeysCallCount, 2)
+    }
+    
+    func test_swaddle_shouldDeliverEncryptOTPWithRSAKeyErrorFailingEncryption() throws {
+        
+        let encryptOTPWithRSAKeyError = anyError("encrypt OTP with RSA key error")
+        let (sut, _, spy) = makeSUT(
+            encryptOTPWithRSAKeyResults: [
+                .failure(encryptOTPWithRSAKeyError),
+                .failure(encryptOTPWithRSAKeyError)
+            ])
+        
+        try XCTAssertThrowsError(sut.swaddle(with: anyOTP())) {
+            
+            XCTAssertNoDiff(
+                $0 as NSError,
+                encryptOTPWithRSAKeyError as NSError
+            )
+        }
+        XCTAssertEqual(spy.encryptOTPWithRSAKeyCallCount, 2)
+    }
+    
+    func test_swaddle_shouldRetryEncryptOTPWithRSAKeyErrorFailingEncryption() throws {
+        
+        let encryptOTPWithRSAKeyError = anyError("encrypt OTP with RSA key error")
+        let (sut, _, spy) = makeSUT(
+            encryptOTPWithRSAKeyResults: [
+                .failure(encryptOTPWithRSAKeyError),
+                success()
+            ])
+        
+        try XCTAssertNoThrow(sut.swaddle(with: anyOTP()))
+        XCTAssertEqual(spy.encryptOTPWithRSAKeyCallCount, 2)
+    }
+    
+    func test_swaddle_shouldDeliverAESEncrypt128bitChunksErrorFailingEncryption() throws {
+        
+        let aesEncrypt128bitChunks = anyError("AES encrypt 128 bit chunks error")
+        let (sut, _, _) = makeSUT(
+            aesEncrypt128bitChunksResult: .failure(aesEncrypt128bitChunks)
+        )
+        
+        try XCTAssertThrowsError(sut.swaddle(with: anyOTP())) {
+            
+            XCTAssertNoDiff(
+                $0 as NSError,
+                aesEncrypt128bitChunks as NSError
+            )
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(
+        generateRSA4096BitKeysResults: [GenerateRSA4096BitKeysResult] = [success(), success()],
+        encryptOTPWithRSAKeyResults: [EncryptOTPWithRSAKeyResult] = [success()],
+        aesEncrypt128bitChunksResult: AESEncrypt128bitChunksResult = success(),
+        saveResult: SaveResult = success(),
+        
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: TestPublicRSAKeySwaddler,
+        keyStorageSpy: KeyStorageSpy,
+        swaddlerSpy: SwaddlerSpy
+    ) {
+        
+        let keyStorageSpy = KeyStorageSpy(saveResult: saveResult)
+        let swaddlerSpy = SwaddlerSpy(
+            generateRSA4096BitKeysResults: generateRSA4096BitKeysResults,
+            encryptOTPWithRSAKeyResults: encryptOTPWithRSAKeyResults,
+            aesEncrypt128bitChunksResult: aesEncrypt128bitChunksResult
+        )
+        
+        let sut = TestPublicRSAKeySwaddler(
+            generateRSA4096BitKeys: swaddlerSpy.generateRSA4096BitKeys,
+            encryptOTPWithRSAKey: swaddlerSpy.encryptOTPWithRSAKey,
+            saveKeys: keyStorageSpy.saveKeys,
+            aesEncrypt128bitChunks: swaddlerSpy.aesEncrypt128bitChunks
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(keyStorageSpy, file: file, line: line)
+        trackForMemoryLeaks(swaddlerSpy, file: file, line: line)
+        
+        return (sut, keyStorageSpy, swaddlerSpy)
+    }
+    
+    fileprivate struct TestPrivateKey {
+        
+        let value: String
+    }
+    
+    fileprivate struct TestPublicKey: RawRepresentational {
+        
+        let value: String
+        
+        var rawRepresentation: Data { value.data(using: .utf8)! }
+    }
+    
+    private func anyOTP(_ value: String = "any OTP") -> OTP {
+        
+        .init(value: value)
+    }
+    
+    fileprivate final class SwaddlerSpy {
+        
+        typealias GenerateRSA4096BitKeysResult = Result<(TestPrivateKey, TestPublicKey), Error>
+        typealias EncryptOTPWithRSAKeyResult = Result<Data, Error>
+        typealias AESEncrypt128bitChunksResult = Result<Data, Error>
+        
+        private(set) var generateRSA4096BitKeysCallCount = 0
+        private(set) var encryptOTPWithRSAKeyCallCount = 0
+        private(set) var aesEncrypt128bitChunksCallCount = 0
+        
+        private var generateRSA4096BitKeysResults: [GenerateRSA4096BitKeysResult]
+        private var encryptOTPWithRSAKeyResults: [EncryptOTPWithRSAKeyResult]
+        private let aesEncrypt128bitChunksResult: AESEncrypt128bitChunksResult
+        
+        init(
+            generateRSA4096BitKeysResults: [GenerateRSA4096BitKeysResult],
+            encryptOTPWithRSAKeyResults: [EncryptOTPWithRSAKeyResult],
+            aesEncrypt128bitChunksResult: AESEncrypt128bitChunksResult
+        ) {
+            self.generateRSA4096BitKeysResults = generateRSA4096BitKeysResults
+            self.encryptOTPWithRSAKeyResults = encryptOTPWithRSAKeyResults
+            self.aesEncrypt128bitChunksResult = aesEncrypt128bitChunksResult
+        }
+        
+        func generateRSA4096BitKeys(
+        ) throws -> (TestPrivateKey, TestPublicKey) {
+            
+            generateRSA4096BitKeysCallCount += 1
+            return try generateRSA4096BitKeysResults.removeFirst().get()
+        }
+        
+        func encryptOTPWithRSAKey(
+            _ otp: OTP,
+            _ privateKey: TestPrivateKey
+        ) throws -> Data {
+            
+            encryptOTPWithRSAKeyCallCount += 1
+            return try encryptOTPWithRSAKeyResults.removeFirst().get()
+        }
+        
+        func aesEncrypt128bitChunks(_ data: Data) throws -> Data {
+            
+            aesEncrypt128bitChunksCallCount += 1
+            return try aesEncrypt128bitChunksResult.get()
+        }
+    }
+    
+    fileprivate final class KeyStorageSpy {
+        
+        typealias SaveResult = Result<Void, Error>
+        
+        private(set) var saveKeyCallCount = 0
+        
+        private let saveResult: SaveResult
+        
+        init(saveResult: SaveResult) {
+            
+            self.saveResult = saveResult
+        }
+        
+        func saveKeys(
+            _ privateKey: TestPrivateKey,
+            _ publicKey: TestPublicKey
+        ) throws -> Void {
+            
+            saveKeyCallCount += 1
+            return try saveResult.get()
+        }
+    }
+}
+
+fileprivate typealias TestPublicRSAKeySwaddler = PublicRSAKeySwaddler<PublicRSAKeySwaddlerTests.TestPrivateKey, PublicRSAKeySwaddlerTests.TestPublicKey>
+fileprivate typealias GenerateRSA4096BitKeysResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.GenerateRSA4096BitKeysResult
+fileprivate typealias EncryptOTPWithRSAKeyResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.EncryptOTPWithRSAKeyResult
+fileprivate typealias AESEncrypt128bitChunksResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.AESEncrypt128bitChunksResult
+fileprivate typealias SaveResult = PublicRSAKeySwaddlerTests.KeyStorageSpy.SaveResult
+
+private func success() -> GenerateRSA4096BitKeysResult {
+    
+    .success((.init(value: "private"), .init(value: "public")))
+}
+
+private func success() -> EncryptOTPWithRSAKeyResult {
+    
+    .success(anyData())
+}
+
+private func success() -> SaveResult {
+    
+    .success(())
+}
+
+private func failure(_ message: String = "save key error") -> SaveResult {
+    
+    .failure(anyError(message))
+}
+
+private func failure() -> EncryptOTPWithRSAKeyResult {
+    
+    .failure(anyError())
+}

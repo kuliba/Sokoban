@@ -108,7 +108,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
 
                 } catch {
                     
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
      
             }.resume()
@@ -174,7 +174,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     
                 } catch {
                     
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
                 
             }.resume()
@@ -232,7 +232,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
  
                 } catch {
                     
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
                 
             }.resume()

@@ -23,6 +23,24 @@ final class Model_PaymentsAbroadTests: XCTestCase {
         // then
         XCTAssertTrue(result.isEmpty)
     }
+    
+        // MARK: - test abroadAmountParameter
+    
+    func test_abroadAmountParameter_shouldReturnAmountZero() {
+        
+        // given
+        let sut = makeSut()
+        
+        // when
+        let result = sut.abroadAmountParameter(
+            "RUB",
+            .rub,
+            [.rub],
+            100)
+        
+        // then
+        XCTAssertNoDiff(result.amount, 0)
+    }
 }
 
 //MARK: Process Tests
@@ -64,17 +82,17 @@ extension Model_PaymentsAbroadTests {
             result,
             [
                 .init(
-                    fieldid: 2,
+                    fieldid: 3,
                     fieldname: "CURR",
                     fieldvalue: "RUB"
                 ),
                 .init(
-                    fieldid: 3,
+                    fieldid: 4,
                     fieldname: "bSurName",
                     fieldvalue: "bSurName"
                 ),
                 .init(
-                    fieldid: 5,
+                    fieldid: 6,
                     fieldname: "ID",
                     fieldvalue: "value"
                 )
@@ -101,12 +119,12 @@ extension Model_PaymentsAbroadTests {
             result,
             [
                 .init(
-                    fieldid: 3,
+                    fieldid: 4,
                     fieldname: "bSurName",
                     fieldvalue: ""
                 ),
                 .init(
-                    fieldid: 5,
+                    fieldid: 6,
                     fieldname: "ID",
                     fieldvalue: "value"
                 )

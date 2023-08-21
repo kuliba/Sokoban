@@ -72,12 +72,14 @@ extension ModelAction {
         
         struct Request: Action {
             
+            let tokenIntent: String
             let system: PersonAgreement.System
             let type: PersonAgreement.TypeDocument?
         }
         
         struct Response: Action {
             
+            let tokenIntent: String
             let result: Result<[PersonAgreement], Error>
         }
     }
@@ -370,11 +372,17 @@ extension Model {
                     return
                 }
                 
-                self.action.send(ModelAction.GetPersonAgreement.Response(result: .success(data)))
+                self.action.send(ModelAction.GetPersonAgreement.Response(
+                    tokenIntent: payload.tokenIntent,
+                    result: .success(data)
+                ))
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                self.action.send(ModelAction.GetPersonAgreement.Response(result: .failure(error)))
+                self.action.send(ModelAction.GetPersonAgreement.Response(
+                    tokenIntent: payload.tokenIntent,
+                    result: .failure(error)
+                ))
             }
         }
     }

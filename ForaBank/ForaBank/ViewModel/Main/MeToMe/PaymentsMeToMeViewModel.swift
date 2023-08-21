@@ -142,52 +142,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             // For ruble transfers
                             if response.needOTP == false {
-                                let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
-                                switch response.documentStatus {
-                                case .complete:
-                                    
-                                    guard let payerProductId = swapViewModel.productIdFrom,
-                                          let payeeProductId = swapViewModel.productIdTo else {
-                                        return
-                                    }
-                                    
-                                    let meToMePayment = MeToMePayment(
-                                        payerProductId: payerProductId,
-                                        payeeProductId: payeeProductId,
-                                        amount: paymentsAmount.textField.value
-                                    )
-                                    
-                                    switch mode {
-                                    case let .templatePayment(templateId, _):
-                                        
-                                        if let successViewModel = PaymentsSuccessViewModel(
-                                            model,
-                                            mode: modeForSuccessView,
-                                            transferData: response,
-                                            meToMePayment: meToMePayment,
-                                            templateId: templateId
-                                        ) {
-                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                        }
-                                        
-                                    default:
-                                        if let successViewModel = PaymentsSuccessViewModel(
-                                            model,
-                                            mode: modeForSuccessView,
-                                            transferData: response,
-                                            meToMePayment: meToMePayment,
-                                            templateId: nil
-                                        ) {
-                                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                        }
-                                    }
-
-                                default:
-
-                                    if let successViewModel = PaymentsSuccessViewModel(model, mode: modeForSuccessView, productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: response) {
-                                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                    }
+                                
+                                let mode = modeForSuccessView(
+                                    productIdFrom: swapViewModel.productIdFrom,
+                                    productIdTo: swapViewModel.productIdTo,
+                                    transferData: response
+                                )
+                                
+                                guard let success = Payments.Success(
+                                    model: model,
+                                    mode: mode,
+                                    amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                                ) else {
+                                    return
                                 }
+                                
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 
                             } else {
                                 
@@ -207,17 +178,18 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                     switch payload.result {
                     case let .success(transferData):
-                        let modeForSuccessView = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo)
-
-                        if let successViewModel = PaymentsSuccessViewModel(
-                            model,
-                            mode: modeForSuccessView,
-                            transferData: transferData,
-                            meToMePayment: nil,
-                            templateId: nil
-                        ) {
-                            self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                        let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: transferData)
+                        
+                        guard let success = Payments.Success(
+                            model: model,
+                            mode: mode,
+                            amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                        ) else {
+                            return
                         }
+                        
+                        let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                        self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
 
                     case let .failure(error):
                         makeAlert(error)
@@ -234,8 +206,19 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         switch mode {
                         case let .closeAccount(productData, balance):
                             
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeAccount(productData.id), currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                            let currency = Currency(description: productData.currency)
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeAccount(
+                                    productData.id,
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                 
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 makeInformer(closeAccount: true)
                             }
@@ -260,23 +243,56 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                         switch mode {
                         case let .closeDeposit(productData, balance):
-                            
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: balance, transferData: transferData) {
+                            let currency = Currency(description: productData.currency)
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeDeposit(
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
                                 
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
+                            
                         case let .transferDeposit(productData, _), let .transferAndCloseDeposit(productData, _):
-                            
-                            if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
-                                
+                            let currency = Currency(description: productData.currency)
+                            let balance = productData.balanceValue
+                            if let success = Payments.Success(
+                                model: model,
+                                mode: .closeDeposit(
+                                    currency,
+                                    balance: balance,
+                                    transferData
+                                ),
+                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                            ) {
+                               
+                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                             }
+                            
                         case .demandDeposit:
                             if let productIdFrom = swapViewModel.productIdFrom,
                                let productData = model.product(productId: productIdFrom) {
                                 
-                                if let successViewModel = PaymentsSuccessViewModel(model, mode: .closeDeposit, currency: .init(description: productData.currency), balance: productData.balanceValue, transferData: transferData) {
-                                    
+                                let currency = Currency(description: productData.currency)
+                                let balance = productData.balanceValue
+                                
+                                if let success = Payments.Success(
+                                    model: model,
+                                    mode: .closeDeposit(
+                                        currency,
+                                        balance: balance,
+                                        transferData
+                                    ),
+                                    amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+                                ) {
+                                   
+                                    let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                                     self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 }
                             }
@@ -629,16 +645,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: value))
     }
     
-    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?) -> PaymentsSuccessViewModel.Mode{
+    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, transferData: TransferResponseData) -> PaymentsSuccessViewModel.Mode{
         if let productIdFrom = productIdFrom,
            let _ = model.product(productId: productIdFrom) as? ProductDepositData {
-            return .makePaymentToDeposite
+            return .makePaymentFromDeposit(from: productIdFrom, to: productIdTo, transferData)
         }
         else if let productIdTo = productIdTo,
                 let _ = model.product(productId: productIdTo) as? ProductDepositData {
-                 return .makePaymentToDeposite
+                 return .makePaymentToDeposit(from: productIdFrom, to: productIdTo, transferData)
              }
-        return .meToMe
+        return .meToMe(from: productIdFrom, to: productIdTo, transferData)
     }
     
     private func isSwapEnabled(isSwapButtonEnabled: Bool, productFrom: ProductData?, productTo: ProductData?) -> Bool {
@@ -782,20 +798,117 @@ class PaymentsMeToMeViewModel: ObservableObject {
         }
     }
     
+    // TODO: надо упростить
+    // TODO: форматирование в отдельный компонент
+    
+    static func updatePaymentInfo(
+        currencyFrom: Currency,
+        currencyTo: Currency,
+        rateDataTo: ExchangeRateData?,
+        currencySymbolFrom: String,
+        currencySymbolTo: String,
+        amount: Double,
+        rateDataFrom: ExchangeRateData?,
+        setDefaultInfoButton: @escaping () -> Void,
+        setText: @escaping (String) -> Void
+    ) {
+        
+        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
+            
+            setDefaultInfoButton()
+        } else if currencyFrom == Currency.rub {
+            
+            if let rateDataTo = rateDataTo {
+                
+                let rateSell = rateDataTo.rateSell.currencyFormatter(currencySymbolFrom)
+                let text = "1 \(currencySymbolTo)  -  \(rateSell)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateSellCurrency = amount / rateDataTo.rateSell
+                    let currencyAmount = rateSellCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+                
+            } else {
+                
+                setDefaultInfoButton()
+            }
+            
+        } else if currencyTo == Currency.rub {
+            
+            if let rateDataFrom = rateDataFrom {
+                
+                let rateBuy = rateDataFrom.rateBuy.currencyFormatter(currencySymbolTo)
+                let text = "1 \(currencySymbolFrom)  -  \(rateBuy)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = amount * rateDataFrom.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+                
+            } else {
+                
+                setDefaultInfoButton()
+            }
+            
+        } else {
+            
+            if let rateDataFrom = rateDataFrom, let rateDataTo = rateDataTo {
+                
+                let rateBuy = rateDataTo.rateBuy / rateDataFrom.rateBuy
+                let rateBuyCurrency = rateBuy.currencyFormatter(currencySymbolFrom)
+                
+                let text = "1 \(currencySymbolTo)  -  \(rateBuyCurrency)"
+                
+                if amount == 0 {
+                    
+                    setText(text)
+                    
+                } else {
+                    
+                    let rateBuyCurrency = (amount * rateDataFrom.rateBuy) / rateDataTo.rateBuy
+                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
+                    
+                    let text = "\(currencyAmount)   |   \(text)"
+                    
+                    setText(text)
+                }
+            }
+        }
+    }
+    
+    // TODO: нужен рефакторинг!!!
     private func updateInfoButton(_ rates: [ExchangeRateData]) {
         
         guard let productIdFrom = swapViewModel.productIdFrom,
               let productIdTo = swapViewModel.productIdTo,
               let products = Self.products(model, from: productIdFrom, to: productIdTo) else {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
         if productIdFrom == productIdTo,
            products.from.currency == products.to.currency {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
@@ -816,92 +929,23 @@ class PaymentsMeToMeViewModel: ObservableObject {
               let currencySymbolFrom = currencyDataFrom.currencySymbol,
               let currencySymbolTo = currencyDataTo.currencySymbol else {
             
-            defaultInfoButton()
+            setDefaultInfoButton()
             return
         }
         
-        if currencyFrom == Currency.rub && currencyTo == Currency.rub {
-            paymentsAmount.info = nil
-            
-        } else if currencyFrom == Currency.rub {
-            
-            if let rateDataTo = rateDataTo {
-                
-                let rateSell = rateDataTo.rateSell.currencyFormatter(currencySymbolFrom)
-                let text = "1 \(currencySymbolTo)  -  \(rateSell)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                                    
-                } else {
-                    
-                    let rateSellCurrency = amount / rateDataTo.rateSell
-                    let currencyAmount = rateSellCurrency.currencyFormatter(currencySymbolTo)
-                    
-                    let text = "\(currencyAmount)   |   \(text)"
-                    
-                    paymentsAmount.info = .text(text)
-                }
-                
-            } else {
-                
-                defaultInfoButton()
-            }
-            
-        } else if currencyTo == Currency.rub {
-         
-            if let rateDataFrom = rateDataFrom {
-                
-                let rateBuy = rateDataFrom.rateBuy.currencyFormatter(currencySymbolTo)
-                let text = "1 \(currencySymbolFrom)  -  \(rateBuy)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                    
-                } else {
-                    
-                    let rateBuyCurrency = amount * rateDataFrom.rateBuy
-                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
-                    
-                    let text = "\(currencyAmount)   |   \(text)"
-                    
-                    paymentsAmount.info = .text(text)
-                }
-                
-            } else {
-                
-                defaultInfoButton()
-            }
-            
-        } else {
-
-            if let rateDataFrom = rateDataFrom, let rateDataTo = rateDataTo {
-                
-                let rateBuy = rateDataTo.rateBuy / rateDataFrom.rateBuy
-                let rateBuyCurrency = rateBuy.currencyFormatter(currencySymbolFrom)
-                
-                let text = "1 \(currencySymbolTo)  -  \(rateBuyCurrency)"
-                
-                if amount == 0 {
-                    
-                    paymentsAmount.info = .text(text)
-                    
-                } else {
-                    
-                    let rateBuyCurrency = (amount * rateDataFrom.rateBuy) / rateDataTo.rateBuy
-                    let currencyAmount = rateBuyCurrency.currencyFormatter(currencySymbolTo)
-
-                    let text = "\(currencyAmount)   |   \(text)"
-
-                    paymentsAmount.info = .text(text)
-                }
-            }
-        }
+        Self.updatePaymentInfo(
+            currencyFrom: currencyFrom,
+            currencyTo: currencyTo,
+            rateDataTo: rateDataTo,
+            currencySymbolFrom: currencySymbolFrom,
+            currencySymbolTo: currencySymbolTo,
+            amount: amount,
+            rateDataFrom: rateDataFrom,
+            setDefaultInfoButton: setDefaultInfoButton,
+            setText: { [weak self] in self?.paymentsAmount.info = .text($0) })
     }
     
-    private func defaultInfoButton() {
+    private func setDefaultInfoButton() {
         paymentsAmount.info = .button(title: "Без комиссии", icon: .ic16Info, action: { [weak self] in
             self?.action.send(PaymentsMeToMeAction.Button.Info.Tap())
         })

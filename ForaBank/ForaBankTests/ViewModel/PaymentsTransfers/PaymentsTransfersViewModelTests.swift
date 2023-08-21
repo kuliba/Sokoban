@@ -146,7 +146,7 @@ extension PaymentsTransfersViewModel {
     
     func meToMeSendSuccess(model: Model) {
         
-        meToMe?.action.send(PaymentsMeToMeAction.Response.Success(viewModel: .init(model, closeAction: {})))
+        meToMe?.action.send(PaymentsMeToMeAction.Response.Success(viewModel: .init(sections: [], adapter: .init(model: model), operation: nil)))
     }
     
     func closeBottomSheet() {

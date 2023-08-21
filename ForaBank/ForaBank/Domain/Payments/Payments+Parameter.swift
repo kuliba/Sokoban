@@ -64,12 +64,27 @@ extension Payments.Parameter {
         case productTemplate                 = "ru.forabank.sense.productTemplate"
         case productTemplateName             = "ru.forabank.sense.productTemplateName"
         
-        case sfpPhone                        = "RecipientID"
-        case sfpBank                         = "BankRecipientID"
-        case sftRecipient                    = "RecipientNm"
-        case sfpAmount                       = "SumSTrs"
-        case sfpMessage                      = "Ustrd"
-        case sfpAntifraud                    = "AFResponse"
+        case successStatus = "ru.forabank.sense.success.status"
+        case successOptionButtons = "ru.forabank.sense.success.optionButtons"
+        case successMode = "ru.forabank.sense.success.mode"
+        case successOperationDetailID = "ru.forabank.sense.success.operationDetailID"
+        case successTitle = "ru.forabank.sense.success.title"
+        case successAmount = "ru.forabank.sense.success.amount"
+        case successActionButton = "ru.forabank.sense.success.actionButton"
+        case successRepeatButton = "ru.forabank.sense.success.repeatButton"
+        case successLogo = "ru.forabank.sense.success.successLogo"
+        case successAdditionalButtons = "ru.forabank.sense.success.successAdditionalButtons"
+        case successTransferNumber = "ru.forabank.sense.success.successTransferNumber"
+        case successOptions = "ru.forabank.sense.success.successOptions"
+        case successService = "ru.forabank.sense.success.successService"
+        case successSubscriptionToken = "ru.forabank.sense.success.successSubscriptionToken"
+
+        case sfpPhone       = "RecipientID"
+        case sfpBank        = "BankRecipientID"
+        case sftRecipient   = "RecipientNm"
+        case sfpAmount      = "SumSTrs"
+        case sfpMessage     = "Ustrd"
+        case sfpAntifraud   = "AFResponse"
         
         case requisitsBankBic                = "requisitsBankBic"
         case requisitsAccountNumber          = "requisitsAccountNumber"
@@ -113,6 +128,7 @@ extension Payments.Parameter {
         case countryOperationId              = "countryOperationId"
         
         case c2bQrcId                        = "qrcId"
+        case c2bIsAmountComplete             = "c2bIsAmountComplete"
         
         case mobileConnectionPhone           = "MobileConnectionPhone"
         case mobileConnectionAmount          = "MobileConnectionAmount"
@@ -184,15 +200,47 @@ extension Payments {
 
     }
     
-    struct ParameterContinue: PaymentsParameterRepresentable {
+    struct ParameterButton: PaymentsParameterRepresentable {
         
         let parameter: Parameter
         let title: String
+        let style: Style
+        let action: Action
+        let placement: Payments.Parameter.Placement
+        let group: Payments.Parameter.Group?
         
-        init(title: String) {
+        init(parameterId: Parameter.ID = UUID().uuidString, title: String, style: Style, acton: Action, placement: Payments.Parameter.Placement = .bottom, group: Payments.Parameter.Group? = nil) {
             
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.continue.rawValue, value: nil)
+            self.parameter = Parameter(id: parameterId, value: nil)
             self.title = title
+            self.style = style
+            self.action = acton
+            self.placement = placement
+            self.group = group
+        }
+        
+        init(with parameter: PaymentParameterButton) {
+            
+            self.init(parameterId: parameter.id, title: parameter.value, style: parameter.color, acton: parameter.action, placement: parameter.placement)
+        }
+        
+        enum Style: String {
+            
+            case primary = "red"
+            case secondary = "white"
+        }
+        
+        enum Action: String, Decodable {
+            
+            case `continue` = "PAY"
+            case save = "SAVE"
+            case cancel = "CANCEL"
+            case update = "UPDATE"
+            case cancelSubscribe = "CANCEL_SUB"
+            case main = "MAIN"
+            case `repeat`
+            case additionalChange
+            case additionalReturn
         }
     }
     
@@ -679,13 +727,13 @@ extension Payments {
     struct ParameterInfo: PaymentsParameterRepresentable {
         
         let parameter: Parameter
-        let icon: ImageData
+        let icon: Payments.Parameter.Icon
         let title: String
         let lineLimit: Int?
         let placement: Payments.Parameter.Placement
         let group: Payments.Parameter.Group?
         
-        init(_ parameter: Parameter, icon: ImageData, title: String, lineLimit: Int? = nil, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
+        init(_ parameter: Parameter, icon: Payments.Parameter.Icon, title: String, lineLimit: Int? = nil, placement: Payments.Parameter.Placement = .feed, group: Payments.Parameter.Group? = nil) {
             
             self.parameter = parameter
             self.icon = icon
@@ -693,6 +741,11 @@ extension Payments {
             self.lineLimit = lineLimit
             self.placement = placement
             self.group = group
+        }
+        
+        init(with qrParameter: PaymentParameterInfo) {
+            
+            self.init(.init(id: qrParameter.id, value: qrParameter.value), icon: qrParameter.icon.parameterIcon, title: qrParameter.title)
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -1101,18 +1154,36 @@ extension Payments {
         
         let parameter: Parameter
         let icon: String
-        let description: String
+        let description: String?
+        let style: Style
         
-        init(_ parameter: Parameter, icon: String, description: String) {
+        init(_ parameter: Parameter, icon: String, description: String?, style: Style = .regular) {
             
             self.parameter = parameter
             self.icon = icon
             self.description = description
+            self.style = style
+        }
+        
+        init(with subscriptionData: C2BSubscriptionData) {
+            
+            self.init(.init(id: UUID().uuidString, value: subscriptionData.brandName), icon: subscriptionData.brandIcon, description: nil, style: .small)
+        }
+        
+        init(with parameter: PaymentParameterSubscriber) {
+            
+            self.init(.init(id: parameter.id, value: parameter.value), icon: parameter.icon, description: parameter.subscriptionPurpose, style: parameter.style)
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
-            ParameterSubscriber(.init(id: parameter.id, value: value), icon: icon, description: description)
+            ParameterSubscriber(.init(id: parameter.id, value: value), icon: icon, description: description, style: style)
+        }
+        
+        enum Style: String, Decodable {
+            
+            case regular = "REGULAR"
+            case small = "SMALL"
         }
     }
     
@@ -1230,6 +1301,338 @@ extension Payments.ParameterSelect.Option {
   }
 }
 
+//MARK: - Success Parameters
+
+extension Payments {
+    
+    struct ParameterSuccessStatus: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        var status: Status {
+            
+            guard let value = parameter.value,
+                    let status = Status(rawValue: value) else {
+                
+                return .error
+            }
+            
+            return status
+        }
+        
+        init(status: Status) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successStatus.rawValue, value: status.rawValue)
+        }
+        
+        init(with documentStatus: TransferResponseBaseData.DocumentStatus) {
+            
+            switch documentStatus {
+            case .complete:
+                self.init(status: .success)
+
+            case .inProgress:
+                self.init(status: .accepted)
+
+            case .rejected, .unknown:
+                self.init(status: .error)
+            }
+        }
+        
+        init(with status: C2BSubscriptionData.Status) {
+            
+            switch status {
+            case .complete:
+                self.init(status: .success)
+                
+            case .rejected:
+                self.init(status: .error)
+                
+            default:
+                self.init(status: .accepted)
+            }
+        }
+        
+        init(with parameter: PaymentParameterStatus) {
+            
+            switch parameter.value {
+            case .complete:
+                self.init(status: .success)
+                
+            case .rejected:
+                self.init(status: .error)
+                
+            default:
+                self.init(status: .accepted)
+            }
+        }
+        
+        enum Status: String {
+            
+            case success
+            case accepted
+            case transfer
+            case error
+        }
+    }
+    
+    struct ParameterSuccessText: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let style: Style
+        let placement: Payments.Parameter.Placement
+        
+        init(id: Parameter.ID = UUID().uuidString, value: String, style: Style, placement: Payments.Parameter.Placement = .feed) {
+            
+            self.parameter = .init(id: id, value: value)
+            self.style = style
+            self.placement = placement
+        }
+        
+        init(with parameter: PaymentParameterText) {
+            
+            self.init(id: parameter.id, value: parameter.value, style: parameter.style)
+        }
+        
+        enum Style: String, Decodable {
+            
+            case title = "TITLE"
+            case subtitle = "SUBTITLE"
+            case amount = "AMOUNT"
+            case warning = "WARNING"
+            case message = "MESSAGE"
+        }
+    }
+    
+    struct ParameterSuccessIcon: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let icon: Icon
+        let size: Size
+        let placement: Payments.Parameter.Placement
+        
+        init(id: Parameter.ID = UUID().uuidString, icon: Icon, size: Size, placement: Payments.Parameter.Placement = .feed) {
+            
+            self.parameter = .init(id: id, value: nil)
+            self.icon = icon
+            self.size = size
+            self.placement = placement
+        }
+        
+        init(with parameter: PaymentParameterIcon) {
+            
+            //TODO: implement icon remote
+            switch parameter.iconType {
+            case .local:
+                self.init(id: parameter.id, icon: .name(parameter.value), size: .normal, placement: parameter.placement)
+                
+            case .remote:
+                self.init(id: parameter.id, icon: .image(.iconPlaceholder), size: .normal, placement: parameter.placement)
+                
+            }
+        }
+        
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
+        }
+        
+        enum Size {
+            
+            case normal
+            case small
+        }
+    }
+    
+    struct ParameterSuccessOptionButtons: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let options: [Option]
+        let operationDetail: OperationDetailData?
+        let placement: Payments.Parameter.Placement
+        let templateID: PaymentTemplateData.ID?
+        let meToMePayment: MeToMePayment?
+        let operation: Payments.Operation?
+        
+        init(
+            options: [Option],
+            operationDetail: OperationDetailData? = nil,
+            placement: Payments.Parameter.Placement = .bottom,
+            templateID: PaymentTemplateData.ID?,
+            meToMePayment: MeToMePayment?,
+            operation: Payments.Operation?
+        ) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successOptionButtons.rawValue, value: nil)
+            self.options = options
+            self.operationDetail = operationDetail
+            self.placement = placement
+            self.templateID = templateID
+            self.meToMePayment = meToMePayment
+            self.operation = operation
+        }
+        
+        init(
+            with parameter: PaymentParameterOptionButtons,
+            templateID: PaymentTemplateData.ID?,
+            operation: Payments.Operation?,
+            meToMePayment: MeToMePayment?
+        ) {
+            
+            self.init(
+                options: parameter.value,
+                placement: .feed,
+                templateID: templateID,
+                meToMePayment: meToMePayment,
+                operation: operation
+            )
+        }
+
+        enum Option: String, Decodable, CaseIterable {
+            
+            case details = "DETAILS"
+            case document = "DOCUMENT"
+            case template = "TEMPLATE"
+        }
+    }
+    
+    struct ParameterSuccessLink: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let title: String
+        let url: URL
+        
+        init(parameterId: Payments.Parameter.ID, title: String, url: URL) {
+            
+            self.parameter = .init(id: parameterId, value: nil)
+            self.title = title
+            self.url = url
+        }
+        
+        init?(with subsctiptionData: C2BSubscriptionData) {
+            
+            guard let url = subsctiptionData.redirectUrl else {
+                return nil
+            }
+            
+            self.init(parameterId: UUID().uuidString, title: "Вернуться в магазин", url: url)
+        }
+        
+        init(with parameter: PaymentParameterLink) {
+            
+            self.init(parameterId: parameter.id, title: parameter.title, url: parameter.value)
+        }
+    }
+    
+    struct ParameterSuccessMode: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        //TODO: extract mode type from ViewModel
+        let mode: PaymentsSuccessViewModel.Mode
+        
+        init(mode: PaymentsSuccessViewModel.Mode) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successMode.rawValue, value: nil)
+            self.mode = mode
+        }
+    }
+    
+    struct ParameterSuccessAdditionalButtons: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let options: [Option]
+        let placement: Payments.Parameter.Placement
+        
+        init(options: [Option], placement: Payments.Parameter.Placement = .feed) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successAdditionalButtons.rawValue, value: nil)
+            self.options = options
+            self.placement = placement
+        }
+        
+        enum Option: CaseIterable {
+            
+            case change
+            case `return`
+            
+            var title: String {
+                
+                switch self {
+                case .change: return "Изменить"
+                case .return: return "Вернуть"
+                }
+            }
+        }
+    }
+    
+    struct ParameterSuccessTransferNumber: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        
+        init(number: String) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successTransferNumber.rawValue, value: number)
+        }
+    }
+    
+    struct ParameterSuccessLogo: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let icon: Icon
+        
+        init(icon: Icon, title: String? = nil) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successLogo.rawValue, value: title)
+            self.icon = icon
+        }
+        
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
+            case sfp
+        }
+    }
+    
+    struct ParameterSuccessOptions: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let options: [Option]
+        
+        init(options: [Option]) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successOptions.rawValue, value: nil)
+            self.options = options
+        }
+        
+        struct Option {
+            
+            let icon: Icon
+            let title: String
+            let subTitle: String?
+            let description: String
+        }
+        
+        enum Icon {
+            
+            case image(ImageData)
+            case name(String)
+        }
+    }
+    
+    struct ParameterSuccessService: PaymentsParameterRepresentable {
+        
+        let parameter: Payments.Parameter
+        let description: String
+        
+        init(title: String, description: String) {
+            
+            self.parameter = .init(id: Payments.Parameter.Identifier.successService.rawValue, value: title)
+            self.description = description
+        }
+    }
+}
+
 extension Payments.Validation.RulesSystem {
     
     static let baseName: Payments.Validation.RulesSystem = {
@@ -1325,5 +1728,34 @@ extension Array where Element == PaymentsParameterRepresentable {
         }
         
         return value
+    }
+    
+    func hasValue(
+        forIdentifier identifier: Payments.Parameter.Identifier
+    ) -> Bool {
+        
+        (try? value(forIdentifier: identifier)) != nil
+    }
+}
+
+extension Payments.ParameterButton.Style: Decodable {
+    
+    init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        
+        let string = try container.decode(String.self)
+        
+        switch string {
+            
+        case "red", "RED", "primary", "PRIMARY":
+            self = .primary
+            
+        case "gray", "GRAY", "white", "WHITE", "secondary", "SECONDARY":
+            self = .secondary
+            
+        default:
+            throw Payments.Error.unsupported
+        }
     }
 }

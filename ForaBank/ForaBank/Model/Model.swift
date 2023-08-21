@@ -102,8 +102,12 @@ class Model {
     let bankClientsInfo: CurrentValueSubject<Set<BankClientInfo>, Never>
     
     //MARK: DeepLink
+    //TODO: remove deepLinkType because shared mutable state
     var deepLinkType: DeepLinkType?
     
+    //MARK: C2B
+    var subscriptions: CurrentValueSubject<C2BSubscription?, Never>
+
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
     
@@ -204,6 +208,7 @@ class Model {
         self.userSettings = .init([])
         self.bankClientsInfo = .init([])
         self.deepLinkType = nil
+        self.subscriptions = .init(nil)
         self.qrMapping = .init(nil)
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
@@ -301,6 +306,7 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
                     action.send(ModelAction.Auth.Session.Activated())
                     
+                    try? localAgent.clear(type: [String: ImageData].self)
                     loadCachedPublicData()
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
                     action.send(ModelAction.Dictionary.UpdateCache.All())
@@ -344,6 +350,7 @@ class Model {
                     action.send(ModelAction.AppVersion.Request())
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.ProductTemplate.List.Request())
+                    action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -636,7 +643,16 @@ class Model {
                     //MARK: - Payments
                     
                 case let payload as ModelAction.Payment.Process.Request:
-                    handlePaymentsProcessRequest(payload)
+                    Task {
+                        
+                        await handlePaymentsProcessRequest(payload)
+                    }
+                    
+                case let payload as ModelAction.Payment.Subscription.Request:
+                    Task {
+                        
+                        await handlePaymentSubscriptionRequest(payload)
+                    }
                     
                     //MARK: - Operation
                     
@@ -965,6 +981,25 @@ class Model {
                 case let payload as ModelAction.Consent.Me2MeDebit.Request:
                     handleConsentGetMe2MeDebit(payload)
                     
+                //MARK: - C2B
+                case let payload as ModelAction.C2B.GetC2BSubscription.Request:
+                    handleGetC2BSubscription(payload)
+                 
+                case let payload as ModelAction.C2B.GetC2BDetail.Request:
+                    handleGetC2BSubscriptionDetail(payload)
+                    
+                case let payload as ModelAction.C2B.CancelC2BSub.Request:
+                    handleCancelC2BSubscription(payload)
+                 
+                case let payload as ModelAction.C2B.UpdateC2BSub.Request:
+                    let product = self.product(productId: payload.productId)
+                    switch product?.productType {
+                    case .card:
+                        handleUpdateC2BSubscriptionCard(payload)
+
+                    default:
+                        handleUpdateC2BSubscriptionAcc(payload)
+                    }
                 //MARK: - QR
                     
                 case let payload as ModelAction.QRAction.SendFailData.Request:

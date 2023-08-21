@@ -35,7 +35,7 @@ class PaymentsSectionViewModel {
     internal func bind() {
         
         action
-            .compactMap{ $0 as? PaymentsSectionViewModelAction.Continue.EnabledChanged }
+            .compactMap{ $0 as? PaymentsSectionViewModelAction.Button.EnabledChanged }
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] payload in
                 
@@ -102,10 +102,24 @@ class PaymentsSectionViewModel {
                         //MARK: Bottom
                         
                     case _ as PaymentsParameterViewModelAction.Amount.ContinueDidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.Continue.DidTapped())
+                        self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .continue))
                         
-                    case _ as PaymentsParameterViewModelAction.ContinueButton.DidTapped:
-                        self.action.send(PaymentsSectionViewModelAction.Continue.DidTapped())
+                    case let payload as PaymentsParameterViewModelAction.Button.DidTapped:
+                        self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: payload.action))
+                        
+                        //MARK: - Success Options Buttons
+                        
+                    case let payload as PaymentsParameterViewModelAction.SuccessOptionButtons.ButtonDidTapped:
+                        self.action.send(PaymentsSectionViewModelAction.OptionButtonDidTapped(option: payload.option))
+                        
+                    case let payload as PaymentsParameterViewModelAction.SuccessAdditionalButtons.ButtonDidTapped:
+                        switch payload.option {
+                        case .change:
+                            self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .additionalChange))
+                            
+                        case .return:
+                            self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .additionalReturn))
+                        }
                         
                     default:
                         break
@@ -162,8 +176,8 @@ extension PaymentsSectionViewModel {
                 groups.append(PaymentsSpoilerGroupViewModel(id: group.id, items: items, isCollapsed: true))
                 
             case .contact:
-                groups.append(PaymentsContactGroupViewModel(items: items))
-
+                groups.append(PaymentsContactGroupViewModel(id: group.id, items: items, isCollapsed: true))
+                
             case .info:
                 groups.append(PaymentsInfoGroupViewModel(id: group.id, items: items))
                 
@@ -191,8 +205,8 @@ extension PaymentsSectionViewModel {
                 } else {
                     
                     //TODO: move to Model side
-                    let continueParameter = Payments.ParameterContinue(title: "Продолжить")
-                    let continueButtonItem = PaymentsContinueButtonView.ViewModel(continueParameter: continueParameter)
+                    let continueButtonParameter = Payments.ParameterButton(parameterId: Payments.Parameter.Identifier.continue.rawValue, title: "Продолжить", style: .primary, acton: .continue)
+                    let continueButtonItem = PaymentsButtonView.ViewModel( continueButtonParameter)
                     result.append(PaymentsSectionViewModel(placement: placement, items: [continueButtonItem]))
                 }
                 
@@ -203,6 +217,23 @@ extension PaymentsSectionViewModel {
                 
                 result.append(PaymentsSectionViewModel(placement: placement, items: items))
             }
+        }
+        
+        return result
+    }
+    
+    static func reduce(success: Payments.Success, model: Model) -> [PaymentsSectionViewModel] {
+        
+        var result = [PaymentsSectionViewModel]()
+
+        for placement in Payments.Parameter.Placement.allCases {
+            
+            let items = Self.reduce(
+                parameters: success.parameters,
+                placement: placement,
+                model: model
+            )
+            result.append(PaymentsSectionViewModel(placement: placement, items: items))
         }
         
         return result
@@ -246,7 +277,7 @@ extension PaymentsSectionViewModel {
             return try? PaymentsCheckView.ViewModel(with: parameterCheckBox)
             
         case let parameterInfo as Payments.ParameterInfo:
-            return PaymentsInfoView.ViewModel(with: parameterInfo)
+            return PaymentsInfoView.ViewModel(with: parameterInfo, model: model)
             
         case let parameterInput as Payments.ParameterInput:
             return PaymentsInputView.ViewModel(with: parameterInput)
@@ -254,8 +285,8 @@ extension PaymentsSectionViewModel {
         case let parameterInputPhone as Payments.ParameterInputPhone:
             return PaymentsInputPhoneView.ViewModel(with: parameterInputPhone, model: model)
             
-        case let paremeterName as Payments.ParameterName:
-            return PaymentsNameView.ViewModel(with: paremeterName)
+        case let parameterName as Payments.ParameterName:
+            return PaymentsNameView.ViewModel(with: parameterName)
             
         case let parameterDropDownList as Payments.ParameterSelectDropDownList:
             return try? PaymentSelectDropDownView.ViewModel(with: parameterDropDownList)
@@ -286,16 +317,44 @@ extension PaymentsSectionViewModel {
             
         case let parameterSubscribe as Payments.ParameterSubscribe:
             return PaymentsSubscribeView.ViewModel(with: parameterSubscribe)
-        
-            // for tests only
-        case let parameterHidden as Payments.ParameterHidden:
-            return PaymentsParameterViewModel(source: parameterHidden)
-
-        case let parameterMock as Payments.ParameterMock:
-            return PaymentsParameterViewModel(source: parameterMock)
             
+        case let parameterButton as Payments.ParameterButton:
+            return PaymentsButtonView.ViewModel(parameterButton)
+            
+            // success
+            
+        case let successStatus as Payments.ParameterSuccessStatus:
+            return PaymentsSuccessStatusView.ViewModel(successStatus)
+            
+        case let successText as Payments.ParameterSuccessText:
+            return PaymentsSuccessTextView.ViewModel(successText)
+            
+        case let successIcon as Payments.ParameterSuccessIcon:
+            return PaymentsSuccessIconView.ViewModel(successIcon)
+            
+        case let successOptionButtons as Payments.ParameterSuccessOptionButtons:
+            return PaymentsSuccessOptionButtonsView.ViewModel(model, source: successOptionButtons)
+            
+        case let successLink as Payments.ParameterSuccessLink:
+            return PaymentsSuccessLinkView.ViewModel(successLink)
+            
+        case let successAdditionalButtons as Payments.ParameterSuccessAdditionalButtons:
+            return PaymentsSuccessAdditionalButtonsView.ViewModel(successAdditionalButtons)
+            
+        case let successTransferNumber as Payments.ParameterSuccessTransferNumber:
+            return PaymentsSuccessTransferNumberView.ViewModel(successTransferNumber)
+            
+        case let successLogo as Payments.ParameterSuccessLogo:
+            return try? PaymentsSuccessLogoView.ViewModel(successLogo)
+            
+        case let successOptions as Payments.ParameterSuccessOptions:
+            return PaymentsSuccessOptionsView.ViewModel(successOptions)
+            
+        case let successService as Payments.ParameterSuccessService:
+            return PaymentsSuccessServiceView.ViewModel(successService)
+        
         default:
-            return nil
+            return PaymentsParameterViewModel(source: parameter)
         }
     }
 }
@@ -309,9 +368,12 @@ enum PaymentsSectionViewModelAction {
         let value: PaymentsParameterViewModel.Value
     }
     
-    enum Continue {
+    enum Button {
         
-        struct DidTapped: Action {}
+        struct DidTapped: Action {
+            
+            let action: Payments.ParameterButton.Action
+        }
         
         struct EnabledChanged: Action {
             
@@ -360,4 +422,9 @@ enum PaymentsSectionViewModelAction {
     }
     
     struct ResendCode: Action {}
+    
+    struct OptionButtonDidTapped: Action {
+        
+        let option: Payments.ParameterSuccessOptionButtons.Option
+    }
 }

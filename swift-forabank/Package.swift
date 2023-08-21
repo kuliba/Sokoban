@@ -9,30 +9,45 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .bindPublicKeyWithEventID,
         .cvvPin,
+        .landingComponents,
         .loadableResourceComponent,
+        .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pinCodeUI,
+        .productUI,
         .searchBarComponent,
+        .sharedAPIInfra,
         .symmetricEncryption,
         .textFieldComponent,
         .textFieldModel,
         .uiKitHelpers,
         .userModel,
+        // services
+        .genericRemoteService,
+        .getProcessingSessionCodeService,
     ],
     dependencies: [
         .combineSchedulers,
         .customDump,
     ],
     targets: [
+        .bindPublicKeyWithEventID,
+        .bindPublicKeyWithEventIDTests,
         .cvvPin,
         .cvvPinTests,
+        .landingComponents,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
+        .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
+        .productUI,
         .searchBarComponent,
+        .sharedAPIInfra,
+        .sharedAPIInfraTests,
         .symmetricEncryption,
         .symmetricEncryptionTests,
         .textFieldComponent,
@@ -47,10 +62,22 @@ let package = Package(
         .wipTests,
         .userModel,
         .userModelTests,
+        // services
+        .genericRemoteService,
+        .genericRemoteServiceTests,
+        .getProcessingSessionCodeService,
+        .getProcessingSessionCodeServiceTests,
     ]
 )
 
 private extension Product {
+    
+    static let bindPublicKeyWithEventID = library(
+        name: .bindPublicKeyWithEventID,
+        targets: [
+            .bindPublicKeyWithEventID,
+        ]
+    )
     
     static let cvvPin = library(
         name: .cvvPin,
@@ -58,32 +85,74 @@ private extension Product {
             .cvvPin,
         ]
     )
-
+    
+    static let genericRemoteService = library(
+        name: .genericRemoteService,
+        targets: [
+            .genericRemoteService,
+        ]
+    )
+    
+    static let getProcessingSessionCodeService = library(
+        name: .getProcessingSessionCodeService,
+        targets: [
+            .getProcessingSessionCodeService,
+        ]
+    )
+    
+    static let landingComponents = library(
+        name: .landingComponents,
+        targets: [
+            .landingComponents,
+        ]
+    )
+    
     static let loadableResourceComponent = library(
         name: .loadableResourceComponent,
         targets: [
             .loadableResourceComponent,
         ]
     )
-
+    
+    static let manageSubscriptionsUI = library(
+        name: .manageSubscriptionsUI,
+        targets: [
+            .manageSubscriptionsUI,
+        ]
+    )
+    
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
             .pickerWithPreviewComponent,
         ]
     )
-
+    
     static let pinCodeUI = library(
         name: .pinCodeUI,
         targets: [
             .pinCodeUI,
         ]
     )
-
+    
+    static let productUI = library(
+        name: .productUI,
+        targets: [
+            .productUI,
+        ]
+    )
+    
     static let searchBarComponent = library(
         name: .searchBarComponent,
         targets: [
             .searchBarComponent,
+        ]
+    )
+    
+    static let sharedAPIInfra = library(
+        name: .sharedAPIInfra,
+        targets: [
+            .sharedAPIInfra,
         ]
     )
     
@@ -125,6 +194,21 @@ private extension Product {
 
 private extension Target {
     
+    static let bindPublicKeyWithEventID = target(
+        name: .bindPublicKeyWithEventID,
+        path: "Sources/Services/\(String.bindPublicKeyWithEventID)"
+    )
+    static let bindPublicKeyWithEventIDTests = testTarget(
+        name: .bindPublicKeyWithEventIDTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .bindPublicKeyWithEventID,
+        ],
+        path: "Tests/Services/\(String.bindPublicKeyWithEventIDTests)"
+    )
+    
     static let cvvPin = target(
         name: .cvvPin,
         dependencies: [
@@ -142,7 +226,42 @@ private extension Target {
             .cvvPin,
         ]
     )
-
+    
+    static let genericRemoteService = target(
+        name: .genericRemoteService,
+        path: "Sources/Services/\(String.genericRemoteService)"
+    )
+    static let genericRemoteServiceTests = testTarget(
+        name: .genericRemoteServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .genericRemoteService,
+        ],
+        path: "Tests/Services/\(String.genericRemoteServiceTests)"
+    )
+    
+    static let getProcessingSessionCodeService = target(
+        name: .getProcessingSessionCodeService,
+        path: "Sources/Services/\(String.getProcessingSessionCodeService)"
+    )
+    static let getProcessingSessionCodeServiceTests = testTarget(
+        name: .getProcessingSessionCodeServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getProcessingSessionCodeService,
+        ],
+        path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
+    )
+    
+    static let landingComponents = target(
+        name: .landingComponents,
+        dependencies: []
+    )
+    
     static let loadableResourceComponent = target(
         name: .loadableResourceComponent,
         dependencies: [
@@ -160,28 +279,47 @@ private extension Target {
             .loadableResourceComponent,
         ]
     )
-
+    
+    static let manageSubscriptionsUI = target(
+        name: .manageSubscriptionsUI
+    )
+    
     static let pickerWithPreviewComponent = target(
         name: .pickerWithPreviewComponent,
         dependencies: [
             .uiKitHelpers,
         ]
     )
+    
     static let pickerWithPreviewComponentTests = testTarget(
         name: .pickerWithPreviewComponentTests,
         dependencies: [
             .pickerWithPreviewComponent,
         ]
     )
-
+    
     static let pinCodeUI = target(
         name: .pinCodeUI
+    )
+    
+    static let productUI = target(
+        name: .productUI
     )
     
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
             .textFieldComponent,
+        ]
+    )
+    
+    static let sharedAPIInfra = target(
+        name: .sharedAPIInfra
+    )
+    static let sharedAPIInfraTests = testTarget(
+        name: .sharedAPIInfraTests,
+        dependencies: [
+            .sharedAPIInfra,
         ]
     )
     
@@ -286,8 +424,24 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let bindPublicKeyWithEventID = byName(
+        name: .bindPublicKeyWithEventID
+    )
+    
     static let cvvPin = byName(
         name: .cvvPin
+    )
+    
+    static let genericRemoteService = byName(
+        name: .genericRemoteService
+    )
+    
+    static let getProcessingSessionCodeService = byName(
+        name: .getProcessingSessionCodeService
+    )
+    
+    static let landingComponents = byName(
+        name: .landingComponents
     )
     
     static let loadableResourceComponent = byName(
@@ -296,6 +450,10 @@ private extension Target.Dependency {
     
     static let pickerWithPreviewComponent = byName(
         name: .pickerWithPreviewComponent
+    )
+    
+    static let sharedAPIInfra = byName(
+        name: .sharedAPIInfra
     )
     
     static let symmetricEncryption = byName(
@@ -329,31 +487,49 @@ private extension Target.Dependency {
 
 private extension String {
     
+    static let bindPublicKeyWithEventID = "BindPublicKeyWithEventID"
+    static let bindPublicKeyWithEventIDTests = "BindPublicKeyWithEventIDTests"
+    
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
     
+    static let genericRemoteService = "GenericRemoteService"
+    static let genericRemoteServiceTests = "GenericRemoteServiceTests"
+    
+    static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
+    static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
+    
+    static let landingComponents = "LandingComponents"
+    
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
     static let pinCodeUI = "PinCodeUI"
     
+    static let productUI = "ProductUI"
+    
     static let searchBarComponent = "SearchBarComponent"
+    
+    static let sharedAPIInfra = "SharedAPIInfra"
+    static let sharedAPIInfraTests = "SharedAPIInfraTests"
     
     static let symmetricEncryption = "SymmetricEncryption"
     static let symmetricEncryptionTests = "SymmetricEncryptionTests"
     
     static let textFieldComponent = "TextFieldComponent"
     static let textFieldComponentTests = "TextFieldComponentTests"
-
+    
     static let textFieldDomain = "TextFieldDomain"
     static let textFieldDomainTests = "TextFieldDomainTests"
-
+    
     static let textFieldModel = "TextFieldModel"
     static let textFieldModelTests = "TextFieldModelTests"
-
+    
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     

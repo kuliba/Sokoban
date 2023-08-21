@@ -139,13 +139,15 @@ extension Payments {
     }
 }
 
+//MARK: - Types
+
 extension Payments.Parameter {
     
-    enum Placement: CaseIterable {
+    enum Placement: String, Decodable, CaseIterable {
         
-        case top
-        case feed
-        case bottom
+        case top = "TOP"
+        case feed = "FEED"
+        case bottom = "BOTTOM"
     }
     
     enum Style {
@@ -174,6 +176,13 @@ extension Payments.Parameter {
         case selectSwitch
         case input
         case info
+    }
+    
+    enum Icon: Equatable {
+        
+        case image(ImageData)
+        case local(String)
+        case remote(String)
     }
 }
 
@@ -231,6 +240,7 @@ extension Payments.Operation {
         
         case requisites(qrCode: QRCode)
         
+        case c2b(URL)
         case c2bSubscribe(URL)
         
         case servicePayment(puref: String, additionalList: [PaymentServiceData.AdditionalListData]?, amount: Double)
@@ -253,6 +263,7 @@ extension Payments.Operation {
             case let .change(operationId: operationId, transferNumber: number, name: name): return "operationId: \(operationId), transferNumber: \(number), name: \(name)"
             case let .mock(mock): return "mock service: \(mock.service.rawValue)"
             case let .requisites(qrCode): return "qrCode: \(qrCode)"
+            case let .c2b(url): return "c2b payment url: \(url.absoluteURL)"
             case let .c2bSubscribe(url): return "c2b subscribe url: \(url.absoluteURL)"
             case let .servicePayment(puref: puref, additionalList: additionalList, amount: amount): return "operator code: \(puref), additionalList: \(String(describing: additionalList)), amount: \(amount)"
             case .avtodor: return "Fake/Combined Avtodor"
@@ -375,54 +386,10 @@ extension Payments.Operation {
 
 extension Payments {
     
-    //TODO: refactor into dynamic list of parameters
     struct Success {
  
-        let operationDetailId: Int
-        let status: TransferResponseBaseData.DocumentStatus
-        let productId: ProductData.ID
-        let amount: Double
-        let service: Payments.Service
         let operation: Payments.Operation?
-        let serviceData: ServiceData?
-        
-        init(operationDetailId: Int, status: TransferResponseBaseData.DocumentStatus, productId: ProductData.ID, amount: Double, service: Payments.Service, serviceData: ServiceData? = nil, operation: Payments.Operation?) {
-            
-            self.operationDetailId = operationDetailId
-            self.status = status
-            self.productId = productId
-            self.amount = amount
-            self.service = service
-            self.serviceData = serviceData
-            self.operation = operation
-        }
-        
-        init(
-            with response: TransferResponseBaseData,
-            operation: Payments.Operation,
-            serviceData: ServiceData? = nil
-        ) throws {
-            
-            guard let status = response.documentStatus,
-                  let amount = operation.amount,
-                  let productId = operation.productId else {
-                
-                //TODO: more informative error
-                throw Payments.Error.unsupported
-            }
-            
-            self.init(operationDetailId: response.paymentOperationDetailId, status: status, productId: productId, amount: amount, service: operation.service, serviceData: serviceData, operation: operation)
-        }
-        
-        enum ServiceData {
-            
-            case c2bSubscriptionData(C2BSubscriptionData)
-            case mobileConnectionData(MobileConnectionData)
-            case abroadData(TransferResponseBaseData)
-            case returnAbroadData(transferData: TransferResponseBaseData, title: String)
-            case paymentsServicesData(PaymentsServicesData)
-
-        }
+        let parameters: [PaymentsParameterRepresentable]
     }
 }
 

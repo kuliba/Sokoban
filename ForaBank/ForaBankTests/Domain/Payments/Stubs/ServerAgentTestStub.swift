@@ -24,6 +24,9 @@ final class ServerAgentTestStub: ServerAgentProtocol {
     
     typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
     typealias MosParkingListData = GetMosParkingList.Response.MosParkingListData
+    
+    typealias C2BPaymentList = ServerCommands.SBPPaymentController.CreateC2BPaymentCard
+    typealias PaymentC2BResponseData = C2BPaymentList.Response.Payload
 
     private let stubs: [Stub.Case: Stub]
     
@@ -45,6 +48,9 @@ final class ServerAgentTestStub: ServerAgentProtocol {
                 
             case .mosParking:
                 dict[.mosParking] = stub
+                
+            case .c2bPaymentCard:
+                dict[.c2bPaymentCard] = stub
             }
         }
     }
@@ -60,14 +66,14 @@ final class ServerAgentTestStub: ServerAgentProtocol {
             guard let stub = stubs[`case`] else {
                 
                 let error = NSError(domain: "Missing stub for case \(`case`)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             
             stub.complete(with: completion)
             
         } catch {
-            completion(.failure(.curruptedData(error)))
+            completion(.failure(.corruptedData(error)))
             return
         }
     }
@@ -81,11 +87,13 @@ extension ServerAgentTestStub {
         typealias GetPhoneInfoResult = Result<GetPhoneInfo, ServerAgentError>
         typealias IsSingleServiceResponseResult = Result<IsSingleService.Response, ServerAgentError>
         typealias MosParkingResult = Result<GetMosParkingList.Response, ServerAgentError>
+        typealias C2BPaymentCard = Result<ServerCommands.SBPPaymentController.CreateC2BPaymentCard.Response, ServerAgentError>
         
         case anywayTransfer(CreateAnywayTransferResult)
         case getPhoneInfo(GetPhoneInfoResult)
         case isSingleService(IsSingleServiceResponseResult)
         case mosParking(MosParkingResult)
+        case c2bPaymentCard(C2BPaymentCard)
         
         enum Case {
             
@@ -93,6 +101,7 @@ extension ServerAgentTestStub {
             case getPhoneInfo
             case isSingleService
             case mosParking
+            case c2bPaymentCard
         }
     }
 }
@@ -113,6 +122,9 @@ extension ServerAgentTestStub.Stub.Case {
             
         case _ as ServerAgentTestStub.GetMosParkingList:
             self = .mosParking
+        
+        case _ as ServerAgentTestStub.C2BPaymentList:
+            self = .c2bPaymentCard
             
         default:
             
@@ -132,7 +144,7 @@ extension ServerAgentTestStub.Stub {
             guard let response = try? result.get() as? Response
             else {
                 let error = NSError(domain: "Bad data for anywayTransfer in \(result)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             completion(.success(response))
@@ -141,7 +153,7 @@ extension ServerAgentTestStub.Stub {
             guard let response = try? result.get() as? Response
             else {
                 let error = NSError(domain: "Bad data for getPhoneInfo in \(result)", code: 0)
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             completion(.success(response))
@@ -153,10 +165,10 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for isSingleService in \(result)", code: 0)
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
             } catch {
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
                 return
             }
             
@@ -167,10 +179,24 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for mosParking in \(result)", code: 0)
-                    completion(.failure(.curruptedData(error)))
+                    completion(.failure(.corruptedData(error)))
                 }
             } catch {
-                completion(.failure(.curruptedData(error)))
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .c2bPaymentCard(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for c2bPaymentCard in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
                 return
             }
         }
