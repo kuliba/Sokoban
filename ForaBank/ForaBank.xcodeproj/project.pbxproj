@@ -1430,6 +1430,7 @@
 		833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */; };
 		833764FD2A385DF700F7C1AB /* CardViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */; };
 		833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */; };
+		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */; };
 		834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DE2A13746B002590A3 /* NoCompanyInListView.swift */; };
 		834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */; };
@@ -3358,6 +3359,7 @@
 		833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingSelectorView.swift; sourceTree = "<group>"; };
 		833764FC2A385DF700F7C1AB /* CardViewComponentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardViewComponentTests.swift; sourceTree = "<group>"; };
 		833765012A38604E00F7C1AB /* ProcessingSessionCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingSessionCodeData.swift; sourceTree = "<group>"; };
+		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PickerWithPreviewComponent.xctestplan; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
 		834731DE2A13746B002590A3 /* NoCompanyInListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListView.swift; sourceTree = "<group>"; };
@@ -5478,6 +5480,7 @@
 				2A5A19E429A0FC1B00DFCDD3 /* Helpers */,
 				2ACF584F29AA3D0700737902 /* ProductCarouselViewComponentTests */,
 				2AE9835429A2394C0001DF72 /* ProductGroupViewComponent */,
+				833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */,
 			);
 			path = ProductSelector;
 			sourceTree = "<group>";
@@ -12177,6 +12180,7 @@
 				2A9100A02A7C413E0022308F /* CryptoTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
+				833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */,
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
