@@ -144,7 +144,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetDepositStatement", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
         
         let data = ProductStatementData(mcc: 3245,
                                         accountId: 10004111477,
@@ -196,7 +196,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetDepositStatementMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
         
         let data = ProductStatementData(mcc: nil,
                                         accountId: nil,
