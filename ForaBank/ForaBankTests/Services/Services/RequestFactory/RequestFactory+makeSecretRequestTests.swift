@@ -65,6 +65,8 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
     
     // MARK: - Helpers
     
+    typealias SecretRequest = FormSessionKeyDomain.Request
+    
     private func makeSecretRequest(
         code: String = "any code",
         data: String = "any data"

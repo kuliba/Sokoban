@@ -7,33 +7,22 @@
 
 import Foundation
 
-/// A namespace.
-public enum HTTPDomain {}
-
-public extension HTTPDomain {
-    
-    typealias Request = URLRequest
-    typealias Response = (Data, HTTPURLResponse)
-    typealias Result = Swift.Result<Response, Error>
-    typealias Completion = (Result) -> Void
-}
-
 public final class RemoteService<Input, Output> {
     
-    public typealias MakeRequest = (Input) throws -> HTTPDomain.Request
+    public typealias CreateRequest = (Input) throws -> HTTPDomain.Request
     public typealias PerformRequest = (HTTPDomain.Request, @escaping HTTPDomain.Completion) -> Void
-    public typealias MapResponse = (Data, HTTPURLResponse) throws -> Output
+    public typealias MapResponse = (HTTPDomain.Response) throws -> Output
     
-    private let makeRequest: MakeRequest
+    private let createRequest: CreateRequest
     private let performRequest: PerformRequest
     private let mapResponse: MapResponse
     
     public init(
-        makeRequest: @escaping MakeRequest,
+        createRequest: @escaping CreateRequest,
         performRequest: @escaping PerformRequest,
         mapResponse: @escaping MapResponse
     ) {
-        self.makeRequest = makeRequest
+        self.createRequest = createRequest
         self.performRequest = performRequest
         self.mapResponse = mapResponse
     }
@@ -45,25 +34,26 @@ public final class RemoteService<Input, Output> {
         completion: @escaping Completion
     ) {
         do {
-            let request = try makeRequest(input)
+            let request = try createRequest(input)
             
             performRequest(request) { [weak self] result in
                 
-                self?.handle(result, completion)
+                self?.handle(result, with: completion)
             }
         } catch {
+            
             completion(.failure(error))
         }
     }
     
     private func handle(
         _ result: HTTPDomain.Result,
-        _ completion: @escaping Completion
+        with completion: @escaping Completion
     ) {
         completion(.init { [mapResponse] in
             
             let (data, response) = try result.get()
-            return try mapResponse(data, response)
+            return try mapResponse((data, response))
         })
     }
 }

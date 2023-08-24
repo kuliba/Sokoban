@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "054D6E96-0AEE-44EF-8145-152DD4CE90AF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
+      }
+    }
+  ],
+  "version" : 1
+}

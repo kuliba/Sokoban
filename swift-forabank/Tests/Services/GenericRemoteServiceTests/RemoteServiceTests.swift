@@ -13,25 +13,25 @@ final class RemoteServiceTests: XCTestCase {
     func test_init_shouldNotRequestHTTPClient() {
         
         let request = anyRequest("some.url")
-        let (_, client) = makeSUT(makeRequest: { _ in request })
+        let (_, client) = makeSUT(createRequest: { _ in request })
         
         XCTAssertEqual(client.requests, [])
     }
     
     func test_process_shouldDeliverErrorOnMakeRequestError() {
         
-        let makeRequestError = anyError(domain: "make request error")
-        let (sut, _) = makeSUT(makeRequest: { _ in throw makeRequestError })
+        let createRequestError = anyError(domain: "make request error")
+        let (sut, _) = makeSUT(createRequest: { _ in throw createRequestError })
         let exp = expectation(description: "wait for completion")
         
         sut.process(()) { result in
             
             switch result {
             case let .failure(error as NSError):
-                XCTAssertNoDiff(error, makeRequestError as NSError)
+                XCTAssertNoDiff(error, createRequestError as NSError)
                 
             default:
-                XCTFail("Expected \(makeRequestError), got \(result) instead.")
+                XCTFail("Expected \(createRequestError), got \(result) instead.")
             }
             
             exp.fulfill()
@@ -43,7 +43,7 @@ final class RemoteServiceTests: XCTestCase {
     func test_process_shouldRequestHTTPClient() {
         
         let request = anyRequest("some.url")
-        let (sut, client) = makeSUT(makeRequest: { _ in request })
+        let (sut, client) = makeSUT(createRequest: { _ in request })
         
         sut.process(()) { _ in }
         
@@ -77,7 +77,7 @@ final class RemoteServiceTests: XCTestCase {
         
         let client = HTTPClientSpy()
         var sut: ProcessingSessionCodeService? = .init(
-            makeRequest: { _ in anyRequest() },
+            createRequest: { _ in anyRequest() },
             performRequest: client.get(_:completion:),
             mapResponse: { _, _ in serverResponseError() }
         )
@@ -143,8 +143,8 @@ final class RemoteServiceTests: XCTestCase {
     private typealias ProcessingSessionCodeService = RemoteService<Input, Output>
     
     private func makeSUT(
-        makeRequest: @escaping ProcessingSessionCodeService.MakeRequest = { _ in anyRequest() },
-        mapResponse: @escaping ProcessingSessionCodeService.MapResponse = { _, _ in serverResponseError() },
+        createRequest: @escaping ProcessingSessionCodeService.CreateRequest = { _ in anyRequest() },
+        mapResponse: @escaping ProcessingSessionCodeService.MapResponse = { _ in serverResponseError() },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -153,7 +153,7 @@ final class RemoteServiceTests: XCTestCase {
     ) {
         let client = HTTPClientSpy()
         let sut = ProcessingSessionCodeService(
-            makeRequest: makeRequest,
+            createRequest: createRequest,
             performRequest: client.get(_:completion:),
             mapResponse: mapResponse
         )

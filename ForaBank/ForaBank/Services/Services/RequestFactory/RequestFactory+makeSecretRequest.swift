@@ -11,7 +11,7 @@ import Foundation
 extension RequestFactory {
     
     static func makeSecretRequest(
-        from secretRequest: SecretRequest
+        from secretRequest: FormSessionKeyDomain.Request
     ) throws -> URLRequest {
         
         guard !secretRequest.code.isEmpty else {
@@ -40,7 +40,7 @@ extension RequestFactory {
     }
 }
 
-private extension SecretRequest {
+private extension FormSessionKeyDomain.Request {
     
     var json: Data? {
         

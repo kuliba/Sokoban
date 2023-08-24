@@ -12,8 +12,8 @@ extension Model {
     // TODO: Move to the Composition Root
     func cvvPinService() -> CvvPinService {
         
-        CvvPinFactory.cvvPinService(
-            httpClient: authorizedHTTPClient()
+        Services.cvvPinService(
+            httpClient: authenticatedHTTPClient()
         )
     }
 }
