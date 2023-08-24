@@ -1,34 +1,69 @@
 //
 //  CvvPinService.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 16.07.2023.
 //
 
+import Foundation
+
 public final class CvvPinService {
     
-    public typealias BindPublicKey = BindPublicKeyDomain.BindPublicKey
+    public typealias ExchangeKey = KeyExchangeDomain.ExchangeKey
     public typealias GetProcessingSessionCode = GetProcessingSessionCodeDomain.GetProcessingSessionCode
+    public typealias TransferPublicKey = TransferPublicKeyDomain.TransferKey
     
+    // TODO: protect from race conditions
+    private var state: State?
+    
+    private enum State {
+        
+        case error(Error)
+        case keyExchange(KeyExchangeDomain.KeyExchange)
+    }
+    
+    private let exchangeKey: ExchangeKey
     private let getProcessingSessionCode: GetProcessingSessionCode
-    private let symmetricKeyService: SymmetricKeyService
-    private let bindPublicKey: BindPublicKey
+    private let transferPublicKey: TransferPublicKey
     
     public init(
         getProcessingSessionCode: @escaping GetProcessingSessionCode,
-        symmetricKeyService: SymmetricKeyService,
-        bindPublicKey: @escaping BindPublicKey
+        exchangeKey: @escaping ExchangeKey,
+        transferPublicKey: @escaping TransferPublicKey
     ) {
         self.getProcessingSessionCode = getProcessingSessionCode
-        self.symmetricKeyService = symmetricKeyService
-        self.bindPublicKey = bindPublicKey
+        self.exchangeKey = exchangeKey
+        self.transferPublicKey = transferPublicKey
+    }
+}
+
+// MARK: - Key Exchange
+
+extension CvvPinService {
+    
+    public typealias Completion = (Result<Void, Error>) -> Void
+    
+    public func exchangeKey(completion: @escaping Completion) {
+        
+        exchangeKey { [unowned self] result in
+            
+            switch result {
+            case let .failure(error):
+                state = .error(error)
+                completion(.failure(error))
+                
+            case let .success(keyExchange):
+                state = .keyExchange(keyExchange)
+                completion(.success(()))
+            }
+        }
     }
     
-    public typealias AuthResult = Result<Auth, Error>
-    public typealias AuthCompletion = (AuthResult) -> Void
+    internal typealias ExchangeKeyCompletion = KeyExchangeDomain.Completion
     
-    public func auth(completion: @escaping AuthCompletion) {
-        
+    internal func exchangeKey(
+        completion: @escaping ExchangeKeyCompletion
+    ) {
         getProcessingSessionCode { [weak self] in
             
             guard let self else { return }
@@ -39,94 +74,89 @@ public final class CvvPinService {
                 completion(.failure(error))
                 
             case let .success(sessionCode):
-                
-                makeSecretRequest(sessionCode.cryptoSessionCode, completion)
+                handleSessionCode(sessionCode.keyExchangeSessionCode, completion)
             }
         }
     }
     
-    private func makeSecretRequest(
-        _ sessionCode: CryptoSessionCode,
-        _ completion: @escaping AuthCompletion
-    ) {
-        symmetricKeyService.makeSymmetricKey(with: sessionCode) { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-            case let .failure(error):
-                completion(.failure(error))
-                
-            case let .success(symmetricKey):
-                
-                self.sendPublicKey(symmetricKey.apiSymmetricKey, completion)
-            }
-        }
-    }
+    private typealias ExchangeKeySessionCode = KeyExchangeDomain.SessionCode
     
-    private func sendPublicKey(
-        _ symmetricKey: APISymmetricKey,
-        _ completion: @escaping AuthCompletion
+    private func handleSessionCode(
+        _ sessionCode: ExchangeKeySessionCode,
+        _ completion: @escaping ExchangeKeyCompletion
     ) {
-        bindPublicKey(symmetricKey) { [weak self] result in
+        exchangeKey(sessionCode) { [weak self] result in
             
             guard self != nil else { return }
             
-            completion(.init {
-                try result.map(Auth.init).get()
-            })
+            completion(result)
+        }
+    }
+}
+
+// MARK: - Key Exchange Confirmation
+
+extension CvvPinService {
+    
+    public typealias OTP = TransferPublicKeyDomain.OTP
+    public typealias ConfirmExchangeResult = TransferPublicKeyDomain.Result
+    
+    public func confirmExchange(
+        withOTP otp: OTP,
+        _ completion: @escaping (ConfirmExchangeResult) -> Void
+    ) {
+        switch state {
+        case .none:
+            completion(.failure(ExchangeStateError()))
+            
+        case let .error(error):
+            completion(.failure(error))
+            
+        case let .keyExchange(keyExchange):
+            confirmExchange(
+                withOTP: otp,
+                eventID: keyExchange.eventID,
+                andSharedSecret: keyExchange.keyData,
+                completion: completion
+            )
         }
     }
     
-    public struct Auth: Equatable {
+    public struct ExchangeStateError: Error {
         
-        let sessionID: SessionID
-        let symmetricKey: SymmetricKey
-        
-        public init(
-            sessionID: SessionID,
-            symmetricKey: SymmetricKey
-        ) {
-            self.sessionID = sessionID
-            self.symmetricKey = symmetricKey
+        public init() {}
+    }
+    
+    public typealias EventID = KeyExchangeDomain.KeyExchange.EventID
+    
+    internal func confirmExchange(
+        withOTP otp: OTP,
+        eventID: EventID,
+        andSharedSecret data: Data,
+        completion: @escaping (ConfirmExchangeResult) -> Void
+    ) {
+        transferPublicKey(otp, eventID.exchangeEventID, data) { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            completion(result)
         }
     }
 }
 
 // MARK: - Mappers
 
-private extension CvvPinService.Auth {
+private extension GetProcessingSessionCodeDomain.SessionCode {
     
-    init(
-        sessionID: SessionID,
-        apiSymmetricKey: APISymmetricKey
-    ) {
-        self.init(
-            sessionID: sessionID,
-            symmetricKey: apiSymmetricKey.symmetricKey
-        )
-    }
-}
-
-private extension SessionCode {
-    
-    var cryptoSessionCode: CryptoSessionCode {
+    var keyExchangeSessionCode: KeyExchangeDomain.SessionCode {
         
         .init(value: value)
     }
 }
 
-public extension SymmetricKey {
+private extension CvvPinService.EventID {
     
-    var apiSymmetricKey: APISymmetricKey {
-        
-        .init(value: value)
-    }
-}
-
-private extension APISymmetricKey {
-    
-    var symmetricKey: SymmetricKey {
+    var exchangeEventID: TransferPublicKeyDomain.EventID {
         
         .init(value: value)
     }

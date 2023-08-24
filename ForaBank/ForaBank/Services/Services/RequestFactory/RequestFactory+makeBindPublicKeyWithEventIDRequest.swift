@@ -5,9 +5,20 @@
 //  Created by Igor Malyarov on 05.08.2023.
 //
 
+import CvvPin
 import Foundation
+import TransferPublicKey
 
 extension RequestFactory {
+    
+    static func makeBindPublicKeyWithEventIDRequest(
+        with publicKeyWithEventID: TransferPublicKey.PublicKeyWithEventID<KeyExchangeDomain.KeyExchange.EventID>
+    ) throws -> URLRequest {
+        
+        try makeBindPublicKeyWithEventIDRequest(
+            with: .init(publicKeyWithEventID)
+        )
+    }
     
     static func makeBindPublicKeyWithEventIDRequest(
         with publicKeyWithEventID: PublicKeyWithEventID
@@ -36,6 +47,18 @@ extension RequestFactory {
         
         case emptyEventID
         case emptyKeyString
+    }
+}
+
+private extension PublicKeyWithEventID {
+    
+    init(
+        _ transferPublicKeyWithEventID: TransferPublicKey.PublicKeyWithEventID<KeyExchangeDomain.KeyExchange.EventID>
+    ) {
+        self.init(
+            keyString: transferPublicKeyWithEventID.data.base64EncodedString(),
+            eventID: .init(value: transferPublicKeyWithEventID.eventID.value)
+        )
     }
 }
 

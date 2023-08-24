@@ -272,6 +272,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ForaCrypto"
+               BuildableName = "ForaCrypto"
+               BlueprintName = "ForaCrypto"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TransferPublicKey"
+               BuildableName = "TransferPublicKey"
+               BlueprintName = "TransferPublicKey"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -363,6 +391,16 @@
                BlueprintIdentifier = "BindPublicKeyWithEventIDTests"
                BuildableName = "BindPublicKeyWithEventIDTests"
                BlueprintName = "BindPublicKeyWithEventIDTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ForaCryptoTests"
+               BuildableName = "ForaCryptoTests"
+               BlueprintName = "ForaCryptoTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

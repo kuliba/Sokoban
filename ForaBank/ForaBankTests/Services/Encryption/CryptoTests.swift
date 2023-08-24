@@ -12,43 +12,44 @@ final class CryptoTests: XCTestCase {
     
     func test_rsaPKCS1Encrypt_shouldEncryptData() throws {
         
-        let secKey = try publicSecKey()
+        let publicKey = try makeSecKeyPair().publicKey
         let data = try XCTUnwrap("some data".data(using: .utf8))
         
-        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: secKey)
+        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
         
         XCTAssertNotEqual(encrypted, data)
     }
     
+    func test_rsaPKCS1Decrypt_shouldDecryptEncryptedData() throws {
+        
+        let originalMessage = "some data"
+        let data = try XCTUnwrap(originalMessage.data(using: .utf8))
+        let (privateKey, publicKey) = try makeSecKeyPair()
+        
+        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        let decrypted = try Crypto.rsaPKCS1Decrypt(data: encrypted, withPrivateKey: privateKey)
+        let decryptedMessage = try XCTUnwrap(String(data: decrypted, encoding: .utf8))
+        
+        XCTAssertNoDiff(originalMessage, decryptedMessage)
+    }
+    
     // MARK: - Helpers Tests
     
-    func test_publicSecKey_shouldBeOkForRSAEncryptionPKCS1() throws {
+    func test_makeSecKeyPair_shouldCreatePublicKeyForRSAEncryptionPKCS1() throws {
         
-        let secKey = try publicSecKey()
-        let rsaEncryptionPKCS1 = SecKeyIsAlgorithmSupported(secKey, .encrypt, .rsaEncryptionPKCS1)
+        let publicKey = try makeSecKeyPair().publicKey
+        let rsaEncryptionPKCS1 = SecKeyIsAlgorithmSupported(publicKey, .encrypt, .rsaEncryptionPKCS1)
         
         XCTAssertTrue(rsaEncryptionPKCS1)
     }
     
-    // MARK: Helpers
+    // MARK: - Helpers
     
-    private func publicSecKey() throws -> SecKey {
-        
-        let attributes: [String: Any] = [
-            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecAttrKeySizeInBits as String: 2048,
-            kSecPrivateKeyAttrs as String:
-                [kSecAttrIsPermanent as String: false]
-        ]
-        
-        var error: Unmanaged<CFError>?
-        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error),
-              let publicKey = SecKeyCopyPublicKey(privateKey)
-        else {
-            throw error!.takeRetainedValue() as Error
-        }
-        
-        return publicKey
+    private func makeSecKeyPair() throws -> (
+        privateKey: SecKey,
+        publicKey: SecKey
+    ) {
+        return try Crypto.createRandomRSA4096BitKeys()
     }
     
     private func keyData() throws -> Data {

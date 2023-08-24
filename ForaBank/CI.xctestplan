@@ -27,13 +27,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
       }
@@ -120,6 +113,20 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UserModelTests",
         "name" : "UserModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
       }
     }
   ],

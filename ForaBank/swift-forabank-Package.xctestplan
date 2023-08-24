@@ -14,7 +14,6 @@
   "testTargets" : [
     {
       "enabled" : false,
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "WIPTests",
@@ -22,7 +21,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldModelTests",
@@ -30,7 +28,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldDomainTests",
@@ -38,7 +35,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldComponentTests",
@@ -46,7 +42,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "UserModelTests",
@@ -54,7 +49,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "PickerWithPreviewComponentTests",
@@ -62,7 +56,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "LoadableResourceComponentTests",
@@ -70,7 +63,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldUITests",
@@ -78,7 +70,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "CvvPinTests",
@@ -86,7 +77,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "GetProcessingSessionCodeServiceTests",
@@ -94,7 +84,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "PinCodeUITests",
@@ -125,8 +114,15 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
       }
     }
   ],

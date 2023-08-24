@@ -9,8 +9,8 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
-        .bindPublicKeyWithEventID,
         .cvvPin,
+        .foraCrypto,
         .landingComponents,
         .loadableResourceComponent,
         .manageSubscriptionsUI,
@@ -27,16 +27,17 @@ let package = Package(
         // services
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        .transferPublicKey,
     ],
     dependencies: [
         .combineSchedulers,
         .customDump,
     ],
     targets: [
-        .bindPublicKeyWithEventID,
-        .bindPublicKeyWithEventIDTests,
         .cvvPin,
         .cvvPinTests,
+        .foraCrypto,
+        .foraCryptoTests,
         .landingComponents,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
@@ -68,17 +69,12 @@ let package = Package(
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        .transferPublicKey,
+        .transferPublicKeyTests,
     ]
 )
 
 private extension Product {
-    
-    static let bindPublicKeyWithEventID = library(
-        name: .bindPublicKeyWithEventID,
-        targets: [
-            .bindPublicKeyWithEventID,
-        ]
-    )
     
     static let cvvPin = library(
         name: .cvvPin,
@@ -91,6 +87,13 @@ private extension Product {
         name: .genericRemoteService,
         targets: [
             .genericRemoteService,
+        ]
+    )
+    
+    static let foraCrypto = library(
+        name: .foraCrypto,
+        targets: [
+            .foraCrypto,
         ]
     )
     
@@ -178,6 +181,13 @@ private extension Product {
         ]
     )
     
+    static let transferPublicKey = library(
+        name: .transferPublicKey,
+        targets: [
+            .transferPublicKey,
+        ]
+    )
+    
     static let uiKitHelpers = library(
         name: .uiKitHelpers,
         targets: [
@@ -195,21 +205,6 @@ private extension Product {
 
 private extension Target {
     
-    static let bindPublicKeyWithEventID = target(
-        name: .bindPublicKeyWithEventID,
-        path: "Sources/Services/\(String.bindPublicKeyWithEventID)"
-    )
-    static let bindPublicKeyWithEventIDTests = testTarget(
-        name: .bindPublicKeyWithEventIDTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .bindPublicKeyWithEventID,
-        ],
-        path: "Tests/Services/\(String.bindPublicKeyWithEventIDTests)"
-    )
-    
     static let cvvPin = target(
         name: .cvvPin,
         dependencies: [
@@ -225,6 +220,20 @@ private extension Target {
             .customDump,
             // internal modules
             .cvvPin,
+        ]
+    )
+    
+    static let foraCrypto = target(
+        name: .foraCrypto,
+        resources: [.copy("Resources/public.crt")]
+    )
+    static let foraCryptoTests = testTarget(
+        name: .foraCryptoTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .foraCrypto,
         ]
     )
     
@@ -307,7 +316,7 @@ private extension Target {
             .pinCodeUI,
         ]
     )
-
+    
     static let productUI = target(
         name: .productUI
     )
@@ -404,6 +413,21 @@ private extension Target {
         ]
     )
     
+    static let transferPublicKey = target(
+        name: .transferPublicKey,
+        path: "Sources/Services/\(String.transferPublicKey)"
+    )
+    static let transferPublicKeyTests = testTarget(
+        name: .transferPublicKeyTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .transferPublicKey,
+        ],
+        path: "Tests/Services/\(String.transferPublicKeyTests)"
+    )
+    
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
     static let wipTests = testTarget(
@@ -413,6 +437,10 @@ private extension Target {
             .combineSchedulers,
             .customDump,
             // internal modules
+            .cvvPin,
+            .genericRemoteService,
+            .getProcessingSessionCodeService,
+            .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
         ]
@@ -429,12 +457,12 @@ private extension Target {
 
 private extension Target.Dependency {
     
-    static let bindPublicKeyWithEventID = byName(
-        name: .bindPublicKeyWithEventID
-    )
-    
     static let cvvPin = byName(
         name: .cvvPin
+    )
+    
+    static let foraCrypto = byName(
+        name: .foraCrypto
     )
     
     static let genericRemoteService = byName(
@@ -460,7 +488,7 @@ private extension Target.Dependency {
     static let pinCodeUI = byName(
         name: .pinCodeUI
     )
-
+    
     static let sharedAPIInfra = byName(
         name: .sharedAPIInfra
     )
@@ -485,6 +513,10 @@ private extension Target.Dependency {
         name: .textFieldUI
     )
     
+    static let transferPublicKey = byName(
+        name: .transferPublicKey
+    )
+    
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
     )
@@ -496,11 +528,11 @@ private extension Target.Dependency {
 
 private extension String {
     
-    static let bindPublicKeyWithEventID = "BindPublicKeyWithEventID"
-    static let bindPublicKeyWithEventIDTests = "BindPublicKeyWithEventIDTests"
-    
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"
+    
+    static let foraCrypto = "ForaCrypto"
+    static let foraCryptoTests = "ForaCryptoTests"
     
     static let genericRemoteService = "GenericRemoteService"
     static let genericRemoteServiceTests = "GenericRemoteServiceTests"
@@ -520,7 +552,7 @@ private extension String {
     
     static let pinCodeUI = "PinCodeUI"
     static let pinCodeUITests = "PinCodeUITests"
-
+    
     static let productUI = "ProductUI"
     
     static let searchBarComponent = "SearchBarComponent"
@@ -542,6 +574,9 @@ private extension String {
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
+    
+    static let transferPublicKey = "TransferPublicKey"
+    static let transferPublicKeyTests = "TransferPublicKeyTests"
     
     static let uiKitHelpers = "UIKitHelpers"
     
