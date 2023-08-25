@@ -110,7 +110,7 @@ final class FailingKeyExchangeService: KeyExchangeServiceProtocol {
         do {
             
             let serverPublicKey = try Crypto.serverPublicKey(
-                from: payload.keyData.base64EncodedString(),
+                from: payload.sharedSecret.base64EncodedString(),
                 using: transportPublicRSAKey
             )
             
@@ -123,7 +123,7 @@ final class FailingKeyExchangeService: KeyExchangeServiceProtocol {
         
         
         let publicKeyWithEventID = PublicKeyWithEventID(
-            keyString: payload.keyData.base64EncodedString(),
+            keyString: payload.sharedSecret.base64EncodedString(),
             eventID: .init(value: payload.eventID.value)
         )
         

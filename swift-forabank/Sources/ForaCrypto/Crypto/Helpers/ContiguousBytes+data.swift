@@ -11,10 +11,6 @@ public extension ContiguousBytes {
     
     var data: Data {
         
-        var result = Data()
-        self.withUnsafeBytes {
-            result = Data($0)
-        }
-        return result
+        withUnsafeBytes { Data($0) }
     }
 }

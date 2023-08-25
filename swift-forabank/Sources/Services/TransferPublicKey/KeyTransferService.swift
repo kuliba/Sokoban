@@ -9,14 +9,8 @@ import Foundation
 
 public final class KeyTransferService<OTP, EventID> {
     
-    public typealias SwaddleKeyResult = Result<Data, Error>
-    public typealias SwaddleKeyCompletion = (SwaddleKeyResult) -> Void
-    public typealias SwaddleKey = (OTP, Data, @escaping SwaddleKeyCompletion) -> Void
-    
-    public typealias BindKeyResult = Result<Void, ErrorWithRetryAttempts>
-    public typealias BindKeyCompletion = (BindKeyResult) -> Void
-    public typealias BindKeyPayload = PublicKeyWithEventID<EventID>
-    public typealias BindKey = (BindKeyPayload, @escaping BindKeyCompletion) -> Void
+    public typealias SwaddleKey = SwaddleKeyDomain<OTP>.SwaddleKey
+    public typealias BindKey = BindKeyDomain<EventID>.BindKey
     
     private let swaddleKey: SwaddleKey
     private let bindKey: BindKey
@@ -28,17 +22,20 @@ public final class KeyTransferService<OTP, EventID> {
         self.swaddleKey = swaddleKey
         self.bindKey = bindKey
     }
+}
+
+extension KeyTransferService {
     
-    public typealias TransferResult = Result<Void, ErrorWithRetry>
-    public typealias TransferCompletion = (TransferResult) -> Void
+    public typealias SharedSecret = SwaddleKeyDomain<OTP>.SharedSecret
+    public typealias TransferCompletion = KeyTransferDomain.Completion
     
     public func transfer(
         otp: OTP,
         eventID: EventID,
-        keyData: Data,
+        sharedSecret: SharedSecret,
         completion: @escaping TransferCompletion
     ) {
-        swaddleKey(otp, keyData) { [weak self] swaddleKeyResult in
+        swaddleKey(otp, sharedSecret) { [weak self] swaddleKeyResult in
             
             guard let self else { return }
             
@@ -55,6 +52,8 @@ public final class KeyTransferService<OTP, EventID> {
             }
         }
     }
+    
+    private typealias BindKeyPayload = BindKeyDomain<EventID>.PublicKeyWithEventID
     
     private func handleBindPayload(
         _ payload: BindKeyPayload,

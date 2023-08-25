@@ -5,10 +5,11 @@
 //  Created by Igor Malyarov on 07.08.2023.
 //
 
-import TransferPublicKey
 import CryptoKit
 import CvvPin
+import ForaCrypto
 import Foundation
+import TransferPublicKey
 
 extension SecKey: RawRepresentational {
     
@@ -44,7 +45,7 @@ extension Services {
         
         let encryptWithTransportPublicRSAKey = { data in
             
-            try Crypto.rsaPKCS1Encrypt(
+            try ForaCrypto.Crypto.rsaPKCS1Encrypt(
                 data: data,
                 withPublicKey: transportPublicRSAKey
             )
@@ -60,7 +61,7 @@ extension Services {
             #warning("FIX THIS")
         }
         
-        let aesEncrypt128bitChunks: TransferPublicRSAKeySwaddler.AESEncryptBits128Chunks = { data in
+        let aesEncrypt128bitChunks: TransferPublicRSAKeySwaddler.AESEncryptBits128Chunks = { data, secret in
             
             // from Encription.encryptAES(string:)
             let salt = AES256.randomSalt()

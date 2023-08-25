@@ -24,7 +24,7 @@ extension Services {
             httpClient: httpClient
         )
         
-        let keyExchangeService = Services.keyExchangeService(
+        let keyExchangeService = keyExchangeService(
             httpClient: httpClient
         )
         
@@ -71,6 +71,8 @@ extension Services {
 
 private extension CvvPinService {
     
+    typealias EventID = KeyExchangeDomain.KeyExchange.EventID
+    
     convenience init(
         sessionCodeService: GetProcessingSessionCodeService,
         keyExchangeService: KeyExchangeService,
@@ -110,13 +112,13 @@ where OTP == TransferPublicKeyDomain.OTP,
     func transfer(
         otp: TransferPublicKeyDomain.OTP,
         eventID: TransferPublicKeyDomain.EventID,
-        keyData: Data,
+        sharedSecret: TransferPublicKeyDomain.SharedSecret,
         completion: @escaping TransferPublicKeyDomain.Completion
     ) {
         transfer(
             otp: otp,
             eventID: eventID.eventID,
-            keyData: keyData
+            sharedSecret: sharedSecret.secret
         ) { result in
             
             completion(result.mapError { $0 })
@@ -129,5 +131,13 @@ private extension TransferPublicKeyDomain.EventID {
     var eventID: KeyExchangeDomain.KeyExchange.EventID {
         
         .init(value: value)
+    }
+}
+
+private extension TransferPublicKeyDomain.SharedSecret {
+    
+    var secret: SwaddleKeyDomain<TransferPublicKeyDomain.OTP>.SharedSecret {
+ 
+        .init(data)
     }
 }

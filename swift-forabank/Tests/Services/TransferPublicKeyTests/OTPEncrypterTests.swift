@@ -25,13 +25,9 @@ final class OTPEncrypterTests: XCTestCase {
             encryptWithPaddingResult: .failure(encryptWithPaddingError)
         )
         
-        try XCTAssertThrowsError(sut.encrypt(otp, withRSAKey: privateRSAKey)) {
-            
-            XCTAssertNoDiff(
-                $0 as NSError,
-                encryptWithPaddingError as NSError
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            sut.encrypt(otp, withRSAKey: privateRSAKey),
+            error: encryptWithPaddingError)
     }
     
     func test_encrypt_shouldFailOnEncryptWithTransportPublicRSAKeyError() throws {
@@ -43,13 +39,10 @@ final class OTPEncrypterTests: XCTestCase {
             encryptWithTransportPublicRSAKeyResult: .failure(encryptWithTransportPublicRSAKeyError)
         )
         
-        try XCTAssertThrowsError(sut.encrypt(otp, withRSAKey: privateRSAKey)) {
-            
-            XCTAssertNoDiff(
-                $0 as NSError,
-                encryptWithTransportPublicRSAKeyError as NSError
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            sut.encrypt(otp, withRSAKey: privateRSAKey),
+            error: encryptWithTransportPublicRSAKeyError
+        )
     }
     
     func test_encrypt_shouldDeliverDataOnSuccessfulEncryption() throws {

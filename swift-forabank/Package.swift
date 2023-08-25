@@ -9,6 +9,7 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .cryptoSwaddler,
         .cvvPin,
         .foraCrypto,
         .landingComponents,
@@ -34,6 +35,8 @@ let package = Package(
         .customDump,
     ],
     targets: [
+        .cryptoSwaddler,
+        .cryptoSwaddlerTests,
         .cvvPin,
         .cvvPinTests,
         .foraCrypto,
@@ -75,6 +78,13 @@ let package = Package(
 )
 
 private extension Product {
+    
+    static let cryptoSwaddler = library(
+        name: .cryptoSwaddler,
+        targets: [
+            .cryptoSwaddler,
+        ]
+    )
     
     static let cvvPin = library(
         name: .cvvPin,
@@ -204,6 +214,25 @@ private extension Product {
 }
 
 private extension Target {
+    
+    static let cryptoSwaddler = target(
+        name: .cryptoSwaddler,
+        dependencies: [
+            .foraCrypto,
+            .transferPublicKey
+        ]
+    )
+    static let cryptoSwaddlerTests = testTarget(
+        name: .cryptoSwaddlerTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cryptoSwaddler,
+            .foraCrypto,
+            .transferPublicKey
+        ]
+    )
     
     static let cvvPin = target(
         name: .cvvPin,
@@ -457,6 +486,10 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    static let cryptoSwaddler = byName(
+        name: .cryptoSwaddler
+    )
+    
     static let cvvPin = byName(
         name: .cvvPin
     )
@@ -527,6 +560,9 @@ private extension Target.Dependency {
 }
 
 private extension String {
+    
+    static let cryptoSwaddler = "CryptoSwaddler"
+    static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
     
     static let cvvPin = "CvvPin"
     static let cvvPinTests = "CvvPinTests"

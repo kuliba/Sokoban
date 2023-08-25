@@ -12,15 +12,15 @@ import Foundation
 import GenericRemoteService
 
 extension PublicTransportKeyDomain {
-#warning("PublicTransportKey is symmetric ergo it should use AES encryption")
+    
     static func encrypt(_ data: Data) throws -> Data {
         
-        try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: fromCert())
+        try ForaCrypto.Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: fromCert())
     }
     
     static func decrypt(_ data: Data) throws -> Data {
         
-        try Crypto.rsaPKCS1Decrypt(data: data, withPrivateKey: fromCert())
+        try ForaCrypto.Crypto.rsaPKCS1Decrypt(data: data, withPrivateKey: fromCert())
     }
 }
 

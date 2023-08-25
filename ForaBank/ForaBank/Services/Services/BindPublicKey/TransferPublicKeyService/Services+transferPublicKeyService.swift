@@ -38,12 +38,13 @@ extension Services {
 #warning("FIX THIS")
                 }
             },
-            aesEncrypt128bitChunks: {
+            aesEncrypt128bitChunks: { data, secret in
                 
-#warning("FIX THIS")
-                return $0
+                let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
+                return try aesGCMEncryptionAgent.encrypt(data)
             }
         )
+        
         let bindKeyService = PublicKeyTransferService.BindKeyService(
             createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
             performRequest: httpClient.performRequest,
@@ -62,15 +63,24 @@ extension Services {
         withPublicKey publicKey: @escaping () throws -> SecKey
     ) -> TransferOTPEncrypter {
         
-        let encryptWithPadding: TransferOTPEncrypter.EncryptWithPadding = { _,_ in
+        #warning("try P384 direct encryption?")
+        let encryptWithPadding: TransferOTPEncrypter.EncryptWithPadding = { otp, privateKey in
+
+            guard let data = otp.value.data(using: .utf8)
+            else {
+                throw NSError(domain: "Error creating data from OTP value", code: 0)
+            }
             
-#warning("FIX THIS")
-            return unimplemented("EncryptWithPadding")
+            let key = try ForaCrypto.Crypto.createSecKeyWith(
+                data: privateKey.derRepresentation
+            )
+            
+            return try ForaCrypto.Crypto.sign(data, withPrivateKey: key)
         }
         
         let encryptWithTransportPublicRSAKey = { data in
             
-            try Crypto.rsaPKCS1Encrypt(
+            try ForaCrypto.Crypto.rsaPKCS1Encrypt(
                 data: data,
                 withPublicKey: publicKey()
             )
@@ -103,16 +113,15 @@ private extension Services.P384Swaddler {
         )
     }
     
-#warning("Data is not used")
     func swaddle(
         otp: OTP,
-        keyData: Data,
+        sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
         completion: @escaping (Result<Data, any Error>) -> Void
     ) {
         completion(
             .init(catching: {
                 
-                try swaddleKey(with: otp)
+                try swaddleKey(with: otp, and: sharedSecret)
             })
         )
     }
@@ -135,7 +144,7 @@ private extension BindPublicKeyWithEventIDMapper {
 
 private extension Services.PublicKeyTransferService {
     
-    typealias Input = TransferPublicKey.PublicKeyWithEventID<Services.ExchangeEventID>
+    typealias Input = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
     typealias BindKeyService = RemoteService<Input, Void>
     
     convenience init(
@@ -151,7 +160,7 @@ private extension Services.PublicKeyTransferService {
 
 private extension Services.PublicKeyTransferService.BindKeyService {
     
-    typealias BindCompletion = Services.PublicKeyTransferService.BindKeyCompletion
+    typealias BindCompletion = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.Completion
     
     func process(
         input: Input,

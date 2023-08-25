@@ -62,10 +62,12 @@ class CvvPinServiceTestHelpers: XCTestCase {
     
     final class KeyExchangeServiceSpy {
         
+        typealias Result = KeyExchangeDomain.Result
         typealias Completion = KeyExchangeDomain.Completion
+        typealias SessionCode = KeyExchangeDomain.SessionCode
         
         func exchangeKey(
-            with sessionCode: KeyExchangeDomain.SessionCode,
+            with sessionCode: SessionCode,
             completion: @escaping Completion
         ) {
             messages.append(.exchangeKey)
@@ -76,7 +78,7 @@ class CvvPinServiceTestHelpers: XCTestCase {
         private var completions = [Completion]()
         
         func complete(
-            with result: KeyExchangeDomain.Result,
+            with result: Result,
             at index: Int = 0
         ) {
             completions[index](result)
@@ -92,11 +94,14 @@ class CvvPinServiceTestHelpers: XCTestCase {
         
         typealias Result = TransferPublicKeyDomain.Result
         typealias Completion = TransferPublicKeyDomain.Completion
+        typealias OTP = TransferPublicKeyDomain.OTP
+        typealias EventID = TransferPublicKeyDomain.EventID
+        typealias SharedSecret = TransferPublicKeyDomain.SharedSecret
         
         func bind(
-            _ otp: TransferPublicKeyDomain.OTP,
-            _ eventID: TransferPublicKeyDomain.EventID,
-            _ data: Data,
+            _ otp: OTP,
+            _ eventID: EventID,
+            _ secret: SharedSecret,
             completion: @escaping Completion
         ) {
             messages.append(.bind)

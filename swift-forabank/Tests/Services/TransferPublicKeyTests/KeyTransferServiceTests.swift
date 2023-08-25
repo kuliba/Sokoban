@@ -102,7 +102,7 @@ final class KeyTransferServiceTests: XCTestCase {
         )
         var results = [TransferResult]()
         
-        sut?.transfer(otp: anyOTP(), eventID: anyEventID(), keyData: anyData()) {
+        sut?.transfer() {
             
             results.append($0)
         }
@@ -122,7 +122,7 @@ final class KeyTransferServiceTests: XCTestCase {
         )
         var results = [TransferResult]()
         
-        sut?.transfer(otp: anyOTP(), eventID: anyEventID(), keyData: anyData()) {
+        sut?.transfer() {
             
             results.append($0)
         }
@@ -135,18 +135,8 @@ final class KeyTransferServiceTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private struct TestOTP {
-        
-        let value: String
-    }
-    
-    private struct TestEventID {
-        
-        let value: String
-    }
-    
     private typealias TransferService = KeyTransferService<TestOTP, TestEventID>
-    private typealias TransferResult = TransferService.Result
+    private typealias TransferResult = KeyTransferDomain.Result
     
     private func makeSUT(
         file: StaticString = #file,
@@ -180,7 +170,7 @@ final class KeyTransferServiceTests: XCTestCase {
         var receivedResults = [TransferResult]()
         let exp = expectation(description: "wait for completion")
         
-        sut.transfer(otp: anyOTP(), eventID: anyEventID(), keyData: anyData()) {
+        sut.transfer() {
             
             receivedResults.append($0)
             exp.fulfill()
@@ -225,26 +215,19 @@ final class KeyTransferServiceTests: XCTestCase {
             }
     }
     
-    private func anyOTP() -> TestOTP {
-        
-        .init(value: UUID().uuidString)
-    }
-    
-    private func anyEventID() -> TestEventID {
-        
-        .init(value: UUID().uuidString)
-    }
     
     private final class KeySwaddlerSpy {
         
-        typealias Result = TransferService.SwaddleKeyResult
-        typealias Completion = (Result) -> Void
+        typealias TestSwaddleKeyDomain = SwaddleKeyDomain<TestOTP>
+        typealias Result = TestSwaddleKeyDomain.Result
+        typealias Completion = TestSwaddleKeyDomain.Completion
+        typealias SharedSecret = TestSwaddleKeyDomain.SharedSecret
         
         private(set) var completions = [Completion]()
         
         func swaddleKey(
             otp: TestOTP,
-            keyData: Data,
+            sharedSecret: SharedSecret,
             completion: @escaping Completion
         ) {
             completions.append(completion)
@@ -258,15 +241,17 @@ final class KeyTransferServiceTests: XCTestCase {
         }
     }
     
+    
     private final class BingPublicKeyWithEventIDSpy {
         
-        typealias Result = TransferService.BindKeyResult
+        typealias TestBindKeyDomain = BindKeyDomain<TestEventID>
+        typealias Result = TestBindKeyDomain.Result
         typealias Completion = (Result) -> Void
         
         private(set) var completions = [Completion]()
         
         func bindKey(
-            payload: PublicKeyWithEventID<TestEventID>,
+            payload: TestBindKeyDomain.Payload,
             completion: @escaping Completion
         ) {
             completions.append(completion)
@@ -278,5 +263,39 @@ final class KeyTransferServiceTests: XCTestCase {
         ) {
             completions[index](result)
         }
+    }
+}
+
+// MARK: - Helpers
+
+private struct TestEventID {
+    
+    let value: String
+}
+
+struct TestOTP {
+    
+    let value: String
+}
+
+private func anyOTP() -> TestOTP {
+    
+    .init(value: UUID().uuidString)
+}
+
+private func anyEventID() -> TestEventID {
+    
+    .init(value: UUID().uuidString)
+}
+
+// MARK: - DSL
+
+private extension KeyTransferService
+where EventID == TestEventID ,
+      OTP == TestOTP {
+    
+    func transfer(completion: @escaping TransferCompletion) {
+        
+        transfer(otp: anyOTP(), eventID: anyEventID(), sharedSecret: anySharedSecret(), completion: completion)
     }
 }

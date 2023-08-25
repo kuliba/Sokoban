@@ -77,7 +77,7 @@ public final class KeyExchangeService {
             completion(.init {
                 
                 try .init(
-                    keyData: result.get(),
+                    sharedSecret: result.get(),
                     eventID: .init(value: response.eventID),
                     sessionTTL: response.sessionTTL
                 )

@@ -136,8 +136,7 @@ final class CvvPinServiceInternalTests: CvvPinServiceTestHelpers {
         
         sut?.confirmExchange(
             withOTP: uniqueOTP(),
-            eventID: uniqueEventID(),
-            andSharedSecret: "some data".data(using: .utf8)!
+            keyExchange: uniqueKeyExchange()
         ) {
             confirmExchangeResults.append($0)
         }
@@ -197,8 +196,7 @@ final class CvvPinServiceInternalTests: CvvPinServiceTestHelpers {
         
         sut.confirmExchange(
             withOTP: uniqueOTP(),
-            eventID: uniqueEventID(),
-            andSharedSecret: "some data".data(using: .utf8)!
+            keyExchange: uniqueKeyExchange()
         ) {
             exchangeKeyResults.append($0)
             exp.fulfill()

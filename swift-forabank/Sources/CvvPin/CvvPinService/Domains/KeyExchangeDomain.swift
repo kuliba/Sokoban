@@ -32,16 +32,16 @@ extension KeyExchangeDomain {
     
     public struct KeyExchange: Equatable {
         
-        public let keyData: Data
+        public let sharedSecret: Data
         public let eventID: EventID
         public let sessionTTL: TimeInterval
         
         public init(
-            keyData: Data,
+            sharedSecret: Data,
             eventID: EventID,
             sessionTTL: TimeInterval
         ) {
-            self.keyData = keyData
+            self.sharedSecret = sharedSecret
             self.eventID = eventID
             self.sessionTTL = sessionTTL
         }

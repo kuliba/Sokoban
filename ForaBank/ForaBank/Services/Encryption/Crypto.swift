@@ -13,41 +13,8 @@ enum Crypto {}
 
 extension Crypto {
     
-    static func rsaPKCS1Encrypt(
-        data: Data,
-        withPublicKey key: SecKey
-    ) throws -> Data {
-        
-        var error: Unmanaged<CFError>? = nil
-        guard let encrypted = SecKeyCreateEncryptedData(key, .rsaEncryptionPKCS1, data as CFData, &error) as Data?
-        else {
-            throw CryptoError.encryptionFailure(error?.takeRetainedValue())
-        }
-        
-        return encrypted
-    }
-    
-    static func rsaPKCS1Decrypt(
-        data: Data,
-        withPrivateKey key: SecKey
-    ) throws -> Data {
-        
-        var error: Unmanaged<CFError>? = nil
-        guard let decrypted = SecKeyCreateDecryptedData(key, .rsaEncryptionPKCS1, data as CFData, &error) as Data?
-        else {
-            throw CryptoError.decryptionFailure(error?.takeRetainedValue())
-        }
-        
-        return decrypted
-    }
-}
-
-extension Crypto {
-    
     enum CryptoError: Error {
         
-        case encryptionFailure(Error?)
-        case decryptionFailure(Error?)
         case publicTransportKeyExternalRepresentationFailure
         case base64StringDecodingFailure
         case serverPublicKeyDataDecryptionFailure(Error?)

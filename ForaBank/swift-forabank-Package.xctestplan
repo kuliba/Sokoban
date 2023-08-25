@@ -124,6 +124,13 @@
         "identifier" : "TransferPublicKeyTests",
         "name" : "TransferPublicKeyTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
     }
   ],
   "version" : 1

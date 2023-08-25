@@ -543,7 +543,176 @@ final class ForaCryptoTests: XCTestCase {
         XCTAssertNoThrow(try P384.KeyAgreement.PublicKey(rawRepresentation: raw))
     }
     
+    func test_createRandomSecKeys_shouldNotFailFor4096RSA() throws {
+        
+        try XCTAssertNoThrow(createRandom4096RSAKeys())
+    }
+    
+    func test_keyBockSize() throws {
+        
+        let (privateKey, publicKey) = try createRandom4096RSAKeys()
+        
+        XCTAssertEqual(SecKeyGetBlockSize(privateKey), 512)
+        XCTAssertEqual(SecKeyGetBlockSize(publicKey), 512)
+    }
+    
+    func test_privateRSAKey_shouldSupportSigning() throws {
+        
+        let (privateKey, _) = try createRandom4096RSAKeys()
+        
+        let algorithms: [SecKeyAlgorithm] = [
+            .rsaSignatureRaw,
+            .rsaSignatureDigestPSSSHA1,
+            .rsaSignatureDigestPSSSHA224,
+            .rsaSignatureDigestPSSSHA256,
+            .rsaSignatureDigestPSSSHA384,
+            .rsaSignatureDigestPSSSHA512,
+            .rsaSignatureMessagePSSSHA1
+        ]
+        
+        algorithms.forEach {
+            
+            expectIsSupported(privateKey, .sign, $0)
+        }
+    }
+    
+    func test_RSASigningWithPrivateKey() throws {
+        
+        let (privateKey, _) = try createRandom4096RSAKeys()
+        let message = "important message"
+        let data = try XCTUnwrap(message.data(using: .utf8))
+        
+        let signed = try Crypto.sign(data, withPrivateKey: privateKey)
+        XCTAssertEqual(signed.count, 512)
+    }
+    
+    func test_RSAEncryption_publicKey_privateKey() throws {
+        
+        let (privateKey, publicKey) = try createRandom4096RSAKeys()
+        let message = "important message"
+        let data = try XCTUnwrap(message.data(using: .utf8))
+        
+        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        XCTAssertEqual(encrypted.count, 512)
+        
+        let decrypted = try Crypto.rsaPKCS1Decrypt(data: encrypted, withPrivateKey: privateKey)
+        
+        let decryptedMessage = String(data: decrypted, encoding: .utf8)
+        XCTAssertEqual(message.count, 17)
+        XCTAssertEqual(decryptedMessage?.count, 17)
+        XCTAssertEqual(decryptedMessage, message)
+    }
+    
+    func test_RSAEncryption_shouldThrowOnPrivateKey() throws {
+        
+        let (privateKey, _) = try createRandom4096RSAKeys()
+        
+        try XCTAssertThrowsError(
+            Crypto.rsaPKCS1Encrypt(
+                data: anyData(),
+                withPublicKey: privateKey
+            )
+        )
+    }
+    
+    func test_encrypt_shouldFailOnPublicKey() throws {
+        
+        let (_, publicKey) = try createRandom4096RSAKeys()
+        
+        try XCTAssertThrowsError(
+            Crypto.encrypt(anyData(), with: publicKey)
+        )
+    }
+    
+    /* keep this test for future explorations
+     
+    func test_privateKey_publicKey() throws {
+        
+        let (privateKey, publicKey) = try createRandom4096RSAKeys()
+        let message = "important message"
+        let data = try XCTUnwrap(message.data(using: .utf8))
+        
+        let encrypted = try Crypto.encrypt(data, with: privateKey)
+        XCTAssertEqual(encrypted.count, 512)
+        
+        let decr = try Crypto.decrypt(encrypted, using: .rsaEncryptionRaw, secKey: publicKey)
+        let decrMessage = String(data: decr, encoding: .utf8)
+        XCTAssertEqual(decrMessage, "")
+        XCTAssertEqual(decrMessage?.count, 17)
+        
+        let decrypted = try Crypto.decrypt(encrypted, with: publicKey)
+        XCTAssertEqual(decrypted.count, 512)
+        
+        let decryptedMessage = String(data: decrypted, encoding: .utf8)
+        XCTAssertEqual(message.count, 17)
+        XCTAssertEqual(decryptedMessage?.count, 17)
+        XCTAssertEqual(decryptedMessage, message)
+    }
+    */
+    
+    func test_encryptWithRSAKey_shouldEncryptWithPublicKey() throws {
+        
+        let (_, publicKey) = try createRandom4096RSAKeys()
+        let message = try XCTUnwrap("important message".data(using: .utf8))
+        
+        // also try OAEP, etc
+        let encrypted = Crypto.encryptWithRSAKey(message, publicKey: publicKey, padding: .PKCS1)
+        XCTAssertNotNil(encrypted)
+        XCTAssertEqual(encrypted?.count, 512)
+    }
+    
+    func test_encryptWithRSAKey_shouldFailToEncryptWithPrivateKey() throws {
+        
+        let (privateKey, _) = try createRandom4096RSAKeys()
+        let message = try XCTUnwrap("important message".data(using: .utf8))
+        
+        // also try OAEP, etc
+        let encrypted = Crypto.encryptWithRSAKey(message, publicKey: privateKey, padding: .PKCS1)
+        XCTAssertNil(encrypted)
+    }
+    
+    func test_rsaPKCS1Encrypt_shouldEncryptData() throws {
+        
+        let publicKey = try createRandom4096RSAKeys().publicKey
+        let data = try XCTUnwrap("some data".data(using: .utf8))
+        
+        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        
+        XCTAssertNotEqual(encrypted, data)
+    }
+    
+    func test_rsaPKCS1Decrypt_shouldDecryptEncryptedData() throws {
+        
+        let originalMessage = "some data"
+        let data = try XCTUnwrap(originalMessage.data(using: .utf8))
+        let (privateKey, publicKey) = try createRandom4096RSAKeys()
+        
+        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        let decrypted = try Crypto.rsaPKCS1Decrypt(data: encrypted, withPrivateKey: privateKey)
+        let decryptedMessage = try XCTUnwrap(String(data: decrypted, encoding: .utf8))
+        
+        XCTAssertEqual(originalMessage, decryptedMessage)
+    }
+    
+    // MARK: - Helpers Tests
+    
+    func test_createRandom4096RSAKeys_shouldCreatePublicKeyForRSAEncryptionPKCS1() throws {
+        
+        let publicKey = try createRandom4096RSAKeys().publicKey
+        let rsaEncryptionPKCS1 = SecKeyIsAlgorithmSupported(publicKey, .encrypt, .rsaEncryptionPKCS1)
+        
+        XCTAssertTrue(rsaEncryptionPKCS1)
+    }
+    
     // MARK: - Helpers
+        
+    private func keyData() throws -> Data {
+        
+        let keyBase64 = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEFZp5pRhs5snqQLa5AsGGtPKvaFfxF3CgSDMKCmwCAKmeZtKetmdUAq/UrfFjP7k7rbH+QSLisR/g3XHFVwQY/CSbuqII5i5Adh2ssCtYmQ7oDbvmk9PbeyCZE4twlNtV"
+        
+        return try XCTUnwrap(Data(base64Encoded: keyBase64))
+    }
+
     
     private typealias MakePrivateKey = (Data) throws -> P384.KeyAgreement.PrivateKey
     private typealias PrivateKeyFactory = (param: String, makeKey: MakePrivateKey)
@@ -709,35 +878,151 @@ final class ForaCryptoTests: XCTestCase {
             "\(algorithm) is not supported.",
             file: file, line: line)
     }
+    
+    private func createRandom4096RSAKeys() throws -> (
+        privateKey: SecKey,
+        publicKey: SecKey
+    ) {
+        try Crypto.createRandomSecKeys(
+            keyType: kSecAttrKeyTypeRSA,
+            keySizeInBits: 4096
+        )
+    }
+}
+
+func anyData(bitCount: Int = 256) -> Data {
+    
+    let key = SymmetricKey(size: .init(bitCount: bitCount))
+    
+    return key.withUnsafeBytes { Data($0) }
 }
 
 extension Crypto {
     
-    static func createRandomSecKeys(
-        keyType: CFString,
-        keySizeInBits: Int
-    ) throws -> (
-        privateKey: SecKey,
-        publicKey: SecKey
-    ) {
-        let attributes: [String: Any] = [
-            kSecAttrKeyType as String: keyType,
-            kSecAttrKeySizeInBits as String: keySizeInBits,
-            kSecPrivateKeyAttrs as String:
-                [kSecAttrIsPermanent as String: false]
-        ]
+    /// Encrypt data using RSA key.
+    ///
+    /// - Parameters:
+    ///   - data: Input data to be encrypted.
+    ///   - key: RSA key to use for encryption.
+    ///   - padding: The type of padding to use. Typically, `PKCS1` is used, which adds PKCS1 padding before encryption.
+    /// - Returns: The encrypted data
+    static func encrypt(
+        _ data: Data,
+        with key: SecKey,
+        padding: SecPadding = .PKCS1
+    ) throws -> Data {
         
-        var error: Unmanaged<CFError>?
-        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error),
-              let publicKey = SecKeyCopyPublicKey(privateKey)
+        let blockSize = SecKeyGetBlockSize(key)
+        
+        var encryptedLength = blockSize
+        var encryptedData = [UInt8](repeating: 0, count: encryptedLength)
+        
+        
+        guard let mutableData = NSMutableData(length: blockSize)
         else {
-            throw Error.keysGenerationFailure(
-                bits: keySizeInBits,
-                keyType: keyType,
-                error!.takeRetainedValue()
-            )
+#warning("replace with CryptoError")
+            throw NSError(domain: "Decryption failed", code: 0)
         }
         
-        return (privateKey, publicKey)
+        let metadata = data
+        let encryptedMetadata = (metadata as NSData).bytes.bindMemory(to: UInt8.self, capacity: metadata.count)
+        let mutableDataBytes = mutableData.mutableBytes.assumingMemoryBound(to: UInt8.self)
+        
+        let status = SecKeyEncrypt(key, padding, /*data.withUnsafeBytes { $0 }*/ mutableDataBytes, data.count, &encryptedData, &encryptedLength)
+        
+        guard noErr != status else {
+            
+#warning("replace with CryptoError")
+            throw NSError(domain: "Encryption failed: \(String(describing: SecCopyErrorMessageString(status, nil)))", code: 0)
+        }
+        
+        return .init(bytes: encryptedData, count: encryptedLength)
+    }
+    
+    static func decrypt(
+        _ data: Data,
+        with key: SecKey,
+        padding: SecPadding = .PKCS1
+    ) throws -> Data {
+        
+        let blockSize = SecKeyGetBlockSize(key)
+        
+        guard let decryptedMetadata = NSMutableData(length: blockSize)
+        else {
+#warning("replace with CryptoError")
+            throw NSError(domain: "Decryption failed", code: 0)
+        }
+        
+        let metadata = data
+        let encryptedMetadata = (metadata as NSData).bytes.bindMemory(to: UInt8.self, capacity: metadata.count)
+        let decryptedMetadataBytes = decryptedMetadata.mutableBytes.assumingMemoryBound(to: UInt8.self)
+        
+        var decryptedMetadataLength = blockSize
+        let decryptionStatus = SecKeyDecrypt(key, padding, encryptedMetadata, blockSize, decryptedMetadataBytes, &decryptedMetadataLength)
+        
+        guard noErr != decryptionStatus else {
+            
+#warning("replace with CryptoError")
+            throw NSError(domain: "Decryption failed: \(String(describing: SecCopyErrorMessageString(decryptionStatus, nil)))", code: 0)
+        }
+        
+        return .init(bytes: decryptedMetadataBytes, count: decryptedMetadataLength)
+    }
+    
+    // From ForaBank
+    static func encryptWithRSAKey(
+        _ data: Data,
+        publicKey key: SecKey,
+        padding: SecPadding
+    ) -> Data? {
+        
+        let blockSize = SecKeyGetBlockSize(key)
+        let maxChunkSize = blockSize - 11
+        
+        var decryptedDataAsArray = [UInt8](repeating: 0, count: data.count / MemoryLayout<UInt8>.size)
+        (data as NSData).getBytes(&decryptedDataAsArray, length: data.count)
+        
+        var encryptedData = [UInt8](repeating: 0, count: 0)
+        var idx = 0
+        while (idx < decryptedDataAsArray.count ) {
+            var idxEnd = idx + maxChunkSize
+            if ( idxEnd > decryptedDataAsArray.count ) {
+                idxEnd = decryptedDataAsArray.count
+            }
+            var chunkData = [UInt8](repeating: 0, count: maxChunkSize)
+            for i in idx..<idxEnd {
+                chunkData[i-idx] = decryptedDataAsArray[i]
+            }
+            
+            var encryptedDataBuffer = [UInt8](repeating: 0, count: blockSize)
+            var encryptedDataLength = blockSize
+            
+            let status = SecKeyEncrypt(key, padding, chunkData, idxEnd-idx, &encryptedDataBuffer, &encryptedDataLength)
+            if ( status != noErr ) {
+                NSLog("Error while ecrypting: %i", status)
+                return nil
+            }
+            //let finalData = removePadding(encryptedDataBuffer)
+            encryptedData += encryptedDataBuffer
+            
+            
+            idx += maxChunkSize
+        }
+        
+        return Data(bytes: UnsafePointer<UInt8>(encryptedData), count: encryptedData.count)
+    }
+}
+
+extension SecKey {
+    
+    func rawRepresentation() throws -> Data {
+        
+        var error: Unmanaged<CFError>?
+        guard let rawRepresentation = SecKeyCopyExternalRepresentation(self, &error) as? Data
+        else {
+            throw NSError(domain: "SecKeyCopyExternalRepresentation Error", code: 0)
+        }
+        
+        return rawRepresentation
     }
 }

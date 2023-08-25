@@ -56,7 +56,7 @@ public final class KeyKeeper {
             _confirmExchange(
                 .init(value: otp),
                 .init(value: keyExchange.eventID.value),
-                keyExchange.keyData
+                .init(keyExchange.sharedSecret)
             ) { result in
                 
                 _ = result

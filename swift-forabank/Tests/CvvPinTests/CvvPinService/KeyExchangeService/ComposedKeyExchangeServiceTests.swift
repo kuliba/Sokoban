@@ -298,7 +298,7 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
         
         sut.exchangeKey(with: sessionCode) {
             
-            extractSharedSecretResults.append($0.map(\.keyData))
+            extractSharedSecretResults.append($0.map(\.sharedSecret))
             exp.fulfill()
         }
         
