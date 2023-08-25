@@ -14,28 +14,44 @@ public extension TransferPublicKeyDomain {
     
     typealias Result = Swift.Result<Void, Error>
     typealias Completion = (Result) -> Void
-    typealias TransferKey = (OTP, EventID, Data, @escaping Completion) -> Void
+    typealias TransferKey = (OTP, EventID, SharedSecret, @escaping Completion) -> Void
 }
 
 extension TransferPublicKeyDomain {
     
     public struct OTP: Equatable {
         
-        public let value: String
+        private let otp: String
         
         public init(value: String) {
          
-            self.value = value
+            self.otp = value
         }
+        
+        public var value: String { otp }
     }
     
     public struct EventID: Equatable {
         
-        public let value: String
+        private let event: String
         
         public init(value: String) {
          
-            self.value = value
+            self.event = value
         }
+
+        public var value: String { event }
+    }
+    
+    public struct SharedSecret: Equatable {
+        
+        private let secret: Data
+        
+        public init(_ secret: Data) {
+         
+            self.secret = secret
+        }
+
+        public var data: Data { secret }
     }
 }

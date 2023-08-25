@@ -9,10 +9,6 @@ import Foundation
 
 public final class CvvPinService {
     
-    public typealias ExchangeKey = KeyExchangeDomain.ExchangeKey
-    public typealias GetProcessingSessionCode = GetProcessingSessionCodeDomain.GetProcessingSessionCode
-    public typealias TransferPublicKey = TransferPublicKeyDomain.TransferKey
-    
     // TODO: protect from race conditions
     private var state: State?
     
@@ -21,6 +17,10 @@ public final class CvvPinService {
         case error(Error)
         case keyExchange(KeyExchangeDomain.KeyExchange)
     }
+    
+    public typealias ExchangeKey = KeyExchangeDomain.ExchangeKey
+    public typealias GetProcessingSessionCode = GetProcessingSessionCodeDomain.GetProcessingSessionCode
+    public typealias TransferPublicKey = TransferPublicKeyDomain.TransferKey
     
     private let exchangeKey: ExchangeKey
     private let getProcessingSessionCode: GetProcessingSessionCode
@@ -115,8 +115,7 @@ extension CvvPinService {
         case let .keyExchange(keyExchange):
             confirmExchange(
                 withOTP: otp,
-                eventID: keyExchange.eventID,
-                andSharedSecret: keyExchange.keyData,
+                keyExchange: keyExchange,
                 completion: completion
             )
         }
@@ -127,15 +126,16 @@ extension CvvPinService {
         public init() {}
     }
     
-    public typealias EventID = KeyExchangeDomain.KeyExchange.EventID
-    
     internal func confirmExchange(
         withOTP otp: OTP,
-        eventID: EventID,
-        andSharedSecret data: Data,
+        keyExchange: KeyExchangeDomain.KeyExchange,
         completion: @escaping (ConfirmExchangeResult) -> Void
     ) {
-        transferPublicKey(otp, eventID.exchangeEventID, data) { [weak self] result in
+        transferPublicKey(
+            otp,
+            keyExchange.eventID.exchangeEventID,
+            keyExchange.secret
+        ) { [weak self] result in
             
             guard self != nil else { return }
             
@@ -154,7 +154,15 @@ private extension GetProcessingSessionCodeDomain.SessionCode {
     }
 }
 
-private extension CvvPinService.EventID {
+private extension KeyExchangeDomain.KeyExchange {
+    
+    var secret: TransferPublicKeyDomain.SharedSecret {
+        
+        .init(sharedSecret)
+    }
+}
+
+private extension KeyExchangeDomain.KeyExchange.EventID {
     
     var exchangeEventID: TransferPublicKeyDomain.EventID {
         

@@ -459,7 +459,6 @@
 		2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A91009E2A7C3F0C0022308F /* Model+cvvPinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009D2A7C3F0B0022308F /* Model+cvvPinService.swift */; };
-		2A9100A02A7C413E0022308F /* CryptoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009F2A7C413E0022308F /* CryptoTests.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
@@ -2400,7 +2399,6 @@
 		2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodorTests.swift"; sourceTree = "<group>"; };
 		2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicServerSessionKeyMapper.swift; sourceTree = "<group>"; };
 		2A91009D2A7C3F0B0022308F /* Model+cvvPinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+cvvPinService.swift"; sourceTree = "<group>"; };
-		2A91009F2A7C413E0022308F /* CryptoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoTests.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
@@ -2429,6 +2427,7 @@
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
 		2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationSourceAvtodorCase.swift; sourceTree = "<group>"; };
 		2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodor.swift"; sourceTree = "<group>"; };
+		2AC410E62A986BBF00D0AC00 /* CryptoSwaddler.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CryptoSwaddler.xctestplan; sourceTree = "<group>"; };
 		2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_1.json; sourceTree = "<group>"; };
 		2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewComponent.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
@@ -7167,7 +7166,6 @@
 				776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */,
 				2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */,
 				779511A62A6A961500A570F8 /* KeychainSymmetricKeyProviderAdapterTests.swift */,
-				2A91009F2A7C413E0022308F /* CryptoTests.swift */,
 				2A89FB992A836179008F6B87 /* Crypto+AESTests.swift */,
 			);
 			path = Encryption;
@@ -9235,6 +9233,7 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
+				2AC410E62A986BBF00D0AC00 /* CryptoSwaddler.xctestplan */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
@@ -9255,7 +9254,6 @@
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
-				2AB2F50A2A95355E001065F9 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -12160,7 +12158,6 @@
 				2A01BAFB29A8E52B0021833F /* ActiveSessionAgentStubTests.swift in Sources */,
 				2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
-				2A9100A02A7C413E0022308F /* CryptoTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
 				0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */,
 				833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */,

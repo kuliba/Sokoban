@@ -88,7 +88,7 @@ final class GetProcessingSessionCodeMapperTests: XCTestCase {
         code: String = "22345200-abe8-4f60-90c8-0d43c5f6c0f6",
         phone: String = "71234567890"
     ) -> (
-        sessionCode: GetProcessingSessionCode,
+        sessionCode: SessionCodeDomain.GetProcessingSessionCode,
         data: Data
     ) {
         
@@ -97,7 +97,7 @@ final class GetProcessingSessionCodeMapperTests: XCTestCase {
             "phone": phone
         ]
         
-        let sessionCode = GetProcessingSessionCode(code: code, phone: phone)
+        let sessionCode = SessionCodeDomain.GetProcessingSessionCode(code: code, phone: phone)
         let data = try! JSONSerialization.data(withJSONObject: json)
         
         return (sessionCode, data)

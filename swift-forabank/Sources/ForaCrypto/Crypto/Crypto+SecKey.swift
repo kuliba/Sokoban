@@ -9,6 +9,54 @@ import Foundation
 
 public extension Crypto {
     
+    // MARK: - Sing & Verify
+    
+    static func sign(
+        _ data: Data,
+        withPrivateKey key: SecKey,
+        algorithm: SecKeyAlgorithm = .rsaSignatureRaw
+    ) throws -> Data {
+        
+        var error: Unmanaged<CFError>? = nil
+        guard let signed = SecKeyCreateSignature(key, algorithm, data as CFData, &error) as? Data
+        else {
+            throw Error.signFailure(error?.takeRetainedValue() as? Swift.Error)
+        }
+        
+        return signed
+    }
+
+    static func veryfy(
+        _ data: Data,
+        withPublicKey key: SecKey,
+        signature: Data,
+        algorithm: SecKeyAlgorithm = .rsaSignatureRaw
+    ) throws -> Bool {
+        
+        var error: Unmanaged<CFError>? = nil
+        let isVerified = SecKeyVerifySignature(key, algorithm, data as CFData, signature as CFData, &error)
+        if let error {
+            throw Error.verificationFailure(error.takeRetainedValue() as Swift.Error)
+        }
+        
+        return isVerified
+    }
+
+    static func createSignature(
+        for data: Data,
+        usingPrivateKey key: SecKey,
+        algorithm: SecKeyAlgorithm = .rsaSignatureRaw
+    ) throws -> Data {
+        
+        var error: Unmanaged<CFError>? = nil
+        guard let signature = SecKeyCreateSignature(key, algorithm, data as CFData, &error) as? Data
+        else {
+            throw Error.creatingSignatureFailure(error?.takeRetainedValue() as? Swift.Error)
+        }
+        
+        return signature
+    }
+
     // MARK: - SecKey
     
     static func decryptPublicKey(
@@ -54,6 +102,34 @@ public extension Crypto {
         return publicKey
     }
     
+    static func createRandomSecKeys(
+        keyType: CFString,
+        keySizeInBits: Int
+    ) throws -> (
+        privateKey: SecKey,
+        publicKey: SecKey
+    ) {
+        let attributes: [String: Any] = [
+            kSecAttrKeyType as String: keyType,
+            kSecAttrKeySizeInBits as String: keySizeInBits,
+            kSecPrivateKeyAttrs as String:
+                [kSecAttrIsPermanent as String: false]
+        ]
+        
+        var error: Unmanaged<CFError>?
+        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error),
+              let publicKey = SecKeyCopyPublicKey(privateKey)
+        else {
+            throw Error.keysGenerationFailure(
+                bits: keySizeInBits,
+                keyType: keyType,
+                error!.takeRetainedValue()
+            )
+        }
+        
+        return (privateKey, publicKey)
+    }
+
     static func decrypt(
         _ string: String,
         with decryptionAlgorithm: SecKeyAlgorithm,

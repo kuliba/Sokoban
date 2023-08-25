@@ -18,7 +18,8 @@ where PublicKey: RawRepresentational {
     public typealias GenerateRSA4096BitKeys = () throws -> (PrivateKey, PublicKey)
     public typealias EncryptOTPWithRSAKey = (OTP, PrivateKey) throws -> Data
     public typealias SaveKeys = (PrivateKey, PublicKey) throws -> Void
-    public typealias AESEncryptBits128Chunks = (Data) throws -> Data
+    public typealias SharedSecret = SwaddleKeyDomain<OTP>.SharedSecret
+    public typealias AESEncryptBits128Chunks = (Data, SharedSecret) throws -> Data
     
     private let generateRSA4096BitKeys: GenerateRSA4096BitKeys
     private let encryptOTPWithRSAKey: EncryptOTPWithRSAKey
@@ -37,7 +38,10 @@ where PublicKey: RawRepresentational {
         self.aesEncrypt128bitChunks = aesEncrypt128bitChunks
     }
     
-    public func swaddleKey(with otp: OTP) throws -> Data {
+    public func swaddleKey(
+        with otp: OTP,
+        and sharedSecret: SharedSecret
+    ) throws -> Data {
         
         let (encryptedOTP, privateKey, publicKey) = try retryEncryptOTP(otp)
         
@@ -50,7 +54,7 @@ where PublicKey: RawRepresentational {
             "clientPublicKeyRSA": publicKeyData.base64EncodedString()
         ] as [String: String])
         
-        let data: Data = try aesEncrypt128bitChunks(json)
+        let data: Data = try aesEncrypt128bitChunks(json, sharedSecret)
         
         return data
     }
@@ -68,7 +72,7 @@ where PublicKey: RawRepresentational {
         }
     }
     
-    #warning("this might already be a part of make...Request")
+#warning("this might already be a part of make...Request")
     func makeSecretJSON(
         eventID: EventID,
         data: Data

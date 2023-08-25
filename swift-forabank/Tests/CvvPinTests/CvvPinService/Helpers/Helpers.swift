@@ -12,7 +12,7 @@ import Foundation
 func uniqueKeyExchange() -> KeyExchangeDomain.KeyExchange {
     
     .init(
-        keyData: uniqueData(),
+        sharedSecret: uniqueData(),
         eventID: uniqueEventID(),
         sessionTTL: 300.0
     )

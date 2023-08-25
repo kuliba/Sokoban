@@ -15,6 +15,11 @@ public extension Crypto {
     
     enum Error: Swift.Error {
         
+        case signFailure(Swift.Error?)
+        case creatingSignatureFailure(Swift.Error?)
+        case verificationFailure(Swift.Error?)
+        case encryptionFailure(Swift.Error?)
+        case decryptionFailure(Swift.Error?)
         case dataCreationFromBase64StringFailure(String)
         case notFoundServerCertificateData
         case unableExtractPublicKeyFromServerCertificate

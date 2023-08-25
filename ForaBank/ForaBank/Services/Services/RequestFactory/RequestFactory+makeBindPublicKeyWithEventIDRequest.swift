@@ -12,7 +12,7 @@ import TransferPublicKey
 extension RequestFactory {
     
     static func makeBindPublicKeyWithEventIDRequest(
-        with publicKeyWithEventID: TransferPublicKey.PublicKeyWithEventID<KeyExchangeDomain.KeyExchange.EventID>
+        with publicKeyWithEventID: BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
     ) throws -> URLRequest {
         
         try makeBindPublicKeyWithEventIDRequest(
@@ -53,7 +53,7 @@ extension RequestFactory {
 private extension PublicKeyWithEventID {
     
     init(
-        _ transferPublicKeyWithEventID: TransferPublicKey.PublicKeyWithEventID<KeyExchangeDomain.KeyExchange.EventID>
+        _ transferPublicKeyWithEventID: BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
     ) {
         self.init(
             keyString: transferPublicKeyWithEventID.data.base64EncodedString(),

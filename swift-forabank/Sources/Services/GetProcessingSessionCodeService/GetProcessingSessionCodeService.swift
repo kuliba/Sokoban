@@ -9,12 +9,8 @@ import Foundation
 
 public final class GetProcessingSessionCodeService {
     
-    public typealias Response = Swift.Result<(Data, HTTPURLResponse), Swift.Error>
-    public typealias ResponseCompletion = (Response) -> Void
-    public typealias PerformRequest = (URLRequest, @escaping ResponseCompletion) -> Void
-    
-    public typealias Result = Swift.Result<GetProcessingSessionCode, Error>
-    public typealias MapResponse = (Data, HTTPURLResponse) -> Result
+    public typealias PerformRequest = SessionCodeDomain.PerformRequest
+    public typealias MapResponse = SessionCodeDomain.MapResponse
     
     private let url: URL
     private let performRequest: PerformRequest
@@ -30,7 +26,7 @@ public final class GetProcessingSessionCodeService {
         self.mapResponse = mapResponse
     }
     
-    public typealias Completion = (Result) -> Void
+    public typealias Completion = SessionCodeDomain.Completion
     
     public func process(completion: @escaping Completion) {
         
@@ -40,20 +36,11 @@ public final class GetProcessingSessionCodeService {
             
             switch result {
             case .failure:
-                completion(.failure(Error.connectivity))
+                completion(.failure(SessionCodeDomain.Error.connectivity))
                 
             case let .success((data, httpURLResponse)):
                 completion(mapResponse(data, httpURLResponse))
             }
         }
     }
-    
-    public enum Error: Swift.Error, Equatable {
-        
-        case connectivity
-        case invalidData(statusCode: Int)
-        case unknownStatusCode(Int)
-        case serverError(statusCode: Int, errorMessage: String)
-    }
 }
-

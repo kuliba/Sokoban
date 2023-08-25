@@ -5,7 +5,14 @@
 //  Created by Igor Malyarov on 07.08.2023.
 //
 
+import CryptoKit
 import Foundation
+import TransferPublicKey
+
+func anySharedSecret<OTP>() -> SwaddleKeyDomain<OTP>.SharedSecret {
+    
+    .init(anyData(bitCount: 64))
+}
 
 func anyError(
     _ domain: String = "any error",
@@ -15,9 +22,11 @@ func anyError(
     NSError(domain: domain, code: code)
 }
 
-func anyData() -> Data {
+func anyData(bitCount: Int = 64) -> Data {
     
-    .init()
+    let key = SymmetricKey(size: .init(bitCount: bitCount))
+    
+    return key.withUnsafeBytes { Data($0) }
 }
 
 func anyHTTPURLResponse(
