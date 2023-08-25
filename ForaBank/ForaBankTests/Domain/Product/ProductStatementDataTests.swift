@@ -37,7 +37,8 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.currencyCodeNumeric, 810)
 
         //"2022-01-20T13:44:17.810Z"
-        XCTAssertEqual(result.date, Date.dateUTC(with: 1648512000000))
+        let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
+        XCTAssertEqual(result.date, date)
 
         XCTAssertEqual(result.deviceCode, "string")
         XCTAssertEqual(result.documentAmount, 144.21)
@@ -55,7 +56,8 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.svgImage, SVGImageData.init(description: "string"))
         XCTAssertEqual(result.terminalCode, "41010601")
         
-        XCTAssertEqual(result.tranDate, Date.dateUTC(with: 1648512000000))
+        let tranDate = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
+        XCTAssertEqual(result.tranDate, tranDate)
         
         XCTAssertEqual(result.type, OperationEnvironment.inside)
     }
