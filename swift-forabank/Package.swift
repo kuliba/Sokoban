@@ -11,7 +11,8 @@ let package = Package(
     products: [
         .bindPublicKeyWithEventID,
         .cvvPin,
-        .landingComponents,
+        .landingComponentsOld,
+        .landingEngineOld,
         .loadableResourceComponent,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
@@ -27,6 +28,10 @@ let package = Package(
         // services
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        // landing
+        .landingMapping,
+        .landingUICompoment,
+        .landingUpdater,
     ],
     dependencies: [
         .combineSchedulers,
@@ -37,7 +42,8 @@ let package = Package(
         .bindPublicKeyWithEventIDTests,
         .cvvPin,
         .cvvPinTests,
-        .landingComponents,
+        .landingComponentsOld,
+        .landingEngineOld,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
         .manageSubscriptionsUI,
@@ -67,6 +73,11 @@ let package = Package(
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        // landing
+        .landingMapping,
+        .landingUICompoment,
+        .landingUICompomentTests,
+        .landingUpdater,
     ]
 )
 
@@ -100,10 +111,17 @@ private extension Product {
         ]
     )
     
-    static let landingComponents = library(
-        name: .landingComponents,
+    static let landingComponentsOld = library(
+        name: .landingComponentsOld,
         targets: [
-            .landingComponents,
+            .landingComponentsOld,
+        ]
+    )
+    
+    static let landingEngineOld = library(
+        name: .landingEngineOld,
+        targets: [
+            .landingEngineOld,
         ]
     )
     
@@ -190,6 +208,29 @@ private extension Product {
             .userModel
         ]
     )
+    
+    // landing
+    
+    static let landingMapping = library(
+        name: .landingMapping,
+        targets: [
+            .landingMapping
+        ]
+    )
+
+    static let landingUICompoment = library(
+        name: .landingUICompoment,
+        targets: [
+            .landingUICompoment
+        ]
+    )
+
+    static let landingUpdater = library(
+        name: .landingUpdater,
+        targets: [
+            .landingUpdater
+        ]
+    )
 }
 
 private extension Target {
@@ -257,9 +298,17 @@ private extension Target {
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
     )
     
-    static let landingComponents = target(
-        name: .landingComponents,
-        dependencies: []
+    static let landingComponentsOld = target(
+        name: .landingComponentsOld,
+        dependencies: [],
+        resources: [.process("Preview")]
+    )
+    
+    static let landingEngineOld = target(
+        name: .landingEngineOld,
+        dependencies: [
+            .landingComponentsOld
+        ]
     )
     
     static let loadableResourceComponent = target(
@@ -420,6 +469,29 @@ private extension Target {
             .userModel
         ]
     )
+    
+    // landing
+    
+    static let landingMapping = target(
+        name: .landingMapping,
+        path: "Sources/Landing/\(String.landingMapping)"
+    )
+    static let landingUpdater = target(
+        name: .landingUpdater,
+        path: "Sources/Landing/\(String.landingUpdater)"
+    )
+    static let landingUICompoment = target(
+        name: .landingUICompoment,
+        path: "Sources/Landing/\(String.landingUICompoment)"
+    )
+    static let landingUICompomentTests = testTarget(
+        name: .landingUICompomentTests,
+        dependencies: [
+            // internal modules
+            .landingUICompoment,
+        ],
+        path: "Tests/Landing/\(String.landingUICompomentTests)"
+    )
 }
 
 private extension Target.Dependency {
@@ -440,8 +512,8 @@ private extension Target.Dependency {
         name: .getProcessingSessionCodeService
     )
     
-    static let landingComponents = byName(
-        name: .landingComponents
+    static let landingComponentsOld = byName(
+        name: .landingComponentsOld
     )
     
     static let loadableResourceComponent = byName(
@@ -483,6 +555,17 @@ private extension Target.Dependency {
     static let userModel = byName(
         name: .userModel
     )
+    
+    // landing
+    static let landingMapping = byName(
+        name: .landingMapping
+    )
+    static let landingUICompoment = byName(
+        name: .landingUICompoment
+    )
+    static let landingUpdater = byName(
+        name: .landingUpdater
+    )
 }
 
 private extension String {
@@ -499,7 +582,8 @@ private extension String {
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
     
-    static let landingComponents = "LandingComponents"
+    static let landingComponentsOld = "LandingComponentsOld"
+    static let landingEngineOld = "LandingEngineOld"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
@@ -539,6 +623,12 @@ private extension String {
     
     static let userModel = "UserModel"
     static let userModelTests = "UserModelTests"
+    
+    // landing
+    static let landingMapping = "LandingMapping"
+    static let landingUICompoment = "LandingUICompoment"
+    static let landingUICompomentTests = "LandingUICompomentTests"
+    static let landingUpdater = "LandingUpdater"
 }
 
 // MARK: - Point-Free

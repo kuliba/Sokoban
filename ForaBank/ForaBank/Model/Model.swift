@@ -893,7 +893,7 @@ class Model {
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
                     
-                    case .jsonAbroad:
+                    case .jsonAbroad: //legacy
                         handleJsonAbroadRequest(payload.serial)
                         
                     case .clientInform:

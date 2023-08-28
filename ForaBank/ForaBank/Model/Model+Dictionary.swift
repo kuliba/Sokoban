@@ -2002,7 +2002,8 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    guard let data = response.data else {
+                    guard let data = response.data
+                    else {
                         handleServerCommandEmptyData(command: command)
                         self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.emptyData(message: response.errorMessage))))
                         return
