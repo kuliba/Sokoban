@@ -9,6 +9,7 @@ import Combine
 import LoadableResourceComponent
 import XCTest
 
+@MainActor
 final class AsyncPublisherTests: XCTestCase {
     
     func test_asyncPublisher_success() async throws {
@@ -55,7 +56,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         try await Task.sleep(nanoseconds: .ms50)
         await Task.megaYield()
-
+        
         assert(spy.events, [
             .value(.init(id: 42)),
             .finished,
@@ -87,7 +88,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         try await Task.sleep(nanoseconds: .ms50)
         await Task.megaYield(count: 100)
-
+        
         XCTAssertNoDiff(
             try XCTUnwrap(receivedError) as NSError,
             anyNSError(domain: "Abc")
@@ -109,7 +110,7 @@ final class AsyncPublisherTests: XCTestCase {
         
         try await Task.sleep(nanoseconds: .ms50)
         await Task.megaYield(count: 100)
-
+        
         assert(spy.events, [.failure])
     }
 }
