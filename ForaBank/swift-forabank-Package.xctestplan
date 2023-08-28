@@ -120,6 +120,14 @@
         "identifier" : "BindPublicKeyWithEventIDTests",
         "name" : "BindPublicKeyWithEventIDTests"
       }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUICompomentTests",
+        "name" : "LandingUICompomentTests"
+      }
     }
   ],
   "version" : 1
