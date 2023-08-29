@@ -10,6 +10,7 @@ import SwiftUI
 struct MultiTextsWithIconsHorizontalView: View {
     
     let model: MultiTextsWithIconsHorizontalViewModel
+    let config: Config
     
     var body: some View {
         
@@ -17,7 +18,9 @@ struct MultiTextsWithIconsHorizontalView: View {
             
             ForEach(model.lists) {
                 
-                ItemView(item: $0)
+                ItemView(
+                    item: $0,
+                    config: config)
             }
         }
     }
@@ -30,6 +33,7 @@ extension MultiTextsWithIconsHorizontalView {
     struct ItemView: View {
         
         let item: Item
+        let config: Config
         
         var body: some View {
             
@@ -40,8 +44,8 @@ extension MultiTextsWithIconsHorizontalView {
                 if let textItem = item.title {
                     
                     Text(textItem.title)
-                        .font(textItem.font)
-                        .foregroundColor(textItem.textColor)
+                        .font(config.font)
+                        .foregroundColor(config.color)
                 }
             }
         }
@@ -52,7 +56,9 @@ struct MultiTextsWithIconsHorizontalView_Previews: PreviewProvider {
     static var previews: some View {
         
         MultiTextsWithIconsHorizontalView(
-            model: .init(lists: .defaultValue)
+            model: .init(
+                lists: .defaultValue),
+            config: .defaultValueBlack
         )
     }
 }

@@ -10,10 +10,15 @@ import SwiftUI
 struct MultiLineHeaderView: View {
     
     let viewModel: MultiLineHeaderViewModel
+    let config: Config
     
-    init(viewModel: MultiLineHeaderViewModel) {
+    init(
+        viewModel: MultiLineHeaderViewModel,
+        config: Config
+    ) {
         
         self.viewModel = viewModel
+        self.config = config
     }
     
     var body: some View {
@@ -22,24 +27,24 @@ struct MultiLineHeaderView: View {
             
             if let regularTextItems = viewModel.regularTextItems {
                 
-                ForEach(regularTextItems, id: \.self) {
+                ForEach(regularTextItems) {
                     
                     ItemView(
-                        font: .title,
+                        font: config.item.fontRegular,
                         text: $0.name,
-                        textColor: viewModel.textColor
+                        textColor: config.item.color
                     )
                 }
             }
             
             if let boldTextItems = viewModel.boldTextItems {
                 
-                ForEach(boldTextItems, id: \.self) {
+                ForEach(boldTextItems) {
                     
                     ItemView(
-                        font: .bold(.title)(),
+                        font: config.item.fontBold,
                         text: $0.name,
-                        textColor: viewModel.textColor
+                        textColor: config.item.color
                     )
                 }
             }
@@ -49,7 +54,7 @@ struct MultiLineHeaderView: View {
             maxWidth: .infinity,
             alignment: .leading
         )
-        .background(viewModel.backgroundColor.value)
+        .background(config.backgroundColor.value)
     }
 }
 
@@ -79,17 +84,20 @@ struct MultiLineHeaderView_Previews: PreviewProvider {
         Group {
             
             MultiLineHeaderView(
-                viewModel: .defaultViewModelBlack
+                viewModel: .defaultViewModelBlack,
+                config: .defaultValueBlack
             )
             .previewDisplayName("Black")
 
             MultiLineHeaderView(
-                viewModel: .defaultViewModelGray
+                viewModel: .defaultViewModelGray,
+                config: .defaultValueGray
             )
             .previewDisplayName("Gray")
             
             MultiLineHeaderView(
-                viewModel: .defaultViewModelWhite
+                viewModel: .defaultViewModelWhite,
+                config: .defaultValueWhite
             )
             .previewDisplayName("White")
         }
