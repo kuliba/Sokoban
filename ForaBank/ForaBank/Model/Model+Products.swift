@@ -34,14 +34,14 @@ extension Model {
         
         if let preferredProductID {
             
-            let filterredProducts = filter.filterredProducts(allProducts)
-            let preferedProduct = filterredProducts.first(where: { $0.id == preferredProductID })
+            let filteredProducts = filter.filteredProducts(allProducts)
+            let preferedProduct = filteredProducts.first(where: { $0.id == preferredProductID })
             
-            return preferedProduct ?? filterredProducts.first
+            return preferedProduct ?? filteredProducts.first
 
         } else {
             
-            return filter.filterredProducts(allProducts).first
+            return filter.filteredProducts(allProducts).first
         }
     }
     
@@ -108,19 +108,19 @@ extension Model {
             return products
         }
         
-        products = filterredProducts(currency: currency, currencyOperation: currencyOperation, products: productTypes)
+        products = filteredProducts(currency: currency, currencyOperation: currencyOperation, products: productTypes)
 
         return products
     }
     
     func products(products: ProductsData, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
 
-        filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
+        filteredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency, currencyOperation: CurrencyOperation) -> [ProductData] {
         
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
+        return filteredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
     func products(currency: Currency) -> [ProductData] {
@@ -137,10 +137,10 @@ extension Model {
     
     func products(currency: Currency, currencyOperation: CurrencyOperation, products: ProductsData) -> [ProductData] {
         
-        return filterredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
+        return filteredProducts(currency: currency, currencyOperation: currencyOperation, products: allProducts)
     }
     
-    private func filterredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {
+    private func filteredProducts(currency: Currency, currencyOperation: CurrencyOperation, products: [ProductData]) -> [ProductData] {
         
         let products = products.filter { product in
             

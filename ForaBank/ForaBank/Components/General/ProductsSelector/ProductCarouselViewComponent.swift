@@ -442,7 +442,7 @@ private extension ProductCarouselView.ViewModel.Mode {
             return uniqueTypes.sorted(by: \.order)
 
         case let .filtered(filter):
-            return filter.filterredProductsTypes(products)
+            return filter.filteredProductsTypes(products)
         }
     }
     
@@ -464,7 +464,7 @@ private extension ProductCarouselView.ViewModel.Mode {
             return products.filter { $0.isVisible }
             
         case let .filtered(filter):
-            return filter.filterredProducts(products)
+            return filter.filteredProducts(products)
         }
     }
 }

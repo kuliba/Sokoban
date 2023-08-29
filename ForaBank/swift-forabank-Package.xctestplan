@@ -131,6 +131,14 @@
         "identifier" : "CryptoSwaddlerTests",
         "name" : "CryptoSwaddlerTests"
       }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUICompomentTests",
+        "name" : "LandingUICompomentTests"
+      }
     }
   ],
   "version" : 1

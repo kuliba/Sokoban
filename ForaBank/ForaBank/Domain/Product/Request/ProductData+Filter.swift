@@ -18,7 +18,7 @@ extension ProductData {
         
         var rules: [ProductDataFilterRule]
         
-        func filterredProducts(_ products: [ProductData]) -> [ProductData] {
+        func filteredProducts(_ products: [ProductData]) -> [ProductData] {
             
             products.filter { productData in
                 
@@ -37,10 +37,10 @@ extension ProductData {
             }
         }
         
-        func filterredProductsTypes(_ products: [ProductData]) -> [ProductType] {
+        func filteredProductsTypes(_ products: [ProductData]) -> [ProductType] {
             
-            let filterredProducts = filterredProducts(products)
-            let uniqueTypes = Set(filterredProducts.map({ $0.productType }))
+            let filteredProducts = filteredProducts(products)
+            let uniqueTypes = Set(filteredProducts.map({ $0.productType }))
             let sortedTypes = Array(uniqueTypes).sorted(by: { $0.order < $1.order })
             
             return sortedTypes

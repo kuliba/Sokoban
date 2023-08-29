@@ -213,18 +213,18 @@ extension CurrencyWalletListViewModel {
     static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, filter: ProductData.Filter) -> [ProductView.ViewModel] {
 
         let sortedProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
-        let filterredProducts = filter.filterredProducts(sortedProducts)
+        let filteredProducts = filter.filteredProducts(sortedProducts)
         
-        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
+        let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
 
         return products
     }
 
     static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductView.ViewModel] {
 
-        let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
+        let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
 
-        let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
+        let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
 
         return products
     }

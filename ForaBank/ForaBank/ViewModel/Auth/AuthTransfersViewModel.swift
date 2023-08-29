@@ -365,6 +365,7 @@ enum CountryType: CaseIterable {
             return "0"
         }
     }
+    
 }
 
 extension AuthTransfersViewModel {

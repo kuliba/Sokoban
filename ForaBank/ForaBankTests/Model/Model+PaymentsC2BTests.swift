@@ -79,6 +79,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> Model {
+        
         let sut: Model = .mockWithEmptyExcept()
         
         sut.products.value = [.card : [.cardStub()]]
