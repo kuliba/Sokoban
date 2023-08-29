@@ -9,49 +9,12 @@ import SwiftUI
 
 struct MultiLineHeaderViewModel {
     
-    let backgroundColor: BackgroundColor
     let regularTextItems: [Item]?
     let boldTextItems: [Item]?
     
-    var textColor: Color {
+    struct Item: Identifiable {
         
-        return backgroundColor.isDark ? .white : .black
-    }
-}
-
-extension MultiLineHeaderViewModel {
-    
-    struct Item: Hashable {
-        
+        let id: String
         let name: String
-    }
-}
-
-extension MultiLineHeaderViewModel {
-    
-    enum BackgroundColor {
-        
-        case black
-        case gray
-        case white
-        
-        var value: Color {
-            get {
-                switch self {
-                    
-                case .black:
-                    return .black
-                case .gray:
-                    return .gray
-                case .white:
-                    return .white
-                }
-            }
-        }
-        
-        var isDark: Bool {
-            
-            self == .black
-        }
     }
 }

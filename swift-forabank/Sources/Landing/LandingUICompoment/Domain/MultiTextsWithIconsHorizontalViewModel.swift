@@ -27,7 +27,5 @@ extension MultiTextsWithIconsHorizontalViewModel {
     struct TextItem {
         
         let title: String
-        let font: Font
-        let textColor: Color
     }
 }

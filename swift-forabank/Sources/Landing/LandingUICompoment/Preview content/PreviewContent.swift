@@ -11,10 +11,12 @@ extension Array where Element == MultiLineHeaderViewModel.Item {
     
     static let regularTextItems: Self = [
         .init(
+            id: "1",
             name: "Переводы"
         )]
     static let boldTextItems: Self = [
         .init(
+            id: "2",
             name: "за рубеж"
         )]
 }
@@ -22,19 +24,16 @@ extension Array where Element == MultiLineHeaderViewModel.Item {
 extension MultiLineHeaderViewModel {
     
     static let defaultViewModelBlack: Self = .init(
-        backgroundColor: .black,
         regularTextItems: .regularTextItems,
         boldTextItems: .boldTextItems
     )
     
     static let defaultViewModelGray: Self = .init(
-        backgroundColor: .gray,
         regularTextItems: .regularTextItems,
         boldTextItems: .boldTextItems
     )
     
     static let defaultViewModelWhite: Self = .init(
-        backgroundColor: .white,
         regularTextItems: .regularTextItems,
         boldTextItems: .boldTextItems
     )
@@ -61,14 +60,10 @@ extension Array where Element == MultiTextsWithIconsHorizontalViewModel.Item {
 extension MultiTextsWithIconsHorizontalViewModel.TextItem {
     
     static let defaultItemOne: Self = .init(
-        title: "Быстро",
-        font: .body,
-        textColor: .grayColor
+        title: "Быстро"
     )
     static let defaultItemTwo: Self = .init(
-        title: "Безопасно",
-        font: .body,
-        textColor: .grayColor
+        title: "Безопасно"
     )
 }
 
@@ -173,4 +168,38 @@ extension ListHorizontalRoundImageView.Config.Detail {
         color: .textSecondary,
         font: .body
     )
+}
+
+extension MultiLineHeaderView.Config {
+    
+    static let defaultValueBlack: Self = .init(
+        backgroundColor: .black,
+        item: .defaultValueWhite
+    )
+    static let defaultValueWhite: Self = .init(
+        backgroundColor: .white,
+        item: .defaultValueBlack
+    )
+    static let defaultValueGray: Self = .init(
+        backgroundColor: .gray,
+        item: .defaultValueBlack
+    )
+}
+extension MultiLineHeaderView.Config.Item {
+    
+    static let defaultValueBlack: Self = .init(
+        color: .black,
+        fontRegular: .title,
+        fontBold: .bold(.title)())
+    static let defaultValueWhite: Self = .init(
+        color: .white,
+        fontRegular: .title,
+        fontBold: .bold(.title)())
+}
+
+extension MultiTextsWithIconsHorizontalView.Config {
+    
+    static let defaultValueBlack: Self = .init(
+        color: .black,
+        font: .body)
 }
