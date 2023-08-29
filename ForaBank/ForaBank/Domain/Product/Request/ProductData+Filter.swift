@@ -177,7 +177,7 @@ extension ProductData.Filter {
     }
     
     
-    struct CardAdditionalNotOwnedRetrictedRule: ProductDataFilterRule {
+    struct CardAdditionalNotOwnedRestrictedRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -194,7 +194,7 @@ extension ProductData.Filter {
         }
     }
     
-    struct CardAdditionalOwnedRetrictedRule: ProductDataFilterRule {
+    struct CardAdditionalOwnedRestrictedRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -264,7 +264,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     static let generalTo = ProductData.Filter(
@@ -272,7 +272,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     // TODO: преобразовать filter в Data Type и добавить тесты
@@ -281,7 +281,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     //MARK: Currency Wallet
@@ -290,7 +290,7 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
     
@@ -298,7 +298,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
     
@@ -308,14 +308,14 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     static let meToMeTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
 
     //MARK: Close Account Base
@@ -330,7 +330,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     
@@ -346,6 +346,6 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
 }
