@@ -28,6 +28,9 @@ final class ServerAgentTestStub: ServerAgentProtocol {
     typealias C2BPaymentList = ServerCommands.SBPPaymentController.CreateC2BPaymentCard
     typealias PaymentC2BResponseData = C2BPaymentList.Response.Payload
 
+    typealias GetScenarioQRData = ServerCommands.SBPController.GetScenarioQRData
+    typealias PaymentGetScenarioQRDataResponseData = GetScenarioQRData.Response.Payload
+    
     private let stubs: [Stub.Case: Stub]
     
     init(_ stubs: [Stub]) {
@@ -51,6 +54,10 @@ final class ServerAgentTestStub: ServerAgentProtocol {
                 
             case .c2bPaymentCard:
                 dict[.c2bPaymentCard] = stub
+            
+            case .getScenarioQRData:
+                dict[.getScenarioQRData] = stub
+                
             }
         }
     }
@@ -88,12 +95,14 @@ extension ServerAgentTestStub {
         typealias IsSingleServiceResponseResult = Result<IsSingleService.Response, ServerAgentError>
         typealias MosParkingResult = Result<GetMosParkingList.Response, ServerAgentError>
         typealias C2BPaymentCard = Result<ServerCommands.SBPPaymentController.CreateC2BPaymentCard.Response, ServerAgentError>
+        typealias GetScenarioQRData = Result<ServerCommands.SBPController.GetScenarioQRData.Response, ServerAgentError>
         
         case anywayTransfer(CreateAnywayTransferResult)
         case getPhoneInfo(GetPhoneInfoResult)
         case isSingleService(IsSingleServiceResponseResult)
         case mosParking(MosParkingResult)
         case c2bPaymentCard(C2BPaymentCard)
+        case getScenarioQRData(GetScenarioQRData)
         
         enum Case {
             
@@ -102,6 +111,7 @@ extension ServerAgentTestStub {
             case isSingleService
             case mosParking
             case c2bPaymentCard
+            case getScenarioQRData
         }
     }
 }
@@ -125,6 +135,9 @@ extension ServerAgentTestStub.Stub.Case {
         
         case _ as ServerAgentTestStub.C2BPaymentList:
             self = .c2bPaymentCard
+        
+        case _ as ServerAgentTestStub.GetScenarioQRData:
+            self = .getScenarioQRData
             
         default:
             
@@ -193,6 +206,20 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for c2bPaymentCard in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .getScenarioQRData(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for getScenarioQRData in \(result)", code: 0)
                     completion(.failure(.corruptedData(error)))
                 }
             } catch {
