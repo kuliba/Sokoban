@@ -53,7 +53,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.CardActiveRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 8)
@@ -74,7 +74,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.CardLoanRestrictedRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 6)
@@ -95,7 +95,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 8)
@@ -118,7 +118,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 2)
@@ -150,7 +150,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.AccountActiveRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 2)
@@ -188,7 +188,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.CardActiveRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 8)
@@ -216,7 +216,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.CurrencyRule([.rub])])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 4)
@@ -240,7 +240,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.DebitRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 7)
@@ -267,7 +267,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.CreditRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 7)
@@ -294,7 +294,7 @@ extension ProductFilterTets {
                                                 ProductData.Filter.ProductRestrictedRule([43])])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 7)
@@ -319,7 +319,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.AllRestrictedRule()])
         
         // when
-        let result = filter.filterredProducts(products)
+        let result = filter.filteredProducts(products)
         
         //then
         XCTAssertEqual(result.count, 0)
@@ -337,7 +337,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account])])
         
         // when
-        let result = filter.filterredProductsTypes(products)
+        let result = filter.filteredProductsTypes(products)
         
         // then
         XCTAssertEqual(result.count, 2)
@@ -352,7 +352,7 @@ extension ProductFilterTets {
         let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account]), ProductData.Filter.CurrencyRule([.usd])])
         
         // when
-        let result = filter.filterredProductsTypes(products)
+        let result = filter.filteredProductsTypes(products)
         
         // then
         XCTAssertEqual(result.count, 1)

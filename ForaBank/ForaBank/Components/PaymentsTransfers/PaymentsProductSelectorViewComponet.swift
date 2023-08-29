@@ -48,7 +48,7 @@ extension PaymentsProductSelectorView {
                     
                     if let categories = categories, let productType = ProductType(rawValue: categories.selected) {
                         
-                        self.productsFilterred = filterredProducts(prpductType: productType, products: productsAll)
+                        self.productsFilterred = filteredProducts(prpductType: productType, products: productsAll)
                         
                     } else {
                         
@@ -86,7 +86,7 @@ extension PaymentsProductSelectorView {
                     
                     if let productType = ProductType(rawValue: selected) {
                         
-                        self.productsFilterred = filterredProducts(prpductType: productType, products: products)
+                        self.productsFilterred = filteredProducts(prpductType: productType, products: products)
                         
                     } else {
                         
@@ -96,7 +96,7 @@ extension PaymentsProductSelectorView {
                 }.store(in: &bindings)
         }
         
-        func filterredProducts(prpductType: ProductType, products: [ProductView.ViewModel]) -> [ProductView.ViewModel] {
+        func filteredProducts(prpductType: ProductType, products: [ProductView.ViewModel]) -> [ProductView.ViewModel] {
             
             products.filter{ $0.productType == prpductType }
         }

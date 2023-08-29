@@ -266,9 +266,9 @@ extension CurrencyWalletSelectorView {
         
         static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
-            let filterredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
+            let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
-            let products = filterredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
+            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
             return products
         }
