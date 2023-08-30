@@ -11,7 +11,29 @@ import XCTest
 
 final class AESGCMEncryptionAgentTests: XCTestCase {
     
-    func test_encrypt_decrypt() throws {
+    func test_encrypt_decrypt_shouldFailOn48() throws {
+        
+        let sut = AESGCMEncryptionAgent(bitCount: 48)
+        
+        try XCTAssertThrowsError(sut.encrypt(anyData()))
+    }
+    
+    func test_encrypt_decrypt_128() throws {
+        
+        let message = "important message"
+        let data = try XCTUnwrap(message.data(using: .utf8))
+        let sut = AESGCMEncryptionAgent(bitCount: 128)
+        
+        let encrypted = try sut.encrypt(data)
+        let decrypted = try sut.decrypt(encrypted)
+        
+        XCTAssertNotEqual(encrypted, decrypted)
+        
+        let decryptedMessage = String(data: decrypted, encoding: .utf8)
+        XCTAssertEqual(decryptedMessage, message)
+    }
+    
+    func test_encrypt_decrypt_256() throws {
         
         let message = "important message"
         let data = try XCTUnwrap(message.data(using: .utf8))
@@ -24,6 +46,13 @@ final class AESGCMEncryptionAgentTests: XCTestCase {
         
         let decryptedMessage = String(data: decrypted, encoding: .utf8)
         XCTAssertEqual(decryptedMessage, message)
+    }
+    
+    func test_encrypt_decrypt_shouldFailOn384() throws {
+        
+        let sut = AESGCMEncryptionAgent(bitCount: 384)
+        
+        try XCTAssertThrowsError(sut.encrypt(anyData()))
     }
     
     func test_initFromData_encrypt_decrypt() throws {

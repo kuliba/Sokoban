@@ -9,7 +9,9 @@ import CryptoKit
 import Foundation
 import TransferPublicKey
 
-func anySharedSecret<OTP>() -> SwaddleKeyDomain<OTP>.SharedSecret {
+func anySharedSecret<OTP>(
+    bitCount: Int = 64
+) -> SwaddleKeyDomain<OTP>.SharedSecret {
     
     .init(anyData(bitCount: 64))
 }

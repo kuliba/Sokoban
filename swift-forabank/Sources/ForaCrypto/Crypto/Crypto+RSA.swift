@@ -11,8 +11,16 @@ public extension Crypto {
     
     static func rsaPKCS1Encrypt(
         data: Data,
+        withPublicKey key: SecKey
+    ) throws -> Data {
+        
+        try rsaEncrypt(data: data, withPublicKey: key, algorithm: .rsaEncryptionPKCS1)
+    }
+    
+    static func rsaEncrypt(
+        data: Data,
         withPublicKey key: SecKey,
-        algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1
+        algorithm: SecKeyAlgorithm
     ) throws -> Data {
         
         var error: Unmanaged<CFError>? = nil
@@ -24,10 +32,61 @@ public extension Crypto {
         return encrypted
     }
     
+    // From ForaBank
+    static func encryptWithRSAKey(
+        _ data: Data,
+        publicKey key: SecKey,
+        padding: SecPadding
+    ) -> Data? {
+        
+        let blockSize = SecKeyGetBlockSize(key)
+        let maxChunkSize = blockSize - 11
+        
+        var decryptedDataAsArray = [UInt8](repeating: 0, count: data.count / MemoryLayout<UInt8>.size)
+        (data as NSData).getBytes(&decryptedDataAsArray, length: data.count)
+        
+        var encryptedData = [UInt8](repeating: 0, count: 0)
+        var idx = 0
+        while (idx < decryptedDataAsArray.count ) {
+            var idxEnd = idx + maxChunkSize
+            if ( idxEnd > decryptedDataAsArray.count ) {
+                idxEnd = decryptedDataAsArray.count
+            }
+            var chunkData = [UInt8](repeating: 0, count: maxChunkSize)
+            for i in idx..<idxEnd {
+                chunkData[i-idx] = decryptedDataAsArray[i]
+            }
+            
+            var encryptedDataBuffer = [UInt8](repeating: 0, count: blockSize)
+            var encryptedDataLength = blockSize
+            
+            let status = SecKeyEncrypt(key, padding, chunkData, idxEnd-idx, &encryptedDataBuffer, &encryptedDataLength)
+            if ( status != noErr ) {
+                NSLog("Error while ecrypting: %i", status)
+                return nil
+            }
+            //let finalData = removePadding(encryptedDataBuffer)
+            encryptedData += encryptedDataBuffer
+            
+            
+            idx += maxChunkSize
+        }
+        
+        return Data(bytes: UnsafePointer<UInt8>(encryptedData), count: encryptedData.count)
+    }
+    
     static func rsaPKCS1Decrypt(
         data: Data,
+        withPrivateKey key: SecKey
+    ) throws -> Data {
+        
+        try rsaDecrypt(data: data, withPrivateKey: key, algorithm: .rsaEncryptionPKCS1)
+    }
+    
+    static func rsaDecrypt(
+        data: Data,
         withPrivateKey key: SecKey,
-        algorithm: SecKeyAlgorithm = .rsaEncryptionPKCS1
+        algorithm: SecKeyAlgorithm
     ) throws -> Data {
         
         var error: Unmanaged<CFError>? = nil
