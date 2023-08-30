@@ -279,8 +279,8 @@ class MyProductsMoneyViewModel: ObservableObject {
         } else {
             
             let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                                                    ProductData.Filter.CardAdditionalOwnedRetrictedRule(),
-                                                    ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
+                                                    ProductData.Filter.CardAdditionalOwnedRestrictedRule(),
+                                                    ProductData.Filter.CardAdditionalNotOwnedRestrictedRule()])
             
             let filteredProducts = filter.filteredProducts(products)
             let balanceRub = filteredProducts.compactMap({ $0.balanceRub }).reduce(0, +)

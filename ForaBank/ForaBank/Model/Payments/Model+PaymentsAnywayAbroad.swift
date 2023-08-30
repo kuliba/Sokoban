@@ -188,7 +188,7 @@ extension Model {
                             ProductData.Filter.ProductTypeRule([.card, .account]),
                             ProductData.Filter.CurrencyRule(Set(currencyArr)),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
                             ProductData.Filter.AccountActiveRule()])
                 
                 if let product = firstProduct(with: filter),
