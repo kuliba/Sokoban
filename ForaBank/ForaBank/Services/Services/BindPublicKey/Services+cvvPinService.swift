@@ -28,7 +28,8 @@ extension Services {
             httpClient: httpClient
         )
         
-        let transferPublicKeyService = publicKeyTransferService(
+        // let transferPublicKeyService = publicKeyTransferService(
+        let transferPublicKeyService = publicSecKeyTransferService(
             httpClient: httpClient
         )
         
@@ -38,35 +39,6 @@ extension Services {
             transferKeyService: transferPublicKeyService
         )
     }
-    
-    //    func transfer(
-    //        otp: BindPublicKeyDomain.OTP,
-    //        andSharedSecret data: Data,
-    //        completion: @escaping Completion
-    //    ) -> Void {
-//    static func bind(
-//        generateRSA4096BitKeys: @escaping () throws -> (SecKey, SecKey),
-//        encryptOTPWithRSAKey: @escaping (OTP, SecKey) throws -> Data
-//    ) -> CvvPinService.BindPublicKey {
-//
-//        return { otp, sharedSecret, completion in
-//
-//            //let (encryptedOTP, privateRSAKey, publicRSAKey)
-//            // wrap everything in KeyCachingAdapter (saveKeys)
-//            let (encryptedOTP, privateKey, publicKey) = try
-//            // or RetryAdapter
-//            retry {
-//
-//                let (privateKey, publicKey) = try generateRSA4096BitKeys()
-//                let encryptedOTP = try encryptOTPWithRSAKey(otp, privateKey)
-//
-//                return (encryptedOTP, privateKey, publicKey)
-//            }
-//
-//            // ...
-//            fatalError()
-//        }
-//    }
 }
 
 private extension CvvPinService {

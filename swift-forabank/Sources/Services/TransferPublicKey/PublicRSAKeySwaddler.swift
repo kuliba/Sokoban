@@ -9,7 +9,7 @@ import Foundation
 
 public protocol RawRepresentational {
     
-    var rawRepresentation: Data { get }
+    var rawRepresentation: Data { get throws }
 }
 
 public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey>
@@ -47,7 +47,7 @@ where PublicKey: RawRepresentational {
         
         try saveKeys(privateKey, publicKey)
         
-        let publicKeyData = publicKey.rawRepresentation
+        let publicKeyData = try publicKey.rawRepresentation
         
         let json = try JSONSerialization.data(withJSONObject: [
             "procClientSecretOTP": encryptedOTP.base64EncodedString(),

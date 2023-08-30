@@ -7,10 +7,123 @@
 
 import CvvPin
 import CryptoKit
+import CryptoSwaddler
 import ForaCrypto
 import Foundation
 import TransferPublicKey
 import GenericRemoteService
+
+// MARK: - SecKey
+
+extension Services {
+    
+    typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
+    typealias SecKeyOTPEncrypter = OTPEncrypter<TransferPublicKeyDomain.OTP, SecKey>
+    
+    static func publicSecKeyTransferService(
+        httpClient: HTTPClient
+    ) -> PublicKeyTransferService {
+        
+        
+        let otpEncrypter: SecKeyOTPEncrypter = .signing(
+            mapOTP: { .init($0.value.utf8) },
+            encryptWithTransportPublicRSAKey: { data in
+                
+                let key = try ForaCrypto.Crypto.transportKey()
+                
+                return try ForaCrypto.Crypto.rsaEncrypt(
+                    data: data,
+                    withPublicKey: key,
+                    algorithm: .rsaEncryptionRaw
+                )
+            }
+        )
+        
+        let keyCache = InMemoryKeyStore<SecKey>()
+        
+        let swaddler = SecKeySwaddler(
+            generateRSA4096BitKeys: {
+                try ForaCrypto.Crypto.createRandomSecKeys(
+                    keyType: kSecAttrKeyTypeRSA,
+                    keySizeInBits: 4096
+                )
+            },
+            otpEncrypter: otpEncrypter,
+            saveKeys: { privateKey, publicKey in
+                
+                keyCache.saveKey(privateKey) { _ in
+#warning("FIX THIS")
+                }
+            },
+            aesEncrypt128bitChunks: { data, secret in
+                
+                //    let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
+                //    return try aesGCMEncryptionAgent.encrypt(data)
+                
+                let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+                let result = try aes256CBC.encrypt(data)
+                return result
+            }
+        )
+        
+        let bindKeyService = PublicKeyTransferService.BindKeyService(
+            createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: BindPublicKeyWithEventIDMapper.map
+        )
+        
+        return .init(
+            secKeySwaddler: swaddler,
+            bindKeyService: bindKeyService
+        )
+    }
+    
+}
+
+private extension Services.SecKeySwaddler {
+    
+    convenience init(
+        generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
+        otpEncrypter: Services.SecKeyOTPEncrypter,
+        saveKeys: @escaping SaveKeys,
+        aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
+    ) {
+        self.init(
+            generateRSA4096BitKeys: generateRSA4096BitKeys,
+            encryptOTPWithRSAKey: otpEncrypter.encrypt,
+            saveKeys: saveKeys,
+            aesEncrypt128bitChunks: aesEncrypt128bitChunks
+        )
+    }
+    
+    func swaddle(
+        otp: OTP,
+        sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
+        completion: @escaping (Result<Data, any Error>) -> Void
+    ) {
+        completion(
+            .init(catching: {
+                
+                try swaddleKey(with: otp, and: sharedSecret)
+            })
+        )
+    }
+}
+
+private extension Services.PublicKeyTransferService {
+    
+    convenience init(
+        secKeySwaddler: Services.SecKeySwaddler,
+        bindKeyService: BindKeyService
+    ) {
+        self.init(
+            swaddleKey: secKeySwaddler.swaddle,
+            bindKey: bindKeyService.process
+        )
+    }
+}
+
+// MARK: - P384
 
 extension Services {
     
@@ -35,13 +148,17 @@ extension Services {
             saveKeys: { privateKey, publicKey in
                 
                 keyCache.saveKey(privateKey) { _ in
-#warning("FIX THIS")
+                    #warning("FIX THIS")
                 }
             },
             aesEncrypt128bitChunks: { data, secret in
                 
-                let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
-                return try aesGCMEncryptionAgent.encrypt(data)
+                //    let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
+                //    return try aesGCMEncryptionAgent.encrypt(data)
+                
+                let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+                let result = try aes256CBC.encrypt(data)
+                return result
             }
         )
         
@@ -59,30 +176,30 @@ extension Services {
     
     typealias TransferOTPEncrypter = OTPEncrypter<TransferOTP, P384KeyAgreementDomain.PrivateKey>
     
+    #warning("remove if not used")
     static func otpEncrypter(
         withPublicKey publicKey: @escaping () throws -> SecKey
     ) -> TransferOTPEncrypter {
         
         #warning("try P384 direct encryption?")
         let encryptWithPadding: TransferOTPEncrypter.EncryptWithPadding = { otp, privateKey in
-
-            guard let data = otp.value.data(using: .utf8)
-            else {
-                throw NSError(domain: "Error creating data from OTP value", code: 0)
-            }
             
             let key = try ForaCrypto.Crypto.createSecKeyWith(
                 data: privateKey.derRepresentation
             )
             
-            return try ForaCrypto.Crypto.sign(data, withPrivateKey: key)
+            return try ForaCrypto.Crypto.sign(
+                .init(otp.value.utf8),
+                withPrivateKey: key
+            )
         }
         
         let encryptWithTransportPublicRSAKey = { data in
             
-            try ForaCrypto.Crypto.rsaPKCS1Encrypt(
+            try ForaCrypto.Crypto.rsaEncrypt(
                 data: data,
-                withPublicKey: publicKey()
+                withPublicKey: publicKey(),
+                algorithm: .rsaEncryptionRaw
             )
         }
         

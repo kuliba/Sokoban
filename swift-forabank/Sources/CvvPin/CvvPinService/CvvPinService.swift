@@ -158,7 +158,7 @@ private extension KeyExchangeDomain.KeyExchange {
     
     var secret: TransferPublicKeyDomain.SharedSecret {
         
-        .init(sharedSecret)
+        .init(sharedSecret.prefix(32))
     }
 }
 

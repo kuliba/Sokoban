@@ -592,7 +592,11 @@ final class ForaCryptoTests: XCTestCase {
         let message = "important message"
         let data = try XCTUnwrap(message.data(using: .utf8))
         
-        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        let encrypted = try Crypto.rsaEncrypt(
+            data: data,
+            withPublicKey: publicKey,
+            algorithm: .rsaEncryptionPKCS1
+        )
         XCTAssertEqual(encrypted.count, 512)
         
         let decrypted = try Crypto.rsaPKCS1Decrypt(data: encrypted, withPrivateKey: privateKey)
@@ -608,9 +612,10 @@ final class ForaCryptoTests: XCTestCase {
         let (privateKey, _) = try createRandom4096RSAKeys()
         
         try XCTAssertThrowsError(
-            Crypto.rsaPKCS1Encrypt(
+            Crypto.rsaEncrypt(
                 data: anyData(),
-                withPublicKey: privateKey
+                withPublicKey: privateKey,
+                algorithm: .rsaEncryptionPKCS1
             )
         )
     }
@@ -676,7 +681,10 @@ final class ForaCryptoTests: XCTestCase {
         let publicKey = try createRandom4096RSAKeys().publicKey
         let data = try XCTUnwrap("some data".data(using: .utf8))
         
-        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        let encrypted = try Crypto.rsaPKCS1Encrypt(
+            data: data,
+            withPublicKey: publicKey
+        )
         
         XCTAssertNotEqual(encrypted, data)
     }
@@ -687,7 +695,10 @@ final class ForaCryptoTests: XCTestCase {
         let data = try XCTUnwrap(originalMessage.data(using: .utf8))
         let (privateKey, publicKey) = try createRandom4096RSAKeys()
         
-        let encrypted = try Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: publicKey)
+        let encrypted = try Crypto.rsaPKCS1Encrypt(
+            data: data,
+            withPublicKey: publicKey
+        )
         let decrypted = try Crypto.rsaPKCS1Decrypt(data: encrypted, withPrivateKey: privateKey)
         let decryptedMessage = try XCTUnwrap(String(data: decrypted, encoding: .utf8))
         
@@ -854,7 +865,7 @@ final class ForaCryptoTests: XCTestCase {
     
     private func transportPublicKey() throws -> SecKey {
         
-        try Crypto.secKey(fromCertURL: XCTUnwrap(publicCrtURL))
+        try Crypto.transportKey()
     }
     
     private func anyP384PrivateKey() -> P384.KeyAgreement.PrivateKey {
@@ -967,49 +978,6 @@ extension Crypto {
         }
         
         return .init(bytes: decryptedMetadataBytes, count: decryptedMetadataLength)
-    }
-    
-    // From ForaBank
-    static func encryptWithRSAKey(
-        _ data: Data,
-        publicKey key: SecKey,
-        padding: SecPadding
-    ) -> Data? {
-        
-        let blockSize = SecKeyGetBlockSize(key)
-        let maxChunkSize = blockSize - 11
-        
-        var decryptedDataAsArray = [UInt8](repeating: 0, count: data.count / MemoryLayout<UInt8>.size)
-        (data as NSData).getBytes(&decryptedDataAsArray, length: data.count)
-        
-        var encryptedData = [UInt8](repeating: 0, count: 0)
-        var idx = 0
-        while (idx < decryptedDataAsArray.count ) {
-            var idxEnd = idx + maxChunkSize
-            if ( idxEnd > decryptedDataAsArray.count ) {
-                idxEnd = decryptedDataAsArray.count
-            }
-            var chunkData = [UInt8](repeating: 0, count: maxChunkSize)
-            for i in idx..<idxEnd {
-                chunkData[i-idx] = decryptedDataAsArray[i]
-            }
-            
-            var encryptedDataBuffer = [UInt8](repeating: 0, count: blockSize)
-            var encryptedDataLength = blockSize
-            
-            let status = SecKeyEncrypt(key, padding, chunkData, idxEnd-idx, &encryptedDataBuffer, &encryptedDataLength)
-            if ( status != noErr ) {
-                NSLog("Error while ecrypting: %i", status)
-                return nil
-            }
-            //let finalData = removePadding(encryptedDataBuffer)
-            encryptedData += encryptedDataBuffer
-            
-            
-            idx += maxChunkSize
-        }
-        
-        return Data(bytes: UnsafePointer<UInt8>(encryptedData), count: encryptedData.count)
     }
 }
 

@@ -25,9 +25,12 @@ public extension Crypto {
         case unableExtractPublicKeyFromServerCertificate
         case unableDecodeDataFromBase64String
         case unableExtractCertFromDerData
+        case unableCopyExternalRepresentation(String)
         case secKeyCreationWithDataFailure(String)
         case keysGenerationFailure(bits: Int, keyType: CFString, Swift.Error)
         case keyExchangeResultFailure(Swift.Error)
         case base64StringEncodedData(String)
+        case encryptionFailed
+        case decryptionFailed
     }
 }

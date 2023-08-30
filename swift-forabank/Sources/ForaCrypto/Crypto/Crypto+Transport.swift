@@ -21,6 +21,30 @@ public extension Crypto {
         return try .init(derRepresentation: derRepresentation)
     }
     
+    /// Encrypts given data using transport key.
+    static func transportEncrypt(
+        _ data: Data
+    ) throws -> Data {
+        
+        try transportEncrypt(data, padding: .PKCS1)
+    }
+    
+    /// Encrypts given data using transport key and padding.
+    static func transportEncrypt(
+        _ data: Data,
+        padding: SecPadding = .PKCS1
+    ) throws -> Data {
+        
+        let key = try Crypto.transportKey()
+        
+        guard let data = Crypto.encryptWithRSAKey(data, publicKey: key, padding: padding)
+        else {
+            throw Crypto.Error.encryptionFailed
+        }
+        
+        return data
+    }
+    
     /// Decrypts given string using transport key.
     static func transportDecrypt(
         _ string: String

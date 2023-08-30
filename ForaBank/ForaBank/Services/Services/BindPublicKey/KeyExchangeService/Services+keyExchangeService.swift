@@ -15,7 +15,7 @@ extension PublicTransportKeyDomain {
     
     static func encrypt(_ data: Data) throws -> Data {
         
-        try ForaCrypto.Crypto.rsaPKCS1Encrypt(data: data, withPublicKey: fromCert())
+        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
     }
     
     static func decrypt(_ data: Data) throws -> Data {

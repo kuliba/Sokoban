@@ -14,9 +14,17 @@ import TransferPublicKey
 extension SecKey: RawRepresentational {
     
     public var rawRepresentation: Data {
-    
-        #warning("FIX THIS")
-        return unimplemented("rawRepresentation for SecKey")
+        
+        get throws {
+            
+            var error: Unmanaged<CFError>?
+            guard let externalRepresentation = SecKeyCopyExternalRepresentation(self, &error) as? Data
+            else {
+                throw error!.takeRetainedValue() as Swift.Error
+            }
+            
+            return externalRepresentation
+        }
     }
 }
 
@@ -45,9 +53,10 @@ extension Services {
         
         let encryptWithTransportPublicRSAKey = { data in
             
-            try ForaCrypto.Crypto.rsaPKCS1Encrypt(
+            try ForaCrypto.Crypto.rsaEncrypt(
                 data: data,
-                withPublicKey: transportPublicRSAKey
+                withPublicKey: transportPublicRSAKey,
+                algorithm: .rsaEncryptionRaw
             )
         }
         
