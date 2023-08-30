@@ -482,8 +482,8 @@ extension Payments.ParameterProduct {
         rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
         if data.filter.additional == false {
             
-            rules.append(ProductData.Filter.CardAdditionalOwnedRetrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRetrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
         }
         
         let filter = ProductData.Filter(rules: rules)
@@ -500,8 +500,8 @@ extension Payments.ParameterProduct {
         rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
         if data.filter.additional == false {
             
-            rules.append(ProductData.Filter.CardAdditionalOwnedRetrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRetrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
         }
         
         let filter = ProductData.Filter(rules: rules)
