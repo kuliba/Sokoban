@@ -32,6 +32,8 @@ let package = Package(
         .landingMapping,
         .landingUICompoment,
         .landingUpdater,
+        // UI
+        .linkableText
     ],
     dependencies: [
         .combineSchedulers,
@@ -78,6 +80,9 @@ let package = Package(
         .landingUICompoment,
         .landingUICompomentTests,
         .landingUpdater,
+        // UI
+        .linkableText,
+        .linkableTextTests,
     ]
 )
 
@@ -231,6 +236,16 @@ private extension Product {
             .landingUpdater
         ]
     )
+    
+    // MARK: - UI
+    
+    static let linkableText = library(
+        name: .linkableText,
+        targets: [
+            .linkableText
+        ]
+    )
+    
 }
 
 private extension Target {
@@ -492,6 +507,23 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.landingUICompomentTests)"
     )
+    
+    // MARK: - UI
+    
+    static let linkableText = target(
+        name: .linkableText,
+        path: "Sources/UI/\(String.linkableText)"
+    )
+    static let linkableTextTests = testTarget(
+        name: .linkableTextTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .linkableText,
+        ],
+        path: "Tests/UI/\(String.linkableTextTests)"
+    )
 }
 
 private extension Target.Dependency {
@@ -566,6 +598,12 @@ private extension Target.Dependency {
     static let landingUpdater = byName(
         name: .landingUpdater
     )
+    
+    // MARK: - UI
+    
+    static let linkableText = byName(
+        name: .linkableText
+    )
 }
 
 private extension String {
@@ -629,6 +667,11 @@ private extension String {
     static let landingUICompoment = "LandingUICompoment"
     static let landingUICompomentTests = "LandingUICompomentTests"
     static let landingUpdater = "LandingUpdater"
+
+    // MARK: - UI
+    
+    static let linkableText = "LinkableText"
+    static let linkableTextTests = "LinkableTextTests"
 }
 
 // MARK: - Point-Free

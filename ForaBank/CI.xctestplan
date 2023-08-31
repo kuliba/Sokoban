@@ -114,6 +114,20 @@
         "identifier" : "UserModelTests",
         "name" : "UserModelTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LandingUICompomentTests",
+        "name" : "LandingUICompomentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
     }
   ],
   "version" : 1
