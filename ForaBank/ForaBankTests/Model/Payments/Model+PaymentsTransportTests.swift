@@ -188,10 +188,12 @@ extension Payments.Operation.Step.Front {
 extension Payments.Operation.Step.Back {
     
     static func empty(
-        stage: Payments.Operation.Stage = .local
+        stage: Payments.Operation.Stage = .local,
+        required: [Payments.Parameter.ID] = [],
+        processed: [Payments.Parameter]? = nil
     ) -> Self {
         
-        .init(stage: stage, required: [], processed: [])
+        .init(stage: stage, required: required, processed: processed)
     }
 }
 
