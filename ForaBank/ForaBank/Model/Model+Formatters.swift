@@ -42,6 +42,11 @@ extension Model {
         return amountFormatted(amount: amount, currencyData: currencyData, style: style)
     }
     
+    func normalAmountFormatted(amount: Double, currencyCode: String) -> String? {
+        
+        return amountFormatted(amount: amount, currencyCode: currencyCode, style: .normal)
+    }
+    
     func amountFormatted(amount: Double, currencyCodeNumeric: Int, style: AmountFormatStyle) -> String? {
         
         guard let currencyData = dictionaryCurrency(for: currencyCodeNumeric) else {
