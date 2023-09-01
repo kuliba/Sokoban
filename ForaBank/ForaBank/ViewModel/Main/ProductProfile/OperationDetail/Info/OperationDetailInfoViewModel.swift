@@ -1159,7 +1159,7 @@ private extension OperationDetailInfoViewModel {
 
 extension OperationDetailInfoViewModel {
     
-    private func makeItems(operation: OperationDetailData) -> [DefaultCellViewModel] {
+    func makeItems(operation: OperationDetailData) -> [DefaultCellViewModel] {
         
         let payeeProductId = [operation.payeeCardId,
                               operation.payeeAccountId].compactMap {$0}.first
@@ -1221,213 +1221,213 @@ extension OperationDetailInfoViewModel {
         
         
         switch operation.transferEnum {
+            
+        case .sfp:
+            
+            return [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                operationNumberViewModel,
+                dateViewModel
+            ].compactMap {$0}
+            
+        case .depositClose:
+            
+            return [
+                payeeViewModel,
+                payerViewModel,
+                amountViewModel,
+                commissionViewModel,
+                purposeViewModel,
+                dateViewModel,
+            ].compactMap {$0}
+            
+        case .accountClose:
+            
+            return [
+                payerViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap {$0}
+            
+        case .direct:
+            
+            var directCells = [
+                payeeNumberPhone,
+                payeeNameViewModel,
+                payeeBankViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            ]
+            
+            if let formattedAmount = self.model.amountFormatted(amount: operation.amount,
+                                                                currencyCode: operation.currencyAmount,
+                                                                style: .normal) {
                 
-            case .sfp:
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма перевода",
+                                                               iconType: IconType.balance.icon,
+                                                               value: formattedAmount)), at: 3)
+            }
+            
+            if let payeeAmount = operation.payeeAmount,
+               let payeeCurrency = operation.payeeCurrency,
+               let formattedAmount = model.amountFormatted(amount: payeeAmount,
+                                                           currencyCode: payeeCurrency,
+                                                           style: .fraction) {
                 
-                return [
-                    payeeNumberPhone,
-                    payeeNameViewModel,
-                    payeeBankViewModel,
-                    amountViewModel,
-                    commissionViewModel,
-                    payerViewModel,
-                    purposeViewModel,
-                    operationNumberViewModel,
-                    dateViewModel
-                ].compactMap {$0}
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма зачисления в валюте",
+                                                               iconType: IconType.balance.icon,
+                                                               value: formattedAmount)), at: 5)
+            }
+            
+            let payeeAmount = operation.payerAmount
+            let payeeCurrency = operation.payerCurrency
+            if let formattedAmount = model.amountFormatted(amount: payeeAmount,
+                                                           currencyCode: payeeCurrency,
+                                                           style: .fraction) {
                 
-            case .depositClose:
+                directCells.insert((PropertyCellViewModel.init(title: "Сумма списания",
+                                                               iconType: IconType.balance.icon,
+                                                               value: formattedAmount)), at: 6)
+            }
+            
+            return directCells.compactMap {$0}
+            
+        case .contactAddressing, .contactAddressingCash, .contactAddressless:
+            
+            if let method = operation.paymentMethod,
+               let transferReference = operation.transferReference,
+               let countryName = operation.countryName {
                 
-                return [
-                    payeeViewModel,
-                    payerViewModel,
-                    amountViewModel,
-                    commissionViewModel,
-                    purposeViewModel,
-                    dateViewModel,
-                ].compactMap {$0}
+                let methodViewModel = PropertyCellViewModel(title: "Способ выплаты",
+                                                            iconType: IconType.cash.icon,
+                                                            value: method.rawValue)
                 
-            case .accountClose:
+                let transferReferenceViewModel = PropertyCellViewModel(title: "Номер перевода",
+                                                                       iconType: IconType.operationNumber.icon,
+                                                                       value: transferReference)
                 
-                return [
-                    payerViewModel,
-                    amountViewModel,
-                    commissionViewModel,
-                    payeeViewModel,
-                    dateViewModel].compactMap {$0}
+                let countryViewModel = PropertyCellViewModel(title: "Страна",
+                                                             iconType: IconType.geo.icon,
+                                                             value: countryName)
                 
-            case .direct:
-                
-                var directCells = [
-                    payeeNumberPhone,
-                    payeeNameViewModel,
-                    payeeBankViewModel,
-                    commissionViewModel,
-                    payerViewModel,
-                    purposeViewModel,
-                    dateViewModel
-                ]
-                
-                if let formattedAmount = self.model.amountFormatted(amount: operation.amount,
-                                                                    currencyCode: operation.currencyAmount,
-                                                                    style: .normal) {
+                if let formattedAmount = model.amountFormatted(amount: operation.payerAmount,
+                                                               currencyCode: operation.payerCurrency,
+                                                               style: .fraction),
+                   let amount = operation.payeeAmount,
+                   let payeeAmount = model.amountFormatted(amount: amount,
+                                                           currencyCode: operation.payeeCurrency,
+                                                           style: .fraction) {
                     
-                    directCells.insert((PropertyCellViewModel.init(title: "Сумма перевода",
-                                                                   iconType: IconType.balance.icon,
-                                                                   value: formattedAmount)), at: 3)
-                }
-                
-                if let payeeAmount = operation.payeeAmount,
-                   let payeeCurrency = operation.payeeCurrency,
-                   let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                               currencyCode: payeeCurrency,
-                                                               style: .fraction) {
+                    let transferAmount = PropertyCellViewModel(title: "Сумма списания",
+                                                               iconType: IconType.balance.icon,
+                                                               value: formattedAmount)
                     
-                    directCells.insert((PropertyCellViewModel.init(title: "Сумма зачисления в валюте",
-                                                                   iconType: IconType.balance.icon,
-                                                                   value: formattedAmount)), at: 5)
-                }
-                
-                let payeeAmount = operation.payerAmount
-                let payeeCurrency = operation.payerCurrency
-                if let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                               currencyCode: payeeCurrency,
-                                                               style: .fraction) {
-                    
-                    directCells.insert((PropertyCellViewModel.init(title: "Сумма списания",
-                                                                   iconType: IconType.balance.icon,
-                                                                   value: formattedAmount)), at: 6)
-                }
-                
-                return directCells.compactMap {$0}
-                
-            case .contactAddressing, .contactAddressingCash, .contactAddressless:
-                
-                if let method = operation.paymentMethod,
-                   let transferReference = operation.transferReference,
-                   let countryName = operation.countryName {
-                    
-                    let methodViewModel = PropertyCellViewModel(title: "Способ выплаты",
-                                                                iconType: IconType.cash.icon,
-                                                                value: method.rawValue)
-                    
-                    let transferReferenceViewModel = PropertyCellViewModel(title: "Номер перевода",
-                                                                           iconType: IconType.operationNumber.icon,
-                                                                           value: transferReference)
-                    
-                    let countryViewModel = PropertyCellViewModel(title: "Страна",
-                                                                 iconType: IconType.geo.icon,
-                                                                 value: countryName)
-                    
-                    if let formattedAmount = model.amountFormatted(amount: operation.payerAmount,
-                                                                   currencyCode: operation.payerCurrency,
-                                                                   style: .fraction),
-                       let amount = operation.payeeAmount,
-                       let payeeAmount = model.amountFormatted(amount: amount,
-                                                               currencyCode: operation.payeeCurrency,
-                                                               style: .fraction) {
-                        
-                        let transferAmount = PropertyCellViewModel(title: "Сумма списания",
-                                                                   iconType: IconType.balance.icon,
-                                                                   value: formattedAmount)
-                        
-                        let amount = PropertyCellViewModel(title: "Сумма перевода",
-                                                           iconType: IconType.balance.icon,
-                                                           value: payeeAmount)
-                        
-                        return [
-                            payeeNumberPhone,
-                            payeeNameViewModel,
-                            countryViewModel,
-                            payeeBankViewModel,
-                            transferAmount,
-                            commissionViewModel,
-                            amount,
-                            methodViewModel,
-                            payerViewModel,
-                            purposeViewModel,
-                            transferReferenceViewModel,
-                            dateViewModel
-                        ].compactMap {$0}
-                        
-                    }
+                    let amount = PropertyCellViewModel(title: "Сумма перевода",
+                                                       iconType: IconType.balance.icon,
+                                                       value: payeeAmount)
                     
                     return [
                         payeeNumberPhone,
                         payeeNameViewModel,
                         countryViewModel,
                         payeeBankViewModel,
+                        transferAmount,
                         commissionViewModel,
-                        amountViewModel,
+                        amount,
                         methodViewModel,
                         payerViewModel,
                         purposeViewModel,
                         transferReferenceViewModel,
                         dateViewModel
                     ].compactMap {$0}
-                } else {
                     
-                    return [
-                        payeeNumberPhone,
-                        payeeNameViewModel,
-                        payeeBankViewModel,
-                        amountViewModel,
-                        commissionViewModel,
-                        payerViewModel,
-                        purposeViewModel,
-                        dateViewModel
-                    ].compactMap {$0}
                 }
                 
-            case .external:
-            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+                return [
+                    payeeNumberPhone,
+                    payeeNameViewModel,
+                    countryViewModel,
+                    payeeBankViewModel,
+                    commissionViewModel,
+                    amountViewModel,
+                    methodViewModel,
+                    payerViewModel,
+                    purposeViewModel,
+                    transferReferenceViewModel,
+                    dateViewModel
+                ].compactMap {$0}
+            } else {
                 
-            case .internet:
-                
-                var cells = [
+                return [
+                    payeeNumberPhone,
+                    payeeNameViewModel,
+                    payeeBankViewModel,
                     amountViewModel,
                     commissionViewModel,
                     payerViewModel,
-                    payeeViewModel,
-                    dateViewModel].compactMap { $0 }
+                    purposeViewModel,
+                    dateViewModel
+                ].compactMap {$0}
+            }
+            
+        case .external:
+            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            
+        case .internet:
+            
+            var cells = [
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap { $0 }
+            
+            
+            if let puref = operation.puref,
+               let account = operation.account {
                 
+                let operatorValue = model.dictionaryAnywayOperator(for: puref)
+                let numberViewModel = PropertyCellViewModel(title: "Номер счета получателя",
+                                                            iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                                                            value: account)
                 
-                if let puref = operation.puref,
-                   let account = operation.account {
-                    
-                    let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                    let numberViewModel = PropertyCellViewModel(title: "Номер счета получателя",
-                                                                iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
-                                                                value: account)
-                    
-                    cells.insert(numberViewModel, at: 0)
-                }
+                cells.insert(numberViewModel, at: 0)
+            }
+            
+            
+            if let puref = operation.puref,
+               let payeeFullName = operation.payeeFullName {
                 
-                
-                if let puref = operation.puref,
-                   let payeeFullName = operation.payeeFullName {
-                    
-                    let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                    let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
-                                                                  iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
-                                                                  value: payeeFullName)
-                    cells.insert(operatorViewModel, at: 0)
-                }
-                
-                return cells
-                
-            case .housingAndCommunalService:
-                
+                let operatorValue = model.dictionaryAnywayOperator(for: puref)
+                let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
+                                                              iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                                                              value: payeeFullName)
+                cells.insert(operatorViewModel, at: 0)
+            }
+            
+            return cells
+            
+        case .housingAndCommunalService:
+            
             var cells = [
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
                 dateViewModel
             ]
-
+            
             let puref = operation.puref ?? ""
             let operatorValue = model.dictionaryAnywayOperator(for: puref)
-
+            
             if let account = operation.account {
                 
                 let numberViewModel = PropertyCellViewModel(
@@ -1474,7 +1474,7 @@ extension OperationDetailInfoViewModel {
             }
             
             return cells.compactMap {$0}
-           
+            
         case .transport:
             
             return Self.makeItemsForTransport(
@@ -1487,14 +1487,88 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             )
             
-            default:
+        case .c2bPayment:
+            
+            let nameCompany: DefaultCellViewModel? = {
                 
-                return [
-                    payerViewModel,
-                    amountViewModel,
-                    commissionViewModel,
-                    payeeViewModel,
-                    dateViewModel].compactMap {$0}
+                if let icon = operation.merchantIcon {
+                    
+                    let image = ImageData(with: .init(description: icon))?.image
+                    return nameCompanyC2B(operation: operation, image: image)
+                }
+                
+                 return nil
+            }()
+            
+            let cells = [
+                amountViewModel,
+                nameCompany,
+                dateViewModel,
+                operationDetailStatus(status: operation.operationStatus),
+                payerViewModel,
+                payeeViewModel,
+                payeeBankViewModel,
+                purposeViewModel,
+                operationNumberViewModel
+            ].compactMap { $0 }
+            
+            return cells
+            
+        default:
+            
+            return [
+                payerViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payeeViewModel,
+                dateViewModel].compactMap {$0}
+        }
+    }
+    
+    func nameCompanyC2B(
+        operation: OperationDetailData,
+        image: Image? = .ic24Bank
+    ) -> BankCellViewModel? {
+        
+        if  let image,
+            let name = operation.merchantSubName {
+            
+            return BankCellViewModel(title: "Наименование ТСП",
+                                     icon: image,
+                                     name: name)
+        } else {
+            
+            return nil
+        }
+    }
+    
+    func operationDetailStatus(
+        status: OperationDetailData.OperationStatus?
+    ) -> BankCellViewModel? {
+        
+        let title = "Статус операции"
+        switch status {
+            
+        case .complete:
+            return BankCellViewModel(title: title,
+                                     icon: Image("OkOperators"),
+                                     name: "Успешно")
+            
+        case .inProgress:
+            return BankCellViewModel(title: title,
+                                     icon: Image("waiting"),
+                                     name: "В обработке")
+            
+        case .rejected:
+            return BankCellViewModel(title: title,
+                                     icon: Image("rejected"),
+                                     name: "Отказ")
+            
+        case .unknown:
+            return nil
+            
+        case .none:
+            return nil
         }
     }
     
@@ -1832,9 +1906,11 @@ extension OperationDetailInfoViewModel {
               let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
               let icon = productData.smallDesign.image,
               let balance = productData.balance,
-              let formattedBalance = model.amountFormatted(amount: balance,
-                                                           currencyCode: productData.currency,
-                                                           style: .fraction) else {
+              let formattedBalance = model.amountFormatted(
+                amount: balance,
+                currencyCode: productData.currency,
+                style: .fraction)
+        else {
             return nil
         }
         
