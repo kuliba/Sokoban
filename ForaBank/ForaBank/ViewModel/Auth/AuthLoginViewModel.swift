@@ -78,7 +78,9 @@ class AuthLoginViewModel: ObservableObject {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Auth.CheckClient.Response:
