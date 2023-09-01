@@ -54,7 +54,7 @@ class PaymentsOperationViewModel: ObservableObject {
         bind()
     }
 
-    //MARK: Bind
+    // MARK: Bind
     
     internal func bind() {
         
@@ -68,24 +68,28 @@ class PaymentsOperationViewModel: ObservableObject {
         
         operation
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] operation in
+            .sink { [weak self] operation in
+                
+                guard let self else { return }
                 
                 sections.value = PaymentsSectionViewModel.reduce(operation: operation, model: model)
                 bind(sections: sections.value)
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         sections
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] sections in
+            .sink { [weak self] sections in
                 
-                withAnimation(.easeOut(duration: 0.3)) {
+                guard let self else { return }
+                
+                withAnimation(.easeOut(duration: 0.3)) { [weak self] in
                     
-                    top = Self.reduceTopGroups(sections: sections)
-                    feed = Self.reduceFeedGroups(sections: sections)
-                    bottom = Self.reduceBottomGroups(sections: sections)
+                    self?.top = Self.reduceTopGroups(sections: sections)
+                    self?.feed = Self.reduceFeedGroups(sections: sections)
+                    self?.bottom = Self.reduceBottomGroups(sections: sections)
                 }
-
+                
                 // update dependend items
                 Self.reduce(operation: operation.value, items: items, dependenceReducer: model.paymentsProcessDependencyReducer(operation:parameterId:parameters:))
                 
@@ -97,21 +101,23 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 // update parameter value callback for each item
                 updateParameterValueCallback(items: items)
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     internal func bindModel() {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Payment.Process.Response:
                     
                     self.action.send(PaymentsOperationViewModelAction.Spinner.Hide())
-                   
+                    
                     switch payload.result {
                     case .step(let operation):
                         self.operation.value = operation
@@ -129,19 +135,21 @@ class PaymentsOperationViewModel: ObservableObject {
                     default:
                         break
                     }
-
+                    
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     internal func bindAction() {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as PaymentsOperationViewModelAction.ItemDidUpdated:
@@ -184,7 +192,9 @@ class PaymentsOperationViewModel: ObservableObject {
                         navigationBar = .init(with: items.map{ $0.source }, closeAction: closeAction)
                         bindNavBar()
 
-                        withAnimation(.easeOut(duration: 0.3)) {
+                        withAnimation(.easeOut(duration: 0.3)) { [weak self] in
+                            
+                            guard let self else { return }
                             
                             top = Self.reduceTopGroups(sections: sections.value)
                             feed = Self.reduceFeedGroups(sections: sections.value)
@@ -236,13 +246,15 @@ class PaymentsOperationViewModel: ObservableObject {
                     bottomSheet = nil
 
                 case _ as PaymentsOperationViewModelAction.Spinner.Show:
-                    withAnimation {
-                        spinner = .init()
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = .init()
                     }
                     
                 case _ as PaymentsOperationViewModelAction.Spinner.Hide:
-                    withAnimation {
-                        spinner = nil
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = nil
                     }
                     
                 case let changeName as PaymentsOperationViewModelAction.ChangeName:
@@ -256,7 +268,7 @@ class PaymentsOperationViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    //MARK: Bind Sections
+    // MARK: Bind Sections
     
     internal func bind(sections: [PaymentsSectionViewModel]) {
         
@@ -264,11 +276,13 @@ class PaymentsOperationViewModel: ObservableObject {
             
             section.action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
+                .sink { [weak self] action in
+                    
+                    guard let self else { return }
                     
                     switch action {
                     case let payload as PaymentsSectionViewModelAction.ItemValueDidChanged:
-                       
+                        
                         guard payload.value.isChanged == true else {
                             return
                         }
@@ -283,15 +297,16 @@ class PaymentsOperationViewModel: ObservableObject {
                             //TODO: implement other actions if required
                             break
                         }
- 
+                        
                     case let payload as PaymentsSectionViewModelAction.PopUpSelector.Show:
                         bottomSheet = .init(type: .popUp(payload.viewModel))
                         // hide keyboard
                         UIApplication.shared.endEditing()
                         
                     case _ as PaymentsSectionViewModelAction.PopUpSelector.Close:
-                        withAnimation {
-                            bottomSheet = nil
+                        withAnimation { [weak self] in
+                            
+                            self?.bottomSheet = nil
                         }
                         
                     case let payload as PaymentsSectionViewModelAction.BankSelector.Show:
@@ -310,10 +325,10 @@ class PaymentsOperationViewModel: ObservableObject {
                     case _ as PaymentsSectionViewModelAction.ContactSelector.Close:
                         sheet = nil
                         
-                    //MARK: Hint
+                        // MARK: Hint
                     case let payload as PaymentsSectionViewModelAction.Hint.Show:
                         bottomSheet = .init(type: .hint(payload.viewModel))
-
+                        
                     case _ as PaymentsSectionViewModelAction.Hint.Close:
                         bottomSheet = nil
                         
@@ -323,18 +338,20 @@ class PaymentsOperationViewModel: ObservableObject {
                     default:
                         break
                     }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
     }
     
-    //MARK: Bind Navigation Bar
+    // MARK: Bind Navigation Bar
     private func bindNavBar() {
         
         navigationBar.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-            
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
                 switch action {
                 case _ as NavigationBarViewModelAction.ScanQrCode:
                     self.action.send(PaymentsViewModelAction.ScanQrCode())
@@ -344,8 +361,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 default: break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bindRename(
@@ -355,7 +372,9 @@ class PaymentsOperationViewModel: ObservableObject {
         rename.action
             .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
+            .sink { [weak self] payload in
+                
+                guard let self else { return }
                 
                 bottomSheet = nil
                 
@@ -366,14 +385,17 @@ class PaymentsOperationViewModel: ObservableObject {
                           paymentTemplateId: payload.itemId))
                 model.action.send(ModelAction.PaymentTemplate.List.Requested())
                 
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(confirmViewModel: PaymentsConfirmViewModel) {
         
         confirmViewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as PaymentsConfirmViewModelAction.CancelOperation:
@@ -385,12 +407,12 @@ class PaymentsOperationViewModel: ObservableObject {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
 }
 
-//MARK: - Sections Reducers
+// MARK: - Sections Reducers
 
 extension PaymentsOperationViewModel {
     
@@ -424,7 +446,7 @@ extension PaymentsOperationViewModel {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
 
 extension PaymentsOperationViewModel {
     
@@ -449,7 +471,7 @@ extension PaymentsOperationViewModel {
     }
 }
 
-//MARK: - Helpers
+// MARK: - Helpers
 
 extension PaymentsOperationViewModel {
         
@@ -507,7 +529,7 @@ extension PaymentsOperationViewModel {
 
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension PaymentsOperationViewModel {
     
@@ -576,7 +598,7 @@ extension PaymentsOperationViewModel {
     }
 }
 
-//MARK: - Action
+// MARK: - Action
 
 enum PaymentsOperationViewModelAction {
     
