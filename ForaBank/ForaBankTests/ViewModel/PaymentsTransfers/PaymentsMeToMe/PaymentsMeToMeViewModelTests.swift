@@ -249,7 +249,9 @@ extension ProductData {
     //TODO: remove stub after merge DBSNEW-8883
     static func stub(
         productId: Int = UUID().hashValue,
-        currency: String = "RUB"
+        currency: String = "RUB",
+        balance: Double? = nil,
+        balanceRub: Double? = nil
     ) -> ProductData {
         
         return .init(
@@ -258,8 +260,8 @@ extension ProductData {
             number: "1",
             numberMasked: nil,
             accountNumber: nil,
-            balance: nil,
-            balanceRub: nil,
+            balance: balance,
+            balanceRub: balanceRub,
             currency: currency,
             mainField: "",
             additionalField: nil,
@@ -270,10 +272,10 @@ extension ProductData {
             branchId: nil,
             allowCredit: true,
             allowDebit: true,
-            extraLargeDesign: .init(description: ""),
-            largeDesign: .init(description: ""),
-            mediumDesign: .init(description: ""),
-            smallDesign: .init(description: ""),
+            extraLargeDesign: SVGImageData.test,
+            largeDesign: SVGImageData.test,
+            mediumDesign: SVGImageData.test,
+            smallDesign: SVGImageData.test,
             fontDesignColor: .init(description: ""),
             background: [.init(description: "")],
             order: 1,

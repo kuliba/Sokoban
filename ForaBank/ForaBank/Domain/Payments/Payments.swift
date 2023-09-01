@@ -70,7 +70,7 @@ enum Payments {
         case gibdd
     }
     
-    enum Operator: String {
+    enum Operator: String, CaseIterable {
         
         case sfp               = "iFora||TransferC2CSTEP"
         case direct            = "iFora||MIG"

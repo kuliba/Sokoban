@@ -143,6 +143,23 @@ extension ProductData.Filter {
 
 extension ProductData.Filter {
     
+    struct ProductActiveRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            switch productData {
+            case let productCard as ProductCardData:
+                return !productCard.isBlocked
+                
+            case let productAccount as ProductAccountData:
+                return productAccount.status == .notBlocked
+                
+            default:
+                return nil
+            }
+        }
+    }
+    
     struct CardActiveRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
@@ -348,4 +365,26 @@ extension ProductData.Filter  {
                 CardActiveRule(),
                 CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
+    
+    static func c2bFilter(
+        productTypes: [ProductType],
+        currencies: [Currency],
+        additional: Bool
+    ) -> ProductData.Filter {
+        
+        var rules = [ProductDataFilterRule]()
+
+        rules.append(ProductData.Filter.ProductTypeRule(Set(productTypes)))
+        rules.append(ProductData.Filter.CurrencyRule(Set(currencies)))
+        
+        if additional == false {
+            
+            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
+        }
+        
+        rules.append(ProductData.Filter.ProductActiveRule())
+        
+        return .init(rules: rules)
+    }
 }

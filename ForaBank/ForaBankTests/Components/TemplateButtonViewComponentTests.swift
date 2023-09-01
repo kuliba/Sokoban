@@ -217,7 +217,9 @@ extension ProductStatementData {
 
 extension ProductData {
     
-    static func stub(productType: ProductType = .account) -> ProductData {
+    static func stub(
+        productType: ProductType = .account
+    ) -> ProductData {
         
         return .init(
             id: 1,

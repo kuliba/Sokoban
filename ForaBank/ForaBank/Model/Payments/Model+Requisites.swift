@@ -255,20 +255,25 @@ extension Model {
                     parameters.append(kppParameter)
                 }
                 
-                //MARK: Company Name Parameter
+                // MARK: Company Name Parameter
                 let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: nil), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
                 parameters.append(companyNameParameter)
             }
             
             if innValue.count == 10 {
                 
-                //MARK: CheckBox Parameter
+                // MARK: CheckBox Parameter
                 let checkBoxParameterId = Payments.Parameter.Identifier.requisitsCheckBox.rawValue
-                let checkBoxParameter = Payments.ParameterCheck(.init(id: checkBoxParameterId, value: .init()), title: "Оплата ЖКХ")
+                let checkBoxParameter = Payments.ParameterCheck(
+                    .init(id: checkBoxParameterId, value: .init()),
+                    title: "Оплата ЖКХ",
+                    urlString: nil,
+                    mode: .requisites
+                )
                 parameters.append(checkBoxParameter)
             }
             
-            //MARK: Message Parameter
+            // MARK: Message Parameter
             let messageValidator: Payments.Validation.RulesSystem = {
                 
                 var rules = [any PaymentsValidationRulesSystemRule]()

@@ -378,6 +378,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 switch action {
                 case let payload as PaymentsConfirmViewModelAction.CancelOperation:
                     self.action.send(PaymentsOperationViewModelAction.CancelOperation(amount: payload.amount, reason: payload.reason))
+                
+                case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
+                    updateBottomSection(isContinueEnabled: isItemsValuesValid)
                     
                 default:
                     break

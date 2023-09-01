@@ -110,8 +110,8 @@ extension Payments.Parameter {
         case countryPayee                    = "countryPayee"
         case countryDeliveryCurrency         = "CURR"
         case countryDeliveryCurrencyDirect   = "##CURR"
-        case countryCheckBox                 = "countryCheckBox"
         case countryOffer                    = "countryOferta"
+        case countryDividend                 = "countryDividend"
         case countryCitySearch               = "search#3#"
         case countryBankSearch               = "search#5#"
         case countryId                       = "bCountryId"
@@ -529,11 +529,11 @@ extension Payments {
         }
     }
     
-    struct ParameterCheck: PaymentsParameterRepresentable {
+    struct ParameterCheck: PaymentsParameterRepresentable, Equatable {
         
         let parameter: Parameter
         let title: String
-        let link: Link?
+        let urlString: String?
         let style: Style
         let mode: Mode
         let group: Payments.Parameter.Group?
@@ -542,35 +542,46 @@ extension Payments {
             return parameter.value == "true" ? true : false
         }
         
-        init(_ parameter: Payments.Parameter, title: String, link: Link? = nil, style: Style = .regular, mode: Mode = .normal, group: Payments.Parameter.Group? = nil) {
+        init(
+            _ parameter: Payments.Parameter,
+            title: String,
+            urlString: String?,
+            style: Style = .regular,
+            mode: Mode = .normal,
+            group: Payments.Parameter.Group? = nil
+        ) {
             self.parameter = parameter
             self.title = title
-            self.link = link
+            self.urlString = urlString
             self.style = style
             self.mode = mode
             self.group = group
         }
         
-        func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
+        func updated(
+            value: Parameter.Value
+        ) -> PaymentsParameterRepresentable {
             
-            ParameterCheck(.init(id: parameter.id, value: value), title: title, link: link, style: style, mode: mode, group: group)
+            ParameterCheck(
+                .init(id: parameter.id, value: value),
+                title: title,
+                urlString: urlString,
+                style: style,
+                mode: mode,
+                group: group
+            )
         }
-        
-        struct Link {
-            
-            let title: String
-            let url: URL
-        }
-        
-        enum Style {
+                
+        enum Style: Equatable {
             
             case regular
-            case c2bSubscribtion
+            case c2bSubscription
         }
         
-        enum Mode {
+        enum Mode: Equatable {
             
             case normal
+            case requisites
             case abroad
         }
     }
@@ -726,7 +737,7 @@ extension Payments {
         }()
     }
     
-    struct ParameterInfo: PaymentsParameterRepresentable {
+    struct ParameterInfo: PaymentsParameterRepresentable, Equatable {
         
         let parameter: Parameter
         let icon: Payments.Parameter.Icon

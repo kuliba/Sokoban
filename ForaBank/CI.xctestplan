@@ -131,7 +131,21 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LandingUICompomentTests",
+        "name" : "LandingUICompomentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CryptoSwaddlerTests",
         "name" : "CryptoSwaddlerTests"
       }

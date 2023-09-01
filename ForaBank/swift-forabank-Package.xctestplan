@@ -13,131 +13,137 @@
   },
   "testTargets" : [
     {
-      "enabled" : false,
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "WIPTests",
-        "name" : "WIPTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldModelTests",
-        "name" : "TextFieldModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldDomainTests",
-        "name" : "TextFieldDomainTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldComponentTests",
-        "name" : "TextFieldComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "UserModelTests",
-        "name" : "UserModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PickerWithPreviewComponentTests",
-        "name" : "PickerWithPreviewComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LoadableResourceComponentTests",
-        "name" : "LoadableResourceComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldUITests",
-        "name" : "TextFieldUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "GetProcessingSessionCodeServiceTests",
-        "name" : "GetProcessingSessionCodeServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PinCodeUITests",
-        "name" : "PinCodeUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SharedAPIInfraTests",
-        "name" : "SharedAPIInfraTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SymmetricEncryptionTests",
-        "name" : "SymmetricEncryptionTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "GenericRemoteServiceTests",
-        "name" : "GenericRemoteServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ForaCryptoTests",
         "name" : "ForaCryptoTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LandingUICompomentTests",
+        "name" : "LandingUICompomentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldDomainTests",
+        "name" : "TextFieldDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "TransferPublicKeyTests",
         "name" : "TransferPublicKeyTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CryptoSwaddlerTests",
-        "name" : "CryptoSwaddlerTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UserModelTests",
+        "name" : "UserModelTests"
       }
     },
     {
-      "parallelizable" : true,
+      "enabled" : false,
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LandingUICompomentTests",
-        "name" : "LandingUICompomentTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "WIPTests",
+        "name" : "WIPTests"
       }
     }
   ],
