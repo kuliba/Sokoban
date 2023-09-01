@@ -649,6 +649,8 @@ extension Model {
         
         let remoteStage: Payments.Operation.Stage.Remote = response.needOTP == true ? .confirm : .next
         
+        let dividendParameter = try? parameters.parameter(forIdentifier: .countryDividend)
+        
         return .init(
             parameters: parameters,
             front: .init(
@@ -657,7 +659,7 @@ extension Model {
             ),
             back: .init(
                 stage: .remote(remoteStage),
-                required: [],
+                required: [dividendParameter].compactMap(\.?.id),
                 processed: nil
             )
         )
@@ -686,7 +688,7 @@ extension Model {
         // check if current step stage is confirm
         guard operation.isConfirmCurrentStage else {
             
-            let parameters = operation.steps.map( \.front.visible ).flatMap({ $0 })
+            let parameters = operation.steps.map(\.front.visible).flatMap({ $0 })
             
             let restrictedParameters = parameters.filter({ !restrictedIds.contains($0) })
             return restrictedParameters
@@ -998,17 +1000,17 @@ private extension TransferResponseData {
         guard
             let response = self as? TransferAnywayResponseData,
             let oferta = response.additionalList.first(where: { $0.fieldName == "oferta" }),
-            let value = oferta.fieldValue,
-            let url = URL(string: value)
+            let title = oferta.fieldTitle,
+            let urlString = oferta.fieldValue
         else { return nil }
         
         let countryOferta = Payments.Parameter.Identifier.countryOffer.rawValue
         
         return .init(
             .init(id: countryOferta, value: "true"),
-            title: "С договором",
-            link: .init(title: "оферты", url: url),
-            style: .c2bSubscribtion,
+            title: title,
+            urlString: urlString,
+            style: .c2bSubscription,
             mode: .abroad
         )
     }
@@ -1017,19 +1019,21 @@ private extension TransferResponseData {
         
         guard
             let response = self as? TransferAnywayResponseData,
-            let dividend = response.additionalList.first(where: { $0.fieldName == "dividend" }),
-            dividend.typeIdParameterList == "checkbox",
-            let value = dividend.fieldTitle
+            let dividend = response.additionalList.first(where: {
+                $0.typeIdParameterList == "checkbox"
+                && $0.fieldName == "dividend"
+            }),
+            let title = dividend.fieldTitle
         else { return nil }
         
         let countryDividend = Payments.Parameter.Identifier.countryDividend.rawValue
         
         return .init(
             .init(id: countryDividend, value: "true"),
-            title: value,
-            link: nil,
-            style: .regular,
-            mode: .abroad
+            title: title,
+            urlString: dividend.fieldValue,
+            style: .c2bSubscription,
+            mode: .normal
         )
     }
     
@@ -1072,68 +1076,40 @@ extension Model {
         var clearCurrency = splittedCurrency
         clearCurrency.remove(at: 0)
         
-        var deliveryCurrency: [Payments.ParameterAmount.DeliveryCurrency] = []
-        
-        for currency in clearCurrency {
-            
-            if let currency = self.deliveryCurrencyMapping(dataType: currency) {
-                
-                deliveryCurrency.append(currency)
-            }
-        }
+        let deliveryCurrency = clearCurrency.compactMap(deliveryCurrencyMapping(dataType:))
         
         guard let product = self.product(productId: productId),
-              let currencies = deliveryCurrency.first(where: { $0.selectedCurrency.description == product.currency.description })?.currenciesList else {
-            return []
-        }
+              let currencies = deliveryCurrency.first(where: { $0.selectedCurrency.description == product.currency.description })?.currenciesList
+        else { return [] }
         
         return currencies
     }
     
     func reduceFilterCurrencies(filterCurrencies: String?) -> [Currency] {
         
-        var deliveryCurrencyProduct: [Payments.ParameterAmount.DeliveryCurrency]? = []
+        guard var splittedCurrency = filterCurrencies?.components(separatedBy: ";")
+        else { return [] }
         
-        if var splittedCurrency = filterCurrencies?.components(separatedBy: ";") {
-            
-            splittedCurrency.remove(at: 0)
-            
-            for currency in splittedCurrency {
-                
-                if let currency = self.deliveryCurrencyMapping(dataType: currency) {
-                    
-                    deliveryCurrencyProduct?.append(currency)
-                }
-            }
-            
-            if let filterCurrency = deliveryCurrencyProduct?.compactMap({ $0.selectedCurrency }) {
-                
-                return filterCurrency
-            } else {
-                
-                return []
-            }
-            
-        } else {
-            
-            return []
-        }
+        splittedCurrency.remove(at: 0)
+        
+        return splittedCurrency
+            .compactMap(deliveryCurrencyMapping(dataType:))
+            .compactMap({ $0.selectedCurrency })
     }
     
     func deliveryCurrencyMapping(dataType: String) -> Payments.ParameterAmount.DeliveryCurrency? {
         
         let splitCurrency = dataType.components(separatedBy: "=")
         
-        let currincies = splitCurrency[1].components(separatedBy: ",").map({ Currency(description: $0.description)})
+        let currencies = splitCurrency[1]
+            .components(separatedBy: ",")
+            .map(\.description)
+            .map(Currency.init(description:))
         
-        if let firstCurriency = splitCurrency.first {
+        return splitCurrency.first.map { firstCurrency in
             
-            let selectedCurrency = Currency(description: firstCurriency)
-            return Payments.ParameterAmount.DeliveryCurrency(selectedCurrency: selectedCurrency, currenciesList: currincies)
-            
-        } else {
-            
-            return nil
+            let selectedCurrency = Currency(description: firstCurrency)
+            return .init(selectedCurrency: selectedCurrency, currenciesList: currencies)
         }
     }
 }
@@ -1146,13 +1122,17 @@ extension Model {
         ) -> Payments.ParameterHeader? {
             
         if case let .template(templateId) = source,
-            let template = templates.first(where: { $0.id == templateId }) {
+           let template = templates.first(where: { $0.id == templateId }) {
             
-            return Payments.ParameterHeader(title: template.name,
-                                                       rightButton: [.init(icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
-                                                                           action: .editName(
-                                                                            .init(oldName: template.name,
-                                                                                  templateID: templateId)))])
+            return Payments.ParameterHeader(
+                title: template.name,
+                rightButton: [
+                    .init(
+                        icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
+                        action: .editName(
+                            .init(oldName: template.name,
+                                  templateID: templateId)))
+                ])
         } else {
                 
             return nil
