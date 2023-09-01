@@ -514,7 +514,12 @@ extension Payments.ParameterCheck {
     
     init(with data: PaymentParameterCheck) {
         
-        self.init(.init(id: data.id, value: String(data.value)), title: data.link.title, link: .init(title: data.link.subtitle, url: data.link.url), style: .c2bSubscribtion)
+        self.init(
+            .init(id: data.id, value: String(data.value)),
+            title: data.link.title,
+            urlString: data.link.url.absoluteString,
+            style: .c2bSubscription
+        )
     }
 }
 

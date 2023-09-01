@@ -548,7 +548,7 @@ final class Model_AbroadTests: XCTestCase {
         }
     }
     
-    func test_paymentsProcessRemoteStepAbroad_shouldDeliverOferta() async throws {
+    func test_paymentsProcessRemoteStepAbroad_shouldNotDeliverOfertaOnMissingFieldTitle() async throws {
         
         for paymentsOperator in allPaymentsOperators {
             
@@ -573,15 +573,53 @@ final class Model_AbroadTests: XCTestCase {
                 "countryDropDownList"
             ])
             XCTAssertNoDiff(step.parameters.count, step.checkParameters.count)
+            XCTAssertNoDiff(step.checkParameters, [])
+            XCTAssertNoDiff(
+                step.front,
+                .init(
+                    visible: [],
+                    isCompleted: false
+                )
+            )
+            XCTAssertNoDiff(step.back, .empty(stage: .remote(.next)))
+        }
+    }
+    
+    func test_paymentsProcessRemoteStepAbroad_shouldDeliverOferta() async throws {
+        
+        for paymentsOperator in allPaymentsOperators {
+            
+            let operation = operationWithCountryDropDownList(
+                paymentsOperator: paymentsOperator
+            )
+            let response: TransferAnywayResponseData = .makeDummy(
+                additionalList: [
+                    .dummy(
+                        fieldName: "oferta",
+                        fieldTitle: "С <u>офертой</u> ознакомлен.",
+                        fieldValue: "abc"
+                    )
+                ],
+                finalStep: false
+            )
+            let model: Model = .mockWithEmptyExcept()
+            model.currencyList.value = [.rub]
+            
+            let step = try await model.paymentsProcessRemoteStepAbroad(
+                operation: operation,
+                response: response
+            )
+            
+            XCTAssertNoDiff(operation.parametersIds, [
+                "countryDropDownList"
+            ])
+            XCTAssertNoDiff(step.parameters.count, step.checkParameters.count)
             XCTAssertNoDiff(step.checkParameters, [
                 .init(
                     .init(id: "countryOferta", value: "true"),
-                    title: "С договором",
-                    link: .init(
-                        title: "оферты",
-                        url: try XCTUnwrap(URL(string: "abc"))
-                    ),
-                    style: .c2bSubscribtion,
+                    title: "С <u>офертой</u> ознакомлен.",
+                    urlString: "abc",
+                    style: .c2bSubscription,
                     mode: .abroad,
                     group: nil
                 )
@@ -632,9 +670,9 @@ final class Model_AbroadTests: XCTestCase {
                 .init(
                     .init(id: "countryDividend", value: "true"),
                     title: "источником перевода не являются средства",
-                    link: nil,
-                    style: .regular,
-                    mode: .abroad,
+                    urlString: nil,
+                    style: .c2bSubscription,
+                    mode: .normal,
                     group: nil
                 )
             ])
@@ -647,7 +685,10 @@ final class Model_AbroadTests: XCTestCase {
                     isCompleted: false
                 )
             )
-            XCTAssertNoDiff(step.back, .empty(stage: .remote(.next)))
+            XCTAssertNoDiff(
+                step.back,
+                .init(stage: .remote(.next), required: ["countryDividend"], processed: nil)
+            )
         }
     }
     

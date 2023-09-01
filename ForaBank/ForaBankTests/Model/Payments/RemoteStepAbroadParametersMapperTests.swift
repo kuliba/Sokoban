@@ -304,7 +304,7 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
         }
     }
     
-    func test_map_shouldDeliverOferta() async throws {
+    func test_map_shouldNotDeliverOfertaOnMissingFieldTitle() async throws {
         
         for paymentsOperator in allPaymentsOperators {
             
@@ -314,15 +314,31 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
             
             let parameters = map(response, with: paymentsOperator)
             
+            XCTAssertNoDiff(parameters.checkParameters, [])
+        }
+    }
+    
+    
+    func test_map_shouldDeliverOferta() async throws {
+        
+        for paymentsOperator in allPaymentsOperators {
+            
+            let response = makeResponseWithAdditional([
+                .dummy(
+                    fieldName: "oferta",
+                    fieldTitle: "С <u>офертой</u> ознакомлен.",
+                    fieldValue: "abc"
+                )
+            ])
+            
+            let parameters = map(response, with: paymentsOperator)
+            
             XCTAssertNoDiff(parameters.checkParameters, [
                 .init(
                     .init(id: "countryOferta", value: "true"),
-                    title: "С договором",
-                    link: .init(
-                        title: "оферты",
-                        url: try XCTUnwrap(URL(string: "abc"))
-                    ),
-                    style: .c2bSubscribtion,
+                    title: "С <u>офертой</u> ознакомлен.",
+                    urlString: "abc",
+                    style: .c2bSubscription,
                     mode: .abroad,
                     group: nil
                 )
@@ -348,8 +364,9 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
                 .init(
                     .init(id: "countryDividend", value: "true"),
                     title: "источником перевода не являются средства",
-                    style: .regular,
-                    mode: .abroad,
+                    urlString: nil,
+                    style: .c2bSubscription,
+                    mode: .normal,
                     group: nil
                 )
             ])

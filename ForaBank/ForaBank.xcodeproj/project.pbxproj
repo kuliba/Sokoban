@@ -444,6 +444,7 @@
 		2A73C2282A03A4C000C68A32 /* getScenarioQRData_1_2_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2272A03A4C000C68A32 /* getScenarioQRData_1_2_1.json */; };
 		2A73C22A2A03A57800C68A32 /* getScenarioQRData_1_2_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
+		2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7AB1922AA1065400D37BD6 /* LinkableText */; };
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
@@ -3857,6 +3858,7 @@
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */,
+				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
 				2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */,
 				0B67728A277CCD7500DCCECD /* PhoneNumberKit in Frameworks */,
@@ -10150,6 +10152,7 @@
 				2A1F08522A79057500C5B11B /* GetProcessingSessionCodeService */,
 				2A1F08672A7951E600C5B11B /* GenericRemoteService */,
 				2A5190302A7E0BE80014B0B7 /* BindPublicKeyWithEventID */,
+				2A7AB1922AA1065400D37BD6 /* LinkableText */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -13621,6 +13624,10 @@
 		2A5190302A7E0BE80014B0B7 /* BindPublicKeyWithEventID */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BindPublicKeyWithEventID;
+		};
+		2A7AB1922AA1065400D37BD6 /* LinkableText */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LinkableText;
 		};
 		2A81425B2A0B8EED005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
