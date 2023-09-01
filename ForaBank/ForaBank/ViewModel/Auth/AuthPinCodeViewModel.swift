@@ -111,7 +111,9 @@ class AuthPinCodeViewModel: ObservableObject {
         model.sessionState
             .combineLatest(model.clientInform, self.viewDidAppear)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state, clientInformData, isViewDidAppear in
+            .sink { [weak self] state, clientInformData, isViewDidAppear in
+                
+                guard let self else { return }
         
                 switch state {
                 
@@ -143,17 +145,20 @@ class AuthPinCodeViewModel: ObservableObject {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Auth.Pincode.Check.Response:
                     switch payload {
                     case .correct:
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: correct")
-                        withAnimation {
+                        withAnimation { [weak self] in
+                            
                             // show correct pincode state
-                            pinCode.style = .correct
-                            numpad.isEnabled = false
+                            self?.pinCode.style = .correct
+                            self?.numpad.isEnabled = false
                         }
                         
                         // taptic feedback
@@ -169,11 +174,12 @@ class AuthPinCodeViewModel: ObservableObject {
                         }
                         mode = .unlock(attempt: lastAttempt + 1, auto: auto)
                         
-                        withAnimation {
+                        withAnimation { [weak self] in
+                            
                             // show incorrect pincode state
-                            mistakes += 1
-                            pinCode.style = .incorrect
-                            numpad.isEnabled = false
+                            self?.mistakes += 1
+                            self?.pinCode.style = .incorrect
+                            self?.numpad.isEnabled = false
                         }
                         // error sound
                         AudioServicesPlaySystemSound(1109)
@@ -189,10 +195,11 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                     case .restricted:
                         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.Pincode.Check.Response: restricted")
-                        withAnimation {
+                        withAnimation { [weak self] in
+                            
                             // show incorrect pincode state
-                            pinCode.style = .incorrect
-                            numpad.isEnabled = false
+                            self?.pinCode.style = .incorrect
+                            self?.numpad.isEnabled = false
                         }
                         alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             
@@ -226,9 +233,9 @@ class AuthPinCodeViewModel: ObservableObject {
                         pinCode.update(with: "0000", pincodeLength: model.authPincodeLength)
                         pinCode.style = .correct
                         
-                        withAnimation {
+                        withAnimation { [weak self] in
                             
-                            pinCode.isAnimated = true
+                            self?.pinCode.isAnimated = true
                         }
                         
                         switch sensorType {
@@ -332,7 +339,9 @@ class AuthPinCodeViewModel: ObservableObject {
         
         numpad.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as NumPadViewModelAction.Button:
@@ -394,7 +403,9 @@ class AuthPinCodeViewModel: ObservableObject {
         
         pincodeValue
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] value in
+            .sink { [weak self] value in
+                
+                guard let self else { return }
                 
                 pinCode.update(with: value, pincodeLength: model.authPincodeLength)
                 
@@ -458,17 +469,20 @@ class AuthPinCodeViewModel: ObservableObject {
         $stage
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] stage in
+            .sink { [weak self] stage in
+                
+                guard let self else { return }
   
                 switch stage {
                 case .mistake:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "stage: mistake")
                     pinCode.isAnimated = false
-                    withAnimation {
+                    withAnimation { [weak self] in
+                        
                         // show incorrect pincode state
-                        mistakes += 1
-                        pinCode.style = .incorrect
-                        numpad.isEnabled = false
+                        self?.mistakes += 1
+                        self?.pinCode.style = .incorrect
+                        self?.numpad.isEnabled = false
                     }
                     // error sound
                     AudioServicesPlaySystemSound(1109)
@@ -492,16 +506,18 @@ class AuthPinCodeViewModel: ObservableObject {
                     
                     switch mode {
                     case .unlock(let attempt, auto: _):
-                        withAnimation {
-                            pinCode.isAnimated = true
+                        withAnimation { [weak self] in
+                            
+                            self?.pinCode.isAnimated = true
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Check.Request")
                         model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pincodeValue.value, attempt: attempt))
                         
                     case .create:
                         pinCode.style = .correct
-                        withAnimation {
-                            pinCode.isAnimated = true
+                        withAnimation { [weak self] in
+                            
+                            self?.pinCode.isAnimated = true
                         }
                         LoggerAgent.shared.log(category: .ui, message: "sent ModelAction.Auth.Pincode.Set.Request")
                         model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pincodeValue.value))
@@ -515,7 +531,9 @@ class AuthPinCodeViewModel: ObservableObject {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case _ as AuthPinCodeViewModelAction.Appear:
@@ -536,12 +554,13 @@ class AuthPinCodeViewModel: ObservableObject {
                     LoggerAgent.shared.log(category: .ui, message: "received AuthPinCodeViewModelAction.Unlock.Attempt")
                     alert = nil
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "hide alert")
-                    withAnimation {
+                    withAnimation { [weak self] in
+                        
                         // back to editing
-                        self.stage = .editing
-                        pinCode.style = .normal
-                        pincodeValue.value = ""
-                        numpad.isEnabled = true
+                        self?.stage = .editing
+                        self?.pinCode.style = .normal
+                        self?.pincodeValue.value = ""
+                        self?.numpad.isEnabled = true
                     }
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "reset pincode")
                     

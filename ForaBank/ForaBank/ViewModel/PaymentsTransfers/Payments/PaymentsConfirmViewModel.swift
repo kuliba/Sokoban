@@ -34,7 +34,9 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
@@ -67,7 +69,9 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
@@ -95,13 +99,15 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     codeItem.action.send(PaymentsParameterViewModelAction.Code.IncorrectCodeEntered())
                     
                 case _ as PaymentsOperationViewModelAction.Spinner.Show:
-                    withAnimation {
-                        spinner = .init()
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = .init()
                     }
                     
                 case _ as PaymentsOperationViewModelAction.Spinner.Hide:
-                    withAnimation {
-                        spinner = nil
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = nil
                     }
                     
                 case _ as PaymentsOperationViewModelAction.CloseBottomSheet:
@@ -118,26 +124,30 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
         
         $top
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] topGroups in
+            .sink { [weak self] topGroups in
                 
-                guard let topItems = topGroups else { return }
+                guard let self,
+                      let topItems = topGroups
+                else { return }
                 updateEditable(for: topItems)
                 
             }.store(in: &bindings)
         
         $feed
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] contentGroups in
+            .sink { [weak self] contentGroups in
                 
-                updateEditable(for: contentGroups)
+                self?.updateEditable(for: contentGroups)
                 
             }.store(in: &bindings)
         
         $bottom
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] bottomGroups in
+            .sink { [weak self] bottomGroups in
                 
-                guard let bottomGroups = bottomGroups else { return }
+                guard let self,
+                      let bottomGroups
+                else { return }
                 updateEditable(for: bottomGroups)
                 
             }.store(in: &bindings)
