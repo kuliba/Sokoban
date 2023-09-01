@@ -26,7 +26,11 @@ final class SigningOTPEncrypterTests: CryptoSwaddlerTestCase {
             for: encrypted,
             usingPrivateKey: privateKey
         )
-        let isVerified = try Crypto.veryfy(encrypted, withPublicKey: publicKey, signature: signature)
+        let isVerified = try Crypto.veryfy(
+            encrypted,
+            withPublicKey: publicKey,
+            signature: signature
+        )
         XCTAssertTrue(isVerified)
     }
     
