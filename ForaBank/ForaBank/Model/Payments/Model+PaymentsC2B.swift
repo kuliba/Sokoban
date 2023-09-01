@@ -477,34 +477,26 @@ extension Payments.ParameterProduct {
     
     init(with data: PaymentParameterProductSelect, firstProduct: (ProductData.Filter) -> ProductData?) throws {
         
-        var rules = [ProductDataFilterRule]()
-        rules.append(ProductData.Filter.ProductTypeRule(Set(data.filter.productTypes)))
-        rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
-        if data.filter.additional == false {
-            
-            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
-        }
+        let filter = ProductData.Filter.c2bFilter(
+            productTypes: data.filter.productTypes,
+            currencies: data.filter.currencies,
+            additional: data.filter.additional
+        )
         
-        let filter = ProductData.Filter(rules: rules)
         guard let product = firstProduct(filter) else {
             throw Payments.Error.unableCreateRepresentable(Payments.Parameter.Identifier.product.rawValue)
         }
+        
         self.init(value: String(product.id), title: data.title, filter: filter, isEditable: true)
     }
     
     init(with data: PaymentParameterProductSelect, product: ProductData) {
         
-        var rules = [ProductDataFilterRule]()
-        rules.append(ProductData.Filter.ProductTypeRule(Set(data.filter.productTypes)))
-        rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
-        if data.filter.additional == false {
-            
-            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
-        }
-        
-        let filter = ProductData.Filter(rules: rules)
+        let filter = ProductData.Filter.c2bFilter(
+            productTypes: data.filter.productTypes,
+            currencies: data.filter.currencies,
+            additional: data.filter.additional
+        )
 
         self.init(value: String(product.id), title: data.title, filter: filter, isEditable: true)
     }
