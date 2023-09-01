@@ -19,14 +19,18 @@ class PaymentsSectionViewModel {
     
     internal var bindings = Set<AnyCancellable>()
     
-    init(placement: Payments.Parameter.Placement, groups: [PaymentsGroupViewModel]) {
-        
+    init(
+        placement: Payments.Parameter.Placement,
+        groups: [PaymentsGroupViewModel]
+    ) {
         self.placement = placement
         self.groups = groups
     }
     
-    convenience init(placement: Payments.Parameter.Placement, items: [PaymentsParameterViewModel]) {
-        
+    convenience init(
+        placement: Payments.Parameter.Placement,
+        items: [PaymentsParameterViewModel]
+    ) {
         self.init(placement: placement, groups: Self.reduce(items: items))
         
         bind()
@@ -35,9 +39,11 @@ class PaymentsSectionViewModel {
     internal func bind() {
         
         action
-            .compactMap{ $0 as? PaymentsSectionViewModelAction.Button.EnabledChanged }
+            .compactMap { $0 as? PaymentsSectionViewModelAction.Button.EnabledChanged }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
+            .sink { [weak self] payload in
+                
+                guard let self else { return }
                 
                 for item in items {
                     
@@ -49,57 +55,59 @@ class PaymentsSectionViewModel {
                         continue
                     }
                 }
-            
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         for item in items {
             
             item.$value
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] value in
+                .sink { [weak self] value in
                     
-                    action.send(PaymentsSectionViewModelAction.ItemValueDidChanged(value: value))
+                    self?.action.send(PaymentsSectionViewModelAction.ItemValueDidChanged(value: value))
                     
                 }.store(in: &bindings)
             
             item.action
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
+                .sink { [weak self] action in
+                    
+                    guard let self else { return }
                     
                     switch action {
                         
-                    //MARK: SelectSimpleComponent
+                        // MARK: SelectSimpleComponent
                     case let payload as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.PopUpSelector.Close())
                         
-                    //MARK: CodeComponent
+                        // MARK: CodeComponent
                     case _ as PaymentsParameterViewModelAction.Code.ResendButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.ResendCode())
-                    
-                    //MARK: InputPhoneComponent
+                        
+                        // MARK: InputPhoneComponent
                     case let payload as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
-                    
+                        
                     case let payload as PaymentsParameterViewModelAction.Hint.Show:
                         self.action.send(PaymentsSectionViewModelAction.Hint.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.Hint.Close:
                         self.action.send(PaymentsSectionViewModelAction.Hint.Close())
                         
-                    //MARK: Bank List Component
+                        // MARK: Bank List Component
                     case let payload as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show:
                         self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
                         
                     case _ as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
-
-                        //MARK: Bottom
+                        
+                        // MARK: Bottom
                         
                     case _ as PaymentsParameterViewModelAction.Amount.ContinueDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: .continue))
@@ -107,7 +115,7 @@ class PaymentsSectionViewModel {
                     case let payload as PaymentsParameterViewModelAction.Button.DidTapped:
                         self.action.send(PaymentsSectionViewModelAction.Button.DidTapped(action: payload.action))
                         
-                        //MARK: - Success Options Buttons
+                        // MARK: - Success Options Buttons
                         
                     case let payload as PaymentsParameterViewModelAction.SuccessOptionButtons.ButtonDidTapped:
                         self.action.send(PaymentsSectionViewModelAction.OptionButtonDidTapped(option: payload.option))
@@ -130,7 +138,7 @@ class PaymentsSectionViewModel {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
 
 extension PaymentsSectionViewModel {
     
@@ -359,7 +367,7 @@ extension PaymentsSectionViewModel {
     }
 }
 
-//MARK: - Action
+// MARK: - Action
 
 enum PaymentsSectionViewModelAction {
     

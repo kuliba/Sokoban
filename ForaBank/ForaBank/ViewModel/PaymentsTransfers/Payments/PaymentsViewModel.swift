@@ -149,7 +149,10 @@ class PaymentsViewModel: ObservableObject {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
                 switch action {
                 case let payload as ModelAction.Payment.Process.Response:
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
@@ -232,7 +235,10 @@ class PaymentsViewModel: ObservableObject {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
                 switch action {
                     
                 case _ as PaymentsViewModelAction.Dismiss:
@@ -242,13 +248,15 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case _ as PaymentsViewModelAction.Spinner.Show:
-                    withAnimation {
-                        spinner = .init()
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = .init()
                     }
                     
                 case _ as PaymentsViewModelAction.Spinner.Hide:
-                    withAnimation {
-                        spinner = nil
+                    withAnimation { [weak self] in
+                        
+                        self?.spinner = nil
                     }
                     
                 case _ as PaymentsViewModelAction.CloseSuccessView:
@@ -267,7 +275,9 @@ class PaymentsViewModel: ObservableObject {
             .compactMap({ $0 as? PaymentsViewModelAction.CriticalAlert })
             .delay(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
+            .sink { [weak self] payload in
+                
+                guard let self else { return }
                 
                 alert = .init(title: payload.title, message: payload.message, primary: .init(type: .cancel, title: "Ок", action: closeAction))
                 
@@ -278,7 +288,9 @@ class PaymentsViewModel: ObservableObject {
         
         successViewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
@@ -303,7 +315,9 @@ class PaymentsViewModel: ObservableObject {
         
         operationViewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                     
