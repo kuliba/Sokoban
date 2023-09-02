@@ -77,6 +77,7 @@ let package = Package(
         .getProcessingSessionCodeServiceTests,
         // landing
         .landingMapping,
+        .landingMappingTests,
         .landingUICompoment,
         .landingUICompomentTests,
         .landingUpdater,
@@ -491,6 +492,16 @@ private extension Target {
         name: .landingMapping,
         path: "Sources/Landing/\(String.landingMapping)"
     )
+    static let landingMappingTests = testTarget(
+        name: .landingMappingTests,
+        dependencies: [
+            // external
+            .customDump,
+            // internal modules
+            .landingMapping,
+        ],
+        path: "Tests/Landing/\(String.landingMappingTests)"
+    )
     static let landingUpdater = target(
         name: .landingUpdater,
         path: "Sources/Landing/\(String.landingUpdater)"
@@ -664,6 +675,7 @@ private extension String {
     
     // landing
     static let landingMapping = "LandingMapping"
+    static let landingMappingTests = "LandingMappingTests"
     static let landingUICompoment = "LandingUICompoment"
     static let landingUICompomentTests = "LandingUICompomentTests"
     static let landingUpdater = "LandingUpdater"

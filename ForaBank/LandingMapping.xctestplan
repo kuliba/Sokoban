@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "732A51DF-DDDE-49C8-B9D8-E1AF085F80E7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    }
+  ],
+  "version" : 1
+}
