@@ -21,7 +21,7 @@ extension OTPEncrypter where PrivateKey == SecKey {
             try Crypto.sign(
                 mapOTP(otp),
                 withPrivateKey: privateKey,
-                algorithm: .rsaSignatureRaw
+                algorithm: .rsaSignatureMessagePKCS1v15SHA256
             )
         }
         
