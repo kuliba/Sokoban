@@ -295,10 +295,10 @@ class MainViewModel: ObservableObject, Resetable {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListviewModel = TemplatesListViewModel(
+                                let templatesListViewModel = TemplatesListViewModel(
                                     model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
-                                bind(templatesListviewModel)
-                                link = .templates(templatesListviewModel)
+                                bind(templatesListViewModel)
+                                link = .templates(templatesListViewModel)
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -764,6 +764,9 @@ class MainViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as TemplatesListViewModelAction.CloseAction:
+                    link = nil
+                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())
