@@ -482,6 +482,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LandingMappingTests"
+               BuildableName = "LandingMappingTests"
+               BlueprintName = "LandingMappingTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ForaCryptoTests"
                BuildableName = "ForaCryptoTests"
                BlueprintName = "ForaCryptoTests"

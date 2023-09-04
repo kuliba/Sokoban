@@ -66,7 +66,8 @@ private extension Model {
             case .template:
                 
                 guard let operationDetail = source.operationDetail,
-                      operationDetail.restrictedTemplateButton else {
+                      operationDetail.restrictedTemplateButton,
+                      let operation = source.operation else {
                     return nil
                 }
                 
@@ -88,6 +89,7 @@ private extension Model {
                     return TemplateButtonView.ViewModel(
                         model: self,
                         state: state,
+                        operation: operation,
                         operationDetail: operationDetail
                     )
                     
@@ -96,6 +98,7 @@ private extension Model {
                     guard let operationDetail = source.operationDetail else {
                         return nil
                     }
+                    
                     if let meToMePayment = source.meToMePayment,
                        let templateID = source.templateID,
                        let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) {
@@ -111,16 +114,18 @@ private extension Model {
                        return TemplateButtonView.ViewModel(
                             model: self,
                             state: state,
+                            operation: nil,
                             operationDetail: operationDetail
                         )
                         
-                    } else {
-                     
-                        return TemplateButtonView.ViewModel(
-                            model: self,
-                            operationDetail: operationDetail
-                        )
                     }
+                    
+                    return TemplateButtonView.ViewModel(
+                         model: self,
+                         state: .idle,
+                         operation: nil,
+                         operationDetail: operationDetail
+                     )
                 }
                 
             default:
