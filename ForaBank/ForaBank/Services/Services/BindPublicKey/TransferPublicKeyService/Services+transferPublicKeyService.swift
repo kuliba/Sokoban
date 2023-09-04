@@ -24,19 +24,9 @@ extension Services {
         httpClient: HTTPClient
     ) -> PublicKeyTransferService {
         
-        
         let otpEncrypter: SecKeyOTPEncrypter = .signing(
             mapOTP: { .init($0.value.utf8) },
-            encryptWithTransportPublicRSAKey: { data in
-                
-                let key = try ForaCrypto.Crypto.transportKey()
-                
-                return try ForaCrypto.Crypto.rsaEncrypt(
-                    data: data,
-                    withPublicKey: key,
-                    algorithm: .rsaEncryptionRaw
-                )
-            }
+            encryptWithTransportPublicRSAKey: ForaCrypto.Crypto.transportEncrypt
         )
         
         let keyCache = InMemoryKeyStore<SecKey>()
