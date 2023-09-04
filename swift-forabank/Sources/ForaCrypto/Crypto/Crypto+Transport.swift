@@ -10,7 +10,7 @@ import Foundation
 
 public extension Crypto {
     
-    /// Create `P384.KeyAgreement.PrivateKey` using `derRepresentation` from a string that is decrypted with Transport Key.
+    /// Create `P384.KeyAgreement.PublicKey` using `derRepresentation` from a string that is decrypted with Transport Key.
     static func transportDecryptP384PublicKey(
         from string: String
     ) throws -> P384KeyAgreementDomain.PublicKey {
