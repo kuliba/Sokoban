@@ -134,7 +134,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                             return
                         }
                         
-                        self.templateButton = .init(model: model, operationDetail: details)
+                        self.templateButton = .init(
+                            model: model,
+                            operation: nil,
+                            operationDetail: details
+                        )
+                        
                         if let templateButton = self.templateButton {
                                 
                             bindTemplateButton(with: templateButton)

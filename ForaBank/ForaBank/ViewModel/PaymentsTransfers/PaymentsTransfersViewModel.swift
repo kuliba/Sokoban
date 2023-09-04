@@ -459,6 +459,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as TemplatesListViewModelAction.CloseAction:
+                    link = nil
+                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -467,7 +470,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
                             .init(productId: payload.productId))
                         }
-                    
                 default:
                     break
                 }

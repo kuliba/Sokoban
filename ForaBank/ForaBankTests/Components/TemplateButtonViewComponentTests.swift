@@ -29,6 +29,7 @@ extension TemplateButtonViewComponentTests {
         let sut = TemplateButtonView.ViewModel(
             model: model,
             state: .refresh,
+            operation: nil,
             operationDetail: .stub()
         )
         
@@ -40,41 +41,69 @@ extension TemplateButtonViewComponentTests {
         let sut = TemplateButtonView.ViewModel(
             model: model,
             state: .refresh,
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: nil)
         )
         
         XCTAssertEqual(sut.testState, .refresh)
     }
     
-    func test_convenienceInit_shouldSet_idleState() throws {
+    func test_templateButton_init_shouldSet_idleState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
             state: .idle,
+            operation: nil,
             operationDetail: .stub()
         )
         
         XCTAssertEqual(sut.testState, .idle)
     }
     
-    func test_convenienceInit_withTemplateId_shouldSet_completeState() throws {
+    func test_init_withTemplateId_shouldSet_completeState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: 1)
         )
         
         XCTAssertEqual(ViewModel.TestState.complete, sut.testState)
     }
     
-    func test_convenienceInit_templateIdNil_shouldSet_idleState() throws {
+    func test_init_templateIdNil_shouldSet_idleState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: nil)
         )
         
         XCTAssertEqual(sut.testState, .idle)
+    }
+    
+    func test_templateButton_init_shouldSetRefreshState_withOperationAbroad_paymentTemplateIdNil() throws {
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .refresh,
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.testState, .refresh)
+    }
+    
+    func test_templateButton_init_shouldSetCompleteState_withOperationAbroad_paymentTemplateIdNil() throws {
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .complete,
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.testState, .complete)
     }
 }
 
@@ -120,6 +149,7 @@ extension TemplateButtonViewComponentTests {
         let templateButton = TemplateButtonView.ViewModel(
             model: model,
             state: .idle,
+            operation: nil,
             operationDetail: .stub()
         )
         
@@ -142,12 +172,34 @@ extension TemplateButtonViewComponentTests {
     
     typealias State = TemplateButtonView.ViewModel.State
     
-    func makeSUT(state: State) -> TemplateButtonView.ViewModel {
+    private func makeSUT(
+        state: State,
+        operation: Payments.Operation? = nil,
+        detail: OperationDetailData = OperationDetailData.stub()
+    ) -> TemplateButtonView.ViewModel {
         
         return TemplateButtonView.ViewModel(
-            state: state,
             model: model,
-            tapAction: {}
+            state: state,
+            operation: operation,
+            operationDetail: detail
+        )
+    }
+    
+    private func paymentOperationStub(
+        service: Payments.Service,
+        parameters: [PaymentsParameterRepresentable] = []
+    ) -> Payments.Operation {
+        
+        return Payments.Operation(
+            service: service,
+            source: .template(1),
+            steps: [.init(
+                parameters: parameters,
+                front: .empty(),
+                back: .empty()
+            )],
+            visible: []
         )
     }
 }
