@@ -6,10 +6,13 @@
 //
 
 import Combine
+import CvvPin
 import Foundation
 import SwiftUI
 
 final class TransportPaymentsViewModel: ObservableObject {
+    
+    let cvvPinService: CvvPinService
     
     @Published private(set) var destination: Destination?
     
@@ -23,11 +26,13 @@ final class TransportPaymentsViewModel: ObservableObject {
     private let handleError: HandleError
     
     init(
+        cvvPinService: CvvPinService,
         operators: [OperatorGroupData.OperatorData],
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
         makePaymentsViewModel: @escaping MakePaymentsViewModel,
         handleError: @escaping HandleError
     ) {
+        self.cvvPinService = cvvPinService
         self.operators = operators
         self.latestPayments = latestPayments
         self.makePaymentsViewModel = makePaymentsViewModel
@@ -65,7 +70,7 @@ extension TransportPaymentsViewModel {
             let link = try destination(for: track)
             
             DispatchQueue.main.async { [weak self] in
-             
+                
                 self?.destination = link
             }
         } catch {

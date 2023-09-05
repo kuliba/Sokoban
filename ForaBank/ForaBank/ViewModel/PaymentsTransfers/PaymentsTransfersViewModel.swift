@@ -1002,6 +1002,7 @@ private extension Model {
         let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
         
         return .init(
+            cvvPinService: cvvPinService(),
             operators: operators,
             latestPayments: latestPayments,
             makePaymentsViewModel: makePaymentsViewModel(source:),

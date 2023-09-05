@@ -204,6 +204,9 @@ final class TransportPaymentsViewModelTests: XCTestCase {
     ) -> TransportPaymentsViewModel {
         
         let sut = TransportPaymentsViewModel(
+            cvvPinService: Services.cvvPinService(
+                httpClient: HTTPClientSpy()
+            ),
             operators: operators,
             latestPayments: .sample,
             makePaymentsViewModel: makePaymentsViewModel,
