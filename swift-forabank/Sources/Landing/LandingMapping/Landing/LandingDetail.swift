@@ -11,28 +11,28 @@ extension Landing {
     
     public struct Detail: Equatable {
         
-        let detailsGroupId: String
-        let dataGroup: [DataGroup]
+        public let groupId: String
+        public let dataGroup: [DataGroup]
         
         public struct DataGroup: Equatable {
             
-            let detailViewId: String
-            let dataView: [DataView]
+            public let viewId: String
+            public let dataView: [DataView]
             
             public init(
-                detailViewId: String,
+                viewId: String,
                 dataView: [DataView]
             ) {
-                self.detailViewId = detailViewId
+                self.viewId = viewId
                 self.dataView = dataView
             }
         }
         
         public init(
-            detailsGroupId: String,
+            groupId: String,
             dataGroup: [DataGroup]
         ) {
-            self.detailsGroupId = detailsGroupId
+            self.groupId = groupId
             self.dataGroup = dataGroup
         }
     }

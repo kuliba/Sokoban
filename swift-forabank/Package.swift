@@ -30,7 +30,7 @@ let package = Package(
         .getProcessingSessionCodeService,
         // landing
         .landingMapping,
-        .landingUICompoment,
+        .landingUIComponent,
         .landingUpdater,
         // UI
         .linkableText
@@ -38,6 +38,7 @@ let package = Package(
     dependencies: [
         .combineSchedulers,
         .customDump,
+        .tagged,
     ],
     targets: [
         .bindPublicKeyWithEventID,
@@ -78,8 +79,8 @@ let package = Package(
         // landing
         .landingMapping,
         .landingMappingTests,
-        .landingUICompoment,
-        .landingUICompomentTests,
+        .landingUIComponent,
+        .landingUIComponentTests,
         .landingUpdater,
         // UI
         .linkableText,
@@ -224,10 +225,10 @@ private extension Product {
         ]
     )
 
-    static let landingUICompoment = library(
-        name: .landingUICompoment,
+    static let landingUIComponent = library(
+        name: .landingUIComponent,
         targets: [
-            .landingUICompoment
+            .landingUIComponent
         ]
     )
 
@@ -506,17 +507,21 @@ private extension Target {
         name: .landingUpdater,
         path: "Sources/Landing/\(String.landingUpdater)"
     )
-    static let landingUICompoment = target(
-        name: .landingUICompoment,
-        path: "Sources/Landing/\(String.landingUICompoment)"
+    static let landingUIComponent = target(
+        name: .landingUIComponent,
+        dependencies: [
+            .combineSchedulers,
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.landingUIComponent)"
     )
-    static let landingUICompomentTests = testTarget(
-        name: .landingUICompomentTests,
+    static let landingUIComponentTests = testTarget(
+        name: .landingUIComponentTests,
         dependencies: [
             // internal modules
-            .landingUICompoment,
+            .landingUIComponent,
         ],
-        path: "Tests/Landing/\(String.landingUICompomentTests)"
+        path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
     
     // MARK: - UI
@@ -603,8 +608,8 @@ private extension Target.Dependency {
     static let landingMapping = byName(
         name: .landingMapping
     )
-    static let landingUICompoment = byName(
-        name: .landingUICompoment
+    static let landingUIComponent = byName(
+        name: .landingUIComponent
     )
     static let landingUpdater = byName(
         name: .landingUpdater
@@ -676,8 +681,8 @@ private extension String {
     // landing
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"
-    static let landingUICompoment = "LandingUICompoment"
-    static let landingUICompomentTests = "LandingUICompomentTests"
+    static let landingUIComponent = "LandingUIComponent"
+    static let landingUIComponentTests = "LandingUIComponentTests"
     static let landingUpdater = "LandingUpdater"
 
     // MARK: - UI

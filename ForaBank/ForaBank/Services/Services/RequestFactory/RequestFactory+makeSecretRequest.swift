@@ -1,5 +1,5 @@
 //
-//  RequestFactory+makeSecretRequest.swift
+//  RequestFactory+createSecretRequest.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 05.08.2023.
@@ -10,7 +10,7 @@ import Foundation
 
 extension RequestFactory {
     
-    static func makeSecretRequest(
+    static func createSecretRequest(
         from secretRequest: SecretRequest
     ) throws -> URLRequest {
         

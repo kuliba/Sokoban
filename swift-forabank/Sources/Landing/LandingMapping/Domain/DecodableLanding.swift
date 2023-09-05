@@ -13,9 +13,9 @@ struct DecodableLanding: Decodable {
     
     struct Data: Decodable {
         
-        let header: [Header]
+        let header: [DataView]
         let main: [DataView]
-        let footer: [String]?
+        let footer: [DataView]
         let details: [Detail]
         let serial: String
     }
@@ -45,9 +45,10 @@ extension DecodableLanding.Data {
         
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case listHorizontalRoundImage(ListHorizontalRoundImage)
+        case listHorizontalRectangleImage(ListHorizontalRectangleImage)
         case multiLineHeader(MultiLineHeader)
         case empty
-        
+        case pageTitle(PageTitle)
         case multiTextsWithIconsHorizontalArray([MuiltiTextsWithIconsHorizontal])
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         
@@ -74,6 +75,11 @@ extension DecodableLanding.Data {
                 
                 self = .listHorizontalRoundImage(data)
                 
+            case .listHorizontalRectangleImage:
+                let data = try container.decode(ListHorizontalRectangleImage.self, forKey: .data)
+                
+                self = .listHorizontalRectangleImage(data)
+
             case .textWithIconHorizontal:
                 let data = try container.decode(TextsWithIconHorizontal.self, forKey: .data)
                 
@@ -88,6 +94,11 @@ extension DecodableLanding.Data {
                 let data = try container.decode([MuiltiTextsWithIconsHorizontal].self, forKey: .data)
                 
                 self = .multiTextsWithIconsHorizontalArray(data)
+            
+            case .pageTitle:
+                let data = try container.decode(PageTitle.self, forKey: .data)
+                
+                self = .pageTitle(data)
                 
             default:
                 // не смогли распарсить - нет такого type
@@ -98,8 +109,6 @@ extension DecodableLanding.Data {
                  case .verticalSpacing:
                  <#code#>
                  
-                 case .listHorizontalRectangleImage:
-                 <#code#>
                  case .listVerticalRoundImage:
                  <#code#>
                  case .multiButtons:
@@ -108,8 +117,7 @@ extension DecodableLanding.Data {
                  <#code#>
                  case .multiText:
                  <#code#>
-                 case .pageTitle:
-                 <#code#>
+                 
                  case .image:
                  <#code#>
                  case .multiMarkersText:

@@ -36,12 +36,11 @@ final class MapperTests: XCTestCase {
         let landing = try XCTUnwrap(map().get())
         
         XCTAssertNoDiff(landing.header, [
-            .init(
-                type: .pageTitle,
-                data: .init(
-                    text: "Переводы за рубеж",
-                    transparency: true)
-            )])
+            .pageTitle(.init(
+                text: "Переводы за рубеж",
+                subtitle: nil,
+                transparency: true))
+        ])
     }
     
     func test_map_deliversMain() throws {
@@ -56,7 +55,7 @@ final class MapperTests: XCTestCase {
                     regularTextList: ["Переводы"],
                     boldTextList: ["за рубеж"])
             ),
-            .multiTextsWithIconsHorizontalArray([
+            .multiTextsWithIconsHorizontalArray(.init(list:[
                 .init(
                     md5hash:"a442191010ad33a883625f93d91037b1",
                     title:"Быстро"
@@ -69,7 +68,7 @@ final class MapperTests: XCTestCase {
                     md5hash:"5d9427225e136f31d26a211b9207dc3b",
                     title:"Выгодно"
                 )
-            ]),
+            ])),
             .listHorizontalRoundImage(
                 .init(
                     title: "Популярные направления",
@@ -84,7 +83,24 @@ final class MapperTests: XCTestCase {
                                         detailViewId:"Armeniya"
                                     )
                         )]
-                ))])
+                )),
+            .listHorizontalRectangleImage(.init(list: [
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
+                    link: "https://www.forabank.ru/landings/mig/",
+                    detail: .init(
+                        groupId: "bannersLanding",
+                        viewId: "oneThousandForTransfer")
+                ),
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/deposit.png",
+                    link: "https://www.forabank.ru/landings/mig/",
+                    detail: .init(
+                        groupId: "bannersLanding",
+                        viewId: "moreTransfers")
+                )
+            ]))
+        ])
     }
     
     func test_map_deliversDetail() throws {
@@ -93,10 +109,10 @@ final class MapperTests: XCTestCase {
         
         XCTAssertNoDiff(landing.details, [
             .init(
-                detailsGroupId: "bannersLanding",
+                groupId: "bannersLanding",
                 dataGroup: [
                     .init(
-                        detailViewId: "moreTransfers",
+                        viewId: "moreTransfers",
                         dataView: [
                             .iconWithTwoTextLines(
                                 .init(
@@ -111,6 +127,19 @@ final class MapperTests: XCTestCase {
                         ])
                 ])])
     }
+    
+    func test_map_deliversFooter() throws {
+        
+        let landing = try XCTUnwrap(map().get())
+        
+        XCTAssertNoDiff(landing.footer, [
+            .pageTitle(.init(
+                text: "Footer",
+                subtitle: nil,
+                transparency: true))
+        ])
+    }
+    
     
     // MARK: - Helpers
     typealias Result = Swift.Result<Landing, LandingMapper.MapperError>
@@ -207,10 +236,39 @@ private extension String {
                   }
                ]
             }
-         }
+         },
+      {
+        "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+        "data": {
+          "list": [
+            {
+              "imageLink": "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
+              "link": "https://www.forabank.ru/landings/mig/",
+              "details": {
+                "detailsGroupId": "bannersLanding",
+                "detailViewId": "oneThousandForTransfer"
+              }
+            },
+            {
+              "imageLink": "dict/getProductCatalogImage?image=/products/banners/deposit.png",
+              "link": "https://www.forabank.ru/landings/mig/",
+              "details": {
+                "detailsGroupId": "bannersLanding",
+                "detailViewId": "moreTransfers"
+              }
+            }
+          ]
+        }
+      }
       ],
       "footer":[
-         
+        {
+            "type":"PAGE_TITLE",
+            "data":{
+                "text":"Footer",
+                "transparency":true
+             }
+        }
       ],
       "details":[
          {

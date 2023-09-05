@@ -74,7 +74,7 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
     ) {
         let secretRequest = anySecretRequest(code: code, data: data)
         
-        let request = try RequestFactory.makeSecretRequest(from: secretRequest)
+        let request = try RequestFactory.createSecretRequest(from: secretRequest)
         
         return (secretRequest, request)
     }

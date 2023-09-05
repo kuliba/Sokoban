@@ -34,7 +34,7 @@ extension Services {
         )
         
         let publicServerSessionKeyAPIClient = RemoteService(
-            makeRequest: RequestFactory.makeSecretRequest,
+            createRequest: RequestFactory.createSecretRequest,
             performRequest: httpClient.performRequest,
             mapResponse: PublicServerSessionKeyMapper.map
         )
