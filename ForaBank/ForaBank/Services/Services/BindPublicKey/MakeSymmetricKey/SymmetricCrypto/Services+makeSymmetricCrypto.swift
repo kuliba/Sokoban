@@ -19,7 +19,7 @@ extension Services {
     ) -> SymmetricCrypto {
         
         let bindPublicKeyWithEventIDService = RemoteService(
-            makeRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
+            createRequest: RequestFactory.createBindPublicKeyWithEventIDRequest,
             performRequest: httpClient.performRequest,
             mapResponse: BindPublicKeyWithEventIDMapper.mapResponse
         )

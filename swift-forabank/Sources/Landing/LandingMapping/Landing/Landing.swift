@@ -9,16 +9,16 @@ import Foundation
 
 public struct Landing: Equatable {
     
-    let header: [Header]
-    let main: [DataView]
-    let footer: [String]?
-    let details: [Detail]
-    let serial: String
+    public let header: [DataView]
+    public let main: [DataView]
+    public let footer: [DataView?]
+    public let details: [Detail]
+    public let serial: String
     
     public init(
-        header: [Header],
+        header: [DataView],
         main: [DataView],
-        footer: [String]?,
+        footer: [DataView?],
         details: [Detail],
         serial: String
     ) {
@@ -38,8 +38,9 @@ extension Landing {
         case listHorizontalRoundImage(ListHorizontalRoundImage)
         case multiLineHeader(MultiLineHeader)
         case empty
-        
-        case multiTextsWithIconsHorizontalArray([MuiltiTextsWithIconsHorizontal])
+        case pageTitle(PageTitle)
+        case multiTextsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
+        case listHorizontalRectangleImage(ListHorizontalRectangleImage)
     }
 }

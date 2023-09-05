@@ -7,18 +7,18 @@
 
 import Foundation
 
-extension Landing {
+public extension Landing {
     
-    public struct ListHorizontalRoundImage: Equatable {
+    struct ListHorizontalRoundImage: Equatable {
         
-        let title: String
-        let list: [ListItem]?
+        public let title: String
+        public let list: [ListItem]?
         
         public struct ListItem: Equatable {
             
-            let md5hash: String
-            let title, subInfo: String?
-            let details: Details
+            public let md5hash: String
+            public let title, subInfo: String?
+            public let details: Details
             
             public init(
                 md5hash: String,
@@ -34,7 +34,7 @@ extension Landing {
             
             public struct Details: Equatable {
                 
-                let detailsGroupId, detailViewId: String
+                public let detailsGroupId, detailViewId: String
                 
                 public init(
                     detailsGroupId: String,
@@ -48,7 +48,7 @@ extension Landing {
         
         public init(
             title: String,
-            list: [ListItem]?
+            list: [ListItem]
         ) {
             self.title = title
             self.list = list

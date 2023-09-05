@@ -342,6 +342,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LandingUIComponent"
+               BuildableName = "LandingUIComponent"
+               BlueprintName = "LandingUIComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -443,6 +457,16 @@
                BlueprintIdentifier = "LandingMappingTests"
                BuildableName = "LandingMappingTests"
                BlueprintName = "LandingMappingTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LandingUIComponentTests"
+               BuildableName = "LandingUIComponentTests"
+               BlueprintName = "LandingUIComponentTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

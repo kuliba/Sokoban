@@ -122,18 +122,17 @@
       }
     },
     {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LandingUICompomentTests",
-        "name" : "LandingUICompomentTests"
-      }
-    },
-    {
       "target" : {
         "containerPath" : "container:",
         "identifier" : "LinkableTextTests",
         "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
       }
     }
   ],

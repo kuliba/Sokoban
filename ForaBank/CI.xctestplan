@@ -118,15 +118,15 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "LandingUICompomentTests",
-        "name" : "LandingUICompomentTests"
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "LinkableTextTests",
-        "name" : "LinkableTextTests"
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
       }
     }
   ],
