@@ -8,3 +8,4 @@
 import Foundation
 
 public let publicCrtURL = Bundle.module.url(forResource: "public", withExtension: "crt")!
+public let publicDerCrtURL = Bundle.module.url(forResource: "der", withExtension: "crt")!

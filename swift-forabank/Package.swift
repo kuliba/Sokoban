@@ -311,7 +311,10 @@ private extension Target {
     
     static let foraCrypto = target(
         name: .foraCrypto,
-        resources: [.copy("Resources/public.crt")]
+        resources: [
+            .copy("Resources/public.crt"),
+            .copy("Resources/der.crt"),
+        ]
     )
     static let foraCryptoTests = testTarget(
         name: .foraCryptoTests,
