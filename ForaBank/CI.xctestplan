@@ -19,16 +19,16 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
-        "identifier" : "EDB14392265FDA430028EF5A",
-        "name" : "ForaBankTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "BindPublicKeyWithEventIDTests",
+        "name" : "BindPublicKeyWithEventIDTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "EDB14392265FDA430028EF5A",
+        "name" : "ForaBankTests"
       }
     },
     {
@@ -134,6 +134,13 @@
         "containerPath" : "container:",
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
       }
     }
   ],

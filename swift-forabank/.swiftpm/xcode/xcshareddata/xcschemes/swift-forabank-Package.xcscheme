@@ -350,9 +350,79 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ForaCrypto"
+               BuildableName = "ForaCrypto"
+               BlueprintName = "ForaCrypto"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "TransferPublicKey"
+               BuildableName = "TransferPublicKey"
+               BlueprintName = "TransferPublicKey"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CryptoSwaddler"
+               BuildableName = "CryptoSwaddler"
+               BlueprintName = "CryptoSwaddler"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "swift-forabank_ForaCrypto"
+               BuildableName = "swift-forabank_ForaCrypto"
+               BlueprintName = "swift-forabank_ForaCrypto"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "LandingUIComponent"
                BuildableName = "LandingUIComponent"
                BlueprintName = "LandingUIComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LoadableModel"
+               BuildableName = "LoadableModel"
+               BlueprintName = "LoadableModel"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -464,9 +534,39 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ForaCryptoTests"
+               BuildableName = "ForaCryptoTests"
+               BlueprintName = "ForaCryptoTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CryptoSwaddlerTests"
+               BuildableName = "CryptoSwaddlerTests"
+               BlueprintName = "CryptoSwaddlerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "LandingUIComponentTests"
                BuildableName = "LandingUIComponentTests"
                BlueprintName = "LandingUIComponentTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LoadableModelTests"
+               BuildableName = "LoadableModelTests"
+               BlueprintName = "LoadableModelTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
