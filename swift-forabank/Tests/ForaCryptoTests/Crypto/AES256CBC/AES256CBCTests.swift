@@ -12,6 +12,7 @@ import XCTest
 final class AES256CBCTests: XCTestCase {
     
     func test_AES256CBC() throws {
+        
         let password = AES256CBC.randomData(length: 256)
         let publicKeyData = try AES256CBC.createKey(password: password)
         
@@ -25,22 +26,5 @@ final class AES256CBCTests: XCTestCase {
         
         XCTAssertEqual(decrypted.count, 6)
         XCTAssertEqual(String(data: decrypted, encoding: .utf8), otp)
-    }
-}
-
-private extension SecKey {
-    
-    var externalRepresentation: Data {
-        
-        get throws {
-            
-            var error: Unmanaged<CFError>?
-            guard let externalRepresentation = SecKeyCopyExternalRepresentation(self, &error) as? Data
-            else {
-                throw error!.takeRetainedValue() as Swift.Error
-            }
-            
-            return externalRepresentation
-        }
     }
 }
