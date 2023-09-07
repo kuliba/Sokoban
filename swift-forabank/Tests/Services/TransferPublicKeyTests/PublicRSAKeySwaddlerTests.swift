@@ -142,7 +142,7 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
         
         let sut = TestPublicRSAKeySwaddler(
             generateRSA4096BitKeys: swaddlerSpy.generateRSA4096BitKeys,
-            encryptOTPWithRSAKey: swaddlerSpy.encryptOTPWithRSAKey,
+            signEncryptOTP: swaddlerSpy.encryptOTPWithRSAKey,
             saveKeys: keyStorageSpy.saveKeys,
             aesEncrypt128bitChunks: swaddlerSpy.aesEncrypt128bitChunks
         )

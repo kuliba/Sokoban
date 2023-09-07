@@ -10,19 +10,6 @@ import ForaCrypto
 import TransferPublicKey
 import XCTest
 
-extension OTPEncrypter where PrivateKey == SecKey {
-    
-    static func signingWithTransportEncryption(
-        mapOTP: @escaping (OTP) throws -> Data
-    ) -> OTPEncrypter {
-        
-        .signing(
-            mapOTP: mapOTP,
-            encryptWithTransportPublicRSAKey: Crypto.transportEncrypt
-        )
-    }
-}
-
 final class CryptoSwaddlerTests: CryptoSwaddlerTestCase {
     
     func test_aesGCMSwaddler_swaddleKey_shouldFailOnShortSecret() throws {
@@ -50,12 +37,16 @@ final class CryptoSwaddlerTests: CryptoSwaddlerTestCase {
         line: UInt = #line
     ) -> SecKeySwaddler {
         
-        let otpEncrypter: SecKeyOTPEncrypter = .signingWithTransportEncryption(
-            mapOTP: { $0.value.data(using: .utf8)! }
-        )
+        let signWithPadding: (TestOTP, SecKey) throws -> Data = { otp, privateKey in
+            
+            let data = Data(otp.value.utf8)
+            
+            return try Crypto.transportEncrypt(data)
+        }
+        
         let sut: PublicRSAKeySwaddler = .aesGCMSwaddler(
             generateRSA4096BitKeys: createRandom4096RSAKeys,
-            otpEncrypter: otpEncrypter,
+            signWithPadding: signWithPadding,
             saveKeys: { privateKey, publicKey in }
         )
         
@@ -89,15 +80,17 @@ where OTP == CryptoSwaddlerTestCase.TestOTP,
       PrivateKey == SecKey,
       PublicKey == SecKey {
     
+    typealias SignWithPadding = (OTP, PrivateKey) throws -> Data
+    
     static func aesGCMSwaddler(
         generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
-        otpEncrypter: OTPEncrypter<OTP, PrivateKey>,
+        signWithPadding: @escaping SignWithPadding,
         saveKeys: @escaping SaveKeys
     ) -> Self {
         
         .init(
             generateRSA4096BitKeys: generateRSA4096BitKeys,
-            otpEncrypter: otpEncrypter,
+            signEncryptOTP: signWithPadding,
             saveKeys: saveKeys,
             aesEncrypt128bitChunks: { data, secret in
                 
@@ -106,21 +99,7 @@ where OTP == CryptoSwaddlerTestCase.TestOTP,
             }
         )
     }
-    
-    convenience init(
-        generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
-        otpEncrypter: OTPEncrypter<OTP, PrivateKey>,
-        saveKeys: @escaping SaveKeys,
-        aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
-    ) {
-        self.init(
-            generateRSA4096BitKeys: generateRSA4096BitKeys,
-            encryptOTPWithRSAKey: otpEncrypter.encrypt,
-            saveKeys: saveKeys,
-            aesEncrypt128bitChunks: aesEncrypt128bitChunks
-        )
-    }
-    
+        
     private func swaddle(
         otp: OTP,
         sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,

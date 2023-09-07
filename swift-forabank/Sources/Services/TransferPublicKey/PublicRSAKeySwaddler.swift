@@ -16,24 +16,24 @@ public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey>
 where PublicKey: RawRepresentational {
     
     public typealias GenerateRSA4096BitKeys = () throws -> (PrivateKey, PublicKey)
-    public typealias EncryptOTPWithRSAKey = (OTP, PrivateKey) throws -> Data
+    public typealias SignEncryptOTP = (OTP, PrivateKey) throws -> Data
     public typealias SaveKeys = (PrivateKey, PublicKey) throws -> Void
     public typealias SharedSecret = SwaddleKeyDomain<OTP>.SharedSecret
     public typealias AESEncryptBits128Chunks = (Data, SharedSecret) throws -> Data
     
     private let generateRSA4096BitKeys: GenerateRSA4096BitKeys
-    private let encryptOTPWithRSAKey: EncryptOTPWithRSAKey
+    private let signEncryptOTP: SignEncryptOTP
     private let saveKeys: SaveKeys
     private let aesEncrypt128bitChunks: AESEncryptBits128Chunks
     
     public init(
         generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
-        encryptOTPWithRSAKey: @escaping EncryptOTPWithRSAKey,
+        signEncryptOTP: @escaping SignEncryptOTP,
         saveKeys: @escaping SaveKeys,
         aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
     ) {
         self.generateRSA4096BitKeys = generateRSA4096BitKeys
-        self.encryptOTPWithRSAKey = encryptOTPWithRSAKey
+        self.signEncryptOTP = signEncryptOTP
         self.saveKeys = saveKeys
         self.aesEncrypt128bitChunks = aesEncrypt128bitChunks
     }
@@ -66,7 +66,7 @@ where PublicKey: RawRepresentational {
         try retry {
             
             let (privateKey, publicKey) = try generateRSA4096BitKeys()
-            let encryptedOTP = try encryptOTPWithRSAKey(otp, privateKey)
+            let encryptedOTP = try signEncryptOTP(otp, privateKey)
             
             return (encryptedOTP, privateKey, publicKey)
         }

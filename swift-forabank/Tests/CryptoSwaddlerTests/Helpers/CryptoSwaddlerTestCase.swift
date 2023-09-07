@@ -15,7 +15,6 @@ class CryptoSwaddlerTestCase: XCTestCase {
     // MARK: - Helpers
     
     typealias SecKeySwaddler = PublicRSAKeySwaddler<TestOTP, SecKey, SecKey>
-    typealias SecKeyOTPEncrypter = OTPEncrypter<TestOTP, SecKey>
     
     func createRandom4096RSAKeys() throws -> (
         privateKey: SecKey,

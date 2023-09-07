@@ -15,11 +15,10 @@ final class SigningOTPEncrypterTests: CryptoSwaddlerTestCase {
     func test_signingWithNoTransportEncryption() throws {
         
         let (privateKey, publicKey) = try createRandom4096RSAKeys()
-        let sut = makeSUT()
         
-        let encrypted = try sut.encrypt(
+        let encrypted = try signEncryptOTP()(
             anyTestOTP(),
-            withRSAKey: privateKey
+            privateKey
         )
         
         let signature = try Crypto.createSignature(
@@ -37,31 +36,28 @@ final class SigningOTPEncrypterTests: CryptoSwaddlerTestCase {
     func test_signingWithTransportEncryption() throws {
         
         let (privateKey, _) = try createRandom4096RSAKeys()
-        let sut = makeSUT(encryptWithTransportPublicRSAKey: Crypto.transportEncrypt)
         
         XCTAssertNoThrow(
-            try sut.encrypt(
+            try signEncryptOTP()(
                 anyTestOTP(),
-                withRSAKey: privateKey
+                privateKey
             )
         )
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(
-        encryptWithTransportPublicRSAKey: @escaping SecKeyOTPEncrypter.EncryptWithTransportPublicRSAKey = { $0 },
+    private func signEncryptOTP(
+        encryptWithTransportPublicRSAKey: @escaping (Data) throws -> Data = { $0 },
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SecKeyOTPEncrypter {
+    ) -> (TestOTP, SecKey) throws -> Data {
         
-        let sut: SecKeyOTPEncrypter = .signing(
-            mapOTP: { $0.value.data(using: .utf8)! },
-            encryptWithTransportPublicRSAKey: encryptWithTransportPublicRSAKey
-        )
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        
-        return sut
+        return { otp, privateKey in
+            
+            try encryptWithTransportPublicRSAKey(
+                .init(otp.value.utf8)
+            )
+        }
     }
 }

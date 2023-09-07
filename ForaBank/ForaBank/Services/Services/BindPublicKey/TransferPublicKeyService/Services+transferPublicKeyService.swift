@@ -18,27 +18,39 @@ import GenericRemoteService
 extension Services {
     
     typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
-    typealias SecKeyOTPEncrypter = OTPEncrypter<TransferPublicKeyDomain.OTP, SecKey>
     
     static func publicSecKeyTransferService(
         httpClient: HTTPClient
     ) -> PublicKeyTransferService {
         
-        let otpEncrypter: SecKeyOTPEncrypter = .signing(
-            mapOTP: { .init($0.value.utf8) },
-            encryptWithTransportPublicRSAKey: ForaCrypto.Crypto.transportEncrypt
-        )
+        let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
+            
+            let clientSecretOTP = try ForaCrypto.Crypto.sign(
+                .init(otp.value.utf8),
+                withPrivateKey: privateKey,
+                algorithm: .rsaSignatureMessagePKCS1v15SHA256
+            )
+            
+            let procClientSecretOTP = try ForaCrypto.Crypto.rsaEncrypt(
+                data: clientSecretOTP,
+                withPublicKey: ForaCrypto.Crypto.transportKey(),
+                algorithm: .rsaEncryptionRaw
+            )
+            
+            return procClientSecretOTP
+        }
         
         let keyCache = InMemoryKeyStore<SecKey>()
         
         let swaddler = SecKeySwaddler(
             generateRSA4096BitKeys: {
+                
                 try ForaCrypto.Crypto.createRandomSecKeys(
                     keyType: kSecAttrKeyTypeRSA,
                     keySizeInBits: 4096
                 )
             },
-            otpEncrypter: otpEncrypter,
+            signEncryptOTP: signEncryptOTP,
             saveKeys: { privateKey, publicKey in
                 
                 keyCache.saveKey(privateKey) { _ in
@@ -71,20 +83,6 @@ extension Services {
 }
 
 private extension Services.SecKeySwaddler {
-    
-    convenience init(
-        generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
-        otpEncrypter: Services.SecKeyOTPEncrypter,
-        saveKeys: @escaping SaveKeys,
-        aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
-    ) {
-        self.init(
-            generateRSA4096BitKeys: generateRSA4096BitKeys,
-            encryptOTPWithRSAKey: otpEncrypter.encrypt,
-            saveKeys: saveKeys,
-            aesEncrypt128bitChunks: aesEncrypt128bitChunks
-        )
-    }
     
     func swaddle(
         otp: OTP,
@@ -126,7 +124,7 @@ extension Services {
         httpClient: HTTPClient
     ) -> PublicKeyTransferService {
         
-        let otpEncrypter = otpEncrypter(
+        let signEncryptOTP = signEncryptOTP(
             withPublicKey: ForaCrypto.Crypto.transportKey
         )
         
@@ -134,7 +132,7 @@ extension Services {
         
         let swaddler = P384Swaddler(
             generateRSA4096BitKeys: ForaCrypto.Crypto.generateP384KeyPair,
-            otpEncrypter: otpEncrypter,
+            signEncryptOTP: signEncryptOTP,
             saveKeys: { privateKey, publicKey in
                 
                 keyCache.saveKey(privateKey) { _ in
@@ -164,15 +162,15 @@ extension Services {
         )
     }
     
-    typealias TransferOTPEncrypter = OTPEncrypter<TransferOTP, P384KeyAgreementDomain.PrivateKey>
+    typealias TransferSignEncryptOTP = (TransferOTP, P384KeyAgreementDomain.PrivateKey) throws -> Data
     
     #warning("remove if not used")
-    static func otpEncrypter(
+    static func signEncryptOTP(
         withPublicKey publicKey: @escaping () throws -> SecKey
-    ) -> TransferOTPEncrypter {
+    ) -> TransferSignEncryptOTP {
         
         #warning("try P384 direct encryption?")
-        let signWithPadding: TransferOTPEncrypter.SignWithPadding = { otp, privateKey in
+        let signWithPadding: TransferSignEncryptOTP = { otp, privateKey in
             
             let key = try ForaCrypto.Crypto.createSecKeyWith(
                 data: privateKey.derRepresentation
@@ -193,10 +191,12 @@ extension Services {
             )
         }
         
-        return .init(
-            signWithPadding: signWithPadding,
-            encryptWithTransportPublicRSAKey: encryptWithTransportPublicRSAKey
-        )
+        return { otp, privateKey in
+            
+            let signed = try signWithPadding(otp, privateKey)
+            
+            return try encryptWithTransportPublicRSAKey(signed)
+        }
     }
 }
 
@@ -205,21 +205,7 @@ extension Services {
 extension P384KeyAgreementDomain.PublicKey: RawRepresentational {}
 
 private extension Services.P384Swaddler {
-    
-    convenience init(
-        generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
-        otpEncrypter: Services.TransferOTPEncrypter,
-        saveKeys: @escaping SaveKeys,
-        aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
-    ) {
-        self.init(
-            generateRSA4096BitKeys: generateRSA4096BitKeys,
-            encryptOTPWithRSAKey: otpEncrypter.encrypt,
-            saveKeys: saveKeys,
-            aesEncrypt128bitChunks: aesEncrypt128bitChunks
-        )
-    }
-    
+
     func swaddle(
         otp: OTP,
         sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
