@@ -21,18 +21,18 @@ public extension Landing {
             public let id = UUID()
             public let image: Image
             public let title, subInfo: String?
-            public let details: Details?
+            public let detail: Detail?
             
-            public struct Details: Equatable {
+            public struct Detail: Equatable {
                 
-                public let detailsGroupId, detailViewId: String
+                public let groupId, viewId: String
                 
                 public init(
-                    detailsGroupId: String,
-                    detailViewId: String
+                    groupId: String,
+                    viewId: String
                 ) {
-                    self.detailsGroupId = detailsGroupId
-                    self.detailViewId = detailViewId
+                    self.groupId = groupId
+                    self.viewId = viewId
                 }
             }
             
@@ -40,12 +40,12 @@ public extension Landing {
                 image: Image,
                 title: String?,
                 subInfo: String?,
-                details: Details?
+                detail: Detail?
             ) {
                 self.image = image
                 self.title = title
                 self.subInfo = subInfo
-                self.details = details
+                self.detail = detail
             }
         }
         

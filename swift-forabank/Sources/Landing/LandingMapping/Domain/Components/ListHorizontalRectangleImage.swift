@@ -25,8 +25,13 @@ extension DecodableLanding.Data {
             }
 
             struct Detail: Decodable, Equatable {
-                let detailsGroupId: String
-                let detailViewId: String
+                let groupId: String
+                let viewId: String
+                
+                enum CodingKeys: String, CodingKey {
+                    case groupId = "detailsGroupId"
+                    case viewId = "detailViewId"
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 //
 //  MapperTests.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 29.08.2023.
 //
@@ -12,7 +12,7 @@ final class MapperTests: XCTestCase {
     
     func test_map_statusCode200_LandingNotNil() throws {
         
-        let landing = try XCTUnwrap(map(statusCode: 200).get())
+        let landing = try XCTUnwrap(map(statusCode: 200))
         
         XCTAssertNotNil(landing)
     }
@@ -24,105 +24,183 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing, .failure(.notOkStatus))
     }
     
+    func test_map_statusCode200_dataNotValid_FailureMapError() throws {
+        
+        let landing = try XCTUnwrap(map(statusCode: 200, data: Data("test".utf8)))
+        
+        XCTAssertNoDiff(landing, .failure(.mapError))
+    }
+    
+    func test_map_statusCode200_dataEmpty() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.emptySample.utf8)))
+        
+        XCTAssertNoDiff(landing.header, [])
+        XCTAssertNoDiff(landing.main, [])
+        XCTAssertNoDiff(landing.footer, [])
+        XCTAssertNoDiff(landing.details, [])
+        XCTAssertNoDiff(landing.serial, "abc")
+    }
+    
     func test_map_deliversSerial() throws {
         
-        let landing = try XCTUnwrap(map().get())
+        let landing = try XCTUnwrap(map())
         
-        XCTAssertNoDiff(landing.serial, "41c44e57adfeb9af7535139c495dd181")
+        XCTAssertNoDiff(landing.serial, "41")
     }
     
     func test_map_deliversHeader() throws {
         
-        let landing = try XCTUnwrap(map().get())
+        let landing = try XCTUnwrap(map())
         
         XCTAssertNoDiff(landing.header, [
             .pageTitle(.init(
-                text: "Переводы за рубеж",
+                text: "a",
                 subtitle: nil,
                 transparency: true))
         ])
     }
     
-    func test_map_deliversMain() throws {
+    func test_map_deliversMultiLineHeadersInMain() throws {
         
-        let landing = try XCTUnwrap(map().get())
+        let landing = try XCTUnwrap(map())
         
-        XCTAssertNoDiff(landing.main, [
-            .empty,
-            .multiLineHeader(
-                .init(
-                    backgroundColor: "WHITE",
-                    regularTextList: ["Переводы"],
-                    boldTextList: ["за рубеж"])
-            ),
-            .multiTextsWithIconsHorizontalArray(.init(list:[
-                .init(
-                    md5hash:"a442191010ad33a883625f93d91037b1",
-                    title:"Быстро"
-                ),
-                .init(
-                    md5hash:"7df826030e8d418be0a33edde3a26ad0",
-                    title:"Безопасно"
-                ),
-                .init(
-                    md5hash:"5d9427225e136f31d26a211b9207dc3b",
-                    title:"Выгодно"
-                )
-            ])),
-            .listHorizontalRoundImage(
-                .init(
-                    title: "Популярные направления",
-                    list: [
-                        .init(
-                            md5hash:"6046e5eaff596a41ce9845cca3b0a887",
-                            title:"Армения",
-                            subInfo:"1%",
-                            details:
-                                    .init(
-                                        detailsGroupId:"forCountriesList",
-                                        detailViewId:"Armeniya"
-                                    )
-                        )]
-                )),
-            .listHorizontalRectangleImage(.init(list: [
-                .init(
-                    imageLink: "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
-                    link: "https://www.forabank.ru/landings/mig/",
-                    detail: .init(
-                        groupId: "bannersLanding",
-                        viewId: "oneThousandForTransfer")
-                ),
-                .init(
-                    imageLink: "dict/getProductCatalogImage?image=/products/banners/deposit.png",
-                    link: "https://www.forabank.ru/landings/mig/",
-                    detail: .init(
-                        groupId: "bannersLanding",
-                        viewId: "moreTransfers")
-                )
-            ]))
+        XCTAssertNoDiff(landing.main.multiLineHeaders, [
+            .init(
+                backgroundColor: "w",
+                regularTextList: ["a"],
+                boldTextList: ["b"])
         ])
+    }
+    
+    func test_map_deliversMultiTextsHeadersInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.multiTexts, [
+            .init(text: ["a"])
+        ])
+    }
+    
+    func test_map_deliversMultiMarkersTextsInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.multiMarkersTexts, [
+            .init(
+                backgroundColor: "g",
+                style: "p",
+                list: ["а", "б", "в"]
+            )
+        ])
+    }
+    
+    func test_map_deliversMuiltiTextsWithIconsHorizontalsInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.muiltiTextsWithIconsHorizontals, [
+            .init(list:[
+                .init(md5hash:"a", title:"b"),
+                .init(md5hash:"c", title:"d"),
+                .init(md5hash:"e", title:"f")
+            ])
+        ])
+    }
+    
+    func test_map_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "a",
+                displayedCount: 5.0,
+                dropButtonOpenTitle: "b",
+                dropButtonCloseTitle: "c",
+                list: [
+                    .init(
+                        md5hash: "87",
+                        title: "a",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: .init(groupId: "b", viewId: "c")
+                    )
+                ]
+            )
+        ])
+    }
+    
+    func test_map_deliversListHorizontalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.listHorizontalRoundImages, [
+            .init(
+                title: "a",
+                list: [
+                    .init(
+                        md5hash:"60",
+                        title:"a",
+                        subInfo:"1%",
+                        details: .init(groupId:"b", viewId:"c")
+                    )]
+            )
+        ])
+    }
+    
+    func test_map_deliversListHorizontalRectangleImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleImages, [
+            .init(list: [
+                .init(
+                    imageLink: "link",
+                    link: "a",
+                    detail: .init(groupId: "b", viewId: "z")
+                ),
+                .init(
+                    imageLink: "link1",
+                    link: "a",
+                    detail: .init(groupId: "b", viewId: "c")
+                )
+            ])
+        ])
+    }
+    
+    func test_map_deliversAll() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.details.count, 1)
+        XCTAssertNoDiff(landing.header.count, 1)
+        XCTAssertNoDiff(landing.main.count, 7)
+        XCTAssertNoDiff(landing.footer.count, 1)
     }
     
     func test_map_deliversDetail() throws {
         
-        let landing = try XCTUnwrap(map().get())
+        let landing = try XCTUnwrap(map())
         
         XCTAssertNoDiff(landing.details, [
             .init(
-                groupId: "bannersLanding",
+                groupId: "b",
                 dataGroup: [
                     .init(
-                        viewId: "moreTransfers",
+                        viewId: "c",
                         dataView: [
                             .iconWithTwoTextLines(
                                 .init(
-                                    md5hash: "6046e5eaff596a41ce9845cca3b0a887",
-                                    title: "Больше возможностей при переводах в Армению",
+                                    md5hash: "60",
+                                    title: "d",
                                     subTitle: nil)),
                             .textsWithIconHorizontal(
                                 .init(
-                                    md5hash: "411d86beb3c9e68dfd8dd46bd544ea49",
-                                    title: "Теперь до 1 000 000 ₽",
+                                    md5hash: "41",
+                                    title: "f",
                                     contentCenterAndPull: true))
                         ])
                 ])])
@@ -130,7 +208,7 @@ final class MapperTests: XCTestCase {
     
     func test_map_deliversFooter() throws {
         
-        let landing = try XCTUnwrap(map().get())
+        let landing = try XCTUnwrap(map())
         
         XCTAssertNoDiff(landing.footer, [
             .pageTitle(.init(
@@ -140,13 +218,24 @@ final class MapperTests: XCTestCase {
         ])
     }
     
-    
     // MARK: - Helpers
+    
     typealias Result = Swift.Result<Landing, LandingMapper.MapperError>
     
     private func map(
-        statusCode: Int = 200,
-        data: Data = Data(String.multiLineHeader.utf8)
+        data: Data = Data(String.sample.utf8)
+    ) throws -> Landing {
+        
+        let decodableLanding = LandingMapper.map(
+            data,
+            anyHTTPURLResponse(200)
+        )
+        return try decodableLanding.get()
+    }
+    
+    private func map(
+        statusCode: Int,
+        data: Data = Data(String.sample.utf8)
     ) -> Result {
         
         let decodableLanding = LandingMapper.map(
@@ -170,14 +259,25 @@ final class MapperTests: XCTestCase {
 
 private extension String {
     
-    static let multiLineHeader: Self = """
+    static let emptySample = """
+{
+    "data": {
+        "header": [],
+        "main": [],
+        "footer": [],
+        "details": [],
+        "serial": "abc"
+    }
+}
+"""
+    static let sample: Self = """
 {
    "data":{
       "header":[
          {
             "type":"PAGE_TITLE",
             "data":{
-               "text":"Переводы за рубеж",
+               "text":"a",
                "transparency":true
             }
          }
@@ -187,19 +287,19 @@ private extension String {
             "type": "IMAGE",
             "data": {
                 "isPlaceholder": false,
-                "imageLink": "dict/getProductCatalogImage?image=/products/banners/Header_abroad.png",
-                "backgroundColor": "WHITE"
+                "imageLink": "link",
+                "backgroundColor": "w"
             }
         },
          {
             "type":"MULTI_LINE_HEADER",
             "data":{
-               "backgroundColor":"WHITE",
+               "backgroundColor":"w",
                "regularTextList":[
-                  "Переводы"
+                  "a"
                ],
                "boldTextList":[
-                  "за рубеж"
+                  "b"
                ]
             }
          },
@@ -207,31 +307,31 @@ private extension String {
             "type":"MULTI_TEXTS_WITH_ICONS_HORIZONTAL",
             "data":[
                {
-                  "md5hash":"a442191010ad33a883625f93d91037b1",
-                  "title":"Быстро"
+                  "md5hash":"a",
+                  "title":"b"
                },
                {
-                  "md5hash":"7df826030e8d418be0a33edde3a26ad0",
-                  "title":"Безопасно"
+                  "md5hash":"c",
+                  "title":"d"
                },
                {
-                  "md5hash":"5d9427225e136f31d26a211b9207dc3b",
-                  "title":"Выгодно"
+                  "md5hash":"e",
+                  "title":"f"
                }
             ]
          },
          {
             "type":"LIST_HORIZONTAL_ROUND_IMAGE",
             "data":{
-               "title":"Популярные направления",
+               "title":"a",
                "list":[
                   {
-                     "md5hash":"6046e5eaff596a41ce9845cca3b0a887",
-                     "title":"Армения",
+                     "md5hash":"60",
+                     "title":"a",
                      "subInfo":"1%",
                      "details":{
-                        "detailsGroupId":"forCountriesList",
-                        "detailViewId":"Armeniya"
+                        "detailsGroupId":"b",
+                        "detailViewId":"c"
                      }
                   }
                ]
@@ -242,24 +342,63 @@ private extension String {
         "data": {
           "list": [
             {
-              "imageLink": "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
-              "link": "https://www.forabank.ru/landings/mig/",
+              "imageLink": "link",
+              "link": "a",
               "details": {
-                "detailsGroupId": "bannersLanding",
-                "detailViewId": "oneThousandForTransfer"
+                "detailsGroupId": "b",
+                "detailViewId": "z"
               }
             },
             {
-              "imageLink": "dict/getProductCatalogImage?image=/products/banners/deposit.png",
-              "link": "https://www.forabank.ru/landings/mig/",
+              "imageLink": "link1",
+              "link": "a",
               "details": {
-                "detailsGroupId": "bannersLanding",
-                "detailViewId": "moreTransfers"
+                "detailsGroupId": "b",
+                "detailViewId": "c"
               }
             }
           ]
         }
-      }
+      },
+      {
+        "type": "MULTI_TEXT",
+        "data": {
+          "list": [
+            "a"
+          ]
+        }
+      },
+      {
+        "type": "LIST_VERTICAL_ROUND_IMAGE",
+        "data": {
+          "title": "a",
+          "displayedCount": 5.0,
+          "dropButtonOpenTitle": "b",
+          "dropButtonCloseTitle": "c",
+          "list": [
+            {
+              "md5hash": "87",
+              "title": "a",
+              "details": {
+                "detailsGroupId": "b",
+                "detailViewId": "c"
+              }
+            }
+          ]
+        }
+        },
+        {
+            "type": "MULTI_MARKERS_TEXT",
+            "data": {
+                "backgroundColor": "g",
+                "style": "p",
+                "list": [
+                    "а",
+                    "б",
+                    "в"
+            ]
+            }
+        }
       ],
       "footer":[
         {
@@ -272,23 +411,23 @@ private extension String {
       ],
       "details":[
          {
-            "detailsGroupId":"bannersLanding",
+            "detailsGroupId":"b",
             "dataGroup":[
                {
-                  "detailViewId":"moreTransfers",
+                  "detailViewId":"c",
                   "dataView":[
                      {
                         "type":"ICON_WITH_TWO_TEXT_LINES",
                         "data":{
-                           "md5hash":"6046e5eaff596a41ce9845cca3b0a887",
-                           "title":"Больше возможностей при переводах в Армению"
+                           "md5hash":"60",
+                           "title":"d"
                         }
                      },
                      {
                         "type":"TEXTS_WITH_ICON_HORIZONTAL",
                         "data":{
-                           "md5hash":"411d86beb3c9e68dfd8dd46bd544ea49",
-                           "title":"Теперь до 1 000 000 ₽",
+                           "md5hash":"41",
+                           "title":"f",
                            "contentCenterAndPull":true
                         }
                      }
@@ -297,8 +436,99 @@ private extension String {
             ]
          }
       ],
-      "serial":"41c44e57adfeb9af7535139c495dd181"
+      "serial":"41"
    }
 }
 """
+}
+
+extension Array where Element == Landing.DataView {
+    
+    var iconWithTwoTextLines: [Landing.IconWithTwoTextLines] {
+        
+        compactMap {
+            if case let .iconWithTwoTextLines(iconWithTwoTextLines) = $0 {
+                return iconWithTwoTextLines
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiLineHeaders: [Landing.MultiLineHeader] {
+        
+        compactMap {
+            if case let .multi(.lineHeader(multiLineHeader)) = $0 {
+                return multiLineHeader
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiTexts: [Landing.MultiText] {
+        
+        compactMap {
+            if case let .multi(.text(multiText)) = $0 {
+                return multiText
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiMarkersTexts: [Landing.MultiMarkersText] {
+        
+        compactMap {
+            if case let .multi(.markersText(multiMarkersText)) = $0 {
+                return multiMarkersText
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var muiltiTextsWithIconsHorizontals: [Landing.MuiltiTextsWithIconsHorizontal] {
+        
+        compactMap {
+            if case let .multi(.textsWithIconsHorizontalArray(muiltiTextsWithIconsHorizontal)) = $0 {
+                return muiltiTextsWithIconsHorizontal
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var listVerticalRoundImages: [Landing.ListVerticalRoundImage] {
+        
+        compactMap {
+            if case let .list(.verticalRoundImage(listVerticalRoundImage)) = $0 {
+                return listVerticalRoundImage
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var listHorizontalRoundImages: [Landing.ListHorizontalRoundImage] {
+        
+        compactMap {
+            if case let .list(.horizontalRoundImage(listHorizontalRoundImage)) = $0 {
+                return listHorizontalRoundImage
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var listHorizontalRectangleImages: [Landing.ListHorizontalRectangleImage] {
+        
+        compactMap {
+            if case let .list(.horizontalRectangleImage(listHorizontalRectangleImage)) = $0 {
+                return listHorizontalRectangleImage
+            } else {
+                return nil
+            }
+        }
+    }
 }

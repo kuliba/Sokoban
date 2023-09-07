@@ -18,30 +18,30 @@ public extension Landing {
             
             public let md5hash: String
             public let title, subInfo: String?
-            public let details: Details
+            public let detail: Detail
             
             public init(
                 md5hash: String,
                 title: String?,
                 subInfo: String?,
-                details: Details
+                details: Detail
             ) {
                 self.md5hash = md5hash
                 self.title = title
                 self.subInfo = subInfo
-                self.details = details
+                self.detail = details
             }
             
-            public struct Details: Equatable {
+            public struct Detail: Equatable {
                 
-                public let detailsGroupId, detailViewId: String
+                public let groupId, viewId: String
                 
                 public init(
-                    detailsGroupId: String,
-                    detailViewId: String
+                    groupId: String,
+                    viewId: String
                 ) {
-                    self.detailsGroupId = detailsGroupId
-                    self.detailViewId = detailViewId
+                    self.groupId = groupId
+                    self.viewId = viewId
                 }
             }
         }

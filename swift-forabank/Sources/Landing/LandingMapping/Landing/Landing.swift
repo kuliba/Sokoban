@@ -11,14 +11,14 @@ public struct Landing: Equatable {
     
     public let header: [DataView]
     public let main: [DataView]
-    public let footer: [DataView?]
+    public let footer: [DataView]
     public let details: [Detail]
     public let serial: String
     
     public init(
         header: [DataView],
         main: [DataView],
-        footer: [DataView?],
+        footer: [DataView],
         details: [Detail],
         serial: String
     ) {
@@ -34,13 +34,24 @@ extension Landing {
     
     public enum DataView: Equatable {
         
+        case list(List)
+        case multi(Multi)
+        
+        public enum List: Equatable {
+            case horizontalRectangleImage(ListHorizontalRectangleImage)
+            case horizontalRoundImage(ListHorizontalRoundImage)
+            case verticalRoundImage(ListVerticalRoundImage)
+        }
+        
+        public enum Multi: Equatable {
+            case lineHeader(MultiLineHeader)
+            case markersText(MultiMarkersText)
+            case text(MultiText)
+            case textsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
+        }
+
         case iconWithTwoTextLines(IconWithTwoTextLines)
-        case listHorizontalRoundImage(ListHorizontalRoundImage)
-        case multiLineHeader(MultiLineHeader)
-        case empty
         case pageTitle(PageTitle)
-        case multiTextsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
-        case listHorizontalRectangleImage(ListHorizontalRectangleImage)
     }
 }

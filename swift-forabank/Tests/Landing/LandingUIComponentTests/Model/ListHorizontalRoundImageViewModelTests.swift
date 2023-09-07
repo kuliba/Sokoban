@@ -21,7 +21,7 @@ final class ListHorizontalRoundImageViewModelTests: XCTestCase {
                 image: .bolt,
                 title: "title",
                 subInfo: "subtitle",
-                details: .init(detailsGroupId: "2", detailViewId: "3"))]
+                detail: .init(groupId: "2", viewId: "3"))]
         )
         
         XCTAssertEqual(sut.title, "Title")
@@ -29,9 +29,8 @@ final class ListHorizontalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(sut.list.first?.title, "title")
         XCTAssertEqual(sut.list.first?.image, .bolt)
         XCTAssertEqual(sut.list.first?.subInfo, "subtitle")
-        XCTAssertEqual(sut.list.first?.details?.detailsGroupId, "2")
-        XCTAssertEqual(sut.list.first?.details?.detailViewId, "3")
-        
+        XCTAssertEqual(sut.list.first?.detail?.groupId, "2")
+        XCTAssertEqual(sut.list.first?.detail?.viewId, "3")
     }
     
     // MARK: - Helpers

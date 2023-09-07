@@ -58,7 +58,7 @@ public struct LandingUIView: View {
         component: LandingComponent
     ) -> some View {
         
-        LandingComponentVew(
+        return LandingComponentVew(
             component: component,
             selectDetail: viewModel.selectDetail
         )
@@ -92,17 +92,17 @@ extension LandingUIView {
             
             switch component {
                 
-            case let .listHorizontalRoundImage(model, config):
+            case let .list(.horizontalRoundImage(model, config)):
                 ListHorizontalRoundImageView(
                     model: model,
                     config: config)
                 
-            case let .multiLineHeader(model, config):
+            case let .multi(.lineHeader(model, config)):
                 MultiLineHeaderView(
                     model: model,
                     config: config)
                 
-            case let .multiTextsWithIconsHorizontal(model, config):
+            case let .multi(.textsWithIconsHorizontal(model, config)):
                 MultiTextsWithIconsHorizontalView(
                     model: model,
                     config: config)
@@ -121,7 +121,7 @@ extension LandingUIView {
             case .textWithIconHorizontal(_):
                 EmptyView()
                 
-            case .empty:
+            case .notImplemented:
                 EmptyView()
             }
         }
