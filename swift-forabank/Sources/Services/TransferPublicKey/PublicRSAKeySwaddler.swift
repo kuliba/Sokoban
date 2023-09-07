@@ -43,14 +43,14 @@ where PublicKey: RawRepresentational {
         and sharedSecret: SharedSecret
     ) throws -> Data {
         
-        let (encryptedOTP, privateKey, publicKey) = try retryEncryptOTP(otp)
+        let (encryptedSignedOTP, privateKey, publicKey) = try retrySignEncryptOTP(otp)
         
         try saveKeys(privateKey, publicKey)
         
         let publicKeyData = try publicKey.rawRepresentation
         
         let json = try JSONSerialization.data(withJSONObject: [
-            "procClientSecretOTP": encryptedOTP.base64EncodedString(),
+            "procClientSecretOTP": encryptedSignedOTP.base64EncodedString(),
             "clientPublicKeyRSA": publicKeyData.base64EncodedString()
         ] as [String: String])
         
@@ -59,16 +59,16 @@ where PublicKey: RawRepresentational {
         return data
     }
     
-    private func retryEncryptOTP(
+    private func retrySignEncryptOTP(
         _ otp: OTP
     ) throws -> (Data, PrivateKey, PublicKey) {
         
         try retry {
             
             let (privateKey, publicKey) = try generateRSA4096BitKeys()
-            let encryptedOTP = try signEncryptOTP(otp, privateKey)
+            let encryptedSignedOTP = try signEncryptOTP(otp, privateKey)
             
-            return (encryptedOTP, privateKey, publicKey)
+            return (encryptedSignedOTP, privateKey, publicKey)
         }
     }
     
