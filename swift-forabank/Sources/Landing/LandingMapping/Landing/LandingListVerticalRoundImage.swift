@@ -23,13 +23,32 @@ extension Landing {
             public let title, subInfo: String?
             public let link, appStore, googlePlay: String?
 
-            public let detail: Detail
+            public let detail: Detail?
             
             public struct Detail: Decodable, Equatable {
                 
                 public let groupId: GroupId
                 public let viewId: ViewId
+                
+                public init(groupId: GroupId, viewId: ViewId) {
+                    self.groupId = groupId
+                    self.viewId = viewId
+                }
             }
+        }
+        
+        public init(
+            title: String?,
+            displayedCount: Double?,
+            dropButtonOpenTitle: String?,
+            dropButtonCloseTitle: String?,
+            list: [ListItem?]
+        ) {
+            self.title = title
+            self.displayedCount = displayedCount
+            self.dropButtonOpenTitle = dropButtonOpenTitle
+            self.dropButtonCloseTitle = dropButtonCloseTitle
+            self.list = list
         }
         
         public typealias GroupId = Tagged<_GroupId, String>

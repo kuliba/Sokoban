@@ -42,6 +42,17 @@ final class MapperTests: XCTestCase {
         XCTAssertNoDiff(landing.serial, "abc")
     }
     
+    func test_map_statusCode200_fullData_deliversAll() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.full.utf8)))
+        
+        XCTAssertNoDiff(landing.header.count, 1)
+        XCTAssertNoDiff(landing.main.count, 15)
+        XCTAssertNoDiff(landing.footer.count, 0)
+        XCTAssertNoDiff(landing.details.count, 3)
+        XCTAssertNoDiff(landing.serial, "41c44e57adfeb9af7535139c495dd181")
+    }
+    
     func test_map_deliversSerial() throws {
         
         let landing = try XCTUnwrap(map())
@@ -171,13 +182,85 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_deliversMultiButtonsInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.multiButtons, [
+            .init(list: [
+                .init(
+                    text: "a",
+                    style: "b",
+                    detail: .init(groupId: "c", viewId: "d"),
+                    link: nil,
+                    action: nil),
+                .init(
+                    text: "f",
+                    style: "w",
+                    detail: nil,
+                    link: nil,
+                    action: .init(type: "g"))
+            ])
+        ])
+    }
+    
+    func test_map_deliversMultiTypeButtonsInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.multiTypeButtons, [
+            .init(md5hash: "63", backgroundColor: "g", text: "a", buttonText: "b", buttonStyle: "c", textLink: "l", action: .init(type: "d", outputData: .init(tarif: 6, type: 7)), detail: nil)
+        ])
+    }
+    
+    func test_map_deliversImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.images, [
+            .init(withPlaceholder: false, backgroundColor: "w", link: "link")
+        ])
+    }
+    
+    func test_map_deliversImageSvgInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.imageSvgs, [
+            .init(backgroundColor: "W", md5hash: "51")
+        ])
+    }
+    
+    func test_map_deliversListDropDownTextsInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.listDropDownTexts, [
+            .init(
+                title: "title",
+                list: [
+                    .init(title: "a", description: "b"),
+                    .init(title: "c", description: "d")
+                ])
+        ])
+    }
+    
+    func test_map_deliversSpacingInMain() throws {
+        
+        let landing = try XCTUnwrap(map())
+        
+        XCTAssertNoDiff(landing.main.spacing, [
+            .init(backgroundColor: "w", type: "b")
+        ])
+    }
+    
     func test_map_deliversAll() throws {
         
         let landing = try XCTUnwrap(map())
         
         XCTAssertNoDiff(landing.details.count, 1)
         XCTAssertNoDiff(landing.header.count, 1)
-        XCTAssertNoDiff(landing.main.count, 7)
+        XCTAssertNoDiff(landing.main.count, 13)
         XCTAssertNoDiff(landing.footer.count, 1)
     }
     
@@ -283,6 +366,36 @@ private extension String {
          }
       ],
       "main":[
+              {
+                "type": "IMAGE_SVG",
+                "data": {
+                  "md5hash": "51",
+                  "backgroundColor": "W"
+                }
+              },
+      {
+        "type": "VERTICAL_SPACING",
+        "data": {
+          "backgroundColor": "w",
+          "spacingType": "b"
+        }
+      },
+      {
+        "type": "LIST_DROP_DOWN_TEXTS",
+        "data": {
+          "title": "title",
+          "list": [
+            {
+              "title": "a",
+              "description": "b"
+            },
+            {
+              "title": "c",
+              "description": "d"
+            }
+          ]
+        }
+      },
         {
             "type": "IMAGE",
             "data": {
@@ -398,7 +511,47 @@ private extension String {
                     "в"
             ]
             }
+        },
+        {
+        "type": "MULTI_BUTTONS",
+        "data": {
+          "list": [
+            {
+              "buttonText": "a",
+              "buttonStyle": "b",
+              "details": {
+                "detailsGroupId": "c",
+                "detailViewId": "d"
+              }
+            },
+            {
+              "buttonText": "f",
+              "buttonStyle": "w",
+              "action": {
+                "actionType": "g"
+              }
+            }
+          ]
         }
+      },
+      {
+                "type": "MULTI_TYPE_BUTTONS",
+                "data": {
+                  "backgroundColor": "g",
+                  "md5hash": "63",
+                  "text": "a",
+                  "textLink": "l",
+                  "buttonText": "b",
+                  "buttonStyle": "c",
+                  "action": {
+                    "actionType": "d",
+                    "outputData": {
+                      "cardTarif": 7,
+                      "cardType": 6
+                    }
+                  }
+                }
+              }
       ],
       "footer":[
         {
@@ -438,6 +591,1802 @@ private extension String {
       ],
       "serial":"41"
    }
+}
+"""
+    static let full: Self = """
+{
+  "data": {
+    "header": [
+      {
+        "type": "PAGE_TITLE",
+        "data": {
+          "text": "Переводы за рубеж",
+          "transparency": true
+        }
+      }
+    ],
+    "main": [
+      {
+        "type": "IMAGE",
+        "data": {
+          "isPlaceholder": false,
+          "imageLink": "dict/getProductCatalogImage?image=/products/banners/Header_abroad.png",
+          "backgroundColor": "WHITE"
+        }
+      },
+      {
+        "type": "MULTI_LINE_HEADER",
+        "data": {
+          "backgroundColor": "WHITE",
+          "regularTextList": [
+            "Переводы"
+          ],
+          "boldTextList": [
+            "за рубеж"
+          ]
+        }
+      },
+      {
+        "type": "VERTICAL_SPACING",
+        "data": {
+          "backgroundColor": "WHITE",
+          "spacingType": "big"
+        }
+      },
+      {
+        "type": "VERTICAL_SPACING",
+        "data": {
+          "backgroundColor": "WHITE",
+          "spacingType": "big"
+        }
+      },
+      {
+        "type": "MULTI_TEXTS_WITH_ICONS_HORIZONTAL",
+        "data": [
+          {
+            "md5hash": "a442191010ad33a883625f93d91037b1",
+            "title": "Быстро"
+          },
+          {
+            "md5hash": "7df826030e8d418be0a33edde3a26ad0",
+            "title": "Безопасно"
+          },
+          {
+            "md5hash": "5d9427225e136f31d26a211b9207dc3b",
+            "title": "Выгодно"
+          }
+        ]
+      },
+      {
+        "type": "LIST_HORIZONTAL_ROUND_IMAGE",
+        "data": {
+          "title": "Популярные направления",
+          "list": [
+            {
+              "md5hash": "6046e5eaff596a41ce9845cca3b0a887",
+              "title": "Армения",
+              "subInfo": "1%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Armeniya"
+              }
+            },
+            {
+              "md5hash": "c63878a33f9caef203972501cbd06359",
+              "title": "Узбекистан",
+              "subInfo": "1,5%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Uzbekistan"
+              }
+            },
+            {
+              "md5hash": "a6c13609939eb58093394ff12b0cf650",
+              "title": "Турция",
+              "subInfo": "0%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Turkey"
+              }
+            },
+            {
+              "md5hash": "cfcbbed7d050392873d726d7a97f199e",
+              "title": "Грузия",
+              "subInfo": "1,2%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Georgia"
+              }
+            },
+            {
+              "md5hash": "7353271bf2ff12101dba791f914d7855",
+              "title": "Казахстан",
+              "subInfo": "1%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Kazakhstan"
+              }
+            },
+            {
+              "md5hash": "c2deb01d90d0234a073890d37e0fb06d",
+              "title": "Кыргызстан",
+              "subInfo": "1%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Kirgizstan"
+              }
+            },
+            {
+              "md5hash": "d194c0a995d5e0bfd67b6db71e99f1e5",
+              "title": "Молдова",
+              "subInfo": "1%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Moldova"
+              }
+            },
+            {
+              "md5hash": "cd6b86a0e95e22cfbc8e73bcedd6083f",
+              "title": "Таджикистан",
+              "subInfo": "1,5%",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Tadzhikistan"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "TEXTS_WITH_ICON_HORIZONTAL",
+        "data": {
+          "md5hash": "5da774ddfc9bc0961fac3e12cba88c55",
+          "title": "Более 5 000 переводов в месяц",
+          "contentCenterAndPull": false
+        }
+      },
+      {
+        "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+        "data": {
+          "list": [
+            {
+              "imageLink": "dict/getProductCatalogImage?image=/products/banners/Product_abroad_1.png",
+              "link": "https://www.forabank.ru/landings/mig/",
+              "details": {
+                "detailsGroupId": "bannersLanding",
+                "detailViewId": "oneThousandForTransfer"
+              }
+            },
+            {
+              "imageLink": "dict/getProductCatalogImage?image=/products/banners/deposit.png",
+              "link": "https://www.forabank.ru/landings/mig/",
+              "details": {
+                "detailsGroupId": "bannersLanding",
+                "detailViewId": "moreTransfers"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "LIST_VERTICAL_ROUND_IMAGE",
+        "data": {
+          "title": "Список стран",
+          "displayedCount": 5.0,
+          "dropButtonOpenTitle": "Смотреть все страны",
+          "dropButtonCloseTitle": "Скрыть все страны",
+          "list": [
+            {
+              "md5hash": "873ae820e558f131084e80df69d6efad",
+              "title": "Абхазия",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Abhaziya"
+              }
+            },
+            {
+              "md5hash": "3d35ab0a583e052f1157b1e703bda356",
+              "title": "Азербайджан",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Azerbaydzhan"
+              }
+            },
+            {
+              "md5hash": "6046e5eaff596a41ce9845cca3b0a887",
+              "title": "Армения",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Armeniya"
+              }
+            },
+            {
+              "md5hash": "f48a9c3ccf4ff096590985ed0688bd69",
+              "title": "Беларусь",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Belarus"
+              }
+            },
+            {
+              "md5hash": "cfcbbed7d050392873d726d7a97f199e",
+              "title": "Грузия",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Georgia"
+              }
+            },
+            {
+              "md5hash": "39da3bbdd0b0569dd563e249105cd2f5",
+              "title": "Израиль",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Israel"
+              }
+            },
+            {
+              "md5hash": "7353271bf2ff12101dba791f914d7855",
+              "title": "Казахстан",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Kazakhstan"
+              }
+            },
+            {
+              "md5hash": "c2deb01d90d0234a073890d37e0fb06d",
+              "title": "Кыргызстан",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Kirgizstan"
+              }
+            },
+            {
+              "md5hash": "d194c0a995d5e0bfd67b6db71e99f1e5",
+              "title": "Молдова",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Moldova"
+              }
+            },
+            {
+              "md5hash": "cd6b86a0e95e22cfbc8e73bcedd6083f",
+              "title": "Таджикистан",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Tadzhikistan"
+              }
+            },
+            {
+              "md5hash": "a6c13609939eb58093394ff12b0cf650",
+              "title": "Турция",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Turkey"
+              }
+            },
+            {
+              "md5hash": "c63878a33f9caef203972501cbd06359",
+              "title": "Узбекистан",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Uzbekistan"
+              }
+            },
+            {
+              "md5hash": "ebcf044a5f0d6ec8b3531fbe167e304c",
+              "title": "Южная Осетия",
+              "details": {
+                "detailsGroupId": "forCountriesList",
+                "detailViewId": "Uzhnaya Osetia"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "LIST_VERTICAL_ROUND_IMAGE",
+        "data": {
+          "title": "Преимущества",
+          "list": [
+            {
+              "md5hash": "c1922354c30751af8867aa0e13d07fa1",
+              "title": "Выгодно",
+              "subTitle": "Низкие проценты"
+            },
+            {
+              "md5hash": "d66499e075262b782331c20b5fbe7299",
+              "title": "Мгновенно",
+              "subTitle": "На карту получателя"
+            },
+            {
+              "md5hash": "d5cbcabf90f3406a0bb7779579e2a2cb",
+              "title": "Круглосуточно",
+              "subTitle": "В мобильном приложении"
+            },
+            {
+              "md5hash": "d072abacb3d2ed748777db9dd39d29ec",
+              "title": "Удобно",
+              "subTitle": "По номеру телефона"
+            }
+          ]
+        }
+      },
+      {
+        "type": "MULTI_BUTTONS",
+        "data": {
+          "list": [
+            {
+              "buttonText": "Заказать карту",
+              "buttonStyle": "blackWhite",
+              "details": {
+                "detailsGroupId": "cardsLanding",
+                "detailViewId": "twoColorsLanding"
+              }
+            },
+            {
+              "buttonText": "Войти и перевести",
+              "buttonStyle": "whiteRed",
+              "action": {
+                "actionType": "goToMain"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "LIST_DROP_DOWN_TEXTS",
+        "data": {
+          "title": "Часто задаваемые вопросы",
+          "list": [
+            {
+              "title": "Как можно отправить перевод за рубеж?",
+              "description": "В приложении в разделе «Платежи» выберите «Перевести за рубеж и по РФ». Выберите страну и введите номер телефона или ФИО получателя. Номера мобильного телефона будет достаточно для перевода в Армению или ФИО получателя при переводе в другие страны."
+            },
+            {
+              "title": "Как можно отправить перевод в Армению?",
+              "description": "В приложении выберите Перевод по номеру телефона и введите номер телефона получателя. Далее следуйте подсказкам системы и выберите банк – получателя в Армении."
+            },
+            {
+              "title": "В какой валюте можно отправить и получить перевод?",
+              "description": "Валюта отправки и получения перевода зависит от выбранной страны получения перевода. Например, отправка переводов в Армению осуществляется в рублях, а получить перевод можно на карту с валютой счета – рубль РФ, драм, доллар США или евро."
+            },
+            {
+              "title": "Какую сумму можно отправить и сколько стоит перевод?",
+              "description": "В Армению можно отправить до 1 млн. рублей за операцию / в день / в месяц. Комиссия составит 1%. В другие страны по ПС Contact – до 5 000$ или эквивалент в другой валюте за операцию / в день / в месяц. Комиссия от 0% до 2% от суммы перевода зависит от страны и валюты перевода."
+            },
+            {
+              "title": "Как быстро получатель сможет получить денежные средства?",
+              "description": "Перевод будет зачислен моментально, при переводах в Армению средства поступят на счет/карту в банке-партнере. При переводах в иные страны перевод доступен к получению через несколько секунд в пунктах выдачи наличных (ПВН) ПС Contact."
+            }
+          ]
+        }
+      },
+      {
+        "type": "LIST_VERTICAL_ROUND_IMAGE",
+        "data": {
+          "title": "Онлайн поддержка",
+          "list": [
+            {
+              "md5hash": "db3914574f451ed3efe4fea1d6ac95c",
+              "title": "Telegram",
+              "link": "https://t.me/forabank_bot",
+              "appStore": "https://apps.apple.com/ru/app/telegram-messenger/id686449807",
+              "googlePlay": "https://play.google.com/store/apps/details?id=org.telegram.messenger"
+            },
+            {
+              "md5hash": "57ed65181beb139a5601be8a596654cd",
+              "title": "WhatsApp",
+              "link": "https://wa.me/79257756555",
+              "appStore": "https://apps.apple.com/ru/app/whatsapp-messenger/id310633997",
+              "googlePlay": "https://play.google.com/store/apps/details?id=com.whatsapp"
+            },
+            {
+              "md5hash": "c81ddc6c5a5cef87a28b7d8e7b09f884",
+              "title": "Viber",
+              "link": "viber://pa?chatURI=forabank",
+              "appStore": "https://apps.apple.com/ru/app/viber-%D0%BC%D0%B5%D1%81%D1%81%D0%B5%D0%BD%D0%B4%D0%B6%D0%B5%D1%80-%D0%B8-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE-%D1%87%D0%B0%D1%82/id382617920",
+              "googlePlay": "https://play.google.com/store/apps/details?id=com.viber.voip"
+            },
+            {
+              "md5hash": "b73c7e611ecc0813fc412925af6422ef",
+              "title": "Звонок оператору",
+              "link": "telprompt://88001009889"
+            }
+          ]
+        }
+      },
+      {
+        "type": "MULTI_TEXT",
+        "data": {
+          "list": [
+            "Фора-банк является зарегистрированным поставщиком платежных услуг. Наша деятельность находится под контролем Налогово-таможенной службы (HMRC) в соответствии с Положением об отмывании денег №12667079 и регулируется Управлением по финансовому регулированию и надзору РФ"
+          ]
+        }
+      },
+      {
+        "type": "VERTICAL_SPACING",
+        "data": {
+          "backgroundColor": "WHITE",
+          "spacingType": "big"
+        }
+      }
+    ],
+    "footer": [],
+    "details": [
+      {
+        "detailsGroupId": "bannersLanding",
+        "dataGroup": [
+          {
+            "detailViewId": "moreTransfers",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "6046e5eaff596a41ce9845cca3b0a887",
+                  "title": "Больше возможностей при переводах в Армению"
+                }
+              },
+              {
+                "type": "TEXTS_WITH_ICON_HORIZONTAL",
+                "data": {
+                  "md5hash": "411d86beb3c9e68dfd8dd46bd544ea49",
+                  "title": "Теперь до 1 000 000 ₽",
+                  "contentCenterAndPull": true
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "ba98336ad696bfe1400ecdd8435d2bac",
+                      "title": "Сумма перевода",
+                      "subTitle": "от 100 ₽ до 1 000 000 ₽"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "1 000 000 ₽ можно использовать на одну операцию или суммарно за день или месяц"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "Комиссия — 1% от суммы",
+                      "subTitle": "(min 100 ₽, max 10 000 ₽)"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "По номеру телефона на счет получателя в одном из банков Армении"
+                    },
+                    {
+                      "md5hash": "bd5a8a1fdc6bf099d5086923b4b42e93",
+                      "title": "Условия",
+                      "subTitle": "Предложение действует для всех зарегистрированных пользователей Фора-Онлайн"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "oneThousandForTransfer",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "6046e5eaff596a41ce9845cca3b0a887",
+                  "title": "Армения"
+                }
+              },
+              {
+                "type": "TEXTS_WITH_ICON_HORIZONTAL",
+                "data": {
+                  "md5hash": "411d86beb3c9e68dfd8dd46bd544ea49",
+                  "title": "Денежные переводы МИГ",
+                  "contentCenterAndPull": true
+                }
+              },
+              {
+                "type": "MULTI_MARKERS_TEXT",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "style": "PADDINGWITHCORNERS",
+                  "list": [
+                    "Соверши свой первый перевод в Армению в приложении Фора-Банка*",
+                    "Получи кешбэк до 1 000 ₽*"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE_SVG",
+                "data": {
+                  "md5hash": "51d1065025fef6a2096a63570245095f",
+                  "backgroundColor": "WHITE"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "c1922354c30751af8867aa0e13d07fa1",
+                      "title": "Выгодно",
+                      "subTitle": "Комиссия всего 1%. Кешбэк до 1 000 ₽ за первый перевод***"
+                    },
+                    {
+                      "md5hash": "d66499e075262b782331c20b5fbe7299",
+                      "title": "Мгновенно",
+                      "subTitle": "Средства поступят на счет получателя через несколько секунд"
+                    },
+                    {
+                      "md5hash": "d5cbcabf90f3406a0bb7779579e2a2cb",
+                      "title": "Круглосуточно",
+                      "subTitle": "В мобильном приложении Фора-банка"
+                    },
+                    {
+                      "md5hash": "d072abacb3d2ed748777db9dd39d29ec",
+                      "title": "Просто",
+                      "subTitle": "По номеру телефона получателя"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "LIST_HORIZONTAL_ROUND_IMAGE",
+                "data": {
+                  "title": "Банки партнеры",
+                  "list": [
+                    {
+                      "md5hash": "1498e6b4a776464eb4e7fd845c221f06",
+                      "title": "Эвокабанк"
+                    },
+                    {
+                      "md5hash": "d5861f90100c97706a6952e0dca2e0c2",
+                      "title": "Ардшинбанк"
+                    },
+                    {
+                      "md5hash": "21b6a406c583929effd620f8853c1a39",
+                      "title": "IDBank"
+                    },
+                    {
+                      "md5hash": "27540fc63bd4e0e91165e4af3934f95b",
+                      "title": "АрраратБанк"
+                    },
+                    {
+                      "md5hash": "a9571b421f9a680cc42564240b4b63e9",
+                      "title": "АрмББ"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_TEXT",
+                "data": {
+                  "list": [
+                    "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.forabank.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
+                    "** Участник Акции имеет право заключить с банком договор банковского счета с использованием карты МИР по тарифному плану «МИГ» или «Все включено-Промо» с бесплатным обслуживанием.",
+                    "*** Банк выплачивает Участнику Акции кешбэк в размере 100% от суммы комиссии за первый перевод, но не более 1000 рублей."
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "detailsGroupId": "cardsLanding",
+        "dataGroup": [
+          {
+            "detailViewId": "twoColorsLanding",
+            "dataView": [
+              {
+                "type": "PAGE_TITLE",
+                "data": {
+                  "text": "Выберите продукт",
+                  "transparency": true
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "spacingType": "big"
+                }
+              },
+              {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "boldTextList": [
+                    "МИР",
+                    "«Все включено»"
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_MARKERS_TEXT",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "style": "PADDING",
+                  "list": [
+                    "Обслуживание – 0 ₽",
+                    "Кешбэк: до 40% партнерский, 5% сезонный, 1% – остальные покупки",
+                    "4% - выгода при покупке топлива в приложении «Турбо»",
+                    "Сумма кешбэка – до 10 000 ₽/мес.",
+                    "Бонусы и кешбэк по «Привет, Мир!»"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "data": {
+                  "isPlaceholder": true,
+                  "imageLink": "dict/getProductCatalogImage?image=/products/products/product_1.png",
+                  "backgroundColor": "GREY"
+                }
+              },
+              {
+                "type": "MULTI_TYPE_BUTTONS",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "md5hash": "63895ae0220683560a3d999da619c88d",
+                  "text": "Подробные условия",
+                  "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/vse-vklyucheno_2-0.pdf",
+                  "buttonText": "Заказать",
+                  "buttonStyle": "whiteRed",
+                  "action": {
+                    "actionType": "orderCard",
+                    "outputData": {
+                      "cardTarif": 7,
+                      "cardType": 6
+                    }
+                  }
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "BLACK",
+                  "spacingType": "big"
+                }
+              },
+              {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                  "backgroundColor": "BLACK",
+                  "regularTextList": [
+                    "Пакет"
+                  ],
+                  "boldTextList": [
+                    "Премиальный"
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_MARKERS_TEXT",
+                "data": {
+                  "backgroundColor": "BLACK",
+                  "style": "PADDING",
+                  "list": [
+                    "Валюта счета: ₽/$/€",
+                    "Кешбэк: до 20% у партнеров, 7% сезонный, 2% канцтовары, 1,2% — остальные покупки, до 20 000 ₽/мес.",
+                    "Кредитный лимит до 1 500 000 ₽, ставка от 17% годовых"
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "data": {
+                  "isPlaceholder": true,
+                  "imageLink": "dict/getProductCatalogImage?image=/products/products/product_2.png",
+                  "backgroundColor": "BLACK"
+                }
+              },
+              {
+                "type": "MULTI_TYPE_BUTTONS",
+                "data": {
+                  "backgroundColor": "BLACK",
+                  "md5hash": "cac49ca8557d2e66d321f5fe1151235e",
+                  "text": "Подробные условия",
+                  "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/paket-premialnyy.pdf",
+                  "buttonText": "Заказать",
+                  "buttonStyle": "whiteRed",
+                  "action": {
+                    "actionType": "orderCard",
+                    "outputData": {
+                      "cardTarif": 38,
+                      "cardType": 5
+                    }
+                  }
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "spacingType": "big"
+                }
+              },
+              {
+                "type": "MULTI_LINE_HEADER",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "boldTextList": [
+                    "«МИР",
+                    "Пенсионная»"
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_MARKERS_TEXT",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "style": "PADDING",
+                  "list": [
+                    "Обслуживание 0 ₽",
+                    "Доход на остаток от 10 001 ₽/мес., до 7,25%",
+                    "Кешбэк: 5% сезонный, 2% — в аптеках, 20% партнерский, 1% — др. покупки",
+                    "В 5-ке лучших пенсионных карт, «Выберу.ру» от 23.08.2022 г."
+                  ]
+                }
+              },
+              {
+                "type": "IMAGE",
+                "data": {
+                  "isPlaceholder": true,
+                  "imageLink": "dict/getProductCatalogImage?image=/products/products/product_3.png",
+                  "backgroundColor": "GREY"
+                }
+              },
+              {
+                "type": "MULTI_TYPE_BUTTONS",
+                "data": {
+                  "backgroundColor": "GREY",
+                  "md5hash": "63895ae0220683560a3d999da619c88d",
+                  "text": "Подробные условия",
+                  "textLink": "https://www.forabank.ru/user-upload/dok-dbo-fl/tariffs/mir-pensionnaya.pdf",
+                  "buttonText": "Заказать",
+                  "buttonStyle": "whiteRed",
+                  "action": {
+                    "actionType": "orderCard",
+                    "outputData": {
+                      "cardTarif": 26,
+                      "cardType": 6
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "detailsGroupId": "forCountriesList",
+        "dataGroup": [
+          {
+            "detailViewId": "Abhaziya",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "873ae820e558f131084e80df69d6efad",
+                  "title": "Абхазия"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽ или $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Azerbaydzhan",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "3d35ab0a583e052f1157b1e703bda356",
+                  "title": "Азербайджан"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1,2% мин. 70 ₽/2,5 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽, $ или азербайджанских манатах"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Belarus",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "f48a9c3ccf4ff096590985ed0688bd69",
+                  "title": "Беларусь"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1%",
+                      "subTitle": "мин. 70 ₽"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Georgia",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "cfcbbed7d050392873d726d7a97f199e",
+                  "title": "Грузия"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1,2% мин. 70 ₽/2,5 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽, $, € или грузинских лари"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Israel",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "39da3bbdd0b0569dd563e249105cd2f5",
+                  "title": "Израиль"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "5% мин. 5 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 600 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Tadzhikistan",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "cd6b86a0e95e22cfbc8e73bcedd6083f",
+                  "title": "Таджикистан"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1,5% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽ или $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Kazakhstan",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "7353271bf2ff12101dba791f914d7855",
+                  "title": "Казахстан"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽, $ или казахских тенге"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Kirgizstan",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "c2deb01d90d0234a073890d37e0fb06d",
+                  "title": "Кыргызстан"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽ или $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 150 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Moldova",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "d194c0a995d5e0bfd67b6db71e99f1e5",
+                  "title": "Молдова"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽ или $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Turkey",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "a6c13609939eb58093394ff12b0cf650",
+                  "title": "Турция"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 150 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Uzbekistan",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "c63878a33f9caef203972501cbd06359",
+                  "title": "Узбекистан"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1,5% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в $"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Uzhnaya Osetia",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "ebcf044a5f0d6ec8b3531fbe167e304c",
+                  "title": "Южная Осетия"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "0%",
+                      "subTitle": "при переводе с конвертацией"
+                    },
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "2% мин. 70 ₽/2 $",
+                      "subTitle": "при переводе в единой валюте"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по ФИО получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "наличными в ₽, $ или €"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 300 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          },
+          {
+            "detailViewId": "Armeniya",
+            "dataView": [
+              {
+                "type": "ICON_WITH_TWO_TEXT_LINES",
+                "data": {
+                  "md5hash": "6046e5eaff596a41ce9845cca3b0a887",
+                  "title": "Армения"
+                }
+              },
+              {
+                "type": "LIST_VERTICAL_ROUND_IMAGE",
+                "data": {
+                  "list": [
+                    {
+                      "md5hash": "6da1aded1d5143877cdd3d9d84d7d018",
+                      "title": "1%",
+                      "subTitle": "мин. 100 ₽, макс. 5 000₽"
+                    },
+                    {
+                      "md5hash": "8b894449c5e9d69cc57dc14a6e8027f2",
+                      "title": "Отправка",
+                      "subTitle": "по номеру телефона получателя"
+                    },
+                    {
+                      "md5hash": "a2f253f0cab9f4dc4508ee4c4ec7795f",
+                      "title": "Получение",
+                      "subTitle": "на карту или счет получателя в банках-партнерах"
+                    },
+                    {
+                      "md5hash": "8fce20724f54a0e8ceec048748efab00",
+                      "title": "Лимит",
+                      "subTitle": "до 1 000 000 ₽ в месяц"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "LIST_HORIZONTAL_ROUND_IMAGE",
+                "data": {
+                  "title": "Банки партнеры",
+                  "list": [
+                    {
+                      "md5hash": "1498e6b4a776464eb4e7fd845c221f06",
+                      "title": "Эвокабанк"
+                    },
+                    {
+                      "md5hash": "d5861f90100c97706a6952e0dca2e0c2",
+                      "title": "Ардшинбанк"
+                    },
+                    {
+                      "md5hash": "21b6a406c583929effd620f8853c1a39",
+                      "title": "IDBank"
+                    },
+                    {
+                      "md5hash": "27540fc63bd4e0e91165e4af3934f95b",
+                      "title": "АрраратБанк"
+                    },
+                    {
+                      "md5hash": "a9571b421f9a680cc42564240b4b63e9",
+                      "title": "АрмББ"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "MULTI_BUTTONS",
+                "data": {
+                  "list": [
+                    {
+                      "buttonText": "Заказать карту",
+                      "buttonStyle": "blackWhite",
+                      "details": {
+                        "detailsGroupId": "cardsLanding",
+                        "detailViewId": "twoColorsLanding"
+                      }
+                    },
+                    {
+                      "buttonText": "Войти и перевести",
+                      "buttonStyle": "whiteRed",
+                      "action": {
+                        "actionType": "goToMain"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "VERTICAL_SPACING",
+                "data": {
+                  "backgroundColor": "WHITE",
+                  "spacingType": "big"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "serial": "41c44e57adfeb9af7535139c495dd181"
+  }
 }
 """
 }
@@ -526,6 +2475,72 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .list(.horizontalRectangleImage(listHorizontalRectangleImage)) = $0 {
                 return listHorizontalRectangleImage
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiButtons: [Landing.MultiButtons] {
+        
+        compactMap {
+            if case let .multi(.buttons(multiButtons)) = $0 {
+                return multiButtons
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var multiTypeButtons: [Landing.MultiTypeButtons] {
+        
+        compactMap {
+            if case let .multi(.typeButtons(typeButtons)) = $0 {
+                return typeButtons
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var images: [Landing.ImageBlock] {
+        
+        compactMap {
+            if case let .image(images) = $0 {
+                return images
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var imageSvgs: [Landing.ImageSvg] {
+        
+        compactMap {
+            if case let .imageSvg(imageSvgs) = $0 {
+                return imageSvgs
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var listDropDownTexts: [Landing.ListDropDownTexts] {
+        
+        compactMap {
+            if case let .list(.dropDownTexts(texts)) = $0 {
+                return texts
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var spacing: [Landing.VerticalSpacing] {
+        
+        compactMap {
+            if case let .verticalSpacing(indents) = $0 {
+                return indents
             } else {
                 return nil
             }

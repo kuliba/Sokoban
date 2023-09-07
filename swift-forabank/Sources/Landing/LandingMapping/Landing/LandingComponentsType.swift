@@ -23,8 +23,10 @@ extension Landing {
         case multiText = "MULTI_TEXT"
         case pageTitle = "PAGE_TITLE"
         case image = "IMAGE"
+        case imageSvg = "IMAGE_SVG"
         case multiMarkersText = "MULTI_MARKERS_TEXT"
         case multiTextsWithIconsHorizontal = "MULTI_TEXTS_WITH_ICONS_HORIZONTAL"
+        case multiTypeButtons = "MULTI_TYPE_BUTTONS"
         case unknow
     }
 }

@@ -37,33 +37,42 @@ extension DecodableLanding.Data {
         case multiText = "MULTI_TEXT"
         case pageTitle = "PAGE_TITLE"
         case image = "IMAGE"
+        case imageSvg = "IMAGE_SVG"
         case multiMarkersText = "MULTI_MARKERS_TEXT"
         case multiTextsWithIconsHorizontal = "MULTI_TEXTS_WITH_ICONS_HORIZONTAL"
+        case multiTypeButtons = "MULTI_TYPE_BUTTONS"
     }
 
+    // TODO: ListHorizontalRectangleImage -> List.Horizontal.RectangleImage
     enum DataView: Decodable, Equatable {
         
         case list(List)
         case multi(Multi)
 
         enum List: Decodable, Equatable  {
-            case listHorizontalRectangleImage(ListHorizontalRectangleImage)
-            case listHorizontalRoundImage(ListHorizontalRoundImage)
-            case listVerticalRoundImage(ListVerticalRoundImage)
+            case horizontalRectangleImage(ListHorizontalRectangleImage)
+            case horizontalRoundImage(ListHorizontalRoundImage)
+            case verticalRoundImage(ListVerticalRoundImage)
+            case dropDownTexts(ListDropDownTexts)
         }
         
         enum Multi: Decodable, Equatable  {
             
-            case multiLineHeader(MultiLineHeader)
-            case multiMarkersText(MultiMarkersText)
-            case multiText(MultiText)
-            case multiTextsWithIconsHorizontalArray([MultiTextsWithIconsHorizontal])
+            case lineHeader(MultiLineHeader)
+            case markersText(MultiMarkersText)
+            case text(MultiText)
+            case textsWithIconsHorizontalArray([MultiTextsWithIconsHorizontal])
+            case buttons(MultiButtons)
+            case typeButtons(MultiTypeButtons)
         }
         
         case noValid(String)
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
+        case image(ImageBlock)
+        case imageSvg(ImageSvg)
+        case verticalSpacing(VerticalSpacing)
         
         init(from decoder: Decoder) throws {
             
@@ -74,7 +83,7 @@ extension DecodableLanding.Data {
 
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
-            let type = try container.decode(LandingComponentsType.self, forKey: .type)
+            let type = try? container.decode(LandingComponentsType.self, forKey: .type)
             
             switch type {
                 
@@ -84,31 +93,31 @@ extension DecodableLanding.Data {
                 
             case .listHorizontalRectangleImage:
                 let data = try container.decode(ListHorizontalRectangleImage.self, forKey: .data)
-                self = .list(.listHorizontalRectangleImage(data))
+                self = .list(.horizontalRectangleImage(data))
                 
             case .listHorizontalRoundImage:
                 let data = try container.decode(ListHorizontalRoundImage.self, forKey: .data)
-                self = .list(.listHorizontalRoundImage(data))
+                self = .list(.horizontalRoundImage(data))
             
             case .listVerticalRoundImage:
                 let data = try container.decode(ListVerticalRoundImage.self, forKey: .data)
-                self = .list(.listVerticalRoundImage(data))
+                self = .list(.verticalRoundImage(data))
                 
             case .multiLineHeader:
                 let data = try container.decode(MultiLineHeader.self, forKey: .data)
-                self = .multi(.multiLineHeader(data))
+                self = .multi(.lineHeader(data))
             
             case .multiMarkersText:
                 let data = try container.decode(MultiMarkersText.self, forKey: .data)
-                self = .multi(.multiMarkersText(data))
+                self = .multi(.markersText(data))
                 
             case .multiText:
                 let data = try container.decode(MultiText.self, forKey: .data)
-                self = .multi(.multiText(data))
+                self = .multi(.text(data))
                 
             case .multiTextsWithIconsHorizontal:
                 let data = try container.decode([MultiTextsWithIconsHorizontal].self, forKey: .data)
-                self = .multi(.multiTextsWithIconsHorizontalArray(data))
+                self = .multi(.textsWithIconsHorizontalArray(data))
             
             case .pageTitle:
                 let data = try container.decode(PageTitle.self, forKey: .data)
@@ -117,21 +126,34 @@ extension DecodableLanding.Data {
             case .textWithIconHorizontal:
                 let data = try container.decode(TextsWithIconHorizontal.self, forKey: .data)
                 self = .textsWithIconHorizontal(data)
+              
+            case .multiButtons:
+                let data = try container.decode(MultiButtons.self, forKey: .data)
+                self = .multi(.buttons(data))
                 
+            case .multiTypeButtons:
+                let data = try container.decode(MultiTypeButtons.self, forKey: .data)
+                self = .multi(.typeButtons(data))
+                
+            case .image:
+                let data = try container.decode(ImageBlock.self, forKey: .data)
+                self = .image(data)
+                
+            case .imageSvg:
+                let data = try container.decode(ImageSvg.self, forKey: .data)
+                self = .imageSvg(data)
+
+            case .listDropDownTexts:
+                let data = try container.decode(ListDropDownTexts.self, forKey: .data)
+                self = .list(.dropDownTexts(data))
+                
+            case .verticalSpacing:
+                let data = try container.decode(VerticalSpacing.self, forKey: .data)
+                self = .verticalSpacing(data)
+
             default:
                 // не смогли распарсить - нет такого type
-                self = .noValid(type.rawValue)
-                
-                /*
-                 case .verticalSpacing:
-                 <#code#>
-                 case .multiButtons:
-                 <#code#>
-                 case .listDropDownTexts:
-                 <#code#>
-                 case .image:
-                 <#code#>
-                 */
+                self = .noValid("нет такого типа")
             }
         }
     }
