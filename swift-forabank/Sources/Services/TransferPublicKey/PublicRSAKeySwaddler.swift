@@ -19,18 +19,18 @@ where PublicKey: RawRepresentational {
     public typealias SignEncryptOTP = (OTP, PrivateKey) throws -> Data
     public typealias SaveKeys = (PrivateKey, PublicKey) throws -> Void
     public typealias SharedSecret = SwaddleKeyDomain<OTP>.SharedSecret
-    public typealias AESEncryptBits128Chunks = (Data, SharedSecret) throws -> Data
+    public typealias AESEncrypt128bitChunks = (Data, SharedSecret) throws -> Data
     
     private let generateRSA4096BitKeys: GenerateRSA4096BitKeys
     private let signEncryptOTP: SignEncryptOTP
     private let saveKeys: SaveKeys
-    private let aesEncrypt128bitChunks: AESEncryptBits128Chunks
+    private let aesEncrypt128bitChunks: AESEncrypt128bitChunks
     
     public init(
         generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
         signEncryptOTP: @escaping SignEncryptOTP,
         saveKeys: @escaping SaveKeys,
-        aesEncrypt128bitChunks: @escaping AESEncryptBits128Chunks
+        aesEncrypt128bitChunks: @escaping AESEncrypt128bitChunks
     ) {
         self.generateRSA4096BitKeys = generateRSA4096BitKeys
         self.signEncryptOTP = signEncryptOTP
