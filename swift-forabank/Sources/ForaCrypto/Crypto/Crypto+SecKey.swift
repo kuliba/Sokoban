@@ -81,15 +81,17 @@ public extension Crypto {
         return publicKey
     }
     
+    /// Create `Public Key` from data
     static func createSecKeyWith(
         data: Data,
-        keyType: CFString = kSecAttrKeyTypeRSA
+        keyType: CFString = kSecAttrKeyTypeRSA,
+        keySizeInBits: Int = 512 * 8
     ) throws -> SecKey {
         
         let parameters: [String: Any] = [
             kSecAttrKeyType as String: keyType,
             kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
-            kSecAttrKeySizeInBits as String: 384,
+            kSecAttrKeySizeInBits as String: keySizeInBits,
             SecKeyKeyExchangeParameter.requestedSize.rawValue as String: 32
         ]
         
