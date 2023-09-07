@@ -13,6 +13,7 @@ let package = Package(
         .cvvPin,
         .landingComponentsOld,
         .landingEngineOld,
+        .loadableModel,
         .loadableResourceComponent,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
@@ -47,6 +48,8 @@ let package = Package(
         .cvvPinTests,
         .landingComponentsOld,
         .landingEngineOld,
+        .loadableModel,
+        .loadableModelTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
         .manageSubscriptionsUI,
@@ -129,6 +132,13 @@ private extension Product {
         name: .landingEngineOld,
         targets: [
             .landingEngineOld,
+        ]
+    )
+    
+    static let loadableModel = library(
+        name: .loadableModel,
+        targets: [
+            .loadableModel,
         ]
     )
     
@@ -325,6 +335,24 @@ private extension Target {
         name: .landingEngineOld,
         dependencies: [
             .landingComponentsOld
+        ]
+    )
+    
+    static let loadableModel = target(
+        name: .loadableModel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableModelTests = testTarget(
+        name: .loadableModelTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableModel,
         ]
     )
     
@@ -567,6 +595,10 @@ private extension Target.Dependency {
         name: .landingComponentsOld
     )
     
+    static let loadableModel = byName(
+        name: .loadableModel
+    )
+    
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
     )
@@ -641,6 +673,9 @@ private extension String {
     
     static let landingComponentsOld = "LandingComponentsOld"
     static let landingEngineOld = "LandingEngineOld"
+    
+    static let loadableModel = "LoadableModel"
+    static let loadableModelTests = "LoadableModelTests"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"

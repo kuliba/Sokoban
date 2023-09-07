@@ -141,6 +141,20 @@
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
     }
   ],
   "version" : 1
