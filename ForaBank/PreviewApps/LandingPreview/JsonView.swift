@@ -117,7 +117,7 @@ extension LandingUIComponent.Landing {
     func appendingToMain(
         component: LandingComponent
     ) -> Self {
-    
+        
         .init(
             header: header,
             main: main + [component],
@@ -148,9 +148,9 @@ private extension LandingUIComponent.Landing {
         data: LandingMapping.Landing
     ) {
         
-        let header: [LandingComponent] = data.header.map { LandingComponent.init(data: $0)}
-        let main: [LandingComponent] = data.main.map { LandingComponent.init(data: $0)}
-        let footer: [LandingComponent] = []
+        let header: [LandingComponent] = data.header.compactMap(LandingComponent.init(data:))
+        let main: [LandingComponent] = data.main.compactMap( LandingComponent.init(data:))
+        let footer: [LandingComponent] = data.footer.compactMap(LandingComponent.init(data:))
         
         self.init(header: header, main: main, footer: footer)
     }
@@ -164,23 +164,22 @@ private extension LandingUIComponent.LandingComponent {
     ) {
         switch data {
             
-            /*case let .iconWithTwoTextLines(x):
-             return (LandingComponents.IconWithTwoTextLines(data: x), LandingComponents.IconWithTwoTextLines*/
-        case let .listHorizontalRoundImage(x):
-                self = .listHorizontalRoundImage(.init(data: x), .defaultValue)
-        case let .multiLineHeader(x):
-                self = .multiLineHeader(.init(data: x), .init(
-                    backgroundColor: .white,
-                    item: .defaultValueBlack))
+        case let .list(.horizontalRoundImage(x)):
+            self = .list(.horizontalRoundImage(.init(data: x), .defaultValue))
+        case let .multi(.lineHeader(x)):
+            self = .multi(.lineHeader(.init(data: x), .init(
+                backgroundColor: .white,
+                item: .defaultValueBlack)))
         case let .pageTitle(x):
-                self = .pageTitle(.init(data: x), .defaultValue)
-        case let .multiTextsWithIconsHorizontalArray(x):
-                self = .multiTextsWithIconsHorizontal(.init(data: x), .defaultValueBlack)
-            
+            self = .pageTitle(.init(data: x), .defaultValue)
+        case let .multi(.textsWithIconsHorizontalArray(x)):
+            self = .multi(.textsWithIconsHorizontal(.init(data: x), .defaultValueBlack))
         case let .textsWithIconHorizontal(x):
-                self = .textWithIconHorizontal(.init(data: x))
+            self = .textWithIconHorizontal(.init(data: x))
+            
+            // TODO: исправить после реализации всех кейсов!!!
         default:
-            self = .empty
+            self = .notImplemented
         }
     }
 }
@@ -213,17 +212,17 @@ private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem {
         data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem
     ) {
         
-        self.init(image: .bolt, title: data.title, subInfo: data.subInfo, details: .init(data: data.details))
+        self.init(image: .bolt, title: data.title, subInfo: data.subInfo, detail: .init(data: data.detail))
     }
 }
 
-private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem.Details {
+private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem.Detail {
     
     init(
-        data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem.Details
+        data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem.Detail
     ) {
         
-        self.init(detailsGroupId: data.detailsGroupId, detailViewId: data.detailViewId)
+        self.init(groupId: data.groupId, viewId: data.viewId)
     }
 }
 
@@ -285,7 +284,7 @@ extension Image {
     static let percent: Self = .init(systemName: "percent")
     static let shield: Self = .init(systemName: "shield")
     static let flag: Self = .init(systemName: "flag")
-
+    
 }
 
 extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config {
@@ -468,7 +467,18 @@ private extension String {
          }
       ],
       "footer":[
-         
+        {
+        "type": "MULTI_LINE_HEADER",
+            "data": {
+                "backgroundColor": "BLACK",
+                "regularTextList": [
+                    "Пакет"
+                ],
+                "boldTextList": [
+                    "Премиальный"
+                ]
+            }
+        }
       ],
       "details":[
          {

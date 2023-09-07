@@ -43,13 +43,26 @@ extension DecodableLanding.Data {
 
     enum DataView: Decodable, Equatable {
         
+        case list(List)
+        case multi(Multi)
+
+        enum List: Decodable, Equatable  {
+            case listHorizontalRectangleImage(ListHorizontalRectangleImage)
+            case listHorizontalRoundImage(ListHorizontalRoundImage)
+            case listVerticalRoundImage(ListVerticalRoundImage)
+        }
+        
+        enum Multi: Decodable, Equatable  {
+            
+            case multiLineHeader(MultiLineHeader)
+            case multiMarkersText(MultiMarkersText)
+            case multiText(MultiText)
+            case multiTextsWithIconsHorizontalArray([MultiTextsWithIconsHorizontal])
+        }
+        
+        case noValid(String)
         case iconWithTwoTextLines(IconWithTwoTextLines)
-        case listHorizontalRoundImage(ListHorizontalRoundImage)
-        case listHorizontalRectangleImage(ListHorizontalRectangleImage)
-        case multiLineHeader(MultiLineHeader)
-        case empty
         case pageTitle(PageTitle)
-        case multiTextsWithIconsHorizontalArray([MuiltiTextsWithIconsHorizontal])
         case textsWithIconHorizontal(TextsWithIconHorizontal)
         
         init(from decoder: Decoder) throws {
@@ -67,60 +80,56 @@ extension DecodableLanding.Data {
                 
             case .iconWithTwoTextLines:
                 let data = try container.decode(IconWithTwoTextLines.self, forKey: .data)
-                
                 self = .iconWithTwoTextLines(data)
-                
-            case .listHorizontalRoundImage:
-                let data = try container.decode(ListHorizontalRoundImage.self, forKey: .data)
-                
-                self = .listHorizontalRoundImage(data)
                 
             case .listHorizontalRectangleImage:
                 let data = try container.decode(ListHorizontalRectangleImage.self, forKey: .data)
+                self = .list(.listHorizontalRectangleImage(data))
                 
-                self = .listHorizontalRectangleImage(data)
-
-            case .textWithIconHorizontal:
-                let data = try container.decode(TextsWithIconHorizontal.self, forKey: .data)
-                
-                self = .textsWithIconHorizontal(data)
+            case .listHorizontalRoundImage:
+                let data = try container.decode(ListHorizontalRoundImage.self, forKey: .data)
+                self = .list(.listHorizontalRoundImage(data))
             
+            case .listVerticalRoundImage:
+                let data = try container.decode(ListVerticalRoundImage.self, forKey: .data)
+                self = .list(.listVerticalRoundImage(data))
+                
             case .multiLineHeader:
                 let data = try container.decode(MultiLineHeader.self, forKey: .data)
+                self = .multi(.multiLineHeader(data))
+            
+            case .multiMarkersText:
+                let data = try container.decode(MultiMarkersText.self, forKey: .data)
+                self = .multi(.multiMarkersText(data))
                 
-                self = .multiLineHeader(data)
+            case .multiText:
+                let data = try container.decode(MultiText.self, forKey: .data)
+                self = .multi(.multiText(data))
                 
             case .multiTextsWithIconsHorizontal:
-                let data = try container.decode([MuiltiTextsWithIconsHorizontal].self, forKey: .data)
-                
-                self = .multiTextsWithIconsHorizontalArray(data)
+                let data = try container.decode([MultiTextsWithIconsHorizontal].self, forKey: .data)
+                self = .multi(.multiTextsWithIconsHorizontalArray(data))
             
             case .pageTitle:
                 let data = try container.decode(PageTitle.self, forKey: .data)
-                
                 self = .pageTitle(data)
+            
+            case .textWithIconHorizontal:
+                let data = try container.decode(TextsWithIconHorizontal.self, forKey: .data)
+                self = .textsWithIconHorizontal(data)
                 
             default:
                 // не смогли распарсить - нет такого type
-                self = .empty
-                /*case .listHorizontalRoundImage:
-                 <#code#>
-                 
+                self = .noValid(type.rawValue)
+                
+                /*
                  case .verticalSpacing:
-                 <#code#>
-                 
-                 case .listVerticalRoundImage:
                  <#code#>
                  case .multiButtons:
                  <#code#>
                  case .listDropDownTexts:
                  <#code#>
-                 case .multiText:
-                 <#code#>
-                 
                  case .image:
-                 <#code#>
-                 case .multiMarkersText:
                  <#code#>
                  */
             }

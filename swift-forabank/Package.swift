@@ -491,6 +491,9 @@ private extension Target {
     
     static let landingMapping = target(
         name: .landingMapping,
+        dependencies: [
+            .tagged,
+        ],
         path: "Sources/Landing/\(String.landingMapping)"
     )
     static let landingMappingTests = testTarget(

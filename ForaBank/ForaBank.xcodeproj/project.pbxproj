@@ -3361,6 +3361,7 @@
 		83378AB92AA0DFE10087F8B1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		833885742AA7845800CE8834 /* LandingMapping.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LandingMapping.xctestplan; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PickerWithPreviewComponent.xctestplan; sourceTree = "<group>"; };
 		834731DC2A1370A7002590A3 /* NoCompanyInListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListViewModel.swift; sourceTree = "<group>"; };
@@ -9235,6 +9236,7 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
+				833885742AA7845800CE8834 /* LandingMapping.xctestplan */,
 				2AB66F052A5F57D800B6FF5B /* CvvPin.xctestplan */,
 				2AEF71992AA0A51800480990 /* LinkableText.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,

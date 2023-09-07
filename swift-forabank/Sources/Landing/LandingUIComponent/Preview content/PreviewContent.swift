@@ -66,29 +66,29 @@ extension Array where Element == Landing.ListHorizontalRoundImage.ListItem {
             image: .bolt,
             title: "Армения",
             subInfo: "1%",
-            details: .init(
-                detailsGroupId: "forCountriesList",
-                detailViewId: "Armeniya")
+            detail: .init(
+                groupId: "forCountriesList",
+                viewId: "Armeniya")
         ),
         .init(
             image: .shield,
             title: "Узбекистан",
             subInfo: "1.5%",
-            details: .init(
-                detailsGroupId: "forCountriesList",
-                detailViewId: "Uzbekistan")
+            detail: .init(
+                groupId: "forCountriesList",
+                viewId: "Uzbekistan")
         ),
         .init(
             image: .percent,
             title: "Абхазия",
             subInfo: nil,
-            details: nil
+            detail: nil
         ),
         .init(
             image: .flag,
             title: nil,
             subInfo: nil,
-            details: nil
+            detail: nil
         )
     ]
 }
@@ -206,17 +206,17 @@ extension Array where Element == LandingComponent {
     ]
     
     static let main: Self = [
-        .multiLineHeader(
+        .multi(.lineHeader(
             .defaultViewModel,
             .init(
                 backgroundColor: .white,
                 item: .defaultValueBlack
             )
-        ),
-        .listHorizontalRoundImage(
+        )),
+        .list(.horizontalRoundImage(
             .defaultValue,
             .defaultValue
-        )
+        ))
     ]
     
     static let empty: Self = []
