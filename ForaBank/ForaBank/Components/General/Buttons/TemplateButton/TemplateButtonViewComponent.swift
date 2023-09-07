@@ -50,6 +50,8 @@ extension TemplateButtonView {
                 self.state = state
                 self.tapAction = {}
             }
+            
+            bind()
         }
 
         static func buttonAction(
