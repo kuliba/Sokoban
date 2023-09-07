@@ -314,6 +314,7 @@ private extension Target {
         resources: [
             .copy("Resources/public.crt"),
             .copy("Resources/der.crt"),
+            .copy("Resources/publicCert.pem"),
         ]
     )
     static let foraCryptoTests = testTarget(
