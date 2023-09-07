@@ -9,17 +9,17 @@ import Foundation
 
 public final class OTPEncrypter<OTP, PrivateKey> {
     
-    public typealias EncryptWithPadding = (OTP, PrivateKey) throws -> Data
+    public typealias SignWithPadding = (OTP, PrivateKey) throws -> Data
     public typealias EncryptWithTransportPublicRSAKey = (Data) throws -> Data
     
-    private let encryptWithPadding: EncryptWithPadding
+    private let signWithPadding: SignWithPadding
     private let encryptWithTransportPublicRSAKey: EncryptWithTransportPublicRSAKey
     
     public init(
-        encryptWithPadding: @escaping EncryptWithPadding,
+        signWithPadding: @escaping SignWithPadding,
         encryptWithTransportPublicRSAKey: @escaping EncryptWithTransportPublicRSAKey
     ) {
-        self.encryptWithPadding = encryptWithPadding
+        self.signWithPadding = signWithPadding
         self.encryptWithTransportPublicRSAKey = encryptWithTransportPublicRSAKey
     }
     
@@ -28,7 +28,7 @@ public final class OTPEncrypter<OTP, PrivateKey> {
         withRSAKey privateKey: PrivateKey
     ) throws -> Data {
         
-        let clientSecretOTP = try encryptWithPadding(otp, privateKey)
+        let clientSecretOTP = try signWithPadding(otp, privateKey)
         let procClientSecretOTP = try encryptWithTransportPublicRSAKey(clientSecretOTP)
         
         return procClientSecretOTP

@@ -16,7 +16,7 @@ extension OTPEncrypter where PrivateKey == SecKey {
         encryptWithTransportPublicRSAKey: @escaping EncryptWithTransportPublicRSAKey
     ) -> OTPEncrypter {
         
-        let encryptWithPadding: EncryptWithPadding = { otp, privateKey in
+        let signWithPadding: SignWithPadding = { otp, privateKey in
             
             try Crypto.sign(
                 mapOTP(otp),
@@ -26,7 +26,7 @@ extension OTPEncrypter where PrivateKey == SecKey {
         }
         
         return .init(
-            encryptWithPadding: encryptWithPadding,
+            signWithPadding: signWithPadding,
             encryptWithTransportPublicRSAKey: encryptWithTransportPublicRSAKey
         )
     }

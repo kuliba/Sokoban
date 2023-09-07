@@ -20,14 +20,14 @@ final class OTPEncrypterTests: XCTestCase {
     func test_encrypt_shouldFailOnEncryptWithPaddingError() throws {
         
         let (otp, privateRSAKey) = makeOTPAndKey()
-        let encryptWithPaddingError = anyError("encryptWithPaddingError")
+        let signWithPaddingError = anyError("signWithPaddingError")
         let (sut, _) = makeSUT(
-            encryptWithPaddingResult: .failure(encryptWithPaddingError)
+            signWithPaddingResult: .failure(signWithPaddingError)
         )
         
         try XCTAssertThrowsAsNSError(
             sut.encrypt(otp, withRSAKey: privateRSAKey),
-            error: encryptWithPaddingError)
+            error: signWithPaddingError)
     }
     
     func test_encrypt_shouldFailOnEncryptWithTransportPublicRSAKeyError() throws {
@@ -35,7 +35,7 @@ final class OTPEncrypterTests: XCTestCase {
         let (otp, privateRSAKey) = makeOTPAndKey()
         let encryptWithTransportPublicRSAKeyError = anyError("encryptWithTransportPublicRSAKeyError")
         let (sut, _) = makeSUT(
-            encryptWithPaddingResult: .success(anyData()),
+            signWithPaddingResult: .success(anyData()),
             encryptWithTransportPublicRSAKeyResult: .failure(encryptWithTransportPublicRSAKeyError)
         )
         
@@ -71,7 +71,7 @@ final class OTPEncrypterTests: XCTestCase {
     }
     
     private func makeSUT(
-        encryptWithPaddingResult: EncryptWithPaddingResult = .success(anyData()),
+        signWithPaddingResult: EncryptWithPaddingResult = .success(anyData()),
         encryptWithTransportPublicRSAKeyResult: EncryptWithTransportPublicRSAKeyResult = .success(anyData()),
         file: StaticString = #file,
         line: UInt = #line
@@ -80,11 +80,11 @@ final class OTPEncrypterTests: XCTestCase {
         spy: EncryptingSpy
     ) {
         let encryptingSpy = EncryptingSpy(
-            encryptWithPaddingResult: encryptWithPaddingResult,
+            signWithPaddingResult: signWithPaddingResult,
             encryptWithTransportPublicRSAKeyResult: encryptWithTransportPublicRSAKeyResult
         )
         let sut = TestOTPEncrypter(
-            encryptWithPadding: encryptingSpy.encryptWithPadding,
+            signWithPadding: encryptingSpy.signWithPadding,
             encryptWithTransportPublicRSAKey: encryptingSpy.encryptWithTransportPublicRSAKey
         )
         
@@ -105,24 +105,24 @@ final class OTPEncrypterTests: XCTestCase {
     private final class EncryptingSpy {
         
         private(set) var encryptionCallCount = 0
-        private let encryptWithPaddingResult: EncryptWithPaddingResult
+        private let signWithPaddingResult: EncryptWithPaddingResult
         private let encryptWithTransportPublicRSAKeyResult: EncryptWithTransportPublicRSAKeyResult
         
         init(
-            encryptWithPaddingResult: EncryptWithPaddingResult,
+            signWithPaddingResult: EncryptWithPaddingResult,
             encryptWithTransportPublicRSAKeyResult: EncryptWithTransportPublicRSAKeyResult
         ) {
-            self.encryptWithPaddingResult = encryptWithPaddingResult
+            self.signWithPaddingResult = signWithPaddingResult
             self.encryptWithTransportPublicRSAKeyResult = encryptWithTransportPublicRSAKeyResult
         }
         
-        func encryptWithPadding(
+        func signWithPadding(
             _ otp: TestOTP,
             with privateKey: TestPrivateKey
         ) throws -> Data {
             
             encryptionCallCount += 1
-            return try encryptWithPaddingResult.get()
+            return try signWithPaddingResult.get()
         }
         
         func encryptWithTransportPublicRSAKey(

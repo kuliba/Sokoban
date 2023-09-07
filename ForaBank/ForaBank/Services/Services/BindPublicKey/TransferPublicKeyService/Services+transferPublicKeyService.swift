@@ -172,7 +172,7 @@ extension Services {
     ) -> TransferOTPEncrypter {
         
         #warning("try P384 direct encryption?")
-        let encryptWithPadding: TransferOTPEncrypter.EncryptWithPadding = { otp, privateKey in
+        let signWithPadding: TransferOTPEncrypter.SignWithPadding = { otp, privateKey in
             
             let key = try ForaCrypto.Crypto.createSecKeyWith(
                 data: privateKey.derRepresentation
@@ -194,7 +194,7 @@ extension Services {
         }
         
         return .init(
-            encryptWithPadding: encryptWithPadding,
+            signWithPadding: signWithPadding,
             encryptWithTransportPublicRSAKey: encryptWithTransportPublicRSAKey
         )
     }

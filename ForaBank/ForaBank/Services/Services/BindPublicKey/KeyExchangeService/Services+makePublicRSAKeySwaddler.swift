@@ -45,7 +45,7 @@ extension Services {
         symmetricKey: SymmetricKey
     ) throws -> TransferPublicRSAKeySwaddler {
         
-        let encryptWithPadding: TOTPEncrypter.EncryptWithPadding = { _,_ in
+        let signWithPadding: TOTPEncrypter.SignWithPadding = { _,_ in
             
             #warning("FIX THIS")
             return unimplemented("EncryptWithPadding")
@@ -61,7 +61,7 @@ extension Services {
         }
         
         let otpEncrypter = TOTPEncrypter(
-            encryptWithPadding: encryptWithPadding,
+            signWithPadding: signWithPadding,
             encryptWithTransportPublicRSAKey: encryptWithTransportPublicRSAKey
         )
         
