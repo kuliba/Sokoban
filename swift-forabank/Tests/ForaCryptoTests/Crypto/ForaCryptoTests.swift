@@ -980,17 +980,3 @@ extension Crypto {
         return .init(bytes: decryptedMetadataBytes, count: decryptedMetadataLength)
     }
 }
-
-extension SecKey {
-    
-    func rawRepresentation() throws -> Data {
-        
-        var error: Unmanaged<CFError>?
-        guard let rawRepresentation = SecKeyCopyExternalRepresentation(self, &error) as? Data
-        else {
-            throw NSError(domain: "SecKeyCopyExternalRepresentation Error", code: 0)
-        }
-        
-        return rawRepresentation
-    }
-}
