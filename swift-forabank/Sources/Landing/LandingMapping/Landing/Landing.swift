@@ -41,6 +41,7 @@ extension Landing {
             case horizontalRectangleImage(ListHorizontalRectangleImage)
             case horizontalRoundImage(ListHorizontalRoundImage)
             case verticalRoundImage(ListVerticalRoundImage)
+            case dropDownTexts(ListDropDownTexts)
         }
         
         public enum Multi: Equatable {
@@ -48,10 +49,15 @@ extension Landing {
             case markersText(MultiMarkersText)
             case text(MultiText)
             case textsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
+            case buttons(MultiButtons)
+            case typeButtons(MultiTypeButtons)
         }
 
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
+        case image(ImageBlock)
+        case imageSvg(ImageSvg)
+        case verticalSpacing(VerticalSpacing)
     }
 }

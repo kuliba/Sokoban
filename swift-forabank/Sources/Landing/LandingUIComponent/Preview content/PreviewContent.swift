@@ -99,7 +99,11 @@ extension Landing.ListHorizontalRoundImage.Config {
         backgroundColor: .grayLightest,
         title: .defaultValue,
         subtitle: .defaultValue,
-        detail: .defaultValue
+        detail: .defaultValue,
+        item: .init(cornerRadius: 28, width: 56, spacing: 8),
+        cornerRadius: 12,
+        spacing: 16,
+        height: 184
     )
 }
 
@@ -116,7 +120,9 @@ extension Landing.ListHorizontalRoundImage.Config.Subtitle {
     static let defaultValue: Self = .init(
         color: .textSecondary,
         background: .white,
-        font: .title
+        font: .title,
+        cornerRadius: 12,
+        padding: .init(horizontal: 6, vertical: 6)
     )
 }
 

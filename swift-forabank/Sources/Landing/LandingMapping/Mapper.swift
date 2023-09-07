@@ -93,25 +93,25 @@ private extension Landing.DataView {
         case let .iconWithTwoTextLines(x):
             self = .iconWithTwoTextLines(.init(data: x))
             
-        case let .list(.listHorizontalRectangleImage(x)):
+        case let .list(.horizontalRectangleImage(x)):
             self = .list(.horizontalRectangleImage(.init(data: x)))
             
-        case let .list(.listHorizontalRoundImage(x)):
+        case let .list(.horizontalRoundImage(x)):
             self = .list(.horizontalRoundImage(.init(data: x)))
             
-        case let .list(.listVerticalRoundImage(x)):
+        case let .list(.verticalRoundImage(x)):
             self = .list(.verticalRoundImage(.init(data: x)))
             
-        case let .multi(.multiLineHeader(x)):
+        case let .multi(.lineHeader(x)):
             self = .multi(.lineHeader(.init(data: x)))
             
-        case let .multi(.multiMarkersText(x)):
+        case let .multi(.markersText(x)):
             self = .multi(.markersText(.init(data: x)))
             
-        case let .multi(.multiText(x)):
+        case let .multi(.text(x)):
             self = .multi(.text(.init(data: x)))
             
-        case let .multi(.multiTextsWithIconsHorizontalArray(x)):
+        case let .multi(.textsWithIconsHorizontalArray(x)):
             self = .multi(.textsWithIconsHorizontalArray(.init(data: x)))
             
         case let .pageTitle(x):
@@ -119,7 +119,189 @@ private extension Landing.DataView {
             
         case let .textsWithIconHorizontal(x):
             self = .textsWithIconHorizontal(.init(data: x))
+            
+        case let .multi(.buttons(x)):
+            self = .multi(.buttons(.init(data: x)))
+            
+        case let .multi(.typeButtons(x)):
+            self = .multi(.typeButtons(.init(data: x)))
+            
+        case let .image(x):
+            self = .image(.init(data: x))
+            
+        case let .imageSvg(x):
+            self = .imageSvg(.init(data: x))
+            
+        case let .list(.dropDownTexts(x)):
+            self = .list(.dropDownTexts(.init(data: x)))
+            
+        case let .verticalSpacing(x):
+            self = .verticalSpacing(.init(data: x))
         }
+    }
+}
+
+private extension Landing.VerticalSpacing {
+    
+    init(
+        data: DecodableLanding.Data.VerticalSpacing
+    ) {
+        
+        self.init(
+            backgroundColor: .init(data.backgroundColor),
+            type: .init(data.type))
+    }
+}
+
+private extension Landing.ListDropDownTexts {
+    
+    init(
+        data: DecodableLanding.Data.ListDropDownTexts
+    ) {
+        
+        self.init(
+            title: data.title.map{.init($0)},
+            list: data.list.compactMap {
+                .init(data:$0)
+            }
+        )
+    }
+}
+
+private extension Landing.ListDropDownTexts.Item {
+    
+    init(
+        data: DecodableLanding.Data.ListDropDownTexts.Item
+    ) {
+        self.init(
+            title: data.title,
+            description: data.description
+        )
+    }
+}
+
+private extension Landing.ImageSvg {
+    
+    init(
+        data: DecodableLanding.Data.ImageSvg
+    ) {
+        self.init(
+            backgroundColor: .init(rawValue: data.backgroundColor),
+            md5hash: .init(rawValue: data.md5hash)
+        )
+    }
+}
+
+private extension Landing.ImageBlock {
+    
+    init(
+        data: DecodableLanding.Data.ImageBlock
+    ) {
+        self.init(
+            withPlaceholder: .init(rawValue: data.withPlaceholder),
+            backgroundColor: .init(rawValue: data.backgroundColor),
+            link: .init(rawValue: data.link)
+        )
+    }
+}
+
+private extension Landing.MultiTypeButtons {
+    
+    init(
+        data: DecodableLanding.Data.MultiTypeButtons
+    ) {
+        self.init(
+            md5hash: data.md5hash,
+            backgroundColor: data.backgroundColor,
+            text: data.text,
+            buttonText: data.buttonText,
+            buttonStyle: data.buttonStyle,
+            textLink: data.textLink,
+            action: data.action.map{.init(data: $0)},
+            detail: data.detail.map{.init(data: $0)})
+    }
+}
+
+private extension Landing.MultiTypeButtons.Action {
+    
+    init(
+        data: DecodableLanding.Data.MultiTypeButtons.Action
+    ) {
+        self.init(
+            type: data.type,
+            outputData: data.outputData.map {
+                .init(data: $0)
+            })
+    }
+}
+
+private extension Landing.MultiTypeButtons.Action.OutputData {
+    
+    init(
+        data: DecodableLanding.Data.MultiTypeButtons.Action.OutputData
+    ) {
+        self.init(
+            tarif: .init(rawValue: data.tarif),
+            type: .init(rawValue: data.type))
+    }
+}
+
+private extension Landing.MultiTypeButtons.Detail {
+    
+    init(
+        data: DecodableLanding.Data.MultiTypeButtons.Detail
+    ) {
+        self.init(groupId: .init(rawValue: data.groupId), viewId: .init(rawValue: data.viewId))
+    }
+}
+private extension Landing.MultiButtons {
+    
+    init(
+        data: DecodableLanding.Data.MultiButtons
+    ) {
+        self.init(
+            list: data.list.map(Landing.MultiButtons.Item.init(data:)))
+    }
+}
+
+private extension Landing.MultiButtons.Item {
+    
+    init(
+        data: DecodableLanding.Data.MultiButtons.Item
+    ) {
+        
+        let detail: Landing.MultiButtons.Item.Detail? = data.detail.map(Landing.MultiButtons.Item.Detail.init(data:))
+        
+        let action: Landing.MultiButtons.Item.Action? = data.action.map(Landing.MultiButtons.Item.Action.init(data:))
+        
+        self.init(
+            text: data.text,
+            style: data.style,
+            detail: detail,
+            link: data.link,
+            action: action
+        )
+    }
+}
+
+private extension Landing.MultiButtons.Item.Detail {
+    
+    init(
+        data: DecodableLanding.Data.MultiButtons.Item.Detail
+    ) {
+        let groupId: Landing.MultiButtons.Item.Detail.GroupId = .init(rawValue: data.groupId)
+        let viewId: Landing.MultiButtons.Item.Detail.ViewId = .init(rawValue: data.viewId)
+        
+        self.init(groupId: groupId, viewId: viewId)
+    }
+}
+
+private extension Landing.MultiButtons.Item.Action {
+    
+    init(
+        data: DecodableLanding.Data.MultiButtons.Item.Action
+    ) {
+        self.init(type: .init(rawValue: data.type))
     }
 }
 
@@ -153,7 +335,13 @@ private extension Landing.ListVerticalRoundImage {
             displayedCount: data.displayedCount,
             dropButtonOpenTitle: data.dropButtonOpenTitle,
             dropButtonCloseTitle: data.dropButtonCloseTitle,
-            list: data.list.compactMap { $0.map { .init(data: $0) }}
+            list: data.list.compactMap {
+                if let data = $0 {
+                    
+                    return .init(data: data)
+                }
+                return nil
+            }
         )
     }
 }
@@ -170,7 +358,8 @@ private extension Landing.ListVerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: .init(data: data.detail))
+            detail: data.detail.map(Landing.ListVerticalRoundImage.ListItem.Detail.init(data:))
+        )
     }
 }
 
@@ -192,7 +381,11 @@ private extension Landing.MultiText {
         data: DecodableLanding.Data.MultiText
     ) {
         let text: [Landing.MultiText.Text] = data.list.compactMap {
-            $0.map { Landing.MultiText.Text.init($0) }
+            
+            if let text = $0 {
+                return Landing.MultiText.Text.init(text)
+            }
+            return nil
         }
         self.init(text: text)
     }
@@ -216,9 +409,13 @@ private extension Landing.ListHorizontalRectangleImage.Item {
     ) {
         
         let detail: Landing.ListHorizontalRectangleImage.Item.Detail? = {
-            data.detail.map {
-                        .init(groupId: $0.groupId, viewId: $0.viewId)
-                    }
+            
+            if let details = data.detail {
+                return .init(
+                    groupId: details.groupId,
+                    viewId: details.viewId)
+            }
+            return nil
         }()
         
         self.init(imageLink: data.imageLink, link: data.link, detail: detail)
@@ -258,11 +455,10 @@ private extension Landing.ListHorizontalRoundImage.ListItem {
     init(
         data: DecodableLanding.Data.ListHorizontalRoundImage.ListItem
     ) {
-        
         self.md5hash = data.md5hash
         self.title = data.title
         self.subInfo = data.subInfo
-        self.detail = .init(data: data.detail)
+        self.detail = data.detail.map(Landing.ListHorizontalRoundImage.ListItem.Detail.init(data:))
     }
 }
 
@@ -271,8 +467,8 @@ private extension Landing.ListHorizontalRoundImage.ListItem.Detail {
     init(
         data: DecodableLanding.Data.ListHorizontalRoundImage.ListItem.Detail
     ) {
-        self.groupId = data.groupId
-        self.viewId = data.viewId
+        self.groupId = .init(rawValue: data.groupId)
+        self.viewId = .init(rawValue: data.viewId)
     }
 }
 

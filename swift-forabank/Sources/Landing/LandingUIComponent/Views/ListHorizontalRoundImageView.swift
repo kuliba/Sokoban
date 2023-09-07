@@ -19,10 +19,10 @@ struct ListHorizontalRoundImageView: View {
         
         ZStack {
             
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: config.cornerRadius)
                 .foregroundColor(config.backgroundColor)
             
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: config.spacing) {
                 
                 if let title = model.title {
                     
@@ -43,7 +43,7 @@ struct ListHorizontalRoundImageView: View {
             }
             .padding(.horizontal)
         }
-        .frame(height: 148)
+        .frame(height: config.height)
         .padding(.horizontal)
     }
 }
@@ -60,10 +60,10 @@ extension ListHorizontalRoundImageView {
             Text(text)
                 .font(config.font)
                 .foregroundColor(config.color)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
+                .padding(.horizontal, config.padding.horizontal)
+                .padding(.vertical, config.padding.vertical)
                 .background(config.background)
-                .cornerRadius(12)
+                .cornerRadius(config.cornerRadius)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -85,12 +85,12 @@ extension ListHorizontalRoundImageView {
                 
                 ZStack {
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: config.item.spacing) {
                         
                         item.image
                             .resizable()
-                            .cornerRadius(28)
-                            .frame(width: 56, height: 56)
+                            .cornerRadius(config.item.cornerRadius)
+                            .frame(width: config.item.width, height: config.item.width)
                         
                         if let title = item.title {
                             

@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 31.08.2023.
 //
 
-import Foundation
+import Tagged
 
 public extension Landing {
     
@@ -18,13 +18,13 @@ public extension Landing {
             
             public let md5hash: String
             public let title, subInfo: String?
-            public let detail: Detail
+            public let detail: Detail?
             
             public init(
                 md5hash: String,
                 title: String?,
                 subInfo: String?,
-                details: Detail
+                details: Detail?
             ) {
                 self.md5hash = md5hash
                 self.title = title
@@ -34,15 +34,22 @@ public extension Landing {
             
             public struct Detail: Equatable {
                 
-                public let groupId, viewId: String
+                public let groupId: GroupId
+                public let viewId: ViewId
                 
                 public init(
-                    groupId: String,
-                    viewId: String
+                    groupId: GroupId,
+                    viewId: ViewId
                 ) {
                     self.groupId = groupId
                     self.viewId = viewId
                 }
+                
+                public typealias GroupId = Tagged<_GroupId, String>
+                public typealias ViewId = Tagged<_ViewId, String>
+                
+                public enum _GroupId {}
+                public enum _ViewId {}
             }
         }
         

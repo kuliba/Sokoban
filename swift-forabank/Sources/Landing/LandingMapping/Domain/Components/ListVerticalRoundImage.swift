@@ -22,7 +22,7 @@ extension DecodableLanding.Data {
             let md5hash: String
             let title, subInfo: String?
             let link, appStore, googlePlay: String?
-            let detail: Detail
+            let detail: Detail?
                         
             enum CodingKeys: String, CodingKey {
                 case md5hash, title, subInfo, link, appStore, googlePlay

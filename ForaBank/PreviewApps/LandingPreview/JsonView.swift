@@ -212,7 +212,7 @@ private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem {
         data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem
     ) {
         
-        self.init(image: .bolt, title: data.title, subInfo: data.subInfo, detail: .init(data: data.detail))
+        self.init(image: .bolt, title: data.title, subInfo: data.subInfo, detail: data.detail.map{ .init(data: $0) })
     }
 }
 
@@ -222,7 +222,7 @@ private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem.D
         data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem.Detail
     ) {
         
-        self.init(groupId: data.groupId, viewId: data.viewId)
+        self.init(groupId: data.groupId.rawValue, viewId: data.viewId.rawValue)
     }
 }
 
@@ -293,7 +293,11 @@ extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config {
         backgroundColor: .grayLightest,
         title: .defaultValue,
         subtitle: .defaultValue,
-        detail: .defaultValue
+        detail: .defaultValue,
+        item: .init(cornerRadius: 28, width: 56, spacing: 8),
+        cornerRadius: 12,
+        spacing: 16,
+        height: 184
     )
 }
 
@@ -310,7 +314,9 @@ extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Subtitle {
     static let defaultValue: Self = .init(
         color: .textSecondary,
         background: .white,
-        font: .title
+        font: .title,
+        cornerRadius: 12,
+        padding: .init(horizontal: 6, vertical: 6)
     )
 }
 
