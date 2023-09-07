@@ -26,7 +26,11 @@ public extension Crypto {
         _ data: Data
     ) throws -> Data {
         
-        try transportEncrypt(data, padding: .PKCS1)
+        try rsaEncrypt(
+            data: data,
+            withPublicKey: transportKey(),
+            algorithm: .rsaEncryptionRaw
+        )
     }
     
     /// Encrypts given data using transport key and padding.
