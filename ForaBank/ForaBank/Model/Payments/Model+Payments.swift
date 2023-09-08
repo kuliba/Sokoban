@@ -855,7 +855,11 @@ extension Model {
     }
     
     /// update dependend on each other parameters
-    func paymentsProcessDependencyReducer(operation: Payments.Operation, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(
+        operation: Payments.Operation,
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable]
+    ) -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .fssp:
