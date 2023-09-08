@@ -28,7 +28,7 @@ class MeToMeViewController: UIViewController {
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var bankField = ForaInput(
         viewModel: ForaInputModel(
-            title: "В банка",
+            title: "Из банка",
             image: #imageLiteral(resourceName: "BankIcon"),
             isEditable: true,
             showChooseButton: true)
