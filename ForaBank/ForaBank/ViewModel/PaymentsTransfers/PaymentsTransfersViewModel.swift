@@ -1120,7 +1120,8 @@ extension PaymentsTransfersViewModel {
             (.mobile, let paymentData),
             (.outside, let paymentData),
             (.phone, let paymentData),
-            (.transport, let paymentData):
+            (.transport, let paymentData),
+            (.taxAndStateService, let paymentData):
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
@@ -1138,9 +1139,6 @@ extension PaymentsTransfersViewModel {
                     action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                 )
 
-        case (.taxAndStateService, let paymentData as PaymentServiceData):
-            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
-            
         default: //error matching
             bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
         }

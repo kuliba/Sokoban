@@ -445,7 +445,10 @@ extension Model {
                 
             case .transport:
                 return .transport
-                
+           
+            case .taxAndStateService:
+                return try latestPayment.getServiceIdentifierForTaxService()
+
             default:
                 throw Payments.Error.unsupported
             }
