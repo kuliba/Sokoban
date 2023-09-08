@@ -36,7 +36,6 @@ class CryptoSwaddlerTestCase: XCTestCase {
         .init(value: value)
     }
     
-    
     func anySharedSecret<OTP>(
         bitCount: Int = 64
     ) -> SwaddleKeyDomain<OTP>.SharedSecret {

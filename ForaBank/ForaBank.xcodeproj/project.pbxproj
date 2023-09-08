@@ -444,6 +444,7 @@
 		2A73C22A2A03A57800C68A32 /* getScenarioQRData_1_2_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
 		2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7AB1922AA1065400D37BD6 /* LinkableText */; };
+		2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */; };
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
@@ -2392,6 +2393,7 @@
 		2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldModel.xctestplan; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
 		2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsGroupSettings.swift; sourceTree = "<group>"; };
+		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
 		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
@@ -4885,6 +4887,7 @@
 				2A4593CE2A7CF908008593A3 /* Services+Endpoint */,
 				2A5190372A7E11C90014B0B7 /* RequestFactory */,
 				2A1F08562A7905B500C5B11B /* Services+getProcessingSessionCodeTests.swift */,
+				2A80D8162AAA4A000054A121 /* BindPublicKey */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -5287,6 +5290,22 @@
 				2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */,
 			);
 			path = Mappers;
+			sourceTree = "<group>";
+		};
+		2A80D8162AAA4A000054A121 /* BindPublicKey */ = {
+			isa = PBXGroup;
+			children = (
+				2A80D8172AAA4A0B0054A121 /* TransferPublicKeyService */,
+			);
+			path = BindPublicKey;
+			sourceTree = "<group>";
+		};
+		2A80D8172AAA4A0B0054A121 /* TransferPublicKeyService */ = {
+			isa = PBXGroup;
+			children = (
+				2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */,
+			);
+			path = TransferPublicKeyService;
 			sourceTree = "<group>";
 		};
 		2A81425D2A0B9209005CF83F /* SearchBar */ = {
@@ -12153,6 +12172,7 @@
 				77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */,
 				7743781829F1797000C3D5B1 /* CreateInterestDepositTransferPayloadTests.swift in Sources */,
 				2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */,
+				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,
 				2AEDAD5429A6355600017F73 /* ServerCommandsDictionaryControllerGetMobileListResponseHelpersTests.swift in Sources */,
 				2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
