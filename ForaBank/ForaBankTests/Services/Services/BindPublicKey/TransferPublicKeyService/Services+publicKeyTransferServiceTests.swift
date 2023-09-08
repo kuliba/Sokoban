@@ -14,10 +14,12 @@ import XCTest
 
 final class Services_publicKeyTransferServiceTests: XCTestCase {
     
+    // MARK: - transfer
+    
     func test_transfer_shouldSetURLPath_bindPublicKeyWithEventID() throws {
         
         let (request, _) = try request()
-
+        
         let path = try XCTUnwrap(request.url?.lastPathComponent)
         
         XCTAssertEqual(path, "bindPublicKeyWithEventId")
@@ -28,7 +30,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         let eventID = "event_123"
         let (request, _) = try request(eventID: eventID)
         let extractedEventID = try extractSecretJSON(fromRequest: request).eventID
-
+        
         XCTAssertNoDiff(extractedEventID, eventID)
     }
     
@@ -37,7 +39,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         let (request, sharedSecret) = try request()
         let (_, json) = try extractSecretJSON(fromRequest: request)
         let (procClientSecretOTP, clientPublicKeyRSA) = try decryptProcClientJSON(from: json, with: sharedSecret)
-
+        
         //????
         XCTAssertFalse(procClientSecretOTP.isEmpty)
         XCTAssertFalse(clientPublicKeyRSA.isEmpty)
@@ -56,7 +58,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
     ) {
         let httpClient = HTTPClientSpy()
         let sut = Services.publicSecKeyTransferService(httpClient: httpClient)
-
+        
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -136,7 +138,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
     ) {
         let aes256CBC = try ForaCrypto.AES256CBC(key: sharedSecret.data)
         let decrypted = try aes256CBC.decrypt(encrypted)
-       
+        
         let procClient = try JSONDecoder().decode(ProcClient.self, from: decrypted)
         
         let procClientSecretOTP = try XCTUnwrap(
@@ -155,5 +157,70 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         
         let procClientSecretOTP: String
         let clientPublicKeyRSA: String
+    }
+    
+    // MARK: - transport key
+    
+    func test_transportKey() throws {
+        
+        let key = try ForaCrypto.Crypto.transportKey()
+        
+        try expectAttributes(ofPublicSecKey: key)
+    }
+    
+    private func expectAttributes(
+        ofPublicSecKey key: SecKey,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        XCTAssertTrue(SecKeyGetTypeID() == CFGetTypeID(key), file: file, line: line)
+        
+        let attributes = try XCTUnwrap(
+            SecKeyCopyAttributes(key) as? [String: Any],
+            file: file, line: line
+        )
+        
+        let keyClass = try XCTUnwrap(
+            attributes[kSecAttrKeyClass as String],
+            file: file, line: line
+        )
+        XCTAssertEqual(keyClass as! CFString, kSecAttrKeyClassPublic, file: file, line: line)
+        
+        let keySize = try XCTUnwrap(
+            attributes[kSecAttrKeySizeInBits as String] as? Int,
+            file: file, line: line
+        )
+        XCTAssertEqual(keySize, 4_096, file: file, line: line)
+        
+        let keyType = try XCTUnwrap(
+            attributes[kSecAttrKeyType as String] as? String,
+            file: file, line: line
+        )
+        XCTAssertEqual(keyType, kSecAttrKeyTypeRSA as String, file: file, line: line)
+        
+        let effectiveSize = try XCTUnwrap(
+            attributes[kSecAttrEffectiveKeySize as String] as? Int,
+            file: file, line: line
+        )
+        XCTAssertEqual(effectiveSize, 4_096, file: file, line: line)
+        
+        let canEncrypt = try XCTUnwrap(
+            attributes[kSecAttrCanEncrypt as String] as? Bool,
+            file: file, line: line
+        )
+        XCTAssertTrue(canEncrypt, file: file, line: line)
+        
+        let canDecrypt = try XCTUnwrap(
+            attributes[kSecAttrCanDecrypt as String] as? Bool,
+            file: file, line: line
+        )
+        XCTAssertTrue(canDecrypt, file: file, line: line)
+        
+        let canDerive = try XCTUnwrap(
+            attributes[kSecAttrCanDerive as String] as? Bool,
+            file: file, line: line
+        )
+        XCTAssertFalse(canDerive, file: file, line: line)
     }
 }
