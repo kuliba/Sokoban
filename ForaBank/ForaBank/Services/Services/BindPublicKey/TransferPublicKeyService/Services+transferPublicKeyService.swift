@@ -20,7 +20,8 @@ extension Services {
     typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
     
     static func publicSecKeyTransferService(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey
     ) -> PublicKeyTransferService {
         
         let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
@@ -33,7 +34,7 @@ extension Services {
             
             let procClientSecretOTP = try ForaCrypto.Crypto.rsaEncrypt(
                 data: clientSecretOTP,
-                withPublicKey: ForaCrypto.Crypto.transportKey(),
+                withPublicKey: transportKey(),
                 algorithm: .rsaEncryptionRaw
             )
             
