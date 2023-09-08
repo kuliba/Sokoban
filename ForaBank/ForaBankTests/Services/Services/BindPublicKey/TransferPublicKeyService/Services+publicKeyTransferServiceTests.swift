@@ -36,13 +36,33 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
     
     func test_transfer_shouldSetDataFieldOfSecretJSON() throws {
         
-        let (request, sharedSecret) = try request()
+        let (privateKey, publicKey) = try createRandomSecKeys()
+        let (request, sharedSecret) = try request(transportKey: { publicKey })
         let (_, json) = try extractSecretJSON(fromRequest: request)
-        let (procClientSecretOTP, clientPublicKeyRSA) = try decryptProcClientJSON(from: json, with: sharedSecret)
+        let (procClientSecretOTPData, clientPublicKeyRSAData) = try decryptProcClientJSON(from: json, with: sharedSecret)
         
         //????
-        XCTAssertFalse(procClientSecretOTP.isEmpty)
-        XCTAssertFalse(clientPublicKeyRSA.isEmpty)
+        XCTAssertFalse(procClientSecretOTPData.isEmpty)
+        XCTAssertFalse(clientPublicKeyRSAData.isEmpty)
+        
+        let clientSecretOTP = try ForaCrypto.Crypto.rsaDecrypt(
+            data: procClientSecretOTPData,
+            withPrivateKey: privateKey,
+            algorithm: .rsaEncryptionRaw
+        )
+        
+        let clientPublicKeyRSA = try Crypto.createSecKeyWith(
+            data: clientPublicKeyRSAData
+        )
+
+        let secretOTP = try ForaCrypto.Crypto.rsaDecrypt(
+            data: clientSecretOTP,
+            withPrivateKey: clientPublicKeyRSA,
+            algorithm: .rsaEncryptionRaw
+        )
+        
+        XCTAssertNoDiff(String(data: secretOTP, encoding: .utf8), "")
+        XCTAssertNoDiff(secretOTP.base64EncodedString(), "")
     }
     
     // MARK: - Helpers
@@ -50,6 +70,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
     private typealias SharedSecret = KeyTransferService<Services.TransferOTP, Services.ExchangeEventID>.SharedSecret
     
     private func makeSUT(
+        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> (
@@ -57,7 +78,10 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         spy: HTTPClientSpy
     ) {
         let httpClient = HTTPClientSpy()
-        let sut = Services.publicSecKeyTransferService(httpClient: httpClient)
+        let sut = Services.publicSecKeyTransferService(
+            httpClient: httpClient,
+            transportKey: transportKey
+        )
         
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -74,6 +98,7 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
     }
     
     private func request(
+        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey,
         otp: String = "abc123",
         eventID: String = "event_1",
         file: StaticString = #file,
@@ -82,7 +107,10 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         request: URLRequest,
         sharedSecret: SharedSecret
     ) {
-        let (sut, spy) = try makeSUT(file: file, line: line)
+        let (sut, spy) = try makeSUT(
+            transportKey: transportKey,
+            file: file, line: line
+        )
         let sharedSecret = try anySharedSecret()
         let exp = expectation(description: "wait for completion")
         var results = [KeyTransferDomain.Result]()
