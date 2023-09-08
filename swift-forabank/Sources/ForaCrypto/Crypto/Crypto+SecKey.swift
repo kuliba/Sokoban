@@ -26,7 +26,7 @@ public extension Crypto {
         return signed
     }
 
-    static func veryfy(
+    static func verify(
         _ data: Data,
         withPublicKey key: SecKey,
         signature: Data,
