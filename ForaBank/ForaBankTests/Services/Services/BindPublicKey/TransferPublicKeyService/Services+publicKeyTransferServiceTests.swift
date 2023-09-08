@@ -159,6 +159,25 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         let clientPublicKeyRSA: String
     }
     
+    // MARK: - SecKey
+    
+    func test_createRandomSecKeys_shouldCreatePublicKey() throws {
+        
+        let (_, publicKey) = try createRandomSecKeys()
+
+        try expectAttributes(ofPublicSecKey: publicKey)
+    }
+    
+    private func createRandomSecKeys() throws -> (
+        privateKey: SecKey,
+        publicKey: SecKey
+    ) {
+        try Crypto.createRandomSecKeys(
+            keyType: kSecAttrKeyTypeRSA,
+            keySizeInBits: 4096
+        )
+    }
+    
     // MARK: - transport key
     
     func test_transportKey() throws {
