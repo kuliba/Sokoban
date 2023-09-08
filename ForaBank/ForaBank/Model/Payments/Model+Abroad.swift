@@ -292,11 +292,11 @@ extension Model {
                 currencySymbol = symbol
             }
             
-            if let filterCurriencies = try? parameters.parameter(forIdentifier: .countryCurrencyFilter),
-               let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
-               splittedCurrency.count > 1 {
+            if let filterCurrencies = try? parameters.parameter(forIdentifier: .countryCurrencyFilter),
+               let splitCurrencies = filterCurrencies.value?.components(separatedBy: ";"),
+               splitCurrencies.count > 1 {
                 
-                let currenciesList = self.reduceDeliveryCurrency(productId: productId, splittedCurrency: splittedCurrency)
+                let currenciesList = self.reduceDeliveryCurrency(productId: productId, splitCurrencies: splitCurrencies)
                 let selectedCurrency = currenciesList.contains(where: { $0.description == amountParameter.deliveryCurrency?.selectedCurrency.description }) ? amountParameter.deliveryCurrency?.selectedCurrency : currenciesList.first
                 
                 let updatedAmountParameter = amountParameter.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: selectedCurrency ?? .rub, currenciesList: currenciesList))
@@ -305,26 +305,7 @@ extension Model {
                     return nil
                 }
 
-                switch operation.source {
-                case let .template(templateId):
-                    let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
-                    let parameterList = template?.parameterList.last as? TransferAnywayData
-                    let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
-                    let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
-                    
-                    if let currencySymbol = selectedCurrency?.currencySymbol,
-                       let code = selectedCurrency?.code{
-                        
-                        let updateAmount = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount) as? Payments.ParameterAmount
-                        return updateAmount?.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: .init(description: code), currenciesList: currenciesList))
-                 
-                    } else {
-                        
-                        return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
-                    }
-                default:
-                    return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
-                }
+                return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
             }
             
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
@@ -1071,9 +1052,9 @@ private extension TransferResponseData {
 
 extension Model {
     
-    func reduceDeliveryCurrency(productId: ProductData.ID, splittedCurrency: [String]) -> [Currency] {
+    func reduceDeliveryCurrency(productId: ProductData.ID, splitCurrencies: [String]) -> [Currency] {
         
-        var clearCurrency = splittedCurrency
+        var clearCurrency = splitCurrencies
         clearCurrency.remove(at: 0)
         
         let deliveryCurrency = clearCurrency.compactMap(deliveryCurrencyMapping(dataType:))
@@ -1087,12 +1068,12 @@ extension Model {
     
     func reduceFilterCurrencies(filterCurrencies: String?) -> [Currency] {
         
-        guard var splittedCurrency = filterCurrencies?.components(separatedBy: ";")
+        guard var splitCurrencies = filterCurrencies?.components(separatedBy: ";")
         else { return [] }
         
-        splittedCurrency.remove(at: 0)
+        splitCurrencies.remove(at: 0)
         
-        return splittedCurrency
+        return splitCurrencies
             .compactMap(deliveryCurrencyMapping(dataType:))
             .compactMap({ $0.selectedCurrency })
     }
