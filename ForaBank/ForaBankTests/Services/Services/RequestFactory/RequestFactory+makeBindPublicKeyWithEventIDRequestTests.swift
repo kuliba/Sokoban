@@ -25,7 +25,7 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
         }
     }
     
-    func test_makeBindPublicKeyWithEventIDRequest_shouldThrowOnEmptyKeyString() throws {
+    func test_makeBindPublicKeyWithEventIDRequest_shouldThrowOnEmptyKey() throws {
         
         XCTAssertThrowsError(
             try makeBindPublicKeyWithEventIDRequest(keyString: "")
@@ -57,10 +57,16 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
     func test_makeBindPublicKeyWithEventIDRequest_shouldSetRequestBody() throws {
         
         let (publicKeyWithEventID, request) = try makeBindPublicKeyWithEventIDRequest()
-        let data = try XCTUnwrap(request.httpBody)
-        let decodedRequest = try JSONDecoder().decode(DecodablePublicKeyWithEventID.self, from: data)
+        let httpBody = try XCTUnwrap(request.httpBody)
+        let decodedRequest = try JSONDecoder().decode(
+            DecodablePublicKeyWithEventID.self,
+            from: httpBody
+        )
         
-        XCTAssertNoDiff(publicKeyWithEventID, decodedRequest.publicKeyWithEventID)
+        XCTAssertNoDiff(
+            decodedRequest.publicKeyWithEventID,
+            publicKeyWithEventID
+        )
     }
     
     // MARK: - Helpers
@@ -72,7 +78,10 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
         publicKeyWithEventID: PublicKeyWithEventID,
         request: URLRequest
     ) {
-        let publicKeyWithEventID = anyPublicKeyWithEventID(eventID: eventID, keyString: keyString)
+        let publicKeyWithEventID = anyPublicKeyWithEventID(
+            eventID: eventID,
+            keyData: Data(keyString.utf8)
+        )
         
         let request = try RequestFactory.makeBindPublicKeyWithEventIDRequest(with: publicKeyWithEventID)
         
@@ -81,11 +90,11 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
     
     private func anyPublicKeyWithEventID(
         eventID: String = "any eventID",
-        keyString: String = "any data"
+        keyData: Data = Data("any data".utf8)
     ) -> PublicKeyWithEventID {
         
         .init(
-            keyString: keyString,
+            key: .init(keyData: keyData),
             eventID: .init(value: eventID)
         )
     }
@@ -97,16 +106,22 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
         
         init(_ publicKeyWithEventID: PublicKeyWithEventID) {
             
-            self.data = publicKeyWithEventID.keyString
+            self.data = publicKeyWithEventID.key.base64String
             self.eventId = publicKeyWithEventID.eventID.value
         }
         
-        var publicKeyWithEventID: PublicKeyWithEventID {
+        var publicKeyWithEventID: PublicKeyWithEventID? {
             
-            .init(
-                keyString: data,
-                eventID: .init(value: eventId)
-            )
+            Data(
+                base64Encoded: data,
+                options: .ignoreUnknownCharacters
+            ).map {
+                
+                .init(
+                    key: .init(keyData: $0),
+                    eventID: .init(value: eventId)
+                )
+            }
         }
     }
 }

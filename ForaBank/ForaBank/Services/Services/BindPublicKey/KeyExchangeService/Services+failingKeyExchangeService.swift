@@ -123,7 +123,7 @@ final class FailingKeyExchangeService: KeyExchangeServiceProtocol {
         
         
         let publicKeyWithEventID = PublicKeyWithEventID(
-            keyString: payload.sharedSecret.base64EncodedString(),
+            key: .init(keyData: payload.sharedSecret),
             eventID: .init(value: payload.eventID.value)
         )
         
