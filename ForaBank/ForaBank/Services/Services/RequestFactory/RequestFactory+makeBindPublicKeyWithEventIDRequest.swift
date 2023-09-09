@@ -9,26 +9,28 @@ import CvvPin
 import Foundation
 import TransferPublicKey
 
+typealias BindKeyExchangePayload = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.Payload
+
 extension RequestFactory {
     
     static func makeBindPublicKeyWithEventIDRequest(
-        with publicKeyWithEventID: BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
+        with payload: BindKeyExchangePayload
     ) throws -> URLRequest {
         
         try makeBindPublicKeyWithEventIDRequest(
-            with: .init(publicKeyWithEventID)
+            with: .init(payload)
         )
     }
     
     static func makeBindPublicKeyWithEventIDRequest(
-        with publicKeyWithEventID: PublicKeyWithEventID
+        with payload: PublicKeyWithEventID
     ) throws -> URLRequest {
         
-        guard !publicKeyWithEventID.eventID.isEmpty else {
+        guard !payload.eventID.isEmpty else {
             throw PublicKeyWithEventIDError.emptyEventID
         }
         
-        guard !publicKeyWithEventID.keyString.isEmpty else {
+        guard !payload.key.isEmpty else {
             throw PublicKeyWithEventIDError.emptyKeyString
         }
         
@@ -38,7 +40,7 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.httpBody = publicKeyWithEventID.json
+        request.httpBody = try? payload.json
         
         return request
     }
@@ -50,25 +52,29 @@ extension RequestFactory {
     }
 }
 
+// MARK: - Adapters
+
 private extension PublicKeyWithEventID {
     
-    init(
-        _ transferPublicKeyWithEventID: BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
-    ) {
+    init(_ payload: BindKeyExchangePayload) {
+        
         self.init(
-            keyString: transferPublicKeyWithEventID.data.base64EncodedString(),
-            eventID: .init(value: transferPublicKeyWithEventID.eventID.value)
+            key: .init(keyData: payload.data),
+            eventID: .init(value: payload.eventID.value)
         )
     }
 }
 
 private extension PublicKeyWithEventID {
     
-    var json: Data? {
+    var json: Data {
         
-        try? JSONSerialization.data(withJSONObject: [
-            "eventId": eventID.value,
-            "data": keyString
-        ] as [String: Any])
+        get throws {
+            
+            try JSONSerialization.data(withJSONObject: [
+                "eventId": eventID.value,
+                "data": key.base64String
+            ] as [String: Any])
+        }
     }
 }
