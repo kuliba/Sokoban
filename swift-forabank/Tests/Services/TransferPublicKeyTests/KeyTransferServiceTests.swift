@@ -241,7 +241,6 @@ final class KeyTransferServiceTests: XCTestCase {
         }
     }
     
-    
     private final class BingPublicKeyWithEventIDSpy {
         
         typealias TestBindKeyDomain = BindKeyDomain<TestEventID>
@@ -291,7 +290,7 @@ private func anyEventID() -> TestEventID {
 // MARK: - DSL
 
 private extension KeyTransferService
-where EventID == TestEventID ,
+where EventID == TestEventID,
       OTP == TestOTP {
     
     func transfer(completion: @escaping TransferCompletion) {
