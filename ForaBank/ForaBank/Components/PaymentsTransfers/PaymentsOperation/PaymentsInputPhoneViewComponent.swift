@@ -32,16 +32,8 @@ extension PaymentsInputPhoneView {
             
             let validator = PhoneValidator()
             
-#if DEBUG
-            if phone.digits == "70115110217" {
-                
-                return true
-                
-            } else {
-                
-                return validator.isValid(phone.digits)
-            }
-            
+#if DEBUG || PREPROD
+            return getDebugValidation(phone: phone.digits)
 #else
             return validator.isValid(phone.digits)
 #endif
@@ -314,4 +306,15 @@ extension PaymentsInputPhoneView.ViewModel {
     )
     
     static let samplePhoneParam = PaymentsInputPhoneView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "79255145555"), title: "Номер телефона получателя"), model: .emptyMock)
+}
+
+private extension PaymentsInputPhoneView.ViewModel {
+    
+    private func getDebugValidation(
+        phone: String,
+        validator: PhoneValidator = PhoneValidator()
+    ) -> Bool {
+        
+        return phone.digits == "70115110217" ? true : validator.isValid(phone.digits)
+    }
 }
