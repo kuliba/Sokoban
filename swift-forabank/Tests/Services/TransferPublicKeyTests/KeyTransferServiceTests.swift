@@ -10,7 +10,7 @@ import XCTest
 
 final class KeyTransferServiceTests: XCTestCase {
     
-    func test_bind_shouldDeliverErrorWithoutRetryOnSwaddleKeyError() {
+    func test_transfer_shouldDeliverErrorWithoutRetryOnSwaddleKeyError() {
         
         let swaddleKeyError = anyError("key swaddle")
         let errorWithoutRetry = ErrorWithRetry(
@@ -28,7 +28,7 @@ final class KeyTransferServiceTests: XCTestCase {
         )
     }
     
-    func test_bind_shouldDeliverErrorWithRetryOnBindKeyErrorWithRetryAttemptsGreaterThanZero() {
+    func test_transfer_shouldDeliverErrorWithRetryOnBindKeyErrorWithRetryAttemptsGreaterThanZero() {
         
         let retryAttempts = 1
         let error = anyError()
@@ -53,7 +53,7 @@ final class KeyTransferServiceTests: XCTestCase {
         XCTAssertGreaterThan(retryAttempts, 0)
     }
     
-    func test_bind_shouldDeliverErrorWithoutRetryOnBindKeyErrorWithZeroRetryAttempts() {
+    func test_transfer_shouldDeliverErrorWithoutRetryOnBindKeyErrorWithZeroRetryAttempts() {
         
         let retryAttempts = 0
         let error = anyError()
@@ -78,7 +78,7 @@ final class KeyTransferServiceTests: XCTestCase {
         XCTAssertEqual(retryAttempts, 0)
     }
     
-    func test_bind_shouldDeliverSuccessOnSuccess() {
+    func test_transfer_shouldDeliverSuccessOnSuccess() {
         
         let (sut, keySwaddlerSpy, bindSpy) = makeSUT()
         
@@ -92,7 +92,7 @@ final class KeyTransferServiceTests: XCTestCase {
         )
     }
     
-    func test_bind_shouldNotDeliverSwaddleKeyOnSUTDeallocation() {
+    func test_transfer_shouldNotDeliverSwaddleKeyOnSUTDeallocation() {
         
         let keySwaddler = KeySwaddlerSpy()
         let bindSpy = BingPublicKeyWithEventIDSpy()
@@ -112,7 +112,7 @@ final class KeyTransferServiceTests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_bind_shouldNotDeliverResultSUTDeallocation() {
+    func test_transfer_shouldNotDeliverResultSUTDeallocation() {
         
         let keySwaddler = KeySwaddlerSpy()
         let bindSpy = BingPublicKeyWithEventIDSpy()
