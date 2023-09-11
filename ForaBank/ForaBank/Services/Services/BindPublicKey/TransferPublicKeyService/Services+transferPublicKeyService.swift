@@ -24,6 +24,24 @@ extension Services {
         transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey
     ) -> PublicKeyTransferService {
         
+        let swaddler = secKeySwaddler(transportKey: transportKey)
+        
+        let bindKeyService = PublicKeyTransferService.BindKeyService(
+            createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: BindPublicKeyWithEventIDMapper.map
+        )
+        
+        return .init(
+            secKeySwaddler: swaddler,
+            bindKeyService: bindKeyService
+        )
+    }
+    
+    static func secKeySwaddler(
+        transportKey: @escaping () throws -> SecKey
+    ) -> SecKeySwaddler {
+        
         let generateRSA4096BitKeys = {
             
             try ForaCrypto.Crypto.createRandomSecKeys(
@@ -31,6 +49,7 @@ extension Services {
                 keySizeInBits: 4096
             )
         }
+        
         let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
             
             let clientSecretOTP = try ForaCrypto.Crypto.sign(
@@ -55,6 +74,7 @@ extension Services {
                 #warning("FIX THIS")
             }
         }
+        
         let aesEncrypt128bitChunks: SecKeySwaddler.AESEncrypt128bitChunks = { data, secret in
             
             let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
@@ -62,22 +82,11 @@ extension Services {
             return result
         }
         
-        let swaddler = SecKeySwaddler(
+        return .init(
             generateRSA4096BitKeys: generateRSA4096BitKeys,
             signEncryptOTP: signEncryptOTP,
             saveKeys: saveKeys,
             aesEncrypt128bitChunks: aesEncrypt128bitChunks
-        )
-        
-        let bindKeyService = PublicKeyTransferService.BindKeyService(
-            createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
-            performRequest: httpClient.performRequest,
-            mapResponse: BindPublicKeyWithEventIDMapper.map
-        )
-        
-        return .init(
-            secKeySwaddler: swaddler,
-            bindKeyService: bindKeyService
         )
     }
 }
