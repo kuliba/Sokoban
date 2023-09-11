@@ -24,6 +24,13 @@ extension Services {
         transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey
     ) -> PublicKeyTransferService {
         
+        let generateRSA4096BitKeys = {
+            
+            try ForaCrypto.Crypto.createRandomSecKeys(
+                keyType: kSecAttrKeyTypeRSA,
+                keySizeInBits: 4096
+            )
+        }
         let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
             
             let clientSecretOTP = try ForaCrypto.Crypto.sign(
@@ -42,31 +49,24 @@ extension Services {
         }
         
         let keyCache = InMemoryKeyStore<SecKey>()
+        let saveKeys: SecKeySwaddler.SaveKeys = { privateKey, publicKey in
+            
+            keyCache.saveKey(privateKey) { _ in
+                #warning("FIX THIS")
+            }
+        }
+        let aesEncrypt128bitChunks: SecKeySwaddler.AESEncrypt128bitChunks = { data, secret in
+            
+            let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+            let result = try aes256CBC.encrypt(data)
+            return result
+        }
         
         let swaddler = SecKeySwaddler(
-            generateRSA4096BitKeys: {
-                
-                try ForaCrypto.Crypto.createRandomSecKeys(
-                    keyType: kSecAttrKeyTypeRSA,
-                    keySizeInBits: 4096
-                )
-            },
+            generateRSA4096BitKeys: generateRSA4096BitKeys,
             signEncryptOTP: signEncryptOTP,
-            saveKeys: { privateKey, publicKey in
-                
-                keyCache.saveKey(privateKey) { _ in
-#warning("FIX THIS")
-                }
-            },
-            aesEncrypt128bitChunks: { data, secret in
-                
-                //    let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
-                //    return try aesGCMEncryptionAgent.encrypt(data)
-                
-                let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
-                let result = try aes256CBC.encrypt(data)
-                return result
-            }
+            saveKeys: saveKeys,
+            aesEncrypt128bitChunks: aesEncrypt128bitChunks
         )
         
         let bindKeyService = PublicKeyTransferService.BindKeyService(
@@ -80,7 +80,19 @@ extension Services {
             bindKeyService: bindKeyService
         )
     }
+}
+
+private extension Services.PublicKeyTransferService {
     
+    convenience init(
+        secKeySwaddler: Services.SecKeySwaddler,
+        bindKeyService: BindKeyService
+    ) {
+        self.init(
+            swaddleKey: secKeySwaddler.swaddle,
+            bindKey: bindKeyService.process
+        )
+    }
 }
 
 private extension Services.SecKeySwaddler {
@@ -95,19 +107,6 @@ private extension Services.SecKeySwaddler {
                 
                 try swaddleKey(with: otp, and: sharedSecret)
             })
-        )
-    }
-}
-
-private extension Services.PublicKeyTransferService {
-    
-    convenience init(
-        secKeySwaddler: Services.SecKeySwaddler,
-        bindKeyService: BindKeyService
-    ) {
-        self.init(
-            swaddleKey: secKeySwaddler.swaddle,
-            bindKey: bindKeyService.process
         )
     }
 }
