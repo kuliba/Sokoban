@@ -119,7 +119,7 @@ extension AtmData {
         var types: [Int] {
             
             switch self {
-            case .atm: return [1, 34]
+            case .atm: return [1, 34, 37]
             case .terminal: return [33, 35, 36]
             default:
                 return [9]
