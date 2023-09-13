@@ -13,11 +13,9 @@ import Combine
 
 class AuthTransfersViewModel: ObservableObject {
     
-    let action: PassthroughSubject<Action, Never> = .init()
+    let action: PassthroughSubject<AuthTransfersAction, Never> = .init()
     
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
-    
+    @Published var link: Link?    
     @Published var sections: [TransfersSectionViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var opacity: Double
@@ -64,7 +62,9 @@ class AuthTransfersViewModel: ObservableObject {
         
         model.transferAbroad
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] transferAbroad in
+            .sink { [weak self] transferAbroad in
+                
+                guard let self else { return }
                 
                 guard let transferAbroad = transferAbroad else { return }
                 
@@ -84,52 +84,61 @@ class AuthTransfersViewModel: ObservableObject {
                                  TransfersSupportView.ViewModel(data: transferAbroad.main.support)]
                 
                 bind(sections)
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
-                    
-                case _ as AuthTransfersAction.Close.Link:
-                    LoggerAgent.shared.log(category: .ui, message: "received AuthTransfersAction.Close.Link")
-                    link = nil
-                    
-                case _ as AuthTransfersAction.Close.Sheet:
-                    bottomSheet = nil
-                    
-                case let payload as AuthTransfersAction.Show.NavbarTitle:
-                
-                    let opacity = payload.scrollOffsetY / 300
-                    if (0...1).contains(opacity) {
-                        self.navigation.opacity = opacity
+                case let .close(close):
+                    switch close {
+                    case .link:
+                        LoggerAgent.shared.log(category: .ui, message: "received AuthTransfersAction.Close.Link")
+                        link = nil
+                        
+                    case .sheet:
+                        bottomSheet = nil
                     }
-                
-                case let payload as AuthTransfersAction.Show.OrderProduct:
                     
-                    let viewModel: OrderProductView.ViewModel = .init(
-                        model,
-                        productData: payload.productData
-                    )
+                case let .show(show):
+                    switch show {
+                    case let .navbarTitle(scrollOffsetY):
+                        
+                        let opacity = scrollOffsetY / 300
+                        if (0...1).contains(opacity) {
+                            self.navigation.opacity = opacity
+                        }
+                        
+                    case let .orderProduct(productData):
+                        
+                        let viewModel: OrderProductView.ViewModel = .init(
+                            model,
+                            productData: productData
+                        )
+                        
+                        bottomSheet = .init(type: .orderProduct(viewModel))
+                    }
                     
-                    bottomSheet = .init(type: .orderProduct(viewModel))
-                    
-                default:
+                case .transfersSection:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         $offset
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] offset in
+            .sink { [weak self] offset in
+                
+                guard let self else { return }
                 
                 navigation.opacity = offset
                 opacity = 1 - offset
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ sections: [TransfersSectionViewModel]) {
@@ -141,13 +150,16 @@ class AuthTransfersViewModel: ObservableObject {
             case let payload as TransfersDirectionsView.ViewModel:
                 
                 payload.action
+                    .compactMap { $0 as? TransfersSectionAction }
                     .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    .sink { [weak self] action in
+                        
+                        guard let self else { return }
                         
                         switch action {
-                        case let payload as TransfersSectionAction.Direction.Tap:
+                        case let .tap(countryCode):
                             
-                            guard let viewModel = TransfersDetailView.ViewModel(model, countryCode: payload.countryCode)
+                            guard let viewModel = TransfersDetailView.ViewModel(model, countryCode: countryCode)
                             else { return }
                             
                             bind(viewModel)
@@ -156,14 +168,16 @@ class AuthTransfersViewModel: ObservableObject {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
             case let payload as TransfersBannersView.ViewModel:
                 
                 payload.action
                     .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    .sink { [weak self] action in
+                        
+                        guard let self else { return }
                         
                         switch action {
                         case let payload as TransfersPromoAction.Banner.Mig.Tap:
@@ -185,8 +199,8 @@ class AuthTransfersViewModel: ObservableObject {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
             default:
                 break
@@ -198,43 +212,40 @@ class AuthTransfersViewModel: ObservableObject {
         
         viewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
-               
-                case _ as TransfersDetailAction.Button.Order.Tap:
+                case .order:
                     
-                    self.action.send(AuthTransfersAction.Close.Sheet())
+                    self.action.send(.close(.sheet))
                     
-                    let action: (Int) -> Void = {
+                    let action: (Int) -> Void = { [weak self] id in
                         
-                       [weak self] id in
-
                         guard let self = self else { return }
-        
+                        
                         if let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id })  {
-                            self.action.send(AuthTransfersAction.Show.OrderProduct(productData: catalogProduct))
+                            self.action.send(.show(.orderProduct(catalogProduct)))
                         }
                     }
                     
                     let dismissAction: () -> Void = { [weak self] in
-                       self?.action.send(AuthTransfersAction.Close.Link()) 
+                       
+                        self?.action.send(.close(.link))
                     }
                     
                     let viewModel: AuthProductsViewModel = .init(self.model, products: self.model.catalogProducts.value, action: action, dismissAction: dismissAction)
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented products view")
                     self.link = .products(viewModel)
                     
-                case _ as TransfersDetailAction.Button.Transfers.Tap:
+                case .transfer:
                     
-                    self.action.send(AuthTransfersAction.Close.Sheet())
-                    self.action.send(TransfersSectionAction.Direction.Detail.Transfers.Tap())
-                    
-                default:
-                    break
+                    self.action.send(.close(.sheet))
+                    self.action.send(.transfersSection(.transfers))
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
 }
@@ -277,25 +288,31 @@ extension AuthTransfersViewModel {
 // MARK: - Action
 
 enum AuthTransfersAction {
-
+    
+    case close(Close)
+    case show(Show)
+    case transfersSection(TransfersSectionAction)
+    
     enum Close {
         
-        struct Sheet: Action {}
-        
-        struct Link: Action {}
-        
+        case link, sheet
     }
     
     enum Show {
-            
-        struct OrderProduct: Action {
-                
-            let productData: CatalogProductData
-        }
         
-        struct NavbarTitle: Action {
-            
-            let scrollOffsetY: Double
+        case orderProduct(CatalogProductData)
+        case navbarTitle(scrollOffsetY: Double)
+    }
+}
+
+extension AuthTransfersAction {
+    
+    var transfersSectionAction: TransfersSectionAction? {
+        
+        if case let .transfersSection(transfersSection) = self {
+            return transfersSection
+        } else {
+            return nil
         }
     }
 }
@@ -372,17 +389,25 @@ extension AuthTransfersViewModel {
     
     static let sample: AuthTransfersViewModel = .init(
         .emptyMock,
-        sections: [TransfersCoverView.ViewModel.sample,
-                   TransfersDirectionsView.ViewModel(model: .emptyMock,
-                                                     items:  TransfersDirectionsView.ViewModel.sampleItems),
-                   TransfersInfoView.ViewModel.sample,
-                   TransfersCountriesView.ViewModel(model: .emptyMock,
-                                                    items:  TransfersDirectionsView.ViewModel.sampleItems),
-                   TransfersAdvantagesView.ViewModel(items: TransfersAdvantagesView.ViewModel.sampleItems),
-                   TransfersQuestionsView.ViewModel(data: TransfersQuestionsView.ViewModel.sampleData),
-                   TransfersSupportView.ViewModel(items: TransfersSupportView.ViewModel.sampleItems)],
+        sections: [
+            TransfersCoverView.ViewModel.sample,
+            TransfersDirectionsView.ViewModel(
+                model: .emptyMock,
+                items:  TransfersDirectionsView.ViewModel.sampleItems),
+            TransfersInfoView.ViewModel.sample,
+            TransfersCountriesView.ViewModel(
+                model: .emptyMock,
+                items:  TransfersDirectionsView.ViewModel.sampleItems),
+            TransfersAdvantagesView.ViewModel(
+                items: TransfersAdvantagesView.ViewModel.sampleItems),
+            TransfersQuestionsView.ViewModel(
+                data: TransfersQuestionsView.ViewModel.sampleData),
+            TransfersSupportView.ViewModel(
+                items: TransfersSupportView.ViewModel.sampleItems)
+        ],
         title: "Переводы",
         subTitle: "за рубеж",
         legalTitle: "Фора-банк является зарегистрированным поставщиком платежных услуг. Наша деятельность находится под контролем Налогово-таможенной службы (HMRC) в соответствии с Положением об отмывании денег №12667079 и регулируется Управлением по финансовому регулированию и надзору РФ",
-    navigation: .init(title: "Переводы за рубеж", opacity: 0.5))
+        navigation: .init(title: "Переводы за рубеж", opacity: 0.5)
+    )
 }

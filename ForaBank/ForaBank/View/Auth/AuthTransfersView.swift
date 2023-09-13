@@ -19,64 +19,72 @@ struct AuthTransfersView: View {
             TransfersImageView(viewModel: viewModel)
             
             ScrollView(.vertical, showsIndicators: false) {
-             
-                    VStack(spacing: 24) {
+                
+                VStack(spacing: 24) {
+                    
+                    TransfersTitleView(viewModel: viewModel)
+                        .padding(.vertical, 32)
+                    
+                    ForEach(viewModel.sections) { section in
                         
-                        TransfersTitleView(viewModel: viewModel)
-                            .padding(.vertical, 32)
-                        
-                        ForEach(viewModel.sections) { section in
+                        switch section {
+                        case let coverViewModel as TransfersCoverView.ViewModel:
+                            TransfersCoverView(viewModel: coverViewModel)
                             
-                            switch section {
-                            case let coverViewModel as TransfersCoverView.ViewModel:
-                                TransfersCoverView(viewModel: coverViewModel)
-                                
-                            case let directionsViewModel as TransfersDirectionsView.ViewModel:
-                                TransfersDirectionsView(viewModel: directionsViewModel)
-                                
-                            case let infoViewModel as TransfersInfoView.ViewModel:
-                                TransfersInfoView(viewModel: infoViewModel)
-                                
-                            case let promoViewModel as TransfersBannersView.ViewModel:
-                                TransfersBannersView(viewModel: promoViewModel)
-                                
-                            case let countriesViewModel as TransfersCountriesView.ViewModel:
-                                TransfersCountriesView(viewModel: countriesViewModel)
-                                
-                            case let advantagesViewModel as TransfersAdvantagesView.ViewModel:
-                                TransfersAdvantagesView(viewModel: advantagesViewModel)
-                                
-                            case let questionsViewModel as TransfersQuestionsView.ViewModel:
-                                TransfersQuestionsView(viewModel: questionsViewModel).scrollId(9)
-                                
-                            case let supportViewModel as TransfersSupportView.ViewModel:
-                                TransfersSupportView(viewModel: supportViewModel).scrollId(10)
-                                
-                            default:
-                                Color.clear
-                            }
+                        case let directionsViewModel as TransfersDirectionsView.ViewModel:
+                            TransfersDirectionsView(viewModel: directionsViewModel)
+                            
+                        case let infoViewModel as TransfersInfoView.ViewModel:
+                            TransfersInfoView(viewModel: infoViewModel)
+                            
+                        case let promoViewModel as TransfersBannersView.ViewModel:
+                            TransfersBannersView(viewModel: promoViewModel)
+                            
+                        case let countriesViewModel as TransfersCountriesView.ViewModel:
+                            TransfersCountriesView(viewModel: countriesViewModel)
+                            
+                        case let advantagesViewModel as TransfersAdvantagesView.ViewModel:
+                            TransfersAdvantagesView(viewModel: advantagesViewModel)
+                            
+                        case let questionsViewModel as TransfersQuestionsView.ViewModel:
+                            TransfersQuestionsView(viewModel: questionsViewModel).scrollId(9)
+                            
+                        case let supportViewModel as TransfersSupportView.ViewModel:
+                            TransfersSupportView(viewModel: supportViewModel).scrollId(10)
+                            
+                        default:
+                            Color.clear
                         }
-                        
-                        Text(viewModel.legalTitle)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.mainColorsGray)
-                        
                     }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .background(GeometryReader {
-                                    Color.clear.preference(key: ViewOffsetKey.self,
-                                        value: -$0.frame(in: .named("scroll")).origin.y)
-                                })
-                    .onPreferenceChange(ViewOffsetKey.self) {
-                        viewModel.action.send(AuthTransfersAction.Show.NavbarTitle(scrollOffsetY: $0))
+                    
+                    Text(viewModel.legalTitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
+                    
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
+                .background(
+                    GeometryReader {
+                        Color.clear.preference(
+                            key: ViewOffsetKey.self,
+                            value: -$0.frame(in: .named("scroll")).origin.y)
                     }
+                )
+                .onPreferenceChange(ViewOffsetKey.self) {
+                    viewModel.action.send(.show(.navbarTitle(scrollOffsetY: $0)))
+                }
             }
             .coordinateSpace(name: "scroll")
             .navigationBar(with: viewModel.navigation)
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
+            NavigationLink(
+                "",
+                isActive: .init(
+                    get: { viewModel.link != nil },
+                    set: { if !$0 { viewModel.link = nil }}
+                )
+            ) {
                 if let link = viewModel.link  {
                     
                     switch link {
@@ -86,9 +94,9 @@ struct AuthTransfersView: View {
                         }
                     }
                 }
-            }
-        
-        }.bottomSheet(item: $viewModel.bottomSheet) { sheet in
+            }    
+        }
+        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
             
             switch sheet.type {
             case let .directions(viewModel):

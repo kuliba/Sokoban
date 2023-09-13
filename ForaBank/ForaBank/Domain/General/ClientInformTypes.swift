@@ -5,7 +5,7 @@
 //  Created by Dmitry Martynov on 09.02.2023.
 //
 
-struct ClientInformStatus {
+struct ClientInformStatus: Equatable {
  
     var isShowNotAuthorized: Bool
     var isShowAuthorized: Bool

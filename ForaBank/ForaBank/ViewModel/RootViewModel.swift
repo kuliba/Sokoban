@@ -68,7 +68,12 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = AuthLoginViewModel(model, rootActions: rootActions)
+                    let loginViewModel = ComposedLoginViewModel(
+                        authLoginViewModel: .init(
+                            model,
+                            rootActions: rootActions
+                        )
+                    )
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
                     action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
@@ -455,7 +460,7 @@ enum RootViewModelAction {
         
         struct ShowLogin: Action {
             
-            let viewModel: AuthLoginViewModel
+            let viewModel: ComposedLoginViewModel
         }
         
         struct ShowLock: Action {

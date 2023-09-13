@@ -51,29 +51,10 @@ enum TransfersSectionType: String, CaseIterable {
 
 // MARK: - Action
 
-enum TransfersSectionAction {
+enum TransfersSectionAction: Action {
     
     // Section Popular destinations
     
-    enum Direction {
-        
-        enum Detail {
-            
-            enum Order {
-                
-                struct Tap: Action {}
-            }
-            
-            enum Transfers {
-                
-                struct Tap: Action {}
-            }
-            
-        }
-        
-        struct Tap: Action {
-            
-            let countryCode: String
-        }
-    }
+    case order, transfers
+    case tap(countryCode: String)
 }
