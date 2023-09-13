@@ -94,18 +94,14 @@ extension TransfersDirectionsView {
             for item in items {
                 
                 item.action
+                    .compactMap { $0 as? TransfersItemAction.Item.Tap }
+                    .map(\.countryCode)
                     .receive(on: DispatchQueue.main)
-                    .sink { action in
+                    .sink { [weak self] in
                         
-                        switch action {
-                        case let payload as TransfersItemAction.Item.Tap:
-                            self.action.send(TransfersSectionAction.Direction.Tap(countryCode: payload.countryCode))
-                            
-                        default:
-                            break
-                        }
-                        
-                    }.store(in: &bindings)
+                        self?.action.send(TransfersSectionAction.tap(countryCode: $0))
+                    }
+                    .store(in: &bindings)
             }
         }
     }

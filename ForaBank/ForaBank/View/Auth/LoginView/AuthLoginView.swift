@@ -19,57 +19,13 @@ struct AuthLoginView: View {
             
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: viewModel.card)
-            
-            Spacer()
-            
-            VStack(spacing: 8) {
-                
-                ForEach(viewModel.buttons) { button in
-                    ButtonAuthView(viewModel: button)
-                }
-            }
-            .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-                
-                switch sheet.type {
-                case let .orderProduct(viewModel):
-                    OrderProductView(viewModel: viewModel)
-                }
-                
-            }.padding(.horizontal, 20)
-
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case let .confirm(confirmViewModel):
-                        AuthConfirmView(viewModel: confirmViewModel)
-                        
-                    case let .transfers(viewModel):
-                        AuthTransfersView(viewModel: viewModel)
-                        
-                    case let .products(productsViewModel):
-                        AuthProductsView(viewModel: productsViewModel)
-                    }
-                }
-            }
         }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
-        .present(item: $viewModel.cardScanner, style: .fullScreen, content: { cardScannerViewModel in
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
+        .present(item: $viewModel.cardScanner, style: .fullScreen) {
             
-            CardScannerView(viewModel: cardScannerViewModel)
+            CardScannerView(viewModel: $0)
                 .edgesIgnoringSafeArea(.all)
-        })
-        .padding(.top, 24)
-        .ignoresSafeArea(.container, edges: .bottom)
-        .background(
-            Image.imgRegistrationBg
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .edgesIgnoringSafeArea(.all)
-        )
+        }
     }
 }
 
@@ -211,10 +167,6 @@ struct AuthLoginView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AuthLoginView(viewModel: .init(header: AuthLoginViewModel.HeaderViewModel.init(),
-                                       buttons: [.init(.abroad, action: {}), .init(.card, action: {})],
-                                       rootActions: .emptyMock,
-                                       model: .emptyMock))
+        AuthLoginView(viewModel: .preview)
     }
 }
-

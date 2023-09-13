@@ -18,7 +18,7 @@ extension TransfersDetailView {
         
         typealias DetailData = TransferAbroadResponseData.DirectionDetailData
         
-        let action: PassthroughSubject<Action, Never> = .init()
+        let action: PassthroughSubject<TransfersDetailAction, Never> = .init()
 
         @Published var icon: ImageStateViewModel
         @Published var banksList: [TransfersBankViewModel]?
@@ -29,11 +29,13 @@ extension TransfersDetailView {
         let countryCode: String
         
         lazy var orderButton: TransfersButtonViewModel = .init(style: .gray) { [weak self] in
-            self?.action.send(TransfersDetailAction.Button.Order.Tap())
+            
+            self?.action.send(.order)
         }
         
         lazy var transfersButton: TransfersButtonViewModel = .init(style: .red) { [weak self] in
-            self?.action.send(TransfersDetailAction.Button.Transfers.Tap())
+            
+            self?.action.send(.transfer)
         }
         
         private var bindings = Set<AnyCancellable>()
@@ -477,20 +479,10 @@ extension TransfersDetailView {
 
 // MARK: - Action
 
-enum TransfersDetailAction {
+enum TransfersDetailAction: Action {
     
-    enum Button {
-        
-        enum Order {
-            
-            struct Tap: Action {}
-        }
-        
-        enum Transfers {
-            
-            struct Tap: Action {}
-        }
-    }
+    case order
+    case transfer
 }
 
 extension TransfersDetailView.ViewModel {
@@ -536,14 +528,20 @@ struct TransfersDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        TransfersDetailView(viewModel: .init(.emptyMock,
-                                             icon: .image(Image("Armenia Flag")),
-                                             title: "Армения",
-                                             countryCode: "AM",
-                                             transfersMoney: .init(icon: .placeholder(nil),
-                                                                   title: "Денежные переводы МИГ"),
-                                             options: TransfersDetailView.ViewModel.sampleOptions,
-                                             banksList: TransfersDetailView.ViewModel.sampleBankList))
-            .previewLayout(.sizeThatFits)
+        TransfersDetailView(
+            viewModel: .init(
+                .emptyMock,
+                icon: .image(Image("Armenia Flag")),
+                title: "Армения",
+                countryCode: "AM",
+                transfersMoney: .init(
+                    icon: .placeholder(nil),
+                    title: "Денежные переводы МИГ"
+                ),
+                options: TransfersDetailView.ViewModel.sampleOptions,
+                banksList: TransfersDetailView.ViewModel.sampleBankList
+            )
+        )
+        .previewLayout(.sizeThatFits)
     }
 }
