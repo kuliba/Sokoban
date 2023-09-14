@@ -192,6 +192,7 @@ struct PaymentsSuccessOptionButtonsView: View {
                 switch button {
                 case let viewModel as TemplateButtonView.ViewModel:
                     TemplateButtonView(viewModel: viewModel)
+//                        .accessibilityIdentifier("SuccessPageTemplateButton")
                     
                 case let simpleButton as ButtonViewModel:
                     ButtonView(viewModel: simpleButton) {
@@ -225,12 +226,15 @@ extension PaymentsSuccessOptionButtonsView {
                         .foregroundColor(.iconBlack)
                         .frame(width: 56, height: 56)
                         .background(Circle().foregroundColor(.mainColorsGrayLightest))
+                        .accessibilityIdentifier("SuccessPageButtonIcon")
                         
                     Text(viewModel.title)
                         .font(.textBodySM12160())
                         .foregroundColor(.textSecondary)
                         .frame(maxWidth: 100)
+                        .accessibilityIdentifier("SuccessPageButtonTitle")
                 }
+                
             }
         }
     }

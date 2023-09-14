@@ -541,6 +541,7 @@ struct PaymentsSelectBankView: View {
                 
                 IconView(viewModel: viewModel.icon)
                     .frame(width: 32, height: 32)
+                    .accessibilityIdentifier("SelectBankIcon")
                 
                 titleView()
                 
@@ -568,16 +569,19 @@ struct PaymentsSelectBankView: View {
                     Text(title)
                         .font(.textBodyMR14180())
                         .foregroundColor(.textPlaceholder)
+                        .accessibilityIdentifier("SelectBankTitleSelected")
                     
                     Text(name)
                         .font(.textH4M16240())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("SelectBankNameSelected")
                 }
             
             case let .empty(title: title):
                 Text(title)
                     .font(.textBodyMR14180())
                     .foregroundColor(.textPlaceholder)
+                    .accessibilityIdentifier("SelectBankTitle")
             }
         }
     }
@@ -604,9 +608,11 @@ struct PaymentsSelectBankView: View {
                         Text(viewModel.title)
                             .font(.textBodyMR14180())
                             .foregroundColor(.textPlaceholder)
+                            .accessibilityIdentifier("SelectBankTitleExpanded")
                         
                         RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16, weight: .medium), textColor: .textSecondary)
                             .frame(height: 24)
+                            .accessibilityIdentifier("SelectBankItemTextFieldExpanded")
                     }
   
                     Spacer()
@@ -669,12 +675,14 @@ struct PaymentsSelectBankView: View {
                 IconView(viewModel: viewModel.icon)
                     .frame(width: 40, height: 40)
                     .padding(.bottom, 8)
+                    .accessibilityIdentifier("SelectBankItemBankIcon")
                 
                 Text(viewModel.name)
                     .font(.textBodyXSR11140())
                     .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
+                    .accessibilityIdentifier("SelectBankItemBankTitle")
                 
                 if let subtitle = viewModel.subtitle {
                     
@@ -683,10 +691,12 @@ struct PaymentsSelectBankView: View {
                         .foregroundColor(.textPlaceholder)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)
+                        .accessibilityIdentifier("SelectBankItemBankSubtitle")
                 }
             }
             .contentShape(Rectangle())
             .onTapGesture { tapped() }
+            .accessibilityIdentifier("SelectBankItemBank")
         }
     }
     
@@ -751,6 +761,7 @@ struct PaymentsSelectBankView: View {
                 case .image(let image):
                     image
                         .resizable()
+                        .accessibilityIdentifier("SelectBankIconImage")
                     
                 case .icon(let image):
                     image
@@ -758,6 +769,7 @@ struct PaymentsSelectBankView: View {
                         .renderingMode(.template)
                         .foregroundColor(.iconGray)
                         .frame(width: 24, height: 24)
+                        .accessibilityIdentifier("SelectBankIcon")
                 }
             }
         }
