@@ -221,6 +221,7 @@ struct PaymentsInputPhoneView: View {
                             removal: .opacity
                         )
                     )
+                    .accessibilityIdentifier("PaymentsInputPhoneTitle")
             }
             
             HStack(spacing: 20) {
@@ -241,6 +242,7 @@ struct PaymentsInputPhoneView: View {
             .foregroundColor(.textSecondary)
             .font(.textH4M16240())
             .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("PaymentsInputPhoneField")
         }
     }
 
@@ -257,6 +259,7 @@ struct PaymentsInputPhoneView: View {
                     .renderingMode(.template)
                     .foregroundColor(.mainColorsGray)
                     .frame(width: 24, height: 24)
+                    .accessibilityIdentifier("PaymentsInputPhoneContactsIcon")
             }
         }
     }

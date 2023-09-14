@@ -167,12 +167,14 @@ extension TemplateButtonView {
                     .resizable()
                     .foregroundColor(foregroundColor)
                     .frame(width: 12, height: 12, alignment: .center)
+                    .accessibilityIdentifier("TemplateButtonStatusIcon")
             }
             
             Text(viewModel.title)
                 .font(.system(size: 12, weight: .medium))
                 .multilineTextAlignment(.center)
                 .foregroundColor(foregroundColor)
+                .accessibilityIdentifier("TemplateButtonTitle")
         }
     }
     
@@ -294,6 +296,7 @@ extension TemplateButtonView {
                     }
                 }
             }
+            .accessibilityIdentifier("TemplateButtonIdle")
         }
     }
 }
@@ -366,6 +369,7 @@ extension TemplateButtonView {
                     .offset(x: 20, y: -20)
                 }
             }
+            .accessibilityIdentifier("TemplateButtonRefresh")
         }
     }
 }
@@ -406,6 +410,7 @@ extension TemplateButtonView {
                     
                 }
             }
+            .accessibilityIdentifier("TemplateButtonComplete")
             .onAppear {
                 
                 self.startAnimation = true

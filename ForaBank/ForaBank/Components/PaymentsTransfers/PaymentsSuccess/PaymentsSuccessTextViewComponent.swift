@@ -40,12 +40,14 @@ struct PaymentsSuccessTextView: View {
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
                 .frame(width: 250)
+                .accessibilityIdentifier("SuccessPageTitle")
             
         case .amount:
             Text(viewModel.text)
                 .font(.textH1SB24322())
                 .foregroundColor(.textSecondary)
                 .padding(.horizontal, 20)
+                .accessibilityIdentifier("SuccessPageAmount")
             
         case .subtitle:
             Text(viewModel.text)
@@ -53,12 +55,14 @@ struct PaymentsSuccessTextView: View {
                 .foregroundColor(.textPlaceholder)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
+                .accessibilityIdentifier("SuccessPageSubtitle")
 
         case .warning:
             Text(viewModel.text)
                 .font(.textH4M16240())
                 .foregroundColor(.systemColorError)
                 .padding(.horizontal, 20)
+                .accessibilityIdentifier("SuccessPageWarning")
             
         case .message:
             Text(viewModel.text)
@@ -67,6 +71,7 @@ struct PaymentsSuccessTextView: View {
                 .frame(maxWidth: .infinity)
                 .padding(12)
                 .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.mainColorsGrayLightest))
+                .accessibilityIdentifier("SuccessPageMessage")
         }
     }
 }
