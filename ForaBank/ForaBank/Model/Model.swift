@@ -306,7 +306,6 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
                     action.send(ModelAction.Auth.Session.Activated())
                     
-                    try? localAgent.clear(type: [String: ImageData].self)
                     loadCachedPublicData()
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
                     action.send(ModelAction.Dictionary.UpdateCache.All())
