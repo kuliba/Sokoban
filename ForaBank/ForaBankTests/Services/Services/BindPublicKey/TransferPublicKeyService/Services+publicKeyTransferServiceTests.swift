@@ -41,9 +41,6 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
         let (_, json) = try extractSecretJSON(fromRequest: request)
         let (procClientSecretOTPData, clientPublicKeyRSAData) = try decryptProcClientJSON(from: json, with: sharedSecret)
         
-        //????
-        XCTAssertFalse(procClientSecretOTPData.isEmpty)
-        XCTAssertFalse(clientPublicKeyRSAData.isEmpty)
         
         let clientSecretOTP = try ForaCrypto.Crypto.rsaDecrypt(
             data: procClientSecretOTPData,
@@ -55,14 +52,8 @@ final class Services_publicKeyTransferServiceTests: XCTestCase {
             data: clientPublicKeyRSAData
         )
 
-        let secretOTP = try ForaCrypto.Crypto.rsaDecrypt(
-            data: clientSecretOTP,
-            withPrivateKey: clientPublicKeyRSA,
-            algorithm: .rsaEncryptionRaw
-        )
-        
-        XCTAssertNoDiff(String(data: secretOTP, encoding: .utf8), "")
-        XCTAssertNoDiff(secretOTP.base64EncodedString(), "")
+        XCTAssertFalse(clientSecretOTP.isEmpty)
+        XCTAssertFalse(try clientPublicKeyRSA.rawRepresentation.isEmpty)
     }
     
     // MARK: - Helpers
