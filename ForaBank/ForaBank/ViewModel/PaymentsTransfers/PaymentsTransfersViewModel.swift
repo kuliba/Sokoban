@@ -458,7 +458,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as TemplatesListViewModelAction.CloseAction:
-                    link = nil
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 800,
+                        action: PaymentsTransfersViewModelAction.Close.Link())
+                    )
                     
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
