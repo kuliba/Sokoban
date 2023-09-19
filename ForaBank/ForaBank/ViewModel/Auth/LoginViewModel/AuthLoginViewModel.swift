@@ -5,13 +5,14 @@
 //  Created by Андрей Лятовец on 07.02.2022.
 //
 
+import Combine
+import CombineSchedulers
 import Foundation
 import SwiftUI
-import Combine
 
 class AuthLoginViewModel: ObservableObject {
     
-    let action: PassthroughSubject<AuthLoginViewModelAction, Never> = .init()
+    let action: PassthroughSubject<Action, Never> = .init()
     let header: HeaderViewModel
     
     @Published var link: Link?
@@ -22,7 +23,10 @@ class AuthLoginViewModel: ObservableObject {
     
     @Published var buttons: [ButtonAuthView.ViewModel]
     
-    private let model: Model
+    private let delayedAction: PassthroughSubject<DelayedAction, Never> = .init()
+    private let eventPublishers: EventPublishers
+    private let eventHandlers: EventHandlers
+    private let factory: AuthLoginViewModelFactory
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     
@@ -39,33 +43,33 @@ class AuthLoginViewModel: ObservableObject {
             toolbar: .init(
                 doneButton: .init(
                     isEnabled: true,
-                    action: { UIApplication.shared.endEditing()}),
+                    action: { UIApplication.shared.endEditing() }),
                 closeButton: .init(
                     isEnabled: true,
-                    action: { UIApplication.shared.endEditing()}))
+                    action: { UIApplication.shared.endEditing() }))
         ),
         nextButton: nil,
         state: .editing
     )
     
     init(
-        header: HeaderViewModel = HeaderViewModel(),
-        buttons: [ButtonAuthView.ViewModel],
+        eventPublishers: EventPublishers,
+        eventHandlers: EventHandlers,
+        factory: AuthLoginViewModelFactory,
+        buttons: [ButtonAuthView.ViewModel] = [],
         rootActions: RootViewModel.RootActions,
-        model: Model = .emptyMock
+        scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
     ) {
-        self.header = header
+        self.header = .init()
         self.buttons = buttons
         self.rootActions = rootActions
-        self.model = model
+        self.eventPublishers = eventPublishers
+        self.eventHandlers = eventHandlers
+        self.factory = factory
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
-    }
-    
-    convenience init(_ model: Model, rootActions: RootViewModel.RootActions) {
         
-        self.init(buttons: [], rootActions: rootActions, model: model)
-        bind()
+        bind(on: scheduler)
     }
     
     deinit {
@@ -84,36 +88,41 @@ class AuthLoginViewModel: ObservableObject {
     }
 }
 
+// MARK: - Factory
+
+protocol AuthLoginViewModelFactory {
+    
+    func makeAuthConfirmViewModel(
+        confirmCodeLength: Int,
+        phoneNumber: String,
+        resendCodeDelay: TimeInterval,
+        backAction: @escaping () -> Void,
+        rootActions: RootViewModel.RootActions
+    ) -> AuthConfirmViewModel
+    
+    func makeAuthProductsViewModel(
+        action: @escaping (_ id: Int) -> Void,
+        dismissAction: @escaping () -> Void
+    ) -> AuthProductsViewModel
+    
+    func makeAuthTransfersViewModel(
+        closeAction: @escaping () -> Void
+    ) -> AuthTransfersViewModel
+    
+    func makeOrderProductViewModel(
+        productData: CatalogProductData
+    ) -> OrderProductView.ViewModel
+}
+
+// MARK: Binding
+
 private extension AuthLoginViewModel {
     
-    func bind() {
-        
-        model.clientInform
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] clientInformData in
-                
-                guard let self else { return }
-                
-                guard !self.model.clientInformStatus.isShowNotAuthorized,
-                      let message = clientInformData.data?.notAuthorized
-                else { return }
-                
-                self.model.clientInformStatus.isShowNotAuthorized = true
-                self.action.send(.show(.alertClientInform(message)))
-            }
-            .store(in: &bindings)
-        
-        model.action
-            .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] payload in
-                
-                self?.handleCheckClientResponse(payload)
-            }
-            .store(in: &bindings)
-        
+    func bind(
+        on scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] action in
                 
                 guard let self else { return }
@@ -128,16 +137,13 @@ private extension AuthLoginViewModel {
                         handleShowProductsAction()
                         
                     case .transfers:
-                        handleShowTransfersAction()
+                        handleShowTransfersAction(on: scheduler)
                         
                     case .scanner:
                         handleShowScannerAction()
                         
                     case let .orderProduct(productData):
                         handleShowOrderProductAction(productData)
-                        
-                    case let .alertClientInform(payload):
-                        extractShowAlertClientInformAction(payload)
                     }
                     
                 case .closeLink:
@@ -152,38 +158,58 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
+        delayedAction
+            .flatMap {
+                
+                Just($0.action)
+                    .delay(
+                        for: .milliseconds($0.delayMS),
+                        scheduler: scheduler
+                    )
+            }
+            .sink { [weak self] in
+                
+                self?.action.send($0)
+            }
+            .store(in: &bindings)
+        
+        eventPublishers.clientInformMessage
+            .receive(on: scheduler)
+            .sink { [weak self] message in
+                
+                self?.showClientInformAlert(withMessage: message)
+            }
+            .store(in: &bindings)
+        
+        eventPublishers.checkClientResponse
+            .receive(on: scheduler)
+            .sink { [weak self] payload in
+                
+                self?.handleCheckClientResponse(payload)
+            }
+            .store(in: &bindings)
+        
         card.$state
-            .combineLatest(model.sessionState, model.fcmToken)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] cardState, sessionState, fcmToken in
+            .combineLatest(eventPublishers.sessionStateFcmToken)
+            .receive(on: scheduler)
+            .sink { [weak self] output in
                 
                 guard let self else { return }
                 
-                switch (cardState, sessionState, fcmToken) {
-                case (.ready(let cardNumber), .active, .some):
-                    LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
-                    LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
-                    card.nextButton = CardViewModel.NextButtonViewModel(
-                        action: { [weak self] in
-                            
-                            self?.action.send(.register(cardNumber: cardNumber))
-                        })
-                    
-                default:
-                    card.nextButton = nil
-                }
-            }.store(in: &bindings)
+                let (cardState, (sessionState, fcmToken)) = output
+                self.card.nextButton = self.makeCardNextButton(with: cardState, sessionState, fcmToken: fcmToken)
+            }
+            .store(in: &bindings)
         
-        model.catalogProducts
-            .combineLatest(model.transferAbroad)
-            .receive(on: DispatchQueue.main)
+        eventPublishers.catalogProductsTransferAbroad
+            .receive(on: scheduler)
             .sink { [weak self] catalogProducts, transferAbroad in
                 
                 guard let self else { return }
                 
                 withAnimation {
                     
-                    self.buttons = self.updateButtons(catalogProducts, transferAbroad)
+                    self.buttons = self.makeButtons(with: catalogProducts, and: transferAbroad)
                 }
             }
             .store(in: &bindings)
@@ -201,8 +227,7 @@ private extension AuthLoginViewModel {
         case let .success(codeLength: codeLength, phone: phone, resendCodeDelay: resendCodeDelay):
             LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: success")
             
-            let confirmViewModel = AuthConfirmViewModel(
-                model,
+            let confirmViewModel = factory.makeAuthConfirmViewModel(
                 confirmCodeLength: codeLength,
                 phoneNumber: phone,
                 resendCodeDelay: resendCodeDelay,
@@ -237,13 +262,12 @@ private extension AuthLoginViewModel {
     ) {
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Register")
         
-        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
-        model.action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
+        eventHandlers.onRegisterCardNumber(cardNumber)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "dismiss keyboard")
         card.textField.dismissKeyboard()
         
-        self.action.send(.spinner(.show))
+        action.send(.spinner(.show))
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Show")
     }
     
@@ -255,7 +279,7 @@ private extension AuthLoginViewModel {
             
             guard let self = self else { return }
             
-            if let catalogProduct = self.model.catalogProducts.value.first(where: { $0.id == id }) {
+            if let catalogProduct = self.eventHandlers.catalogProductForID(id) {
                 
                 self.action.send(.show(.orderProduct(catalogProduct)))
             }
@@ -266,9 +290,7 @@ private extension AuthLoginViewModel {
             self?.action.send(.closeLink)
         }
         
-        let viewModel = AuthProductsViewModel(
-            model,
-            products: model.catalogProducts.value,
+        let viewModel = factory.makeAuthProductsViewModel(
             action: action,
             dismissAction: dismissAction
         )
@@ -279,16 +301,17 @@ private extension AuthLoginViewModel {
         link = .products(viewModel)
     }
     
-    func handleShowTransfersAction() {
-        
-        let viewModel: AuthTransfersViewModel = .init(model) { [weak self] in
+    func handleShowTransfersAction(
+        on scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        let viewModel = factory.makeAuthTransfersViewModel { [weak self] in
             
             self?.action.send(.closeLink)
         }
         
         UIApplication.shared.endEditing()
         
-        bind(viewModel)
+        bind(viewModel, on: scheduler)
         link = .transfers(viewModel)
     }
     
@@ -297,27 +320,29 @@ private extension AuthLoginViewModel {
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Show.Scaner")
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented card scanner")
-        cardScanner = .init(closeAction: { [weak self] number in
+        
+        cardScanner = .init(closeAction: { [weak self] value in
             
             guard let self else { return }
             
-            guard let value = number else {
-                self.cardScanner = nil
-                return
+            if let value {
+                
+                let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
+                let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
+                self.card.textField.text = maskedValue
             }
-            let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
-            let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
-            self.card.textField.text = maskedValue
+            
             self.cardScanner = nil
         })
     }
     
-    func extractShowAlertClientInformAction(
-        _ message: String
+    func showClientInformAlert(
+        withMessage message: String
     ) {
         LoggerAgent.shared.log(category: .ui, message: "AuthLoginViewModelAction.Show.AlertClientInform: \(message)")
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "alert ClientInform presented")
+        
         alert = .init(
             title: "Ошибка",
             message: message,
@@ -349,17 +374,39 @@ private extension AuthLoginViewModel {
     func handleShowOrderProductAction(
         _ productData: CatalogProductData
     ) {
-        let viewModel: OrderProductView.ViewModel = .init(
-            model,
+        let viewModel = factory.makeOrderProductViewModel(
             productData: productData
         )
         
         bottomSheet = .init(type: .orderProduct(viewModel))
     }
     
-    func updateButtons(
-        _ catalogProducts: [CatalogProductData],
-        _ transferAbroad: TransferAbroadResponseData?
+    func makeCardNextButton(
+        with cardState: CardViewModel.State,
+        _ sessionState: SessionState,
+        fcmToken: String?
+    ) -> CardViewModel.NextButtonViewModel? {
+        
+        switch (cardState, sessionState, fcmToken) {
+        case (.ready(let cardNumber), .active, .some):
+            LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
+            
+            LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
+            
+            return CardViewModel.NextButtonViewModel(
+                action: { [weak self] in
+                    
+                    self?.action.send(.register(cardNumber: cardNumber))
+                })
+            
+        default:
+            return nil
+        }
+    }
+    
+    func makeButtons(
+        with catalogProducts: [CatalogProductData],
+        and transferAbroad: TransferAbroadResponseData?
     ) -> [ButtonAuthView.ViewModel] {
         
         var buttons = [ButtonAuthView.ViewModel]()
@@ -383,11 +430,13 @@ private extension AuthLoginViewModel {
         return buttons
     }
     
-    func bind(_ viewModel: AuthTransfersViewModel) {
-        
+    func bind(
+        _ viewModel: AuthTransfersViewModel,
+        on scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
         viewModel.action
             .compactMap(\.transfersSectionAction)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [weak self] direction in
                 
                 guard let self else { return }
@@ -395,11 +444,12 @@ private extension AuthLoginViewModel {
                 switch direction {
                 case .order:
                     self.action.send(.closeLink)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                        
-                        self?.action.send(.show(.products))
-                    }
+                    self.delayedAction.send(
+                        .init(
+                            delayMS: 1_000,
+                            action: .show(.products)
+                        )
+                    )
                     
                 case .transfers:
                     self.action.send(.closeLink)
@@ -412,7 +462,7 @@ private extension AuthLoginViewModel {
     }
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension AuthLoginViewModel {
     
@@ -513,24 +563,46 @@ extension AuthLoginViewModel {
 
 // MARK: - Actions
 
-enum AuthLoginViewModelAction {
+extension AuthLoginViewModel {
     
-    case register(cardNumber: String)
-    case show(Show)
-    case closeLink
-    case spinner(Spinner)
-    
-    enum Show {
+    enum Action {
         
-        case scanner
-        case products
-        case transfers
-        case orderProduct(CatalogProductData)
-        case alertClientInform(String)
+        case register(cardNumber: String)
+        case show(Show)
+        case closeLink
+        case spinner(Spinner)
+        
+        enum Show {
+            
+            case scanner
+            case products
+            case transfers
+            case orderProduct(CatalogProductData)
+        }
+        
+        enum Spinner {
+            
+            case show, hide
+        }
     }
     
-    enum Spinner {
+    struct DelayedAction {
         
-        case show, hide
+        let delayMS: Int
+        let action: Action
+    }
+    
+    struct EventPublishers {
+        
+        let clientInformMessage: AnyPublisher<String, Never>
+        let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
+        let catalogProductsTransferAbroad: AnyPublisher<([CatalogProductData], TransferAbroadResponseData?), Never>
+        let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>
+    }
+    
+    struct EventHandlers {
+        
+        let onRegisterCardNumber: (String) -> Void
+        let catalogProductForID: (Int) -> CatalogProductData?
     }
 }

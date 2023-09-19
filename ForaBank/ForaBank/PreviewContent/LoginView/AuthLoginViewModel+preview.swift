@@ -9,12 +9,11 @@
 extension AuthLoginViewModel {
     
     static let preview: AuthLoginViewModel = .init(
-        header: .init(),
+        .emptyMock,
         buttons: [
             .init(.abroad, action: {}),
             .init(.card, action: {})
         ],
-        rootActions: .emptyMock,
-        model: .emptyMock
+        rootActions: .emptyMock
     )
 }

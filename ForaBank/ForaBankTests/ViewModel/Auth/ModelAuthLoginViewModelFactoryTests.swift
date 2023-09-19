@@ -1,0 +1,115 @@
+//
+//  ModelAuthLoginViewModelFactoryTests.swift
+//  ForaBankTests
+//
+//  Created by Igor Malyarov on 14.09.2023.
+//
+
+@testable import ForaBank
+import XCTest
+
+final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
+    
+    // MARK: - makeAuthConfirmViewModel
+    
+    func test_makeAuthConfirmViewModel() {
+        
+        let (sut, factory) = makeSUT()
+        let confirmCodeLength = 123
+        let phoneNumber = "123-4567"
+        let resendCodeDelay = 1.0
+        let rootActions = RootViewModel.RootActions.emptyMock
+        
+        let authConfirmViewModel = factory.makeAuthConfirmViewModel(
+            confirmCodeLength: confirmCodeLength,
+            phoneNumber: phoneNumber,
+            resendCodeDelay: resendCodeDelay,
+            backAction: {},
+            rootActions: rootActions
+        )
+        
+        XCTAssertEqual(
+            authConfirmViewModel.code.codeLenght,
+            confirmCodeLength
+        )
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - makeAuthProductsViewModel
+    
+    func test_makeAuthProductsViewModel_shouldMakeViewModelWithEmptyProdutCardsOnEmptyCatalogProducts() {
+        
+        let (sut, factory) = makeSUT()
+        
+        let authProductsViewModel = factory.makeAuthProductsViewModel(
+            action: { _ in },
+            dismissAction: {}
+        )
+        
+        XCTAssertTrue(authProductsViewModel.productCards.isEmpty)
+        XCTAssertTrue(sut.catalogProducts.value.isEmpty)
+    }
+    
+    func test_makeAuthProductsViewModel_shouldMakeViewModelWithProductCard() {
+        
+        let (sut, factory) = makeSUT()
+        sut.catalogProducts.value = [.sample]
+        
+        let authProductsViewModel = factory.makeAuthProductsViewModel(
+            action: { _ in },
+            dismissAction: {}
+        )
+        
+        XCTAssertNoDiff(
+            authProductsViewModel.productCards.map(\.title),
+            sut.catalogProducts.value.map(\.name)
+        )
+    }
+    
+    // MARK: - makeAuthTransfersViewModel
+    
+    func test_makeAuthTransfersViewModel() {
+        
+        let (sut, factory) = makeSUT()
+        
+        let authTransfersViewModel = factory.makeAuthTransfersViewModel(
+            closeAction: {}
+        )
+        
+        XCTAssertNotNil(authTransfersViewModel)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - makeOrderProductViewModel
+    
+    func test_makeOrderProductViewModel() {
+        
+        let (sut, factory) = makeSUT()
+        
+        let orderProductViewModel = factory.makeOrderProductViewModel(
+            productData: .sample
+        )
+        
+        XCTAssertNotNil(orderProductViewModel)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: Model,
+        factory: ModelAuthLoginViewModelFactory
+    ) {
+        let sut: Model = .mockWithEmptyExcept()
+        let factory = sut.authLoginViewModelFactory()
+        
+        // TODO: restore memory leaks tracking after Model fix
+        // trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(factory, file: file, line: line)
+        
+        return (sut, factory)
+    }
+}

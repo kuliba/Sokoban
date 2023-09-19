@@ -1,8 +1,8 @@
 //
-//  AuthLoginViewModelTests.swift
+//  ModelAuthLoginViewModelTests.swift
 //  ForaBankTests
 //
-//  Created by Igor Malyarov on 17.09.2023.
+//  Created by Igor Malyarov on 13.09.2023.
 //
 
 import Combine
@@ -10,13 +10,13 @@ import Combine
 import SwiftUI
 import XCTest
 
-final class AuthLoginViewModelTests: XCTestCase {
+final class ModelAuthLoginViewModelTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldSetHeader() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNoDiff(sut.header.title, "Войти")
         XCTAssertNoDiff(sut.header.subTitle, "чтобы получить доступ к счетам и картам")
@@ -25,101 +25,354 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_init_shouldSetLinkToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNil(sut.link)
     }
     
     func test_init_shouldSetBottomSheetToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNil(sut.bottomSheet)
     }
     
     func test_init_shouldSetCardScannerToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNil(sut.cardScanner)
     }
     
     func test_init_shouldSetAlertToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNil(sut.alert)
     }
     
     func test_init_shouldSetButtonsToEmpty() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertTrue(sut.buttons.isEmpty)
     }
     
-    // MARK: - Events: clientInform
+    // MARK: - Events: clientInform alert: nil ClientInformData
     
-    func test_clientInform_shouldShowClientInformAlertWithMesssage() {
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_nilClientInformData() {
         
-        let message = "message"
-        let (sut, clientInformMessage, _, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spy = ValueSpy(sut.alertPublisher)
         
-        clientInformMessage.send(message)
         XCTAssertNoDiff(spy.values, [nil])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        model.sendClientInform(nil)
         
-        XCTAssertNoDiff(spy.values, [nil, .alert(message: message)])
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_nilClientInformData() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(nil)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    // MARK: - Events: clientInform alert: emptyAuthorized_nilNotAuthorized
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_emptyAuthorized_nilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_nilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    // MARK: - Events: clientInform alert: emptyAuthorized_notNilNotAuthorized
+    
+    func test_clientInform_shouldShowClientInformAlert_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil, .alert(message: "notAuthorized")])
+    }
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    // MARK: - Events: clientInform alert: notEmptyAuthorized_nilNotAuthorized
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_nilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_nilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    // MARK: - Events: clientInform alert: notEmptyAuthorized_notNilNotAuthorized
+    
+    func test_clientInform_shouldShowClientInformAlert_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil, .alert(message: "notAuthorized")])
+    }
+    
+    func test_clientInform_shouldNotShowClientInformAlert_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let spy = ValueSpy(sut.alertPublisher)
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        XCTAssertNoDiff(spy.values, [nil])
+        
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    // MARK: - Events: clientInform model property change: nil ClientInformData
+    
+    func test_clientInform_shouldNotChangeClientInformStatus_isShowNotAuthorizedFalse_nilClientInformData() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        
+        model.sendClientInform(nil)
+        
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(model.clientInformStatus, clientInformStatus)
+    }
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_nilClientInformData() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        model.sendClientInform(nil)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+    }
+    
+    // MARK: - Events: clientInform model property change: emptyAuthorized_nilNotAuthorized
+    
+    func test_clientInform_shouldNotChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_nilNotAuthorized() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(model.clientInformStatus, clientInformStatus)
+    }
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_nilNotAuthorized() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        model.sendClientInform(.emptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+    }
+    
+    // MARK: - Events: clientInform model property change: emptyAuthorized_notNilNotAuthorized
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_emptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_emptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        model.sendClientInform(.emptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - Events: clientInform model property change: notEmptyAuthorized_nilNotAuthorized
+    
+    func test_clientInform_shouldNotChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_nilNotAuthorized() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertFalse(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNoDiff(model.clientInformStatus, clientInformStatus)
+    }
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_nilNotAuthorized() {
+        
+        let (_, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        model.sendClientInform(.notEmptyAuthorized_nilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+    }
+    
+    // MARK: - Events: clientInform model property change: notEmptyAuthorized_notNilNotAuthorized
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedFalse_notEmptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_clientInform_shouldChangeClientInformStatus_isShowNotAuthorizedTrue_notEmptyAuthorized_notNilNotAuthorized() {
+        
+        let (sut, model) = makeSUT()
+        let clientInformStatus = model.clientInformStatus
+        model.clientInformStatus.isShowNotAuthorized = true
+        
+        model.sendClientInform(.notEmptyAuthorized_notNilNotAuthorized, timeout: 0.05)
+        
+        XCTAssertTrue(model.clientInformStatus.isShowNotAuthorized)
+        XCTAssertNotEqual(model.clientInformStatus, clientInformStatus)
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Events: Auth.CheckClient.Response
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseSuccess() {
         
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
         
-        checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
         XCTAssertTrue(spinnerSpy.values.isEmpty)
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        model.checkClientSuccess(phone: "phone")
         
         XCTAssertFalse(spinnerSpy.values.isEmpty)
     }
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseFailure() {
         
-        let message = "message"
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
         
-        checkClientResponse.send(.failure(message: message))
         XCTAssertTrue(spinnerSpy.values.isEmpty)
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        model.checkClientFailure(message: "failure message")
         
         XCTAssertFalse(spinnerSpy.values.isEmpty)
     }
     
     func test_authCheckClientResponse_shouldSetLink_onResponseSuccess() {
         
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
-        
-        checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        model.checkClientSuccess(phone: "123-456")
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
             .confirm(.init(
                 codeTitle: "Введите код из сообщения",
                 codeLength: 1,
-                infoTitle: "123-456"
+                infoTitle: "Код отправлен на 123-456"
             ))
         ])
         XCTAssertNotNil(sut)
@@ -127,18 +380,16 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
         
-        let message = "failure message"
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         
-        checkClientResponse.send(.failure(message: message))
         XCTAssertNoDiff(alertSpy.values, [nil])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        model.checkClientFailure(message: "failure message")
         
         XCTAssertNoDiff(alertSpy.values, [
             nil,
-            .alert(message: message)
+            .alert(message: "failure message")
         ])
         XCTAssertNotNil(sut)
     }
@@ -147,18 +398,19 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionRegister_shouldCheckClient() {
         
-        let (sut, _, _, _, _, registerCardNumberSpy) = makeSUT()
+        let (sut, model) = makeSUT()
+        let checkClientSpy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Auth.CheckClient.Request }.map(\.number))
         
-        XCTAssertTrue(registerCardNumberSpy.values.isEmpty)
+        XCTAssertTrue(checkClientSpy.values.isEmpty)
         
         sut.register(cardNumber: "1234-5678")
         
-        XCTAssertNoDiff(registerCardNumberSpy.values, ["1234-5678"])
+        XCTAssertNoDiff(checkClientSpy.values, ["1234-5678"])
     }
     
     func test_authLoginViewModelActionRegister_shouldShowSpinner() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let spinnerSpy = ValueSpy(sut.showSpinnerPublisher)
         
         XCTAssertTrue(spinnerSpy.values.isEmpty)
@@ -172,7 +424,7 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithEmptyProductListOnEmptyModelCatalogProducts() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -183,12 +435,14 @@ final class AuthLoginViewModelTests: XCTestCase {
             nil,
             .products(titles: [])
         ])
+        XCTAssertTrue(model.catalogProducts.value.isEmpty)
     }
     
     func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithProductListOnNonEmptyModelCatalogProducts() {
         
-        let (sut, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, model) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        model.catalogProducts.send([.sample])
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -198,12 +452,14 @@ final class AuthLoginViewModelTests: XCTestCase {
             nil,
             .products(titles: ["Sample"])
         ])
+        XCTAssertFalse(model.catalogProducts.value.isEmpty)
     }
     
     func test_authLoginViewModelActionShowProducts_shouldSetButtonToOrderSelectedProduct() throws {
         
-        let (sut, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, model) = makeSUT()
         let orderProductSpy = ValueSpy(sut.orderProductPublisher)
+        model.catalogProducts.send([.sample])
         
         sut.showProductsAndWait()
         
@@ -213,12 +469,12 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(orderProductSpy.values, [.sample])
     }
-     
-     // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
-     
+    
+    // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
+    
     func test_authLoginViewModelActionShowTransfers_shouldSetLinkToTransfers() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -230,10 +486,10 @@ final class AuthLoginViewModelTests: XCTestCase {
             .transfers
         ])
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailOrderTap() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
         
         XCTAssertTrue(closeLinkSpy.values.isEmpty)
@@ -243,13 +499,13 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertFalse(closeLinkSpy.values.isEmpty)
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldShowProductsOnDelay() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let showProductsSpy = ValueSpy(sut.showProductsPublisher)
         
-        XCTAssertNoDiff(showProductsSpy.values, [])
+        XCTAssertTrue(showProductsSpy.values.isEmpty)
         
         sut.showTransfersAndWait()
         sut.orderDestination()
@@ -260,10 +516,10 @@ final class AuthLoginViewModelTests: XCTestCase {
 
         XCTAssertNoDiff(showProductsSpy.values, [.product])
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailTransfersTap() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
         
         XCTAssertTrue(closeLinkSpy.values.isEmpty)
@@ -273,12 +529,12 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertFalse(closeLinkSpy.values.isEmpty)
     }
-     
-     // MARK: - Events: AuthLoginViewModelAction.Show.Scaner
-     
+    
+    // MARK: - Events: AuthLoginViewModelAction.Show.Scaner
+    
     func test_authLoginViewModelActionShowScanner_shouldSetCardScanner() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
@@ -288,11 +544,11 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner])
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
         sut.showScanner()
@@ -300,11 +556,11 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner, nil])
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nonNilScanValue() {
         
         let scanValue: String? = "abc123"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
         sut.showScanner()
@@ -312,22 +568,22 @@ final class AuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner, nil])
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         sut.showScanner()
         sut.closeScanner(scanValue)
         
         XCTAssertNoDiff(sut.card.textField.text, nil)
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_emptyScanValue() {
         
         let scanValue: String? = ""
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         sut.showScanner()
         sut.closeScanner(scanValue)
@@ -338,118 +594,124 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_invalidScanValue() {
         
         let scanValue: String? = "abc"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         sut.showScanner()
         sut.closeScanner(scanValue)
         
         XCTAssertNoDiff(sut.card.textField.text, "")
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_scanValueWithDigits() {
         
         let scanValue: String? = "abc12345"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         sut.showScanner()
         sut.closeScanner(scanValue)
         
         XCTAssertNoDiff(sut.card.textField.text, "1234 5")
     }
-    
+        
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_validScanValue() {
         
         let scanValue: String? = "1234567812345678"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
         sut.showScanner()
         sut.closeScanner(scanValue)
         
         XCTAssertNoDiff(sut.card.textField.text, "1234 5678 1234 5678")
     }
-    
+        
     // MARK: - Events: catalogProducts & transferAbroad
-     
+    
     func test_catalogProducts_transferAbroad_shouldChangeButtonsOnUpdate() {
         
-        let (sut, _, _, catalogProductsTransferAbroad, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, model) = makeSUT()
         let buttonsSpy = ValueSpy(sut.$buttons.map { $0.map(\.view) })
         
+        XCTAssertTrue(model.catalogProducts.value.isEmpty)
         XCTAssertNoDiff(buttonsSpy.values, [
             []
         ])
         
-        catalogProductsTransferAbroad.send((.sample, nil))
+        model.catalogProducts.send(.sample)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(buttonsSpy.values, [
             [],
+            [],
             [.orderCard]
         ])
         
-        catalogProductsTransferAbroad.send((.sample, .sample()))
+        model.transferAbroad.send(.sample())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(buttonsSpy.values, [
+            [],
             [],
             [.orderCard],
             [.transfer, .orderCard,]
         ])
     }
-     
-     // MARK: - Events: cardState & sessionState & fcmToken
-     
+    
+    // MARK: - Events: cardState & sessionState & fcmToken
+    
     func test_cardState_sessionState_fcmToken_shouldChangeCardButton() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
         sut.card.state = .editing
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil])
         
         sut.card.state = .ready("1234")
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil])
         
-        sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), nil))
+        model.sessionAgent.sessionState.send(.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil])
         
-        sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
+        model.fcmToken.send(nil)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil, nil])
+        
+        model.fcmToken.send("fcmToken")
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil, nil, .ic24ArrowRight])
     }
-     
+    
     func test_cardState_shouldSetCardButton() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
-        sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(spy.values, [nil, nil])
-        
+        model.fcmToken.send("fcmToken")
         sut.card.state = .ready("1234")
+        model.sessionAgent.sessionState.send(.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, .ic24ArrowRight])
     }
-     
+    
     func test_cardState_shouldSendRegisterCardNumberOnCardNextButtonAction() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, model) = makeSUT()
         let spy = ValueSpy(sut.registerCardNumber)
         
         XCTAssertNil(sut.card.nextButton)
         
-        sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
+        model.fcmToken.send("fcmToken")
         sut.card.state = .ready("1234")
+        model.sessionAgent.sessionState.send(.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(spy.values, [])
@@ -462,131 +724,21 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    typealias ClientInformMessage = PassthroughSubject<String, Never>
-    typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
-    typealias CatalogProductsTransferAbroad = PassthroughSubject<([CatalogProductData], TransferAbroadResponseData?), Never>
-    typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
-    
     private func makeSUT(
-        catalogProductDataStub: CatalogProductData? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
-        clientInformMessage: ClientInformMessage,
-        checkClientResponse: CheckClientResponse,
-        catalogProductsTransferAbroad: CatalogProductsTransferAbroad,
-        sessionStateFcmToken: SessionStateFcmToken,
-        registerCardNumberSpy: RegisterCardNumberSpy
+        model: Model
     ) {
-        let clientInformMessage = ClientInformMessage()
-        let checkClientResponse = CheckClientResponse()
-        let catalogProductsTransferAbroad = CatalogProductsTransferAbroad()
-        let sessionStateFcmToken = SessionStateFcmToken()
-        
-        let eventPublishers = AuthLoginViewModel.EventPublishers(
-            clientInformMessage: clientInformMessage.eraseToAnyPublisher(),
-            checkClientResponse: checkClientResponse.eraseToAnyPublisher(),
-            catalogProductsTransferAbroad: catalogProductsTransferAbroad.eraseToAnyPublisher(),
-            sessionStateFcmToken: sessionStateFcmToken.eraseToAnyPublisher()
-        )
-        
-        let registerCardNumberSpy = RegisterCardNumberSpy()
-        
-        let eventHandlers = AuthLoginViewModel.EventHandlers(
-            onRegisterCardNumber: registerCardNumberSpy.registerCardNumber,
-            catalogProductForID: { _ in catalogProductDataStub }
-        )
-        
-        let factory = AuthLoginViewModelFactorySpy(
-            products: [catalogProductDataStub].compactMap { $0 }
-        )
-        
-        let sut = AuthLoginViewModel(
-            eventPublishers: eventPublishers,
-            eventHandlers: eventHandlers,
-            factory: factory,
-            rootActions: .emptyMock
-        )
+        let model: Model = .mockWithEmptyExcept()
+        let sut = AuthLoginViewModel(model, rootActions: .emptyMock)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        // TODO: return memory leak tracking after Model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
         
-        return (sut, clientInformMessage, checkClientResponse, catalogProductsTransferAbroad, sessionStateFcmToken, registerCardNumberSpy)
-    }
-    
-    private final class RegisterCardNumberSpy {
-        
-        private(set) var values = [String]()
-        
-        func registerCardNumber(_ cardNumber: String) {
-            
-            values.append(cardNumber)
-        }
-    }
-    
-    private final class AuthLoginViewModelFactorySpy: AuthLoginViewModelFactory {
-        
-        private let products: [CatalogProductData]
-        
-        init(products: [CatalogProductData]) {
-         
-            self.products = products
-        }
-        
-        func makeAuthConfirmViewModel(
-            confirmCodeLength: Int,
-            phoneNumber: String,
-            resendCodeDelay: TimeInterval,
-            backAction: @escaping () -> Void,
-            rootActions: RootViewModel.RootActions
-        ) -> AuthConfirmViewModel {
-            
-            let codeViewModel = AuthConfirmViewModel.CodeViewModel(
-                title: "Введите код из сообщения",
-                lenght: confirmCodeLength,
-                state: .openening
-            )
-            let infoViewModel = AuthConfirmViewModel.InfoViewModel(
-                title: phoneNumber,
-                subtitle: "Повторно отправить можно через:",
-                state: .button(.init(action: {}))
-            )
-            
-            return .init(
-                navigationBar: .init(action: backAction),
-                code: codeViewModel,
-                info: infoViewModel,
-                isPincodeViewPresented: false,
-                model: .emptyMock,
-                showingAlert: false,
-                phoneNumber: phoneNumber,
-                resendCodeDelay: resendCodeDelay,
-                backAction: {},
-                rootActions: .emptyMock
-            )
-        }
-        
-        func makeAuthProductsViewModel(
-            action: @escaping (Int) -> Void,
-            dismissAction: @escaping () -> Void
-        ) -> AuthProductsViewModel {
-            
-            .init(.emptyMock, products: products, action: action, dismissAction: dismissAction)
-        }
-        
-        func makeAuthTransfersViewModel(
-            closeAction: @escaping () -> Void
-        ) -> AuthTransfersViewModel {
-            
-            .sample
-        }
-        
-        func makeOrderProductViewModel(
-            productData: CatalogProductData
-        ) -> OrderProductView.ViewModel {
-            
-            .init(.mockWithEmptyExcept(), productData: .sample)
-        }
+        return (sut, model)
     }
 }
 
@@ -759,7 +911,7 @@ private extension AuthLoginViewModel {
         timeout: TimeInterval = 0.05
     ) {
         orderAuthButton?.action(productData.id)
-    
+        
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
@@ -775,6 +927,42 @@ private extension AuthLoginViewModel {
         
         let transfers = AuthTransfersAction.transfersSection(.transfers)
         link?.authTransfersViewModel?.action.send(transfers)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension Model {
+    
+    // MARK: - Actions
+    
+    func checkClientSuccess(
+        codeLength: Int = 1,
+        phone: String,
+        resendCodeDelay: TimeInterval = 1.0,
+        timeout: TimeInterval = 0.05
+    ) {
+        let response = ModelAction.Auth.CheckClient.Response.success(codeLength: codeLength, phone: phone, resendCodeDelay: resendCodeDelay)
+        action.send(response)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func checkClientFailure(
+        message: String,
+        timeout: TimeInterval = 0.05
+    ) {
+        let response: ModelAction.Auth.CheckClient.Response = .failure(message: message)
+        action.send(response)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func sendClientInform(
+        _ data: ClientInformData?,
+        timeout: TimeInterval = 0.05
+    ) {
+        clientInform.send(.result(data))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
@@ -923,6 +1111,19 @@ private extension Array where Element == CatalogProductData {
     static let sample: Self = [
         .sample
     ]
+}
+
+extension CatalogProductData {
+    
+    static let sample: Self = .init(
+        name: "Sample",
+        description: ["Sample", "Product"],
+        imageEndpoint: "",
+        infoURL: .init(string: "infoURL")!,
+        orderURL: .init(string: "orderURL")!,
+        tariff: 1,
+        productType: 1
+    )
 }
 
 private extension AuthProductsViewModel.ProductCardViewModel.OrderButtonType {
