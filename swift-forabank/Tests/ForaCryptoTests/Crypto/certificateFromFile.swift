@@ -8,6 +8,21 @@
 import ForaCrypto
 import XCTest
 
+extension SecKey {
+    
+    func base64() throws -> String {
+        
+        try rawRepresentation()
+            .base64EncodedString(
+                options: [
+                    .lineLength64Characters,
+                    .endLineWithLineFeed,
+                    .endLineWithCarriageReturn
+                ]
+            )
+    }
+}
+
 final class CertificateFromFileTests: XCTestCase {
     
     func test() throws {
@@ -15,22 +30,20 @@ final class CertificateFromFileTests: XCTestCase {
         let certificate = try certificateFromFile(at: publicDerCrtURL)
         let publicKey = try publicKey(from: certificate)
         
-        
-        let data = Data("test".utf8)
+        let message = "test"
         
         let encrypted = try XCTUnwrap(
             Crypto.encryptWithRSAKey(
-                data,
+                .init(message.utf8),
                 publicKey: publicKey,
                 padding: .PKCS1
             )
         )
         
-        let keyData = try publicKey.rawRepresentation()
-        let base64 = keyData.base64EncodedString()
+        let base64 = try publicKey.base64()
         
         XCTAssertNoDiff(base64, rom_transportPublicKey)
-        XCTAssertEqual(base64.count, 704)
+        XCTAssertEqual(base64.count, 736)
         XCTAssertEqual(rom_transportPublicKey.count, 736)
 
         
