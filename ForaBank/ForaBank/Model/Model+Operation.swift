@@ -82,7 +82,6 @@ extension Model {
                     
                     guard let details = response.data else {
                         self.handleServerCommandEmptyData(command: command)
-                        self.action.send(ModelAction.Operation.Detail.Response(result: .failure(ModelError.emptyData(message: response.errorMessage))))
                         return
                     }
                     
