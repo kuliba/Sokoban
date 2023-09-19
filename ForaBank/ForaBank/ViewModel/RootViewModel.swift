@@ -405,7 +405,141 @@ class RootViewModel: ObservableObject, Resetable {
     }()
 }
 
-//MARK: - Types
+extension AuthLoginViewModel {
+    
+    convenience init(
+        _ model: Model,
+        buttons: [ButtonAuthView.ViewModel] = [],
+        rootActions: RootViewModel.RootActions
+    ) {
+        self.init(
+            eventPublishers: model.eventPublishers,
+            eventHandlers: model.eventHandlers,
+            factory: model.authLoginViewModelFactory(),
+            rootActions: rootActions
+        )
+    }
+}
+
+private extension Model {
+    
+    var eventPublishers: AuthLoginViewModel.EventPublishers {
+        
+        .init(
+            clientInformMessage: clientInform
+                .filter { [self] _ in
+                    
+                    !clientInformStatus.isShowNotAuthorized
+                }
+                .compactMap(\.data?.notAuthorized)
+                .handleEvents(receiveOutput: { [self] _ in
+                    
+                    clientInformStatus.isShowNotAuthorized = true
+                })
+                .eraseToAnyPublisher(),
+            
+            checkClientResponse: action
+                .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
+                .eraseToAnyPublisher(),
+            
+            catalogProductsTransferAbroad: catalogProducts
+                .combineLatest(transferAbroad)
+                .eraseToAnyPublisher(),
+            
+            sessionStateFcmToken: sessionState
+                .combineLatest(fcmToken)
+                .eraseToAnyPublisher()
+        )
+    }
+    
+    var eventHandlers: AuthLoginViewModel.EventHandlers {
+        
+        .init(
+            onRegisterCardNumber: { [weak self] in
+                
+                LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\($0.suffix(4))")
+                
+                self?.action.send(ModelAction.Auth.CheckClient.Request(number: $0))
+            },
+            catalogProductForID: { [weak self] id in
+                
+                self?.catalogProducts.value.first(where: { $0.id == id })
+            }
+        )
+    }
+}
+
+extension ModelAuthLoginViewModelFactory: AuthLoginViewModelFactory {}
+
+// MARK: - Factory
+
+extension Model {
+    
+    func authLoginViewModelFactory() -> ModelAuthLoginViewModelFactory {
+        
+        ModelAuthLoginViewModelFactory(model: self)
+    }
+}
+
+final class ModelAuthLoginViewModelFactory {
+    
+    private let model: Model
+    
+    init(model: Model) {
+        
+        self.model = model
+    }
+    
+    func makeAuthConfirmViewModel(
+        confirmCodeLength: Int,
+        phoneNumber: String,
+        resendCodeDelay: TimeInterval,
+        backAction: @escaping () -> Void,
+        rootActions: RootViewModel.RootActions
+    ) -> AuthConfirmViewModel {
+        
+        .init(
+            model,
+            confirmCodeLength: confirmCodeLength,
+            phoneNumber: phoneNumber,
+            resendCodeDelay: resendCodeDelay,
+            backAction: backAction,
+            rootActions: rootActions
+        )
+    }
+    
+    func makeAuthProductsViewModel(
+        action: @escaping (_ id: Int) -> Void,
+        dismissAction: @escaping () -> Void
+    ) -> AuthProductsViewModel {
+        
+        .init(
+            model,
+            products: model.catalogProducts.value,
+            action: action,
+            dismissAction: dismissAction
+        )
+    }
+    
+    func makeAuthTransfersViewModel(
+        closeAction: @escaping () -> Void
+    ) -> AuthTransfersViewModel {
+        
+        .init(model, closeAction: closeAction)
+    }
+    
+    func makeOrderProductViewModel(
+        productData: CatalogProductData
+    ) -> OrderProductView.ViewModel {
+        
+        .init(
+            model,
+            productData: productData
+        )
+    }
+}
+
+// MARK: - Types
 
 extension RootViewModel {
     

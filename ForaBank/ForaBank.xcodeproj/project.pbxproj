@@ -402,7 +402,7 @@
 		2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */; };
 		2A45AF752AA729D500762DEE /* RequestFactory+createLandingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45AF742AA729D500762DEE /* RequestFactory+createLandingRequest.swift */; };
 		2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45AF772AA72B5300762DEE /* Services+getLandingService.swift */; };
-		2A4B54222AB1D9C10042A0FF /* AuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4B54212AB1D9C10042A0FF /* AuthLoginViewModelTests.swift */; };
+		2A4B54222AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4B54212AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4E8DFF29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */; };
 		2A50321D2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */; };
@@ -491,12 +491,15 @@
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
 		2AB5FEA829E6833E0055BE57 /* UIImage+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */; };
+		2AB6BFE32AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB6BFE22AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift */; };
+		2AB6BFE62AB72E8E00AAFFF7 /* AuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB6BFE52AB72E8E00AAFFF7 /* AuthLoginViewModelTests.swift */; };
 		2AB766BE29EA82A600501DD2 /* StringUpdateMaskedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */; };
 		2AB766C029EA89AB00501DD2 /* UIKitHelpers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AB766BF29EA89AB00501DD2 /* UIKitHelpers */; };
 		2AB93D092A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */; };
 		2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */; };
 		2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */; };
 		2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */; };
+		2ABCD3E92AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABCD3E82AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift */; };
 		2AC396A72A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */; };
 		2AC396AA2A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */; };
 		2AC8478E2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */; };
@@ -2325,7 +2328,6 @@
 		2A3039492A17D8B50008701D /* ReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A3086C129FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionViewModelTests.swift; sourceTree = "<group>"; };
 		2A31446D29FA46E500AB062D /* OrderProductViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductViewComponentTests.swift; sourceTree = "<group>"; };
-		2A337B3D29A17FF10039F63D /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensionsTests.swift; sourceTree = "<group>"; };
 		2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewModelTests.swift; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
@@ -2344,7 +2346,7 @@
 		2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+EndpointBindPublicKeyWithEventIDTests.swift"; sourceTree = "<group>"; };
 		2A45AF742AA729D500762DEE /* RequestFactory+createLandingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createLandingRequest.swift"; sourceTree = "<group>"; };
 		2A45AF772AA72B5300762DEE /* Services+getLandingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingService.swift"; sourceTree = "<group>"; };
-		2A4B54212AB1D9C10042A0FF /* AuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModelTests.swift; sourceTree = "<group>"; };
+		2A4B54212AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAuthLoginViewModelTests.swift; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAmountViewViewModelTests.swift; sourceTree = "<group>"; };
@@ -2362,7 +2364,6 @@
 		2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModelTests.swift; sourceTree = "<group>"; };
 		2A5871632A335E9E0059D4B6 /* AvtodorCrutchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvtodorCrutchView.swift; sourceTree = "<group>"; };
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
-		2A5A19E529A0FC3200DFCDD3 /* XCTestCase+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+ext.swift"; sourceTree = "<group>"; };
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
@@ -2431,11 +2432,14 @@
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
 		2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TestHelpers.swift"; sourceTree = "<group>"; };
 		2AB66F052A5F57D800B6FF5B /* CvvPin.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CvvPin.xctestplan; sourceTree = "<group>"; };
+		2AB6BFE22AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAuthLoginViewModelFactoryTests.swift; sourceTree = "<group>"; };
+		2AB6BFE52AB72E8E00AAFFF7 /* AuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModelTests.swift; sourceTree = "<group>"; };
 		2AB766BD29EA82A600501DD2 /* StringUpdateMaskedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUpdateMaskedTests.swift; sourceTree = "<group>"; };
 		2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferAnywayTests.swift"; sourceTree = "<group>"; };
 		2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelTests.swift; sourceTree = "<group>"; };
 		2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelModeTests.swift; sourceTree = "<group>"; };
 		2ABBF2C42A308AF6004411D1 /* Model+PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServicesTests.swift"; sourceTree = "<group>"; };
+		2ABCD3E82AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerAuthLoginViewModelTests.swift; sourceTree = "<group>"; };
 		2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationSourceAvtodorCase.swift; sourceTree = "<group>"; };
 		2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodor.swift"; sourceTree = "<group>"; };
 		2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_1.json; sourceTree = "<group>"; };
@@ -2487,7 +2491,6 @@
 		5008781A285345390033DDD5 /* PageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicatorView.swift; sourceTree = "<group>"; };
 		5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerContentViewComponent.swift; sourceTree = "<group>"; };
 		50087820285348A90033DDD5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
-		500C09E228D31609009E8F61 /* PaymentsSuccessMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessMock.swift; sourceTree = "<group>"; };
 		500ECA6128DC4DCD00881710 /* ProductsSwapViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewComponent.swift; sourceTree = "<group>"; };
 		5011B1E7291408EA00F2481A /* CloseAccountSpinnerViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAccountSpinnerViewComponent.swift; sourceTree = "<group>"; };
 		50149A882934F05A00B53EB7 /* TransfersCountriesViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersCountriesViewComponent.swift; sourceTree = "<group>"; };
@@ -5199,7 +5202,10 @@
 		2A4B54202AB1D9AF0042A0FF /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				2A4B54212AB1D9C10042A0FF /* AuthLoginViewModelTests.swift */,
+				2AB6BFE52AB72E8E00AAFFF7 /* AuthLoginViewModelTests.swift */,
+				2ABCD3E82AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift */,
+				2A4B54212AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift */,
+				2AB6BFE22AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -6039,16 +6045,6 @@
 				6833E0B52732B763004C070F /* DetailOperationTableViewCell.xib */,
 			);
 			path = DetailOperationCell;
-			sourceTree = "<group>";
-		};
-		6833E0B82739157E004C070F /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				500C09E228D31609009E8F61 /* PaymentsSuccessMock.swift */,
-				2A5A19E529A0FC3200DFCDD3 /* XCTestCase+ext.swift */,
-				2A337B3D29A17FF10039F63D /* XCTestCase+MemoryLeakTracking.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		6833E0C2273920CD004C070F /* Coordinators */ = {
@@ -9305,7 +9301,6 @@
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
-				6833E0B82739157E004C070F /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -12275,6 +12270,7 @@
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
 				2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */,
 				77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */,
+				2AB6BFE32AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift in Sources */,
 				77CCEA6628EF034000C62215 /* PaymentsStepTests.swift in Sources */,
 				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
 				7758DFD229EB1DE200060761 /* PaymentsSelectViewComponentTests.swift in Sources */,
@@ -12293,6 +12289,7 @@
 				83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */,
 				2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */,
 				2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */,
+				2ABCD3E92AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift in Sources */,
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
 				2A4593D52A7CFA74008593A3 /* URL+StaticString.swift in Sources */,
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
@@ -12312,6 +12309,7 @@
 				2A1F08492A79040B00C5B11B /* Model+signRequestTests.swift in Sources */,
 				83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */,
 				C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */,
+				2AB6BFE62AB72E8E00AAFFF7 /* AuthLoginViewModelTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				77A76A7E27FB036200A271B3 /* ServerCommandsAtmTests.swift in Sources */,
 				0BDDFE05290028910045CDC6 /* QRCodeTests.swift in Sources */,
@@ -12413,7 +12411,7 @@
 				7788096B2A3B749B0004EA73 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */,
 				77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */,
-				2A4B54222AB1D9C10042A0FF /* AuthLoginViewModelTests.swift in Sources */,
+				2A4B54222AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift in Sources */,
 				2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */,
 				7789794929CB6C1200ECF684 /* XCTestCase+ext.swift in Sources */,
 				2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */,

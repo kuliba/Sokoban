@@ -1,5 +1,5 @@
 //
-//  AuthLoginViewModelTests.swift
+//  SchedulerAuthLoginViewModelTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 17.09.2023.
@@ -10,13 +10,13 @@ import Combine
 import SwiftUI
 import XCTest
 
-final class AuthLoginViewModelTests: XCTestCase {
+final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     // MARK: - init
     
     func test_init_shouldSetHeader() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNoDiff(sut.header.title, "Войти")
         XCTAssertNoDiff(sut.header.subTitle, "чтобы получить доступ к счетам и картам")
@@ -25,35 +25,35 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_init_shouldSetLinkToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.link)
     }
     
     func test_init_shouldSetBottomSheetToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.bottomSheet)
     }
     
     func test_init_shouldSetCardScannerToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.cardScanner)
     }
     
     func test_init_shouldSetAlertToNil() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.alert)
     }
     
     func test_init_shouldSetButtonsToEmpty() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertTrue(sut.buttons.isEmpty)
     }
@@ -63,13 +63,12 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_clientInform_shouldShowClientInformAlertWithMesssage() {
         
         let message = "message"
-        let (sut, clientInformMessage, _, _, _, _) = makeSUT()
+        let (sut, scheduler, clientInformMessage, _, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.alertPublisher)
         
         clientInformMessage.send(message)
         XCTAssertNoDiff(spy.values, [nil])
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil, .alert(message: message)])
     }
@@ -78,13 +77,13 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseSuccess() {
         
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
         let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
         
         checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
         XCTAssertTrue(spinnerSpy.values.isEmpty)
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertFalse(spinnerSpy.values.isEmpty)
     }
@@ -92,27 +91,27 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authCheckClientResponse_shouldHideSpinner_onResponseFailure() {
         
         let message = "message"
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
         let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
         
         checkClientResponse.send(.failure(message: message))
         XCTAssertTrue(spinnerSpy.values.isEmpty)
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertFalse(spinnerSpy.values.isEmpty)
     }
     
     func test_authCheckClientResponse_shouldSetLink_onResponseSuccess() {
         
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         
         checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
@@ -128,13 +127,13 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
         
         let message = "failure message"
-        let (sut, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         
         checkClientResponse.send(.failure(message: message))
         XCTAssertNoDiff(alertSpy.values, [nil])
         
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(alertSpy.values, [
             nil,
@@ -147,23 +146,23 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionRegister_shouldCheckClient() {
         
-        let (sut, _, _, _, _, registerCardNumberSpy) = makeSUT()
+        let (sut, scheduler, _, _, _, _, registerCardNumberSpy) = makeSUT()
         
         XCTAssertTrue(registerCardNumberSpy.values.isEmpty)
         
-        sut.register(cardNumber: "1234-5678")
+        sut.register(cardNumber: "1234-5678", on: scheduler)
         
         XCTAssertNoDiff(registerCardNumberSpy.values, ["1234-5678"])
     }
     
     func test_authLoginViewModelActionRegister_shouldShowSpinner() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let spinnerSpy = ValueSpy(sut.showSpinnerPublisher)
         
         XCTAssertTrue(spinnerSpy.values.isEmpty)
         
-        sut.register(cardNumber: "1234-5678")
+        sut.register(cardNumber: "1234-5678", on: scheduler)
         
         XCTAssertFalse(spinnerSpy.values.isEmpty)
     }
@@ -172,27 +171,28 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithEmptyProductListOnEmptyModelCatalogProducts() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.showProductsAndWait()
+        sut.showProductsAndWait(on: scheduler)
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
             .products(titles: [])
         ])
+        //XCTAssertTrue(model.catalogProducts.value.isEmpty)
     }
     
     func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithProductListOnNonEmptyModelCatalogProducts() {
         
-        let (sut, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, scheduler, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.showProductsAndWait()
+        sut.showProductsAndWait(on: scheduler)
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
@@ -202,89 +202,87 @@ final class AuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionShowProducts_shouldSetButtonToOrderSelectedProduct() throws {
         
-        let (sut, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, scheduler, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
         let orderProductSpy = ValueSpy(sut.orderProductPublisher)
         
-        sut.showProductsAndWait()
+        sut.showProductsAndWait(on: scheduler)
         
         XCTAssertTrue(orderProductSpy.values.isEmpty)
         
-        sut.order(.sample)
+        sut.order(.sample, on: scheduler)
         
         XCTAssertNoDiff(orderProductSpy.values, [.sample])
     }
-     
-     // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
-     
+    
+    // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
+    
     func test_authLoginViewModelActionShowTransfers_shouldSetLinkToTransfers() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
         
-        sut.showTransfersAndWait()
+        sut.showTransfersAndWait(on: scheduler)
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
             .transfers
         ])
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailOrderTap() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
         
         XCTAssertTrue(closeLinkSpy.values.isEmpty)
         
-        sut.showTransfersAndWait()
-        sut.orderDestination()
-        
+        sut.showTransfersAndWait(on: scheduler)
+        sut.orderDestination(on: scheduler)
+
+        scheduler.advance(by: 1)
         XCTAssertFalse(closeLinkSpy.values.isEmpty)
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldShowProductsOnDelay() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let showProductsSpy = ValueSpy(sut.showProductsPublisher)
         
-        XCTAssertNoDiff(showProductsSpy.values, [])
+        XCTAssertTrue(showProductsSpy.values.isEmpty)
         
-        sut.showTransfersAndWait()
-        sut.orderDestination()
-        
-        XCTAssertNoDiff(showProductsSpy.values, [])
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 1)
-
+        sut.showTransfersAndWait(on: scheduler)
+        sut.orderDestination(on: scheduler)
+                
+        scheduler.advance(by: 1)
         XCTAssertNoDiff(showProductsSpy.values, [.product])
     }
-     
+    
     func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailTransfersTap() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
         
         XCTAssertTrue(closeLinkSpy.values.isEmpty)
         
-        sut.showTransfersAndWait()
-        sut.tapTransfer()
+        sut.showTransfersAndWait(on: scheduler)
+        sut.tapTransfer(on: scheduler)
         
         XCTAssertFalse(closeLinkSpy.values.isEmpty)
     }
-     
-     // MARK: - Events: AuthLoginViewModelAction.Show.Scaner
-     
+    
+    // MARK: - Events: AuthLoginViewModelAction.Show.Scaner
+    
     func test_authLoginViewModelActionShowScanner_shouldSetCardScanner() {
         
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil])
         
-        sut.showScanner()
+        sut.showScanner(on: scheduler)
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner])
     }
@@ -292,11 +290,11 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner, nil])
     }
@@ -304,11 +302,11 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nonNilScanValue() {
         
         let scanValue: String? = "abc123"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(cardScannerSpy.values, [nil, .scanner, nil])
     }
@@ -316,10 +314,10 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(sut.card.textField.text, nil)
     }
@@ -327,10 +325,10 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_emptyScanValue() {
         
         let scanValue: String? = ""
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(sut.card.textField.text, "")
     }
@@ -338,10 +336,10 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_invalidScanValue() {
         
         let scanValue: String? = "abc"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(sut.card.textField.text, "")
     }
@@ -349,10 +347,10 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_scanValueWithDigits() {
         
         let scanValue: String? = "abc12345"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(sut.card.textField.text, "1234 5")
     }
@@ -360,19 +358,19 @@ final class AuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_validScanValue() {
         
         let scanValue: String? = "1234567812345678"
-        let (sut, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _) = makeSUT()
         
-        sut.showScanner()
-        sut.closeScanner(scanValue)
+        sut.showScanner(on: scheduler)
+        sut.closeScanner(scanValue, on: scheduler)
         
         XCTAssertNoDiff(sut.card.textField.text, "1234 5678 1234 5678")
     }
     
     // MARK: - Events: catalogProducts & transferAbroad
-     
+    
     func test_catalogProducts_transferAbroad_shouldChangeButtonsOnUpdate() {
         
-        let (sut, _, _, catalogProductsTransferAbroad, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, scheduler, _, _, catalogProductsTransferAbroad, _, _) = makeSUT(catalogProductDataStub: .sample)
         let buttonsSpy = ValueSpy(sut.$buttons.map { $0.map(\.view) })
         
         XCTAssertNoDiff(buttonsSpy.values, [
@@ -380,7 +378,7 @@ final class AuthLoginViewModelTests: XCTestCase {
         ])
         
         catalogProductsTransferAbroad.send((.sample, nil))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(buttonsSpy.values, [
             [],
@@ -388,7 +386,7 @@ final class AuthLoginViewModelTests: XCTestCase {
         ])
         
         catalogProductsTransferAbroad.send((.sample, .sample()))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(buttonsSpy.values, [
             [],
@@ -396,66 +394,66 @@ final class AuthLoginViewModelTests: XCTestCase {
             [.transfer, .orderCard,]
         ])
     }
-     
-     // MARK: - Events: cardState & sessionState & fcmToken
-     
+    
+    // MARK: - Events: cardState & sessionState & fcmToken
+    
     func test_cardState_sessionState_fcmToken_shouldChangeCardButton() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
         sut.card.state = .editing
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil])
         
         sut.card.state = .ready("1234")
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil])
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), nil))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil, nil])
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
     }
-     
+    
     func test_cardState_shouldSetCardButton() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil, nil])
         
         sut.card.state = .ready("1234")
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
     }
-     
+    
     func test_cardState_shouldSendRegisterCardNumberOnCardNextButtonAction() {
         
-        let (sut, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
         let spy = ValueSpy(sut.registerCardNumber)
         
         XCTAssertNil(sut.card.nextButton)
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
         sut.card.state = .ready("1234")
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, [])
         
         sut.card.nextButton?.action()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
         
         XCTAssertNoDiff(spy.values, ["1234"])
     }
@@ -473,6 +471,7 @@ final class AuthLoginViewModelTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: AuthLoginViewModel,
+        scheduler: TestSchedulerOfDispatchQueue,
         clientInformMessage: ClientInformMessage,
         checkClientResponse: CheckClientResponse,
         catalogProductsTransferAbroad: CatalogProductsTransferAbroad,
@@ -502,16 +501,20 @@ final class AuthLoginViewModelTests: XCTestCase {
             products: [catalogProductDataStub].compactMap { $0 }
         )
         
+        let scheduler = DispatchQueue.test
+        
         let sut = AuthLoginViewModel(
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
             factory: factory,
-            rootActions: .emptyMock
+            rootActions: .emptyMock,
+            scheduler: scheduler.eraseToAnyScheduler()
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(scheduler, file: file, line: line)
         
-        return (sut, clientInformMessage, checkClientResponse, catalogProductsTransferAbroad, sessionStateFcmToken, registerCardNumberSpy)
+        return (sut, scheduler, clientInformMessage, checkClientResponse, catalogProductsTransferAbroad, sessionStateFcmToken, registerCardNumberSpy)
     }
     
     private final class RegisterCardNumberSpy {
@@ -529,7 +532,7 @@ final class AuthLoginViewModelTests: XCTestCase {
         private let products: [CatalogProductData]
         
         init(products: [CatalogProductData]) {
-         
+            
             self.products = products
         }
         
@@ -665,7 +668,7 @@ private extension AuthLoginViewModel {
             }
             .eraseToAnyPublisher()
     }
-
+    
     var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
         
         $alert
@@ -717,66 +720,65 @@ private extension AuthLoginViewModel {
     
     func register(
         cardNumber: String,
-        timeout: TimeInterval = 0.05
+        on scheduler: TestSchedulerOfDispatchQueue
     ) {
         action.send(.register(cardNumber: cardNumber))
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        scheduler.advance()
     }
     
-    func showProductsAndWait(timeout: TimeInterval = 0.05) {
-        
+    func showProductsAndWait(
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
         showProducts()
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        scheduler.advance()
     }
     
-    func showTransfersAndWait(timeout: TimeInterval = 0.05) {
-        
+    func showTransfersAndWait(
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
         showTransfers()
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        scheduler.advance()
     }
     
-    func showScanner(timeout: TimeInterval = 0.05) {
-        
+    func showScanner(
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
         action.send(.show(.scanner))
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        scheduler.advance()
     }
     
     func closeScanner(
         _ scanValue: String?,
-        timeout: TimeInterval = 0.05
+        on scheduler: TestSchedulerOfDispatchQueue
     ) {
         cardScanner?.closeAction(scanValue)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        scheduler.advance()
     }
     
     func order(
         _ productData: CatalogProductData,
-        timeout: TimeInterval = 0.05
+        on scheduler: TestSchedulerOfDispatchQueue
     ) {
         orderAuthButton?.action(productData.id)
-    
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        scheduler.advance()
     }
     
-    func orderDestination(timeout: TimeInterval = 0.05) {
-        
-        let order = AuthTransfersAction.transfersSection(.order)
-        link?.authTransfersViewModel?.action.send(order)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    func orderDestination(
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
+        link?.authTransfersViewModel?.action.send(
+            .transfersSection(.order)
+        )
+        scheduler.advance()
     }
     
-    func tapTransfer(timeout: TimeInterval = 0.05) {
-        
-        let transfers = AuthTransfersAction.transfersSection(.transfers)
-        link?.authTransfersViewModel?.action.send(transfers)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    func tapTransfer(
+        on scheduler: TestSchedulerOfDispatchQueue
+    ) {
+        link?.authTransfersViewModel?.action.send(
+            .transfersSection(.transfers)
+        )
+        scheduler.advance()
     }
 }
 
@@ -815,10 +817,10 @@ private extension AuthLoginViewModel.Link {
         switch self {
         case let .confirm(viewModel):
             return .confirm(viewModel.view)
-
+            
         case .transfers:
             return .transfers
-
+            
         case let .products(viewModel):
             return .products(titles: viewModel.productCards.map(\.title))
         }
