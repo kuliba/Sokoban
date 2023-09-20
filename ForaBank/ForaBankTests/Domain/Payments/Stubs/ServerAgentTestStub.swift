@@ -34,6 +34,18 @@ final class ServerAgentTestStub: ServerAgentProtocol {
     typealias GetOperationDetail = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail
     typealias GetOperationDetailPayload = GetOperationDetail.Response.Payload
     
+    typealias SavePaymentTemplate = ServerCommands.PaymentTemplateController.SavePaymentTemplate
+    typealias SavePaymentTemplateResponseData = SavePaymentTemplate.Response.Payload
+    
+    typealias DeletePaymentTemplates = ServerCommands.PaymentTemplateController.DeletePaymentTemplates
+    typealias DeletePaymentTemplateResponseData = DeletePaymentTemplates.Response.Payload
+    
+    typealias UpdatePaymentTemplates = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate
+    typealias UpdatePaymentTemplateResponseData = UpdatePaymentTemplates.Response.Payload
+    
+    typealias MakeTransfer = ServerCommands.TransferController.MakeTransfer
+    typealias MakeTransferResponseData = UpdatePaymentTemplates.Response.Payload
+    
     private let stubs: [Stub.Case: Stub]
     
     init(_ stubs: [Stub]) {
@@ -60,9 +72,21 @@ final class ServerAgentTestStub: ServerAgentProtocol {
             
             case .getScenarioQRData:
                 dict[.getScenarioQRData] = stub
+              
+            case .getPaymentSaveTemplate:
+                dict[.getPaymentSaveTemplate] = stub
                 
             case .getOperationDetail:
                 dict[.getOperationDetail] = stub
+                
+            case .deletePaymentTemplate:
+                dict[.deletePaymentTemplate] = stub
+                
+            case .updatePaymentTemplate:
+                dict[.updatePaymentTemplate] = stub
+                
+            case .makeTransfer:
+                dict[.makeTransfer] = stub
             }
         }
     }
@@ -102,6 +126,11 @@ extension ServerAgentTestStub {
         typealias C2BPaymentCard = Result<ServerCommands.SBPPaymentController.CreateC2BPaymentCard.Response, ServerAgentError>
         typealias GetScenarioQRData = Result<ServerCommands.SBPController.GetScenarioQRData.Response, ServerAgentError>
         typealias GetOperationDetail = Result<ServerCommands.PaymentOperationDetailContoller.GetOperationDetail.Response, ServerAgentError>
+        typealias SavePaymentTemplate = Result<ServerCommands.PaymentTemplateController.SavePaymentTemplate.Response, ServerAgentError>
+        typealias DeletePaymentTemplate = Result<ServerCommands.PaymentTemplateController.DeletePaymentTemplates.Response, ServerAgentError>
+        typealias UpdatePaymentTemplate = Result<ServerCommands.PaymentTemplateController.UpdatePaymentTemplate.Response, ServerAgentError>
+        typealias MakeTransfer = Result<ServerCommands.TransferController.MakeTransfer.Response, ServerAgentError>
+        
         
         case anywayTransfer(CreateAnywayTransferResult)
         case getPhoneInfo(GetPhoneInfoResult)
@@ -110,6 +139,10 @@ extension ServerAgentTestStub {
         case c2bPaymentCard(C2BPaymentCard)
         case getScenarioQRData(GetScenarioQRData)
         case getOperationDetail(GetOperationDetail)
+        case getPaymentSaveTemplate(SavePaymentTemplate)
+        case deletePaymentTemplate(DeletePaymentTemplate)
+        case updatePaymentTemplate(UpdatePaymentTemplate)
+        case makeTransfer(MakeTransfer)
         
         enum Case {
             
@@ -120,6 +153,10 @@ extension ServerAgentTestStub {
             case c2bPaymentCard
             case getScenarioQRData
             case getOperationDetail
+            case getPaymentSaveTemplate
+            case deletePaymentTemplate
+            case updatePaymentTemplate
+            case makeTransfer
         }
     }
 }
@@ -146,9 +183,21 @@ extension ServerAgentTestStub.Stub.Case {
         
         case _ as ServerAgentTestStub.GetScenarioQRData:
             self = .getScenarioQRData
+          
+        case _ as ServerAgentTestStub.SavePaymentTemplate:
+            self = .getPaymentSaveTemplate
             
         case _ as ServerAgentTestStub.GetOperationDetail:
             self = .getOperationDetail
+            
+        case _ as ServerAgentTestStub.DeletePaymentTemplates:
+            self = .deletePaymentTemplate
+        
+        case _ as ServerAgentTestStub.UpdatePaymentTemplates:
+            self = .updatePaymentTemplate
+            
+        case _ as ServerAgentTestStub.MakeTransfer:
+            self = .makeTransfer
             
         default:
             
@@ -245,6 +294,62 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for getOperationDetail in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .getPaymentSaveTemplate(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for getPaymentSaveTemplate in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .deletePaymentTemplate(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for deletePaymentTemplate in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .updatePaymentTemplate(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for updatePaymentTemplate in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .makeTransfer(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for makeTransfer in \(result)", code: 0)
                     completion(.failure(.corruptedData(error)))
                 }
             } catch {

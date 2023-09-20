@@ -136,6 +136,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         
                         self.templateButton = .init(
                             model: model,
+                            state: .init(details: details),
                             operation: nil,
                             operationDetail: details
                         )

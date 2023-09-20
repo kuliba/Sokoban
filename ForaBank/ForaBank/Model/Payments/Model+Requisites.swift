@@ -214,9 +214,14 @@ extension Model {
                         parameters.append(kppParameter)
                     }
                     
-                    //MARK: Company Name Parameter
-                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: suggestedCompanies[0].name), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
-                    parameters.append(companyNameParameter)
+                    let companyParameter = try getCompanyNameParameter(
+                        operation,
+                        companyNameParameterId,
+                        companyNameValidator,
+                        suggestedCompanies
+                    )
+                    
+                    parameters.append(companyParameter)
                     
                 } else {
                     
@@ -310,6 +315,53 @@ extension Model {
             
         default:
             throw Payments.Error.unsupported
+        }
+    }
+    
+    func getCompanyNameParameter(
+        _ operation: Payments.Operation,
+        _ companyNameParameterId: String,
+        _ companyNameValidator: Payments.Validation.RulesSystem,
+        _ suggestedCompanies: [(kpp: String?, name: String)]
+    ) throws -> PaymentsParameterRepresentable {
+        
+        // MARK: Company Name Parameter
+        let title = "Наименование получателя"
+        let limit = Payments.Limitation(limit: 160)
+        
+        switch operation.source {
+        case let .template(templateId):
+            
+            guard let template = self.paymentTemplates.value.first(where: { $0.id == templateId }) else {
+                throw Payments.Error.unsupported
+            }
+            
+            let companyNameParameter = Payments.ParameterInput(
+                .init(
+                    id: companyNameParameterId,
+                    value: template.name
+                ),
+                icon: nil,
+                title: title,
+                validator: companyNameValidator,
+                limitator: limit
+            )
+             
+            return companyNameParameter
+            
+        default:
+            let companyNameParameter = Payments.ParameterInput(
+                .init(
+                    id: companyNameParameterId,
+                    value: suggestedCompanies[0].name
+                ),
+                icon: nil,
+                title: title,
+                validator: companyNameValidator,
+                limitator: limit
+            )
+            
+            return companyNameParameter
         }
     }
     
