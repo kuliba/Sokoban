@@ -54,7 +54,7 @@ extension PaymentsSuccessOptionButtonsView {
     }
 }
 
-private extension Model {
+extension Model {
   
     func makePaymentsSuccessOptionButtonsButtonViewModels(
         withSource source: Payments.ParameterSuccessOptionButtons
@@ -66,8 +66,7 @@ private extension Model {
             case .template:
                 
                 guard let operationDetail = source.operationDetail,
-                      operationDetail.restrictedTemplateButton,
-                      let operation = source.operation else {
+                      operationDetail.restrictedTemplateButton else {
                     return nil
                 }
                 
@@ -89,18 +88,14 @@ private extension Model {
                     return TemplateButtonView.ViewModel(
                         model: self,
                         state: state,
-                        operation: operation,
+                        operation: source.operation,
                         operationDetail: operationDetail
-                    )
-                    
+                    )    
                     
                 default:
-                    guard let operationDetail = source.operationDetail else {
-                        return nil
-                    }
                     
                     if let meToMePayment = source.meToMePayment,
-                       let templateID = source.templateID,
+                       let templateID = meToMePayment.templateId,
                        let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) {
                 
                         let state = TemplateButton.templateButtonState(
