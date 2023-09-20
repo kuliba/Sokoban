@@ -30,6 +30,8 @@ extension ModelAction {
                 
                 let result: Result<OperationDetailData, ModelError>
             }
+            
+            struct ResponseWithEmptyData: Action {}
         }
     }
     
@@ -82,6 +84,7 @@ extension Model {
                     
                     guard let details = response.data else {
                         self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Operation.Detail.ResponseWithEmptyData())
                         return
                     }
                     
