@@ -5,27 +5,41 @@
 //  Created by Igor Malyarov on 19.09.2023.
 //
 
-@testable import ForaBank
+import Combine
 import XCTest
+@testable import ForaBank
 
 final class Model_OperationTests: XCTestCase {
     
     func test_shouldNotSendDetailResponseActionOnSuccessfulOperationDetailRequesResponse() {
         
         let sut = makeSUT(detail: .emptyDataDetail)
-        let spy = ValueSpy(
-            sut.action
-                .compactMap { $0 as? ModelAction.Operation.Detail.Response }
-                .map(\.emptyDataMessage)
-        )
+        let spy = ValueSpy(sut.emptyDataMessagePublisher)
         XCTAssertNoDiff(spy.values, [])
         
-        let request = ModelAction.Operation.Detail.Request(type: .documentId(123))
-        sut.action.send(request)
+        sut.sendDetailRequestAndWait()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNoDiff(spy.values, [])
+    }
+    
+    func test_shouldSendDetailWithEmptyDataResponse_shouldSetupIsLoadingFalse() {
+        
+        let sut = makeSUT(detail: .emptyDataDetail)
+        let operationDetail = OperationDetailViewModel(
+            productStatement: .stub(),
+            product: .stub(),
+            model: sut
+        )
+        
+        XCTAssertNoDiff(operationDetail?.isLoading, true)
+        
+        sut.sendDetailRequestAndWait()
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.8)
+        
+        XCTAssertNoDiff(operationDetail?.isLoading, false)
     }
     
     // MARK: - Helpers
@@ -74,4 +88,24 @@ private extension ServerCommands.PaymentOperationDetailContoller.GetOperationDet
         errorMessage: "empty data",
         data: nil
     )
+}
+
+private extension Model {
+   
+    typealias Publisher = Publishers.MapKeyPath<Publishers.CompactMap<PassthroughSubject<any Action, Never>, ModelAction.Operation.Detail.Response>, String?>
+    
+    var emptyDataMessagePublisher: Publisher {
+
+      action
+        .compactMap { $0 as? ModelAction.Operation.Detail.Response }
+        .map(\.emptyDataMessage)
+    }
+    
+    func sendDetailRequestAndWait(timeout: TimeInterval = 0.05) {
+        
+        let request = ModelAction.Operation.Detail.Request(type: .documentId(123))
+        action.send(request)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
 }

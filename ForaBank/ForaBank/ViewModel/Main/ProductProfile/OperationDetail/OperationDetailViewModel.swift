@@ -175,6 +175,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
             }).store(in: &bindings)
         
+        model.action
+            .compactMap { $0 as? ModelAction.Operation.Detail.ResponseWithEmptyData }
+            .receive(on: DispatchQueue.main)
+            .map { _ in false }
+            .assign(to: &$isLoading)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
