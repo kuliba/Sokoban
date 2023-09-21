@@ -17,7 +17,7 @@ extension Services {
     ) -> KeyExchangeService {
         
         let keyPair = cryptographer.generateP384KeyPair()
-                                                         
+        
         let secretRequestMaker = SecretRequestMaker(
             publicKeyData: {
                 
