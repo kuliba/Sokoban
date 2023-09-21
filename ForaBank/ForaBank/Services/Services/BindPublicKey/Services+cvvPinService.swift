@@ -26,7 +26,7 @@ extension Services {
             ),
             keyExchangeService: keyExchangeService(
                 httpClient: httpClient,
-                cryptographer: .init()
+                cryptographer: .live
             ),
             transferKeyService: .init(
                 secKeySwaddler: secKeySwaddler(),
@@ -43,22 +43,32 @@ struct KeyExchangeCryptographer {
     typealias PublicKey = P384KeyAgreementDomain.PublicKey
     typealias PrivateKey = P384KeyAgreementDomain.PrivateKey
     
-    let generateP384KeyPair: () -> P384KeyAgreementDomain.KeyPair = ForaCrypto.Crypto.generateP384KeyPair
-    let publicKeyData: (PublicKey) throws -> Data = { $0.derRepresentation }
-    let transportEncrypt: (Data) throws -> Data = { data in
-        
-        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
-    }
-    let sharedSecret = { string, privateKey in
-        
-        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
-            privateKey: privateKey,
-            publicKey: serverPublicKey
-        )
-        
-        return sharedSecret
-    }
+    let generateP384KeyPair: () -> P384KeyAgreementDomain.KeyPair
+    let publicKeyData: (PublicKey) throws -> Data
+    let transportEncrypt: (Data) throws -> Data
+    let sharedSecret: (String, PrivateKey) throws -> Data
+}
+
+extension KeyExchangeCryptographer {
+    
+    static let live: Self = .init(
+        generateP384KeyPair: ForaCrypto.Crypto.generateP384KeyPair,
+        publicKeyData: { $0.derRepresentation },
+        transportEncrypt: { data in
+            
+            try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
+        },
+        sharedSecret: { string, privateKey in
+            
+            let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
+            let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
+                privateKey: privateKey,
+                publicKey: serverPublicKey
+            )
+            
+            return sharedSecret
+        }
+    )
 }
 
 // MARK: - Adapters
