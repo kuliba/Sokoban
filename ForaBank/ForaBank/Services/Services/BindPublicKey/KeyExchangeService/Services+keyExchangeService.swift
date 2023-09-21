@@ -5,40 +5,27 @@
 //  Created by Igor Malyarov on 04.08.2023.
 //
 
-import CryptoKit
 import CvvPin
-import ForaCrypto
 import Foundation
 import GenericRemoteService
-
-extension PublicTransportKeyDomain {
-    
-    static func encrypt(_ data: Data) throws -> Data {
-        
-        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
-    }
-    
-    static func decrypt(_ data: Data) throws -> Data {
-        
-        try ForaCrypto.Crypto.rsaPKCS1Decrypt(data: data, withPrivateKey: fromCert())
-    }
-}
-
-extension KeyExchangeService: KeyExchangeServiceProtocol {}
 
 extension Services {
     
     static func keyExchangeService(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        cryptographer: KeyExchangeCryptographer
     ) -> KeyExchangeService {
         
-        let keyPair = ForaCrypto.Crypto.generateP384KeyPair()
-        
-        let publicKeyData = keyPair.publicKey.derRepresentation
-        
+        let keyPair = cryptographer.generateP384KeyPair()
+                                                         
         let secretRequestMaker = SecretRequestMaker(
-            publicKeyData: { publicKeyData },
-            encrypt: PublicTransportKeyDomain.encrypt
+            publicKeyData: {
+                
+                try cryptographer.publicKeyData(
+                    keyPair.publicKey
+                )
+            },
+            encrypt: cryptographer.transportEncrypt
         )
         
         let formSessionKeyService = RemoteService(
@@ -50,14 +37,8 @@ extension Services {
         let extractSharedSecret: KeyExchangeService.ExtractSharedSecret = { string, completion in
             
             completion(.init(catching: {
-                #warning("extract as method to ForaCrypto.Crypto")
-                let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-                let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
-                    privateKey: keyPair.privateKey,
-                    publicKey: serverPublicKey
-                )
                 
-                return sharedSecret
+                try cryptographer.sharedSecret(string, keyPair.privateKey)
             }))
         }
         
@@ -88,7 +69,7 @@ private extension KeyExchangeService {
     }
 }
 
-extension RemoteService: CryptoAPIClient {
+extension RemoteService {
     
     public func get(
         _ request: Input,

@@ -25,7 +25,8 @@ extension Services {
                 httpClient: httpClient
             ),
             keyExchangeService: keyExchangeService(
-                httpClient: httpClient
+                httpClient: httpClient,
+                cryptographer: .init()
             ),
             transferKeyService: .init(
                 secKeySwaddler: secKeySwaddler(),
@@ -34,6 +35,29 @@ extension Services {
                 )
             )
         )
+    }
+}
+
+struct KeyExchangeCryptographer {
+    
+    typealias PublicKey = P384KeyAgreementDomain.PublicKey
+    typealias PrivateKey = P384KeyAgreementDomain.PrivateKey
+    
+    let generateP384KeyPair: () -> P384KeyAgreementDomain.KeyPair = ForaCrypto.Crypto.generateP384KeyPair
+    let publicKeyData: (PublicKey) throws -> Data = { $0.derRepresentation }
+    let transportEncrypt: (Data) throws -> Data = { data in
+        
+        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
+    }
+    let sharedSecret = { string, privateKey in
+        
+        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
+        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
+            privateKey: privateKey,
+            publicKey: serverPublicKey
+        )
+        
+        return sharedSecret
     }
 }
 

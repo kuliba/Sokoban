@@ -396,7 +396,6 @@
 		2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */; };
 		2A4593C62A7CC8B6008593A3 /* Services+keyExchangeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */; };
 		2A4593C92A7CCAC6008593A3 /* Services+transferPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593C82A7CCAC6008593A3 /* Services+transferPublicKeyService.swift */; };
-		2A4593CC2A7CCC88008593A3 /* Services+failingKeyExchangeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593CB2A7CCC88008593A3 /* Services+failingKeyExchangeService.swift */; };
 		2A4593D52A7CFA74008593A3 /* URL+StaticString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D42A7CFA74008593A3 /* URL+StaticString.swift */; };
 		2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */; };
 		2A49221A2ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */; };
@@ -2348,7 +2347,6 @@
 		2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
 		2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+keyExchangeService.swift"; sourceTree = "<group>"; };
 		2A4593C82A7CCAC6008593A3 /* Services+transferPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+transferPublicKeyService.swift"; sourceTree = "<group>"; };
-		2A4593CB2A7CCC88008593A3 /* Services+failingKeyExchangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+failingKeyExchangeService.swift"; sourceTree = "<group>"; };
 		2A4593D42A7CFA74008593A3 /* URL+StaticString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+StaticString.swift"; sourceTree = "<group>"; };
 		2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+EndpointBindPublicKeyWithEventIDTests.swift"; sourceTree = "<group>"; };
 		2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratedRequestCreator.swift; sourceTree = "<group>"; };
@@ -5146,7 +5144,6 @@
 		2A4593C42A7CC8AC008593A3 /* KeyExchangeService */ = {
 			isa = PBXGroup;
 			children = (
-				2A4593CB2A7CCC88008593A3 /* Services+failingKeyExchangeService.swift */,
 				2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */,
 				2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */,
 				2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */,
@@ -11364,7 +11361,6 @@
 				C16B8A4D2955F1FD00B0AD4C /* PrefferedBanksList.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */,
-				2A4593CC2A7CCC88008593A3 /* Services+failingKeyExchangeService.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
 				68EACA5328909AF200B27B50 /* C2BDetailsViewController+Legacy.swift in Sources */,
 				2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */,
