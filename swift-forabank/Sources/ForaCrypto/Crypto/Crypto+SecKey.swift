@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 18.08.2023.
 //
 
+import CryptoKit
 import Foundation
 
 public extension Crypto {
@@ -14,11 +15,13 @@ public extension Crypto {
     static func sign(
         _ data: Data,
         withPrivateKey key: SecKey,
-        algorithm: SecKeyAlgorithm = .rsaSignatureRaw
+        algorithm: SecKeyAlgorithm
     ) throws -> Data {
         
+        let hash = SHA256.hash(data: data)
+        
         var error: Unmanaged<CFError>? = nil
-        guard let signed = SecKeyCreateSignature(key, algorithm, data as CFData, &error) as? Data
+        guard let signed = SecKeyCreateSignature(key, algorithm, hash.withUnsafeBytes { Data($0) } as CFData, &error) as? Data
         else {
             throw Error.signFailure(error?.takeRetainedValue() as? Swift.Error)
         }
