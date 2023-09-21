@@ -17,6 +17,7 @@ class LoggerAgent: LoggerAgentProtocol {
     private let uiLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.ui.rawValue)
     private let networkLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.network.rawValue)
     private let cacheLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.cache.rawValue)
+    private let cryptoLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.crypto.rawValue)
     private let sessionLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.session.rawValue)
     private let paymentsLogger = Logger(subsystem: subsystem, category: LoggerAgentCategory.payments.rawValue)
     
@@ -41,6 +42,7 @@ class LoggerAgent: LoggerAgentProtocol {
         case .ui: return uiLogger
         case .network: return networkLogger
         case .cache: return cacheLogger
+        case .crypto: return cryptoLogger
         case .session: return sessionLogger
         case .payments: return paymentsLogger
         }
