@@ -26,8 +26,16 @@ extension Services {
         
         let swaddler = secKeySwaddler(transportKey: transportKey)
         
+        typealias LoggingRequestCreator = LoggingDecoratedRequestCreator<BindKeyExchangePayload, Void>
+        
+        let loggingRequestCreator = LoggingRequestCreator(
+            log: LoggerAgent.shared.log,
+            decoratee: RequestFactory.makeBindPublicKeyWithEventIDRequest
+        )
+        
         let bindKeyService = PublicKeyTransferService.BindKeyService(
-            createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest,
+            // createRequest: decoratedCreateRequest,
+            createRequest: loggingRequestCreator.createRequest,
             performRequest: httpClient.performRequest,
             mapResponse: BindPublicKeyWithEventIDMapper.map
         )
@@ -55,7 +63,7 @@ extension Services {
             let clientSecretOTP = try ForaCrypto.Crypto.sign(
                 .init(otp.value.utf8),
                 withPrivateKey: privateKey,
-                algorithm: .rsaSignatureMessagePKCS1v15SHA256
+                algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
             
             let procClientSecretOTP = try ForaCrypto.Crypto.rsaEncrypt(
@@ -187,7 +195,8 @@ extension Services {
             
             return try ForaCrypto.Crypto.sign(
                 .init(otp.value.utf8),
-                withPrivateKey: key
+                withPrivateKey: key,
+                algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
         }
         
