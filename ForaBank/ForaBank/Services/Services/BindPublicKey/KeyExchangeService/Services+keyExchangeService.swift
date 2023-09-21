@@ -36,6 +36,11 @@ extension Services {
         
         let publicKeyData = keyPair.publicKey.derRepresentation
         
+        let secretRequestMaker = SecretRequestMaker(
+            publicKeyData: { publicKeyData },
+            encrypt: PublicTransportKeyDomain.encrypt
+        )
+        
         let formSessionKeyService = RemoteService(
             createRequest: RequestFactory.makeSecretRequest,
             performRequest: httpClient.performRequest,
@@ -45,7 +50,7 @@ extension Services {
         let extractSharedSecret: KeyExchangeService.ExtractSharedSecret = { string, completion in
             
             completion(.init(catching: {
-#warning("extract as method to ForaCrypto.Crypto")
+                #warning("extract as method to ForaCrypto.Crypto")
                 let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
                 let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
                     privateKey: keyPair.privateKey,
@@ -56,18 +61,15 @@ extension Services {
             }))
         }
         
-        let secretRequestMaker = SecretRequestMaker(
-            publicKeyData: { publicKeyData },
-            encrypt: PublicTransportKeyDomain.encrypt
-        )
-        
-        return KeyExchangeService(
+        return .init(
             makeSecretRequest: secretRequestMaker.makeSecretRequest,
             formSessionKey: formSessionKeyService.get,
             extractSharedSecret: extractSharedSecret
         )
     }
 }
+
+// MARK: - Adapters
 
 extension RemoteService: CryptoAPIClient {
     

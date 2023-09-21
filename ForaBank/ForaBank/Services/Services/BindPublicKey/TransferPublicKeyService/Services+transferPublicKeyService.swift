@@ -13,127 +13,6 @@ import Foundation
 import TransferPublicKey
 import GenericRemoteService
 
-// MARK: - SecKey
-
-extension Services {
-    
-    typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
-    
-    static func publicSecKeyTransferService(
-        httpClient: HTTPClient,
-        transportKey: @escaping () throws -> SecKey = ForaCrypto.Crypto.transportKey
-    ) -> PublicKeyTransferService {
-        
-        let swaddler = secKeySwaddler(transportKey: transportKey)
-        
-        typealias LoggingRequestCreator = LoggingDecoratedRequestCreator<BindKeyExchangePayload, Void>
-        
-        let loggingRequestCreator = LoggingRequestCreator(
-            log: LoggerAgent.shared.log,
-            decoratee: RequestFactory.makeBindPublicKeyWithEventIDRequest
-        )
-        
-        let bindKeyService = PublicKeyTransferService.BindKeyService(
-            // createRequest: decoratedCreateRequest,
-            createRequest: loggingRequestCreator.createRequest,
-            performRequest: httpClient.performRequest,
-            mapResponse: BindPublicKeyWithEventIDMapper.map
-        )
-        
-        return .init(
-            secKeySwaddler: swaddler,
-            bindKeyService: bindKeyService
-        )
-    }
-    
-    static func secKeySwaddler(
-        transportKey: @escaping () throws -> SecKey
-    ) -> SecKeySwaddler {
-        
-        let generateRSA4096BitKeys = {
-            
-            try ForaCrypto.Crypto.createRandomSecKeys(
-                keyType: kSecAttrKeyTypeRSA,
-                keySizeInBits: 4096
-            )
-        }
-        
-        let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
-            
-            let clientSecretOTP = try ForaCrypto.Crypto.sign(
-                .init(otp.value.utf8),
-                withPrivateKey: privateKey,
-                algorithm: .rsaSignatureDigestPKCS1v15SHA256
-            )
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
-
-            let procClientSecretOTP = try ForaCrypto.Crypto.rsaEncrypt(
-                data: clientSecretOTP,
-                withPublicKey: transportKey(),
-                algorithm: .rsaEncryptionRaw
-            )
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
-            
-            return procClientSecretOTP
-        }
-        
-        let keyCache = InMemoryKeyStore<SecKey>()
-        let saveKeys: SecKeySwaddler.SaveKeys = { privateKey, publicKey in
-            
-            keyCache.saveKey(privateKey) { _ in
-                #warning("FIX THIS")
-            }
-        }
-        
-        let aesEncrypt128bitChunks: SecKeySwaddler.AESEncrypt128bitChunks = { data, secret in
-            
-            let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
-            
-            let result = try aes256CBC.encrypt(data)
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
-            
-            return result
-        }
-        
-        return .init(
-            generateRSA4096BitKeys: generateRSA4096BitKeys,
-            signEncryptOTP: signEncryptOTP,
-            saveKeys: saveKeys,
-            aesEncrypt128bitChunks: aesEncrypt128bitChunks
-        )
-    }
-}
-
-private extension Services.PublicKeyTransferService {
-    
-    convenience init(
-        secKeySwaddler: Services.SecKeySwaddler,
-        bindKeyService: BindKeyService
-    ) {
-        self.init(
-            swaddleKey: secKeySwaddler.swaddle,
-            bindKey: bindKeyService.process
-        )
-    }
-}
-
-private extension Services.SecKeySwaddler {
-    
-    func swaddle(
-        otp: OTP,
-        sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
-        completion: @escaping (Result<Data, any Error>) -> Void
-    ) {
-        completion(
-            .init(catching: {
-                
-                try swaddleKey(with: otp, and: sharedSecret)
-            })
-        )
-    }
-}
-
 // MARK: - P384
 
 extension Services {
@@ -159,7 +38,7 @@ extension Services {
             saveKeys: { privateKey, publicKey in
                 
                 keyCache.saveKey(privateKey) { _ in
-                    #warning("FIX THIS")
+#warning("FIX THIS")
                 }
             },
             aesEncrypt128bitChunks: { data, secret in
@@ -187,12 +66,12 @@ extension Services {
     
     typealias TransferSignEncryptOTP = (TransferOTP, P384KeyAgreementDomain.PrivateKey) throws -> Data
     
-    #warning("remove if not used")
+#warning("remove if not used")
     static func signEncryptOTP(
         withPublicKey publicKey: @escaping () throws -> SecKey
     ) -> TransferSignEncryptOTP {
         
-        #warning("try P384 direct encryption?")
+#warning("try P384 direct encryption?")
         let signWithPadding: TransferSignEncryptOTP = { otp, privateKey in
             
             let key = try ForaCrypto.Crypto.createSecKeyWith(
@@ -229,7 +108,7 @@ extension Services {
 extension P384KeyAgreementDomain.PublicKey: RawRepresentational {}
 
 private extension Services.P384Swaddler {
-
+    
     func swaddle(
         otp: OTP,
         sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
@@ -259,7 +138,7 @@ private extension BindPublicKeyWithEventIDMapper {
     }
 }
 
-private extension Services.PublicKeyTransferService {
+extension Services.PublicKeyTransferService {
     
     typealias Input = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
     typealias BindKeyService = RemoteService<Input, Void>

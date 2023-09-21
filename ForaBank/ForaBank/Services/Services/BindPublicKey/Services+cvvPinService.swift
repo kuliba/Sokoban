@@ -20,23 +20,34 @@ extension Services {
         httpClient: HTTPClient
     ) -> CvvPinService {
         
-        let sessionCodeService = getProcessingSessionCode(
-            httpClient: httpClient
+        .init(
+            sessionCodeService: getProcessingSessionCode(
+                httpClient: httpClient
+            ),
+            keyExchangeService: keyExchangeService(
+                httpClient: httpClient
+            ),
+            transferKeyService: .init(
+                secKeySwaddler: secKeySwaddler(),
+                bindKeyService: bindKeyService(
+                    httpClient: httpClient
+                )
+            )
         )
-        
-        let keyExchangeService = keyExchangeService(
-            httpClient: httpClient
-        )
-        
-        // let transferPublicKeyService = publicKeyTransferService(
-        let transferPublicKeyService = publicSecKeyTransferService(
-            httpClient: httpClient
-        )
-        
-        return .init(
-            sessionCodeService: sessionCodeService,
-            keyExchangeService: keyExchangeService,
-            transferKeyService: transferPublicKeyService
+    }
+}
+
+// MARK: - Adapters
+
+private extension Services.PublicKeyTransferService {
+    
+    convenience init(
+        secKeySwaddler: Services.SecKeySwaddler,
+        bindKeyService: BindKeyService
+    ) {
+        self.init(
+            swaddleKey: secKeySwaddler.swaddle,
+            bindKey: bindKeyService.process
         )
     }
 }
@@ -58,8 +69,45 @@ private extension CvvPinService {
     }
 }
 
-// MARK: - Adapters
+private extension Services.SecKeySwaddler {
+    
+    func swaddle(
+        otp: OTP,
+        sharedSecret: SwaddleKeyDomain<OTP>.SharedSecret,
+        completion: @escaping (Result<Data, any Error>) -> Void
+    ) {
+        completion(
+            .init(catching: {
+                
+                try swaddleKey(with: otp, and: sharedSecret)
+            })
+        )
+    }
+}
 
+private extension Services.PublicKeyTransferService.BindKeyService {
+    
+    typealias BindCompletion = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.Completion
+    
+    func process(
+        input: Input,
+        completion: @escaping BindCompletion
+    ) {
+        self.process(input) { result in
+            
+            switch result {
+            case let .failure(error as ErrorWithRetryAttempts):
+                completion(.failure(error))
+                
+            case let .failure(error):
+                completion(.failure(.init(error: error, retryAttempts: 0)))
+                
+            case .success:
+                completion(.success(()))
+            }
+        }
+    }
+}
 private extension GetProcessingSessionCodeService {
     
     typealias GetResult = GetProcessingSessionCodeDomain.Result
@@ -109,7 +157,7 @@ private extension TransferPublicKeyDomain.EventID {
 private extension TransferPublicKeyDomain.SharedSecret {
     
     var secret: SwaddleKeyDomain<TransferPublicKeyDomain.OTP>.SharedSecret {
- 
+        
         .init(data)
     }
 }
