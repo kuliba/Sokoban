@@ -65,12 +65,14 @@ extension Services {
                 withPrivateKey: privateKey,
                 algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
-            
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
+
             let procClientSecretOTP = try ForaCrypto.Crypto.rsaEncrypt(
                 data: clientSecretOTP,
                 withPublicKey: transportKey(),
                 algorithm: .rsaEncryptionRaw
             )
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
             
             return procClientSecretOTP
         }
@@ -86,7 +88,11 @@ extension Services {
         let aesEncrypt128bitChunks: SecKeySwaddler.AESEncrypt128bitChunks = { data, secret in
             
             let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
+            
             let result = try aes256CBC.encrypt(data)
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
+            
             return result
         }
         
