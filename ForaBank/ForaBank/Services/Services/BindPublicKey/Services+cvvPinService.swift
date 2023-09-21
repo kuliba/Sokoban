@@ -153,6 +153,23 @@ extension Services {
     typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
 }
 
+private extension CvvPinService {
+    
+    typealias EventID = KeyExchangeDomain.KeyExchange.EventID
+    
+    convenience init(
+        sessionCodeService: GetProcessingSessionCodeService,
+        keyExchangeService: KeyExchangeService,
+        transferKeyService: KeyTransferService<OTP, EventID>
+    ) {
+        self.init(
+            getProcessingSessionCode: sessionCodeService.process,
+            exchangeKey: keyExchangeService.exchangeKey,
+            transferPublicKey: transferKeyService.transfer
+        )
+    }
+}
+
 private extension Services.PublicKeyTransferService {
     
     convenience init(
@@ -179,23 +196,6 @@ where OTP == Services.TransferOTP,
             signEncryptOTP: cryptographer.signEncryptOTP,
             saveKeys: cryptographer.saveKeys,
             aesEncrypt128bitChunks: cryptographer.aesEncrypt128bitChunks
-        )
-    }
-}
-
-private extension CvvPinService {
-    
-    typealias EventID = KeyExchangeDomain.KeyExchange.EventID
-    
-    convenience init(
-        sessionCodeService: GetProcessingSessionCodeService,
-        keyExchangeService: KeyExchangeService,
-        transferKeyService: KeyTransferService<OTP, EventID>
-    ) {
-        self.init(
-            getProcessingSessionCode: sessionCodeService.process,
-            exchangeKey: keyExchangeService.exchangeKey,
-            transferPublicKey: transferKeyService.transfer
         )
     }
 }
@@ -239,6 +239,7 @@ private extension Services.PublicKeyTransferService.BindKeyService {
         }
     }
 }
+
 private extension GetProcessingSessionCodeService {
     
     typealias GetResult = GetProcessingSessionCodeDomain.Result
@@ -251,6 +252,7 @@ private extension GetProcessingSessionCodeService {
             let result: GetResult = result
                 .map { .init(value: $0.code) }
                 .mapError { $0 }
+            
             completion(result)
         }
     }
