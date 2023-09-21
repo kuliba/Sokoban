@@ -56,23 +56,45 @@ struct KeyExchangeCryptographer {
 extension KeyExchangeCryptographer {
     
     static let live: Self = .init(
-        generateP384KeyPair: ForaCrypto.Crypto.generateP384KeyPair,
-        publicKeyData: { $0.derRepresentation },
-        transportEncrypt: { data in
-            
-            try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
-        },
-        sharedSecret: { string, privateKey in
-            
-            let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-            let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
-                privateKey: privateKey,
-                publicKey: serverPublicKey
-            )
-            
-            return sharedSecret
-        }
+        generateP384KeyPair: generateP384KeyPair,
+        publicKeyData: publicKeyData,
+        transportEncrypt: transportEncrypt,
+        sharedSecret: sharedSecret
     )
+    
+    private static func generateP384KeyPair(
+    ) -> P384KeyAgreementDomain.KeyPair {
+        
+        ForaCrypto.Crypto.generateP384KeyPair()
+    }
+    
+    private static func publicKeyData(
+        publicKey: PublicKey
+    ) throws -> Data {
+        
+        publicKey.derRepresentation
+    }
+    
+    private static func transportEncrypt(
+        _ data: Data
+    ) throws -> Data {
+        
+        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
+    }
+    
+    private static func sharedSecret(
+        string: String,
+        privateKey: PrivateKey
+    ) throws -> Data {
+        
+        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
+        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
+            privateKey: privateKey,
+            publicKey: serverPublicKey
+        )
+        
+        return sharedSecret
+    }
 }
 
 struct SecKeySwaddleCryptographer {
@@ -88,62 +110,83 @@ struct SecKeySwaddleCryptographer {
 extension SecKeySwaddleCryptographer {
     
     static let live: Self = .init(
-        generateRSA4096BitKeys: {
-            
-            try ForaCrypto.Crypto.createRandomSecKeys(
-                keyType: kSecAttrKeyTypeRSA,
-                keySizeInBits: 4096
-            )
-        },
-        signEncryptOTP: { otp, privateKey in
-            
-            let clientSecretOTP = try ForaCrypto.Crypto.sign(
-                .init(otp.value.utf8),
-                withPrivateKey: privateKey,
-                algorithm: .rsaSignatureDigestPKCS1v15SHA256
-            )
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
-            
-            let transportKeyEncrypt: (Data) throws -> Data = {
+        generateRSA4096BitKeys: generateRSA4096BitKeys,
+        signEncryptOTP: signEncryptOTP,
+        saveKeys: saveKeys,
+        aesEncrypt128bitChunks: aesEncrypt128bitChunks
+    )
+    
+    private static func generateRSA4096BitKeys(
+    ) throws -> (privateKey: SecKey, publicKey: SecKey)  {
+        
+        try ForaCrypto.Crypto.createRandomSecKeys(
+            keyType: kSecAttrKeyTypeRSA,
+            keySizeInBits: 4096
+        )
+    }
+    
+    private static func signEncryptOTP(
+        otp: Services.TransferOTP,
+        privateKey: SecKey
+    ) throws -> Data {
+        
+        let clientSecretOTP = try ForaCrypto.Crypto.sign(
+            .init(otp.value.utf8),
+            withPrivateKey: privateKey,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
+        
+        let procClientSecretOTP = try transportKeyEncrypt(
+            clientSecretOTP
+        )
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
+        
+        return procClientSecretOTP
+    }
+    
+    private static func transportKeyEncrypt(
+        _ data: Data
+    ) throws -> Data {
+        
+        let transportKey = try ForaCrypto.Crypto.transportKey()
         
         let encrypted = try ForaCrypto.Crypto.rsaEncrypt(
-            data: $0,
-            withPublicKey: ForaCrypto.Crypto.transportKey(),
+            data: data,
+            withPublicKey: transportKey,
             algorithm: .rsaEncryptionRaw
         )
         LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Encrypted with transport public key: \(encrypted)")
         
         return encrypted
     }
-            
-            let procClientSecretOTP = try transportKeyEncrypt(
-                clientSecretOTP
-            )
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
-            
-            return procClientSecretOTP
-        },
-        saveKeys:  { privateKey, publicKey in
-            
-            let keyCache = InMemoryKeyStore<SecKey>()
-            let saveKeys: SecKeySwaddler.SaveKeys = { privateKey, publicKey in
+    
+    private static func saveKeys(
+        privateKey: SecKey,
+        publicKey: SecKey
+    ) throws {
+        
+        let keyCache = InMemoryKeyStore<SecKey>()
         
         keyCache.saveKey(privateKey) { _ in
+            
             #warning("FIX THIS")
-    }
-    }
-        },
-        aesEncrypt128bitChunks: { data, secret in
-            
-            let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
-            
-            let result = try aes256CBC.encrypt(data)
-            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
-            
-            return result
         }
-    )
+    }
+    
+    private static func aesEncrypt128bitChunks(
+        data: Data,
+        secret: SecKeySwaddler.SharedSecret
+    ) throws -> Data {
+        
+        let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
+        
+        let result = try aes256CBC.encrypt(data)
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
+        
+        return result
+    }
 }
 
 // MARK: - Adapters
