@@ -28,6 +28,7 @@ public extension Crypto {
         case unableCopyExternalRepresentation(String)
         case secKeyCreationWithDataFailure(String)
         case keysGenerationFailure(bits: Int, keyType: CFString, Swift.Error)
+        case keysPairGenerationFailure(keySize: Int, keyType: CFString, OSStatus)
         case keyExchangeResultFailure(Swift.Error)
         case base64StringEncodedData(String)
         case encryptionFailed

@@ -134,7 +134,62 @@ public extension Crypto {
         
         return (privateKey, publicKey)
     }
-
+    
+    /// Use `OpenSSL` to check public and private key files.
+    ///
+    /// For `RSA` keys:
+    ///
+    /// ```bash
+    ///     openssl rsa -pubin -in public.pem -text -noout
+    /// ```
+    ///
+    /// ```bash
+    ///     openssl rsa -in private.pem -check
+    ///     openssl rsa -in private.pem -text -noout
+    /// ```
+    ///
+    /// If the key is valid, you should get an output like:
+    ///
+    /// ```vbnet
+    /// RSA key ok
+    /// writing RSA key
+    /// -----BEGIN RSA PRIVATE KEY-----
+    /// ...
+    /// -----END RSA PRIVATE KEY-----
+    /// ```
+    ///
+    static func generateKeyPair(
+        keyType: CFString,
+        keySize: Int
+    ) throws -> (
+        publicKey: SecKey,
+        privateKey: SecKey
+    ) {
+        let parameters: [String: Any] = [
+            kSecAttrKeyType as String: keyType,
+            kSecAttrKeySizeInBits as String: keySize,
+            kSecPrivateKeyAttrs as String: [
+                kSecAttrIsPermanent as String: false
+            ]
+        ]
+        
+        var publicKey, privateKey: SecKey?
+        let status = SecKeyGeneratePair(parameters as CFDictionary, &publicKey, &privateKey)
+        
+        guard status == errSecSuccess,
+              let publicKey = publicKey,
+              let privateKey = privateKey
+        else {
+            throw Error.keysPairGenerationFailure(
+                keySize: keySize,
+                keyType: keyType,
+                status
+            )
+        }
+        
+        return (publicKey, privateKey)
+    }
+    
     static func decrypt(
         _ string: String,
         with decryptionAlgorithm: SecKeyAlgorithm,

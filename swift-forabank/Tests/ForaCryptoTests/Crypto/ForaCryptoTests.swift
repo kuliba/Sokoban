@@ -582,7 +582,11 @@ final class ForaCryptoTests: XCTestCase {
         let message = "important message"
         let data = try XCTUnwrap(message.data(using: .utf8))
         
-        let signed = try Crypto.sign(data, withPrivateKey: privateKey)
+        let signed = try Crypto.sign(
+            data,
+            withPrivateKey: privateKey,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
         XCTAssertEqual(signed.count, 512)
     }
     
