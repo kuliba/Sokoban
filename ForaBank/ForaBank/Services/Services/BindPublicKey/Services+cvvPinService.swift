@@ -29,7 +29,9 @@ extension Services {
                 cryptographer: .live
             ),
             transferKeyService: .init(
-                secKeySwaddler: secKeySwaddler(),
+                secKeySwaddler: .init(
+                    cryptographer: .init()
+                ),
                 bindKeyService: bindKeyService(
                     httpClient: httpClient
                 )
@@ -37,6 +39,8 @@ extension Services {
         )
     }
 }
+
+// MARK: - Cryptography
 
 struct KeyExchangeCryptographer {
     
@@ -71,7 +75,73 @@ extension KeyExchangeCryptographer {
     )
 }
 
+struct SecKeySwaddleCryptographer {
+    
+    typealias SecKeySwaddler = PublicRSAKeySwaddler<Services.TransferOTP, SecKey, SecKey>
+    
+    let generateRSA4096BitKeys: () throws -> (privateKey: SecKey, publicKey: SecKey) = {
+        
+        try ForaCrypto.Crypto.createRandomSecKeys(
+            keyType: kSecAttrKeyTypeRSA,
+            keySizeInBits: 4096
+        )
+    }
+    let signEncryptOTP: SecKeySwaddler.SignEncryptOTP = { otp, privateKey in
+        
+        let clientSecretOTP = try ForaCrypto.Crypto.sign(
+            .init(otp.value.utf8),
+            withPrivateKey: privateKey,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
+        
+        let transportKeyEncrypt: (Data) throws -> Data = {
+            
+            let encrypted = try ForaCrypto.Crypto.rsaEncrypt(
+                data: $0,
+                withPublicKey: ForaCrypto.Crypto.transportKey(),
+                algorithm: .rsaEncryptionRaw
+            )
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Encrypted with transport public key: \(encrypted)")
+            
+            return encrypted
+        }
+        
+        let procClientSecretOTP = try transportKeyEncrypt(
+            clientSecretOTP
+        )
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
+        
+        return procClientSecretOTP
+    }
+    let saveKeys: SecKeySwaddler.SaveKeys = { privateKey, publicKey in
+        
+        let keyCache = InMemoryKeyStore<SecKey>()
+        let saveKeys: SecKeySwaddler.SaveKeys = { privateKey, publicKey in
+            
+            keyCache.saveKey(privateKey) { _ in
+                #warning("FIX THIS")
+            }
+        }
+    }
+    let aesEncrypt128bitChunks: PublicRSAKeySwaddler<Services.TransferOTP, SecKey, SecKey>.AESEncrypt128bitChunks = { data, secret in
+        
+        let aes256CBC = try ForaCrypto.AES256CBC(key: secret.data)
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
+        
+        let result = try aes256CBC.encrypt(data)
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
+        
+        return result
+    }
+}
+
 // MARK: - Adapters
+
+extension Services {
+    
+    typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
+}
 
 private extension Services.PublicKeyTransferService {
     
@@ -82,6 +152,23 @@ private extension Services.PublicKeyTransferService {
         self.init(
             swaddleKey: secKeySwaddler.swaddle,
             bindKey: bindKeyService.process
+        )
+    }
+}
+
+private extension PublicRSAKeySwaddler
+where OTP == Services.TransferOTP,
+      PrivateKey == SecKey,
+      PublicKey == SecKey{
+    
+    convenience init(
+        cryptographer: SecKeySwaddleCryptographer
+    ) {
+        self.init(
+            generateRSA4096BitKeys: cryptographer.generateRSA4096BitKeys,
+            signEncryptOTP: cryptographer.signEncryptOTP,
+            saveKeys: cryptographer.saveKeys,
+            aesEncrypt128bitChunks: cryptographer.aesEncrypt128bitChunks
         )
     }
 }
