@@ -151,7 +151,7 @@ extension SecKeySwaddleCryptographer {
         
         let transportKey = try ForaCrypto.Crypto.transportKey()
         
-        let encrypted = try ForaCrypto.Crypto.rsaEncrypt(
+        let encrypted = try ForaCrypto.Crypto.encrypt(
             data: data,
             withPublicKey: transportKey,
             algorithm: .rsaEncryptionRaw

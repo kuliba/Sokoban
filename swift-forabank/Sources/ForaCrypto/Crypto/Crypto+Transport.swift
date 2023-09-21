@@ -26,7 +26,7 @@ public extension Crypto {
         _ data: Data
     ) throws -> Data {
         
-        try rsaEncrypt(
+        try encrypt(
             data: data,
             withPublicKey: transportKey(),
             algorithm: .rsaEncryptionRaw

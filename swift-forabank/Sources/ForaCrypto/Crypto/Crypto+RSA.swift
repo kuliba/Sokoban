@@ -14,10 +14,10 @@ public extension Crypto {
         withPublicKey key: SecKey
     ) throws -> Data {
         
-        try rsaEncrypt(data: data, withPublicKey: key, algorithm: .rsaEncryptionPKCS1)
+        try encrypt(data: data, withPublicKey: key, algorithm: .rsaEncryptionPKCS1)
     }
     
-    static func rsaEncrypt(
+    static func encrypt(
         data: Data,
         withPublicKey key: SecKey,
         algorithm: SecKeyAlgorithm

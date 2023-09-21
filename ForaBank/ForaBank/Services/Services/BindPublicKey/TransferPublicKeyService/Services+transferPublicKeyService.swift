@@ -87,7 +87,7 @@ extension Services {
         
         let encryptWithTransportPublicRSAKey = { data in
             
-            try ForaCrypto.Crypto.rsaEncrypt(
+            try ForaCrypto.Crypto.encrypt(
                 data: data,
                 withPublicKey: publicKey(),
                 algorithm: .rsaEncryptionRaw

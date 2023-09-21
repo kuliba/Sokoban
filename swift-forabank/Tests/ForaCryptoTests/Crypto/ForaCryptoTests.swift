@@ -596,7 +596,7 @@ final class ForaCryptoTests: XCTestCase {
         let message = "important message"
         let data = try XCTUnwrap(message.data(using: .utf8))
         
-        let encrypted = try Crypto.rsaEncrypt(
+        let encrypted = try Crypto.encrypt(
             data: data,
             withPublicKey: publicKey,
             algorithm: .rsaEncryptionPKCS1
@@ -616,7 +616,7 @@ final class ForaCryptoTests: XCTestCase {
         let (privateKey, _) = try createRandom4096RSAKeys()
         
         try XCTAssertThrowsError(
-            Crypto.rsaEncrypt(
+            Crypto.encrypt(
                 data: anyData(),
                 withPublicKey: privateKey,
                 algorithm: .rsaEncryptionPKCS1
