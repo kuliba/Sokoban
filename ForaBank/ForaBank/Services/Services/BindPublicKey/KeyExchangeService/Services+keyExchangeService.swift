@@ -28,8 +28,15 @@ extension Services {
             encrypt: cryptographer.transportEncrypt
         )
         
+        typealias LoggingRequestCreator = LoggingDecoratedRequestCreator<FormSessionKeyDomain.Request>
+        
+        let loggingRequestCreator = LoggingRequestCreator(
+            log: LoggerAgent.shared.log,
+            decoratee: RequestFactory.makeSecretRequest
+        )
+        
         let formSessionKeyService = RemoteService(
-            createRequest: RequestFactory.makeSecretRequest,
+            createRequest: loggingRequestCreator.createRequest,
             performRequest: httpClient.performRequest,
             mapResponse: PublicServerSessionKeyMapper.map
         )

@@ -19,7 +19,7 @@ extension Services {
         httpClient: HTTPClient
     ) -> BindKeyService {
         
-        typealias LoggingRequestCreator = LoggingDecoratedRequestCreator<BindKeyExchangePayload, Void>
+        typealias LoggingRequestCreator = LoggingDecoratedRequestCreator<BindKeyExchangePayload>
         
         let loggingRequestCreator = LoggingRequestCreator(
             log: LoggerAgent.shared.log,

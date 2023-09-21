@@ -8,9 +8,9 @@
 import GenericRemoteService
 import Foundation
 
-struct LoggingDecoratedRequestCreator<Input, Output> {
+struct LoggingDecoratedRequestCreator<Input> {
     
-    typealias CreateRequest = RemoteService<Input, Output>.CreateRequest
+    typealias CreateRequest = RemoteService<Input, Void>.CreateRequest
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     let createRequest: CreateRequest
