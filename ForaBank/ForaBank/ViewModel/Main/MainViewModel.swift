@@ -102,6 +102,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
+
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+
                     link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:

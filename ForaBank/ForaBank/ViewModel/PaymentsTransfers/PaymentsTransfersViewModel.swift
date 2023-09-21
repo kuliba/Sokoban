@@ -132,6 +132,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value
                     else {return }
                     
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     link = .userAccount(
                         .init(model: model,
                               clientInfo: clientInfo,
