@@ -62,14 +62,31 @@ extension Services {
         }
         
         return .init(
-            makeSecretRequest: secretRequestMaker.makeSecretRequest,
-            formSessionKey: formSessionKeyService.get,
+            secretRequestMaker: secretRequestMaker,
+            formSessionKeyService: formSessionKeyService,
             extractSharedSecret: extractSharedSecret
         )
     }
 }
 
 // MARK: - Adapters
+
+private extension KeyExchangeService {
+    
+    typealias FormSessionKeyService = RemoteService<FormSessionKeyDomain.Request, FormSessionKeyDomain.Response>
+    
+    convenience init(
+        secretRequestMaker: SecretRequestMaker,
+        formSessionKeyService: FormSessionKeyService,
+        extractSharedSecret: @escaping ExtractSharedSecret
+    ) {
+        self.init(
+            makeSecretRequest: secretRequestMaker.makeSecretRequest,
+            formSessionKey: formSessionKeyService.get,
+            extractSharedSecret: extractSharedSecret
+        )
+    }
+}
 
 extension RemoteService: CryptoAPIClient {
     
