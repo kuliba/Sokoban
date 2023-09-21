@@ -50,10 +50,8 @@ where PublicKey: RawRepresentational {
         let publicKeyData = try publicKey.rawRepresentation
         
         let json = try JSONSerialization.data(withJSONObject: [
-//            "procClientSecretOTP": encryptedSignedOTP.base64EncodedString(),
-//            "clientPublicKeyRSA": publicKeyData.base64EncodedString()
-            "procClientSecretOTP": encryptedSignedOTP.base64EncodedString(options: .lineLength64Characters),
-            "clientPublicKeyRSA": publicKeyData.base64EncodedString(options: .lineLength64Characters)
+            "procClientSecretOTP": encryptedSignedOTP.base64EncodedString(),
+            "clientPublicKeyRSA": publicKeyData.base64EncodedString()
         ] as [String: String])
         
         let data: Data = try aesEncrypt128bitChunks(json, sharedSecret)
