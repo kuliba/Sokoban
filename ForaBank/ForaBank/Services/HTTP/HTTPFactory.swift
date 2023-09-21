@@ -33,6 +33,7 @@ extension URLSessionHTTPClient: HTTPClient {
         perform(request) { result in
             
             completion(.init {
+                
                 try result.get()
             })
         }
