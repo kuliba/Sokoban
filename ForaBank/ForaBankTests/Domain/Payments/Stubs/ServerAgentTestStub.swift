@@ -46,6 +46,9 @@ final class ServerAgentTestStub: ServerAgentProtocol {
     typealias MakeTransfer = ServerCommands.TransferController.MakeTransfer
     typealias MakeTransferResponseData = UpdatePaymentTemplates.Response.Payload
     
+    typealias GetC2bSubscriptions = ServerCommands.SubscriptionController.GetC2bSubscriptions
+    typealias GetC2bSubscriptionsPayload = GetC2bSubscriptions.Response.Payload
+    
     private let stubs: [Stub.Case: Stub]
     
     init(_ stubs: [Stub]) {
@@ -87,6 +90,10 @@ final class ServerAgentTestStub: ServerAgentProtocol {
                 
             case .makeTransfer:
                 dict[.makeTransfer] = stub
+                
+            case .getC2bSubscriptions:
+                dict[.getC2bSubscriptions] = stub
+
             }
         }
     }
@@ -130,7 +137,7 @@ extension ServerAgentTestStub {
         typealias DeletePaymentTemplate = Result<ServerCommands.PaymentTemplateController.DeletePaymentTemplates.Response, ServerAgentError>
         typealias UpdatePaymentTemplate = Result<ServerCommands.PaymentTemplateController.UpdatePaymentTemplate.Response, ServerAgentError>
         typealias MakeTransfer = Result<ServerCommands.TransferController.MakeTransfer.Response, ServerAgentError>
-        
+        typealias GetC2bSubscriptions = Result<ServerCommands.SubscriptionController.GetC2bSubscriptions.Response, ServerAgentError>
         
         case anywayTransfer(CreateAnywayTransferResult)
         case getPhoneInfo(GetPhoneInfoResult)
@@ -143,7 +150,8 @@ extension ServerAgentTestStub {
         case deletePaymentTemplate(DeletePaymentTemplate)
         case updatePaymentTemplate(UpdatePaymentTemplate)
         case makeTransfer(MakeTransfer)
-        
+        case getC2bSubscriptions(GetC2bSubscriptions)
+
         enum Case {
             
             case anywayTransfer
@@ -157,6 +165,8 @@ extension ServerAgentTestStub {
             case deletePaymentTemplate
             case updatePaymentTemplate
             case makeTransfer
+            case getC2bSubscriptions
+
         }
     }
 }
@@ -198,6 +208,9 @@ extension ServerAgentTestStub.Stub.Case {
             
         case _ as ServerAgentTestStub.MakeTransfer:
             self = .makeTransfer
+            
+        case _ as ServerAgentTestStub.GetC2bSubscriptions:
+            self = .getC2bSubscriptions
             
         default:
             
@@ -350,6 +363,20 @@ extension ServerAgentTestStub.Stub {
                     completion(.success(response))
                 } else {
                     let error = NSError(domain: "Bad data for makeTransfer in \(result)", code: 0)
+                    completion(.failure(.corruptedData(error)))
+                }
+            } catch {
+                completion(.failure(.corruptedData(error)))
+                return
+            }
+            
+        case let .getC2bSubscriptions(result):
+            do {
+                let response = try result.get()
+                if let response = response as? Response {
+                    completion(.success(response))
+                } else {
+                    let error = NSError(domain: "Bad data for getC2bSubscriptions in \(result)", code: 0)
                     completion(.failure(.corruptedData(error)))
                 }
             } catch {

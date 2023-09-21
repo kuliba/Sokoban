@@ -78,7 +78,7 @@ class UserAccountViewModel: ObservableObject {
             })
         
         bind()
-        
+                
         if let action = action {
             
             self.action.send(action)
@@ -328,7 +328,6 @@ class UserAccountViewModel: ObservableObject {
                             }))
                         
                     case _ as UserAccountViewModelAction.OpenManagingSubscription:
-                        model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                             
                         let products = self.getSubscriptions(with: model.subscriptions.value?.list)
                         
