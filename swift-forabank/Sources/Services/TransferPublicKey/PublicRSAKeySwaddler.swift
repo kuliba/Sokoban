@@ -57,6 +57,15 @@ where PublicKey: RawRepresentational {
             "clientPublicKeyRSA": clientPublicKeyRSA
         ] as [String: String])
 
+        #if DEBUG
+        print(">>> encryptedSignedOTP count: \(encryptedSignedOTP)\n>>> procClientSecretOTP.count: \(procClientSecretOTP.count)\n", #file, #line)
+        dump(procClientSecretOTP)
+
+        print(">>> publicKeyData count: \(publicKeyData.count)\n>>> clientPublicKeyRSA.count: \(clientPublicKeyRSA.count)\n", #file, #line)
+        dump(clientPublicKeyRSA)
+        print(">>> json:\n", String(data: json, encoding: .utf8)!)
+        #endif
+
         let data: Data = try aesEncrypt128bitChunks(json, sharedSecret)
         
         return data
