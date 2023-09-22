@@ -149,16 +149,21 @@ extension SecKeySwaddleCryptographer {
         _ data: Data
     ) throws -> Data {
         
-        let transportKey = try ForaCrypto.Crypto.transportKey()
-        
-        let encrypted = try ForaCrypto.Crypto.encrypt(
-            data: data,
-            withPublicKey: transportKey,
-            algorithm: .rsaEncryptionRaw
-        )
-        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Encrypted with transport public key: \(encrypted)")
-        
-        return encrypted
+        do {
+            let transportKey = try ForaCrypto.Crypto.transportKey()
+            
+            let encrypted = try ForaCrypto.Crypto.encrypt(
+                data: data,
+                withPublicKey: transportKey,
+                algorithm: .rsaEncryptionRaw
+            )
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Encrypted with transport public key: \(encrypted)")
+            
+            return encrypted
+        } catch {
+            LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Transport public key encryption error: \(error.localizedDescription)")
+            throw error
+        }
     }
     
     private static func saveKeys(
