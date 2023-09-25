@@ -10,6 +10,8 @@ import Combine
 import os
 import UserModel
 import SymmetricEncryption
+import CodableLanding
+import LandingUIComponent
 
 class Model {
     
@@ -24,8 +26,9 @@ class Model {
     let fcmToken: CurrentValueSubject<String?, Never>
 
     //MARK: Pre-Auth
-    let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
-    
+    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never> 
+    let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -174,7 +177,8 @@ class Model {
         self.depositsInfo = .init(DepositsInfoData())
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
-        self.transferAbroad = .init(nil)
+        self.transferLanding = .init(.success(.none))
+        self.orderCardLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
@@ -892,9 +896,6 @@ class Model {
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
                     
-                    case .jsonAbroad: //legacy
-                        handleJsonAbroadRequest(payload.serial)
-                        
                     case .clientInform:
                         handleClientInform(payload.serial)
                     }
@@ -1110,7 +1111,7 @@ private extension Model {
             }
         }
     }
-    
+        
     func loadCachedPublicData() {
         
         if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
@@ -1180,18 +1181,21 @@ private extension Model {
             
             self.currencyWalletList.value = currencyWalletList
         }
-        
-        if let transferAbroad = localAgent.load(type: TransferAbroadResponseData.self) {
-            
-            self.transferAbroad.value = transferAbroad
-        }
-        
+                
+        loadLanding()
+                
         if let qrMapping = localAgent.load(type: QRMapping.self) {
             
             self.qrMapping.value = qrMapping
         }
     }
     
+    func loadLanding() {
+        
+        self.transferLanding.value = .success(localAgent.load(.transfer))
+        self.orderCardLanding.value = .success(localAgent.load(.orderCard))
+    }
+
     func loadCachedAuthorizedData() {
         
         self.products.value = productsCacheLoad()
@@ -1436,6 +1440,45 @@ private extension Model {
     }
 }
 
+// MARK: - Adapter
+
+private extension LocalAgentProtocol {
+    
+    func load(_ abroadType: AbroadType) -> UILanding? {
+        
+        switch abroadType {
+        case .transfer:
+            return load(type: LocalAgentDomain.AbroadTransfer.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .orderCard:
+            return load(type: LocalAgentDomain.AbroadOrderCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+        }
+    }
+}
+
 //MARK: - Extensions
 
 extension ChaChaPolyEncryptionAgent: EncryptionAgent {}
+
+// MARK: - Local Agent Domain
+
+enum LocalAgentDomain {}
+
+extension LocalAgentDomain {
+    
+    typealias Landing = CodableLanding
+        
+    struct AbroadOrderCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AbroadTransfer: Codable {
+        
+        let landing: Landing
+    }
+}

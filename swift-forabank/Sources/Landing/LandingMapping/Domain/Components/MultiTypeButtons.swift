@@ -41,8 +41,8 @@ extension DecodableLanding.Data {
                 let type: Int
                 
                 enum CodingKeys: String, CodingKey {
-                    case type = "cardTarif"
-                    case tarif = "cardType"
+                    case type = "cardType"
+                    case tarif = "cardTarif"
                 }
             }
         }
@@ -56,6 +56,5 @@ extension DecodableLanding.Data {
                 case viewId = "detailViewId"
             }
         }
-        
     }
 }

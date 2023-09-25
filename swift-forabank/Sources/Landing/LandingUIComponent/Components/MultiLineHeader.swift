@@ -6,19 +6,23 @@
 //
 
 import Foundation
+import SwiftUI
 
-public extension Landing {
+public extension UILanding.Multi {
     
-    struct MultiLineHeader: Equatable, Identifiable {
+    struct LineHeader: Hashable, Identifiable {
         
-        public let id = UUID()
+        public var id: Self { self }
+        public let backgroundColor: String
         public let regularTextList: [String]?
         public let boldTextList: [String]?
                 
         public init(
+            backgroundColor: String,
             regularTextList: [String]?,
             boldTextList: [String]?
         ) {
+            self.backgroundColor = backgroundColor
             self.regularTextList = regularTextList
             self.boldTextList = boldTextList
         }
@@ -30,5 +34,13 @@ extension String: Identifiable {
     public typealias ID = Int
     public var id: Int {
         return hash
+    }
+}
+
+extension UILanding.Multi.LineHeader {
+    
+    func imageRequests() -> [ImageRequest] {
+        
+        return []
     }
 }

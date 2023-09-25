@@ -10,7 +10,7 @@ import XCTest
 
 final class MultiTextsWithIconsHorizontalViewConfigTests: XCTestCase {
 
-    typealias Config = Landing.MultiTextsWithIconsHorizontal.Config
+    typealias Config = UILanding.Multi.TextsWithIconsHorizontal.Config
 
     //MARK: - test init config
     
@@ -18,9 +18,14 @@ final class MultiTextsWithIconsHorizontalViewConfigTests: XCTestCase {
         
         let sut: Config = .init(
             color: .grayColor,
-            font: .body)
+            font: .body,
+            size: 10,
+            padding: 11
+        )
         
         XCTAssertEqual(sut.color, .grayColor)
         XCTAssertEqual(sut.font, .body)
+        XCTAssertEqual(sut.size, 10)
+        XCTAssertEqual(sut.padding, 11)
     }
 }

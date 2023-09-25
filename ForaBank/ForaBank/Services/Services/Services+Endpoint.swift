@@ -18,11 +18,13 @@ extension Services {
         enum PathPrefix: String {
             
             case processingRegistration = "processing/registration"
+            case dict = "dict"
         }
         
         enum Version: String {
             
             case v1
+            case v2
         }
         
         enum ServiceName: String {
@@ -30,6 +32,7 @@ extension Services {
             case bindPublicKeyWithEventId
             case formSessionKey
             case getProcessingSessionCode
+            case getJsonAbroad
         }
     }
 }
@@ -89,4 +92,51 @@ extension Services.Endpoint {
         version: .v1,
         serviceName: .getProcessingSessionCode
     )
+    
+    static let createLandingRequest: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getJsonAbroad
+    )
+}
+
+extension Services.Endpoint {
+    
+    func url(withBase base: String, parameters: [(String, String)]) throws -> URL {
+        
+        guard let baseURL = URL(string: base)
+        else {
+            
+            throw URLConstructionError()
+        }
+        
+        return try url(withBaseURL: baseURL, parameters: parameters)
+    }
+    
+    
+    func url(withBaseURL baseURL: URL, parameters: [(String, String)]) throws -> URL {
+        
+        var components = URLComponents()
+        components.scheme = baseURL.scheme
+        components.host = baseURL.host
+        components.path = baseURL.path + path
+        
+        if !parameters.isEmpty {
+            
+            components.queryItems = [URLQueryItem]()
+            
+            components.queryItems = parameters.map { (key, value) in
+                URLQueryItem(
+                    name: key,
+                    value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+            }
+        }
+        
+        guard let url = components.url(relativeTo: baseURL)
+        else {
+            throw URLConstructionError()
+        }
+        
+        return url
+    }
 }

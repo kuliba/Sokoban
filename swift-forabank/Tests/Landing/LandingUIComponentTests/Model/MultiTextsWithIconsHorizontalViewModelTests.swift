@@ -15,21 +15,21 @@ final class MultiTextsWithIconsHorizontalViewModelTests: XCTestCase {
     func test_init_item_shouldSetAllValue() {
         
         let sut: Item = .init(
-            image: .bolt,
+            md5hash: "1",
             title: "String"
         )
         
-        XCTAssertEqual(sut.image, .bolt)
+        XCTAssertEqual(sut.md5hash, "1")
         XCTAssertEqual(sut.title, "String")
     }
         
     // MARK: - Helpers
     
-    typealias Item = Landing.MultiTextsWithIconsHorizontal.Item
+    typealias Item = UILanding.Multi.TextsWithIconsHorizontal.Item
     
     private func makeSUT(
         lists: [Item]
-    ) -> Landing.MultiTextsWithIconsHorizontal {
+    ) -> UILanding.Multi.TextsWithIconsHorizontal {
         
        return .init(
         lists: lists

@@ -9,14 +9,15 @@ import Combine
 @testable import ForaBank
 import SwiftUI
 import XCTest
+import LandingUIComponent
 
-final class SchedulerAuthLoginViewModelTests: XCTestCase {
+final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
     
     // MARK: - init
     
     func test_init_shouldSetHeader() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNoDiff(sut.header.title, "Войти")
         XCTAssertNoDiff(sut.header.subTitle, "чтобы получить доступ к счетам и картам")
@@ -25,45 +26,75 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_init_shouldSetLinkToNil() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.link)
     }
     
     func test_init_shouldSetBottomSheetToNil() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.bottomSheet)
     }
     
     func test_init_shouldSetCardScannerToNil() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.cardScanner)
     }
     
     func test_init_shouldSetAlertToNil() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertNil(sut.alert)
     }
     
     func test_init_shouldSetButtonsToEmpty() {
         
-        let (sut, _, _, _, _, _, _) = makeSUT()
+        let (sut, _, _, _, _, _, _, _, _) = makeSUT()
         
         XCTAssertTrue(sut.buttons.isEmpty)
     }
     
+    // MARK: - LandingWrapperComponent action: orderCard
+    
+    func test_landing_orderCard_shouldCallOrderCard() {
+        
+        let (sut, scheduler, _, _, _, _, _, factory, _) = makeSUT()
+        
+        XCTAssertNoDiff(factory.cardOrders, [])
+        
+        sut.showProductsAndWait(on: scheduler)
+        sut.orderCard(cardTarif: 123, cardType: 321)
+        
+        XCTAssertNoDiff(factory.cardOrders, [
+            .init(cardTarif: 123, cardType: 321)
+        ])
+    }
+    
+    // MARK: - LandingWrapperComponent action: goToMain
+    
+    func test_landing_goToMain_shouldCallGoToMain() {
+        
+        let (sut, scheduler, _, _, _, _, _, factory, _) = makeSUT()
+        
+        XCTAssertNoDiff(factory.goToMainCount, 0)
+        
+        sut.showProductsAndWait(on: scheduler)
+        sut.goToMain()
+        
+        XCTAssertNoDiff(factory.goToMainCount, 1)
+    }
+    
     // MARK: - Events: clientInform
     
-    func test_clientInform_shouldShowClientInformAlertWithMesssage() {
+    func test_clientInform_shouldShowClientInformAlertWithMessage() {
         
         let message = "message"
-        let (sut, scheduler, clientInformMessage, _, _, _, _) = makeSUT()
+        let (sut, scheduler, clientInformMessage, _, _, _, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.alertPublisher)
         
         clientInformMessage.send(message)
@@ -77,49 +108,45 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseSuccess() {
         
-        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
-        let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, rootActionsSpy) = makeSUT()
         
-        checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
-        XCTAssertTrue(spinnerSpy.values.isEmpty)
+        checkClientResponse.send(.sample)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [])
         
         scheduler.advance()
         
-        XCTAssertFalse(spinnerSpy.values.isEmpty)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [.hide])
+        XCTAssertNotNil(sut)
     }
     
     func test_authCheckClientResponse_shouldHideSpinner_onResponseFailure() {
         
         let message = "message"
-        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
-        let spinnerSpy = ValueSpy(sut.hideSpinnerPublisher)
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, rootActionsSpy) = makeSUT()
         
         checkClientResponse.send(.failure(message: message))
-        XCTAssertTrue(spinnerSpy.values.isEmpty)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [])
         
         scheduler.advance()
         
-        XCTAssertFalse(spinnerSpy.values.isEmpty)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [.hide])
+        XCTAssertNotNil(sut)
     }
     
     func test_authCheckClientResponse_shouldSetLink_onResponseSuccess() {
         
-        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         
-        checkClientResponse.send(.success(codeLength: 1, phone: "123-456", resendCodeDelay: 1))
+        checkClientResponse.send(.sample)
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         scheduler.advance()
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
-            .confirm(.init(
-                codeTitle: "Введите код из сообщения",
-                codeLength: 1,
-                infoTitle: "123-456"
-            ))
+            .confirm(.sample)
         ])
         XCTAssertNotNil(sut)
     }
@@ -127,7 +154,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authCheckClientResponse_shouldSetAlert_onResponseFailure() {
         
         let message = "failure message"
-        let (sut, scheduler, _, checkClientResponse, _, _, _) = makeSUT()
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
         
         checkClientResponse.send(.failure(message: message))
@@ -142,11 +169,37 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_authCheckClientResponse_shouldSetAlertActionToResetAlert_onResponseFailure() {
+        
+        let message = "failure message"
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
+        
+        checkClientResponse.send(.failure(message: message))
+        XCTAssertNoDiff(alertSpy.values, [nil])
+        
+        scheduler.advance()
+
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message)
+        ])
+        
+        sut.tapAlertPrimaryButton()
+        
+        XCTAssertNoDiff(alertSpy.values, [
+            nil,
+            .alert(message: message),
+            nil
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Events: AuthLoginViewModelAction.Register
     
     func test_authLoginViewModelActionRegister_shouldCheckClient() {
         
-        let (sut, scheduler, _, _, _, _, registerCardNumberSpy) = makeSUT()
+        let (sut, scheduler, _, _, _, _, registerCardNumberSpy, _, _) = makeSUT()
         
         XCTAssertTrue(registerCardNumberSpy.values.isEmpty)
         
@@ -157,21 +210,20 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_authLoginViewModelActionRegister_shouldShowSpinner() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
-        let spinnerSpy = ValueSpy(sut.showSpinnerPublisher)
+        let (sut, scheduler, _, _, _, _, _, _, rootActionsSpy) = makeSUT()
         
-        XCTAssertTrue(spinnerSpy.values.isEmpty)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [])
         
         sut.register(cardNumber: "1234-5678", on: scheduler)
         
-        XCTAssertFalse(spinnerSpy.values.isEmpty)
+        XCTAssertNoDiff(rootActionsSpy.spinnerMessages, [.show])
     }
     
     // MARK: - Events: AuthLoginViewModelAction.Show.Products
     
-    func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithEmptyProductListOnEmptyModelCatalogProducts() {
+    func test_authLoginViewModelActionShowProducts_shouldSetLinkToLanding() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -180,45 +232,26 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
-            .products(titles: [])
-        ])
-        //XCTAssertTrue(model.catalogProducts.value.isEmpty)
-    }
-    
-    func test_authLoginViewModelActionShowProducts_shouldSetLinkToProductsWithProductListOnNonEmptyModelCatalogProducts() {
-        
-        let (sut, scheduler, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
-        
-        XCTAssertNoDiff(linkSpy.values, [nil])
-        
-        sut.showProductsAndWait(on: scheduler)
-        
-        XCTAssertNoDiff(linkSpy.values, [
-            nil,
-            .products(titles: ["Sample"])
+            .landing
         ])
     }
     
-    func test_authLoginViewModelActionShowProducts_shouldSetButtonToOrderSelectedProduct() throws {
+    func test_showProducts_shouldCreateLandingWithOrderCardAbroadType() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
-        let orderProductSpy = ValueSpy(sut.orderProductPublisher)
+        let (sut, scheduler, _, _, _, _, _, factory, _) = makeSUT()
+        
+        XCTAssertNoDiff(factory.abroadType, nil)
         
         sut.showProductsAndWait(on: scheduler)
         
-        XCTAssertTrue(orderProductSpy.values.isEmpty)
-        
-        sut.order(.sample, on: scheduler)
-        
-        XCTAssertNoDiff(orderProductSpy.values, [.sample])
+        XCTAssertNoDiff(factory.abroadType, .orderCard)
     }
     
     // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
     
-    func test_authLoginViewModelActionShowTransfers_shouldSetLinkToTransfers() {
+    func test_authLoginViewModelActionShowTransfers_shouldSetLinkToLanding() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         
         XCTAssertNoDiff(linkSpy.values, [nil])
@@ -227,56 +260,28 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(linkSpy.values, [
             nil,
-            .transfers
+            .landing
         ])
     }
     
-    func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailOrderTap() {
-        
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
-        let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
-        
-        XCTAssertTrue(closeLinkSpy.values.isEmpty)
-        
-        sut.showTransfersAndWait(on: scheduler)
-        sut.orderDestination(on: scheduler)
-
-        scheduler.advance(by: 1)
-        XCTAssertFalse(closeLinkSpy.values.isEmpty)
-    }
+    // MARK: - Events: AuthLoginViewModelAction.Show.Transfers
     
-    func test_authLoginViewModelActionShowTransfers_shouldShowProductsOnDelay() {
+    func test_showTransfers_shouldCreateLandingWithOrderCardAbroadType() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
-        let showProductsSpy = ValueSpy(sut.showProductsPublisher)
+        let (sut, scheduler, _, _, _, _, _, factory, _) = makeSUT()
         
-        XCTAssertTrue(showProductsSpy.values.isEmpty)
-        
-        sut.showTransfersAndWait(on: scheduler)
-        sut.orderDestination(on: scheduler)
-                
-        scheduler.advance(by: 1)
-        XCTAssertNoDiff(showProductsSpy.values, [.product])
-    }
-    
-    func test_authLoginViewModelActionShowTransfers_shouldReceiveCloseLinkActionOnDirectionDetailTransfersTap() {
-        
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
-        let closeLinkSpy = ValueSpy(sut.closeLinkPublisher)
-        
-        XCTAssertTrue(closeLinkSpy.values.isEmpty)
+        XCTAssertNoDiff(factory.abroadType, nil)
         
         sut.showTransfersAndWait(on: scheduler)
-        sut.tapTransfer(on: scheduler)
         
-        XCTAssertFalse(closeLinkSpy.values.isEmpty)
+        XCTAssertNoDiff(factory.abroadType, .transfer)
     }
     
     // MARK: - Events: AuthLoginViewModelAction.Show.Scaner
     
     func test_authLoginViewModelActionShowScanner_shouldSetCardScanner() {
         
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
@@ -290,7 +295,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
         sut.showScanner(on: scheduler)
@@ -302,7 +307,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardScannerToNil_nonNilScanValue() {
         
         let scanValue: String? = "abc123"
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         let cardScannerSpy = ValueSpy(sut.scannerPublisher)
         
         sut.showScanner(on: scheduler)
@@ -314,7 +319,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToNil_nilScanValue() {
         
         let scanValue: String? = nil
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         sut.showScanner(on: scheduler)
         sut.closeScanner(scanValue, on: scheduler)
@@ -325,7 +330,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_emptyScanValue() {
         
         let scanValue: String? = ""
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         sut.showScanner(on: scheduler)
         sut.closeScanner(scanValue, on: scheduler)
@@ -336,7 +341,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToEmpty_invalidScanValue() {
         
         let scanValue: String? = "abc"
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         sut.showScanner(on: scheduler)
         sut.closeScanner(scanValue, on: scheduler)
@@ -347,7 +352,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_scanValueWithDigits() {
         
         let scanValue: String? = "abc12345"
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         sut.showScanner(on: scheduler)
         sut.closeScanner(scanValue, on: scheduler)
@@ -358,7 +363,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     func test_authLoginViewModelActionCloseScanner_shouldSetCardTextToMasked_validScanValue() {
         
         let scanValue: String? = "1234567812345678"
-        let (sut, scheduler, _, _, _, _, _) = makeSUT()
+        let (sut, scheduler, _, _, _, _, _, _, _) = makeSUT()
         
         sut.showScanner(on: scheduler)
         sut.closeScanner(scanValue, on: scheduler)
@@ -370,28 +375,19 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_catalogProducts_transferAbroad_shouldChangeButtonsOnUpdate() {
         
-        let (sut, scheduler, _, _, catalogProductsTransferAbroad, _, _) = makeSUT(catalogProductDataStub: .sample)
+        let (sut, scheduler, _, _, catalogProducts, _, _, _, _) = makeSUT(catalogProductDataStub: .sample)
         let buttonsSpy = ValueSpy(sut.$buttons.map { $0.map(\.view) })
         
         XCTAssertNoDiff(buttonsSpy.values, [
             []
         ])
         
-        catalogProductsTransferAbroad.send((.sample, nil))
+        catalogProducts.send((.sample))
         scheduler.advance()
         
         XCTAssertNoDiff(buttonsSpy.values, [
             [],
-            [.orderCard]
-        ])
-        
-        catalogProductsTransferAbroad.send((.sample, .sample()))
-        scheduler.advance()
-        
-        XCTAssertNoDiff(buttonsSpy.values, [
-            [],
-            [.orderCard],
-            [.transfer, .orderCard,]
+            [.transfer, .orderCard]
         ])
     }
     
@@ -399,7 +395,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_cardState_sessionState_fcmToken_shouldChangeCardButton() {
         
-        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
         sut.card.state = .editing
@@ -425,7 +421,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_cardState_shouldSetCardButton() {
         
-        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
@@ -441,7 +437,7 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
     
     func test_cardState_shouldSendRegisterCardNumberOnCardNextButtonAction() {
         
-        let (sut, scheduler, _, _, _, sessionStateFcmToken, _) = makeSUT()
+        let (sut, scheduler, _, _, _, sessionStateFcmToken, _, _, _) = makeSUT()
         let spy = ValueSpy(sut.registerCardNumber)
         
         XCTAssertNil(sut.card.nextButton)
@@ -458,12 +454,65 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, ["1234"])
     }
     
-    // MARK: - Helpers
+    // MARK: - Buttons
     
-    typealias ClientInformMessage = PassthroughSubject<String, Never>
-    typealias CheckClientResponse = PassthroughSubject<ModelAction.Auth.CheckClient.Response, Never>
-    typealias CatalogProductsTransferAbroad = PassthroughSubject<([CatalogProductData], TransferAbroadResponseData?), Never>
-    typealias SessionStateFcmToken = PassthroughSubject<(SessionState, String?), Never>
+    func test_transfersButton_shouldSetLinkToLandingOnAction() throws {
+        
+        let (sut, scheduler, _, _, catalogProducts, _, _, factorySpy, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        XCTAssertNil(factorySpy.abroadType)
+        
+        try tapTransferButton(sut, catalogProducts, on: scheduler)
+
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing])
+        XCTAssertNoDiff(factorySpy.abroadType, .transfer)
+    }
+    
+    func test_orderCardButton_shouldSetLinkToLandingOnAction() throws {
+        
+        let (sut, scheduler, _, _, catalogProducts, _, _, factorySpy, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        XCTAssertNil(factorySpy.abroadType)
+        
+        try tapOrderCardButton(sut, catalogProducts, on: scheduler)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .landing])
+        XCTAssertNoDiff(factorySpy.abroadType, .orderCard)
+    }
+    
+    // MARK: - Confirm
+    
+    func test_confirmBackAction_shouldSetLinkToNil() throws {
+        
+        let (sut, scheduler, _, checkClientResponse, _, _, _, _, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+
+        XCTAssertNoDiff(linkSpy.values, [
+            nil
+        ])
+        
+        checkClientResponse.send(.sample)
+        scheduler.advance()
+
+        XCTAssertNoDiff(linkSpy.values, [
+            nil,
+            .confirm(.sample)
+        ])
+        
+        try sut.tapBackButtonInConfirm(on: scheduler)
+        
+        XCTAssertNoDiff(linkSpy.values, [
+            nil,
+            .confirm(.sample),
+            nil
+        ])
+    }
+    
+    // MARK: - Helpers
     
     private func makeSUT(
         catalogProductDataStub: CatalogProductData? = nil,
@@ -474,27 +523,32 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         scheduler: TestSchedulerOfDispatchQueue,
         clientInformMessage: ClientInformMessage,
         checkClientResponse: CheckClientResponse,
-        catalogProductsTransferAbroad: CatalogProductsTransferAbroad,
+        catalogProducts: CatalogProducts,
         sessionStateFcmToken: SessionStateFcmToken,
-        registerCardNumberSpy: RegisterCardNumberSpy
+        registerCardNumberSpy: RegisterCardNumberSpy,
+        factory: AuthLoginViewModelFactorySpy,
+        rootActionsSpy: RootActionsSpy
     ) {
         let clientInformMessage = ClientInformMessage()
         let checkClientResponse = CheckClientResponse()
-        let catalogProductsTransferAbroad = CatalogProductsTransferAbroad()
+        let catalogProducts = CatalogProducts()
         let sessionStateFcmToken = SessionStateFcmToken()
         
         let eventPublishers = AuthLoginViewModel.EventPublishers(
             clientInformMessage: clientInformMessage.eraseToAnyPublisher(),
             checkClientResponse: checkClientResponse.eraseToAnyPublisher(),
-            catalogProductsTransferAbroad: catalogProductsTransferAbroad.eraseToAnyPublisher(),
+            catalogProducts: catalogProducts.eraseToAnyPublisher(),
             sessionStateFcmToken: sessionStateFcmToken.eraseToAnyPublisher()
         )
         
         let registerCardNumberSpy = RegisterCardNumberSpy()
+        let rootActionsSpy = RootActionsSpy()
         
         let eventHandlers = AuthLoginViewModel.EventHandlers(
             onRegisterCardNumber: registerCardNumberSpy.registerCardNumber,
-            catalogProductForID: { _ in catalogProductDataStub }
+            catalogProduct: { _ in catalogProductDataStub },
+            showSpinner: rootActionsSpy.rootActions().spinner.show,
+            hideSpinner: rootActionsSpy.rootActions().spinner.hide
         )
         
         let factory = AuthLoginViewModelFactorySpy(
@@ -503,621 +557,51 @@ final class SchedulerAuthLoginViewModelTests: XCTestCase {
         
         let scheduler = DispatchQueue.test
         
+        
         let sut = AuthLoginViewModel(
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
             factory: factory,
-            rootActions: .emptyMock,
             scheduler: scheduler.eraseToAnyScheduler()
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(scheduler, file: file, line: line)
+        trackForMemoryLeaks(factory, file: file, line: line)
+        trackForMemoryLeaks(rootActionsSpy, file: file, line: line)
         
-        return (sut, scheduler, clientInformMessage, checkClientResponse, catalogProductsTransferAbroad, sessionStateFcmToken, registerCardNumberSpy)
+        return (sut, scheduler, clientInformMessage, checkClientResponse, catalogProducts, sessionStateFcmToken, registerCardNumberSpy, factory, rootActionsSpy)
     }
     
-    private final class RegisterCardNumberSpy {
+    private func tapTransferButton(
+        _ sut: AuthLoginViewModel,
+        _ catalogProducts: CatalogProducts,
+        on scheduler: TestSchedulerOfDispatchQueue,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
         
-        private(set) var values = [String]()
-        
-        func registerCardNumber(_ cardNumber: String) {
-            
-            values.append(cardNumber)
-        }
-    }
-    
-    private final class AuthLoginViewModelFactorySpy: AuthLoginViewModelFactory {
-        
-        private let products: [CatalogProductData]
-        
-        init(products: [CatalogProductData]) {
-            
-            self.products = products
-        }
-        
-        func makeAuthConfirmViewModel(
-            confirmCodeLength: Int,
-            phoneNumber: String,
-            resendCodeDelay: TimeInterval,
-            backAction: @escaping () -> Void,
-            rootActions: RootViewModel.RootActions
-        ) -> AuthConfirmViewModel {
-            
-            let codeViewModel = AuthConfirmViewModel.CodeViewModel(
-                title: "Введите код из сообщения",
-                lenght: confirmCodeLength,
-                state: .openening
-            )
-            let infoViewModel = AuthConfirmViewModel.InfoViewModel(
-                title: phoneNumber,
-                subtitle: "Повторно отправить можно через:",
-                state: .button(.init(action: {}))
-            )
-            
-            return .init(
-                navigationBar: .init(action: backAction),
-                code: codeViewModel,
-                info: infoViewModel,
-                isPincodeViewPresented: false,
-                model: .emptyMock,
-                showingAlert: false,
-                phoneNumber: phoneNumber,
-                resendCodeDelay: resendCodeDelay,
-                backAction: {},
-                rootActions: .emptyMock
-            )
-        }
-        
-        func makeAuthProductsViewModel(
-            action: @escaping (Int) -> Void,
-            dismissAction: @escaping () -> Void
-        ) -> AuthProductsViewModel {
-            
-            .init(.emptyMock, products: products, action: action, dismissAction: dismissAction)
-        }
-        
-        func makeAuthTransfersViewModel(
-            closeAction: @escaping () -> Void
-        ) -> AuthTransfersViewModel {
-            
-            .sample
-        }
-        
-        func makeOrderProductViewModel(
-            productData: CatalogProductData
-        ) -> OrderProductView.ViewModel {
-            
-            .init(.mockWithEmptyExcept(), productData: .sample)
-        }
-    }
-}
-
-// MARK: - DSL
-
-private extension AuthLoginViewModel {
-    
-    // MARK: - Publishers
-    
-    var hideSpinnerPublisher: AnyPublisher<Void, Never> {
-        
-        action
-            .compactMap {
-                
-                if case .spinner(.hide) = $0 {
-                    return ()
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var showSpinnerPublisher: AnyPublisher<Void, Never> {
-        
-        action
-            .compactMap {
-                
-                if case .spinner(.show) = $0 {
-                    return ()
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var orderProductPublisher: AnyPublisher<CatalogProductData, Never> {
-        
-        action
-            .compactMap { (action) -> CatalogProductData? in
-                
-                if case let .show(.orderProduct(catalogProductData)) = action {
-                    return catalogProductData
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var closeLinkPublisher: AnyPublisher<Void, Never> {
-        
-        action
-            .compactMap {
-                
-                if case .closeLink = $0 {
-                    return ()
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var showProductsPublisher: AnyPublisher<Spy?, Never> {
-        
-        action
-            .compactMap {
-                
-                if case .show(.products) = $0 {
-                    return .product
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var alertPublisher: AnyPublisher<Alert.ViewModel.View?, Never> {
-        
-        $alert
-            .map(\.?.view)
-            .eraseToAnyPublisher()
-    }
-    
-    var registerCardNumber: AnyPublisher<String, Never> {
-        
-        action
-            .compactMap {
-                
-                if case let .register(cardNumber: cardNumber) = $0 {
-                    return cardNumber
-                } else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    var scannerPublisher: AnyPublisher<Spy?, Never> {
-        
-        $cardScanner.map {
-            
-            $0.map { _ in Spy.scanner } ?? nil
-        }
-        .eraseToAnyPublisher()
-    }
-    
-    enum Spy: Equatable {
-        
-        case product
-        case scanner
-    }
-    
-    // MARK: - Properties
-    
-    var orderAuthButton: AuthProductsViewModel.ProductCardViewModel.OrderAuthButton? {
-        
-        link?
-            .authProductsViewModel?
-            .productCards.first?
-            .orderButtonType
-            .orderAuthButton
-    }
-    
-    // MARK: - Actions
-    
-    func register(
-        cardNumber: String,
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        action.send(.register(cardNumber: cardNumber))
+        catalogProducts.send((.sample))
         scheduler.advance()
+
+        let transferButton = try XCTUnwrap(sut.buttons.first(where: { $0.id == .abroad }), "Expected to have transfer button but got nil.", file: file, line: line)
+        
+        transferButton.action()
     }
     
-    func showProductsAndWait(
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        showProducts()
+    private func tapOrderCardButton(
+        _ sut: AuthLoginViewModel,
+        _ catalogProducts: CatalogProducts,
+        on scheduler: TestSchedulerOfDispatchQueue,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        catalogProducts.send((.sample))
         scheduler.advance()
-    }
-    
-    func showTransfersAndWait(
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        showTransfers()
-        scheduler.advance()
-    }
-    
-    func showScanner(
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        action.send(.show(.scanner))
-        scheduler.advance()
-    }
-    
-    func closeScanner(
-        _ scanValue: String?,
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        cardScanner?.closeAction(scanValue)
-        scheduler.advance()
-    }
-    
-    func order(
-        _ productData: CatalogProductData,
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        orderAuthButton?.action(productData.id)
-        scheduler.advance()
-    }
-    
-    func orderDestination(
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        link?.authTransfersViewModel?.action.send(
-            .transfersSection(.order)
-        )
-        scheduler.advance()
-    }
-    
-    func tapTransfer(
-        on scheduler: TestSchedulerOfDispatchQueue
-    ) {
-        link?.authTransfersViewModel?.action.send(
-            .transfersSection(.transfers)
-        )
-        scheduler.advance()
-    }
-}
 
-// MARK: - Helpers
-
-private extension ClientInformData {
-    
-    static let emptyAuthorized_nilNotAuthorized: Self = .init(serial: "serial", authorized: [], notAuthorized: nil)
-    static let emptyAuthorized_notNilNotAuthorized: Self = .init(serial: "serial", authorized: [], notAuthorized: "notAuthorized")
-    static let notEmptyAuthorized_nilNotAuthorized: Self = .init(serial: "serial", authorized: ["authorized"], notAuthorized: nil)
-    static let notEmptyAuthorized_notNilNotAuthorized: Self = .init(serial: "serial", authorized: ["authorized"], notAuthorized: "notAuthorized")
-}
-
-private extension AuthLoginViewModel.Link {
-    
-    var authProductsViewModel: AuthProductsViewModel? {
+        let orderCardButton = try XCTUnwrap(sut.buttons.first(where: { $0.id == .card }), "Expected to have order card button but got nil.", file: file, line: line)
         
-        if case let .products(authProductsViewModel) = self {
-            return authProductsViewModel
-        } else {
-            return nil
-        }
-    }
-    
-    var authTransfersViewModel: AuthTransfersViewModel? {
-        
-        if case let .transfers(authTransfersViewModel) = self {
-            return authTransfersViewModel
-        } else {
-            return nil
-        }
-    }
-    
-    var `case`: Case {
-        
-        switch self {
-        case let .confirm(viewModel):
-            return .confirm(viewModel.view)
-            
-        case .transfers:
-            return .transfers
-            
-        case let .products(viewModel):
-            return .products(titles: viewModel.productCards.map(\.title))
-        }
-    }
-    
-    enum Case: Equatable {
-        
-        case confirm(AuthConfirmViewModel.View)
-        case transfers
-        case products(titles: [String])
-    }
-}
-
-private extension AuthConfirmViewModel {
-    
-    var view: View {
-        
-        .init(
-            codeTitle: code.title,
-            codeLength: code.codeLenght,
-            infoTitle: info?.title
-        )
-    }
-    
-    struct View: Equatable {
-        
-        let codeTitle: String
-        let codeLength: Int
-        let infoTitle: String?
-    }
-}
-
-private extension Alert.ViewModel {
-    
-    var view: View {
-        
-        .init(
-            title: title,
-            message: message,
-            primary: .init(
-                kind: primary.type.kind,
-                title: primary.title
-            ),
-            secondary: secondary.map {
-                .init(
-                    kind: $0.type.kind,
-                    title: $0.title
-                )
-            }
-        )
-    }
-    
-    struct View: Equatable {
-        
-        let title: String
-        let message: String?
-        let primary: ButtonViewModel
-        let secondary: ButtonViewModel?
-        
-        struct ButtonViewModel: Equatable {
-            
-            let kind: Kind
-            let title: String
-            
-            enum Kind {
-                
-                case `default`
-                case distructive
-                case cancel
-            }
-            
-            static let `default`: Self = .init(kind: .default, title: "Ok")
-        }
-        
-        static func alert(
-            title: String = "Ошибка",
-            message: String,
-            primary: ButtonViewModel = .default,
-            secondary: ButtonViewModel? = nil
-        ) -> Self {
-            
-            .init(title: title, message: message, primary: primary, secondary: secondary)
-        }
-    }
-}
-
-private extension Alert.ViewModel.ButtonViewModel.Kind {
-    
-    var kind: Alert.ViewModel.View.ButtonViewModel.Kind {
-        
-        switch self {
-            
-        case .default:     return .default
-        case .distructive: return .distructive
-        case .cancel:      return .cancel
-        }
-    }
-}
-
-private extension Array where Element == CatalogProductData {
-    
-    static let sample: Self = [
-        .sample
-    ]
-}
-
-private extension AuthProductsViewModel.ProductCardViewModel.OrderButtonType {
-    
-    var orderAuthButton: AuthProductsViewModel.ProductCardViewModel.OrderAuthButton? {
-        
-        if case let .auth(orderAuthButton) = self {
-            return orderAuthButton
-        } else {
-            return nil
-        }
-    }
-}
-
-private extension ButtonAuthView.ViewModel {
-    
-    var view: View {
-        
-        .init(
-            id: id,
-            title: title,
-            subTitle: subTitle
-        )
-    }
-    
-    struct View: Equatable {
-        
-        let id: ButtonAuthView.ViewModel.ButtonType
-        let title: String
-        let subTitle: String
-    }
-}
-
-private extension ButtonAuthView.ViewModel.View {
-    
-    static let orderCard: Self = .init(
-        id: .card,
-        title: "Нет карты?",
-        subTitle: "Доставим в любую точку"
-    )
-    static let transfer: Self = .init(
-        id: .abroad,
-        title: "Переводы за рубеж",
-        subTitle: "Быстро и безопасно"
-    )
-}
-
-private extension TransferAbroadResponseData {
-    
-    static func sample(
-        serial: String = "serial-123",
-        main: MainTransferData = .sample(),
-        directionsDetailList: [DirectionDetailData] = [],
-        bannersDetailList: [BannerDetailData] = [],
-        countriesDetailList: CountryDetailData = .sample()
-    ) -> Self {
-        
-        .init(
-            serial: serial,
-            main: main,
-            directionsDetailList: directionsDetailList,
-            bannersDetailList: bannersDetailList,
-            countriesDetailList: countriesDetailList
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.MainTransferData {
-    
-    static func sample(
-        title: String = "title",
-        subTitle: String = "subTitle",
-        legalTitle: String = "legalTitle",
-        promotion: [TransferAbroadResponseData.PromotionTransferData] = [],
-        directions: TransferAbroadResponseData.DirectionTransferData = .sample(),
-        bannerCatalogList: [BannerCatalogListData] = [],
-        info: TransferAbroadResponseData.InfoTransferData = .sample(),
-        countriesList: TransferAbroadResponseData.CountriesListData = .sample(),
-        advantages: TransferAbroadResponseData.AdvantageTransferData = .sample(),
-        questions: TransferAbroadResponseData.QuestionTransferData = .sample(),
-        support: TransferAbroadResponseData.SupportTransferData = .sample()
-    ) -> Self {
-        
-        .init(
-            title: title,
-            subTitle: subTitle,
-            legalTitle: legalTitle,
-            promotion: promotion,
-            directions: directions,
-            bannerCatalogList: bannerCatalogList,
-            info: info,
-            countriesList: countriesList,
-            advantages: advantages,
-            questions: questions,
-            support: support
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.CountryDetailData {
-    
-    static func sample(
-        title: String = "title",
-        codeList: [String] = ["code"]
-    ) -> Self {
-        
-        .init(
-            title: title,
-            codeList: codeList
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.DirectionTransferData {
-    
-    static func sample(
-        title: String = "title",
-        countriesList: [CountriesList] = []
-    ) -> Self {
-        
-        .init(
-            title: title,
-            countriesList: countriesList
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.InfoTransferData {
-    
-    static func sample(
-        md5hash: String = "md5hash",
-        title: String = "title"
-    ) -> Self {
-        
-        .init(
-            md5hash: md5hash,
-            title: title
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.CountriesListData {
-    
-    static func sample(
-        title: String = "title",
-        codeList: [String] = ["code"]
-    ) -> Self {
-        
-        .init(
-            title: title,
-            codeList: codeList
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.AdvantageTransferData {
-    
-    static func sample(
-        title: String = "title",
-        content: [ContentData] = []
-    ) -> Self {
-        
-        .init(
-            title: title,
-            content: content
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.QuestionTransferData {
-    
-    static func sample(
-        title: String = "title",
-        content: [ContentData] = []
-    ) -> Self {
-        
-        .init(
-            title: title,
-            content: content
-        )
-    }
-}
-
-private extension TransferAbroadResponseData.SupportTransferData {
-    
-    static func sample(
-        title: String = "title",
-        content: [ContentData] = []
-    ) -> Self {
-        
-        .init(
-            title: title,
-            content: content
-        )
+        orderCardButton.action()
     }
 }

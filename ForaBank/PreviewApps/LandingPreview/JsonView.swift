@@ -8,13 +8,14 @@
 import LandingMapping
 import LandingUIComponent
 import SwiftUI
+import Tagged
 
 struct JsonView: View {
     
     @State var text: String = .multiLineHeader
     @State private var showingLandingView: Bool = false
     @State private var showingAlert = false
-    @State private var landing: LandingUIComponent.Landing?
+    @State private var landing: LandingUIComponent.UILanding?
     
     @State private var alertID: AlertID?
     
@@ -38,9 +39,9 @@ struct JsonView: View {
                         let a = try parse(string: text)
                         let detail = Detail(
                             groupID: "GroupID_123",
-                            viewID: "ViewID_abc"
+                            dataGroup: []
                         )
-                        let detailButton: LandingComponent = .detailButton(detail)
+                        let detailButton: UILanding.Component = .detailButton(detail)
                         landing = .init(data: a).appendingToMain(component: detailButton)
                         showingLandingView = true
                     } catch {
@@ -112,16 +113,18 @@ struct JsonView: View {
     }
 }
 
-extension LandingUIComponent.Landing {
+extension LandingUIComponent.UILanding {
     
     func appendingToMain(
-        component: LandingComponent
+        component: UILanding.Component
     ) -> Self {
         
         .init(
             header: header,
             main: main + [component],
-            footer: footer
+            footer: footer,
+            details: [],
+            config: .defaultValue
         )
     }
 }
@@ -142,22 +145,27 @@ private func parse(string: String) throws -> LandingMapping.Landing {
 }
 
 
-private extension LandingUIComponent.Landing {
+private extension LandingUIComponent.UILanding {
     
     init(
         data: LandingMapping.Landing
     ) {
         
-        let header: [LandingComponent] = data.header.compactMap(LandingComponent.init(data:))
-        let main: [LandingComponent] = data.main.compactMap( LandingComponent.init(data:))
-        let footer: [LandingComponent] = data.footer.compactMap(LandingComponent.init(data:))
+        let header: [Component] = data.header.compactMap(Component.init(data:))
+        let main: [Component] = data.main.compactMap( Component.init(data:))
+        let footer: [Component] = data.footer.compactMap(Component.init(data:))
+        let details: [Detail] = []
         
-        self.init(header: header, main: main, footer: footer)
+        self.init(header: header, main: main, footer: footer, details: details, config: .defaultValue)
     }
 }
 
+private extension UILanding.Component.Config {
+    
+    static let defaultValue: Self = .init(listHorizontalRoundImage: .defaultValue, listHorizontalRectangleImage: .init(cornerRadius: 10), listVerticalRoundImage: .emptyConfig, listDropDownTexts: .emptyConfig, multiLineHeader: .defaultValueGray, multiTextsWithIconsHorizontal: .defaultValueBlack, multiTexts: .defaultValue, multiMarkersText: .emptyConfig, multiButtons: .emptyConfig, multiTypeButtons: .emptyConfig, pageTitle: .defaultValue, textWithIconHorizontal: .emptyConfig, detailButton: .emptyConfig, iconWithTwoTextLines: .emptyConfig, image: .emptyConfig, imageSvg: .emptyConfig, verticalSpacing: .emptyConfig, notImplemented: .emptyConfig)
+}
 
-private extension LandingUIComponent.LandingComponent {
+private extension LandingUIComponent.UILanding.Component {
     
     init(
         data: LandingMapping.Landing.DataView
@@ -165,18 +173,18 @@ private extension LandingUIComponent.LandingComponent {
         switch data {
             
         case let .list(.horizontalRoundImage(x)):
-            self = .list(.horizontalRoundImage(.init(data: x), .defaultValue))
+            self = .list(.horizontalRoundImage(.init(data: x)))
         case let .multi(.lineHeader(x)):
-            self = .multi(.lineHeader(.init(data: x), .init(
-                backgroundColor: .white,
-                item: .defaultValueBlack)))
+            self = .multi(.lineHeader(.init(data: x)))
         case let .pageTitle(x):
-            self = .pageTitle(.init(data: x), .defaultValue)
+            self = .pageTitle(.init(data: x))
         case let .multi(.textsWithIconsHorizontalArray(x)):
-            self = .multi(.textsWithIconsHorizontal(.init(data: x), .defaultValueBlack))
+            self = .multi(.textsWithIconsHorizontal(.init(data: x)))
         case let .textsWithIconHorizontal(x):
             self = .textWithIconHorizontal(.init(data: x))
-            
+        case let .multi(.text(x)):
+            self = .multi(.texts(.init(data: x)))
+
             // TODO: исправить после реализации всех кейсов!!!
         default:
             self = .notImplemented
@@ -184,39 +192,49 @@ private extension LandingUIComponent.LandingComponent {
     }
 }
 
-private extension LandingUIComponent.Landing.IconWithTwoTextLines {
+private extension LandingUIComponent.UILanding.Multi.Texts {
+    
+    init(
+        data: LandingMapping.Landing.MultiText
+    ) {
+        
+        self.init(texts: data.text.map{ .init($0.rawValue) })
+    }
+}
+
+private extension LandingUIComponent.UILanding.IconWithTwoTextLines {
     
     init(
         data: LandingMapping.Landing.IconWithTwoTextLines
     ) {
         
-        self.init(image: .init(systemName: "flag"), title: data.title, subTitle: data.subTitle)
+        self.init(md5hash: data.md5hash, title: data.title, subTitle: data.subTitle)
     }
 }
 
-private extension LandingUIComponent.Landing.ListHorizontalRoundImage {
+private extension LandingUIComponent.UILanding.List.HorizontalRoundImage {
     
     init(
         data: LandingMapping.Landing.ListHorizontalRoundImage
     ) {
-        let lists: [LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem]? = data.list?.map {
-            Landing.ListHorizontalRoundImage.ListItem.init(data: $0)
+        let lists: [LandingUIComponent.UILanding.List.HorizontalRoundImage.ListItem]? = data.list?.map {
+            LandingUIComponent.UILanding.List.HorizontalRoundImage.ListItem(data: $0)
         }
-        self.init(title: data.title, list: lists ?? [], config: .defaultValue)
+        self.init(title: data.title, list: lists ?? [])
     }
 }
 
-private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem {
+private extension LandingUIComponent.UILanding.List.HorizontalRoundImage.ListItem {
     
     init(
         data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem
     ) {
         
-        self.init(image: .bolt, title: data.title, subInfo: data.subInfo, detail: data.detail.map{ .init(data: $0) })
+        self.init(imageMd5Hash: "1", title: data.title, subInfo: data.subInfo, detail: data.detail.map{ .init(data: $0) })
     }
 }
 
-private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem.Detail {
+private extension LandingUIComponent.UILanding.List.HorizontalRoundImage.ListItem.Detail {
     
     init(
         data: LandingMapping.Landing.ListHorizontalRoundImage.ListItem.Detail
@@ -226,19 +244,20 @@ private extension LandingUIComponent.Landing.ListHorizontalRoundImage.ListItem.D
     }
 }
 
-private extension LandingUIComponent.Landing.MultiLineHeader {
+private extension LandingUIComponent.UILanding.Multi.LineHeader {
     
     init(
         data: LandingMapping.Landing.MultiLineHeader
     ) {
         self.init(
+            backgroundColor: "WHITE",
             regularTextList: data.regularTextList,
             boldTextList: data.boldTextList
         )
     }
 }
 
-private extension LandingUIComponent.Landing.PageTitle {
+private extension LandingUIComponent.UILanding.PageTitle {
     
     init(
         data: LandingMapping.Landing.PageTitle
@@ -250,23 +269,23 @@ private extension LandingUIComponent.Landing.PageTitle {
     }
 }
 
-private extension LandingUIComponent.Landing.MultiTextsWithIconsHorizontal {
+private extension LandingUIComponent.UILanding.Multi.TextsWithIconsHorizontal {
     
     init(
         data: LandingMapping.Landing.MuiltiTextsWithIconsHorizontal
     ) {
         self.init(lists: data.list.map {
-            .init(image: .percent, title: $0.title)
+            .init(md5hash: $0.md5hash, title: $0.title)
         })
     }
 }
 
-private extension LandingUIComponent.Landing.TextsWithIconHorizontal {
+private extension LandingUIComponent.UILanding.TextsWithIconHorizontal {
     
     init(
         data: LandingMapping.Landing.TextsWithIconHorizontal
     ) {
-        self.init(image: .shield, title: data.title, contentCenterAndPull: data.contentCenterAndPull)
+        self.init(md5hash: data.md5hash, title: data.title, contentCenterAndPull: data.contentCenterAndPull)
     }
 }
 
@@ -287,21 +306,21 @@ extension Image {
     
 }
 
-extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config {
+extension LandingUIComponent.UILanding.List.HorizontalRoundImage.Config {
     
     static let defaultValue: Self = .init(
         backgroundColor: .grayLightest,
         title: .defaultValue,
         subtitle: .defaultValue,
         detail: .defaultValue,
-        item: .init(cornerRadius: 28, width: 56, spacing: 8),
+        item: .init(cornerRadius: 28, width: 56, spacing: 8, size: .init(width: 80, height: 80)),
         cornerRadius: 12,
         spacing: 16,
         height: 184
     )
 }
 
-extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Title {
+extension LandingUIComponent.UILanding.List.HorizontalRoundImage.Config.Title {
     
     static let defaultValue: Self = .init(
         color: .textSecondary,
@@ -309,7 +328,7 @@ extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Title {
     )
 }
 
-extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Subtitle {
+extension LandingUIComponent.UILanding.List.HorizontalRoundImage.Config.Subtitle {
     
     static let defaultValue: Self = .init(
         color: .textSecondary,
@@ -320,7 +339,7 @@ extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Subtitle {
     )
 }
 
-extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Detail {
+extension LandingUIComponent.UILanding.List.HorizontalRoundImage.Config.Detail {
     
     static let defaultValue: Self = .init(
         color: .textSecondary,
@@ -328,7 +347,7 @@ extension LandingUIComponent.Landing.ListHorizontalRoundImage.Config.Detail {
     )
 }
 
-extension LandingUIComponent.Landing.MultiLineHeader.Config {
+extension LandingUIComponent.UILanding.Multi.LineHeader.Config {
     
     static let defaultValueBlack: Self = .init(
         backgroundColor: .black,
@@ -343,7 +362,7 @@ extension LandingUIComponent.Landing.MultiLineHeader.Config {
         item: .defaultValueBlack
     )
 }
-extension LandingUIComponent.Landing.MultiLineHeader.Config.Item {
+extension LandingUIComponent.UILanding.Multi.LineHeader.Config.Item {
     
     static let defaultValueBlack: Self = .init(
         color: .black,
@@ -355,31 +374,38 @@ extension LandingUIComponent.Landing.MultiLineHeader.Config.Item {
         fontBold: .bold(.title)())
 }
 
-extension LandingUIComponent.Landing.MultiTextsWithIconsHorizontal.Config {
+extension LandingUIComponent.UILanding.Multi.TextsWithIconsHorizontal.Config {
     
     static let defaultValueBlack: Self = .init(
         color: .black,
         font: .body)
 }
 
-extension LandingUIComponent.Landing.PageTitle.Config {
+extension LandingUIComponent.UILanding.PageTitle.Config {
     
     static let defaultValue: Self = .init(
         title: .init(color: .black, font: .title),
-        subtitle: .init(color: .gray, font: .body),
-        transparency: true)
+        subtitle: .init(color: .gray, font: .body))
 }
+
+extension LandingUIComponent.UILanding.Multi.Texts.Config {
+    
+    static let defaultValue: Self = .init(textColor: .gray, padding: .init(horizontal: 10, vertical: 20))
+}
+
 
 private extension String {
     
     static let multiLineHeader: Self = """
 {
+    "statusCode":0,
+    "errorMessage":null,
    "data":{
       "header":[
          {
             "type":"PAGE_TITLE",
             "data":{
-               "text":"Переводы за рубеж",
+               "title":"Переводы за рубеж",
                "transparency":true
             }
          }
@@ -470,7 +496,17 @@ private extension String {
 
                ]
             }
-         }
+         },
+        {
+                "type": "MULTI_TEXT",
+                "data": {
+                  "list": [
+                    "*Акция «Кешбэк до 1000 руб. за первый перевод» – стимулирующее мероприятие, не является лотереей. Период проведения акции «Кешбэк до 1000 руб. за первый перевод» с 01 ноября 2022 по 31 января 2023 года. Информацию об организаторе акции, о правилах, порядке, сроках и месте ее проведения можно узнать на официальном сайте www.forabank.ru и в офисах АКБ «ФОРА-БАНК» (АО).",
+                    "** Участник Акции имеет право заключить с банком договор банковского счета с использованием карты МИР по тарифному плану «МИГ» или «Все включено-Промо» с бесплатным обслуживанием.",
+                    "*** Банк выплачивает Участнику Акции кешбэк в размере 100% от суммы комиссии за первый перевод, но не более 1000 рублей."
+                  ]
+                }
+              }
       ],
       "footer":[
         {

@@ -12,6 +12,6 @@ extension DecodableLanding.Data {
     struct MultiMarkersText: Decodable, Equatable {
         
         let backgroundColor, style: String
-        let list: [String?]
+        let list: [String]?
     }
 }

@@ -12,12 +12,12 @@ extension Landing {
     public struct MultiMarkersText: Decodable, Equatable {
         
         public let backgroundColor, style: String
-        public let list: [Text?]
+        public let list: [Text]
         
         public init(
             backgroundColor: String,
             style: String,
-            list: [Text?]
+            list: [Text]
         ) {
             self.backgroundColor = backgroundColor
             self.style = style

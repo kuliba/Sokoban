@@ -7,9 +7,9 @@
 
 import Foundation
 
-public extension Landing {
+public extension UILanding {
     
-    struct PageTitle: Equatable {
+    struct PageTitle: Hashable {
         
         public let text: String
         public let subTitle: String?
@@ -18,11 +18,20 @@ public extension Landing {
         public init(
             text: String,
             subTitle: String?,
-            transparency: Bool) {
+            transparency: Bool
+        ) {
             self.text = text
             self.subTitle = subTitle
             self.transparency = transparency
         }
+    }
+}
+
+extension UILanding.PageTitle {
+    
+    func imageRequests() -> [ImageRequest] {
+        
+        return []
     }
 }
 

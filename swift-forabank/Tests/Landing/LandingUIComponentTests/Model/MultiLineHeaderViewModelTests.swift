@@ -15,11 +15,13 @@ final class MultiLineHeaderViewModelTests: XCTestCase {
     
     func test_init_shouldSetAllValue() {
         
-        let sut = Landing.MultiLineHeader(
+        let sut = UILanding.Multi.LineHeader(
+            backgroundColor: "qqq",
             regularTextList: ["regularTextItem"],
             boldTextList: ["boldTextItem"]
         )
         
+        XCTAssertEqual(sut.backgroundColor, "qqq")
         XCTAssertEqual(sut.regularTextList?.count, 1)
         XCTAssertEqual(sut.boldTextList?.count, 1)
         XCTAssertEqual(sut.regularTextList?.first, "regularTextItem")

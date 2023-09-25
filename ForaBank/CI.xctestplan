@@ -131,14 +131,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "LoadableModelTests",
         "name" : "LoadableModelTests"
       }

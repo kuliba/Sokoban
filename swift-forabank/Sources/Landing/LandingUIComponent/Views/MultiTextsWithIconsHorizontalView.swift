@@ -7,22 +7,23 @@
 
 import SwiftUI
 
-typealias ComponentMTWIH = Landing.MultiTextsWithIconsHorizontal
-typealias ConfigMTWIH = Landing.MultiTextsWithIconsHorizontal.Config
+typealias ComponentMTWIH = UILanding.Multi.TextsWithIconsHorizontal
+typealias ConfigMTWIH = UILanding.Multi.TextsWithIconsHorizontal.Config
 
 struct MultiTextsWithIconsHorizontalView: View {
     
-    let model: ComponentMTWIH
+    @ObservedObject var model: ViewModel
     let config: ConfigMTWIH
     
     var body: some View {
         
         HStack {
             
-            ForEach(model.lists) {
+            ForEach(model.data.lists) {
                 
                 ItemView(
                     item: $0,
+                    image: model.image(byMd5Hash: $0.md5hash),
                     config: config)
             }
         }
@@ -36,13 +37,17 @@ extension MultiTextsWithIconsHorizontalView {
     struct ItemView: View {
         
         let item: Item
+        let image: Image?
         let config: ConfigMTWIH
         
         var body: some View {
             
             HStack {
                 
-                item.image
+                image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: config.size, height: config.size)
                 
                 if let textItem = item.title {
                     
@@ -51,6 +56,7 @@ extension MultiTextsWithIconsHorizontalView {
                         .foregroundColor(config.color)
                 }
             }
+            .padding(.vertical, config.padding)
         }
     }
 }
@@ -59,10 +65,13 @@ struct MultiTextsWithIconsHorizontalView_Previews: PreviewProvider {
     static var previews: some View {
         
         MultiTextsWithIconsHorizontalView(
-            model: .init(lists: [
-                .defaultItemOne,
-                .defaultItemTwo
-            ]),
+            model: .init(
+                data: .init(
+                    lists: [
+                        .defaultItemOne,
+                        .defaultItemTwo
+                    ]),
+                images: .defaultValue),
             config: .defaultValueBlack
         )
     }

@@ -24,8 +24,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
             confirmCodeLength: confirmCodeLength,
             phoneNumber: phoneNumber,
             resendCodeDelay: resendCodeDelay,
-            backAction: {},
-            rootActions: rootActions
+            backAction: {}
         )
         
         XCTAssertEqual(
@@ -66,20 +65,6 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         )
     }
     
-    // MARK: - makeAuthTransfersViewModel
-    
-    func test_makeAuthTransfersViewModel() {
-        
-        let (sut, factory) = makeSUT()
-        
-        let authTransfersViewModel = factory.makeAuthTransfersViewModel(
-            closeAction: {}
-        )
-        
-        XCTAssertNotNil(authTransfersViewModel)
-        XCTAssertNotNil(sut)
-    }
-    
     // MARK: - makeOrderProductViewModel
     
     func test_makeOrderProductViewModel() {
@@ -94,9 +79,40 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    // MARK: - makeLandingViewModel
+    
+    func test_makeOrderProductViewModel_orderCard() {
+        
+        let (sut, factory) = makeSUT()
+        
+        let landingViewModel = factory.makeLandingViewModel(
+            .orderCard,
+            config: .default,
+            goMain: {},
+            orderCard: {_,_ in })
+        
+        XCTAssertNotNil(landingViewModel)
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_makeOrderProductViewModel_transfer() {
+        
+        let (sut, factory) = makeSUT()
+        
+        let landingViewModel = factory.makeLandingViewModel(
+            .transfer,
+            config: .default,
+            goMain: {},
+            orderCard: {_,_ in })
+        
+        XCTAssertNotNil(landingViewModel)
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
+        rootActions: RootViewModel.RootActions = .emptyMock,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -104,7 +120,9 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         factory: ModelAuthLoginViewModelFactory
     ) {
         let sut: Model = .mockWithEmptyExcept()
-        let factory = sut.authLoginViewModelFactory()
+        let factory = sut.authLoginViewModelFactory(
+            rootActions: rootActions
+        )
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(sut, file: file, line: line)

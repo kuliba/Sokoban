@@ -9,14 +9,16 @@ import Foundation
 
 struct DecodableLanding: Decodable {
     
-    let data: Data
+    let statusCode: Int
+    let errorMessage: String?
+    let data: Data?
     
     struct Data: Decodable {
         
-        let header: [DataView]
+        let header: [DataView]?
         let main: [DataView]
-        let footer: [DataView]
-        let details: [Detail]
+        let footer: [DataView]?
+        let details: [Detail]?
         let serial: String
     }
 }

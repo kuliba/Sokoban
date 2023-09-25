@@ -7,64 +7,85 @@
 
 import SwiftUI
 
-public extension Landing.MultiLineHeader {
+public extension UILanding.Multi.LineHeader {
     
-    struct Config: Equatable {
+    struct Config {
         
-        public let backgroundColor: BackgroundColor
+        public var id: Self { self }
+        
         public let item: Item
+        public let background: Background
+        public let foreground: Foreground
         
-        public var textColor: Color {
+        public struct Foreground {
             
-            return backgroundColor.isDark ? .white : .black
+            let fgBlack: Color
+            let fgWhite: Color
+            
+            public init(fgBlack: Color, fgWhite: Color) {
+                self.fgBlack = fgBlack
+                self.fgWhite = fgWhite
+            }
         }
         
-        public struct Item: Equatable {
+        public struct Background {
+            let black: Color
+            let gray: Color
+            let white: Color
             
-            public let color: Color
+            public init(black: Color, gray: Color, white: Color) {
+                self.black = black
+                self.gray = gray
+                self.white = white
+            }
+        }
+        
+        public struct Item {
+            
             public let fontRegular: Font
             public let fontBold: Font
             
             public init(
-                color: Color,
                 fontRegular: Font,
                 fontBold: Font
             ) {
-                self.color = color
                 self.fontRegular = fontRegular
                 self.fontBold = fontBold
             }
         }
         
-        public enum BackgroundColor: Equatable {
-            
-            case black
-            case gray
-            case white
-            
-            public var value: Color {
-                get {
-                    switch self {
-                        
-                    case .black:
-                        return .black
-                    case .gray:
-                        return .gray
-                    case .white:
-                        return .white
-                    }
-                }
-            }
-            
-            public var isDark: Bool {
+        public init(item: Item, background: Background, foreground: Foreground) {
+            self.item = item
+            self.background = background
+            self.foreground = foreground
+        }
                 
-                self == .black
+        func backgroundColor(_ backgroundColor: String) -> Color {
+            
+            let colorType: BackgroundColorType = .init(rawValue: backgroundColor) ?? .white
+                
+            switch colorType {
+                
+            case .black:
+                return background.black
+            case .gray:
+                return background.gray
+            case .white:
+                return background.white
             }
         }
-        
-        public init(backgroundColor: BackgroundColor, item: Item) {
-            self.backgroundColor = backgroundColor
-            self.item = item
+            
+        func textColor(_ backgroundColor: String) -> Color {
+            
+            let colorType: BackgroundColorType = .init(rawValue: backgroundColor) ?? .white
+
+            switch colorType {
+                
+            case .black:
+                return foreground.fgWhite
+            case .gray, .white:
+                return foreground.fgBlack
+            }
         }
     }
 }

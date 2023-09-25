@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LandingUIComponent
 
 struct ComposedLoginView: View {
     
@@ -62,12 +63,14 @@ struct ComposedLoginView: View {
                 switch link {
                 case let .confirm(confirmViewModel):
                     AuthConfirmView(viewModel: confirmViewModel)
-                    
-                case let .transfers(viewModel):
-                    AuthTransfersView(viewModel: viewModel)
-                    
+                                        
                 case let .products(productsViewModel):
                     AuthProductsView(viewModel: productsViewModel)
+                    
+                case let .landing(viewModel):
+                    LandingWrapperView(viewModel: viewModel)
+                        .navigationBarBackButtonHidden(true)
+                        .foregroundColor(.black)
                 }
             }
         }

@@ -30,9 +30,9 @@ let package = Package(
         .genericRemoteService,
         .getProcessingSessionCodeService,
         // landing
+        .codableLanding,
         .landingMapping,
         .landingUIComponent,
-        .landingUpdater,
         // UI
         .linkableText
     ],
@@ -40,6 +40,7 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .tagged,
+        .shimmer,
     ],
     targets: [
         .bindPublicKeyWithEventID,
@@ -80,11 +81,11 @@ let package = Package(
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
         // landing
+        .codableLanding,
         .landingMapping,
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
-        .landingUpdater,
         // UI
         .linkableText,
         .linkableTextTests,
@@ -228,6 +229,13 @@ private extension Product {
     
     // landing
     
+    static let codableLanding = library(
+        name: .codableLanding,
+        targets: [
+            .codableLanding
+        ]
+    )
+    
     static let landingMapping = library(
         name: .landingMapping,
         targets: [
@@ -239,13 +247,6 @@ private extension Product {
         name: .landingUIComponent,
         targets: [
             .landingUIComponent
-        ]
-    )
-
-    static let landingUpdater = library(
-        name: .landingUpdater,
-        targets: [
-            .landingUpdater
         ]
     )
     
@@ -517,6 +518,13 @@ private extension Target {
     
     // landing
     
+    static let codableLanding = target(
+        name: .codableLanding,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.codableLanding)"
+    )
     static let landingMapping = target(
         name: .landingMapping,
         dependencies: [
@@ -534,15 +542,12 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.landingMappingTests)"
     )
-    static let landingUpdater = target(
-        name: .landingUpdater,
-        path: "Sources/Landing/\(String.landingUpdater)"
-    )
     static let landingUIComponent = target(
         name: .landingUIComponent,
         dependencies: [
             .combineSchedulers,
             .tagged,
+            .shimmer,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -640,14 +645,14 @@ private extension Target.Dependency {
     )
     
     // landing
+    static let codableLanding = byName(
+        name: .codableLanding
+    )
     static let landingMapping = byName(
         name: .landingMapping
     )
     static let landingUIComponent = byName(
         name: .landingUIComponent
-    )
-    static let landingUpdater = byName(
-        name: .landingUpdater
     )
     
     // MARK: - UI
@@ -717,11 +722,11 @@ private extension String {
     static let userModelTests = "UserModelTests"
     
     // landing
+    static let codableLanding = "CodableLanding"
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
-    static let landingUpdater = "LandingUpdater"
 
     // MARK: - UI
     
@@ -761,6 +766,10 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_tagged,
         from: .init(0, 7, 0)
     )
+    static let shimmer = Package.Dependency.package(
+        url: .swift_shimmer_path,
+        from: .init(1, 0, 0)
+    )
 }
 
 private extension Target.Dependency {
@@ -793,6 +802,10 @@ private extension Target.Dependency {
         name: .tagged,
         package: .swift_tagged
     )
+    static let shimmer = product(
+        name: .shimmer,
+        package: .swift_shimmer
+    )
 }
 
 private extension String {
@@ -819,4 +832,8 @@ private extension String {
     
     static let tagged = "Tagged"
     static let swift_tagged = "swift-tagged"
+    
+    static let shimmer = "Shimmer"
+    static let swift_shimmer = "SwiftUI-Shimmer"
+    static let swift_shimmer_path = "https://github.com/markiv/SwiftUI-Shimmer"
 }
