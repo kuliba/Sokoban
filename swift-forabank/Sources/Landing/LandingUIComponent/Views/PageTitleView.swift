@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-typealias ComponentPT = Landing.PageTitle
-typealias ConfigPT = Landing.PageTitle.Config
+typealias ComponentPT = UILanding.PageTitle
+typealias ConfigPT = UILanding.PageTitle.Config
 
 struct PageTitleView: View {
     
@@ -32,7 +32,7 @@ struct PageTitleView: View {
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity,  alignment: .leading)
-        .background(config.background)
+        .background(config.background(model.transparency))
     }
 }
 

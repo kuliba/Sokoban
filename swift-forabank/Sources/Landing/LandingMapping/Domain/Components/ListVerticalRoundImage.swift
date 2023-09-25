@@ -25,8 +25,9 @@ extension DecodableLanding.Data {
             let detail: Detail?
                         
             enum CodingKeys: String, CodingKey {
-                case md5hash, title, subInfo, link, appStore, googlePlay
+                case md5hash, title, link, appStore, googlePlay
                 case detail = "details"
+                case subInfo = "subTitle"
             }
             
             struct Detail: Decodable, Equatable {

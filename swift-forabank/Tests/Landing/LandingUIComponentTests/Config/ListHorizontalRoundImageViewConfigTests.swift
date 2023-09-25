@@ -11,7 +11,7 @@ import SwiftUI
 
 final class ListHorizontalRoundImageViewConfigTests: XCTestCase {
     
-    typealias Config = Landing.ListHorizontalRoundImage.Config
+    typealias Config = UILanding.List.HorizontalRoundImage.Config
     
     //MARK: - test init config
     
@@ -27,10 +27,11 @@ final class ListHorizontalRoundImageViewConfigTests: XCTestCase {
                 cornerRadius: 12,
                 padding: .init(horizontal: 6, vertical: 4)),
             detail: .init(color: .blue, font: .body),
-            item: .init(cornerRadius: 2, width: 3, spacing: 4),
+            item: .init(cornerRadius: 2, width: 3, spacing: 4, size: .init(width: 1, height: 10)),
             cornerRadius: 5,
             spacing: 6,
-            height: 9)
+            height: 9,
+            paddings: .init(horizontal: 2, vertical: 3))
         
         XCTAssertEqual(config.backgroundColor, .black)
         XCTAssertEqual(config.title.color, .textSecondary)
@@ -44,8 +45,12 @@ final class ListHorizontalRoundImageViewConfigTests: XCTestCase {
         XCTAssertEqual(config.detail.font, .body)
         XCTAssertEqual(config.item.cornerRadius, 2)
         XCTAssertEqual(config.item.width, 3)
+        XCTAssertEqual(config.item.size.height, 10)
+        XCTAssertEqual(config.item.size.width, 1)
         XCTAssertEqual(config.cornerRadius, 5)
         XCTAssertEqual(config.spacing, 6)
         XCTAssertEqual(config.height, 9)
+        XCTAssertEqual(config.paddings.horizontal, 2)
+        XCTAssertEqual(config.paddings.vertical, 3)
     }
 }

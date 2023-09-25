@@ -40,25 +40,33 @@ public struct LandingMapper {
     
     private static func decode(_ data: Data) throws -> DecodableLanding {
         
-        return try JSONDecoder().decode(DecodableLanding.self, from: data)
+        let str = String(decoding: data, as: UTF8.self)
+        let correctedString = str.replacingOccurrences(of: ".\n", with: ".\\n")
+        let dataCorrected: Data = correctedString.data(using: .utf8) ?? .init()
+
+        return try JSONDecoder().decode(DecodableLanding.self, from: dataCorrected)
     }
     
     private static func decodeLandingToLanding(
         _ decodeLanding: DecodableLanding
     ) -> Landing {
         
-        let serial: String = decodeLanding.data.serial
-        let header: [Landing.DataView] = decodeLanding.data.header.compactMap(Landing.DataView.init(data:))
-        let main: [Landing.DataView] = decodeLanding.data.main.compactMap(Landing.DataView.init(data:))
-        let footer: [Landing.DataView] = decodeLanding.data.footer.compactMap (Landing.DataView.init(data:))
-        let details: [Landing.Detail] = decodeLanding.data.details.compactMap (Landing.Detail.init(data:))
+        let errorMessage: String? = decodeLanding.errorMessage
+        let code: Int = decodeLanding.statusCode
+        let serial: String? = decodeLanding.data?.serial
+        let header: [Landing.DataView] = decodeLanding.data?.header?.compactMap(Landing.DataView.init(data:)) ?? []
+        let main: [Landing.DataView] = decodeLanding.data?.main.compactMap(Landing.DataView.init(data:)) ?? []
+        let footer: [Landing.DataView] = decodeLanding.data?.footer?.compactMap (Landing.DataView.init(data:)) ?? []
+        let details: [Landing.Detail] = decodeLanding.data?.details?.compactMap (Landing.Detail.init(data:)) ?? []
         
         let landing: Landing = .init(
             header: header,
             main: main,
             footer: footer,
             details: details,
-            serial: serial
+            serial: serial,
+            statusCode: code,
+            errorMessage: errorMessage
         )
         
         return landing
@@ -310,14 +318,10 @@ private extension Landing.MultiMarkersText {
     init(
         data: DecodableLanding.Data.MultiMarkersText
     ) {
-        let list: [Landing.MultiMarkersText.Text?] = data.list.compactMap {
-            
-            if let text = $0 {
-                
-                return .init(text)
-            }
-            return nil
-        }
+        let list: [Landing.MultiMarkersText.Text] = data.list?.compactMap {
+                return Landing.MultiMarkersText.Text.init($0)
+        } ?? []
+        
         self.init(
             backgroundColor: data.backgroundColor,
             style: data.style,
@@ -502,7 +506,7 @@ private extension Landing.PageTitle {
     init(
         data: DecodableLanding.Data.PageTitle
     ) {
-        self.text = data.text
+        self.text = data.title
         self.transparency = data.transparency
         self.subtitle = data.subTitle
     }

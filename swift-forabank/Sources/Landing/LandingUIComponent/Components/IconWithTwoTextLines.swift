@@ -7,22 +7,55 @@
 
 import SwiftUI
 
-public extension Landing {
+public extension UILanding {
     
-    struct IconWithTwoTextLines {
+    struct IconWithTwoTextLines: Hashable {
         
-        public let image: Image
+        public let md5hash: String
         public let title, subTitle: String?
         
         public init(
-            image: Image,
+            md5hash: String,
             title: String?,
             subTitle: String?
         ) {
             
-            self.image = image
+            self.md5hash = md5hash
             self.title = title
             self.subTitle = subTitle
         }
+    }
+}
+
+extension IconWithTwoTextLinesView {
+    
+    final class ViewModel: ObservableObject {
+        
+        typealias IconWithTwoTextLines = UILanding.IconWithTwoTextLines
+        
+        @Published private(set) var data: IconWithTwoTextLines
+        
+        @Published private(set) var images: [String: Image] = [:]
+        
+        init(
+            data: IconWithTwoTextLines,
+            images: [String: Image]
+        ) {
+            self.data = data
+            self.images = images
+        }
+        
+        func image(byMd5Hash: String) -> Image? {
+            
+            return images[byMd5Hash]
+        }
+    }
+}
+
+extension UILanding.IconWithTwoTextLines {
+    
+    func imageRequests() -> [ImageRequest] {
+        
+        return [ImageRequest.md5Hash(self.md5hash)]
     }
 }

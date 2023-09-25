@@ -9,6 +9,7 @@ import Combine
 import CombineSchedulers
 import Foundation
 import SwiftUI
+import LandingUIComponent
 
 class AuthLoginViewModel: ObservableObject {
     
@@ -23,11 +24,9 @@ class AuthLoginViewModel: ObservableObject {
     
     @Published var buttons: [ButtonAuthView.ViewModel]
     
-    private let delayedAction: PassthroughSubject<DelayedAction, Never> = .init()
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
-    private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     
     lazy var card: CardViewModel = CardViewModel(
@@ -57,12 +56,10 @@ class AuthLoginViewModel: ObservableObject {
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
         buttons: [ButtonAuthView.ViewModel] = [],
-        rootActions: RootViewModel.RootActions,
         scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
     ) {
         self.header = .init()
         self.buttons = buttons
-        self.rootActions = rootActions
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
@@ -79,12 +76,12 @@ class AuthLoginViewModel: ObservableObject {
     
     func showTransfers() {
         
-        action.send(.show(.transfers))
+        handleLandingAction(.transfer)
     }
     
     func showProducts() {
         
-        action.send(.show(.products))
+        handleLandingAction(.orderCard)
     }
 }
 
@@ -96,8 +93,7 @@ protocol AuthLoginViewModelFactory {
         confirmCodeLength: Int,
         phoneNumber: String,
         resendCodeDelay: TimeInterval,
-        backAction: @escaping () -> Void,
-        rootActions: RootViewModel.RootActions
+        backAction: @escaping () -> Void
     ) -> AuthConfirmViewModel
     
     func makeAuthProductsViewModel(
@@ -105,13 +101,19 @@ protocol AuthLoginViewModelFactory {
         dismissAction: @escaping () -> Void
     ) -> AuthProductsViewModel
     
-    func makeAuthTransfersViewModel(
-        closeAction: @escaping () -> Void
-    ) -> AuthTransfersViewModel
-    
     func makeOrderProductViewModel(
         productData: CatalogProductData
     ) -> OrderProductView.ViewModel
+    
+    typealias GoMainAction = () -> Void
+    typealias OrderCardAction = (Int, Int) -> Void
+    
+    func makeLandingViewModel(
+        _ type: AbroadType,
+        config: UILanding.Component.Config,
+        goMain: @escaping GoMainAction,
+        orderCard: @escaping OrderCardAction
+    ) -> LandingWrapperViewModel
 }
 
 // MARK: Binding
@@ -136,9 +138,6 @@ private extension AuthLoginViewModel {
                     case .products:
                         handleShowProductsAction()
                         
-                    case .transfers:
-                        handleShowTransfersAction(on: scheduler)
-                        
                     case .scanner:
                         handleShowScannerAction()
                         
@@ -148,28 +147,7 @@ private extension AuthLoginViewModel {
                     
                 case .closeLink:
                     handleCloseLinkAction()
-                    
-                case let .spinner(spinner):
-                    switch spinner {
-                    case .show: handleSpinnerShowAction()
-                    case .hide: handleSpinnerHideAction()
-                    }
                 }
-            }
-            .store(in: &bindings)
-        
-        delayedAction
-            .flatMap {
-                
-                Just($0.action)
-                    .delay(
-                        for: .milliseconds($0.delayMS),
-                        scheduler: scheduler
-                    )
-            }
-            .sink { [weak self] in
-                
-                self?.action.send($0)
             }
             .store(in: &bindings)
         
@@ -201,15 +179,15 @@ private extension AuthLoginViewModel {
             }
             .store(in: &bindings)
         
-        eventPublishers.catalogProductsTransferAbroad
+        eventPublishers.catalogProducts
             .receive(on: scheduler)
-            .sink { [weak self] catalogProducts, transferAbroad in
+            .sink { [weak self] catalogProducts in
                 
                 guard let self else { return }
                 
                 withAnimation {
                     
-                    self.buttons = self.makeButtons(with: catalogProducts, and: transferAbroad)
+                    self.buttons = self.makeButtons(with: catalogProducts)
                 }
             }
             .store(in: &bindings)
@@ -220,8 +198,8 @@ private extension AuthLoginViewModel {
     ) {
         LoggerAgent.shared.log(category: .ui, message: "received ModelAction.Auth.CheckClient.Response")
         
-        action.send(.spinner(.hide))
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Hide")
+        eventHandlers.hideSpinner()
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Call hide spinner rootAction")
         
         switch payload {
         case let .success(codeLength: codeLength, phone: phone, resendCodeDelay: resendCodeDelay):
@@ -234,8 +212,7 @@ private extension AuthLoginViewModel {
                 backAction: { [weak self] in
                     
                     self?.action.send(.closeLink)
-                },
-                rootActions: rootActions
+                }
             )
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented confirm view")
@@ -267,8 +244,18 @@ private extension AuthLoginViewModel {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "dismiss keyboard")
         card.textField.dismissKeyboard()
         
-        action.send(.spinner(.show))
-        LoggerAgent.shared.log(level: .debug, category: .ui, message: "sent AuthLoginViewModelAction.Spinner.Show")
+        eventHandlers.showSpinner()
+        LoggerAgent.shared.log(level: .debug, category: .ui, message: "Call show spinner rootAction")
+    }
+    
+    func orderCard(
+        _ cardTarif: Int,
+        _ cardType: Int
+    ) {
+        if let catalogProduct = self.eventHandlers.catalogProduct(.tarif(cardTarif, type: cardType)) {
+            
+            handleShowOrderProductAction(catalogProduct)
+        }
     }
     
     func handleShowProductsAction() {
@@ -279,7 +266,7 @@ private extension AuthLoginViewModel {
             
             guard let self = self else { return }
             
-            if let catalogProduct = self.eventHandlers.catalogProductForID(id) {
+            if let catalogProduct = self.eventHandlers.catalogProduct(.id(id)) {
                 
                 self.action.send(.show(.orderProduct(catalogProduct)))
             }
@@ -301,18 +288,18 @@ private extension AuthLoginViewModel {
         link = .products(viewModel)
     }
     
-    func handleShowTransfersAction(
-        on scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        let viewModel = factory.makeAuthTransfersViewModel { [weak self] in
-            
-            self?.action.send(.closeLink)
-        }
+    func handleLandingAction(_ abroadType: AbroadType) {
+        
+        let viewModel = factory.makeLandingViewModel(
+            abroadType,
+            config: .default,
+            goMain: handleCloseLinkAction,
+            orderCard: orderCard
+        )
         
         UIApplication.shared.endEditing()
         
-        bind(viewModel, on: scheduler)
-        link = .transfers(viewModel)
+        link = .landing(viewModel)
     }
     
     func handleShowScannerAction() {
@@ -360,17 +347,6 @@ private extension AuthLoginViewModel {
         link = nil
     }
     
-    func handleSpinnerShowAction() {
-        
-        LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Show")
-        rootActions.spinner.show()
-    }
-    
-    func handleSpinnerHideAction() {
-        LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Spinner.Hide")
-        rootActions.spinner.hide()
-    }
-    
     func handleShowOrderProductAction(
         _ productData: CatalogProductData
     ) {
@@ -405,19 +381,14 @@ private extension AuthLoginViewModel {
     }
     
     func makeButtons(
-        with catalogProducts: [CatalogProductData],
-        and transferAbroad: TransferAbroadResponseData?
+        with catalogProducts: [CatalogProductData]
     ) -> [ButtonAuthView.ViewModel] {
         
         var buttons = [ButtonAuthView.ViewModel]()
         
-        if transferAbroad != nil {
-            
-            LoggerAgent.shared.log(level: .debug, category: .ui, message: "TransferAbroad button presented")
-            buttons.append(
-                .init(.abroad) { [weak self] in self?.showTransfers() }
-            )
-        }
+        buttons.append(
+            .init(.abroad) { [weak self] in self?.showTransfers() }
+        )
         
         if !catalogProducts.isEmpty {
             
@@ -428,37 +399,6 @@ private extension AuthLoginViewModel {
         }
         
         return buttons
-    }
-    
-    func bind(
-        _ viewModel: AuthTransfersViewModel,
-        on scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        viewModel.action
-            .compactMap(\.transfersSectionAction)
-            .receive(on: scheduler)
-            .sink { [weak self] direction in
-                
-                guard let self else { return }
-                
-                switch direction {
-                case .order:
-                    self.action.send(.closeLink)
-                    self.delayedAction.send(
-                        .init(
-                            delayMS: 1_000,
-                            action: .show(.products)
-                        )
-                    )
-                    
-                case .transfers:
-                    self.action.send(.closeLink)
-                    
-                case .tap:
-                    break
-                }
-            }
-            .store(in: &bindings)
     }
 }
 
@@ -543,7 +483,7 @@ extension AuthLoginViewModel {
     enum Link {
         
         case confirm(AuthConfirmViewModel)
-        case transfers(AuthTransfersViewModel)
+        case landing(LandingWrapperViewModel)
         case products(AuthProductsViewModel)
     }
     
@@ -570,39 +510,34 @@ extension AuthLoginViewModel {
         case register(cardNumber: String)
         case show(Show)
         case closeLink
-        case spinner(Spinner)
         
         enum Show {
             
-            case scanner
-            case products
-            case transfers
             case orderProduct(CatalogProductData)
+            case products
+            case scanner
         }
-        
-        enum Spinner {
-            
-            case show, hide
-        }
-    }
-    
-    struct DelayedAction {
-        
-        let delayMS: Int
-        let action: Action
     }
     
     struct EventPublishers {
         
         let clientInformMessage: AnyPublisher<String, Never>
         let checkClientResponse: AnyPublisher<ModelAction.Auth.CheckClient.Response, Never>
-        let catalogProductsTransferAbroad: AnyPublisher<([CatalogProductData], TransferAbroadResponseData?), Never>
+        let catalogProducts: AnyPublisher<([CatalogProductData]), Never>
         let sessionStateFcmToken: AnyPublisher<(SessionState, String?), Never>
     }
     
     struct EventHandlers {
         
         let onRegisterCardNumber: (String) -> Void
-        let catalogProductForID: (Int) -> CatalogProductData?
+        let catalogProduct: (Request) -> CatalogProductData?
+        let showSpinner: () -> Void
+        let hideSpinner: () -> Void
+        
+        enum Request {
+            
+            case id(Int)
+            case tarif(Int, type: Int)
+        }
     }
 }

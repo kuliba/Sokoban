@@ -13,20 +13,18 @@ public struct Landing: Equatable {
     public let main: [DataView]
     public let footer: [DataView]
     public let details: [Detail]
-    public let serial: String
-    
-    public init(
-        header: [DataView],
-        main: [DataView],
-        footer: [DataView],
-        details: [Detail],
-        serial: String
-    ) {
+    public let serial: String?
+    public let statusCode: Int
+    public let errorMessage: String?
+
+    public init(header: [DataView], main: [DataView], footer: [DataView], details: [Detail], serial: String?, statusCode: Int, errorMessage: String?) {
         self.header = header
         self.main = main
         self.footer = footer
         self.details = details
         self.serial = serial
+        self.statusCode = statusCode
+        self.errorMessage = errorMessage
     }
 }
 

@@ -12,7 +12,7 @@ struct ContentView: View {
     
     @Environment(\.openURL) var openURL
     
-    let landing: Landing
+    let landing: UILanding
     let action: (LandingAction) -> Void
     
     var body: some View {
@@ -35,9 +35,10 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             
-            LandingUIView(
+            LandingView(
                 viewModel: .init(),
                 landing: landing,
+                images: [:],
                 action: action,
                 openURL: { openURL($0) }
             )

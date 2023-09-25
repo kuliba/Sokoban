@@ -8,32 +8,34 @@
 import Foundation
 import GenericRemoteService
 import LandingMapping
+import LandingUIComponent
+import CodableLanding
 
 extension Services {
     
-    typealias GetLandingService = RemoteService<Void, Landing>
+    typealias GetLanding = (serial: String, abroadType: AbroadType)    
+    typealias GetLandingService = RemoteService<GetLanding, UILanding>
+    typealias Cache = (CodableLanding) -> Void
     
     static func getLandingService(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        withCache cache: @escaping Cache
     ) -> GetLandingService {
         
-        .init(
+        let map: (Data, HTTPURLResponse) throws -> UILanding = { data, response in
+            
+            let mapperLanding = LandingMapper.map(data, response)
+            
+            let codableLanding = try? CodableLanding(mapperLanding.get())
+            codableLanding.map(cache)
+            
+            return try .init(mapperLanding.get())
+        }
+        
+        return .init(
             createRequest: RequestFactory.createLandingRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: LandingMapper.map
+            mapResponse: map
         )
-    }
-}
-
-// MARK: - Adapter
-
-private extension LandingMapper {
-    
-    static func map(
-        data: Data,
-        response: HTTPURLResponse
-    ) throws -> Landing {
-        
-        try map(data, response).get()
     }
 }

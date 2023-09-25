@@ -41,159 +41,17 @@ struct PaymentsTransfersView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case let .userAccount(userAccountViewModel):
-                        UserAccountView(viewModel: userAccountViewModel)
-                        
-                    case let .exampleDetail(title):
-                        ExampleDetailMock(title: title)
-                        
-                    case .mobile(let model):
-                        MobilePayView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case let .country(countryData):
-                        CountryPaymentView(viewModel: countryData)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case let .payments(paymentsViewModel):
-                        PaymentsView(viewModel: paymentsViewModel)
-                            .navigationBarHidden(true)
-                        
-                    case let .phone(phoneData):
-                        PaymentPhoneView(viewModel: phoneData)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .internetOperators(let model):
-                        OperatorsView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .serviceOperators(let model):
-                        OperatorsView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .transportOperators(let model):
-                        OperatorsView(viewModel: model)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .transport(let viewModel):
-                        OperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .internet(let viewModel):
-                        OperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .service(let viewModel):
-                        OperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .template(let templateListViewModel):
-                        TemplatesListView(viewModel: templateListViewModel)
-                        
-                    case .currencyWallet(let currencyWalletViewModel):
-                        CurrencyWalletView(viewModel: currencyWalletViewModel)
-                        
-                    case .failedView(let failedViewModel):
-                        QRFailedView(viewModel: failedViewModel)
-                        
-                    case .c2b(let c2bViewModel):
-                        C2BDetailsView(viewModel: c2bViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .searchOperators(let viewModel):
-                        QRSearchOperatorView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                        
-                    case let .operatorView(internetDetailViewModel):
-                        InternetTVDetailsView(viewModel: internetDetailViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .paymentsServices(let viewModel):
-                        PaymentsServicesOperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                        
-                    case let .transportPayments(transportPaymentsViewModel):
-                        
-                        transportPaymentsView(
-                            viewModel: viewModel,
-                            transportPaymentsViewModel: transportPaymentsViewModel
-                        )
-                        
-                    case .productProfile(let productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
-                        
-                    case .openDeposit(let depositListViewModel):
-                        OpenDepositDetailView(viewModel: depositListViewModel)
-                        
-                    case .openDepositsList(let openDepositViewModel):
-                        OpenDepositView(viewModel: openDepositViewModel)
-                    }
-                }
+                viewModel.link.map(destinationView)
             }
             
             Color.clear
-                .sheet(item: $viewModel.sheet, content: { sheet in
-                    
-                    switch sheet.type {
-                        
-                    case let .transferByPhone(viewModel):
-                        TransferByPhoneView(viewModel: viewModel)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case let .meToMe(viewModel):
-                        PaymentsMeToMeView(viewModel: viewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                    case let .successMeToMe(successMeToMeViewModel):
-                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                        
-                    case .anotherCard(let anotherCardViewModel):
-                        AnotherCardView(viewModel: anotherCardViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                        
-                    case .fastPayment(let viewModel):
-                        ContactsView(viewModel: viewModel)
-                        
-                    case .country(let viewModel):
-                        ContactsView(viewModel: viewModel)
-                    }
-                })
+                .sheet(item: $viewModel.sheet, content: sheetView)
             
             Color.clear
-                .fullScreenCover(item: $viewModel.fullScreenSheet, content: { item in
-                    
-                    switch item.type {
-                    case let .qrScanner(viewModel):
-                        NavigationView {
-                            
-                            QRView(viewModel: viewModel)
-                                .navigationBarHidden(true)
-                                .navigationBarBackButtonHidden(true)
-                                .edgesIgnoringSafeArea(.all)
-                        }
-                    }
-                })
-            
+                .fullScreenCover(
+                    item: $viewModel.fullScreenSheet,
+                    content: fullScreenCoverView
+                )
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
@@ -209,37 +67,124 @@ struct PaymentsTransfersView: View {
             },
             trailing:
                 HStack {
-                    ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                        
-                        NavBarButton(viewModel: navButtonViewModel)
-                    }
-                })
-        .bottomSheet(item: $viewModel.bottomSheet) { sheet in
-            
-            switch sheet.type {
-            case let .exampleDetail(title):
-                ExampleDetailMock(title: title)
-                
-            case let .meToMe(viewModel):
-                
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.fullCover) { fullCover in
-                        
-                        switch fullCover.type {
-                        case let .successMeToMe(successMeToMeViewModel):
-                            PaymentsSuccessView(viewModel: successMeToMeViewModel)
-                        }
-                        
-                    }.transaction { transaction in
-                        transaction.disablesAnimations = false
-                    }
-            }
-        }
+                    ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
+                }
+        )
+        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        
         .tabBar(isHidden: $viewModel.isTabBarHidden)
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        link: PaymentsTransfersViewModel.Link
+    ) -> some View {
+        
+        switch link {
+        case let .userAccount(userAccountViewModel):
+            UserAccountView(viewModel: userAccountViewModel)
+            
+        case let .exampleDetail(title):
+            ExampleDetailMock(title: title)
+            
+        case let .mobile(model):
+            MobilePayView(viewModel: model)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .country(countryData):
+            CountryPaymentView(viewModel: countryData)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .payments(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
+                .navigationBarHidden(true)
+            
+        case let .phone(phoneData):
+            PaymentPhoneView(viewModel: phoneData)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .internetOperators(model):
+            OperatorsView(viewModel: model)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .serviceOperators(model):
+            OperatorsView(viewModel: model)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .transportOperators(model):
+            OperatorsView(viewModel: model)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .transport(viewModel):
+            OperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .internet(viewModel):
+            OperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .service(viewModel):
+            OperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .template(templateListViewModel):
+            TemplatesListView(viewModel: templateListViewModel)
+            
+        case let .currencyWallet(currencyWalletViewModel):
+            CurrencyWalletView(viewModel: currencyWalletViewModel)
+            
+        case let .failedView(failedViewModel):
+            QRFailedView(viewModel: failedViewModel)
+            
+        case let .c2b(c2bViewModel):
+            C2BDetailsView(viewModel: c2bViewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .searchOperators(viewModel):
+            QRSearchOperatorView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .operatorView(internetDetailViewModel):
+            InternetTVDetailsView(viewModel: internetDetailViewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .paymentsServices(viewModel):
+            PaymentsServicesOperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .transportPayments(transportPaymentsViewModel):
+            transportPaymentsView(
+                viewModel: viewModel,
+                transportPaymentsViewModel: transportPaymentsViewModel
+            )
+            
+        case let .productProfile(productProfileViewModel):
+            ProductProfileView(viewModel: productProfileViewModel)
+            
+        case let .openDeposit(depositListViewModel):
+            OpenDepositDetailView(viewModel: depositListViewModel)
+            
+        case let .openDepositsList(openDepositViewModel):
+            OpenDepositView(viewModel: openDepositViewModel)
+        }
     }
     
     private func transportPaymentsView(
@@ -286,6 +231,79 @@ struct PaymentsTransfersView: View {
                 navTrailingAction: viewModel.openScanner
             )
         )
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        sheet: PaymentsTransfersViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+            
+        case let .transferByPhone(viewModel):
+            TransferByPhoneView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .meToMe(viewModel):
+            PaymentsMeToMeView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .fixedSize(horizontal: false, vertical: true)
+            
+        case let .successMeToMe(successMeToMeViewModel):
+            PaymentsSuccessView(viewModel: successMeToMeViewModel)
+            
+        case .anotherCard(let anotherCardViewModel):
+            AnotherCardView(viewModel: anotherCardViewModel)
+                .edgesIgnoringSafeArea(.bottom)
+            
+        case .fastPayment(let viewModel):
+            ContactsView(viewModel: viewModel)
+            
+        case .country(let viewModel):
+            ContactsView(viewModel: viewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetView(
+        bottomSheet: PaymentsTransfersViewModel.BottomSheet
+    ) -> some View {
+        
+        switch bottomSheet.type {
+        case let .exampleDetail(title):
+            ExampleDetailMock(title: title)
+            
+        case let .meToMe(viewModel):
+            
+            PaymentsMeToMeView(viewModel: viewModel)
+                .fullScreenCover(item: $viewModel.fullCover) { fullCover in
+                    
+                    switch fullCover.type {
+                    case let .successMeToMe(successMeToMeViewModel):
+                        PaymentsSuccessView(viewModel: successMeToMeViewModel)
+                    }
+                    
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverView(
+        fullScreenCover: PaymentsTransfersViewModel.FullScreenSheet
+    ) -> some View {
+        
+        switch fullScreenCover.type {
+        case let .qrScanner(viewModel):
+            NavigationView {
+                
+                QRView(viewModel: viewModel)
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
+            }
+        }
     }
 }
 

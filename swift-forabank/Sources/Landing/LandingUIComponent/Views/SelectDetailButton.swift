@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SelectDetailButton: View {
     
-    let detail: Detail
-    let selectDetail: (Detail) -> Void
+    let detail: DetailDestination
+    let selectDetail: (DetailDestination?) -> Void
     
     var body: some View {
         
@@ -43,7 +43,7 @@ struct SelectDetailButton_Previews: PreviewProvider {
             
             SelectDetailButton(
                 detail: .preview,
-                selectDetail: { alertID = .detail($0) }
+                selectDetail: { alertID = .detail($0 ?? .init(groupID: "", viewID: "")) }
             )
         }
         
@@ -58,14 +58,14 @@ struct SelectDetailButton_Previews: PreviewProvider {
         
         enum AlertID: Identifiable, Hashable {
             
-            case detail(Detail)
+            case detail(DetailDestination)
             
             var id: Self { self }
         }
     }
 }
 
-private extension Detail {
+private extension DetailDestination {
     
     static let preview: Self = .init(
         groupID: "DetailsGroupID_123",

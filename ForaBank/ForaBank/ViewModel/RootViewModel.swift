@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
+import CodableLanding
+import LandingMapping
+import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -15,8 +18,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     @Published var selected: TabType
     @Published var alert: Alert.ViewModel?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published private(set) var link: Link?
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
@@ -26,21 +28,25 @@ class RootViewModel: ObservableObject, Resetable {
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
     private let model: Model
+    private let infoDictionary: [String : Any]?
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
-    init(_ model: Model) {
-        
+    init(
+        _ model: Model,
+        infoDictionary: [String : Any]? = Bundle.main.infoDictionary
+    ) {
         self.selected = .main
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)
         self.chatViewModel = .init()
         self.informerViewModel = .init(model)
         self.model = model
+        self.infoDictionary = infoDictionary
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
-                
+        
         bind()
         bindAuth()
     }
@@ -50,6 +56,11 @@ class RootViewModel: ObservableObject, Resetable {
         mainViewModel.reset()
         paymentsViewModel.reset()
         chatViewModel.reset()
+    }
+    
+    func resetLink() {
+        
+        link = nil
     }
     
     private func bindAuth() {
@@ -67,7 +78,7 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     
                     resetRootView()
-                    
+                                                            
                     let loginViewModel = ComposedLoginViewModel(
                         authLoginViewModel: .init(
                             model,
@@ -101,7 +112,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
-                
+                    
                 case .unlockRequiredManual:
                     guard coverPresented != .lock else {
                         return
@@ -141,7 +152,7 @@ class RootViewModel: ObservableObject, Resetable {
         action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     private func bind() {
-
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -181,7 +192,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 tokenIntent: payload.tokenIntent
                             )))
                     )
-                
+                    
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
                     alert = nil
@@ -195,7 +206,7 @@ class RootViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-
+        
         model.action
             .compactMap { $0 as? ModelAction.DeepLink.Process }
             .map(\.type)
@@ -205,69 +216,29 @@ class RootViewModel: ObservableObject, Resetable {
                 switch deepLink {
                 case let .me2me(bankId):
                     self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
-
+                    
                 case let .c2b(url):
-                  
-                    Task {
-                        
-                        do {
+                    let operationViewModel = PaymentsViewModel(
+                        source: .c2b(url),
+                        model: model,
+                        closeAction: { [weak self] in
                             
-                            let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
-                                
-                                self?.action.send(RootViewModelAction.CloseLink())
-                            })
-                            
-                            await MainActor.run {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.alert = .init(title: "Ошибка оплаты", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                                    
-                                    self?.action.send(RootViewModelAction.CloseAlert())
-                                    
-                                }))
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            self?.action.send(RootViewModelAction.CloseLink())
                         }
-                    }
+                    )
+                    self.link = .payments(operationViewModel)
                     
                 case let .c2bSubscribe(url):
-                  
-                    Task {
-                        
-                        do {
+                    let operationViewModel = PaymentsViewModel(
+                        source: .c2bSubscribe(url),
+                        model: model,
+                        closeAction: { [weak self] in
                             
-                            let operationViewModel = try await PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                                
-                                self?.action.send(RootViewModelAction.CloseLink())
-                            })
-                            
-                            await MainActor.run {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.alert = .init(title: "Ошибка привязки счета", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                                    
-                                    self?.action.send(RootViewModelAction.CloseAlert())
-                                    
-                                }))
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            self?.action.send(RootViewModelAction.CloseLink())
                         }
-                    }
-
+                    )
+                    self.link = .payments(operationViewModel)
+                    
                 case let .sbpPay(tokenIntent):
                     self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
                     self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
@@ -279,7 +250,9 @@ class RootViewModel: ObservableObject, Resetable {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Notification.Transition.Process:
@@ -307,7 +280,7 @@ class RootViewModel: ObservableObject, Resetable {
                         case let .success(appInfo):
                             LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.AppVersion.Response, success, info: \(appInfo)")
                             
-                            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
+                            if let appVersion = self.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
                                 
                                 self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
                                     guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
@@ -329,7 +302,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         self.action.send(RootViewModelAction.DismissAll())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-
+                            
                             self.link = .me2me(.init(model: consentData.getConcentLegacy()))
                         }
                         
@@ -356,7 +329,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         self.action.send(RootViewModelAction.DismissAll())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-
+                            
                             self.action.send(RootViewModelAction.ShowUserProfile(
                                 tokenIntent: payload.tokenIntent,
                                 conditions: personAgreement
@@ -414,9 +387,15 @@ extension AuthLoginViewModel {
     ) {
         self.init(
             eventPublishers: model.eventPublishers,
-            eventHandlers: model.eventHandlers,
-            factory: model.authLoginViewModelFactory(),
-            rootActions: rootActions
+            eventHandlers: .init(
+                onRegisterCardNumber: model.register(cardNumber:),
+                catalogProduct: model.catalogProduct,
+                showSpinner: rootActions.spinner.show,
+                hideSpinner: rootActions.spinner.hide
+            ),
+            factory: model.authLoginViewModelFactory(
+                rootActions: rootActions
+            )
         )
     }
 }
@@ -442,8 +421,7 @@ private extension Model {
                 .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
                 .eraseToAnyPublisher(),
             
-            catalogProductsTransferAbroad: catalogProducts
-                .combineLatest(transferAbroad)
+            catalogProducts: catalogProducts
                 .eraseToAnyPublisher(),
             
             sessionStateFcmToken: sessionState
@@ -452,20 +430,29 @@ private extension Model {
         )
     }
     
-    var eventHandlers: AuthLoginViewModel.EventHandlers {
+    func register(cardNumber: String) -> Void {
         
-        .init(
-            onRegisterCardNumber: { [weak self] in
-                
-                LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\($0.suffix(4))")
-                
-                self?.action.send(ModelAction.Auth.CheckClient.Request(number: $0))
-            },
-            catalogProductForID: { [weak self] id in
-                
-                self?.catalogProducts.value.first(where: { $0.id == id })
+        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
+        
+        action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
+    }
+    
+    func catalogProduct(
+        for request: AuthLoginViewModel.EventHandlers.Request
+    ) -> CatalogProductData? {
+        
+        switch request {
+        case let .id(id):
+            return catalogProducts.value.first {
+                $0.id == id
             }
-        )
+            
+        case let .tarif(tarif, type: type):
+            return catalogProducts.value.first {
+                $0.tariff == tarif &&
+                $0.productType == type
+            }
+        }
     }
 }
 
@@ -475,27 +462,35 @@ extension ModelAuthLoginViewModelFactory: AuthLoginViewModelFactory {}
 
 extension Model {
     
-    func authLoginViewModelFactory() -> ModelAuthLoginViewModelFactory {
+    func authLoginViewModelFactory(
+        rootActions: RootViewModel.RootActions
+    ) -> ModelAuthLoginViewModelFactory {
         
-        ModelAuthLoginViewModelFactory(model: self)
+        ModelAuthLoginViewModelFactory(
+            model: self,
+            rootActions: rootActions
+        )
     }
 }
 
 final class ModelAuthLoginViewModelFactory {
     
     private let model: Model
+    private let rootActions: RootViewModel.RootActions
     
-    init(model: Model) {
-        
+    init(
+        model: Model,
+        rootActions: RootViewModel.RootActions
+    ) {
         self.model = model
+        self.rootActions = rootActions
     }
     
     func makeAuthConfirmViewModel(
         confirmCodeLength: Int,
         phoneNumber: String,
         resendCodeDelay: TimeInterval,
-        backAction: @escaping () -> Void,
-        rootActions: RootViewModel.RootActions
+        backAction: @escaping () -> Void
     ) -> AuthConfirmViewModel {
         
         .init(
@@ -520,14 +515,7 @@ final class ModelAuthLoginViewModelFactory {
             dismissAction: dismissAction
         )
     }
-    
-    func makeAuthTransfersViewModel(
-        closeAction: @escaping () -> Void
-    ) -> AuthTransfersViewModel {
         
-        .init(model, closeAction: closeAction)
-    }
-    
     func makeOrderProductViewModel(
         productData: CatalogProductData
     ) -> OrderProductView.ViewModel {
@@ -535,6 +523,21 @@ final class ModelAuthLoginViewModelFactory {
         .init(
             model,
             productData: productData
+        )
+    }
+    
+    func makeLandingViewModel(
+        _ type: AbroadType,
+        config: UILanding.Component.Config,
+        goMain: @escaping GoMainAction,
+        orderCard: @escaping OrderCardAction
+    ) -> LandingWrapperViewModel {
+        
+        self.model.landingViewModelFactory(
+            abroadType: type,
+            config: config,
+            goMain: goMain,
+            orderCard: orderCard
         )
     }
 }
@@ -638,3 +641,5 @@ enum RootViewModelAction {
         let conditions: [PersonAgreement]
     }
 }
+
+

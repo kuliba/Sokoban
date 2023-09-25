@@ -7,16 +7,25 @@
 
 import SwiftUI
 
-public extension Landing.MultiTextsWithIconsHorizontal {
+public extension UILanding.Multi.TextsWithIconsHorizontal {
     
-    struct Config: Equatable {
+    struct Config {
         
         public let color: Color
         public let font: Font
+        public let size: CGFloat
+        public let padding: CGFloat
         
-        public init(color: Color, font: Font) {
+        public init(
+            color: Color,
+            font: Font,
+            size: CGFloat,
+            padding: CGFloat
+        ) {
             self.color = color
             self.font = font
+            self.size = size
+            self.padding = padding
         }
     }
 }
