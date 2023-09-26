@@ -7,34 +7,32 @@
 
 import Foundation
 
-public protocol RawRepresentational {
-    
-    var rawRepresentation: Data { get throws }
-}
-
-public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey>
-where PublicKey: RawRepresentational {
+public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
     
     public typealias GenerateRSA4096BitKeys = () throws -> (PrivateKey, PublicKey)
     public typealias SignEncryptOTP = (OTP, PrivateKey) throws -> Data
     public typealias SaveKeys = (PrivateKey, PublicKey) throws -> Void
+    public typealias X509Representation = (PublicKey) throws -> Data
     public typealias SharedSecret = SwaddleKeyDomain<OTP>.SharedSecret
     public typealias AESEncrypt128bitChunks = (Data, SharedSecret) throws -> Data
     
     private let generateRSA4096BitKeys: GenerateRSA4096BitKeys
     private let signEncryptOTP: SignEncryptOTP
     private let saveKeys: SaveKeys
+    private let x509Representation: X509Representation
     private let aesEncrypt128bitChunks: AESEncrypt128bitChunks
     
     public init(
         generateRSA4096BitKeys: @escaping GenerateRSA4096BitKeys,
         signEncryptOTP: @escaping SignEncryptOTP,
         saveKeys: @escaping SaveKeys,
+        x509Representation: @escaping X509Representation,
         aesEncrypt128bitChunks: @escaping AESEncrypt128bitChunks
     ) {
         self.generateRSA4096BitKeys = generateRSA4096BitKeys
         self.signEncryptOTP = signEncryptOTP
         self.saveKeys = saveKeys
+        self.x509Representation = x509Representation
         self.aesEncrypt128bitChunks = aesEncrypt128bitChunks
     }
     
@@ -47,10 +45,10 @@ where PublicKey: RawRepresentational {
         
         try saveKeys(privateKey, publicKey)
         
-        let publicKeyData = try publicKey.rawRepresentation
+        let publicKeyX509Representation = try x509Representation(publicKey)
         
         let procClientSecretOTP = encryptedSignedOTP.base64EncodedString()
-        let clientPublicKeyRSA = publicKeyData.base64EncodedString()
+        let clientPublicKeyRSA = publicKeyX509Representation.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [
             "procClientSecretOTP": procClientSecretOTP,
@@ -61,7 +59,7 @@ where PublicKey: RawRepresentational {
         print(">>> encryptedSignedOTP count: \(encryptedSignedOTP)\n>>> procClientSecretOTP.count: \(procClientSecretOTP.count)\n", #file, #line)
         dump(procClientSecretOTP)
 
-        print(">>> publicKeyData count: \(publicKeyData.count)\n>>> clientPublicKeyRSA.count: \(clientPublicKeyRSA.count)\n", #file, #line)
+        print(">>> publicKeyData count: \(publicKeyX509Representation.count)\n>>> clientPublicKeyRSA.count: \(clientPublicKeyRSA.count)\n", #file, #line)
         dump(clientPublicKeyRSA)
         print(">>> json:\n", String(data: json, encoding: .utf8)!)
         #endif

@@ -11,7 +11,7 @@ import ForaCrypto
 import Foundation
 import TransferPublicKey
 
-extension SecKey: RawRepresentational {
+extension SecKey {
     
     public var rawRepresentation: Data {
         
@@ -27,6 +27,7 @@ extension SecKey: RawRepresentational {
         }
     }
 }
+
 func unimplemented<T>(
     _ message: String = "",
     file: StaticString = #file,

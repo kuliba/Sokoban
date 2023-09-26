@@ -41,6 +41,7 @@ extension Services {
 #warning("FIX THIS")
                 }
             },
+            x509Representation: { _ in unimplemented() },
             aesEncrypt128bitChunks: { data, secret in
                 
                 //    let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
@@ -104,8 +105,6 @@ extension Services {
 }
 
 // MARK: - Adapters
-
-extension P384KeyAgreementDomain.PublicKey: RawRepresentational {}
 
 private extension Services.P384Swaddler {
     

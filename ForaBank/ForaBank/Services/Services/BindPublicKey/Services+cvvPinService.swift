@@ -104,6 +104,7 @@ struct SecKeySwaddleCryptographer {
     let generateRSA4096BitKeys: () throws -> (privateKey: SecKey, publicKey: SecKey)
     let signEncryptOTP: SecKeySwaddler.SignEncryptOTP
     let saveKeys: SecKeySwaddler.SaveKeys
+    let x509Representation: SecKeySwaddler.X509Representation
     let aesEncrypt128bitChunks: SecKeySwaddler.AESEncrypt128bitChunks
 }
 
@@ -113,6 +114,7 @@ extension SecKeySwaddleCryptographer {
         generateRSA4096BitKeys: generateRSA4096BitKeys,
         signEncryptOTP: signEncryptOTP,
         saveKeys: saveKeys,
+        x509Representation: x509Representation,
         aesEncrypt128bitChunks: aesEncrypt128bitChunks
     )
     
@@ -179,6 +181,13 @@ extension SecKeySwaddleCryptographer {
         }
     }
     
+    private static func x509Representation(
+        publicKey: SecKey
+    ) throws -> Data {
+        
+        try publicKey.x509Representation()
+    }
+    
     private static func aesEncrypt128bitChunks(
         data: Data,
         secret: SecKeySwaddler.SharedSecret
@@ -243,6 +252,7 @@ where OTP == Services.TransferOTP,
             generateRSA4096BitKeys: cryptographer.generateRSA4096BitKeys,
             signEncryptOTP: cryptographer.signEncryptOTP,
             saveKeys: cryptographer.saveKeys,
+            x509Representation: cryptographer.x509Representation,
             aesEncrypt128bitChunks: cryptographer.aesEncrypt128bitChunks
         )
     }
