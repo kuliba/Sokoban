@@ -1,5 +1,5 @@
 //
-//  RequestFactory+makeBindPublicKeyWithEventIDRequest.swift
+//  RequestFactory+createBindPublicKeyWithEventIDRequest.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 05.08.2023.
@@ -9,7 +9,7 @@ import Foundation
 
 extension RequestFactory {
     
-    static func makeBindPublicKeyWithEventIDRequest(
+    static func createBindPublicKeyWithEventIDRequest(
         with publicKeyWithEventID: PublicKeyWithEventID
     ) throws -> URLRequest {
         

@@ -37,7 +37,7 @@ public struct CancellableSearchBarView<ClearButtonLabel: View, CancelButton: Vie
             TextFieldView(
                 viewModel: viewModel,
                 textFieldConfig: textFieldConfig
-            )
+            ).accessibilityIdentifier("CancellableSearchField")
             
             switch viewModel.state {
             case .editing(.empty),

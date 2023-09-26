@@ -14,7 +14,7 @@ public extension TextState {
     /// Creates ``TextState`` from a given text, setting cursor position at given or  at the end if nil.
     init(_ text: String, cursorPosition: Int? = nil) {
         
-        self.init(text, cursorPosition: cursorPosition ?? text.count)
+        self.init(text, cursorPosition: cursorPosition ?? text.utf16.count)
     }
     
     /// Returns ``TextState`` after performing text replacement at a given range.
@@ -35,7 +35,7 @@ public extension TextState {
         }
         
         let changed = text.shouldChangeTextIn(range: range, with: replacementText)
-        let cursorPosition = range.location + replacementText.count
+        let cursorPosition = range.location + replacementText.utf16.count
         
         return .init(changed, cursorPosition: cursorPosition)
     }
@@ -49,7 +49,7 @@ public extension NSRange {
     
     func isValidForReplacement(in text: String) -> Bool {
         
-        let valid = (0...text.count)
+        let valid = (0...text.utf16.count)
         
         return valid ~= location
         && valid ~= length

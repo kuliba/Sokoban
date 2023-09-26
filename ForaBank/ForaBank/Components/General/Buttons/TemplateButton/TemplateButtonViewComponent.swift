@@ -16,88 +16,223 @@ extension TemplateButtonView {
         let id: Payments.ParameterSuccessOptionButtons.Option = .template
         let action: PassthroughSubject<Action, Never> = .init()
         private var bindings = Set<AnyCancellable>()
-
-        @Published var state: State
-        let tapAction: () -> Void
         
+        @Published private(set) var state: State
+        private(set) var tapAction: () -> Void
         private let model: Model
         
-        init(state: State,
-             model: Model,
-             tapAction: @escaping () -> Void) {
-            
-            self.model = model
-            self.state = state
-            self.tapAction = tapAction
-            
-            bind()
-        }
-        
-        convenience init(
+        init(
             model: Model,
             state: State? = nil,
+            operation: Payments.Operation?,
             operationDetail: OperationDetailData
         ) {
             
-            let state = state ?? (operationDetail.paymentTemplateId != nil ? .complete : .idle)
+            self.model = model
             
-            let action = Self.buttonAction(
-                model: model,
-                with: state,
-                operationDetail: operationDetail
-            )
+            let state = state ?? (operationDetail.paymentTemplateId != nil ? .init(details: operationDetail) : .idle)
             
-            self.init(
-                state: state,
-                model: model,
-                tapAction: action
-            )
+            switch operation {
+            case let .some(operation):
+                
+                let action = Self.buttonAction(
+                    model: model,
+                    with: state,
+                    operation: operation,
+                    operationDetail: operationDetail
+                )
+                
+                self.state = state
+                self.tapAction = action
+                
+            default:
+                
+                self.state = state
+                let action = Self.buttonAction(
+                    model: model,
+                    with: state,
+                    operation: operation,
+                    operationDetail: operationDetail
+                )
+                self.tapAction = action
+            }
+            
+            bind(operation: operation, details: operationDetail)
         }
-
+        
         static func buttonAction(
             model: Model,
             with state: State,
+            operation: Payments.Operation?,
             operationDetail: OperationDetailData
-            ) -> () -> Void {
+        ) -> () -> Void {
+            
+            switch state {
+            case let .refresh(templateId: templateId):
                 
-                switch state {
-                case .refresh:
-                    guard let paymentTemplateId = operationDetail.paymentTemplateId else {
-                        return {}
-                    }
+                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId } ) else {
+                    return {}
+                }
+                
+                if case let .template(templateID) = operation?.source {
                     
-                    let name = operationDetail.templateName
-                    let action = ModelAction.PaymentTemplate.Update.Requested(
-                        name: name,
-                        parameterList: [],
-                        paymentTemplateId: paymentTemplateId
+                    let parameterList = TemplateButton.templateParameterList(
+                        model: model,
+                        operationDetail: operationDetail,
+                        operation: operation
                     )
+                    
+                    let action = ModelAction.PaymentTemplate.Update.Requested(
+                        name: template.name,
+                        parameterList: parameterList,
+                        paymentTemplateId: templateID
+                    )
+                    
                     return { model.action.send(action) }
                     
-                case .complete:
-                    guard let paymentTemplateId = operationDetail.paymentTemplateId else {
-                        return {}
-                    }
+                } else {
+                    
+                    let parameterList = TemplateButton.createMe2MeParameterList(
+                        model: model,
+                        operationDetail: operationDetail
+                    )
+                    
+                    let action = ModelAction.PaymentTemplate.Update.Requested(
+                        name: template.name,
+                        parameterList: parameterList,
+                        paymentTemplateId: templateId
+                    )
+                    
+                    return { model.action.send(action) }
+                }
+                
+            case let .complete(templateId):
+                
+                switch operationDetail.paymentTemplateId {
+                case let .some(paymentTemplateId):
                     
                     let action = ModelAction.PaymentTemplate.Delete.Requested(
                         paymentTemplateIdList: [paymentTemplateId]
                     )
                     return { model.action.send(action) }
                     
-                case .idle:
-                    
-                    let paymentOperationDetailId = operationDetail.paymentOperationDetailId
-                    let name = operationDetail.templateName
-                    let action = ModelAction.PaymentTemplate.Save.Requested(
-                        name: name,
-                        paymentOperationDetailId: paymentOperationDetailId
-                    )
-                    return { model.action.send(action) }
-                    
-                case .loading:
-                    return {}
+                default:
+                    if case let .template(templateID) = operation?.source {
+                        
+                        let action = ModelAction.PaymentTemplate.Delete.Requested(
+                            paymentTemplateIdList: [templateID]
+                        )
+                        return { model.action.send(action) }
+                        
+                    } else {
+                        
+                        let action = ModelAction.PaymentTemplate.Delete.Requested(
+                            paymentTemplateIdList: [templateId]
+                        )
+                        
+                        return { model.action.send(action) }
+                    }
                 }
+                
+            case .idle:
+                
+                let paymentOperationDetailId = operationDetail.paymentOperationDetailId
+                let name = operationDetail.templateName
+                let action = ModelAction.PaymentTemplate.Save.Requested(
+                    name: name,
+                    paymentOperationDetailId: paymentOperationDetailId
+                )
+                return { model.action.send(action) }
+                
+            case .loading:
+                return {}
             }
+        }
+    }
+}
+
+// MARK: Binding's
+
+extension TemplateButtonView.ViewModel {
+    
+    func bind(
+        operation: Payments.Operation?,
+        details: OperationDetailData
+    ) {
+        
+        //MARK: bind model action
+        
+        let complete = Publishers.CombineLatest(
+            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
+            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
+        )
+            .map(\.0.paymentTemplateId)
+            .map { State.complete(templateId: $0) }
+        
+        let idle = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
+            .map { _ in State.idle}
+        
+        let loading = Publishers.CombineLatest(
+            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested },
+            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
+        )
+            .map { _ in State.loading}
+        
+        let refresh = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
+            .map(\.paymentTemplateId)
+            .map { templateId in State.complete(templateId: templateId)}
+        
+        Publishers.Merge3(complete, idle, refresh)
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$state)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
+                switch action {
+                case _ as ModelAction.PaymentTemplate.Save.Requested:
+                    self.state = .loading
+                    
+                case let payload as ModelAction.PaymentTemplate.Save.Complete:
+                    self.state = .complete(templateId: payload.paymentTemplateId)
+                    self.deleteAction(templateId: payload.paymentTemplateId)
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Complete:
+                    self.state = .idle
+                    let action = Self.buttonAction(
+                        model: self.model,
+                        with: .idle,
+                        operation: operation,
+                        operationDetail: details
+                    )
+                    self.tapAction = action
+                    
+                case _ as ModelAction.PaymentTemplate.Delete.Requested:
+                    self.state = .loading
+                    
+                case let payload as ModelAction.PaymentTemplate.Update.Complete:
+                    self.state = .complete(templateId: payload.paymentTemplateId)
+                    self.deleteAction(templateId: payload.paymentTemplateId)
+                    
+                default:
+                    break
+                }    
+            }
+            .store(in: &bindings)
+    }
+    
+    func deleteAction(templateId: Int) {
+        
+        let action = ModelAction.PaymentTemplate.Delete.Requested(
+            paymentTemplateIdList: [templateId]
+        )
+        
+        self.tapAction = { self.model.action.send(action) }
     }
 }
 
@@ -127,6 +262,41 @@ extension TemplateButtonView.ViewModel {
     }
 }
 
+// MARK: Sub Type's
+
+extension TemplateButtonView.ViewModel {
+    
+    enum State {
+        
+        case idle
+        case loading
+        case refresh(templateId: Int)
+        case complete(templateId: Int)
+    }
+}
+
+extension TemplateButtonView.ViewModel.State {
+    
+    init(details: OperationDetailData) {
+        
+        if let templateId = details.paymentTemplateId {
+            self = .complete(templateId: templateId)
+        } else {
+            self = .idle
+        }
+    }
+}
+
+// MARK: Action
+
+extension TemplateButtonView.ViewModel {
+    
+    enum ButtonAction: Action {
+        
+        case tapAction
+    }
+}
+
 // MARK: View Builder's
 
 extension TemplateButtonView {
@@ -142,12 +312,14 @@ extension TemplateButtonView {
                     .resizable()
                     .foregroundColor(foregroundColor)
                     .frame(width: 12, height: 12, alignment: .center)
+                    .accessibilityIdentifier("TemplateButtonStatusIcon")
             }
             
             Text(viewModel.title)
                 .font(.system(size: 12, weight: .medium))
                 .multilineTextAlignment(.center)
                 .foregroundColor(foregroundColor)
+                .accessibilityIdentifier("TemplateButtonTitle")
         }
     }
     
@@ -159,86 +331,6 @@ extension TemplateButtonView {
         default:
             return .mainColorsBlack
         }
-    }
-}
-
-// MARK: Binding's
-
-extension TemplateButtonView.ViewModel {
-    
-    func bind() {
-        
-        //MARK: bind model action
-        
-        let complete = Publishers.CombineLatest(
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
-        )
-            .map { _ in State.complete}
-        
-        let idle = model.action
-            .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
-            .map { _ in State.idle}
-        
-        let loading = Publishers.CombineLatest(
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
-        )
-            .map { _ in State.loading}
-        
-        let refresh = model.action
-            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
-            .map { _ in State.complete}
-        
-        Publishers.Merge3(complete, idle, refresh)
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$state)
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { action in
-                
-                switch action {
-                case _ as ModelAction.PaymentTemplate.Save.Requested:
-                    self.state = .loading
-                    
-                case _ as ModelAction.PaymentTemplate.Save.Complete:
-                    self.state = .complete
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    self.state = .idle
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Requested:
-                    self.state = .loading
-
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-}
- 
-// MARK: Sub Type's
-
-extension TemplateButtonView.ViewModel {
-    
-    enum State {
-        
-        case idle
-        case loading
-        case refresh
-        case complete
-    }
-}
-
-// MARK: Action
-
-extension TemplateButtonView.ViewModel {
-    
-    enum ButtonAction: Action {
-            
-       case tapAction
     }
 }
 
@@ -269,6 +361,7 @@ extension TemplateButtonView {
                     }
                 }
             }
+            .accessibilityIdentifier("TemplateButtonIdle")
         }
     }
 }
@@ -292,7 +385,7 @@ extension TemplateButtonView {
                 ThreeBounceAnimationView(color: isAnimating ? .black : .white)
             }
             .onAppear {
-             
+                
                 withAnimation(.linear(duration: 0.5)) {
                     
                     self.isAnimating = true
@@ -341,6 +434,7 @@ extension TemplateButtonView {
                     .offset(x: 20, y: -20)
                 }
             }
+            .accessibilityIdentifier("TemplateButtonRefresh")
         }
     }
 }
@@ -381,6 +475,7 @@ extension TemplateButtonView {
                     
                 }
             }
+            .accessibilityIdentifier("TemplateButtonComplete")
             .onAppear {
                 
                 self.startAnimation = true
@@ -499,7 +594,8 @@ struct TemplateButtonView: View {
             
             bottomView(viewModel: viewModel)
         }
-        .frame(width: 70, height: 120)
+        .frame(height: 120)
+        .frame(maxWidth: 100)
     }
 }
 
@@ -510,21 +606,21 @@ struct TemplateButtonView_Previews: PreviewProvider {
         TemplateButtonView(viewModel: .preview(state: .idle))
             .previewDisplayName("idle state")
         
-        TemplateButtonView(viewModel: .preview(state: .refresh))
+        TemplateButtonView(viewModel: .preview(state: .refresh(templateId: 1)))
             .previewDisplayName("refresh state")
         
         TemplateButtonView(viewModel: .preview(state: .loading))
             .previewDisplayName("loading state")
         
-        TemplateButtonView(viewModel: .preview(state: .complete))
+        TemplateButtonView(viewModel: .preview(state: .complete(templateId: 1)))
             .previewDisplayName("complete state")
     }
 }
 
 private extension TemplateButtonView.ViewModel {
- 
+    
     static func preview(state: State) -> TemplateButtonView.ViewModel {
         
-        .init(state: state, model: .emptyMock, tapAction: {})
+        .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub())
     }
 }

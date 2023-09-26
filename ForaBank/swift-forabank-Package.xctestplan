@@ -120,6 +120,41 @@
         "identifier" : "BindPublicKeyWithEventIDTests",
         "name" : "BindPublicKeyWithEventIDTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
     }
   ],
   "version" : 1

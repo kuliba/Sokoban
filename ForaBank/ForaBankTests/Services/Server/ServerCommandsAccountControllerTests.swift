@@ -23,7 +23,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGeneric", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
 
 		let accountStatementData = ProductStatementData(mcc: 3245,
 														accountId: 10004111477,
@@ -75,7 +75,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-        let date = Date.dateUTC(with: 1648512000000)
+        let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
 
 		let accountStatementData = ProductStatementData(mcc: nil,
 														accountId: nil,

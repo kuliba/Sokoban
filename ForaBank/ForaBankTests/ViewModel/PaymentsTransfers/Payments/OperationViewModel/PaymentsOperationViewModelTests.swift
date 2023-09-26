@@ -162,7 +162,7 @@ private extension PaymentsOperationViewModelTests {
         
         let stringValue = value ? "true" : "false"
         
-        return .init(.init(id: id, value: stringValue), title: "")
+        return .init(.init(id: id, value: stringValue), title: "", urlString: nil)
     }
     
     func makeWithFirstCompleteSecondUncompleteStepsOperation(first: [PaymentsParameterRepresentable], second: [PaymentsParameterRepresentable]) -> Payments.Operation {

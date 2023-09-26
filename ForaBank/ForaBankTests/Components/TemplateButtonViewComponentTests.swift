@@ -21,57 +21,146 @@ extension TemplateButtonViewComponentTests {
 
         let sut = makeSUT(state: .idle)
         
-        XCTAssertEqual(sut.testState, .idle)
+        XCTAssertEqual(sut.state.testState, .idle)
     }
     
     func test_init_shouldSet_refreshState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
-            state: .refresh,
+            state: .refresh(templateId: 1),
+            operation: nil,
             operationDetail: .stub()
         )
         
-        XCTAssertEqual(sut.testState, .refresh)
+        XCTAssertEqual(sut.state.testState, .refresh)
     }
     
     func test_init_paymentTemplateId_shouldSet_refreshState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
-            state: .refresh,
+            state: .refresh(templateId: 1),
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: nil)
         )
         
-        XCTAssertEqual(sut.testState, .refresh)
+        XCTAssertEqual(sut.state.testState, .refresh)
     }
     
-    func test_convenienceInit_shouldSet_idleState() throws {
+    func test_templateButton_init_shouldSet_idleState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
             state: .idle,
+            operation: nil,
             operationDetail: .stub()
         )
         
-        XCTAssertEqual(sut.testState, .idle)
+        XCTAssertEqual(sut.state.testState, .idle)
     }
     
-    func test_convenienceInit_withTemplateId_shouldSet_completeState() throws {
+    func test_templateButton_init_shouldSet_CompleteState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
+            state: .complete(templateId: 1),
+            operation: nil,
+            operationDetail: .stub()
+        )
+        
+        XCTAssertEqual(sut.state.testState, .complete)
+    }
+    
+    func test_templateButton_initWithPaymentTemplateIdNil_shouldSet_CompleteState() throws {
+
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .complete(templateId: 1),
+            operation: nil,
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.state.testState, .complete)
+    }
+    
+    func test_init_withTemplateId_shouldSet_completeState() throws {
+
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: 1)
         )
         
-        XCTAssertEqual(ViewModel.TestState.complete, sut.testState)
+        XCTAssertEqual(sut.state.testState, .complete)
     }
     
-    func test_convenienceInit_templateIdNil_shouldSet_idleState() throws {
+    func test_init_templateIdNil_shouldSet_idleState() throws {
 
         let sut = TemplateButtonView.ViewModel(
             model: model,
+            operation: nil,
             operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.state.testState, .idle)
+    }
+    
+    func test_templateButton_init_shouldSetRefreshState_withOperationAbroad_paymentTemplateIdNil() throws {
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .refresh(templateId: 1),
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.state.testState, .refresh)
+    }
+    
+    func test_templateButton_init_shouldSetCompleteState_withOperationAbroad_paymentTemplateIdNil() throws {
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .complete(templateId: 1),
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.state.testState, .complete)
+    }
+    
+    func test_templateButton_init_withOperation_shouldSetRefreshState() throws {
+        
+        let sut = makeSUT(
+            state: .refresh(templateId: 1),
+            operation: paymentOperationStub(service: .abroad),
+            detail: .stub(paymentTemplateId: 1),
+            paymentTemplate: [.templateStub(paymentTemplateId: 1, type: .byPhone)]
+        )
+        
+        XCTAssertEqual(sut.state.testState, .refresh)
+    }
+
+    func test_templateButton_init_withOperationNil_shouldSetRefreshState() throws {
+        
+        let sut = makeSUT(
+            state: .refresh(templateId: 1),
+            operation: nil,
+            detail: .stub(paymentTemplateId: 1),
+            paymentTemplate: [.templateStub(paymentTemplateId: 1, type: .byPhone)]
+        )
+        
+        XCTAssertEqual(sut.state.testState, .refresh)
+    }
+
+    
+    //MARK: TemplateButtonView.ViewModel.State init
+    
+    func test_templateButtonState_init_withPaymentTemplateIdNil_shouldReturnStateIdle() throws {
+
+        let sut = TemplateButtonView.ViewModel.State(
+            details: .stub(paymentTemplateId: nil)
         )
         
         XCTAssertEqual(sut.testState, .idle)
@@ -99,13 +188,13 @@ extension TemplateButtonViewComponentTests {
     
     func test_computedPropertyTitle_refreshState_shouldReturnRefreshTemplate() throws {
 
-        let sut = makeSUT(state: .refresh)
+        let sut = makeSUT(state: .refresh(templateId: 1))
         
         XCTAssertEqual(sut.title, "Обновить шаблон?")
     }
 }
 
-//MAKR: binding tests
+    // MARK: binding tests
 
 extension TemplateButtonViewComponentTests {
     
@@ -120,6 +209,7 @@ extension TemplateButtonViewComponentTests {
         let templateButton = TemplateButtonView.ViewModel(
             model: model,
             state: .idle,
+            operation: nil,
             operationDetail: .stub()
         )
         
@@ -134,7 +224,89 @@ extension TemplateButtonViewComponentTests {
 
         }
 
-        XCTAssertEqual(sut?.templateButton?.testState, .idle)
+        XCTAssertEqual(sut?.templateButton?.state.testState, .idle)
+    }
+    
+    func test_templateButton_sendActionSaveTemplate_shouldCompleteState() throws {
+        
+        let sessionAgent = ActiveSessionAgentStub()
+        let serverAgent = ServerAgentTestStub(savePaymentTemplateStub())
+        
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            serverAgent: serverAgent
+        )
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .idle,
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub(paymentTemplateId: nil)
+        )
+        
+        XCTAssertEqual(sut.state.testState, .idle)
+
+        model.action.send(ModelAction.PaymentTemplate.Save.Requested(
+            name: "name",
+            paymentOperationDetailId: 1
+        ))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertEqual(sut.state.testState, .complete)
+    }
+    
+    func test_templateButton_sendActionDeleteTemplate_shouldIdleState() throws {
+        
+        let sessionAgent = ActiveSessionAgentStub()
+        let serverAgent = ServerAgentTestStub(deletePaymentTemplateStub())
+        
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            serverAgent: serverAgent
+        )
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .complete(templateId: 1),
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub()
+        )
+        
+        XCTAssertEqual(sut.state.testState, .complete)
+
+        model.action.send(ModelAction.PaymentTemplate.Delete.Requested(paymentTemplateIdList: [1]))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertEqual(sut.state.testState, .idle)
+    }
+    
+    func test_templateButton_sendActionUpdateTemplate_shouldCompleteState() throws {
+        
+        let sessionAgent = ActiveSessionAgentStub()
+        let serverAgent = ServerAgentTestStub(updatePaymentTemplateStub())
+        
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            serverAgent: serverAgent
+        )
+        
+        let sut = TemplateButtonView.ViewModel(
+            model: model,
+            state: .refresh(templateId: 1),
+            operation: paymentOperationStub(service: .abroad),
+            operationDetail: .stub()
+        )
+        
+        XCTAssertEqual(sut.state.testState, .refresh)
+
+        model.action.send(ModelAction.PaymentTemplate.Update.Complete.init(paymentTemplateId: 1, newName: "newName")
+        )
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertEqual(sut.state.testState, .complete)
     }
 }
 
@@ -142,21 +314,84 @@ extension TemplateButtonViewComponentTests {
     
     typealias State = TemplateButtonView.ViewModel.State
     
-    func makeSUT(state: State) -> TemplateButtonView.ViewModel {
+    private func makeSUT(
+        state: State,
+        operation: Payments.Operation? = nil,
+        detail: OperationDetailData = OperationDetailData.stub(),
+        paymentTemplate: [PaymentTemplateData] = [],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> TemplateButtonView.ViewModel {
         
-        return TemplateButtonView.ViewModel(
-            state: state,
+        model.paymentTemplates.value = paymentTemplate
+        
+        let sut = TemplateButtonView.ViewModel(
             model: model,
-            tapAction: {}
+            state: state,
+            operation: operation,
+            operationDetail: detail
         )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
+    
+    private func paymentOperationStub(
+        service: Payments.Service,
+        parameters: [PaymentsParameterRepresentable] = []
+    ) -> Payments.Operation {
+        
+        return Payments.Operation(
+            service: service,
+            source: .template(1),
+            steps: [.init(
+                parameters: parameters,
+                front: .empty(),
+                back: .empty()
+            )],
+            visible: []
+        )
+    }
+    
+    private func savePaymentTemplateStub() -> [ServerAgentTestStub.Stub] {
+        
+        [
+            .getPaymentSaveTemplate(.success(.init(
+                statusCode: .ok,
+                errorMessage: nil,
+                data: .init(paymentTemplateId: 1)
+            )))
+        ]
+    }
+    
+    private func deletePaymentTemplateStub() -> [ServerAgentTestStub.Stub] {
+        
+        [
+            .deletePaymentTemplate(.success(.init(
+                statusCode: .ok,
+                errorMessage: nil,
+                data: nil
+            )))
+        ]
+    }
+    
+    private func updatePaymentTemplateStub() -> [ServerAgentTestStub.Stub] {
+        
+        [
+            .updatePaymentTemplate(.success(.init(
+                statusCode: .ok,
+                errorMessage: nil,
+                data: nil
+            )))
+        ]
     }
 }
 
-extension TemplateButtonView.ViewModel {
+extension TemplateButtonView.ViewModel.State {
 
     var testState: TestState {
         
-        switch self.state {
+        switch self {
         case .idle:
             return .idle
         case .loading:
@@ -179,9 +414,11 @@ extension TemplateButtonView.ViewModel {
 
 extension ProductStatementData {
     
-    static func stub(paymentDetailType: ProductStatementData.Kind = .betweenTheir,
-                     documentId: Int? = 1,
-                     operationId: String = "1") -> ProductStatementData {
+    static func stub(
+        paymentDetailType: ProductStatementData.Kind = .betweenTheir,
+        documentId: Int? = 1,
+        operationId: String = "1"
+    ) -> ProductStatementData {
         
         return .init(
             mcc: nil,
@@ -217,7 +454,9 @@ extension ProductStatementData {
 
 extension ProductData {
     
-    static func stub(productType: ProductType = .account) -> ProductData {
+    static func stub(
+        productType: ProductType = .account
+    ) -> ProductData {
         
         return .init(
             id: 1,

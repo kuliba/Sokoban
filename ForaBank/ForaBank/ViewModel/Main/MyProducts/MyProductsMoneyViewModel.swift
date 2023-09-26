@@ -279,11 +279,11 @@ class MyProductsMoneyViewModel: ObservableObject {
         } else {
             
             let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                                                    ProductData.Filter.CardAdditionalOwnedRetrictedRule(),
-                                                    ProductData.Filter.CardAdditionalNotOwnedRetrictedRule()])
+                                                    ProductData.Filter.CardAdditionalOwnedRestrictedRule(),
+                                                    ProductData.Filter.CardAdditionalNotOwnedRestrictedRule()])
             
-            let filterredProducts = filter.filterredProducts(products)
-            let balanceRub = filterredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
+            let filteredProducts = filter.filteredProducts(products)
+            let balanceRub = filteredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
             
             if let currencyDataItem = rates.first(where: { $0.id == selectedCurrency.id }) {
             

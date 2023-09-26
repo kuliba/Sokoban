@@ -215,6 +215,14 @@ extension ProductSelectorView {
 
 extension ProductSelectorView.ViewModel {
     
+    static func degreesForChevron(isCollapsed: Bool) -> Double {
+        
+      return isCollapsed ? 0 : 180
+    }
+}
+
+extension ProductSelectorView.ViewModel {
+    
     // MARK: - Context
     
     struct Context {
@@ -481,7 +489,7 @@ extension ProductSelectorView {
         private var chevron: some View {
             
             let foregroundColor: Color = viewModel.isUserInteractionEnabled ? .mainColorsGray : .blurGray20
-            let degrees: Double = viewModel.isUserInteractionEnabled && viewModel.isCollapsed ? 0 : -180
+            let degrees = ProductSelectorView.ViewModel.degreesForChevron(isCollapsed: viewModel.isCollapsed)
             
             Image.ic24ChevronDown
                 .renderingMode(.template)
@@ -544,12 +552,14 @@ extension ProductSelectorView {
                     
                     Spacer()
                     
+                    let degrees = ProductSelectorView.ViewModel.degreesForChevron(isCollapsed: viewModel.isCollapsed)
+
                     Image.ic24ChevronDown
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 24, height: 24)
                         .foregroundColor(.mainColorsGray)
-                        .rotationEffect(viewModel.isCollapsed == false ? .degrees(0) : .degrees(-90))
+                        .rotationEffect(.degrees(degrees))
                 }
             }
         }

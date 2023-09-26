@@ -132,6 +132,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value
                     else {return }
                     
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     link = .userAccount(
                         .init(model: model,
                               clientInfo: clientInfo,
@@ -457,6 +458,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as TemplatesListViewModelAction.CloseAction:
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 800,
+                        action: PaymentsTransfersViewModelAction.Close.Link())
+                    )
+                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -465,7 +472,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
                             .init(productId: payload.productId))
                         }
-                    
                 default:
                     break
                 }
@@ -1118,7 +1124,8 @@ extension PaymentsTransfersViewModel {
             (.mobile, let paymentData),
             (.outside, let paymentData),
             (.phone, let paymentData),
-            (.transport, let paymentData):
+            (.transport, let paymentData),
+            (.taxAndStateService, let paymentData):
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
@@ -1136,9 +1143,6 @@ extension PaymentsTransfersViewModel {
                     action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                 )
 
-        case (.taxAndStateService, let paymentData as PaymentServiceData):
-            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
-            
         default: //error matching
             bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
         }

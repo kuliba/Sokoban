@@ -20,20 +20,20 @@ public extension HTTPDomain {
 
 public final class RemoteService<Input, Output> {
     
-    public typealias MakeRequest = (Input) throws -> HTTPDomain.Request
+    public typealias CreateRequest = (Input) throws -> HTTPDomain.Request
     public typealias PerformRequest = (HTTPDomain.Request, @escaping HTTPDomain.Completion) -> Void
     public typealias MapResponse = (Data, HTTPURLResponse) throws -> Output
     
-    private let makeRequest: MakeRequest
+    private let createRequest: CreateRequest
     private let performRequest: PerformRequest
     private let mapResponse: MapResponse
     
     public init(
-        makeRequest: @escaping MakeRequest,
+        createRequest: @escaping CreateRequest,
         performRequest: @escaping PerformRequest,
         mapResponse: @escaping MapResponse
     ) {
-        self.makeRequest = makeRequest
+        self.createRequest = createRequest
         self.performRequest = performRequest
         self.mapResponse = mapResponse
     }
@@ -45,7 +45,7 @@ public final class RemoteService<Input, Output> {
         completion: @escaping Completion
     ) {
         do {
-            let request = try makeRequest(input)
+            let request = try createRequest(input)
             
             performRequest(request) { [weak self] result in
                 

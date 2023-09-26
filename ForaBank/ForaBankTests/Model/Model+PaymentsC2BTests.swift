@@ -60,7 +60,51 @@ final class Model_PaymentsC2BTests: XCTestCase {
         ])
     }
     
+    // MARK: - ParameterProduct
+    
+    func test_parameterProduct_withAdditionalFalse_shouldReturnC2BRules() {
+    
+        let parameterProduct = parameterProductStub(additional: false)
+    
+        XCTAssertNoDiff(parameterProduct.filter.rulesString, [
+            .productTypeRule,
+            .currencyRule,
+            .cardAdditionalOwnedRestrictedRule,
+            .cardAdditionalNotOwnedRestrictedRule,
+            .productActiveRule
+        ])
+    }
+    
+    func test_parameterProduct_withAdditionalTrue_shouldReturnC2BRules() {
+
+        let parameterProduct = parameterProductStub(additional: true)
+    
+        XCTAssertNoDiff(parameterProduct.filter.rulesString, [
+            .productTypeRule,
+            .currencyRule,
+            .productActiveRule
+        ])
+    }
+    
     // MARK: - Helpers
+    
+    private func parameterProductStub(
+        additional: Bool
+    ) -> Payments.ParameterProduct {
+        
+        Payments.ParameterProduct(
+            with: .init(
+                id: "id",
+                value: nil,
+                title: "title",
+                filter: .init(
+                    productTypes: [.account],
+                    currencies: [.rub],
+                    additional: additional
+                )),
+            product: .stub()
+        )
+    }
     
     private func getC2bPayloadParameters(
         model: Model,
@@ -79,6 +123,7 @@ final class Model_PaymentsC2BTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> Model {
+        
         let sut: Model = .mockWithEmptyExcept()
         
         sut.products.value = [.card : [.cardStub()]]
@@ -91,7 +136,10 @@ final class Model_PaymentsC2BTests: XCTestCase {
 
 extension ProductData {
     
-    static func cardStub() -> ProductCardData{
+    static func cardStub(
+        status: ProductData.Status = .active,
+        statusPC: ProductData.StatusPC = .active
+    ) -> ProductCardData {
         
         ProductCardData(
             id: 1,
@@ -121,7 +169,7 @@ extension ProductData {
             cardId: 1,
             name: "name",
             validThru: .init(),
-            status: .active,
+            status: status,
             expireDate: nil,
             holderName: nil,
             product: nil,
@@ -130,7 +178,7 @@ extension ProductData {
             paymentSystemName: nil,
             paymentSystemImage: nil,
             loanBaseParam: nil,
-            statusPc: .active,
+            statusPc: statusPC,
             isMain: nil,
             externalId: nil,
             order: 1,
@@ -138,5 +186,90 @@ extension ProductData {
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: ""
         )
+    }
+    
+    static func accountStub(
+        status: ProductData.Status = .active
+    ) -> ProductAccountData {
+        
+        ProductAccountData(
+            id: 1,
+            productType: .account,
+            number: nil,
+            numberMasked: nil,
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: "RUB",
+            mainField: "mainField",
+            additionalField: nil,
+            customName: "customName",
+            productName: "productName",
+            openDate: nil,
+            ownerId: 1,
+            branchId: nil,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: .init(description: ""),
+            largeDesign: .init(description: ""),
+            mediumDesign: .init(description: ""),
+            smallDesign: .init(description: ""),
+            fontDesignColor: .init(description: ""),
+            background: [.init(description: "")],
+            externalId: 1,
+            name: "name",
+            dateOpen: Date(),
+            status: status,
+            branchName: nil,
+            miniStatement: [],
+            order: 1,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            detailedRatesUrl: "",
+            detailedConditionUrl: ""
+        )
+    }
+}
+
+private extension ProductData.Filter {
+
+    var rulesString: [FilterRules] {
+        
+        self.rules.map { filter in
+                
+            switch filter {
+            case _ as ProductData.Filter.AccountActiveRule:
+                return .accountActiveRule
+            
+            case _ as ProductData.Filter.ProductTypeRule:
+                return .productTypeRule
+            
+            case _ as ProductData.Filter.CurrencyRule:
+                return .currencyRule
+            
+            case _ as ProductData.Filter.CardAdditionalOwnedRestrictedRule:
+                return .cardAdditionalOwnedRestrictedRule
+            
+            case _ as ProductData.Filter.CardAdditionalNotOwnedRestrictedRule:
+                return .cardAdditionalNotOwnedRestrictedRule
+            
+            case _ as ProductData.Filter.ProductActiveRule:
+                return .productActiveRule
+            
+            default:
+                return nil
+            }
+            
+        }.compactMap( {$0} )
+    }
+    
+    enum FilterRules: Equatable {
+        case accountActiveRule,
+             productTypeRule,
+             currencyRule,
+             cardAdditionalOwnedRestrictedRule,
+             cardAdditionalNotOwnedRestrictedRule,
+             productActiveRule
     }
 }

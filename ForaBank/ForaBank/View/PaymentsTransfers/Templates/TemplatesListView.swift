@@ -123,7 +123,7 @@ struct TemplatesListView: View {
                 } //case style
                 
                 
-                if let deletePannelViewModel = viewModel.deletePannel {
+                if let deletePannelViewModel = viewModel.deletePanel {
                     
                     DeletePannelView(viewModel: deletePannelViewModel)
                 }

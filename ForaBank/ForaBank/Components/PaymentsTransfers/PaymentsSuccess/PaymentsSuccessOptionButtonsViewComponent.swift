@@ -54,7 +54,7 @@ extension PaymentsSuccessOptionButtonsView {
     }
 }
 
-private extension Model {
+extension Model {
   
     func makePaymentsSuccessOptionButtonsButtonViewModels(
         withSource source: Payments.ParameterSuccessOptionButtons
@@ -88,16 +88,14 @@ private extension Model {
                     return TemplateButtonView.ViewModel(
                         model: self,
                         state: state,
+                        operation: source.operation,
                         operationDetail: operationDetail
-                    )
-                    
+                    )    
                     
                 default:
-                    guard let operationDetail = source.operationDetail else {
-                        return nil
-                    }
+                    
                     if let meToMePayment = source.meToMePayment,
-                       let templateID = source.templateID,
+                       let templateID = meToMePayment.templateId,
                        let template = self.paymentTemplates.value.first(where: { $0.id == templateID }) {
                 
                         let state = TemplateButton.templateButtonState(
@@ -111,16 +109,18 @@ private extension Model {
                        return TemplateButtonView.ViewModel(
                             model: self,
                             state: state,
+                            operation: nil,
                             operationDetail: operationDetail
                         )
                         
-                    } else {
-                     
-                        return TemplateButtonView.ViewModel(
-                            model: self,
-                            operationDetail: operationDetail
-                        )
                     }
+                    
+                    return TemplateButtonView.ViewModel(
+                         model: self,
+                         state: .idle,
+                         operation: nil,
+                         operationDetail: operationDetail
+                     )
                 }
                 
             default:
@@ -187,6 +187,7 @@ struct PaymentsSuccessOptionButtonsView: View {
                 switch button {
                 case let viewModel as TemplateButtonView.ViewModel:
                     TemplateButtonView(viewModel: viewModel)
+//                        .accessibilityIdentifier("SuccessPageTemplateButton")
                     
                 case let simpleButton as ButtonViewModel:
                     ButtonView(viewModel: simpleButton) {
@@ -220,12 +221,15 @@ extension PaymentsSuccessOptionButtonsView {
                         .foregroundColor(.iconBlack)
                         .frame(width: 56, height: 56)
                         .background(Circle().foregroundColor(.mainColorsGrayLightest))
+                        .accessibilityIdentifier("SuccessPageButtonIcon")
                         
                     Text(viewModel.title)
                         .font(.textBodySM12160())
                         .foregroundColor(.textSecondary)
                         .frame(maxWidth: 100)
+                        .accessibilityIdentifier("SuccessPageButtonTitle")
                 }
+                
             }
         }
     }
