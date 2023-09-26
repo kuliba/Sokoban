@@ -40,3 +40,30 @@ struct PaymentStickerView: View {
     }
 }
 
+// MARK: - Previews
+
+struct PaymentStickerView_Previews: PreviewProvider {
+
+    static var previews: some View {
+        
+        Group {
+            
+            PaymentStickerView(viewModel: .init(
+                header: .init(
+                    title: "Платежный стикер",
+                    detailTitle: "Стоимость обслуживания взимается единоразово за весь срок при заказе стикера"
+                ),
+                card: .init(viewModel: .sample),
+                options: [.init(
+                    title: "При получении в офисе",
+                    icon: .checkImage,
+                    description: "700",
+                    colorType: .green
+                )]
+            ))
+            .previewLayout(.sizeThatFits)
+            .padding(8)
+            
+        }
+    }
+}
