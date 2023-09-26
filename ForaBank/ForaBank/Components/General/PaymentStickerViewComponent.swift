@@ -1,5 +1,5 @@
 //
-//  PaymentStickerVIewComponent.swift
+//  PaymentStickerViewComponent.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 26.09.2023.
@@ -66,12 +66,15 @@ struct PaymentStickerView_Previews: PreviewProvider {
                     detailTitle: "Стоимость обслуживания взимается единоразово за весь срок при заказе стикера"
                 ),
                 card: .init(viewModel: .sample),
-                options: [.init(
-                    title: "При получении в офисе",
-                    icon: .checkImage,
-                    description: "700",
-                    colorType: .green
-                )]
+                options: [
+                    .init(
+                        title: "При получении в офисе",
+                        icon: .ic16ArrowRightCircle,
+                        description: "700 ₽",
+                        colorType: .green
+                    ),
+                    .init(title: "При доставке курьром", icon: .ic16ArrowRightCircle, description: "1500 ₽", colorType: .green)
+                ]
             ))
             .previewLayout(.sizeThatFits)
             .padding(8)
