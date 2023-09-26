@@ -54,16 +54,29 @@ public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
             "procClientSecretOTP": procClientSecretOTP,
             "clientPublicKeyRSA": clientPublicKeyRSA
         ] as [String: String])
-
-        #if DEBUG
-        print(">>> encryptedSignedOTP count: \(encryptedSignedOTP)\n>>> procClientSecretOTP.count: \(procClientSecretOTP.count)\n", #file, #line)
+        
+#if DEBUG
+        print(">>> encryptedSignedOTP count: \(encryptedSignedOTP)\n>>> procClientSecretOTP.count: \(procClientSecretOTP.count)\n", "\(#file):\(#line)")
         dump(procClientSecretOTP)
-
-        print(">>> publicKeyData count: \(publicKeyX509Representation.count)\n>>> clientPublicKeyRSA.count: \(clientPublicKeyRSA.count)\n", #file, #line)
+        
+        print(">>> publicKeyData count: \(publicKeyX509Representation.count)\n>>> clientPublicKeyRSA.count: \(clientPublicKeyRSA.count)\n", "\(#file):\(#line)")
         dump(clientPublicKeyRSA)
         print(">>> json:\n", String(data: json, encoding: .utf8)!)
-        #endif
-
+        
+        do {
+            let publicKeyData = try (publicKey as! SecKey).publicKeyRepresentation()
+            let (modulus, exponent) = try publicKeyData.extractRSAModulusAndExponent()
+            print(">>> Public Key modulus")
+            dump(modulus.hexEncodedString())
+            dump(modulus.base64EncodedString())
+            print(">>> Public Key exponent")
+            dump(exponent.hexEncodedString())
+            dump(exponent.base64EncodedString())
+        } catch {
+            print(">>> ", error.localizedDescription, "\(#file):\(#line)")
+        }
+#endif
+        
         let data: Data = try aesEncrypt128bitChunks(json, sharedSecret)
         
         return data
@@ -100,4 +113,102 @@ public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
 struct EventID {
     
     let value: String
+}
+
+extension SecKey {
+
+    func publicKeyRepresentation() throws -> Data {
+        
+        guard let keyData = SecKeyCopyExternalRepresentation(self, nil) as Data?
+        else {
+            throw NSError(domain: "External Representation error", code: -1)
+        }
+        
+        return keyData
+    }
+}
+
+enum PublicKeyExtractionError: Error {
+    case invalidFormat
+    case unexpectedTag(tag: UInt8, index: Int)
+    case lengthOutOfBounds
+}
+
+extension Data {
+    
+    func extractRSAModulusAndExponent() throws -> (modulus: Data, exponent: Data) {
+        
+        var index = 0
+        
+        // Navigate past outer sequence
+        try skipASN1Sequence(at: &index)
+        
+        // Extract modulus
+        let modulus = try decodeASN1Integer(at: &index)
+        
+        // Extract exponent
+        let exponent = try decodeASN1Integer(at: &index)
+        
+        return (modulus, exponent)
+    }
+
+    func extractASN1Length(at index: inout Int) throws -> Int {
+        
+        guard index < self.count
+        else { throw PublicKeyExtractionError.invalidFormat }
+
+        var length = Int(self[index])
+        index += 1
+        
+        if length & 0x80 != 0 { // Multi-byte length
+            let lengthBytesCount = length & 0x7f
+            guard lengthBytesCount <= 2
+            else { throw PublicKeyExtractionError.lengthOutOfBounds }
+            
+            length = 0
+            for _ in 0..<lengthBytesCount {
+                length = (length << 8) + Int(self[index])
+                index += 1
+            }
+        }
+        return length
+    }
+    
+    func skipASN1Sequence(at index: inout Int) throws {
+        
+        guard self[index] == 0x30
+        else {
+            let surroundingData = subdata(in: Swift.max(0, index-10)..<Swift.min(count, index+10))
+            print("Surrounding data:", surroundingData as NSData)
+
+            throw PublicKeyExtractionError.unexpectedTag(tag: self[index], index: index)
+        }
+        
+        index += 1
+        _ = try extractASN1Length(at: &index)
+    }
+
+    func decodeASN1Integer(at index: inout Int) throws -> Data {
+        
+        guard self[index] == 0x02
+        else {
+            throw PublicKeyExtractionError.unexpectedTag(tag: self[index], index: index)
+        }
+        index += 1
+        let length = try extractASN1Length(at: &index)
+        let dataRange = index..<index + length
+        
+        guard dataRange.upperBound <= self.count
+        else { throw PublicKeyExtractionError.invalidFormat }
+        
+        index += length
+        return self.subdata(in: dataRange)
+    }
+}
+
+extension Data {
+    func hexEncodedString() -> String {
+        
+        return self.map { String(format: "%02x", $0) }.joined()
+    }
 }
