@@ -6,6 +6,18 @@
 //
 
 import Foundation
+import SwiftUI
+
+extension PaymentStickerView {
+    
+    struct ViewModel {
+        
+        let header: OpenAccountItemView.ViewModel.HeaderViewModel
+        let card: OpenAccountCardView
+        let options: [OpenAccountItemView.ViewModel.OptionViewModel]
+    }
+}
+
 struct PaymentStickerView: View {
      
     let viewModel: PaymentStickerView.ViewModel
