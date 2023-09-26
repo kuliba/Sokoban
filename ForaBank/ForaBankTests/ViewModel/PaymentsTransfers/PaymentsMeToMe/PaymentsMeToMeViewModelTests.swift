@@ -18,7 +18,12 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let model = modelWithNecessaryData()
         let newName = "newName"
         
-        let sut = makeSUT(model: model)
+        let name = model.paymentTemplates.value.first(where: { $0.id == templateId })?.name
+        
+        let sut = makeSUT(
+            model: model,
+            mode: .templatePayment(templateId, name ?? "Между своими")
+        )
         
         let renameViewModel = TemplatesListViewModel.RenameTemplateItemViewModel(
             oldName: oldName, templateID: templateId)
@@ -39,7 +44,12 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         
         let model = modelWithNecessaryData()
         
-        let sut = makeSUT(model: model)
+        let name = model.paymentTemplates.value.first(where: { $0.id == templateId })?.name
+        
+        let sut = makeSUT(
+            model: model,
+            mode: .templatePayment(templateId, name ?? "Между своими")
+        )
         
         let title = try XCTUnwrap(sut?.title)
         
@@ -187,8 +197,111 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(text, "9,42 currencySymbolTo   |   1 currencySymbolTo  -  1,06 currencySymbolFrom")
     }
+
+    // MARK: - PaymentsMeToMeViewModel Helpers Tests
+
+    func test_getTemplateId_withPaymentMeToMeModeTemplatePayment() throws {
     
+        let sut = makeSUT(
+            model: modelWithNecessaryData(),
+            mode: .templatePayment(1, "name")
+        )
+        
+        XCTAssertNoDiff(sut?.getTemplateId(), 1)
+    }
+    
+    func test_getTemplateId_withPaymentMeToMeModeDemandDeposit() throws {
+    
+        let sut = makeSUT(
+            model: modelWithNecessaryData(),
+            mode: .demandDeposit
+        )
+        
+        XCTAssertNoDiff(sut?.getTemplateId(), nil)
+    }
+    
+    // MARK: MeToMePayment Tests
+    
+    func test_meToMePayment_init_withModeMeToMe_shouldReturnMeToMePayment() throws {
+    
+        let sut = MeToMePayment(
+            mode: .meToMe(
+                templateId: 1,
+                from: 1,
+                to: 1,
+                .makeDummy(amount: 1)
+            )
+        )
+        
+        XCTAssertNoDiff(sut, .init(
+            templateId: 1,
+            payerProductId: 1,
+            payeeProductId: 1,
+            amount: 1
+        ))
+    }
+    
+    func test_meToMePayment_init_withModeMeToMe_shouldReturnNil() throws {
+    
+        let sut = MeToMePayment(
+            mode: .normal
+        )
+        
+        XCTAssertNoDiff(sut, nil)
+    }
+    
+    func test_meToMePayment_withSendActionMakeTransferActionSuccess_shouldSpyValue1() throws {
+        
+        let model = makeModelWithServerAgentStub()
+        let sut = PaymentsMeToMeViewModel(model, mode: .general)
+        let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.MakeTransfer.Response })
+
+        XCTAssertNotNil(sut)
+        XCTAssertNoDiff(
+            try spy.values.first?.result.get().documentStatus,
+            nil
+        )
+
+        model.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Request(transferResponse: .makeDummy())
+        )
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+
+        XCTAssertNoDiff(
+            try spy.values.first?.result.get().documentStatus,
+            .complete
+        )
+    }
     // MARK: - Helpers
+    
+    private func makeModelWithServerAgentStub() -> Model {
+    
+        let sessionAgent = ActiveSessionAgentStub()
+        let serverAgent = ServerAgentTestStub(makeTransferStub())
+        
+        let model: Model = .mockWithEmptyExcept(
+            sessionAgent: sessionAgent,
+            serverAgent: serverAgent
+        )
+        
+        model.products.value = [.card: [.stub(productType: .card)], .account: [.stub()]]
+        
+        return model
+    }
+    
+    private func makeTransferStub() -> [ServerAgentTestStub.Stub] {
+        
+        [
+            .makeTransfer(.success(.init(
+                statusCode: .ok,
+                errorMessage: nil,
+                data: .init(
+                    documentStatus: .complete,
+                    paymentOperationDetailId: 1
+                )
+            )))
+        ]
+    }
     
     private func updatePaymentInfo(
         currencyFrom: Currency = .rub,
@@ -231,14 +344,20 @@ extension PaymentsMeToMeViewModelTests {
     
     func makeSUT(
         model: Model,
-        templateId: PaymentTemplateData.ID = 1
+        mode: PaymentsMeToMeViewModel.Mode,
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> PaymentsMeToMeViewModel? {
         
-        let name = model.paymentTemplates.value.first(where: { $0.id == templateId })?.name
         let sut = PaymentsMeToMeViewModel(
             model,
-            mode: .templatePayment(templateId, name ?? "Между своими")
+            mode: mode
         )
+        
+        if let sut {
+            
+            trackForMemoryLeaks(sut, file: file, line: line)
+        }
         
         return sut
     }
@@ -249,7 +368,9 @@ extension ProductData {
     //TODO: remove stub after merge DBSNEW-8883
     static func stub(
         productId: Int = UUID().hashValue,
-        currency: String = "RUB"
+        currency: String = "RUB",
+        balance: Double? = nil,
+        balanceRub: Double? = nil
     ) -> ProductData {
         
         return .init(
@@ -258,8 +379,8 @@ extension ProductData {
             number: "1",
             numberMasked: nil,
             accountNumber: nil,
-            balance: nil,
-            balanceRub: nil,
+            balance: balance,
+            balanceRub: balanceRub,
             currency: currency,
             mainField: "",
             additionalField: nil,
@@ -270,10 +391,10 @@ extension ProductData {
             branchId: nil,
             allowCredit: true,
             allowDebit: true,
-            extraLargeDesign: .init(description: ""),
-            largeDesign: .init(description: ""),
-            mediumDesign: .init(description: ""),
-            smallDesign: .init(description: ""),
+            extraLargeDesign: SVGImageData.test,
+            largeDesign: SVGImageData.test,
+            mediumDesign: SVGImageData.test,
+            smallDesign: SVGImageData.test,
             fontDesignColor: .init(description: ""),
             background: [.init(description: "")],
             order: 1,

@@ -32,16 +32,8 @@ extension PaymentsInputPhoneView {
             
             let validator = PhoneValidator()
             
-#if DEBUG
-            if phone.digits == "70115110217" {
-                
-                return true
-                
-            } else {
-                
-                return validator.isValid(phone.digits)
-            }
-            
+#if DEBUG || PREPROD
+            return getDebugValidation(phone: phone.digits)
 #else
             return validator.isValid(phone.digits)
 #endif
@@ -229,6 +221,7 @@ struct PaymentsInputPhoneView: View {
                             removal: .opacity
                         )
                     )
+                    .accessibilityIdentifier("PaymentsInputPhoneTitle")
             }
             
             HStack(spacing: 20) {
@@ -249,6 +242,7 @@ struct PaymentsInputPhoneView: View {
             .foregroundColor(.textSecondary)
             .font(.textH4M16240())
             .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("PaymentsInputPhoneField")
         }
     }
 
@@ -265,6 +259,7 @@ struct PaymentsInputPhoneView: View {
                     .renderingMode(.template)
                     .foregroundColor(.mainColorsGray)
                     .frame(width: 24, height: 24)
+                    .accessibilityIdentifier("PaymentsInputPhoneContactsIcon")
             }
         }
     }
@@ -314,4 +309,15 @@ extension PaymentsInputPhoneView.ViewModel {
     )
     
     static let samplePhoneParam = PaymentsInputPhoneView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "79255145555"), title: "Номер телефона получателя"), model: .emptyMock)
+}
+
+private extension PaymentsInputPhoneView.ViewModel {
+    
+    private func getDebugValidation(
+        phone: String,
+        validator: PhoneValidator = PhoneValidator()
+    ) -> Bool {
+        
+        return phone.digits == "70115110217" ? true : validator.isValid(phone.digits)
+    }
 }

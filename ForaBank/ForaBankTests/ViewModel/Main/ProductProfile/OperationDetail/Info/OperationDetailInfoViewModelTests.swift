@@ -1057,6 +1057,106 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertNil(cell)
     }
 
+    // MARK: - C2BOperation Tests
+    
+    func test_c2BOperationDetails_makeItems_shouldReturnCellsC2B() {
+        
+        let (detail, products) = makeStubs(
+            transferEnum: .c2bPayment,
+            transferNumber: "transferNumber",
+            productID: 1,
+            currency: "RUB",
+            productBalance: 10,
+            payeeAccountId: 1,
+            payeeBankName: "ПАО СБЕРБАНК",
+            memberId: "1"
+        )
+        
+        let (sut, _) =  makeSUT(
+            transferEnum: .c2bPayment,
+            detail: detail,
+            products: products,
+            currencyList: [.rub]
+        )
+        
+        sut.cells = sut.makeItems(operation: detail)
+        
+        XCTAssertNoDiff(sut.testTitles, [
+            "Сумма перевода",
+            "Наименование ТСП",
+            "Дата и время операции (МСК)",
+            "Статус операции",
+            "Счет списания",
+            "Счет зачисления",
+            "Банк получателя",
+            "Назначение платежа",
+            "Номер операции СБП"
+        ])
+    }
+    
+    func test_nameCompanyC2B_withMerchantSubName_shouldReturnCell() {
+        
+        let (sut, _) =  makeSUT()
+        let (detail, _) = makeStubs(
+            merchantSubName: "Company Name"
+        )
+        
+        let companyCell = sut.nameCompanyC2B(operation: detail)
+        
+        XCTAssertNotNil(companyCell)
+    }
+    
+    func test_nameCompanyC2B_withOutMerchantSubName_shouldReturnNil() {
+        
+        let (sut, _) =  makeSUT()
+        let (detail, _) = makeStubs(
+            merchantSubName: nil
+        )
+        
+        let companyCell = sut.nameCompanyC2B(operation: detail)
+        
+        XCTAssertNil(companyCell)
+    }
+    
+    func test_operationDetailStatus_shouldReturnCompleteCell() {
+        
+        let (detail, _) = makeStubs(
+            operationStatus: .complete
+        )
+        
+        let (sut, _) =  makeSUT()
+        
+        let cell = sut.operationDetailStatus(status: detail.operationStatus)
+        XCTAssertEqual(cell?.name, "Успешно")
+        XCTAssertEqual(cell?.title, "Статус операции")
+    }
+    
+    func test_operationDetailStatus_shouldReturnInProgressCell() {
+        
+        let (detail, _) = makeStubs(
+            operationStatus: .inProgress
+        )
+        
+        let (sut, _) =  makeSUT()
+        
+        let cell = sut.operationDetailStatus(status: detail.operationStatus)
+        XCTAssertEqual(cell?.name, "В обработке")
+        XCTAssertEqual(cell?.title, "Статус операции")
+    }
+    
+    func test_operationDetailStatus_shouldReturnRejectCell() {
+        
+        let (detail, _) = makeStubs(
+            operationStatus: .rejected
+        )
+        
+        let (sut, _) =  makeSUT()
+        
+        let cell = sut.operationDetailStatus(status: detail.operationStatus)
+        XCTAssertEqual(cell?.name, "Отказ")
+        XCTAssertEqual(cell?.title, "Статус операции")
+    }
+    
     // MARK: - Helpers
     
     private func makeItemsForExternal(
@@ -1106,7 +1206,13 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         payeePhone: String? = nil,
         productID: Int = 123,
         currency: String = "Rub",
-        comment: String? = "Lorem ipsum dolor sit amet"
+        comment: String? = "Lorem ipsum dolor sit amet",
+        operationStatus: OperationDetailData.OperationStatus = .complete,
+        merchantSubName: String? = "merchantSubName",
+        productBalance: Double? = nil,
+        payeeAccountId: Int = 111,
+        payeeBankName: String? = "ПАО СБЕРБАНК",
+        memberId: String? = nil
     ) -> (
         detail: OperationDetailData,
         products: ProductsData
@@ -1122,12 +1228,18 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
                 payeeFullName: payeeFullName,
                 payeePhone: payeePhone,
                 productID: productID,
-                comment: comment
+                comment: comment,
+                operationStatus: operationStatus,
+                merchantSubName: merchantSubName,
+                payeeAccountId: payeeAccountId,
+                payeeBankName: payeeBankName,
+                memberId: memberId
             ),
             [.card: [
                 .stub(
                     productId: productID,
-                    currency: currency
+                    currency: currency,
+                    balance: productBalance
                 )
             ]]
         )
@@ -1271,7 +1383,12 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         payeeFullName: String? = nil,
         payeePhone: String? = nil,
         productID: Int = 123,
-        comment: String? = "Lorem ipsum dolor sit amet"
+        comment: String? = "Lorem ipsum dolor sit amet",
+        operationStatus: OperationDetailData.OperationStatus = .complete,
+        merchantSubName: String? = "merchantSubName",
+        payeeAccountId: Int = 111,
+        payeeBankName: String? = "ПАО СБЕРБАНК",
+        memberId: String? = nil
     ) -> OperationDetailData {
         
         .stub(
@@ -1285,8 +1402,9 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             externalTransferType: externalTransferType,
             isForaBank: false,
             isTrafficPoliceService: isTrafficPoliceService,
+            memberId: memberId,
             operation: "Перевод юридическому лицу в сторонний банк",
-            payeeAccountId: 111,
+            payeeAccountId: payeeAccountId,
             payeeAccountNumber: "40802810938050002771",
             payeeBankBIC: "044525225",
             payeeBankCorrAccount: "30101810400000000225",
@@ -1318,7 +1436,10 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
             transferEnum: transferEnum,
             transferNumber: transferNumber,
             cursivePayerAmount: "Одна тысяча сто сорок один рубль 00 копеек",
-            cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек"
+            cursiveAmount: "Одна тысяча сто одиннадцать рублей 00 копеек",
+            merchantSubName: merchantSubName,
+            merchantIcon: SVGImageData.test.description,
+            operationStatus: operationStatus
         )
     }
     
@@ -1354,6 +1475,7 @@ private extension OperationDetailInfoViewModel.DefaultCellViewModel {
 private extension OperationDetailInfoViewModel {
     
     var testCells: [TestCell] { cells.map(\.testCell) }
+    var testTitles: [String] { cells.map(\.title) }
     
     enum TestCell: Equatable {
         

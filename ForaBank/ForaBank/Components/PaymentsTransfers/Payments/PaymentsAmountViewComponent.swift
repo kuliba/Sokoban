@@ -88,7 +88,6 @@ extension PaymentsAmountView {
                                let symbol = currency.currencySymbol {
                                 
                                 self?.deliveryCurrency?.currency = symbol
-                                self?.bind()
                                 self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Close())
                             }
                         }
@@ -97,6 +96,7 @@ extension PaymentsAmountView {
                 })
             }
             
+            bind()
             bind(textField: textField)
         }
         
@@ -153,6 +153,7 @@ extension PaymentsAmountView {
                                 }
                             }
                         )
+                        
                         self?.action.send(PaymentsParameterViewModelAction.SelectSimple.PopUpSelector.Show(viewModel: viewModel))
                     }
                 })
@@ -196,6 +197,8 @@ extension PaymentsAmountView {
                         if let selectCurrencyUpdated = source.updated(value: source.amount.description, selectedCurrency: .init(description: currency.code)) as? Payments.ParameterAmount {
                             
                             update(source: selectCurrencyUpdated.updated(currencySymbol: currencySymbol))
+                            updateCurrencyIsChanged(currencyIsChanged: true)
+                            
                         } else {
                             
                             update(value: nil)

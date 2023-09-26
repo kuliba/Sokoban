@@ -102,6 +102,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
+
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+
                     link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
@@ -295,10 +298,10 @@ class MainViewModel: ObservableObject, Resetable {
                             switch payload.operationType {
                             case .templates:
                                 
-                                let templatesListviewModel = TemplatesListViewModel(
+                                let templatesListViewModel = TemplatesListViewModel(
                                     model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
-                                bind(templatesListviewModel)
-                                link = .templates(templatesListviewModel)
+                                bind(templatesListViewModel)
+                                link = .templates(templatesListViewModel)
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -764,6 +767,12 @@ class MainViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as TemplatesListViewModelAction.CloseAction:
+                    self.action.send(DelayWrappedAction(
+                             delayMS: 800,
+                             action: MainViewModelAction.Close.Link())
+                         )
+                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())

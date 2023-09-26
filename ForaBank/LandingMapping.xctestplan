@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "0882E5B7-6633-4086-8BE9-FF0AA06FEF4D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    }
+  ],
+  "version" : 1
+}

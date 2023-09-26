@@ -49,6 +49,11 @@ class PaymentsParameterViewModel: Identifiable {
         self.isEditable = source.isEditable
     }
     
+    func updateCurrencyIsChanged(currencyIsChanged: Bool = false) {
+        
+        self.value.currencyIsChanged = currencyIsChanged
+    }
+    
     func updateEditable(update: EditableUpdate) {
         
         switch update {
@@ -78,6 +83,7 @@ extension PaymentsParameterViewModel {
         let current: String?
         
         var isChanged: Bool { last != current }
+        var currencyIsChanged: Bool = false
         
         internal init(id: Payments.Parameter.ID, last: String?, current: String?) {
             

@@ -56,7 +56,7 @@ extension PTSectionLatestPaymentsView {
                                 withAnimation(.easeInOut(duration: 1)) {
                                     
                                     // temporally removed taxAndStateService from list
-                                    let latestPayments = LatestPaymentsView.ViewModel(model, filter: .excluding([.taxAndStateService]))
+                                    let latestPayments = LatestPaymentsView.ViewModel(model)
                                     self.latestPayments = latestPayments
                                     bind(latestPayments)
                                 }

@@ -7,10 +7,10 @@
 
 import SwiftUI
 import Combine
-//TODO: extract AnySchedulerOfDispatchQueue into a separate module
+// TODO: extract AnySchedulerOfDispatchQueue into a separate module
 import TextFieldModel
 
-//TODO: remove Identifiable
+// TODO: remove Identifiable
 final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         
     let action: PassthroughSubject<Action, Never> = .init()
@@ -59,13 +59,13 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         paymentSuccess: Payments.Success,
         _ model: Model,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
-        mapper: @escaping (Payments.Success, Model) -> [PaymentsSectionViewModel] = PaymentsSectionViewModel.reduce(success:model:)) {
-        
-            self.init(
-                sections: mapper(paymentSuccess, model),
-                adapter: .init(model: model, mapper: mapper, scheduler: scheduler),
-                operation: paymentSuccess.operation,
-                scheduler: scheduler)
+        mapper: @escaping (Payments.Success, Model) -> [PaymentsSectionViewModel] = PaymentsSectionViewModel.reduce(success:model:)
+    ) {
+        self.init(
+            sections: mapper(paymentSuccess, model),
+            adapter: .init(model: model, mapper: mapper, scheduler: scheduler),
+            operation: paymentSuccess.operation,
+            scheduler: scheduler)
     }
     
     private func bind() {
@@ -81,7 +81,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 operationDetailData = detailData
              
                 switch mode {
-                case let .meToMe(from: productFromID, to: productToID, transferData):
+                case let .meToMe(templateId: templateId, from: productFromID, to: productToID, transferData):
                     guard let productIdFrom = productFromID,
                           let productIdTo = productToID,
                           let productFrom = adapter.product(productId: productIdFrom),
@@ -90,7 +90,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                           let paymentOperationDetailID else {
                         return
                     }
-                    //FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
+                    // FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
                     let fakeOperationDetailData = OperationDetailData.make(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailID, transferEnum: .conversionCardToAccount)
                     operationDetailData = fakeOperationDetailData
                     
@@ -101,6 +101,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         operationDetail: fakeOperationDetailData,
                         operation: self.operation,
                         meToMePayment: .init(
+                            templateId: templateId,
                             payerProductId: productIdFrom,
                             payeeProductId: productIdTo,
                             amount: amount
@@ -122,7 +123,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                           let paymentOperationDetailID else {
                         return
                     }
-                    //FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
+                    // FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
                     let fakeOperationDetailData = OperationDetailData.make(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailID, transferEnum: .conversionCardToAccount)
                     operationDetailData = fakeOperationDetailData
                     
@@ -150,7 +151,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                           let paymentOperationDetailID else {
                         return
                     }
-                    //FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
+                    // FIXME: OperationDetailData received from server is incorrect? Why we have to manually create it? This code should be removed.
                     let fakeOperationDetailData =  OperationDetailData.make(amount: amount, productFrom: productFrom, productTo: productTo, paymentOperationDetailId: paymentOperationDetailID, transferEnum: .conversionCardToAccount)
                     operationDetailData = fakeOperationDetailData
                     
@@ -213,39 +214,40 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             }
         }
         
-        //MARK: - PaymentsSuccessViewModel Actions
+        // MARK: - PaymentsSuccessViewModel Actions
         
         // PaymentsSuccessAction.Button.Close
         action
             .compactMap { $0 as? PaymentsSuccessAction.Button.Close }
             .receive(on: scheduler)
-            .sink { [unowned self] _ in
+            .sink { [weak self] _ in
                 
-                adapter.updateProducts()
+                self?.adapter.updateProducts()
                 
             }.store(in: &bindings)
         
         // PaymentsSuccessAction.ShowOperationDetailInfo
         action
-            .compactMap({ $0 as? PaymentsSuccessAction.ShowOperationDetailInfo })
+            .compactMap { $0 as? PaymentsSuccessAction.ShowOperationDetailInfo }
             .map(\.viewModel)
             .receive(on: scheduler)
-            .sink { [unowned self] detailInfoViewModel in
+            .sink { [weak self] detailInfoViewModel in
                 
-                self.sheet = .init(type: .detailInfo(detailInfoViewModel))
+                self?.sheet = .init(type: .detailInfo(detailInfoViewModel))
                 
             }.store(in: &bindings)
         
-        //MARK: - Other Actions
+        // MARK: - Other Actions
         
         // DelayWrappedAction
         action
-            .compactMap({ $0 as? DelayWrappedAction })
+            .compactMap { $0 as? DelayWrappedAction }
             .flatMap { [weak self] in
                 
                 struct NoSelfError: Error {}
                 
-                guard let self else {
+                guard let self
+                else {
                     return Fail(outputType: Action.self, failure: NoSelfError() as Error)
                         .eraseToAnyPublisher()
                 }
@@ -264,26 +266,28 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             ).store(in: &bindings)
     }
     
-    //FIXME: figure out how to get rid of second Success View
+    // FIXME: figure out how to get rid of second Success View
     private func bind(_ successViewModel: PaymentsSuccessViewModel) {
         
         successViewModel.action
             .compactMap { $0 as? PaymentsSuccessAction.Button.Close }
             .receive(on: scheduler)
-            .sink { [unowned self] _ in
+            .sink { [weak self] _ in
                 
-                action.send(PaymentsSuccessAction.Button.Close())
-                
-            }.store(in: &bindings)
+                self?.action.send(PaymentsSuccessAction.Button.Close())
+            }
+            .store(in: &bindings)
     }
     
     private func bind(section: PaymentsSectionViewModel) {
         
         section.action
-            .compactMap({ $0 as? PaymentsSectionViewModelAction.Button.DidTapped })
-            .map({ $0.action })
+            .compactMap { $0 as? PaymentsSectionViewModelAction.Button.DidTapped }
+            .map(\.action)
             .receive(on: scheduler)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case .main:
@@ -294,7 +298,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .save:
                     self.spinner = .init()
                     adapter.requestSubscription(parameters: parameters, action: .link)
-                
+                    
                 case .update:
                     self.spinner = .init()
                     adapter.requestSubscription(parameters: parameters, action: .update)
@@ -313,9 +317,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .additionalChange:
                     guard let operationDetailData,
                           let name = operationDetailData.payeeFullName,
-                          let number = operationDetailData.transferReference else {
-                        return
-                    }
+                          let number = operationDetailData.transferReference
+                    else { return }
                     
                     let operationID = operationDetailData.paymentOperationDetailId.description
                     self.action.send(PaymentsSuccessAction.Payment(
@@ -352,17 +355,22 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             }.store(in: &sectionsBindings)
         
         section.action
-            .compactMap({ $0 as? PaymentsSectionViewModelAction.OptionButtonDidTapped })
-            .map({ $0.option })
+            .compactMap { $0 as? PaymentsSectionViewModelAction.OptionButtonDidTapped }
+            .map(\.option)
             .receive(on: scheduler)
-            .sink { [unowned self] option in
+            .sink { [weak self] option in
+                
+                guard let self else { return }
                 
                 switch option {
                 case .document:
                     
                     switch mode {
                     case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit:
-                        guard let operationDetailData, let paymentOperationDetailID else {
+                        guard
+                            let operationDetailData,
+                            let paymentOperationDetailID
+                        else {
                             return
                         }
                         
@@ -393,21 +401,20 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         
                         self?.sheet = nil
                     }
-   
+                    
                     self.sheet = .init(type: .detailInfo(viewModel))
-                
+                    
                 default:
                     break
                 }
-                
-            }.store(in: &sectionsBindings)
+            }
+            .store(in: &sectionsBindings)
     }
     
     func updateSections(
         with operation: Payments.Operation?,
         parameters: [PaymentsParameterRepresentable]
     ) {
-        
         let success = Payments.Success(
             operation: operation,
             parameters: parameters
@@ -417,13 +424,14 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
         updatedSections.forEach { section in
             bind(section: section)
         }
-        withAnimation {
-            self.sections = updatedSections
+        withAnimation { [weak self] in
+            
+            self?.sections = updatedSections
         }
     }
 }
 
-//MARK: - Computed Properties
+// MARK: - Computed Properties
 
 extension PaymentsSuccessViewModel {
     
@@ -458,9 +466,8 @@ extension PaymentsSuccessViewModel {
     
     var mode: Mode {
         
-        guard let param = try? parameters.parameter(forIdentifier: .successMode, as: Payments.ParameterSuccessMode.self) else {
-            return .normal
-        }
+        guard let param = try? parameters.parameter(forIdentifier: .successMode, as: Payments.ParameterSuccessMode.self)
+        else { return .normal }
         
         return param.mode
     }
@@ -469,31 +476,29 @@ extension PaymentsSuccessViewModel {
         
         guard let param = try? parameters.parameter(forIdentifier: .successOperationDetailID),
               let stringValue = param.value,
-              let intValue = Int(stringValue) else {
-            return nil
-        }
+              let intValue = Int(stringValue)
+        else { return nil }
         
         return intValue
     }
     
     var documentStatus: TransferResponseBaseData.DocumentStatus {
         
-        guard let param = try? parameters.parameter(forIdentifier: .successStatus, as: Payments.ParameterSuccessStatus.self) else {
-            return .unknown
-        }
+        guard let param = try? parameters.parameter(forIdentifier: .successStatus, as: Payments.ParameterSuccessStatus.self)
+        else { return .unknown }
         
         return param.documentStatus
     }
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension PaymentsSuccessViewModel {
     
     enum Mode: Equatable {
         
         case normal
-        case meToMe(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
+        case meToMe(templateId: Int?, from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case closeDeposit(Currency, balance: Double, CloseProductTransferData)
         case closeAccount(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
         case closeAccountEmpty(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
@@ -546,5 +551,3 @@ enum PaymentsSuccessAction {
         let viewModel: OperationDetailInfoViewModel
     }
 }
-
-

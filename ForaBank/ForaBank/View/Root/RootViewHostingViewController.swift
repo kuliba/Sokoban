@@ -56,7 +56,9 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                         dismissCover(animated: false)
                     }
                     
-                    let loginView = AuthLoginView(viewModel: payload.viewModel)
+                    let loginView = ComposedLoginView(
+                        viewModel: payload.viewModel
+                    )
                     let loginViewController = UIHostingController(rootView: loginView)
                     let navigation = UINavigationController(rootViewController: loginViewController)
                     presentCover(navigation, of: .login, animated: false)

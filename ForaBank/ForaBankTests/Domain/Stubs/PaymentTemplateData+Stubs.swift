@@ -35,12 +35,13 @@ extension PaymentTemplateData {
     static func templateStub(
         paymentTemplateId: Int = 2513,
         type: Kind,
+        name: String = "name",
         parameterList: [TransferData] = TransferGeneralData.generalStub()
     ) -> PaymentTemplateData {
         
         let template = getTemplate(
             groupName: "groupName",
-            name: "name",
+            name: name,
             parameterList: parameterList,
             paymentTemplateId: paymentTemplateId,
             sort: 0,

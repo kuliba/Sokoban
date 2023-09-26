@@ -292,11 +292,11 @@ extension Model {
                 currencySymbol = symbol
             }
             
-            if let filterCurriencies = try? parameters.parameter(forIdentifier: .countryCurrencyFilter),
-               let splittedCurrency = filterCurriencies.value?.components(separatedBy: ";"),
-               splittedCurrency.count > 1 {
+            if let filterCurrencies = try? parameters.parameter(forIdentifier: .countryCurrencyFilter),
+               let splitCurrencies = filterCurrencies.value?.components(separatedBy: ";"),
+               splitCurrencies.count > 1 {
                 
-                let currenciesList = self.reduceDeliveryCurrency(productId: productId, splittedCurrency: splittedCurrency)
+                let currenciesList = self.reduceDeliveryCurrency(productId: productId, splitCurrencies: splitCurrencies)
                 let selectedCurrency = currenciesList.contains(where: { $0.description == amountParameter.deliveryCurrency?.selectedCurrency.description }) ? amountParameter.deliveryCurrency?.selectedCurrency : currenciesList.first
                 
                 let updatedAmountParameter = amountParameter.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: selectedCurrency ?? .rub, currenciesList: currenciesList))
@@ -305,26 +305,7 @@ extension Model {
                     return nil
                 }
 
-                switch operation.source {
-                case let .template(templateId):
-                    let template = self.paymentTemplates.value.first(where: { $0.id == templateId })
-                    let parameterList = template?.parameterList.last as? TransferAnywayData
-                    let currency = parameterList?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.countryDeliveryCurrency.rawValue })
-                    let selectedCurrency = self.currencyList.value.first(where: { $0.code == currency?.fieldvalue })
-                    
-                    if let currencySymbol = selectedCurrency?.currencySymbol,
-                       let code = selectedCurrency?.code{
-                        
-                        let updateAmount = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount) as? Payments.ParameterAmount
-                        return updateAmount?.updated(value: amountParameter.value, deliveryCurrency: .init(selectedCurrency: .init(description: code), currenciesList: currenciesList))
-                 
-                    } else {
-                        
-                        return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
-                    }
-                default:
-                    return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
-                }
+                return amountParameter.updated(currencySymbol: currencySymbol, maxAmount: maxAmount)
             }
             
             let updatedAmountParameter = amountParameter.update(currencySymbol: currencySymbol, maxAmount: maxAmount)
@@ -360,7 +341,7 @@ extension Model {
                 ProductData.Filter.RestrictedDepositRule(),
                 ProductData.Filter.CurrencyRule(Set(filterCurrencies)),
                 ProductData.Filter.CardActiveRule(),
-                ProductData.Filter.CardAdditionalNotOwnedRetrictedRule(),
+                ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
                 ProductData.Filter.AccountActiveRule()
             ])
             
@@ -636,142 +617,35 @@ extension Model {
         }
     }
     
-    func paymentsProcessRemoteStepAbroad(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepAbroad(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
         
-        var parameters = [PaymentsParameterRepresentable]()
-            
-            let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
-            if let bankParameter = operation.parameters.first(where: { $0.id == countrySwitch }),
-               let value = bankParameter.value,
-               let options = Payments.Operator(rawValue: value) {
-                
-                switch options {
-                case .direct, .cardKZ, .cardTJ, .cardUZ, .cardHumoUZ:
-                    if let customerName = response.payeeName {
-                        
-                        let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
-                        let countryTransferNumber = Payments.ParameterInfo(
-                            .init(id: countryTransferNumberId, value: customerName),
-                            icon: .local("ic24User"),
-                            title: "Получатель", placement: .feed, group: .init(id: "confirm", type: .info))
-                        
-                        parameters.append(countryTransferNumber)
-                        
-                    }
-                    
-                    if let amountValue = response.amount,
-                       let currencyPayer = response.currencyPayer {
-                        
-                        let amount = self.amountFormatted(amount: amountValue, currencyCode: currencyPayer.description, style: .normal)
-                        
-                        let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
-                        let amountParameter = Payments.ParameterInfo(
-                            .init(id: amountParameterId, value: amount),
-                            icon: .local("ic24Coins"),
-                            title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
-                        
-                        parameters.append(amountParameter)
-                    }
-                    
-                default:
-                    if let customerName = response.payeeName {
-                        
-                        let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
-                        let countryTransferNumber = Payments.ParameterInfo(
-                            .init(id: countryTransferNumberId, value: customerName),
-                            icon: .local("ic24User"),
-                            title: "Получатель", placement: .feed)
-                        
-                        parameters.append(countryTransferNumber)
-                    }
-                    
-                    if let amountValue = response.creditAmount,
-                       let currencyPayee = response.currencyPayee {
-                        
-                        let amount = self.amountFormatted(amount: amountValue, currencyCode: currencyPayee.description, style: .normal)
-                        
-                        let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
-                        let amountParameter = Payments.ParameterInfo(
-                            .init(id: amountParameterId, value: amount),
-                            icon: .local("ic24Coins"),
-                            title: "Сумма перевода", placement: .feed, group: .init(id: "confirm", type: .info))
-                        
-                        parameters.append(amountParameter)
-                    }
-                }
-            }
+        let parameters = RemoteStepAbroadParametersMapper.map(
+            response,
+            with: operation,
+            and: self
+        )
         
-        if let payeeAmount = response.creditAmount,
-           let currency = response.currencyPayee {
-            
-            let amount = self.amountFormatted(amount: payeeAmount, currencyCode: currency.description, style: .normal)
-            
-            let countryTransferNumberId = Payments.Parameter.Identifier.countryPayeeAmount.rawValue
-            let countryTransferNumber = Payments.ParameterInfo(
-                .init(id: countryTransferNumberId, value: amount),
-                icon: .local("ic24User"),
-                title: "Сумма зачисления в валюте", placement: .feed, group: .init(id: "confirm", type: .info))
-            
-            parameters.append(countryTransferNumber)
-        }
+        let remoteStage: Payments.Operation.Stage.Remote = response.needOTP == true ? .confirm : .next
         
-        if let response = response as? TransferAnywayResponseData,
-           let oferta = response.additionalList.first(where: {$0.fieldName == "oferta"}),
-           let value = oferta.fieldValue,
-           let url = URL(string: value) {
-            
-            let countryOferta = Payments.Parameter.Identifier.countryOffer.rawValue
-            parameters.append(Payments.ParameterCheck(.init(id: countryOferta, value: "true"), title: "С договором", link: .init(title: "оферты", url: url), style: .c2bSubscribtion, mode: .abroad))
-        }
+        let dividendParameter = try? parameters.parameter(forIdentifier: .countryDividend)
         
-        if let amountCurrency = response.debitAmount,
-           let amountFormatted = paymentsAmountFormatted(amount: amountCurrency, parameters: operation.parameters){
-            
-            let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
-            let amountParameter = Payments.ParameterInfo(
-                .init(id: amountParameterId, value: amountFormatted),
-                icon: .local("ic24Coins"),
-                title: "Сумма списания", placement: .feed, group: .init(id: "confirm", type: .info))
-            
-            parameters.append(amountParameter)
-        }
-        
-        if  let response = response as? TransferAnywayResponseData,
-            let trnReference = response.additionalList.first(where: {$0.fieldName == "trnReference"}) {
-            
-            let countryTransferNumberId = Payments.Parameter.Identifier.countryTransferNumber.rawValue
-            let countryTransferNumber = Payments.ParameterInfo(
-                .init(id: countryTransferNumberId, value: trnReference.fieldValue),
-                icon: .local("ic24PercentCommission"),
-                title: trnReference.fieldTitle ?? "Номер перевода", placement: .feed, group: .init(id: "confirm", type: .info))
-            
-            parameters.append(countryTransferNumber)
-        }
-        
-        if let feeAmount = response.fee,
-           let feeAmountFormatted = paymentsAmountFormatted(amount: feeAmount, parameters: operation.parameters) {
-            
-            let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
-            let feeParameter = Payments.ParameterInfo(
-                .init(id: feeParameterId, value: feeAmountFormatted),
-                icon: .local("ic24PercentCommission"),
-                title: "Комиссия", placement: .feed, group: .init(id: "confirm", type: .info))
-            
-            parameters.append(feeParameter)
-        }
-        
-        if response.needOTP == true {
-            
-            parameters.append(Payments.ParameterCode.regular)
-            
-            return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
-            
-        } else {
-            
-            return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
-        }
+        return .init(
+            parameters: parameters,
+            front: .init(
+                visible: parameters.map(\.id),
+                isCompleted: false
+            ),
+            back: .init(
+                stage: .remote(remoteStage),
+                required: [dividendParameter].compactMap(\.?.id),
+                processed: nil
+            )
+        )
     }
-    
+        
     func paymentsProcessAbroadComplete(code: String, operation: Payments.Operation) async throws -> Payments.Success {
         
         let response = try await paymentsTransferComplete(
@@ -786,7 +660,7 @@ extension Model {
         return success
     }
     
-    func paymentsProcessOperationResetVisibleCountry(_ operation: Payments.Operation) async throws -> [Payments.Parameter.ID]? {
+    func paymentsProcessOperationResetVisibleCountry(_ operation: Payments.Operation) -> [Payments.Parameter.ID]? {
         
         let restrictedIds = [Payments.Parameter.Identifier.countryId.rawValue,
                              Payments.Parameter.Identifier.countryCity.rawValue,
@@ -795,7 +669,7 @@ extension Model {
         // check if current step stage is confirm
         guard operation.isConfirmCurrentStage else {
             
-            let parameters = operation.steps.map( \.front.visible ).flatMap({ $0 })
+            let parameters = operation.steps.map(\.front.visible).flatMap({ $0 })
             
             let restrictedParameters = parameters.filter({ !restrictedIds.contains($0) })
             return restrictedParameters
@@ -806,127 +680,417 @@ extension Model {
            let value = bankParameter.value,
            let options = Payments.Operator.init(rawValue: value) {
             
+            let identifiers: [Payments.Parameter.Identifier]
+            
             switch options {
             case .contact, .contactCash:
                 
-                return [Payments.Parameter.Identifier.header.rawValue,
-                        Payments.Parameter.Identifier.countrySelect.rawValue,
-                        Payments.Parameter.Identifier.countryPayee.rawValue,
-                        Payments.Parameter.Identifier.product.rawValue,
-                        Payments.Parameter.Identifier.countryTransferNumber.rawValue,
-                        Payments.Parameter.Identifier.countryCurrencyAmount.rawValue,
-                        Payments.Parameter.Identifier.fee.rawValue,
-                        Payments.Parameter.Identifier.sfpAmount.rawValue,
-                        Payments.Parameter.Identifier.code.rawValue,
-                        Payments.Parameter.Identifier.countryOffer.rawValue]
+                identifiers = [
+                    .header,
+                    .countrySelect,
+                    .countryPayee,
+                    .product,
+                    .countryTransferNumber,
+                    .countryCurrencyAmount,
+                    .fee,
+                    .sfpAmount,
+                    .code,
+                    .countryOffer,
+                    .countryDividend,
+                ]
+                
             case .direct:
                 
-                return [Payments.Parameter.Identifier.header.rawValue,
-                        Payments.Parameter.Identifier.countryPhone.rawValue,
-                        Payments.Parameter.Identifier.countryBank.rawValue,
-                        Payments.Parameter.Identifier.product.rawValue,
-                        Payments.Parameter.Identifier.countryPayee.rawValue,
-                        Payments.Parameter.Identifier.countryTransferNumber.rawValue,
-                        Payments.Parameter.Identifier.countryCurrencyAmount.rawValue,
-                        Payments.Parameter.Identifier.fee.rawValue,
-                        Payments.Parameter.Identifier.countryPayeeAmount.rawValue,
-                        Payments.Parameter.Identifier.sfpAmount.rawValue,
-                        Payments.Parameter.Identifier.code.rawValue]
+                identifiers = [
+                    .header,
+                    .countryPhone,
+                    .countryBank,
+                    .product,
+                    .countryPayee,
+                    .countryTransferNumber,
+                    .countryCurrencyAmount,
+                    .fee,
+                    .countryPayeeAmount,
+                    .sfpAmount,
+                    .code,
+                    .countryDividend
+                ]
+                
             default:
                 
-                return [Payments.Parameter.Identifier.header.rawValue,
-                        Payments.Parameter.Identifier.countrySelect.rawValue,
-                        Payments.Parameter.Identifier.countryPayee.rawValue,
-                        Payments.Parameter.Identifier.product.rawValue,
-                        Payments.Parameter.Identifier.countryTransferNumber.rawValue,
-                        Payments.Parameter.Identifier.countryCurrencyAmount.rawValue,
-                        Payments.Parameter.Identifier.fee.rawValue,
-                        Payments.Parameter.Identifier.sfpAmount.rawValue,
-                        Payments.Parameter.Identifier.code.rawValue]
+                identifiers = [
+                    .header,
+                    .countrySelect,
+                    .countryPayee,
+                    .product,
+                    .countryTransferNumber,
+                    .countryCurrencyAmount,
+                    .fee,
+                    .sfpAmount,
+                    .code,
+                    .countryDividend
+                ]
+            }
+            
+            return identifiers.map(\.rawValue)
+        }
+        
+        let identifiers: [Payments.Parameter.Identifier] = [
+            .header,
+            .countrySelect,
+            .countryPayee,
+            .product,
+            .countryTransferNumber,
+            .countryCurrencyAmount,
+            .fee,
+            .sfpAmount,
+            .code,
+        ]
+        
+        return identifiers.map(\.rawValue)
+    }
+}
+
+private extension Payments.Operation {
+    
+    func abroadPaymentsOperator() -> Payments.Operator? {
+       
+        let countrySwitch = Payments.Parameter.Identifier.countryDropDownList.rawValue
+        guard
+            let bankParameter = parameters.first(where: { $0.id == countrySwitch }),
+                let value = bankParameter.value
+        else { return nil }
+        
+        return Payments.Operator(rawValue: value)
+    }
+}
+
+private extension RemoteStepAbroadParametersMapper {
+    
+    static func map(
+        _ response: TransferResponseData,
+        with operation: Payments.Operation,
+        and model: Model
+    ) -> [PaymentsParameterRepresentable] {
+        
+        map(
+            response,
+            paymentsOperator: operation.abroadPaymentsOperator(),
+            formattedAmount: {
+                model.paymentsAmountFormatted(
+                    amount: $0,
+                    parameters: operation.parameters
+                )
+            },
+            normalAmountFormatted: model.normalAmountFormatted
+        )
+    }
+}
+
+enum RemoteStepAbroadParametersMapper {
+    
+    static func map(
+        _ response: TransferResponseData,
+        paymentsOperator: Payments.Operator?,
+        formattedAmount: @escaping (Double) -> String?,
+        normalAmountFormatted: @escaping (Double, String) -> String?
+    ) -> [PaymentsParameterRepresentable] {
+        
+        var parameters1 = [PaymentsParameterRepresentable?]()
+        
+        if let paymentsOperator {
+            
+            switch paymentsOperator {
+            case .direct, .cardKZ, .cardTJ, .cardUZ, .cardHumoUZ:
+                
+                parameters1.append(contentsOf: [
+                    response.countryTransferNumber(
+                        group: .init(id: "confirm", type: .info)
+                    ),
+                    response.amountParameter(
+                        formatted: normalAmountFormatted
+                    )
+                ])
+                
+            default:
+                
+                parameters1.append(contentsOf: [
+                    response.countryTransferNumber(),
+                    response.creditAmountParameter(
+                        formatted: normalAmountFormatted
+                    )
+                ])
             }
         }
         
-        return [Payments.Parameter.Identifier.header.rawValue,
-                Payments.Parameter.Identifier.countrySelect.rawValue,
-                Payments.Parameter.Identifier.countryPayee.rawValue,
-                Payments.Parameter.Identifier.product.rawValue,
-                Payments.Parameter.Identifier.countryTransferNumber.rawValue,
-                Payments.Parameter.Identifier.countryCurrencyAmount.rawValue,
-                Payments.Parameter.Identifier.fee.rawValue,
-                Payments.Parameter.Identifier.sfpAmount.rawValue,
-                Payments.Parameter.Identifier.code.rawValue]
+        let parameters2: [PaymentsParameterRepresentable?] = [
+            
+            response.creditAmountParameter(
+                formatted: normalAmountFormatted,
+                amountIdentifier: .countryPayeeAmount,
+                icon: .local("ic24User"),
+                title: "Сумма зачисления в валюте"
+            ),
+            response.countryOffer(),
+            response.debitAmountParameter(
+                formatted: formattedAmount
+            ),
+            response.countryTransferReferenceNumber(),
+            response.feeParameter(
+                formatted: formattedAmount
+            ),
+            response.otpParameter(),
+            response.dividend(),
+        ]
+        
+        let parameters = (parameters1 + parameters2).compactMap { $0 }
+        
+        return parameters
+    }
+}
+
+private extension TransferResponseData {
+    
+    func countryTransferNumber(
+        group: Payments.Parameter.Group? = nil
+    ) -> Payments.ParameterInfo? {
+        
+        payeeName.map { customerName in
+            
+            let countryTransferNumberId = Payments.Parameter.Identifier.countryPayee.rawValue
+            
+            return .init(
+                .init(
+                    id: countryTransferNumberId,
+                    value: customerName
+                ),
+                icon: .local("ic24User"),
+                title: "Получатель",
+                placement: .feed,
+                group: group
+            )
+        }
+    }
+    
+    func countryTransferReferenceNumber(
+    ) -> Payments.ParameterInfo? {
+        
+        guard
+            let response = self as? TransferAnywayResponseData,
+            let trnReference = response.additionalList.first(where: { $0.fieldName == "trnReference" })
+        else { return nil }
+        
+        let countryTransferNumberId = Payments.Parameter.Identifier.countryTransferNumber.rawValue
+        
+        return .init(
+            .init(
+                id: countryTransferNumberId,
+                value: trnReference.fieldValue
+            ),
+            icon: .local("ic24PercentCommission"),
+            title: trnReference.fieldTitle ?? "Номер перевода",
+            placement: .feed,
+            group: .init(
+                id: "confirm", type: .info
+            )
+        )
+    }
+    
+    func amountParameter(
+        formatted: @escaping (Double, String) -> String?
+    ) -> Payments.ParameterInfo? {
+        
+        guard
+            let amountValue = amount,
+            let currencyPayer = currencyPayer
+        else { return nil }
+        
+        let amount = formatted(amountValue, currencyPayer.description)
+        
+        let amountParameterId = Payments.Parameter.Identifier.countryCurrencyAmount.rawValue
+        
+        return .init(
+            .init(id: amountParameterId, value: amount),
+            icon: .local("ic24Coins"),
+            title: "Сумма перевода",
+            placement: .feed,
+            group: .init(
+                id: "confirm",
+                type: .info
+            )
+        )
+    }
+    
+    func debitAmountParameter(
+        formatted: @escaping (Double) -> String?
+    ) -> Payments.ParameterInfo? {
+        
+        guard
+            let amountCurrency = debitAmount,
+            let amountFormatted = formatted(amountCurrency)
+        else { return nil }
+        
+        let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
+        
+        return .init(
+            .init(
+                id: amountParameterId,
+                value: amountFormatted
+            ),
+            icon: .local("ic24Coins"),
+            title: "Сумма списания",
+            placement: .feed,
+            group: .init(
+                id: "confirm",
+                type: .info
+            )
+        )
+    }
+    
+    func creditAmountParameter(
+        formatted: @escaping (Double, String) -> String?,
+        amountIdentifier: Payments.Parameter.Identifier = .countryCurrencyAmount,
+        icon: Payments.Parameter.Icon = .local("ic24Coins"),
+        title: String = "Сумма перевода"
+    ) -> Payments.ParameterInfo? {
+        
+        guard
+            let amountValue = creditAmount,
+            let currencyPayee = currencyPayee
+        else { return nil }
+        
+        let amount = formatted(amountValue, currencyPayee.description)
+        
+        return .init(
+            .init(
+                id: amountIdentifier.rawValue,
+                value: amount
+            ),
+            icon: icon,
+            title: title,
+            placement: .feed,
+            group: .init(
+                id: "confirm",
+                type: .info
+            )
+        )
+    }
+    
+    func countryOffer() -> Payments.ParameterCheck? {
+        
+        guard
+            let response = self as? TransferAnywayResponseData,
+            let oferta = response.additionalList.first(where: { $0.fieldName == "oferta" }),
+            let title = oferta.fieldTitle,
+            let urlString = oferta.fieldValue
+        else { return nil }
+        
+        let countryOferta = Payments.Parameter.Identifier.countryOffer.rawValue
+        
+        return .init(
+            .init(id: countryOferta, value: "true"),
+            title: title,
+            urlString: urlString,
+            style: .c2bSubscription,
+            mode: .abroad
+        )
+    }
+    
+    func dividend() -> Payments.ParameterCheck? {
+        
+        guard
+            let response = self as? TransferAnywayResponseData,
+            let dividend = response.additionalList.first(where: {
+                $0.typeIdParameterList == "checkbox"
+                && $0.fieldName == "dividend"
+            }),
+            let title = dividend.fieldTitle
+        else { return nil }
+        
+        let countryDividend = Payments.Parameter.Identifier.countryDividend.rawValue
+        
+        return .init(
+            .init(id: countryDividend, value: "true"),
+            title: title,
+            urlString: dividend.fieldValue,
+            style: .c2bSubscription,
+            mode: .normal
+        )
+    }
+    
+    func feeParameter(
+        formatted: @escaping (Double) -> String?
+    ) -> Payments.ParameterInfo? {
+        
+        guard
+            let feeAmount = fee,
+            let feeAmountFormatted = formatted(feeAmount)
+        else { return nil }
+        
+        let feeParameterId = Payments.Parameter.Identifier.fee.rawValue
+        
+        return .init(
+            .init(
+                id: feeParameterId,
+                value: feeAmountFormatted
+            ),
+            icon: .local("ic24PercentCommission"),
+            title: "Комиссия",
+            placement: .feed,
+            group: .init(
+                id: "confirm",
+                type: .info
+            )
+        )
+    }
+    
+    func otpParameter() -> Payments.ParameterCode? {
+        
+        needOTP == true ? .regular : nil
     }
 }
 
 extension Model {
     
-    func reduceDeliveryCurrency(productId: ProductData.ID, splittedCurrency: [String]) -> [Currency] {
+    func reduceDeliveryCurrency(productId: ProductData.ID, splitCurrencies: [String]) -> [Currency] {
         
-        var clearCurrency = splittedCurrency
+        var clearCurrency = splitCurrencies
         clearCurrency.remove(at: 0)
         
-        var deliveryCurrency: [Payments.ParameterAmount.DeliveryCurrency] = []
-        
-        for currency in clearCurrency {
-            
-            if let currency = self.deliveryCurrencyMapping(dataType: currency) {
-                
-                deliveryCurrency.append(currency)
-            }
-        }
+        let deliveryCurrency = clearCurrency.compactMap(deliveryCurrencyMapping(dataType:))
         
         guard let product = self.product(productId: productId),
-              let currencies = deliveryCurrency.first(where: { $0.selectedCurrency.description == product.currency.description })?.currenciesList else {
-            return []
-        }
+              let currencies = deliveryCurrency.first(where: { $0.selectedCurrency.description == product.currency.description })?.currenciesList
+        else { return [] }
         
         return currencies
     }
     
     func reduceFilterCurrencies(filterCurrencies: String?) -> [Currency] {
         
-        var deliveryCurrencyProduct: [Payments.ParameterAmount.DeliveryCurrency]? = []
+        guard var splitCurrencies = filterCurrencies?.components(separatedBy: ";")
+        else { return [] }
         
-        if var splittedCurrency = filterCurrencies?.components(separatedBy: ";") {
-            
-            splittedCurrency.remove(at: 0)
-            
-            for currency in splittedCurrency {
-                
-                if let currency = self.deliveryCurrencyMapping(dataType: currency) {
-                    
-                    deliveryCurrencyProduct?.append(currency)
-                }
-            }
-            
-            if let filterCurrency = deliveryCurrencyProduct?.compactMap({ $0.selectedCurrency }) {
-                
-                return filterCurrency
-            } else {
-                
-                return []
-            }
-            
-        } else {
-            
-            return []
-        }
+        splitCurrencies.remove(at: 0)
+        
+        return splitCurrencies
+            .compactMap(deliveryCurrencyMapping(dataType:))
+            .compactMap({ $0.selectedCurrency })
     }
     
     func deliveryCurrencyMapping(dataType: String) -> Payments.ParameterAmount.DeliveryCurrency? {
         
         let splitCurrency = dataType.components(separatedBy: "=")
         
-        let currincies = splitCurrency[1].components(separatedBy: ",").map({ Currency(description: $0.description)})
+        let currencies = splitCurrency[1]
+            .components(separatedBy: ",")
+            .map(\.description)
+            .map(Currency.init(description:))
         
-        if let firstCurriency = splitCurrency.first {
+        return splitCurrency.first.map { firstCurrency in
             
-            let selectedCurrency = Currency(description: firstCurriency)
-            return Payments.ParameterAmount.DeliveryCurrency(selectedCurrency: selectedCurrency, currenciesList: currincies)
-            
-        } else {
-            
-            return nil
+            let selectedCurrency = Currency(description: firstCurrency)
+            return .init(selectedCurrency: selectedCurrency, currenciesList: currencies)
         }
     }
 }
@@ -939,13 +1103,17 @@ extension Model {
         ) -> Payments.ParameterHeader? {
             
         if case let .template(templateId) = source,
-            let template = templates.first(where: { $0.id == templateId }) {
+           let template = templates.first(where: { $0.id == templateId }) {
             
-            return Payments.ParameterHeader(title: template.name,
-                                                       rightButton: [.init(icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
-                                                                           action: .editName(
-                                                                            .init(oldName: template.name,
-                                                                                  templateID: templateId)))])
+            return Payments.ParameterHeader(
+                title: template.name,
+                rightButton: [
+                    .init(
+                        icon: .init(named: "ic24Edit2") ?? .iconPlaceholder,
+                        action: .editName(
+                            .init(oldName: template.name,
+                                  templateID: templateId)))
+                ])
         } else {
                 
             return nil

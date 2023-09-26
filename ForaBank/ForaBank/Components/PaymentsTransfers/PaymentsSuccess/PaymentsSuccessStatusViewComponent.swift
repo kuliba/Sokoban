@@ -65,6 +65,7 @@ struct PaymentsSuccessStatusView: View {
             .foregroundColor(.iconWhite)
             .frame(width: 88, height: 88)
             .background(Circle().foregroundColor(viewModel.color))
+            .accessibilityIdentifier("SuccessPageStatusIcon")
             
     }
 }

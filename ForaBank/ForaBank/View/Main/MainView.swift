@@ -35,7 +35,7 @@ struct MainView: View {
                             MainSectionPromoView(viewModel: promoViewModel)
                                 .padding(.horizontal, 20)
                                 .padding(.bottom, 32)
-
+                            
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
                                 .padding(.bottom, 32)
@@ -61,7 +61,7 @@ struct MainView: View {
                     
                     Color.clear
                         .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-           
+                    
                 })
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
@@ -76,132 +76,150 @@ struct MainView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case .userAccount(let userAccountViewModel):
-                        UserAccountView(viewModel: userAccountViewModel)
-                        
-                    case .productProfile(let productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
-                        
-                    case .messages(let messagesHistoryViewModel):
-                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                        
-                    case .openDeposit(let depositListViewModel):
-                        OpenDepositDetailView(viewModel: depositListViewModel)
-                    
-                    case .openCard( let authProductsViewModel):
-                        AuthProductsView(viewModel: authProductsViewModel)
-                        
-                    case .openDepositsList(let openDepositViewModel):
-                        OpenDepositView(viewModel: openDepositViewModel)
-                        
-                    case .templates(let templatesViewModel):
-                        TemplatesListView(viewModel: templatesViewModel)
-                    
-                    case let .currencyWallet(viewModel):
-                        CurrencyWalletView(viewModel: viewModel)
-                        
-                    case let .myProducts(myProductsViewModel):
-                        MyProductsView(viewModel: myProductsViewModel)
-                        
-                    case let .country(countyViewModel):
-                        CountryPaymentView(viewModel: countyViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .serviceOperators(let viewModel):
-                        OperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .failedView(let failedViewModel):
-                        QRFailedView(viewModel: failedViewModel)
-
-                    case .searchOperators(let viewModel):
-                        QRSearchOperatorView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                        
-                    case let .payments(paymentsViewModel):
-                        PaymentsView(viewModel: paymentsViewModel)
-                        
-                    case let .operatorView(internetDetailViewModel):
-                        InternetTVDetailsView(viewModel: internetDetailViewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                    case .paymentsServices(let viewModel):
-                        PaymentsServicesOperatorsView(viewModel: viewModel)
-                            .navigationBarTitle("", displayMode: .inline)
-                            .navigationBarBackButtonHidden(true)
-                    }
-                }
+                viewModel.link.map(destinationView)
             }
             
             Color.clear
-                .sheet(item: $viewModel.sheet, content: { sheet in
-                    switch sheet.type {
-                    case .productProfile(let productProfileViewModel):
-                        ProductProfileView(viewModel: productProfileViewModel)
-                        
-                    case .messages(let messagesHistoryViewModel):
-                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                        
-                    case .places(let placesViewModel):
-                        PlacesView(viewModel: placesViewModel)
-                        
-                    case .byPhone(let viewModel):
-                        ContactsView(viewModel: viewModel)
-                    }
-                })
+                .sheet(item: $viewModel.sheet, content: sheetView)
             
             Color.clear
-                .fullScreenCover(item: $viewModel.fullScreenSheet) { item in
-                    
-                    switch item.type {
-                    case let .qrScanner(viewModel):
-                        NavigationView {
-                            
-                            QRView(viewModel: viewModel)
-                                .navigationBarHidden(true)
-                                .navigationBarBackButtonHidden(true)
-                                .edgesIgnoringSafeArea(.all)
-                        }
-                    }
-                }
-               
+                .fullScreenCover(
+                    item: $viewModel.fullScreenSheet,
+                    content: fullScreenSheetView
+                )
         }
         .ignoreKeyboard()
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-
-            switch bottomSheet.type {
-            case let .openAccount(openAccountViewModel):
-                OpenAccountView(viewModel: openAccountViewModel)
-            
-            case let .clientInform(clientInformViewModel):
-                ClientInformView(viewModel: clientInformViewModel)
-            }
-        }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .tabBar(isHidden: $viewModel.isTabBarHidden)
         .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
         .navigationBarTitle("", displayMode: .inline)
-        .navigationBarItems(leading:
-                                UserAccountButton(viewModel: viewModel.userAccountButton),
-                            trailing:
-                                HStack {
-                                    ForEach(viewModel.navButtonsRight) { navButtonViewModel in
-                                        
-                                        NavBarButton(viewModel: navButtonViewModel)
-                                    }
-                                }
+        .navigationBarItems(
+            leading:
+                UserAccountButton(viewModel: viewModel.userAccountButton),
+            trailing:
+                HStack {
+                    ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
+                }
         )
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        link: MainViewModel.Link
+    ) -> some View {
         
+        switch link {
+        case let .userAccount(userAccountViewModel):
+            UserAccountView(viewModel: userAccountViewModel)
+            
+        case let .productProfile(productProfileViewModel):
+            ProductProfileView(viewModel: productProfileViewModel)
+            
+        case let .messages(messagesHistoryViewModel):
+            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            
+        case let .openDeposit(depositListViewModel):
+            OpenDepositDetailView(viewModel: depositListViewModel)
+            
+        case let .openCard(authProductsViewModel):
+            AuthProductsView(viewModel: authProductsViewModel)
+            
+        case let .openDepositsList(openDepositViewModel):
+            OpenDepositView(viewModel: openDepositViewModel)
+            
+        case let .templates(templatesViewModel):
+            TemplatesListView(viewModel: templatesViewModel)
+            
+        case let .currencyWallet(viewModel):
+            CurrencyWalletView(viewModel: viewModel)
+            
+        case let .myProducts(myProductsViewModel):
+            MyProductsView(viewModel: myProductsViewModel)
+            
+        case let .country(countyViewModel):
+            CountryPaymentView(viewModel: countyViewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .serviceOperators(viewModel):
+            OperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .failedView(failedViewModel):
+            QRFailedView(viewModel: failedViewModel)
+            
+        case let .searchOperators(viewModel):
+            QRSearchOperatorView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+            
+        case let .payments(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
+            
+        case let .operatorView(internetDetailViewModel):
+            InternetTVDetailsView(viewModel: internetDetailViewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .edgesIgnoringSafeArea(.all)
+            
+        case let .paymentsServices(viewModel):
+            PaymentsServicesOperatorsView(viewModel: viewModel)
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        _ sheet: MainViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .productProfile(productProfileViewModel):
+            ProductProfileView(viewModel: productProfileViewModel)
+            
+        case let .messages(messagesHistoryViewModel):
+            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            
+        case let .places(placesViewModel):
+            PlacesView(viewModel: placesViewModel)
+            
+        case let .byPhone(viewModel):
+            ContactsView(viewModel: viewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetView(
+        bottomSheet: MainViewModel.BottomSheet
+    ) -> some View {
+        
+        switch bottomSheet.type {
+        case let .openAccount(openAccountViewModel):
+            OpenAccountView(viewModel: openAccountViewModel)
+            
+        case let .clientInform(clientInformViewModel):
+            ClientInformView(viewModel: clientInformViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenSheetView(
+        fullScreenSheet: MainViewModel.FullScreenSheet
+    ) -> some View {
+        
+        switch fullScreenSheet.type {
+        case let .qrScanner(viewModel):
+            NavigationView {
+                
+                QRView(viewModel: viewModel)
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
+            }
+        }
     }
 }
 

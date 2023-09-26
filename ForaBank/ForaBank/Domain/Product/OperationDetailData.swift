@@ -89,7 +89,6 @@ struct OperationDetailData: Codable, Equatable {
     let printData: PrintMapData?
     let paymentMethod: PaymentMethod?
     
-    
     enum PaymentMethod: String, Codable, Unknownable {
     
         case cash = "Наличные"
@@ -472,5 +471,100 @@ extension OperationDetailData {
             self.payeeCardNumber,
             self.payeeAccountNumber
         ].compactMap { $0 }.first
+    }
+}
+
+extension OperationDetailData {
+    
+    static func stub(
+        cardId: Int? = 1,
+        amount: Double = 100,
+        paymentTemplateId: Int? = 1,
+        transferEnum: OperationDetailData.TransferEnum? = .accountClose,
+        payeeFullName: String? = nil,
+        payeePhone: String? = nil,
+        payeeAccountNumber: String = "payeeAccountNumber"
+    ) -> OperationDetailData {
+        
+        return .init(
+            oktmo: nil,
+            account: nil,
+            accountTitle: nil,
+            amount: amount,
+            billDate: nil,
+            billNumber: nil,
+            claimId: "",
+            comment: nil,
+            countryName: nil,
+            currencyAmount: "",
+            dateForDetail: "",
+            division: nil,
+            driverLicense: nil,
+            externalTransferType: .individual,
+            isForaBank: false,
+            isTrafficPoliceService: false,
+            memberId: nil,
+            operation: nil,
+            payeeAccountId: nil,
+            payeeAccountNumber: payeeAccountNumber,
+            payeeAmount: nil,
+            payeeBankBIC: nil,
+            payeeBankCorrAccount: nil,
+            payeeBankName: nil,
+            payeeCardId: nil,
+            payeeCardNumber: nil,
+            payeeCurrency: nil,
+            payeeFirstName: nil,
+            payeeFullName: payeeFullName,
+            payeeINN: nil,
+            payeeKPP: nil,
+            payeeMiddleName: nil,
+            payeePhone: payeePhone,
+            payeeSurName: nil,
+            payerAccountId: 10,
+            payerAccountNumber: "payerAccountNumber",
+            payerAddress: "",
+            payerAmount: 11,
+            payerCardId: cardId,
+            payerCardNumber: "payerCardNumber",
+            payerCurrency: "",
+            payerDocument: nil,
+            payerFee: 10,
+            payerFirstName: "",
+            payerFullName: "",
+            payerINN: nil,
+            payerMiddleName: nil,
+            payerPhone: nil,
+            payerSurName: nil,
+            paymentOperationDetailId: 1,
+            paymentTemplateId: paymentTemplateId,
+            period: nil,
+            printFormType: .addressing_cash,
+            provider: nil,
+            puref: nil,
+            regCert: nil,
+            requestDate: "",
+            responseDate: "",
+            returned: nil,
+            transferDate: "",
+            transferEnum: transferEnum,
+            transferNumber: nil,
+            transferReference: nil,
+            cursivePayerAmount: nil,
+            cursivePayeeAmount: nil,
+            cursiveAmount: nil,
+            serviceSelect: nil,
+            serviceName: nil,
+            merchantSubName: nil,
+            merchantIcon: nil,
+            operationStatus: nil,
+            shopLink: nil,
+            payeeCheckAccount: nil,
+            depositNumber: nil,
+            depositDateOpen: nil,
+            currencyRate: nil,
+            mcc: nil,
+            printData: nil,
+            paymentMethod: nil)
     }
 }

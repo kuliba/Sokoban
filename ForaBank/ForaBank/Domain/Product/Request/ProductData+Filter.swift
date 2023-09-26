@@ -18,7 +18,7 @@ extension ProductData {
         
         var rules: [ProductDataFilterRule]
         
-        func filterredProducts(_ products: [ProductData]) -> [ProductData] {
+        func filteredProducts(_ products: [ProductData]) -> [ProductData] {
             
             products.filter { productData in
                 
@@ -37,10 +37,10 @@ extension ProductData {
             }
         }
         
-        func filterredProductsTypes(_ products: [ProductData]) -> [ProductType] {
+        func filteredProductsTypes(_ products: [ProductData]) -> [ProductType] {
             
-            let filterredProducts = filterredProducts(products)
-            let uniqueTypes = Set(filterredProducts.map({ $0.productType }))
+            let filteredProducts = filteredProducts(products)
+            let uniqueTypes = Set(filteredProducts.map({ $0.productType }))
             let sortedTypes = Array(uniqueTypes).sorted(by: { $0.order < $1.order })
             
             return sortedTypes
@@ -143,6 +143,23 @@ extension ProductData.Filter {
 
 extension ProductData.Filter {
     
+    struct ProductActiveRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            switch productData {
+            case let productCard as ProductCardData:
+                return !productCard.isBlocked
+                
+            case let productAccount as ProductAccountData:
+                return productAccount.status == .notBlocked
+                
+            default:
+                return nil
+            }
+        }
+    }
+    
     struct CardActiveRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
@@ -177,7 +194,7 @@ extension ProductData.Filter {
     }
     
     
-    struct CardAdditionalNotOwnedRetrictedRule: ProductDataFilterRule {
+    struct CardAdditionalNotOwnedRestrictedRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -194,7 +211,7 @@ extension ProductData.Filter {
         }
     }
     
-    struct CardAdditionalOwnedRetrictedRule: ProductDataFilterRule {
+    struct CardAdditionalOwnedRestrictedRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
             
@@ -264,7 +281,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     static let generalTo = ProductData.Filter(
@@ -272,7 +289,7 @@ extension ProductData.Filter  {
                 ProductTypeRule([.card, .account]),
                 CurrencyRule([.rub]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     // TODO: преобразовать filter в Data Type и добавить тесты
@@ -281,7 +298,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     //MARK: Currency Wallet
@@ -290,7 +307,7 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
     
@@ -298,7 +315,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule(),
                 DemandDepositRule()])
     
@@ -308,14 +325,14 @@ extension ProductData.Filter  {
         rules: [DebitRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     static let meToMeTo = ProductData.Filter(
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
 
     //MARK: Close Account Base
@@ -330,7 +347,7 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
     
     
@@ -346,6 +363,28 @@ extension ProductData.Filter  {
         rules: [CreditRule(),
                 ProductTypeRule([.card, .account, .deposit]),
                 CardActiveRule(),
-                CardAdditionalNotOwnedRetrictedRule(),
+                CardAdditionalNotOwnedRestrictedRule(),
                 AccountActiveRule()])
+    
+    static func c2bFilter(
+        productTypes: [ProductType],
+        currencies: [Currency],
+        additional: Bool
+    ) -> ProductData.Filter {
+        
+        var rules = [ProductDataFilterRule]()
+
+        rules.append(ProductData.Filter.ProductTypeRule(Set(productTypes)))
+        rules.append(ProductData.Filter.CurrencyRule(Set(currencies)))
+        
+        if additional == false {
+            
+            rules.append(ProductData.Filter.CardAdditionalOwnedRestrictedRule())
+            rules.append(ProductData.Filter.CardAdditionalNotOwnedRestrictedRule())
+        }
+        
+        rules.append(ProductData.Filter.ProductActiveRule())
+        
+        return .init(rules: rules)
+    }
 }

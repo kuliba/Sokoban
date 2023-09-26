@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LinkableText
 import SwiftUI
 
 // MARK: - ViewModel
@@ -14,69 +15,64 @@ extension PaymentsCheckView {
     
     class ViewModel: PaymentsParameterViewModel, ObservableObject {
         
-        @Published var isChecked: Bool
+        @Published private(set) var isChecked: Bool
+        
         let title: String
-        let link: LinkViewModel?
+        let urlString: String?
         let style: Style
         let mode: Mode
-        let abroadFamiliarizedTitle = "ознакомлен"
         
-        var parameterCheck: Payments.ParameterCheck? { source as? Payments.ParameterCheck }
+        var parameterCheck: Payments.ParameterCheck? {
+            source as? Payments.ParameterCheck
+        }
         
         override var isValid: Bool {
             
-            guard let parameterCheck = parameterCheck else {
+            guard let parameterCheck else {
                 return true
             }
             
             switch parameterCheck.mode {
-            case .abroad: return isChecked
-            default: return true
+            case .abroad:     return isChecked
+            case .requisites: return true
+            default:          return isChecked
             }
         }
         
-        init(_ isChecked: Bool, title: String, link: LinkViewModel?, style: Style, mode: Mode = .normal, source: PaymentsParameterRepresentable = Payments.ParameterMock()) {
+        init(with parameterCheck: Payments.ParameterCheck) {
             
-            self.isChecked = isChecked
-            self.title = title
-            self.link = link
-            self.style = style
-            self.mode = mode
-            super.init(source: source)
+            self.isChecked = parameterCheck.value
+            self.title = parameterCheck.title
+            self.urlString = parameterCheck.urlString
+            self.style = .init(with: parameterCheck)
+            self.mode = .init(with: parameterCheck)
+            
+            super.init(source: parameterCheck)
+            
+            bind()
         }
         
-        convenience init(with parameterCheck: Payments.ParameterCheck) {
+        func toggleCheckbox() {
             
-            self.init(parameterCheck.value, title: parameterCheck.title, link: .init(with: parameterCheck), style: .init(with: parameterCheck), mode: .init(with: parameterCheck), source: parameterCheck)
-            bind()
+            DispatchQueue.main.async {
+                
+                self.isChecked.toggle()
+            }
+        }
+        
+        func setCheckbox(to value: Bool) {
+            
+            DispatchQueue.main.async {
+                
+                self.isChecked = value
+            }
         }
     }
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension PaymentsCheckView.ViewModel {
-    
-    struct LinkViewModel {
-        
-        let title: String
-        let url: URL
-        
-        init(title: String, url: URL) {
-            
-            self.title = title
-            self.url = url
-        }
-        
-        init?(with parameter: Payments.ParameterCheck) {
-            
-            guard let link = parameter.link else {
-                return nil
-            }
-            
-            self.init(title: link.title, url: link.url)
-        }
-    }
     
     enum Style {
         
@@ -89,7 +85,7 @@ extension PaymentsCheckView.ViewModel {
             case .regular:
                 self = .regular
                 
-            case .c2bSubscribtion:
+            case .c2bSubscription:
                 self = .c2bSubscription
             }
         }
@@ -97,14 +93,18 @@ extension PaymentsCheckView.ViewModel {
     
     enum Mode {
         
-        case normal
         case abroad
+        case requisites
+        case normal
         
         init(with parameter: Payments.ParameterCheck) {
             
             switch parameter.mode {
             case .abroad:
                 self = .abroad
+                
+            case .requisites:
+                self = .requisites
                 
             case .normal:
                 self = .normal
@@ -113,7 +113,7 @@ extension PaymentsCheckView.ViewModel {
     }
 }
 
-//MARK: - Binding
+// MARK: - Binding
 
 extension PaymentsCheckView.ViewModel {
     
@@ -129,7 +129,8 @@ extension PaymentsCheckView.ViewModel {
     }
 }
 
-//MARK: - Actions
+// MARK: - Actions
+
 extension PaymentsParameterViewModelAction {
     
     enum CheckBox {
@@ -145,96 +146,50 @@ extension PaymentsParameterViewModelAction {
 
 struct PaymentsCheckView: View {
     
-    @ObservedObject var viewModel: ViewModel
     @Environment(\.openURL) var openURL
+    
+    @ObservedObject var viewModel: ViewModel
     
     var titleColor: Color {
         
         switch viewModel.style {
-        case .regular: return .textSecondary
+        case .regular:         return .textSecondary
         case .c2bSubscription: return .textPlaceholder
         }
     }
     
-    var checkBoxActiveColor: Color {
-        
-        switch viewModel.style {
-        case .regular: return .systemColorActive
-        case .c2bSubscription: return .iconGray
-        }
-    }
-
     var body: some View {
         
-        switch viewModel.mode {
-        case .normal:
-            VStack(alignment: .leading, spacing: 0) {
-                
-                HStack(spacing: 18) {
-                    
-                    CheckBoxView(isChecked: $viewModel.isChecked, activeColor: checkBoxActiveColor)
-                    
-                    Text(viewModel.title)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(titleColor)
-      
-                    Spacer()
-                }
-                .onTapGesture {
-                    
-                    viewModel.isChecked.toggle()
-                }
-                
-                if let link = viewModel.link {
-                    
-                    Text(link.title)
-                        .underline()
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.textSecondary)
-                        .padding(.leading, 42)
-                        .onTapGesture {
-                            openURL(link.url)
-                        }
-                }
-            }
-        case .abroad:
-         
-            VStack(alignment: .leading, spacing: 0) {
-                
-                HStack(spacing: 18) {
-                    
-                    CheckBoxView(isChecked: $viewModel.isChecked, activeColor: checkBoxActiveColor)
-                    
-                    HStack(spacing: 8) {
-                        
-                        Text(viewModel.title)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textPlaceholder)
-
-                        if let link = viewModel.link {
-                            
-                            Text(link.title)
-                                .underline()
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textSecondary)
-                                .onTapGesture {
-                                    openURL(link.url)
-                                }
-                        }
-                        
-                        Text(viewModel.abroadFamiliarizedTitle)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textPlaceholder)
-                    }
-      
-                    Spacer()
-                }
-                .onTapGesture {
-                    
-                    viewModel.isChecked.toggle()
-                }
-            }
+        HStack(alignment: .top, spacing: 18) {
+            
+            checkBoxView()
+            linkableTextView()
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+    
+    private func checkBoxView() -> some View {
+        
+        CheckBoxView(
+            isChecked: .init(
+                get: { viewModel.isChecked },
+                set: { viewModel.setCheckbox(to: $0) }
+            ),
+            activeColor: .systemColorActive
+        )
+        .onTapGesture(perform: viewModel.toggleCheckbox)
+    }
+    
+    private func linkableTextView() -> some View {
+        
+        LinkableTextView(
+            title: viewModel.title,
+            urlString: viewModel.urlString,
+            handleURL: { openURL($0) }
+        )
+        .font(.textBodyMR14200())
+        .foregroundColor(.textPlaceholder)
+        .accentColor(.textSecondary)
     }
 }
 
@@ -243,9 +198,8 @@ extension PaymentsCheckView {
     struct CheckBoxView: View {
         
         @Binding var isChecked: Bool
-        let activeColor: Color
         
-        private var srokeStyle: StrokeStyle { StrokeStyle(lineWidth: 1.25, lineCap: .round, dash: [123], dashPhase: isChecked == false ? 0 : 70) }
+        let activeColor: Color
         
         var body: some View {
             
@@ -253,7 +207,7 @@ extension PaymentsCheckView {
                 
                 RoundedRectangle(cornerRadius: 3)
                     .trim(from: 0, to: 1)
-                    .stroke(style: srokeStyle)
+                    .stroke(style: strokeStyle)
                     .foregroundColor(isChecked ? activeColor : .iconGray)
                     .frame(width: 18, height: 18)
                 
@@ -267,6 +221,16 @@ extension PaymentsCheckView {
                 }
             }
             .frame(width: 24, height: 24)
+        }
+        
+        private var strokeStyle: StrokeStyle {
+            
+            .init(
+                lineWidth: 1.25,
+                lineCap: .round,
+                dash: [123],
+                dashPhase: isChecked == false ? 0 : 70
+            )
         }
     }
 }
@@ -292,6 +256,25 @@ struct CheckMark: Shape {
     }
 }
 
+// MARK: - Adapter
+
+private extension LinkableTextView {
+    
+    init(
+        title: String,
+        urlString: String?,
+        tag: (String, String) = ("<u>", "</u>"),
+        handleURL: @escaping (URL) -> Void
+    ) {
+        self.init(
+            taggedText: title,
+            urlString: urlString ?? " ",
+            tag: tag,
+            handleURL: handleURL
+        )
+    }
+}
+
 // MARK: - Preview
 
 struct PaymentsCheckBoxView_Previews: PreviewProvider {
@@ -300,33 +283,75 @@ struct PaymentsCheckBoxView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsCheckView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 80))
-                .padding()
+            previewsGroup()
             
-            PaymentsCheckView(viewModel: .init(false, title: "Оплата ЖКХ", link: nil, style: .regular))
-                .previewLayout(.fixed(width: 375, height: 80))
-                .padding()
-            
-            PaymentsCheckView(viewModel: .init(true, title: "C договором", link: .init(title: "оферты", url: URL(string: "https://www.google.com")!), style: .regular, mode: .abroad))
-                .previewLayout(.fixed(width: 375, height: 80))
-                .padding()
-            
-            PaymentsCheckView(viewModel: .init(false, title: "Включить переводы через СБП, ", link: .init(title: "принять условия обслуживания", url: URL(string: "https://www.google.com")!) ,style: .c2bSubscription))
-                .previewLayout(.fixed(width: 375, height: 100))
-                .padding()
-            
-            PaymentsCheckView(viewModel: .init(true, title: "Включить переводы через СБП, ", link: .init(title: "принять условия обслуживания", url: URL(string: "https://www.google.com")!) ,style: .c2bSubscription))
-                .previewLayout(.fixed(width: 375, height: 100))
-                .padding()
+            VStack(content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
         }
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            PaymentsCheckView(viewModel: .sample)
+            PaymentsCheckView(viewModel: .sampleUnchecked)
+            
+            PaymentsCheckView(viewModel: .preview(
+                isChecked: true,
+                title: "C договором",
+                linkTitle: "оферты",
+                mode: .abroad
+            ))
+            
+            PaymentsCheckView(viewModel: .spb(isChecked: true))
+            PaymentsCheckView(viewModel: .spb(isChecked: false))
+            
+            PaymentsCheckView(viewModel: .preview(isChecked: true))
+            PaymentsCheckView(viewModel: .preview(isChecked: false))
+            PaymentsCheckView(viewModel: .preview(isChecked: false, style: .c2bSubscription))
+            PaymentsCheckView(viewModel: .preview(isChecked: false, mode: .abroad))
+        }
+        .padding(.horizontal)
     }
 }
 
-//MARK: - Sample Content
+// MARK: - Sample Content
 
 extension PaymentsCheckView.ViewModel {
     
-    static let sample = PaymentsCheckView.ViewModel(true, title: "Оплата ЖКХ", link: nil, style: .regular)
-
+    static let sample = preview(isChecked: true, title: "Оплата ЖКХ")
+    static let sampleUnchecked = preview(isChecked: false, title: "Оплата ЖКХ")
+    
+    static func spb(
+        isChecked: Bool
+    ) -> PaymentsCheckView.ViewModel {
+        
+        preview(
+            isChecked: isChecked,
+            title: "Включить переводы через СБП, ",
+            linkTitle: "принять условия обслуживания",
+            style: .c2bSubscription
+        )
+    }
+    
+    static func preview(
+        isChecked: Bool,
+        title: String = "Подтверждаю, что источником перевода не являются средства от полученных дивидендов (распределения прибыли) от российских АО, ООО, хозяйственных товариществ и производственных кооперативов",
+        linkTitle: String? = nil,
+        style: Payments.ParameterCheck.Style = .regular,
+        mode: Payments.ParameterCheck.Mode = .normal
+    ) -> PaymentsCheckView.ViewModel {
+        
+        .init(
+            with: .init(
+                .init(id: "checkBoxID", value: "\(isChecked)"),
+                title: title,
+                urlString: "https://www.google.com",
+                style: style,
+                mode: mode,
+                group: nil
+            )
+        )
+    }
 }

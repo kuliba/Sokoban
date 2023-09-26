@@ -9,6 +9,59 @@ import Foundation
 
 extension Model {
     
+    func handleC2BScenario<Command: ServerCommand>(
+        makeCommand: @escaping (String) -> Command,
+        map: @escaping (Command.Response.Payload) -> QRScenarioData,
+        consume: @escaping (QRScenarioData) throws -> Void
+    ) async throws {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = makeCommand(token)
+
+        let response = try await serverAgent.executeCommand(command: command)
+        
+        try consume(map(response))
+    }
+    
+    internal func c2BParameters(
+        data: QRScenarioData,
+        parameters: [PaymentsParameterRepresentable],
+        visible: [Payments.Operation.Step.Parameter.ID]
+    ) throws -> (parameters: [PaymentsParameterRepresentable], visible: [Payments.Operation.Step.Parameter.ID]) {
+        
+        var parameters = [PaymentsParameterRepresentable]()
+        var visible = [Payments.Operation.Step.Parameter.ID]()
+        
+        parameters.append(contentsOf: try self.paymentsC2BReduceScenarioData(
+            data: data.parameters,
+            c2b: .default
+        ))
+        
+        visible = parameters.map { $0.id }
+        
+        parameters.append(Payments.ParameterDataValue(
+            parameter: .init(
+                id: Payments.Parameter.Identifier.c2bQrcId.rawValue,
+                value: data.qrcId
+            )
+        ))
+        
+        if let amount = parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue }),
+           amount.value == nil {
+            
+            parameters.append(Payments.ParameterDataValue(parameter: .init(
+                id: Payments.Parameter.Identifier.c2bIsAmountComplete.rawValue,
+                value: "false"
+            )))
+        }
+        
+        return (parameters, visible)
+    }
+    
     func paymentsStepC2B(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
         
         switch stepIndex {
@@ -23,23 +76,32 @@ extension Model {
                     throw Payments.Error.notAuthorized
                 }
                 
-                let command = ServerCommands.SBPController.GetScenarioQRData(token: token, payload: .init(QRLink: url.absoluteString))
-                let response = try await serverAgent.executeCommand(command: command)
-                
-                var parameters = try paymentsC2BReduceScenarioData(data: response.parameters, c2b: .default)
-                let visible = parameters.map{ $0.id }
-                
-                parameters.append(Payments.ParameterDataValue(parameter: .init(id: Payments.Parameter.Identifier.c2bQrcId.rawValue, value: response.qrcId)))
-                
-                let amount = response.parameters.first(where: { $0.id == Payments.Parameter.Identifier.amount.rawValue })
-                
-                if let amount = amount?.parameter as? PaymentParameterAmount,
-                   amount.value == nil {
+                let makeCommand = { (token: String) in
                     
-                    parameters.append(Payments.ParameterDataValue(parameter: .init(
-                        id: Payments.Parameter.Identifier.c2bIsAmountComplete.rawValue,
-                        value: "false"))
+                    ServerCommands.SBPController.GetScenarioQRData(
+                        token: token,
+                        payload: .init(
+                            QRLink: url.absoluteString
+                        ))
+                }
+                
+                var parameters = [PaymentsParameterRepresentable]()
+                var visible = [Payments.Operation.Step.Parameter.ID]()
+                
+                try await handleC2BScenario(makeCommand: makeCommand) { response in
+                    
+                    response
+                    
+                } consume: { data in
+                    
+                    let (newParameters, visibleParam) = try self.c2BParameters(
+                        data: data,
+                        parameters: parameters,
+                        visible: visible
                     )
+                    
+                    parameters = newParameters
+                    visible = visibleParam
                 }
                 
                 var required = [Payments.Parameter.ID]()
@@ -415,34 +477,26 @@ extension Payments.ParameterProduct {
     
     init(with data: PaymentParameterProductSelect, firstProduct: (ProductData.Filter) -> ProductData?) throws {
         
-        var rules = [ProductDataFilterRule]()
-        rules.append(ProductData.Filter.ProductTypeRule(Set(data.filter.productTypes)))
-        rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
-        if data.filter.additional == false {
-            
-            rules.append(ProductData.Filter.CardAdditionalOwnedRetrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRetrictedRule())
-        }
+        let filter = ProductData.Filter.c2bFilter(
+            productTypes: data.filter.productTypes,
+            currencies: data.filter.currencies,
+            additional: data.filter.additional
+        )
         
-        let filter = ProductData.Filter(rules: rules)
         guard let product = firstProduct(filter) else {
             throw Payments.Error.unableCreateRepresentable(Payments.Parameter.Identifier.product.rawValue)
         }
+        
         self.init(value: String(product.id), title: data.title, filter: filter, isEditable: true)
     }
     
     init(with data: PaymentParameterProductSelect, product: ProductData) {
         
-        var rules = [ProductDataFilterRule]()
-        rules.append(ProductData.Filter.ProductTypeRule(Set(data.filter.productTypes)))
-        rules.append(ProductData.Filter.CurrencyRule(Set(data.filter.currencies)))
-        if data.filter.additional == false {
-            
-            rules.append(ProductData.Filter.CardAdditionalOwnedRetrictedRule())
-            rules.append(ProductData.Filter.CardAdditionalNotOwnedRetrictedRule())
-        }
-        
-        let filter = ProductData.Filter(rules: rules)
+        let filter = ProductData.Filter.c2bFilter(
+            productTypes: data.filter.productTypes,
+            currencies: data.filter.currencies,
+            additional: data.filter.additional
+        )
 
         self.init(value: String(product.id), title: data.title, filter: filter, isEditable: true)
     }
@@ -452,7 +506,12 @@ extension Payments.ParameterCheck {
     
     init(with data: PaymentParameterCheck) {
         
-        self.init(.init(id: data.id, value: String(data.value)), title: data.link.title, link: .init(title: data.link.subtitle, url: data.link.url), style: .c2bSubscribtion)
+        self.init(
+            .init(id: data.id, value: String(data.value)),
+            title: data.link.title,
+            urlString: data.link.url.absoluteString,
+            style: .c2bSubscription
+        )
     }
 }
 

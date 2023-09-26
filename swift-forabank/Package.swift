@@ -11,7 +11,9 @@ let package = Package(
     products: [
         .bindPublicKeyWithEventID,
         .cvvPin,
-        .landingComponents,
+        .landingComponentsOld,
+        .landingEngineOld,
+        .loadableModel,
         .loadableResourceComponent,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
@@ -27,17 +29,28 @@ let package = Package(
         // services
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        // landing
+        .codableLanding,
+        .landingMapping,
+        .landingUIComponent,
+        // UI
+        .linkableText
     ],
     dependencies: [
         .combineSchedulers,
         .customDump,
+        .tagged,
+        .shimmer,
     ],
     targets: [
         .bindPublicKeyWithEventID,
         .bindPublicKeyWithEventIDTests,
         .cvvPin,
         .cvvPinTests,
-        .landingComponents,
+        .landingComponentsOld,
+        .landingEngineOld,
+        .loadableModel,
+        .loadableModelTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
         .manageSubscriptionsUI,
@@ -67,6 +80,15 @@ let package = Package(
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        // landing
+        .codableLanding,
+        .landingMapping,
+        .landingMappingTests,
+        .landingUIComponent,
+        .landingUIComponentTests,
+        // UI
+        .linkableText,
+        .linkableTextTests,
     ]
 )
 
@@ -100,10 +122,24 @@ private extension Product {
         ]
     )
     
-    static let landingComponents = library(
-        name: .landingComponents,
+    static let landingComponentsOld = library(
+        name: .landingComponentsOld,
         targets: [
-            .landingComponents,
+            .landingComponentsOld,
+        ]
+    )
+    
+    static let landingEngineOld = library(
+        name: .landingEngineOld,
+        targets: [
+            .landingEngineOld,
+        ]
+    )
+    
+    static let loadableModel = library(
+        name: .loadableModel,
+        targets: [
+            .loadableModel,
         ]
     )
     
@@ -190,6 +226,39 @@ private extension Product {
             .userModel
         ]
     )
+    
+    // landing
+    
+    static let codableLanding = library(
+        name: .codableLanding,
+        targets: [
+            .codableLanding
+        ]
+    )
+    
+    static let landingMapping = library(
+        name: .landingMapping,
+        targets: [
+            .landingMapping
+        ]
+    )
+
+    static let landingUIComponent = library(
+        name: .landingUIComponent,
+        targets: [
+            .landingUIComponent
+        ]
+    )
+    
+    // MARK: - UI
+    
+    static let linkableText = library(
+        name: .linkableText,
+        targets: [
+            .linkableText
+        ]
+    )
+    
 }
 
 private extension Target {
@@ -257,9 +326,35 @@ private extension Target {
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
     )
     
-    static let landingComponents = target(
-        name: .landingComponents,
-        dependencies: []
+    static let landingComponentsOld = target(
+        name: .landingComponentsOld,
+        dependencies: [],
+        resources: [.process("Preview")]
+    )
+    
+    static let landingEngineOld = target(
+        name: .landingEngineOld,
+        dependencies: [
+            .landingComponentsOld
+        ]
+    )
+    
+    static let loadableModel = target(
+        name: .loadableModel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableModelTests = testTarget(
+        name: .loadableModelTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableModel,
+        ]
     )
     
     static let loadableResourceComponent = target(
@@ -420,6 +515,67 @@ private extension Target {
             .userModel
         ]
     )
+    
+    // landing
+    
+    static let codableLanding = target(
+        name: .codableLanding,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.codableLanding)"
+    )
+    static let landingMapping = target(
+        name: .landingMapping,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.landingMapping)"
+    )
+    static let landingMappingTests = testTarget(
+        name: .landingMappingTests,
+        dependencies: [
+            // external
+            .customDump,
+            // internal modules
+            .landingMapping,
+        ],
+        path: "Tests/Landing/\(String.landingMappingTests)"
+    )
+    static let landingUIComponent = target(
+        name: .landingUIComponent,
+        dependencies: [
+            .combineSchedulers,
+            .tagged,
+            .shimmer,
+        ],
+        path: "Sources/Landing/\(String.landingUIComponent)"
+    )
+    static let landingUIComponentTests = testTarget(
+        name: .landingUIComponentTests,
+        dependencies: [
+            // internal modules
+            .landingUIComponent,
+        ],
+        path: "Tests/Landing/\(String.landingUIComponentTests)"
+    )
+    
+    // MARK: - UI
+    
+    static let linkableText = target(
+        name: .linkableText,
+        path: "Sources/UI/\(String.linkableText)"
+    )
+    static let linkableTextTests = testTarget(
+        name: .linkableTextTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .linkableText,
+        ],
+        path: "Tests/UI/\(String.linkableTextTests)"
+    )
 }
 
 private extension Target.Dependency {
@@ -440,8 +596,12 @@ private extension Target.Dependency {
         name: .getProcessingSessionCodeService
     )
     
-    static let landingComponents = byName(
-        name: .landingComponents
+    static let landingComponentsOld = byName(
+        name: .landingComponentsOld
+    )
+    
+    static let loadableModel = byName(
+        name: .loadableModel
     )
     
     static let loadableResourceComponent = byName(
@@ -483,6 +643,23 @@ private extension Target.Dependency {
     static let userModel = byName(
         name: .userModel
     )
+    
+    // landing
+    static let codableLanding = byName(
+        name: .codableLanding
+    )
+    static let landingMapping = byName(
+        name: .landingMapping
+    )
+    static let landingUIComponent = byName(
+        name: .landingUIComponent
+    )
+    
+    // MARK: - UI
+    
+    static let linkableText = byName(
+        name: .linkableText
+    )
 }
 
 private extension String {
@@ -499,7 +676,11 @@ private extension String {
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
     
-    static let landingComponents = "LandingComponents"
+    static let landingComponentsOld = "LandingComponentsOld"
+    static let landingEngineOld = "LandingEngineOld"
+    
+    static let loadableModel = "LoadableModel"
+    static let loadableModelTests = "LoadableModelTests"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
@@ -539,6 +720,18 @@ private extension String {
     
     static let userModel = "UserModel"
     static let userModelTests = "UserModelTests"
+    
+    // landing
+    static let codableLanding = "CodableLanding"
+    static let landingMapping = "LandingMapping"
+    static let landingMappingTests = "LandingMappingTests"
+    static let landingUIComponent = "LandingUIComponent"
+    static let landingUIComponentTests = "LandingUIComponentTests"
+
+    // MARK: - UI
+    
+    static let linkableText = "LinkableText"
+    static let linkableTextTests = "LinkableTextTests"
 }
 
 // MARK: - Point-Free
@@ -573,6 +766,10 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_tagged,
         from: .init(0, 7, 0)
     )
+    static let shimmer = Package.Dependency.package(
+        url: .swift_shimmer_path,
+        from: .init(1, 0, 0)
+    )
 }
 
 private extension Target.Dependency {
@@ -605,6 +802,10 @@ private extension Target.Dependency {
         name: .tagged,
         package: .swift_tagged
     )
+    static let shimmer = product(
+        name: .shimmer,
+        package: .swift_shimmer
+    )
 }
 
 private extension String {
@@ -631,4 +832,8 @@ private extension String {
     
     static let tagged = "Tagged"
     static let swift_tagged = "swift-tagged"
+    
+    static let shimmer = "Shimmer"
+    static let swift_shimmer = "SwiftUI-Shimmer"
+    static let swift_shimmer_path = "https://github.com/markiv/SwiftUI-Shimmer"
 }
