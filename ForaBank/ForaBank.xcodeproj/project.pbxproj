@@ -1590,6 +1590,7 @@
 		C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */; };
 		C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */; };
 		C1851C322AC2AF8C00DD4645 /* PaymentStickerViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1851C312AC2AF8C00DD4645 /* PaymentStickerViewComponent.swift */; };
+		C1851C342AC2E81000DD4645 /* PaymentHintViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1851C332AC2E81000DD4645 /* PaymentHintViewComponent.swift */; };
 		C18D25F62A25A91400DF5643 /* CircleAnimatableAnge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F52A25A91400DF5643 /* CircleAnimatableAnge.swift */; };
 		C18D25F82A25AC5A00DF5643 /* StarShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F72A25AC5A00DF5643 /* StarShape.swift */; };
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
@@ -3521,6 +3522,7 @@
 		C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsTests.swift; sourceTree = "<group>"; };
 		C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDepositDataTests.swift; sourceTree = "<group>"; };
 		C1851C312AC2AF8C00DD4645 /* PaymentStickerViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerViewComponent.swift; sourceTree = "<group>"; };
+		C1851C332AC2E81000DD4645 /* PaymentHintViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHintViewComponent.swift; sourceTree = "<group>"; };
 		C18D25F52A25A91400DF5643 /* CircleAnimatableAnge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleAnimatableAnge.swift; sourceTree = "<group>"; };
 		C18D25F72A25AC5A00DF5643 /* StarShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarShape.swift; sourceTree = "<group>"; };
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
@@ -6691,6 +6693,7 @@
 				0CD7CE9628DE5AD500B52CF9 /* SwipeActionView.swift */,
 				C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */,
 				C1851C312AC2AF8C00DD4645 /* PaymentStickerViewComponent.swift */,
+				C1851C332AC2E81000DD4645 /* PaymentHintViewComponent.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -10993,6 +10996,7 @@
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				0C1877B328776449004F7699 /* CurrencyWalletData.swift in Sources */,
 				83FAD89229CDB4F400474B06 /* PaymentsServicesOperatorItemView.swift in Sources */,
+				C1851C342AC2E81000DD4645 /* PaymentHintViewComponent.swift in Sources */,
 				2A45AF752AA729D500762DEE /* RequestFactory+createLandingRequest.swift in Sources */,
 				509EE0DB285F820E002281BF /* View+Extension.swift in Sources */,
 				83B6F3D62AB1EF0C00A4C427 /* LandingToCodable.swift in Sources */,
