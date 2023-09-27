@@ -528,6 +528,8 @@
 		2AEDAD5C29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */; };
 		2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */; };
 		2AF177512AC4780600D100DD /* CvvPinService+CertificateClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177502AC4780600D100DD /* CvvPinService+CertificateClient.swift */; };
+		2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */; };
+		2AF177552AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177542AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift */; };
 		2AF375912A1B7BC300B5B29E /* TextState+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF375902A1B7BC300B5B29E /* TextState+DSL.swift */; };
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
@@ -2481,6 +2483,8 @@
 		2AEF71992AA0A51800480990 /* LinkableText.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LinkableText.xctestplan; sourceTree = "<group>"; };
 		2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		2AF177502AC4780600D100DD /* CvvPinService+CertificateClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CvvPinService+CertificateClient.swift"; sourceTree = "<group>"; };
+		2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyExchangeCryptographer+live.swift"; sourceTree = "<group>"; };
+		2AF177542AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecKeySwaddleCryptographer+live.swift"; sourceTree = "<group>"; };
 		2AF375902A1B7BC300B5B29E /* TextState+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextState+DSL.swift"; sourceTree = "<group>"; };
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
@@ -5170,6 +5174,8 @@
 				2A4593C42A7CC8AC008593A3 /* KeyExchangeService */,
 				2A4593C72A7CCAA9008593A3 /* TransferPublicKeyService */,
 				2A9E2AB12A94F42C00EBD05A /* Services+cvvPinService.swift */,
+				2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */,
+				2AF177542AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift */,
 				2A9733782AC2C26E0059C753 /* SecKey+x509Representation.swift */,
 			);
 			path = BindPublicKey;
@@ -11392,6 +11398,7 @@
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */,
 				0B2B29232808CB2E001C6380 /* DocumentCollectionViewCell.swift in Sources */,
+				2AF177552AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift in Sources */,
 				2A1F085F2A790DAA00C5B11B /* Model+authorizedHTTPClient.swift in Sources */,
 				777460E9291E5AB700D3FF46 /* ContactsBankPrefferedItemViewComponent.swift in Sources */,
 				7767049E27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift in Sources */,
@@ -11912,6 +11919,7 @@
 				ED2D8A03286DB6D30000B391 /* imageGalleryAgentMock.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
 				77577BAD29929F1B00D6BD66 /* MockEncryptionAgent.swift in Sources */,
+				2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */,
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
