@@ -62,7 +62,10 @@ extension Model {
         return (parameters, visible)
     }
     
-    func paymentsStepC2B(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
+    func paymentsStepC2B(
+        _ operation: Payments.Operation,
+        for stepIndex: Int
+    ) async throws -> Payments.Operation.Step {
         
         switch stepIndex {
         case 0:
@@ -72,43 +75,24 @@ extension Model {
             
             switch source {
             case .c2b(let url):
-                guard let token = token else {
-                    throw Payments.Error.notAuthorized
-                }
+
+                let qrLink: QRLink = .init(link: .init(url.absoluteString))
+                let parameters = try await paymentsStepC2B(by: qrLink)
+
+                let required: [Payments.Parameter.ID] = [
+                    Payments.Parameter.Identifier.product.rawValue,
+                    Payments.Parameter.Identifier.c2bQrcId.rawValue
+                ]
                 
-                let makeCommand = { (token: String) in
-                    
-                    ServerCommands.SBPController.GetScenarioQRData(
-                        token: token,
-                        payload: .init(
-                            QRLink: url.absoluteString
-                        ))
-                }
-                
-                var parameters = [PaymentsParameterRepresentable]()
-                var visible = [Payments.Operation.Step.Parameter.ID]()
-                
-                try await handleC2BScenario(makeCommand: makeCommand) { response in
-                    
-                    response
-                    
-                } consume: { data in
-                    
-                    let (newParameters, visibleParam) = try self.c2BParameters(
-                        data: data,
-                        parameters: parameters,
-                        visible: visible
-                    )
-                    
-                    parameters = newParameters
-                    visible = visibleParam
-                }
-                
-                var required = [Payments.Parameter.ID]()
-                required.append(Payments.Parameter.Identifier.product.rawValue)
-                required.append(Payments.Parameter.Identifier.c2bQrcId.rawValue)
-                
-                return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .remote(.complete), required: required, processed: nil))
+                return .init(
+                    parameters: parameters.parameters,
+                    front: .init(
+                        visible: parameters.visible,
+                        isCompleted: false),
+                    back: .init(
+                        stage: .remote(.complete),
+                        required: required,
+                        processed: nil))
                 
             case .c2bSubscribe(let url):
                 guard let token = token else {
