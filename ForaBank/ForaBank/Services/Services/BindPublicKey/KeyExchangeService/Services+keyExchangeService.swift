@@ -7,6 +7,7 @@
 
 import CvvPin
 import Foundation
+import ForaCrypto
 import GenericRemoteService
 
 extension Services {
@@ -55,6 +56,19 @@ extension Services {
             extractSharedSecret: extractSharedSecret
         )
     }
+}
+
+// MARK: - Cryptography Interface
+
+struct KeyExchangeCryptographer {
+    
+    typealias PublicKey = P384KeyAgreementDomain.PublicKey
+    typealias PrivateKey = P384KeyAgreementDomain.PrivateKey
+    
+    let generateP384KeyPair: () -> P384KeyAgreementDomain.KeyPair
+    let publicKeyData: (PublicKey) throws -> Data
+    let transportEncrypt: (Data) throws -> Data
+    let sharedSecret: (String, PrivateKey) throws -> Data
 }
 
 // MARK: - Adapters
