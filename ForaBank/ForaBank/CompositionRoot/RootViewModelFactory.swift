@@ -10,13 +10,12 @@ import Foundation
 enum RootViewModelFactory {
     
     static func make(
-        with model: Model,
-        certificateClient: CertificateClient
+        with model: Model
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
-            certificateClient: certificateClient
+            certificateClient: model.cvvPinService()
         )
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model

@@ -9,7 +9,6 @@ import CvvPin
 
 extension Model {
     
-    // TODO: Move to the Composition Root
     func cvvPinService() -> CvvPinService {
         
         Services.cvvPinService(
