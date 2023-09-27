@@ -11,7 +11,7 @@ import SwiftUI
 import PDFKit
 import PinCodeUI
 
-struct CVVPinError {
+enum CVVPinError {
     
     enum PinError: Error {
         
