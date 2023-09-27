@@ -7,11 +7,10 @@
 
 import Combine
 @testable import ForaBank
+import ServerAgent
 import XCTest
 
 final class ServerAgentTestStub: ServerAgentProtocol {
-    
-    let action = PassthroughSubject<ForaBank.Action, Never>()
     
     typealias CreateAnywayTransfer = ServerCommands.TransferController.CreateAnywayTransfer
     typealias CreateAnywayTransferResponse = CreateAnywayTransfer.Response

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 // https://git.inn4b.ru/dbs/ios/-/wikis/Server-Status-Codes
-enum ServerStatusCode: Decodable, Equatable {
+public enum ServerStatusCode: Decodable, Equatable {
     
     case ok
     case error(Int)
@@ -19,7 +19,7 @@ enum ServerStatusCode: Decodable, Equatable {
     case unknownRequest
     case unknownStatus(Int)
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         
         let container = try decoder.singleValueContainer()
         let statusCode = try container.decode(Int.self)
@@ -38,7 +38,7 @@ enum ServerStatusCode: Decodable, Equatable {
 
 extension ServerStatusCode: CustomDebugStringConvertible {
     
-    var debugDescription: String {
+    public var debugDescription: String {
         
         switch self {
         case .ok: return "0: Ok"

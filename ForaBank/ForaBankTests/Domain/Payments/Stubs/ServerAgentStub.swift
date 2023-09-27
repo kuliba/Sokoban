@@ -5,13 +5,14 @@
 //  Created by Igor Malyarov on 21.02.2023.
 //
 
-@testable import ForaBank
 import Combine
+@testable import ForaBank
 import Foundation
+import ServerAgent
 
 final class ServerAgentStub: ServerAgentProtocol {
     
-    var action: PassthroughSubject<Action, Never> = .init()
+    var action: PassthroughSubject<ServerAgentAction, Never> = .init()
     
     typealias GetPhoneInfo = ServerCommands.DaDataController.GetPhoneInfo
     typealias GetPhoneInfoResponse = GetPhoneInfo.Response

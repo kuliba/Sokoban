@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import ForaBank
+import ServerAgent
 
 class ServerStatusCodeTests: XCTestCase {
     

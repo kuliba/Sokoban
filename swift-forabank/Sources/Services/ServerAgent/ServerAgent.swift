@@ -8,26 +8,21 @@
 import Foundation
 import Combine
 
-class ServerAgent: NSObject, ServerAgentProtocol {
-
-    let action: PassthroughSubject<Action, Never> = .init()
+public final class ServerAgent: NSObject {
     
-    private var baseURL: String { enviroment.baseURL }
-    private let enviroment: ServerAgentEnvironment
-  
     private lazy var session: URLSession = {
         
         let configuration = URLSessionConfiguration.default
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
-
+        
         return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
     private lazy var sessionCached: URLSession = {
         
         let configuration = URLSessionConfiguration.default
-
+        
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
         configuration.urlCache = URLCache.downloadCache
@@ -35,25 +30,47 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         return URLSession(configuration: configuration)
     }()
     
+    private let baseURL: String
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
-    var cookies: [HTTPCookie]?
-
-    internal init(enviroment: ServerAgentEnvironment) {
-        
-        self.enviroment = enviroment
-        self.encoder = JSONEncoder.serverDate
-        self.decoder = JSONDecoder.serverDate
-    }
+    private let logError: (String) -> Void
+    private let logMessage: (String) -> Void
+    private let sendAction: (ServerAgentAction) -> Void
     
-    func executeCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerCommand {
+    public var cookies: [HTTPCookie]?
+    
+    public init(
+        baseURL: String,
+        encoder: JSONEncoder,
+        decoder: JSONDecoder,
+        logError: @escaping (String) -> Void,
+        logMessage: @escaping (String) -> Void,
+        sendAction: @escaping (ServerAgentAction) -> Void
+    ) {
+        self.baseURL = baseURL
+        self.encoder = encoder
+        self.decoder = decoder
+        self.logError = logError
+        self.logMessage = logMessage
+        self.sendAction = sendAction
+    }
+}
+
+// MARK: - Execute Command
+
+extension ServerAgent {
+    
+    public func executeCommand<Command>(
+        command: Command,
+        completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void
+    ) where Command : ServerCommand {
         
         do {
             
             let request = try request(with: command)
-            LoggerAgent.shared.log(category: .network, message: "data request: \(request)")
+            logMessage("data request: \(request)")
             session.dataTask(with: request) {[unowned self] data, response, error in
-
+                
                 if let error = error {
                     
                     completion(.failure(.sessionError(error)))
@@ -68,13 +85,13 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 
                 if response.statusCode == 200 {
                     
-                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    self.sendAction(.networkActivityEvent)
                     
                 } else {
                     
                     if response.statusCode == 401 {
                         
-                        self.action.send(ServerAgentAction.NotAuthorized())
+                        self.sendAction(.notAuthorized)
                     }
                     
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
@@ -91,7 +108,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                         self.cookies = responseCookies
                     }
                 }
- 
+                
                 guard let data = data else {
                     completion(.failure(.emptyResponseData))
                     return
@@ -102,15 +119,15 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     let response = try decoder.decode(Command.Response.self, from: data)
                     if response.statusCode == .userNotAuthorized {
                         
-                        self.action.send(ServerAgentAction.NotAuthorized())
+                        self.sendAction(.notAuthorized)
                     }
                     completion(.success(response))
-
+                    
                 } catch {
                     
                     completion(.failure(.corruptedData(error)))
                 }
-     
+                
             }.resume()
             
         } catch {
@@ -118,13 +135,18 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             completion(.failure(ServerAgentError.requestCreationError(error)))
         }
     }
+}
+
+// MARK: - Execute Download Command
+
+extension ServerAgent {
     
-    func executeDownloadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerDownloadCommand {
+    public func executeDownloadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerDownloadCommand {
         
         do {
             
             let request = try downloadRequest(with: command)
-            LoggerAgent.shared.log(category: .network, message: "download request: \(request)")
+            logMessage("download request: \(request)")
             sessionCached.downloadTask(with: request) { localFileURL, response, error in
                 
                 if let error = error {
@@ -141,13 +163,13 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 
                 if response.statusCode == 200 {
                     
-                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    self.sendAction(.networkActivityEvent)
                     
                 } else {
                     
                     if response.statusCode == 401 {
                         
-                        self.action.send(ServerAgentAction.NotAuthorized())
+                        self.sendAction(.notAuthorized)
                     }
                     
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
@@ -159,7 +181,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     completion(.failure(.emptyResponseData))
                     return
                 }
-  
+                
                 do {
                     
                     let data = try Data(contentsOf: localFileURL)
@@ -184,13 +206,21 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             completion(.failure(ServerAgentError.requestCreationError(error)))
         }
     }
+}
+
+// MARK: - Execute Upload Command
+
+extension ServerAgent {
     
-    func executeUploadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerUploadCommand {
+    public func executeUploadCommand<Command>(
+        command: Command,
+        completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void
+    ) where Command : ServerUploadCommand {
         
         do {
             
             let request = try uploadRequest(with: command)
-            LoggerAgent.shared.log(category: .network, message: "upload request: \(request)")
+            logMessage("upload request: \(request)")
             session.uploadTask(with: request, from: request.httpBody) { [unowned self] data, response, error in
                 
                 if let error = error {
@@ -207,19 +237,19 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 
                 if response.statusCode == 200 {
                     
-                    self.action.send(ServerAgentAction.NetworkActivityEvent())
+                    self.sendAction(.networkActivityEvent)
                     
                 } else {
                     
                     if response.statusCode == 401 {
                         
-                        self.action.send(ServerAgentAction.NotAuthorized())
+                        self.sendAction(.notAuthorized)
                     }
                     
                     completion(.failure(.unexpectedResponseStatus(response.statusCode)))
                     return
                 }
-  
+                
                 guard let data = data else {
                     completion(.failure(.emptyResponseData))
                     return
@@ -229,7 +259,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)
                     completion(.success(response))
- 
+                    
                 } catch {
                     
                     completion(.failure(.corruptedData(error)))
@@ -244,24 +274,24 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     }
 }
 
-//MARK: - Request
+// MARK: - Request
 
 internal extension ServerAgent {
     
-    //TODO: tests
+    // TODO: tests
     func request<Command>(with command: Command) throws -> URLRequest where Command : ServerCommand {
         
         let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
-
+        
         // http method
         request.httpMethod = command.method.rawValue
         
         // cookies headers
         request.httpShouldHandleCookies = false
         if command.cookiesProvider == false, let cookies = self.cookies {
-           
+            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
         
@@ -281,7 +311,7 @@ internal extension ServerAgent {
             urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
             
             guard let updatedURL = urlComponents?.url else {
-                throw ServerRequestCreationError.unableCounstructURLWithParameters
+                throw ServerRequestCreationError.unableConstructURLWithParameters
             }
             
             request.url = updatedURL
@@ -309,7 +339,7 @@ internal extension ServerAgent {
         return request
     }
     
-    //TODO: tests
+    // TODO: tests
     func downloadRequest<Command>(with command: Command) throws -> URLRequest where Command : ServerDownloadCommand {
         
         let url = try url(with: command.endpoint)
@@ -319,7 +349,7 @@ internal extension ServerAgent {
         // cookies headers
         request.httpShouldHandleCookies = false
         if let cookies = self.cookies {
-           
+            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
         
@@ -329,7 +359,7 @@ internal extension ServerAgent {
         
         // token
         request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
-
+        
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
             
@@ -337,7 +367,7 @@ internal extension ServerAgent {
             urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
             
             guard let updatedURL = urlComponents?.url else {
-                throw ServerRequestCreationError.unableCounstructURLWithParameters
+                throw ServerRequestCreationError.unableConstructURLWithParameters
             }
             
             request.url = updatedURL
@@ -380,7 +410,7 @@ internal extension ServerAgent {
         // cookies headers
         request.httpShouldHandleCookies = false
         if let cookies = self.cookies {
-           
+            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
         
@@ -398,7 +428,7 @@ internal extension ServerAgent {
             urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
             
             guard let updatedURL = urlComponents?.url else {
-                throw ServerRequestCreationError.unableCounstructURLWithParameters
+                throw ServerRequestCreationError.unableConstructURLWithParameters
             }
             
             request.url = updatedURL
@@ -427,7 +457,7 @@ internal extension ServerAgent {
         return request
     }
     
-    //TODO: tests
+    // TODO: tests
     func url(with endpoint: String) throws -> URL {
         
         guard let url = URL(string: baseURL + endpoint) else {
@@ -438,38 +468,28 @@ internal extension ServerAgent {
     }
 }
 
-//MARK: - URLSessionTaskDelegate
+// MARK: - URLSessionTaskDelegate
 
 extension ServerAgent: URLSessionTaskDelegate {
- 
-    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+    
+    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         
-        if let error = error {
-            
-            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid with error: \(error.localizedDescription)")
-
-        } else {
-
-            LoggerAgent.shared.log(level: .error, category: .network, message: "URL Session did become invalid")
-       }
+        let message = error.map { " with error: \($0.localizedDescription)" } ?? ""
+        
+        logError("URL Session did become invalid\(message)")
     }
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         
-        if let error = error {
-            
-            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete with error: \(error.localizedDescription)")
-
-        } else {
-
-            LoggerAgent.shared.log(level: .error, category: .network, message: "URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete unexpected")
-        }
+        let message = error.map { "with error: \($0.localizedDescription)" } ?? "unexpected"
+        
+        logError("URLSessionTask: \(String(describing: task.originalRequest?.url)) did complete \(message)")
     }
 }
 
-//TODO: make throw
 private extension Data {
     
+    // TODO: make throwing
     mutating func append(_ string: String) {
         
         guard let data = string.data(using: .utf8) else {
