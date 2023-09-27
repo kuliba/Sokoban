@@ -135,7 +135,7 @@ extension SecKeySwaddleCryptographer {
         let clientSecretOTP = try ForaCrypto.Crypto.signNoHash(
             .init(otp.value.utf8),
             withPrivateKey: privateKey,
-            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+            algorithm: .rsaSignatureDigestPKCS1v15Raw
         )
         LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
         
