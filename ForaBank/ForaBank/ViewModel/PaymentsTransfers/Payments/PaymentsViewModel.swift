@@ -5,9 +5,10 @@
 //  Created by Max Gribov on 14.03.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import Foundation
+import ServerAgent
+import SwiftUI
 
 class PaymentsViewModel: ObservableObject {
     

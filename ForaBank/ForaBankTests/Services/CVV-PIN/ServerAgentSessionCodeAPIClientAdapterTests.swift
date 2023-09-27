@@ -8,6 +8,7 @@
 import Combine
 import CvvPin
 @testable import ForaBank
+import ServerAgent
 import XCTest
 
 final class ServerAgentSessionCodeAPIClientAdapterTests: XCTestCase {
@@ -112,8 +113,6 @@ final class ServerAgentSessionCodeAPIClientAdapterTests: XCTestCase {
             
             fatalError("unimplemented")
         }
-        
-        let action = PassthroughSubject<Action, Never>()
     }
     
     typealias APIResult = Result<API.ServerResponse<APISessionCode, Int>, any Error>
