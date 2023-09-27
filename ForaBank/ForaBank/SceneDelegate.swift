@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    let rootViewModel = RootViewModelFactory.make(
+    private let rootViewModel = RootViewModelFactory.make(
         with: AppDelegate.shared.model,
         certificateClient: HappyCertificateClient()
     )
