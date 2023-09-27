@@ -1001,9 +1001,13 @@ private extension Model {
             .replacingAvtodors(with: avtodorGroup)
         
         let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
-        
+
+        let cvvPinService = Services.cvvPinService(
+            httpClient: authenticatedHTTPClient()
+        )
+
         return .init(
-            cvvPinService: cvvPinService(),
+            cvvPinService: cvvPinService,
             operators: operators,
             latestPayments: latestPayments,
             makePaymentsViewModel: makePaymentsViewModel(source:),
