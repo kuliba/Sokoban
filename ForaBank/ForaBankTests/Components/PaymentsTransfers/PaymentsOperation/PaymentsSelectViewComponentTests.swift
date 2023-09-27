@@ -54,7 +54,7 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         }
         XCTAssertEqual(placeholderText, "Выберете тип")
         
-        XCTAssertEqual(optionsListViewModel.filterred, listOptions)
+        XCTAssertEqual(optionsListViewModel.filtered, listOptions)
         XCTAssertNil(optionsListViewModel.selected)
     }
     
@@ -114,7 +114,7 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         }
         XCTAssertEqual(placeholderText, "Оплата наличными")
         
-        XCTAssertEqual(optionsListViewModel.filterred, listOptions)
+        XCTAssertEqual(optionsListViewModel.filtered, listOptions)
         XCTAssertEqual(optionsListViewModel.selected, "0")
     }
     
