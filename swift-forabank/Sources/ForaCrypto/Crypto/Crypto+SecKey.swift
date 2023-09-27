@@ -14,14 +14,25 @@ public extension Crypto {
     
     static func sign(
         _ data: Data,
-        withPrivateKey key: SecKey,
+        withPrivateKey privateKey: SecKey,
         algorithm: SecKeyAlgorithm
     ) throws -> Data {
         
-        let hash = SHA256.hash(data: data)
+        let data = SHA256
+            .hash(data: data)
+            .withUnsafeBytes { Data($0) }
+        
+        return try signNoHash(data, withPrivateKey: privateKey, algorithm: algorithm)
+    }
+
+    static func signNoHash(
+        _ data: Data,
+        withPrivateKey privateKey: SecKey,
+        algorithm: SecKeyAlgorithm
+    ) throws -> Data {
         
         var error: Unmanaged<CFError>? = nil
-        guard let signed = SecKeyCreateSignature(key, algorithm, hash.withUnsafeBytes { Data($0) } as CFData, &error) as? Data
+        guard let signed = SecKeyCreateSignature(privateKey, algorithm, data as CFData, &error) as? Data
         else {
             throw Error.signFailure(error?.takeRetainedValue() as? Swift.Error)
         }

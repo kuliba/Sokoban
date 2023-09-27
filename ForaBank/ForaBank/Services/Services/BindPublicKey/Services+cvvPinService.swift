@@ -132,7 +132,7 @@ extension SecKeySwaddleCryptographer {
         privateKey: SecKey
     ) throws -> Data {
         
-        let clientSecretOTP = try ForaCrypto.Crypto.sign(
+        let clientSecretOTP = try ForaCrypto.Crypto.signNoHash(
             .init(otp.value.utf8),
             withPrivateKey: privateKey,
             algorithm: .rsaSignatureDigestPKCS1v15SHA256
