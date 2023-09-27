@@ -111,13 +111,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
+                    let certificateClient = HappyCertificateClient()
                     // TODO: добавить factory
                     guard let product = model.product(productId: payload.productId),
                           let productProfileViewModel = ProductProfileViewModel(
                             model,
                             product: product,
                             rootView: "\(type(of: self))",
-                            certificateClient: HappyCertificateClient(),
+                            certificateClient: certificateClient,
                             dismissAction: { [weak self] in self?.link = nil })
                     else { return }
 
