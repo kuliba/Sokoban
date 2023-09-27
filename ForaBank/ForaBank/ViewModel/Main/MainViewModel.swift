@@ -94,9 +94,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let product = model.product(productId: payload.productId),
                           let productProfileViewModel = ProductProfileViewModel(
                             model,
+                            certificateClient: certificateClient,
                             product: product,
                             rootView: "\(type(of: self))",
-                            certificateClient: certificateClient,
                             dismissAction: { [weak self] in self?.link = nil } )
                     else { return }
 
@@ -401,7 +401,10 @@ class MainViewModel: ObservableObject, Resetable {
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(
+                            model,
+                            certificateClient: certificateClient
+                        )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                         

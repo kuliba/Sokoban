@@ -28,8 +28,9 @@ class MyProductsViewModel: ObservableObject {
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
 
-    private  lazy var settingsOnboarding = model.settingsMyProductsOnboarding
+    private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
+    private let certificateClient: CertificateClient
     private var bindings = Set<AnyCancellable>()
    
     
@@ -39,10 +40,12 @@ class MyProductsViewModel: ObservableObject {
          openProductVM: MyProductsOpenProductView.ViewModel,
          editModeState: EditMode = .inactive,
          model: Model = .emptyMock,
+         certificateClient: CertificateClient,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
-         showOnboarding: [Onboarding: Bool] = [:]) {
-
+         showOnboarding: [Onboarding: Bool] = [:]
+    ) {
         self.model = model
+        self.certificateClient = certificateClient
         self.editModeState = editModeState
         self.navigationBar = navigationBar
         self.totalMoneyVM = totalMoney
@@ -52,16 +55,21 @@ class MyProductsViewModel: ObservableObject {
         self.showOnboarding = showOnboarding
     }
 
-    convenience init(_ model: Model) {
-
-        self.init(navigationBar: .init(background: .mainColorsWhite),
-                  totalMoney: .init(model: model),
-                  productSections: [],
-                  openProductVM: .init(model),
-                  editModeState: .inactive,
-                  model: model,
-                  refreshingIndicator: .init(isActive: false),
-                  showOnboarding: [:])
+    convenience init(
+        _ model: Model,
+        certificateClient: CertificateClient
+    ) {
+        self.init(
+            navigationBar: .init(background: .mainColorsWhite),
+            totalMoney: .init(model: model),
+            productSections: [],
+            openProductVM: .init(model),
+            editModeState: .inactive,
+            model: model,
+            certificateClient: certificateClient,
+            refreshingIndicator: .init(isActive: false),
+            showOnboarding: [:]
+        )
         
         updateNavBar(state: .normal)
         bind()
@@ -234,9 +242,9 @@ class MyProductsViewModel: ObservableObject {
                         
                         guard let productProfileViewModel = ProductProfileViewModel
                             .init(model,
+                                  certificateClient: HappyCertificateClient(),
                                   product: product,
                                   rootView: "\(type(of: self))",
-                                  certificateClient: HappyCertificateClient(),
                                   dismissAction: {[weak self] in self?.link = nil }
                             )
                         else { return }
@@ -542,28 +550,29 @@ enum MyProductsViewModelAction {
 extension MyProductsViewModel {
     
     static let sample = MyProductsViewModel(
-            navigationBar: .init(
+        navigationBar: .init(
             title: "Мои продукты",
             leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
             rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24BarInOrder, action: {})],
             background: .mainColorsWhite),
-            totalMoney: .sampleBalance,
-            productSections: [.sample2, .sample3],
-            openProductVM: .previewSample,
-            refreshingIndicator: .init(isActive: true)
+        totalMoney: .sampleBalance,
+        productSections: [.sample2, .sample3],
+        openProductVM: .previewSample,
+        certificateClient: HappyCertificateClient(),
+        refreshingIndicator: .init(isActive: true)
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
-            navigationBar: .init(
+        navigationBar: .init(
             title: "Мои продукты",
             leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
             rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Edit, action: { })],
             background: .mainColorsWhite),
-            totalMoney: .sampleBalance,
-            productSections: [.sample2, .sample3],
-            openProductVM: .previewSample,
-            refreshingIndicator: .init(isActive: true),
-            showOnboarding: [.hide: true, .ordered: false]
+        totalMoney: .sampleBalance,
+        productSections: [.sample2, .sample3],
+        openProductVM: .previewSample,
+        certificateClient: HappyCertificateClient(),
+        refreshingIndicator: .init(isActive: true),
+        showOnboarding: [.hide: true, .ordered: false]
     )
 }
-

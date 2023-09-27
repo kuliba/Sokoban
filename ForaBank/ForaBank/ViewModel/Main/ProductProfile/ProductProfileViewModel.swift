@@ -149,14 +149,13 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
+    private let certificateClient: CertificateClient
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
-    
-    private let certificateClient: CertificateClient
-    
+        
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
          buttons: ProductProfileButtonsView.ViewModel,
@@ -166,10 +165,9 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         rootView: String,
-         certificateClient: CertificateClient
+         certificateClient: CertificateClient,
+         rootView: String
     ) {
-        
         self.navigationBar = navigationBar
         self.product = product
         self.buttons = buttons
@@ -179,8 +177,8 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
-        self.rootView = rootView
         self.certificateClient = certificateClient
+        self.rootView = rootView
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -192,9 +190,9 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
+        certificateClient: CertificateClient,
         product: ProductData,
         rootView: String,
-        certificateClient: CertificateClient,
         dismissAction: @escaping () -> Void
     ) {
         
@@ -207,7 +205,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, rootView: rootView, certificateClient: certificateClient)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, certificateClient: certificateClient, rootView: rootView)
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -216,6 +214,7 @@ class ProductProfileViewModel: ObservableObject {
         let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
         self.history = historyViewModel
         self.historyPool[product.id] = historyViewModel
+        
         bind(product: productViewModel)
         bind(history: historyViewModel)
         bind(detail: detail)
@@ -242,7 +241,8 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     isTabBarHidden: true,
-                    mode: .link
+                    mode: .link,
+                    certificateClient: certificateClient
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
@@ -677,7 +677,10 @@ private extension ProductProfileViewModel {
                         self.action.send(ProductProfileViewModelAction.Close.SelfView())
                         
                     } else {
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(
+                            model,
+                            certificateClient: certificateClient
+                        )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                     }

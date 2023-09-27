@@ -318,8 +318,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        rootView: "",
-        certificateClient: HappyCertificateClient()
+        certificateClient: HappyCertificateClient(),
+        rootView: ""
     )
     
     static let sadSample = ProductProfileViewModel(
@@ -328,8 +328,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        rootView: "",
-        certificateClient: SadCertificateClient()
+        certificateClient: SadCertificateClient(),
+        rootView: ""
     )
 }
 
@@ -339,5 +339,6 @@ extension NavigationBarView.ViewModel {
         title: "Platinum", subtitle: "· 4329",
         leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
         rightItems: [],
-        background: .purple, foreground: .iconWhite)
+        background: .purple, foreground: .iconWhite
+    )
 }

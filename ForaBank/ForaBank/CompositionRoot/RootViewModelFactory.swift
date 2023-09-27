@@ -23,9 +23,12 @@ enum RootViewModelFactory {
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
-            model: model
+            model: model,
+            certificateClient: cvvPinService
         )
+        
         let chatViewModel = ChatViewModel()
+        
         let informerViewModel = InformerView.ViewModel(
             model
         )
