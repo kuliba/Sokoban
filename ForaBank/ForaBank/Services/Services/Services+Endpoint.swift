@@ -19,6 +19,7 @@ extension Services {
             
             case processingRegistration = "processing/registration"
             case dict = "dict"
+            case binding = "rest/binding"
         }
         
         enum Version: String {
@@ -31,8 +32,9 @@ extension Services {
             
             case bindPublicKeyWithEventId
             case formSessionKey
-            case getProcessingSessionCode
             case getJsonAbroad
+            case getProcessingSessionCode
+            case getScenarioQRData
         }
     }
 }
@@ -97,6 +99,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getScenarioQRDataRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getScenarioQRData
     )
 }
 
