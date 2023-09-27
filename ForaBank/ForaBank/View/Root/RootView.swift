@@ -71,17 +71,17 @@ struct RootView: View {
                     MessagesHistoryView(viewModel: messagesHistoryViewModel)
                     //FIXME: looks like zIndex not needed
                         .zIndex(.greatestFiniteMagnitude)
-
+                    
                 case .me2me(let requestMeToMeModel):
                     //FIXME: looks like NavigationView required
                     MeToMeRequestView(viewModel: requestMeToMeModel)
                     //FIXME: looks like zIndex not needed
                         .zIndex(.greatestFiniteMagnitude)
-
+                    
                 case .userAccount(let viewModel):
                     NavigationView {
-                          UserAccountView(viewModel: viewModel)
-                      }
+                        UserAccountView(viewModel: viewModel)
+                    }
                     
                 case let .payments(paymentsViewModel):
                     NavigationView {
@@ -168,6 +168,14 @@ struct RootView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        RootView(viewModel: .init(.emptyMock))
+        RootView(
+            viewModel: .init(
+                mainViewModel: .sample,
+                paymentsViewModel: .sample,
+                chatViewModel: .init(),
+                informerViewModel: .init(.emptyMock),
+                .emptyMock
+            )
+        )
     }
 }

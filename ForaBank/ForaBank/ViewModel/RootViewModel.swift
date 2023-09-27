@@ -29,13 +29,18 @@ class RootViewModel: ObservableObject, Resetable {
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
-    init(_ model: Model) {
-        
+    init(
+        mainViewModel: MainViewModel,
+        paymentsViewModel: PaymentsTransfersViewModel,
+        chatViewModel: ChatViewModel,
+        informerViewModel: InformerView.ViewModel,
+        _ model: Model
+    ) {
         self.selected = .main
-        self.mainViewModel = MainViewModel(model, certificateClient: HappyCertificateClient())
-        self.paymentsViewModel = .init(model: model)
-        self.chatViewModel = .init()
-        self.informerViewModel = .init(model)
+        self.mainViewModel = mainViewModel
+        self.paymentsViewModel = paymentsViewModel
+        self.chatViewModel = chatViewModel
+        self.informerViewModel = informerViewModel
         self.model = model
         
         mainViewModel.rootActions = rootActions
@@ -44,7 +49,7 @@ class RootViewModel: ObservableObject, Resetable {
         bind()
         bindAuth()
     }
-    
+
     func reset() {
         
         mainViewModel.reset()

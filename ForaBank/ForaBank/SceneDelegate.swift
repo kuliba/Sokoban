@@ -13,8 +13,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    let rootViewModel = RootViewModel(AppDelegate.shared.model)
-    
+    let rootViewModel: RootViewModel = {
+        
+        let model = AppDelegate.shared.model
+        let certificateClient = HappyCertificateClient()
+        let mainViewModel = MainViewModel(
+            model,
+            certificateClient: certificateClient
+        )
+        let paymentsViewModel = PaymentsTransfersViewModel(
+            model: model
+        )
+        let chatViewModel = ChatViewModel()
+        let informerViewModel = InformerView.ViewModel(
+            model
+        )
+        
+        return .init(
+            mainViewModel: mainViewModel,
+            paymentsViewModel: paymentsViewModel,
+            chatViewModel: chatViewModel,
+            informerViewModel: informerViewModel,
+            model
+        )
+    }()
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
