@@ -20,22 +20,26 @@ extension Services {
         httpClient: HTTPClient
     ) -> CvvPinService {
         
-        .init(
-            sessionCodeService: getProcessingSessionCode(
-                httpClient: httpClient
-            ),
-            keyExchangeService: keyExchangeService(
-                httpClient: httpClient,
+        let sessionCodeService = getProcessingSessionCode(
+            httpClient: httpClient
+        )
+        let keyExchangeService = keyExchangeService(
+            httpClient: httpClient,
+            cryptographer: .live
+        )
+        let transferKeyService = KeyTransferService(
+            secKeySwaddler: .init(
                 cryptographer: .live
             ),
-            transferKeyService: .init(
-                secKeySwaddler: .init(
-                    cryptographer: .live
-                ),
-                bindKeyService: bindKeyService(
-                    httpClient: httpClient
-                )
+            bindKeyService: bindKeyService(
+                httpClient: httpClient
             )
+        )
+        
+        return .init(
+            getProcessingSessionCode: sessionCodeService.process,
+            exchangeKey: keyExchangeService.exchangeKey,
+            transferPublicKey: transferKeyService.transfer
         )
     }
 }
@@ -208,23 +212,6 @@ extension SecKeySwaddleCryptographer {
 extension Services {
     
     typealias SecKeySwaddler = PublicRSAKeySwaddler<TransferOTP, SecKey, SecKey>
-}
-
-private extension CvvPinService {
-    
-    typealias EventID = KeyExchangeDomain.KeyExchange.EventID
-    
-    convenience init(
-        sessionCodeService: GetProcessingSessionCodeService,
-        keyExchangeService: KeyExchangeService,
-        transferKeyService: KeyTransferService<OTP, EventID>
-    ) {
-        self.init(
-            getProcessingSessionCode: sessionCodeService.process,
-            exchangeKey: keyExchangeService.exchangeKey,
-            transferPublicKey: transferKeyService.transfer
-        )
-    }
 }
 
 private extension Services.PublicKeyTransferService {
