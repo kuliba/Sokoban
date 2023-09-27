@@ -30,8 +30,11 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
-        
+    init(
+        navButtonsRight: [NavigationBarButtonViewModel],
+        sections: [MainSectionViewModel],
+        model: Model = .emptyMock
+    ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
@@ -40,13 +43,14 @@ class MainViewModel: ObservableObject, Resetable {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model),
-                         MainSectionFastOperationView.ViewModel(),
-                         MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyMetallView.ViewModel(model),
-                         MainSectionOpenProductView.ViewModel(model),
-                         MainSectionAtmView.ViewModel.initial]
-        
+        self.sections = [
+            MainSectionProductsView.ViewModel(model),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
         self.model = model
         
         navButtonsRight = createNavButtonsRight()
