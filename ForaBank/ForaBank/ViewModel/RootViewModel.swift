@@ -32,7 +32,7 @@ class RootViewModel: ObservableObject, Resetable {
     init(_ model: Model) {
         
         self.selected = .main
-        self.mainViewModel = MainViewModel(model)
+        self.mainViewModel = MainViewModel(model, certificateClient: HappyCertificateClient())
         self.paymentsViewModel = .init(model: model)
         self.chatViewModel = .init()
         self.informerViewModel = .init(model)

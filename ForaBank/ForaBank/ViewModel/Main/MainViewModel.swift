@@ -28,20 +28,25 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
+    private let certificateClient: CertificateClient
     private var bindings = Set<AnyCancellable>()
     
     init(
         navButtonsRight: [NavigationBarButtonViewModel],
         sections: [MainSectionViewModel],
-        model: Model = .emptyMock
+        model: Model = .emptyMock,
+        certificateClient: CertificateClient
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
+        self.certificateClient = certificateClient
     }
     
-    init(_ model: Model) {
-        
+    init(
+        _ model: Model,
+        certificateClient: CertificateClient
+    ) {
         self.navButtonsRight = []
         self.sections = [
             MainSectionProductsView.ViewModel(model),
@@ -52,6 +57,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionAtmView.ViewModel.initial
         ]
         self.model = model
+        self.certificateClient = certificateClient
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -85,7 +91,6 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
-                    let certificateClient = HappyCertificateClient()
                     guard let product = model.product(productId: payload.productId),
                           let productProfileViewModel = ProductProfileViewModel(
                             model,

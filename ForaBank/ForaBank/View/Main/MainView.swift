@@ -321,7 +321,8 @@ extension MainViewModel {
             MainSectionPromoView.ViewModel.sample,
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
-        ]
+        ],
+        certificateClient: HappyCertificateClient()
     )
     
     static let sampleProducts = MainViewModel(
@@ -334,7 +335,8 @@ extension MainViewModel {
             MainSectionPromoView.ViewModel.sample,
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
-        ]
+        ],
+        certificateClient: HappyCertificateClient()
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -348,6 +350,7 @@ extension MainViewModel {
             MainSectionPromoView.ViewModel.sample,
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
-        ]
+        ],
+        certificateClient: HappyCertificateClient()
     )
 }
