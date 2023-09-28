@@ -31,7 +31,7 @@ enum CVVPinError {
     }
 }
 
-typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient
+typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient & BindPublicKeyClient
 
 protocol CheckCertificateClient {
     
@@ -43,6 +43,11 @@ protocol ActivateCertificateClient {
     func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void)
 }
 
+protocol BindPublicKeyClient {
+    
+    func bindPublicKey(otp: String, completion: @escaping (Result<Void, CVVPinError.BindPublicKeyError>) -> Void)
+}
+
 final class HappyCertificateClient: CertificateClient {
     
     func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
@@ -52,6 +57,10 @@ final class HappyCertificateClient: CertificateClient {
     func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
         completion(.success(()))
     }
+    
+    func bindPublicKey(otp: String, completion: @escaping (Result<Void, CVVPinError.BindPublicKeyError>) -> Void) {
+        completion(.success(()))
+    }
 }
 
 final class HappyCheckSadActivateCertificateClient: CertificateClient {
@@ -59,10 +68,14 @@ final class HappyCheckSadActivateCertificateClient: CertificateClient {
     func checkCertificate(completion: @escaping (Result<Void, CVVPinError.PinError>) -> Void) {
         completion(.success(()))
     }
-
+    
     func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!!")))
+    }
+    
+    func bindPublicKey(otp: String, completion: @escaping (Result<Void, CVVPinError.BindPublicKeyError>) -> Void) {
+        completion(.success(()))
     }
 }
 
@@ -77,6 +90,10 @@ final class SadCertificateClient: CertificateClient {
         
         completion(.success(()))
     }
+    
+    func bindPublicKey(otp: String, completion: @escaping (Result<Void, CVVPinError.BindPublicKeyError>) -> Void) {
+        completion(.success(()))
+    }
 }
 
 final class SadCheckSadActivateCertificateClient: CertificateClient {
@@ -89,6 +106,10 @@ final class SadCheckSadActivateCertificateClient: CertificateClient {
     func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
 
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
+    }
+    
+    func bindPublicKey(otp: String, completion: @escaping (Result<Void, CVVPinError.BindPublicKeyError>) -> Void) {
+        completion(.success(()))
     }
 }
 
@@ -224,7 +245,28 @@ class ProductProfileViewModel: ObservableObject {
     }
 }
 
-//MARK: - Bindings
+extension ProductProfileViewModel {
+    
+    func confirmKeyBinding(
+        withOTP otp: String,
+        completion: @escaping (Bool) -> Void
+    ) {
+        certificateClient.bindPublicKey(otp: otp) { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case .success:
+                completion(true)
+                
+            case .failure:
+                completion(false)
+            }
+        }
+    }
+}
+
+// MARK: - Bindings
 
 private extension ProductProfileViewModel {
     
@@ -240,9 +282,9 @@ private extension ProductProfileViewModel {
                 model.setPreferredProductID(to: product.activeProductId)
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
+                    certificateClient: certificateClient,
                     isTabBarHidden: true,
-                    mode: .link,
-                    certificateClient: certificateClient
+                    mode: .link
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 

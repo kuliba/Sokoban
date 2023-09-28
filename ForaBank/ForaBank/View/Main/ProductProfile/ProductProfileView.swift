@@ -97,8 +97,10 @@ struct ProductProfileView: View {
                     
                     switch link {
                     case let .changePin(pinCodeViewModel):
-                        
-                        pinCodeChangeView(pinCodeViewModel)
+                        pinCodeChangeView(
+                            pinCodeViewModel,
+                            confirm: viewModel.confirmKeyBinding
+                        )
                         
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
@@ -125,7 +127,7 @@ struct ProductProfileView: View {
                         PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
                         
                     case .confirmCode:
-                        
+                        viewModel.accentColor
                         confirmCodeView()
                     }
                 }
@@ -226,7 +228,8 @@ struct ProductProfileView: View {
     }
     
     private func pinCodeChangeView(
-        _ viewModel: PinCodeViewModel
+        _ viewModel: PinCodeViewModel,
+        confirm: @escaping (String, @escaping (Bool) -> Void) -> Void
     ) -> some View {
         
         let buttonConfig: ButtonConfig = .init(
@@ -255,11 +258,9 @@ struct ProductProfileView: View {
                 
                 ConfirmCodeView(
                     phoneNumber: $0.value,
-                    reset: viewModel.resetState
-                ) { otp, action in
-                    
-                    action("123456" == otp)
-                }
+                    reset: viewModel.resetState,
+                    handler: confirm
+                )
             }
         )
         .edgesIgnoringSafeArea(.bottom)

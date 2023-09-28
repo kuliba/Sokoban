@@ -20,7 +20,7 @@ extension CvvPinService: CheckCertificateClient {
         completion(.failure(.certificate))
     }
 }
- 
+
 extension CvvPinService: ActivateCertificateClient {
     
     typealias ActivateCertificateResult = Result<Void, CVVPinError.ActivationError>
@@ -29,9 +29,45 @@ extension CvvPinService: ActivateCertificateClient {
     func activateCertificate(
         completion: @escaping ActivateCertificateCompletion
     ) {
-//        self.exchangeKey { <#Result<Void, Error>#> in
-//            <#code#>
-//        }
-        let _: Void = unimplemented()
+        self.exchangeKey {[weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case let .failure(error):
+                #warning("fix error type: should have message")
+                completion(.failure(.init(message: error.localizedDescription)))
+                
+            case .success:
+                completion(.success(()))
+            }
+        }
+    }
+}
+
+extension CvvPinService: BindPublicKeyClient {
+    
+    typealias BindPublicKeyResult = Result<Void, CVVPinError.BindPublicKeyError>
+    typealias BindPublicKeyCompletion = (BindPublicKeyResult) -> Void
+    
+    func bindPublicKey(
+        otp: String,
+        completion: @escaping BindPublicKeyCompletion
+    ) {
+        confirmExchange(
+            withOTP: .init(value: otp)
+        ) { [weak self] result in
+            
+            guard self != nil else { return }
+            
+            switch result {
+            case let .failure(error):
+                #warning("fix error type: should have retry attempts")
+                completion(.failure(.init(errorMessage: error.localizedDescription, retryAttempts: 1)))
+                
+            case .success:
+                completion(.success(()))
+            }
+        }
     }
 }

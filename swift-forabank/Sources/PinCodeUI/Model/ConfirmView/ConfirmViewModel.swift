@@ -15,7 +15,7 @@ public class ConfirmViewModel: ObservableObject {
     @Published var isDisabled: Bool
     @Published var showAlert: Bool
 
-    var handler: (String, @escaping (Bool) -> Void) -> Void
+    let handler: (String, @escaping (Bool) -> Void) -> Void
     
     public init(
         maxDigits: Int = 6,
@@ -24,7 +24,6 @@ public class ConfirmViewModel: ObservableObject {
         showAlert: Bool = false,
         handler: @escaping (String, @escaping (Bool) -> Void) -> Void
     ) {
-        
         self.maxDigits = maxDigits
         self.pin = pin
         self.isDisabled = isDisable

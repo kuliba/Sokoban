@@ -53,9 +53,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
+        certificateClient: CertificateClient,
         isTabBarHidden: Bool = false,
-        mode: Mode = .normal,
-        certificateClient: CertificateClient
+        mode: Mode = .normal
     ) {
         self.navButtonsRight = []
         self.sections = [
