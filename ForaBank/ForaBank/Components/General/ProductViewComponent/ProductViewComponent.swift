@@ -16,6 +16,10 @@ extension ProductView {
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
         @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
+        // TODO: add Tagged
+        typealias CVV = String
+        typealias CVVResult = Result<CVV, Error>
+        typealias ShowCVV = (@escaping (CVVResult) -> Void) -> Void
         
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -30,7 +34,7 @@ extension ProductView {
         var appearance: Appearance
         let productType: ProductType
         let copyCardNumber: (String) -> Void
-        let showCVV: () -> Void
+        let showCVV: ShowCVV?
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
         
@@ -45,7 +49,7 @@ extension ProductView {
             isUpdating: Bool,
             productType: ProductType,
             copyCardNumber: @escaping (String) -> Void,
-            showCVV: @escaping () -> Void
+            showCVV: ShowCVV?
         ) {
             
             self.id = id
@@ -67,7 +71,7 @@ extension ProductView {
             size: Appearance.Size,
             style: Appearance.Style,
             model: Model,
-            showCVV: @escaping () -> Void
+            showCVV: ShowCVV?
         ) {
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
@@ -1137,8 +1141,23 @@ extension ProductView.ViewModel {
     
     func openCVV() {
         
-        self.showCVV()
-        self.cardInfo.state = .maskedNumberCVV
+        self.showCVV? { [weak self] result in
+            
+            guard let self else { return }
+            
+            // TODO: main thread
+            switch result {
+                
+            case let .failure(error):
+                // TODO: real error
+                //self.action.send(.alert(error.localizedDescription))
+                print(error)
+            case let .success(cvv):
+                // TODO: self.cardInfo.cvvTitle = cvv
+                self.cardInfo.state = .maskedNumberCVV
+                print(cvv)
+            }
+        }
     }
     
     func animationAtFisrtShowCard() {

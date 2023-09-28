@@ -220,7 +220,7 @@ class ProductProfileViewModel: ObservableObject {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
             productData: product,
-            showCVV: { certificateClient.activateCertificate { _ in }})
+            showCVV: { _ in certificateClient.activateCertificate { _ in }})
         else { return nil }
         
         // status bar

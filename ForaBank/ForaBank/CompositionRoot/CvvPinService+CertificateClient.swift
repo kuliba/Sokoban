@@ -29,9 +29,9 @@ extension CvvPinService: ActivateCertificateClient {
     func activateCertificate(
         completion: @escaping ActivateCertificateCompletion
     ) {
-        self.exchangeKey {[weak self] result in
+        self.exchangeKey { [weak self] result in
             
-            guard self != nil else { return }
+            guard let self else { return }
             
             switch result {
             case let .failure(error):

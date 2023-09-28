@@ -130,7 +130,7 @@ extension ProductCarouselView {
                                 } else {
                                     
                                     // create new product view model
-                                    let productViewModel = ProductView.ViewModel(with: product, size: style.productAppearanceSize, style: .main, model: model, showCVV: {
+                                    let productViewModel = ProductView.ViewModel(with: product, size: style.productAppearanceSize, style: .main, model: model, showCVV: {_ in 
 #warning("showCVV does nothing")
 })
                                     bind(productViewModel)

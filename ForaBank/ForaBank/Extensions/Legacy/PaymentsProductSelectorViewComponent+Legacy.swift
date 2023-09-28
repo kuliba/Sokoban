@@ -12,7 +12,7 @@ extension PaymentsProductSelectorView.ViewModel {
     convenience init(
         productsData: [ProductData],
         model: Model,
-        showCVV: @escaping () -> Void
+        showCVV: ProductView.ViewModel.ShowCVV?
     ) {
         self.init(categories: nil, products: [])
         
