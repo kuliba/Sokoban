@@ -289,11 +289,18 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     private func makeSUT(
         model: Model = .mockWithEmptyExcept(),
+        certificateClient: CertificateClient = HappyCertificateClient(),
         product: ProductData,
         rootView: String = ""
     ) -> ProductProfileViewModel? {
         
-        .init(model, product: product, rootView: rootView, certificateClient: HappyCertificateClient(), dismissAction: {})
+        .init(
+            model,
+            certificateClient: certificateClient,
+            product: product,
+            rootView: rootView,
+            dismissAction: {}
+        )
     }
     
     private func makeSUT(
@@ -319,9 +326,9 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
+                certificateClient: certificateClient,
                 product: product,
                 rootView: "",
-                certificateClient: certificateClient,
                 dismissAction: {}
             )
         )
