@@ -144,6 +144,7 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
             generateRSA4096BitKeys: swaddlerSpy.generateRSA4096BitKeys,
             signEncryptOTP: swaddlerSpy.encryptOTPWithRSAKey,
             saveKeys: keyStorageSpy.saveKeys,
+            x509Representation: { _ in throw NSError(domain: "Unimplemented", code: -1)},
             aesEncrypt128bitChunks: swaddlerSpy.aesEncrypt128bitChunks
         )
         
@@ -159,7 +160,7 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
         let value: String
     }
     
-    fileprivate struct TestPublicKey: RawRepresentational {
+    fileprivate struct TestPublicKey {
         
         let value: String
         

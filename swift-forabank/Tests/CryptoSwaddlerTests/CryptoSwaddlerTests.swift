@@ -57,7 +57,7 @@ final class CryptoSwaddlerTests: CryptoSwaddlerTestCase {
 }
 
 #warning("copy from `Services+makePublicRSAKeySwaddler.swift:14`")
-extension SecKey: RawRepresentational {
+extension SecKey {
     
     public var rawRepresentation: Data {
         
@@ -92,6 +92,7 @@ where OTP == CryptoSwaddlerTestCase.TestOTP,
             generateRSA4096BitKeys: generateRSA4096BitKeys,
             signEncryptOTP: signWithPadding,
             saveKeys: saveKeys,
+            x509Representation: { _ in throw NSError(domain: "Unimplemented", code: -1)},
             aesEncrypt128bitChunks: { data, secret in
                 
                 let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)
