@@ -39,7 +39,7 @@ class StringExtensionsTests: XCTestCase {
     func testFilter() throws {
 
         // given
-        let value = try "121221 dsjomcmsd".filterred(regEx: "[0-9]")
+        let value = try "121221 dsjomcmsd".filtered(regEx: "[0-9]")
         
         // when
         let result = "121221"

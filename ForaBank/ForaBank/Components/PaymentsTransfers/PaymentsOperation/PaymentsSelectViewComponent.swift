@@ -229,18 +229,18 @@ extension PaymentsSelectView.ViewModel {
         let icon: IconViewModel
         let title: String
         let textField: RegularFieldViewModel
-        @Published var filterred: [OptionViewModel]
+        @Published var filtered: [OptionViewModel]
         let selected: OptionViewModel.ID?
         
         private let options: [OptionViewModel]
         private var bindings: Set<AnyCancellable> = []
         
-        init(icon: IconViewModel, title: String, textField: RegularFieldViewModel, filterred: [OptionViewModel], options: [OptionViewModel], selected: OptionViewModel.ID?) {
+        init(icon: IconViewModel, title: String, textField: RegularFieldViewModel, filtered: [OptionViewModel], options: [OptionViewModel], selected: OptionViewModel.ID?) {
             
             self.icon = icon
             self.title = title
             self.textField = textField
-            self.filterred = filterred
+            self.filtered = filtered
             self.options = options
             self.selected = selected
         }
@@ -260,7 +260,7 @@ extension PaymentsSelectView.ViewModel {
                     icon: .init(with: selectedOption, and: parameterSelect.icon),
                     title: parameterSelect.title,
                     textField: textField,
-                    filterred: optionsViewModels,
+                    filtered: optionsViewModels,
                     options: optionsViewModels,
                     selected: selectedOption.id)
                 
@@ -276,7 +276,7 @@ extension PaymentsSelectView.ViewModel {
                     icon: .init(with: parameterSelect.icon),
                     title: parameterSelect.title,
                     textField: textField,
-                    filterred: optionsViewModels,
+                    filtered: optionsViewModels,
                     options: optionsViewModels,
                     selected: nil)
             }
@@ -296,14 +296,14 @@ extension PaymentsSelectView.ViewModel {
                         case let .some(value):
                             switch value {
                             case "":
-                                filterred = options
+                                filtered = options
                                 
                             default:
-                                filterred = PaymentsSelectView.ViewModel.reduce(options: options, filter: value)
+                                filtered = PaymentsSelectView.ViewModel.reduce(options: options, filter: value)
                             }
                             
                         case .none:
-                            filterred = options
+                            filtered = options
                         }
                     }
                     
@@ -539,13 +539,13 @@ extension PaymentsSelectView {
                     
                     VStack(spacing: 16) {
                         
-                        ForEach(viewModel.filterred) { optionViewModel in
+                        ForEach(viewModel.filtered) { optionViewModel in
                             
                             PaymentsSelectView.OptionView(viewModel: optionViewModel, isSelected: optionViewModel.id == viewModel.selected) {
                                 selected(optionViewModel.id)
                             }
                             
-                            if optionViewModel.id != viewModel.filterred.last?.id {
+                            if optionViewModel.id != viewModel.filtered.last?.id {
                                 
                                 Divider()
                                     .padding(.leading, 46)

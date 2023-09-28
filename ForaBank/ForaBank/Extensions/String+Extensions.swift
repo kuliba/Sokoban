@@ -112,7 +112,7 @@ extension String {
         return true
     }
     
-    func filterred(regEx: String) throws -> String {
+    func filtered(regEx: String) throws -> String {
         
         let value = self
         
@@ -126,7 +126,7 @@ extension String {
         }
     }
 
-    func filterred() -> String {
+    func filtered() -> String {
         filter { ("0"..."9").contains($0) }
     }
     

@@ -53,9 +53,9 @@ class PlacesViewModel: ObservableObject {
     
         //TODO: load from settings
         let filter: AtmFilter = .initial
-        let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
+        let filteredAtmList = Self.filtered(atmList: atmList, filter: filter)
         let initialRegion = Self.initialRegion
-        self.map = PlacesMapViewModel(with: filterredAtmList, initialRegion: initialRegion)
+        self.map = PlacesMapViewModel(with: filteredAtmList, initialRegion: initialRegion)
         self.referenceLocation = .map(initialRegion)
         
         self.filter = filter
@@ -146,7 +146,7 @@ class PlacesViewModel: ObservableObject {
                 switch mode {
                 case .list:
                     
-                    let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
+                    let filterredAtmList = Self.filtered(atmList: atmList, filter: filter)
                     let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, referenceLocation: referenceLocation.coordinate)
                     
                     withAnimation {
@@ -187,7 +187,7 @@ class PlacesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] filter in
                 
-                let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
+                let filterredAtmList = Self.filtered(atmList: atmList, filter: filter)
                 map.update(with: filterredAtmList)
                 list?.update(with: filterredAtmList, metroStationsList: atmMetroStations, referenceLocation: referenceLocation.coordinate)
                 
@@ -258,7 +258,7 @@ class PlacesViewModel: ObservableObject {
         return result
     }
     
-    static func filterred(atmList: [AtmData], filter: AtmFilter?) -> [AtmData] {
+    static func filtered(atmList: [AtmData], filter: AtmFilter?) -> [AtmData] {
         
         guard let filter = filter else {
             return atmList

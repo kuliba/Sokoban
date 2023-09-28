@@ -314,8 +314,8 @@ private extension AuthLoginViewModel {
             
             if let value {
                 
-                let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
-                let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
+                let filteredValue = (try? value.filtered(regEx: self.card.textField.regExp)) ?? value
+                let maskedValue = filteredValue.masked(masks: self.card.textField.masks)
                 self.card.textField.text = maskedValue
             }
             
@@ -450,7 +450,7 @@ extension AuthLoginViewModel {
                         
                         if text.isComplete(for: mask) {
                             
-                            let unmasked = (try? text.filterred(regEx: textField.regExp)) ?? text
+                            let unmasked = (try? text.filtered(regEx: textField.regExp)) ?? text
                             state = .ready(unmasked)
                             return
                         }

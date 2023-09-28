@@ -531,7 +531,7 @@ extension PaymentsProductTemplateView {
                             return
                         }
                         
-                        let filterredValue = (try? value.filterred(regEx: editViewModel.textField.regExp)) ?? value
+                        let filterredValue = (try? value.filtered(regEx: editViewModel.textField.regExp)) ?? value
                         let maskedValue = filterredValue.masked(masks: editViewModel.textField.masks)
                         editViewModel.textField.text = maskedValue
                         
