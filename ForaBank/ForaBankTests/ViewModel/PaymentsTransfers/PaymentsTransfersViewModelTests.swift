@@ -76,6 +76,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeSUT(
         products: [ProductData] = [],
+        certificateClient: CertificateClient = HappyCertificateClient(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -87,7 +88,10 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             model.products.value = [.card: products]
         }
                 
-        let sut = PaymentsTransfersViewModel(model: model)
+        let sut = PaymentsTransfersViewModel(
+            model: model,
+            certificateClient: certificateClient
+        )
         
         trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
