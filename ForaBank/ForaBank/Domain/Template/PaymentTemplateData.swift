@@ -170,10 +170,6 @@ extension PaymentTemplateData {
     
     var payerProductId: Int? {
         
-        guard let transfer,
-              let productId = transfer.payer?.accountId ?? transfer.payer?.cardId
-        else { return nil }
-        
-        return productId
+        parameterList.last?.payer?.accountId ?? parameterList.last?.payer?.cardId
     }
 }
