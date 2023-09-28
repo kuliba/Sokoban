@@ -134,7 +134,7 @@ extension Model {
                     throw Payments.Error.unableCreateRepresentable(productParameterId)
                 }
                 
-                let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+                let productId = productWithSource(source: operation.source, productId: String(product.id))
                 let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
                 
                 //MARK: Amount Parameter
@@ -300,7 +300,7 @@ extension Model {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             
-            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productId = productWithSource(source: operation.source, productId: String(product.id))
             let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             parameters.append(productParameter)
 

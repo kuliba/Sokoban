@@ -742,7 +742,9 @@ extension PaymentsSourceReducerTemplateTests {
             Identifier.product.rawValue
         )
         
-        let transferData = TransferMe2MeData.me2MeStub()
+        let transferData = TransferMe2MeData.me2MeStub(
+            accountId: 123
+        )
         let sut = makeSUT()
         let template = PaymentTemplateData.templateStub(
             type: type,
@@ -757,7 +759,7 @@ extension PaymentsSourceReducerTemplateTests {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(result, "1")
+        XCTAssertEqual(result, "123")
     }
     
     func test_updateParameter_parameterAmount_shouldReturnValue() throws {
