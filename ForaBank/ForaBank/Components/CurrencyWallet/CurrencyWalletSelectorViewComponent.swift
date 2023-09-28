@@ -268,7 +268,9 @@ extension CurrencyWalletSelectorView {
             
             let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
-            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
+            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model, showCVV: {
+                    #warning("showCVV does nothing")
+            })}
             
             return products
         }

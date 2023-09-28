@@ -9,14 +9,23 @@ import Foundation
 
 extension PaymentsProductSelectorView.ViewModel {
     
-    convenience init(productsData: [ProductData], model: Model) {
-        
+    convenience init(
+        productsData: [ProductData],
+        model: Model,
+        showCVV: @escaping () -> Void
+    ) {
         self.init(categories: nil, products: [])
-
+        
         var products = [ProductView.ViewModel]()
         for product in productsData {
             
-            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model)
+            let productViewModel = ProductView.ViewModel(
+                with: product,
+                size: .small,
+                style: .main,
+                model: model,
+                showCVV: showCVV
+            )
             products.append(productViewModel)
         }
         

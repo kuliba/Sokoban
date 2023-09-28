@@ -23,19 +23,30 @@ extension ProductProfileCardView {
         let productType: ProductType
         
         private let model: Model
+        private let showCVV: () -> Void
         private var bindings = Set<AnyCancellable>()
         
-        init(selector: SelectorViewModel, products: [ProductView.ViewModel], activeProductId: ProductData.ID, productType: ProductType, model: Model = .emptyMock) {
- 
+        fileprivate init(
+            selector: SelectorViewModel,
+            products: [ProductView.ViewModel],
+            activeProductId: ProductData.ID,
+            productType: ProductType,
+            model: Model = .emptyMock,
+            showCVV: @escaping () -> Void
+        ) {
             self.selector = selector
             self.products = products
             self.activeProductId = activeProductId
             self.productType = productType
             self.model = model
+            self.showCVV = showCVV
         }
         
-        init?(_ model: Model, productData: ProductData) {
-            
+        init?(
+            _ model: Model,
+            productData: ProductData,
+            showCVV: @escaping () -> Void
+        ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
                   productsForType.isEmpty == false,
@@ -49,7 +60,13 @@ extension ProductProfileCardView {
             var productsViewModels = [ProductView.ViewModel]()
             for product in productsWithRelated {
                 
-                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
+                let productViewModel = ProductView.ViewModel(
+                    with: product,
+                    size: .large,
+                    style: .profile,
+                    model: model,
+                    showCVV: showCVV
+                )
                 productsViewModels.append(productViewModel)
             }
             
@@ -67,6 +84,7 @@ extension ProductProfileCardView {
             self.activeProductId = productData.id
             self.productType = productData.productType
             self.model = model
+            self.showCVV = showCVV
             
             bind()
             bind(selector)
@@ -137,7 +155,7 @@ extension ProductProfileCardView {
                                 
                             } else {
                                 
-                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
+                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model, showCVV: showCVV)
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
@@ -558,7 +576,7 @@ struct ProductProfileCardView_Previews: PreviewProvider {
 
 extension ProductProfileCardView.ViewModel {
     
-    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], activeProductId: 4, productType: .account, model: .emptyMock)
+    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], activeProductId: 4, productType: .account, model: .emptyMock, showCVV: {})
 }
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {

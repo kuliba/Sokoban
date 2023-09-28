@@ -216,10 +216,12 @@ class ProductProfileViewModel: ObservableObject {
         rootView: String,
         dismissAction: @escaping () -> Void
     ) {
-        
-        guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
-            return nil
-        }
+        #warning("showCVV does nothing")
+        guard let productViewModel = ProductProfileCardView.ViewModel(
+            model,
+            productData: product,
+            showCVV: { certificateClient.activateCertificate { _ in }})
+        else { return nil }
         
         // status bar
         let navigationBar = NavigationBarView.ViewModel(product: product, dismissAction: dismissAction)

@@ -61,8 +61,14 @@ extension ProductView {
             self.showCVV = showCVV
         }
         
-        convenience init(with productData: ProductData, isChecked: Bool = false, size: Appearance.Size, style: Appearance.Style, model: Model) {
-            
+        convenience init(
+            with productData: ProductData,
+            isChecked: Bool = false,
+            size: Appearance.Size,
+            style: Appearance.Style,
+            model: Model,
+            showCVV: @escaping () -> Void
+        ) {
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
             let numberMasked = Self.maskedValue(
@@ -115,9 +121,7 @@ extension ProductView {
                         )
                     ))
                 },
-                showCVV: {
-                    //TODO: добавить проверку на необходимость запроса активации после реализации STEP2+STEP3
-                }
+                showCVV: showCVV
             )
             
             bind()
