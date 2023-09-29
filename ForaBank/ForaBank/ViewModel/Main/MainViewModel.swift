@@ -580,7 +580,8 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             do {
                                 
-                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: {})
+                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())})
                                 bind(operationViewModel)
                                 
                                 await MainActor.run {

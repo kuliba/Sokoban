@@ -17,7 +17,9 @@ extension Model {
     ) {
         
         guard let data = try await getC2B().process(qrLink)
-        else { throw NSError(domain: "nil qr data", code: -1) }
+        else {
+            throw Payments.Error.action(.alert(title: "Ошибка", message: "Не смогли получить данные"))
+        }
         
         return try c2BParameters(
             data: data,

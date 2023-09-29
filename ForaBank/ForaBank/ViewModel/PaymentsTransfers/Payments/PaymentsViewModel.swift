@@ -13,7 +13,7 @@ import SwiftUI
 class PaymentsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-
+    
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
     @Published var spinner: SpinnerView.ViewModel?
@@ -22,13 +22,15 @@ class PaymentsViewModel: ObservableObject {
     let closeAction: () -> Void
     
     private let model: Model
+    private var source: Payments.Operation.Source?
     private var bindings = Set<AnyCancellable>()
-    
+
     enum ContentType {
         
         case loading
         case service(PaymentsServiceViewModel)
         case operation(PaymentsOperationViewModel)
+        case linkNotActive(PaymentsSuccessViewModel)
     }
     
     init(content: ContentType, model: Model, closeAction: @escaping () -> Void) {
@@ -37,7 +39,7 @@ class PaymentsViewModel: ObservableObject {
         self.model = model
         self.closeAction = closeAction
     }
-    
+        
     convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
         self.init(content: .loading, model: model, closeAction: closeAction)
@@ -88,31 +90,10 @@ class PaymentsViewModel: ObservableObject {
     convenience init(source: Payments.Operation.Source, model: Model, closeAction: @escaping () -> Void) {
         
         self.init(content: .loading, model: model, closeAction: closeAction)
+        self.source = source
         bind()
         
-        Task {
-            
-            do {
-                
-                let operation = try await model.paymentsOperation(with: source)
-                let operationViewModel = PaymentsOperationViewModel(operation: operation, model: model, closeAction: closeAction)
-                operationViewModel.rootActions = rootActions
-                bind(operationViewModel: operationViewModel)
-                
-                await MainActor.run {
-                    
-                    withAnimation {
-                        content = .operation(operationViewModel)
-                    }
-                }
-                
-            } catch {
-                
-                LoggerAgent.shared.log(level: .error, category: .ui, message: "Payment with source: \(source) start failed with error: \(error)")
-                
-                self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: "\(error.localizedDescription)"))
-            }
-        }
+        sourceOperation(model, source, closeAction)
     }
     
     convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void) {
@@ -120,7 +101,7 @@ class PaymentsViewModel: ObservableObject {
         self.init(content: .loading, model: model, closeAction: closeAction)
         
         bind()
-
+        
         Task {
             
             do {
@@ -131,7 +112,7 @@ class PaymentsViewModel: ObservableObject {
                 bind(operationViewModel: operationViewModel)
                 
                 await MainActor.run {
-
+                    
                     withAnimation {
                         content = .operation(operationViewModel)
                     }
@@ -167,7 +148,7 @@ class PaymentsViewModel: ObservableObject {
                         model.action.send(ModelAction.Products.Update.Fast.All())
                         // update latest operations list
                         model.action.send(ModelAction.LatestPayments.List.Requested())
-     
+                        
                     case let .failure(error):
                         switch error {
                         case let paymentsError as Payments.Error:
@@ -175,7 +156,7 @@ class PaymentsViewModel: ObservableObject {
                             case let .action(action):
                                 switch action {
                                 case let .warning(parameterId: parameterId, message: message):
-                                   
+                                    
                                     if case .operation(let operationViewModel) = content {
                                         
                                         operationViewModel.action.send(PaymentsOperationViewModelAction.ShowWarning(parameterId: parameterId, message: message))
@@ -215,7 +196,7 @@ class PaymentsViewModel: ObservableObject {
                                     
                                     self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message))
                                 }
-
+                                
                             default:
                                 self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: error.localizedDescription))
                             }
@@ -265,7 +246,7 @@ class PaymentsViewModel: ObservableObject {
                         
                         self.successViewModel = nil
                     }
- 
+                    
                 default:
                     break
                 }
@@ -274,13 +255,16 @@ class PaymentsViewModel: ObservableObject {
         
         action
             .compactMap({ $0 as? PaymentsViewModelAction.CriticalAlert })
-            .delay(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .delay(for: .milliseconds(700), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] payload in
                 
                 guard let self else { return }
                 
-                alert = .init(title: payload.title, message: payload.message, primary: .init(type: .cancel, title: "Ок", action: closeAction))
+                alert = .init(
+                    title: payload.title,
+                    message: payload.message,
+                    primary: .init(type: .cancel, title: "Ок", action: closeAction))
                 
             }.store(in: &bindings)
     }
@@ -302,8 +286,21 @@ class PaymentsViewModel: ObservableObject {
                     self.action.send(PaymentsViewModelAction.CloseSuccessView())
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
-                    //TODO: correct implementation required
-                    self.action.send(PaymentsViewModelAction.Dismiss())
+                    //TODO: correct implementation required                    
+                    switch content {
+                        
+                    case .linkNotActive:
+                        if let source {
+                            sourceOperation(
+                                model,
+                                source,
+                                closeAction)
+                        }
+                        else { self.action.send(PaymentsViewModelAction.Dismiss()) }
+                        
+                    default:
+                        self.action.send(PaymentsViewModelAction.Dismiss())
+                    }
                     
                 default:
                     break
@@ -324,13 +321,13 @@ class PaymentsViewModel: ObservableObject {
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     self.action.send(PaymentsViewModelAction.ScanQrCode())
-                 
+                    
                 case _ as PaymentsViewModelAction.EditName:
                     break
-                //TODO: setup open edit name sheet action
-                        
+                    //TODO: setup open edit name sheet action
+                    
                 case _ as PaymentsOperationViewModelAction.CancelOperation:
-
+                    
                     //TODO: move to convenience init
                     let succes = Payments.Success(
                         operation: operationViewModel.operation.value,
@@ -343,6 +340,9 @@ class PaymentsViewModel: ObservableObject {
                         ])
                     
                     self.successViewModel = .init(paymentSuccess: succes, model)
+                
+                case _ as PaymentsSuccessAction.Button.Repeat:
+                    self.content = .operation(operationViewModel)
 
                 default:
                     break
@@ -413,5 +413,105 @@ extension PaymentsViewModel {
     
     enum Error: LocalizedError {
         case unableRecognizeCategoryForService(Payments.Service)
+    }
+}
+
+extension PaymentsViewModel {
+    
+    func notActiveLink(
+    ) async {
+        
+        let viewModel: PaymentsSuccessViewModel = .init(
+            paymentSuccess: .init(
+                operation: nil,
+                parameters: [
+                    Payments.ParameterSuccessStatus(status: .error),
+                    Payments.ParameterSuccessText(
+                        value: "Оплата не активирована",
+                        style: .title,
+                        placement: .top
+                    ),
+                    Payments.ParameterSuccessText(
+                        value: "Убедитесь, что сотрудник магазина активировал оплату и нажмите “Обновить”",
+                        style: .subtitle,
+                        placement: .top
+                    ),
+                    Payments.ParameterButton.init(
+                        title: "Обновить",
+                        style: .primary,
+                        acton: .repeat,
+                        placement: .bottom
+                    ),
+                    Payments.ParameterButton.init(
+                        title: "На главный",
+                        style: .secondary,
+                        acton: .main,
+                        placement: .bottom
+                    ),
+                    Payments.ParameterSuccessIcon(
+                        icon: .name("ic72Sbp"),
+                        size: .normal,
+                        placement: .bottom
+                    )
+                ]),
+            .emptyMock)
+        
+        bind(successViewModel: viewModel)
+
+        await MainActor.run {
+            
+            withAnimation {
+                content = .linkNotActive(viewModel)
+            }
+        }
+    }
+        
+    func sourceOperation(
+        _ model: Model,
+        _ source: Payments.Operation.Source,
+        _ closeAction: @escaping () -> Void
+    ) {
+        Task {
+            
+            do {
+                
+                let operation = try await model.paymentsOperation(with: source)
+                let operationViewModel = PaymentsOperationViewModel(
+                    operation: operation,
+                    model: model,
+                    closeAction: closeAction)
+                operationViewModel.rootActions = rootActions
+                bind(operationViewModel: operationViewModel)
+                
+                await MainActor.run {
+                    
+                    withAnimation {
+                        content = .operation(operationViewModel)
+                    }
+                }
+            } catch {
+                
+                LoggerAgent.shared.log(level: .error, category: .ui, message: "Payment with source: \(source) start failed with error: \(error)")
+                
+                await showErrorAlert(error)
+            }
+        }
+    }
+    
+    func showErrorAlert(_ error: Swift.Error) async {
+        
+        if let mapperError = error as? QrDataMapper.MapperError {
+            
+            switch mapperError {
+                
+            case let .mapError(message):
+                self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: "\(message)"))
+                
+            case .status3122:
+                await notActiveLink()
+            }
+        } else {
+            self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: "\(error.localizedDescription)"))
+        }
     }
 }

@@ -23,7 +23,7 @@ struct QrDataMapper {
             return handle200(with: data)
             
         default:
-            return .failure(.notOkStatus(statusCode))
+            return .failure(.mapError(HTTPURLResponse.localizedString(forStatusCode: statusCode)))
         }
     }
     
@@ -34,27 +34,34 @@ struct QrDataMapper {
             
             switch decodableData.statusCode {
                 
+            case statusCode102:
+                return .failure(.mapError(decodableData.errorMessage ?? .defaultError))
+            
             case statusCode3122:
                 return .failure(.status3122)
-                
+
             default:
                 guard let data = decodableData.data
-                else { return .failure(.emptyData)}
+                else { return .failure(.mapError(decodableData.errorMessage ?? .defaultError))}
                 return .success(data)
             }
         } catch {
-            return .failure(.mapError)
+            return .failure(.mapError(.defaultError))
         }
     }
     
-    enum MapperError: Error {
+    enum MapperError: Error, Equatable {
         
-        case emptyData
-        case notOkStatus(Int)
-        case mapError
+        case mapError(String)
         case status3122
     }
 }
 
+private let statusCode102 = 102
 private let statusCode200 = 200
 private let statusCode3122 = 3122
+
+extension String {
+    
+    static let defaultError: Self = "Возникла техническая ошибка"
+}
