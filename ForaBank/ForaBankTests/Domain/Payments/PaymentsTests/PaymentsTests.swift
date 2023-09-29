@@ -47,7 +47,7 @@ final class PaymentsTests: XCTestCase {
         let sut = makeSUT(serverStub: getScenarioData)
         let operation = c2bOperationWithParameter()
         
-        // TODO: обновить тест с учетом HTTPClient
+        // TODO: обновить тест с учетом HTTPClient 
         /*let paymentsStepC2B = try await sut.paymentsStepC2B(operation, for: 0)
           
         XCTAssertNoDiff(paymentsStepC2B.parametersIds, [
