@@ -359,9 +359,9 @@ final class CardViewComponentTests: XCTestCase {
         let sut = makeSUT(size: .large)
         XCTAssertEqual(sut.cardInfo.state, .showFront)
         
-        sut.openCVV()
+        sut.showCVV()
         
-        XCTAssertEqual(sut.cardInfo.state, .maskedNumberCVV)
+        XCTAssertEqual(sut.cardInfo.state, .maskedNumberCVV("123"))
         XCTAssertEqual(sut.cardInfo.numberToDisplay, MaskedNumber.maskedNumber.value)
     }
     
@@ -388,9 +388,9 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.cardInfo.cvvToDisplay, .cvvTitle)
         
         // open CVV
-        sut.openCVV()
+        sut.showCVV()
         
-        XCTAssertEqual(sut.cardInfo.state, .maskedNumberCVV)
+        XCTAssertEqual(sut.cardInfo.state, .maskedNumberCVV("123"))
         XCTAssertNotEqual(sut.cardInfo.cvvToDisplay, .cvvTitle)
         
         // copy number to clipboard
@@ -402,7 +402,7 @@ final class CardViewComponentTests: XCTestCase {
     
     // MARK: - Test Showing Full Number - full path
     
-    func test_showingFullNumber_fullPathWithCopyNumberToClipboardWithOutOpenCVVAndFlipCard_onLargeCard() {
+    func test_showingFullNumber_fullPathWithCopyNumberToClipboardWithOutShowCVVAndFlipCard_onLargeCard() {
         
         let sut = makeSUT(productType: .card, size: .large)
         
@@ -430,7 +430,7 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.cardInfo.state, .showFront)
     }
     
-    func test_showingFullNumber_fullPathWithOutCopyNumberToClipboardWithOutOpenCVVAndFlipCard_onLargeCard() {
+    func test_showingFullNumber_fullPathWithOutCopyNumberToClipboardWithOutShowCVVAndFlipCard_onLargeCard() {
         
         let sut = makeSUT(productType: .card, size: .large)
         
@@ -464,6 +464,8 @@ final class CardViewComponentTests: XCTestCase {
         name: String,
         footer:ProductView.ViewModel.FooterViewModel,
         appearance: ProductView.ViewModel.Appearance,
+        certificate: CertificateClient? = HappyCertificateClientForTests(),
+        cardAction: ProductView.ViewModel.CardAction? = { _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -484,8 +486,8 @@ final class CardViewComponentTests: XCTestCase {
             appearance: appearance,
             isUpdating: false,
             productType: productType,
-            copyCardNumber: { _ in },
-            showCVV: {}
+            cardAction: cardAction,
+            certificate: certificate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -495,6 +497,8 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productType: ProductType = .card,
+        certificate: CertificateClient? = HappyCertificateClientForTests(),
+        cardAction: ProductView.ViewModel.CardAction? = { _ in },
         size: ProductView.ViewModel.Appearance.Size = .small,
         file: StaticString = #file,
         line: UInt = #line
@@ -512,8 +516,8 @@ final class CardViewComponentTests: XCTestCase {
                 size: size),
             isUpdating: false,
             productType: productType,
-            copyCardNumber: { _ in },
-            showCVV: {}
+            cardAction: cardAction,
+            certificate: certificate
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -728,4 +732,23 @@ private extension ProductView.ViewModel.CardInfo {
         fullNumber: .number,
         numberMasked: .maskedNumber
     )
+}
+
+private final class HappyCertificateClientForTests: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        completion(.success(()))
+    }
+
+    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.success("123"))
+    }
 }

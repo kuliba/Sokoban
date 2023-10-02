@@ -10,7 +10,7 @@ import Foundation
 
 extension CvvPinService: CheckCertificateClient {
     
-    typealias CheckCertificateResult = Result<Void, CVVPinError.PinError>
+    typealias CheckCertificateResult = Result<Void, CVVPinError.CheckError>
     typealias CheckCertificateCompletion = (CheckCertificateResult) -> Void
     
     func checkCertificate(
@@ -45,12 +45,12 @@ extension CvvPinService: ActivateCertificateClient {
     }
 }
 
-extension CvvPinService: BindPublicKeyClient {
+extension CvvPinService: ConfirmWithOtpClient {
     
-    typealias BindPublicKeyResult = Result<Void, CVVPinError.BindPublicKeyError>
+    typealias BindPublicKeyResult = Result<Void, CVVPinError.OtpError>
     typealias BindPublicKeyCompletion = (BindPublicKeyResult) -> Void
     
-    func bindPublicKey(
+    func comfirmWith(
         otp: String,
         completion: @escaping BindPublicKeyCompletion
     ) {
@@ -69,5 +69,23 @@ extension CvvPinService: BindPublicKeyClient {
                 completion(.success(()))
             }
         }
+    }
+}
+
+extension CvvPinService: ShowCVVClient {
+    
+    typealias CVV = ProductView.ViewModel.CardInfo.CVV
+    typealias ShowCVVCompletion = (Result<CVV, CVVPinError.ShowCVVError>) -> Void
+
+    func showCVV(
+        completion: @escaping ShowCVVCompletion
+    ) {
+#warning("fix this")
+        // completion(.success(.init("3")))
+        // completion(.failure(.check(.certificate)))
+        // completion(.failure(.check(.connectivity)))
+        // completion(.failure(.activation(.init(message: "Возникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения"))))
+        // completion(.failure(.otp(.init(errorMessage: "error", retryAttempts: 1))))
+        completion(.failure(.otp(.init(errorMessage: "error", retryAttempts: 0))))
     }
 }
