@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import Tagged
 
 //MARK: - ViewModel
 
@@ -16,11 +17,9 @@ extension ProductView {
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
         @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
-        // TODO: add Tagged
-        typealias CVV = String
-        typealias CVVResult = Result<CVV, Error>
+        typealias CVVResult = Result<CardInfo.CVV, Error>
         typealias ShowCVV = (@escaping (CVVResult) -> Void) -> Void
-        
+        typealias CardAction = (CardEvent) -> Void
         let action: PassthroughSubject<Action, Never> = .init()
         
         let id: ProductData.ID
@@ -33,8 +32,8 @@ extension ProductView {
         
         var appearance: Appearance
         let productType: ProductType
-        let copyCardNumber: (String) -> Void
-        let showCVV: ShowCVV?
+        let cardAction: CardAction?
+        let certificate: CertificateClient?
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
         
@@ -48,10 +47,9 @@ extension ProductView {
             appearance: Appearance,
             isUpdating: Bool,
             productType: ProductType,
-            copyCardNumber: @escaping (String) -> Void,
-            showCVV: ShowCVV?
+            cardAction: CardAction? = nil,
+            certificate: CertificateClient? = nil
         ) {
-            
             self.id = id
             self.header = header
             self.cardInfo = cardInfo
@@ -61,8 +59,8 @@ extension ProductView {
             self.appearance = appearance
             self.isUpdating = isUpdating
             self.productType = productType
-            self.copyCardNumber = copyCardNumber
-            self.showCVV = showCVV
+            self.cardAction = cardAction
+            self.certificate = certificate
         }
         
         convenience init(
@@ -71,7 +69,8 @@ extension ProductView {
             size: Appearance.Size,
             style: Appearance.Style,
             model: Model,
-            showCVV: ShowCVV?
+            cardAction: CardAction? = nil,
+            certificate: CertificateClient? = nil
         ) {
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
@@ -97,7 +96,6 @@ extension ProductView {
             let backgroundImage = Self.backgroundImage(with: productData, size: size)
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
-            
             self.init(
                 id: productData.id,
                 header: .init(number: number, period: period),
@@ -115,17 +113,8 @@ extension ProductView {
                 ),
                 isUpdating: false,
                 productType: productType,
-                copyCardNumber: { message in
-                    
-                    model.action.send(ModelAction.Informer.Show(
-                        informer: .init(
-                            message: message,
-                            icon: .copy,
-                            type: .copyInfo
-                        )
-                    ))
-                },
-                showCVV: showCVV
+                cardAction: cardAction,
+                certificate: certificate
             )
             
             bind()
@@ -562,6 +551,9 @@ extension ProductView.ViewModel {
     
     struct CardInfo: Equatable {
         
+        typealias CVV = Tagged<_CVV, String>
+        enum _CVV {}
+
         var name: String
         var owner: String
         
@@ -571,10 +563,10 @@ extension ProductView.ViewModel {
         let numberMasked: MaskedNumber
         var state: State = .showFront
 
-        enum State {
+        enum State: Equatable {
             
             case fullNumberMaskedCVV
-            case maskedNumberCVV
+            case maskedNumberCVV(CVV)
             case maskedNumberMaskedCVV
             case showFront
         }
@@ -588,12 +580,7 @@ extension ProductView.ViewModel {
             
             let value: String
         }
-        
-        struct CVV: Equatable {
-            
-            let value: String
-        }
-        
+                
         struct CVVTitle: Equatable {
             
             let value: String
@@ -636,9 +623,8 @@ extension ProductView.ViewModel.CardInfo {
         case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront:
             return cvvTitle.value
             
-            //TODO: добавить реальное значение CVV!!!
-        case .maskedNumberCVV:
-            return "111"
+        case let .maskedNumberCVV(value):
+            return value.rawValue
         }
     }
     
@@ -763,7 +749,7 @@ struct ProductView: View {
             },
             cvvView: {
                 
-                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.openCVV)
+                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.showCVV)
             }
         )
         .card(
@@ -1136,26 +1122,46 @@ extension ProductView.ViewModel {
         
         pasteboard.string = self.cardInfo.fullNumber.value
         self.cardInfo.state = .fullNumberMaskedCVV
-        self.copyCardNumber("Номер карты скопирован")
+        cardAction?(.copyCardNumber("Номер карты скопирован"))
     }
     
-    func openCVV() {
+    func showCVV() {
         
-        self.showCVV? { [weak self] result in
+        certificate?.showCVV { [weak self] result in
             
             guard let self else { return }
-            
-            // TODO: main thread
+
             switch result {
                 
             case let .failure(error):
                 // TODO: real error
-                //self.action.send(.alert(error.localizedDescription))
-                print(error)
+                switch error {
+                case let .check(checkError):
+                    switch checkError {
+                    case .certificate:
+                        // show certificate Alert
+                        cardAction?(.showActivateAlert)
+
+                    case .connectivity:
+                        // show connectivity Alert
+                        cardAction?(.showAlert("Истеклo время\nожидания ответа"))
+                    }
+                case let .activation(activationError):
+                    // show Alert with message
+                    cardAction?(.showAlert(activationError.message))
+                case let .otp(otpError):
+                    // show Alert with message
+                    let message = {
+                        if otpError.retryAttempts > 0 {
+                            return "Введен некорректный код. Попробуйте еще раз."
+                        } else {
+                            return "Возникла техническая ошибка."
+                        }
+                    }()
+                    cardAction?(.showAlert(message))
+                }
             case let .success(cvv):
-                // TODO: self.cardInfo.cvvTitle = cvv
-                self.cardInfo.state = .maskedNumberCVV
-                print(cvv)
+                self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
             }
         }
     }
@@ -1257,4 +1263,14 @@ extension Array where Element == (String, String) {
         ("X", "*"),
         ("-", " ")
     ]
+}
+
+extension ProductView.ViewModel {
+    
+    enum CardEvent {
+        
+        case copyCardNumber(String)
+        case showAlert(String)
+        case showActivateAlert
+    }
 }

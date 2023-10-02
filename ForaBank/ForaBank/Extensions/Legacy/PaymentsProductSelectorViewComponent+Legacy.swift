@@ -11,20 +11,19 @@ extension PaymentsProductSelectorView.ViewModel {
     
     convenience init(
         productsData: [ProductData],
-        model: Model,
-        showCVV: ProductView.ViewModel.ShowCVV?
+        model: Model
     ) {
         self.init(categories: nil, products: [])
         
         var products = [ProductView.ViewModel]()
         for product in productsData {
-            
+            // для маленьких карт сертификат не нужен - нет функционал CVV/PIN
             let productViewModel = ProductView.ViewModel(
                 with: product,
                 size: .small,
                 style: .main,
                 model: model,
-                showCVV: showCVV
+                certificate: nil
             )
             products.append(productViewModel)
         }

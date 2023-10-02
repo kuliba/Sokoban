@@ -1454,6 +1454,7 @@
 		8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */; };
 		8362FB0329DEF7F20094457E /* SearchCityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0229DEF7F20094457E /* SearchCityViewModel.swift */; };
 		8362FB0529DEFA050094457E /* SearchCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0429DEFA050094457E /* SearchCityView.swift */; };
+		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83802B992A010FF100257D8C /* ProductBackViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83802B982A010FF100257D8C /* ProductBackViewComponent.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
@@ -3896,6 +3897,7 @@
 				2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */,
 				ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */,
 				6833E0B027322878004C070F /* SkeletonView in Frameworks */,
+				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
@@ -10286,6 +10288,7 @@
 				2A727A252A9381A700235EFF /* TransferPublicKey */,
 				2AFF5D282A9885210097F429 /* CryptoSwaddler */,
 				2A7AB1922AA1065400D37BD6 /* LinkableText */,
+				836DE2EB2AC72A7C00D4C754 /* Tagged */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -10397,6 +10400,7 @@
 				ED0AF883286B24DF00F86B68 /* XCRemoteSwiftPackageReference "AnyImageKit" */,
 				2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */,
 				2A3039342A17D48B0008701D /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
+				836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -13644,6 +13648,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
 		ED0AF883286B24DF00F86B68 /* XCRemoteSwiftPackageReference "AnyImageKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AnyImageProject/AnyImageKit.git";
@@ -13856,6 +13868,11 @@
 		77B243DB2A2F658500CDCEC6 /* UserModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserModel;
+		};
+		836DE2EB2AC72A7C00D4C754 /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
 		};
 		837F82E42A3B271C003544BB /* PickerWithPreviewComponent */ = {
 			isa = XCSwiftPackageProductDependency;

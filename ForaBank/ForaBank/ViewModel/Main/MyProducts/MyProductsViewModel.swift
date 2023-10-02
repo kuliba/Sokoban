@@ -12,6 +12,8 @@ import SwiftUI
 
 class MyProductsViewModel: ObservableObject {
     
+    typealias CardAction = (ProductView.ViewModel.CardEvent) -> Void
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var sections: [MyProductsSectionViewModel]
@@ -30,6 +32,7 @@ class MyProductsViewModel: ObservableObject {
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
+    private let cardAction: CardAction?
     private let certificateClient: CertificateClient
     private var bindings = Set<AnyCancellable>()
     
@@ -40,11 +43,13 @@ class MyProductsViewModel: ObservableObject {
          openProductVM: MyProductsOpenProductView.ViewModel,
          editModeState: EditMode = .inactive,
          model: Model = .emptyMock,
+         cardAction: CardAction? = nil,
          certificateClient: CertificateClient,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:]
     ) {
         self.model = model
+        self.cardAction = cardAction
         self.certificateClient = certificateClient
         self.editModeState = editModeState
         self.navigationBar = navigationBar
@@ -57,6 +62,7 @@ class MyProductsViewModel: ObservableObject {
     
     convenience init(
         _ model: Model,
+        cardAction: CardAction? = nil,
         certificateClient: CertificateClient
     ) {
         self.init(
@@ -66,6 +72,7 @@ class MyProductsViewModel: ObservableObject {
             openProductVM: .init(model),
             editModeState: .inactive,
             model: model,
+            cardAction: cardAction,
             certificateClient: certificateClient,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:]
@@ -601,6 +608,7 @@ extension MyProductsViewModel {
         totalMoney: .sampleBalance,
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
+        cardAction: { _ in },
         certificateClient: HappyCertificateClient(),
         refreshingIndicator: .init(isActive: true)
     )
@@ -614,6 +622,7 @@ extension MyProductsViewModel {
         totalMoney: .sampleBalance,
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
+        cardAction: { _ in },
         certificateClient: HappyCertificateClient(),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false]

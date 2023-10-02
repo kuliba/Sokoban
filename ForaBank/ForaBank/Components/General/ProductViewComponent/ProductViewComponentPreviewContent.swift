@@ -20,8 +20,8 @@ extension ProductView.ViewModel {
         appearance: .whiteSample(),
         isUpdating: false,
         productType: .card,
-        copyCardNumber: { _ in },
-        showCVV: {_ in }
+        cardAction: { _ in },
+        certificate: HappyCertificateClient()
     )
     
     static let blocked = blockedCard(id: 1, .whiteSample())
@@ -41,8 +41,8 @@ extension ProductView.ViewModel {
             appearance: appearance,
             isUpdating: false,
             productType: .card,
-            copyCardNumber: { _ in },
-            showCVV: {_ in }
+            cardAction: { _ in },
+            certificate: HappyCertificateClient()
         )
     }
     
@@ -63,8 +63,8 @@ extension ProductView.ViewModel {
             appearance: appearance,
             isUpdating: false,
             productType: .card,
-            copyCardNumber: { _ in },
-            showCVV: {_ in }
+            cardAction: { _ in },
+            certificate: HappyCertificateClient()
         )
     }
     
@@ -77,8 +77,8 @@ extension ProductView.ViewModel {
         appearance: .whiteRIO(),
         isUpdating: false,
         productType: .card,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
     
     static let accountSmall = ProductView.ViewModel(
@@ -91,8 +91,8 @@ extension ProductView.ViewModel {
         appearance: .whiteRIO(.small),
         isUpdating: false,
         productType: .account,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
     
     static let notActivateProfile = ProductView.ViewModel(
@@ -107,8 +107,8 @@ extension ProductView.ViewModel {
         ),
         isUpdating: false,
         productType: .deposit,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
     
     static let blockedProfile = ProductView.ViewModel(
@@ -123,8 +123,8 @@ extension ProductView.ViewModel {
             style: .profile),
         isUpdating: false,
         productType: .card,
-        copyCardNumber: { _ in },
-        showCVV: {_ in }
+        cardAction: { _ in },
+        certificate: HappyCertificateClient()
     )
     static let classicProfile = ProductView.ViewModel(
         id: 6,
@@ -142,8 +142,8 @@ extension ProductView.ViewModel {
         appearance: .whiteRIO(),
         isUpdating: false,
         productType: .card,
-        copyCardNumber: { _ in },
-        showCVV: {_ in }
+        cardAction: { _ in },
+        certificate: HappyCertificateClient()
     )
     
     static let accountProfile = ProductView.ViewModel(
@@ -155,8 +155,8 @@ extension ProductView.ViewModel {
         appearance: .whiteRIO(),
         isUpdating: false,
         productType: .account,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
     
     static let depositProfile = ProductView.ViewModel(
@@ -177,8 +177,8 @@ extension ProductView.ViewModel {
             background: .init(color: .cardRIO, image: Image( "Cover Deposit"))),
         isUpdating: false,
         productType: .deposit,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
     
     static let updating = ProductView.ViewModel(
@@ -197,8 +197,8 @@ extension ProductView.ViewModel {
         appearance: .whiteSample(),
         isUpdating: true,
         productType: .card,
-        copyCardNumber: { _ in },
-        showCVV: nil
+        cardAction: { _ in },
+        certificate: nil
     )
 }
 
