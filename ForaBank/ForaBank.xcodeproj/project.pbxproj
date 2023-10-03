@@ -1557,6 +1557,11 @@
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
 		C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3732A8FBE11002F99BC /* PaymentsTests.swift */; };
 		C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3752A8FC184002F99BC /* C2BOperation.swift */; };
+		C134B1912AC31864008AC17E /* StickerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B1902AC31864008AC17E /* StickerPreviewApp.swift */; };
+		C134B1932AC31864008AC17E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B1922AC31864008AC17E /* ContentView.swift */; };
+		C134B1952AC31865008AC17E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C134B1942AC31865008AC17E /* Assets.xcassets */; };
+		C134B1982AC31865008AC17E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C134B1972AC31865008AC17E /* Preview Assets.xcassets */; };
+		C134B19F2AC31941008AC17E /* OpenAccountItemViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */; };
 		C13825452AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */; };
 		C13825472AB9D6E200AD2AF2 /* Model+RequisitesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
@@ -1611,6 +1616,8 @@
 		C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */; };
 		C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */; };
 		C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */; };
+		C1BA23DC2AC5AACF00425B10 /* PaymentsComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */; };
+		C1BA23DF2AC701EC00425B10 /* StickersStyleConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
@@ -3498,6 +3505,12 @@
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
 		C130E3732A8FBE11002F99BC /* PaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTests.swift; sourceTree = "<group>"; };
 		C130E3752A8FC184002F99BC /* C2BOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BOperation.swift; sourceTree = "<group>"; };
+		C134B18E2AC31863008AC17E /* StickerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C134B1902AC31864008AC17E /* StickerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewApp.swift; sourceTree = "<group>"; };
+		C134B1922AC31864008AC17E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C134B1942AC31865008AC17E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C134B1972AC31865008AC17E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAccountItemViewComponent.swift; sourceTree = "<group>"; };
 		C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakePaymentsSuccessOptionButtonsViewModelTests.swift; sourceTree = "<group>"; };
 		C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+RequisitesTests.swift"; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
@@ -3550,6 +3563,7 @@
 		C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SbpPayTests.swift"; sourceTree = "<group>"; };
 		C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTemplateDataTests.swift; sourceTree = "<group>"; };
 		C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsC2BTests.swift"; sourceTree = "<group>"; };
+		C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStyleConfiguration.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
@@ -3894,6 +3908,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C134B18B2AC31863008AC17E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1A4D3782A67CDFC001DD9E4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3931,6 +3952,7 @@
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
 				2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */,
+				C1BA23DC2AC5AACF00425B10 /* PaymentsComponents in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
@@ -5650,6 +5672,7 @@
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
+				C134B18F2AC31863008AC17E /* StickerPreview */,
 				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
 			);
 			path = PreviewApps;
@@ -7836,6 +7859,7 @@
 				5059D4482863B75900DA446D /* CurrencyWallet */,
 				ED15DAE32811639D00BF7E9F /* Account */,
 				0B4145BA2810931A0097430C /* Messages */,
+				C1BA23DD2AC701C800425B10 /* StickersOrder */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -8613,6 +8637,26 @@
 			path = PaymentsTests;
 			sourceTree = "<group>";
 		};
+		C134B18F2AC31863008AC17E /* StickerPreview */ = {
+			isa = PBXGroup;
+			children = (
+				C134B1902AC31864008AC17E /* StickerPreviewApp.swift */,
+				C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */,
+				C134B1922AC31864008AC17E /* ContentView.swift */,
+				C134B1942AC31865008AC17E /* Assets.xcassets */,
+				C134B1962AC31865008AC17E /* Preview Content */,
+			);
+			path = StickerPreview;
+			sourceTree = "<group>";
+		};
+		C134B1962AC31865008AC17E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				C134B1972AC31865008AC17E /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		C14093F72A43D2E600B82E1F /* OperationDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -8675,6 +8719,14 @@
 				C1A4D3842A67CDFD001DD9E4 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C1BA23DD2AC701C800425B10 /* StickersOrder */ = {
+			isa = PBXGroup;
+			children = (
+				C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */,
+			);
+			path = StickersOrder;
 			sourceTree = "<group>";
 		};
 		C1F7999B29CD181C0048346B /* Abroad */ = {
@@ -9453,6 +9505,7 @@
 				2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */,
 				C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */,
 				83378AB52AA0DFE10087F8B1 /* LandingPreview.app */,
+				C134B18E2AC31863008AC17E /* StickerPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -10346,6 +10399,23 @@
 			productReference = A515682C2821B927000D4455 /* ForaPushServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		C134B18D2AC31863008AC17E /* StickerPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C134B19D2AC31865008AC17E /* Build configuration list for PBXNativeTarget "StickerPreview" */;
+			buildPhases = (
+				C134B18A2AC31863008AC17E /* Sources */,
+				C134B18B2AC31863008AC17E /* Frameworks */,
+				C134B18C2AC31863008AC17E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StickerPreview;
+			productName = StickerPreview;
+			productReference = C134B18E2AC31863008AC17E /* StickerPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */;
@@ -10426,6 +10496,7 @@
 				2A5EB43C2AAB29C900CA931D /* LandingUIComponent */,
 				830C91BA2AAF9051005EC90C /* CodableLanding */,
 				2A4630082AC454E400020B73 /* ServerAgent */,
+				C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -10494,6 +10565,9 @@
 					A515682B2821B927000D4455 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
+					C134B18D2AC31863008AC17E = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					C1A4D37A2A67CDFC001DD9E4 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
@@ -10554,6 +10628,7 @@
 				2A14A8512A2750440018511E /* TextFieldViewVithBindingPreview */,
 				C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				83378AB42AA0DFE10087F8B1 /* LandingPreview */,
+				C134B18D2AC31863008AC17E /* StickerPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -10590,6 +10665,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C134B18C2AC31863008AC17E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C134B1982AC31865008AC17E /* Preview Assets.xcassets in Resources */,
+				C134B1952AC31865008AC17E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11009,6 +11093,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C134B18A2AC31863008AC17E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C134B1932AC31864008AC17E /* ContentView.swift in Sources */,
+				C134B1912AC31864008AC17E /* StickerPreviewApp.swift in Sources */,
+				C134B19F2AC31941008AC17E /* OpenAccountItemViewComponent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1A4D3772A67CDFC001DD9E4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -11174,6 +11268,7 @@
 				68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */,
 				777460F72922D2C300D3FF46 /* ContactsBanksPrefferedSectionView.swift in Sources */,
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
+				C1BA23DF2AC701EC00425B10 /* StickersStyleConfiguration.swift in Sources */,
 				774A8B4D2865FD3600B81140 /* MyProductsSectionView.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,
 				774CA5E1287C7C6000544C17 /* ProductStatementView+Legacy.swift in Sources */,
@@ -12906,7 +13001,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12973,7 +13067,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -12986,7 +13079,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13128,7 +13220,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -13141,7 +13232,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13159,7 +13249,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -13172,7 +13261,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13182,6 +13270,130 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
+		};
+		C134B1992AC31865008AC17E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C134B19A2AC31865008AC17E /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		C134B19B2AC31865008AC17E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C134B19C2AC31865008AC17E /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
 		};
 		C137D6782A28C72400EC337E /* Preprod */ = {
 			isa = XCBuildConfiguration;
@@ -13254,7 +13466,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -13265,7 +13476,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13331,7 +13541,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -13344,7 +13553,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13614,7 +13822,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -13626,7 +13833,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				"OTHER_SWIFT_FLAGS[sdk=*]" = "-Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=400";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
@@ -13651,7 +13857,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -13662,7 +13867,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 9.4.3;
 				MARKETING_VERSION = 9.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13810,6 +14014,17 @@
 				7752FED229928A7A00795CD5 /* Mock */,
 				A51568362821B927000D4455 /* Release */,
 				C137D67C2A28C72400EC337E /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C134B19D2AC31865008AC17E /* Build configuration list for PBXNativeTarget "StickerPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C134B1992AC31865008AC17E /* Debug */,
+				C134B19A2AC31865008AC17E /* Mock */,
+				C134B19B2AC31865008AC17E /* Release */,
+				C134B19C2AC31865008AC17E /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14212,6 +14427,10 @@
 		C1A4D3922A694EF2001DD9E4 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentsComponents;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;

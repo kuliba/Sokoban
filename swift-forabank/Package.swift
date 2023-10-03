@@ -22,6 +22,8 @@ let package = Package(
         .codableLanding,
         .landingMapping,
         .landingUIComponent,
+        // MARK: - PaymentsComponents
+        .paymentsComponents,
         // MARK: - Services
         .bindPublicKeyWithEventID,
         .cvvPin,
@@ -68,6 +70,9 @@ let package = Package(
         .landingMappingTests,
         .landingUIComponent,
         .landingUIComponentTests,
+        // MARK: - PaymentsComponents
+        .paymentsComponents,
+        .paymentsComponentsTests,
         // MARK: - Services
         .bindPublicKeyWithEventID,
         .bindPublicKeyWithEventIDTests,
@@ -172,6 +177,14 @@ private extension Product {
         name: .landingUIComponent,
         targets: [
             .landingUIComponent
+        ]
+    )
+    
+    // MARK: - PaymentsComponents
+    static let paymentsComponents = library(
+        name: .paymentsComponents,
+        targets: [
+            .paymentsComponents,
         ]
     )
     
@@ -414,6 +427,7 @@ private extension Target {
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
+    
     static let landingUIComponentTests = testTarget(
         name: .landingUIComponentTests,
         dependencies: [
@@ -421,6 +435,25 @@ private extension Target {
             .landingUIComponent,
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
+    )
+    
+    //MARK: - PaymentsComponents
+    
+    static let paymentsComponents = target(
+        name: .paymentsComponents,
+        dependencies: [
+            .textFieldComponent,
+        ],
+        path: "Sources/\(String.paymentsComponents)"
+    )
+    
+    static let paymentsComponentsTests = testTarget(
+        name: .paymentsComponentsTests,
+        dependencies: [
+            // internal modules
+            .paymentsComponents,
+        ],
+        path: "Tests/\(String.paymentsComponentsTests)"
     )
     
     // MARK: - Services
@@ -664,6 +697,12 @@ private extension Target.Dependency {
         name: .landingUIComponent
     )
     
+    // MARK: - PaymentsComponents
+    
+    static let paymentsComponents = byName(
+        name: .paymentsComponents
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -746,6 +785,10 @@ private extension String {
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
     
+    // MARK: - PaymentsComponents
+    static let paymentsComponents = "PaymentsComponents"
+    static let paymentsComponentsTests = "PaymentsComponentsTests"
+
     // MARK: - Services
     
     static let bindPublicKeyWithEventID = "BindPublicKeyWithEventID"
