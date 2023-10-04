@@ -373,7 +373,8 @@ extension PaymentsViewModel {
         
         return .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss()) },
                      spinner:
-                .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
+                .init(show: { [weak self] in
+                    self?.action.send(PaymentsViewModelAction.Spinner.Show()) },
                       hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide()) }),
                      alert: { [weak self] message in self?.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message)) })
     }
@@ -428,13 +429,11 @@ extension PaymentsViewModel {
                     Payments.ParameterSuccessStatus(status: .error),
                     Payments.ParameterSuccessText(
                         value: "Оплата не активирована",
-                        style: .title,
-                        placement: .top
+                        style: .title
                     ),
                     Payments.ParameterSuccessText(
                         value: "Убедитесь, что сотрудник магазина активировал оплату и нажмите “Обновить”",
-                        style: .subtitle,
-                        placement: .top
+                        style: .subtitle
                     ),
                     Payments.ParameterButton.init(
                         title: "Обновить",
@@ -472,7 +471,7 @@ extension PaymentsViewModel {
         _ closeAction: @escaping () -> Void
     ) {
         Task {
-            
+            await MainActor.run { content = .loading }
             do {
                 
                 let operation = try await model.paymentsOperation(with: source)
@@ -498,6 +497,7 @@ extension PaymentsViewModel {
         }
     }
     
+    @MainActor
     func showErrorAlert(_ error: Swift.Error) async {
         
         if let mapperError = error as? QrDataMapper.MapperError {

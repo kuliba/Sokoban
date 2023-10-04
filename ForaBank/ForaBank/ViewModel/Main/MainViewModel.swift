@@ -603,7 +603,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case .c2bSubscribeURL(let url):
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.action.send(MainViewModelAction.Close.Link())
                         })
                         bind(paymentsViewModel)
                         
