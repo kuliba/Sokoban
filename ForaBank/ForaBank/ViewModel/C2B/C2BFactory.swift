@@ -15,12 +15,7 @@ extension Model {
         parameters: [PaymentsParameterRepresentable],
         visible: [Payments.Operation.Step.Parameter.ID]
     ) {
-        
-        guard let data = try await getC2B().process(qrLink)
-        else {
-            throw Payments.Error.action(.alert(title: "Ошибка", message: "Не смогли получить данные"))
-        }
-        
+        let data = try await getC2B().process(qrLink).get()
         return try c2BParameters(
             data: data,
             parameters: [],
@@ -32,7 +27,7 @@ extension Model {
     ) -> Services.GetScenarioQRData {
         
         Services.getScenarioQRData(
-            httpClient: authorizedHTTPClient()
+            httpClient: cachelessAuthorizedHTTPClient()
         )
     }
 }

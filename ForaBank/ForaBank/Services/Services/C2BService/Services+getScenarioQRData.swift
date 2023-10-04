@@ -11,7 +11,8 @@ import GenericRemoteService
 extension Services {
     
     typealias GetScenarioQR = (QRLink)
-    typealias GetScenarioQRData = RemoteService<GetScenarioQR, QRScenarioData?>
+    typealias Result = Swift.Result<QRScenarioData, QrDataMapper.MapperError>
+    typealias GetScenarioQRData = RemoteService<GetScenarioQR, Result>
     
     static func getScenarioQRData(
         httpClient: HTTPClient
@@ -20,7 +21,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getScenarioQRDataRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: { try QrDataMapper.map($0, $1).get() }
+            mapResponse: { QrDataMapper.map($0, $1) }
         )
     }
 }

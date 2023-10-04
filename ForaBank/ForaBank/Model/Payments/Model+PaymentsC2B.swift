@@ -9,25 +9,7 @@ import Foundation
 import ServerAgent
 
 extension Model {
-    
-    func handleC2BScenario<Command: ServerCommand>(
-        makeCommand: @escaping (String) -> Command,
-        map: @escaping (Command.Response.Payload) -> QRScenarioData,
-        consume: @escaping (QRScenarioData) throws -> Void
-    ) async throws {
         
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        let command = makeCommand(token)
-
-        let response = try await serverAgent.executeCommand(command: command)
-        
-        try consume(map(response))
-    }
-    
     internal func c2BParameters(
         data: QRScenarioData,
         parameters: [PaymentsParameterRepresentable],
@@ -76,10 +58,10 @@ extension Model {
             
             switch source {
             case .c2b(let url):
-
-                let qrLink: QRLink = .init(link: .init(url.absoluteString))
+                
+                let qrLink = QRLink(link: .init(url.absoluteString))
                 let parameters = try await paymentsStepC2B(by: qrLink)
-
+                
                 let required: [Payments.Parameter.ID] = [
                     Payments.Parameter.Identifier.product.rawValue,
                     Payments.Parameter.Identifier.c2bQrcId.rawValue
@@ -96,12 +78,9 @@ extension Model {
                         processed: nil))
                 
             case .c2bSubscribe(let url):
-                guard let token = token else {
-                    throw Payments.Error.notAuthorized
-                }
                 
-                let command = ServerCommands.SBPController.GetScenarioQRData(token: token, payload: .init(QRLink: url.absoluteString))
-                let response = try await serverAgent.executeCommand(command: command)
+                let qrLink = QRLink(link: .init(url.absoluteString))
+                let response = try await paymentsStepC2BSubscribe(by: qrLink)
                 
                 var parameters = [PaymentsParameterRepresentable]()
                 
