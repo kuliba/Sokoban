@@ -35,6 +35,7 @@ extension Services {
             case getJsonAbroad
             case getProcessingSessionCode
             case getScenarioQRData
+            case getStickerPayment
         }
     }
 }
@@ -106,6 +107,12 @@ extension Services.Endpoint {
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getScenarioQRData
+    )
+    
+    static let getStickerPaymentRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v2,
+        serviceName: .getStickerPayment
     )
 }
 
