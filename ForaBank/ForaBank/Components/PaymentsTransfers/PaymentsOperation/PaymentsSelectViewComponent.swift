@@ -515,8 +515,10 @@ extension PaymentsSelectView {
                             .foregroundColor(.textPlaceholder)
                             .font(.textBodyMR14180())
                             .matchedGeometryEffect(id: "title", in: namespace)
+                            .accessibilityIdentifier("ParameterSelectTitle")
                         
                         RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary, textColor: .textSecondary)
+                            .accessibilityIdentifier("ParameterSelectFilterInputText")
                     }
                     
                     Spacer()
@@ -612,6 +614,7 @@ extension PaymentsSelectView {
                             .font(.textH4M16240())
                             .foregroundColor(.textSecondary)
                             .lineLimit(3)
+                            .accessibilityIdentifier("SelectOptionDescription")
                         
                         if let subname = viewModel.subname {
                             
@@ -680,10 +683,13 @@ extension PaymentsSelectView {
                 
                 Image("Payments Icon Circle Selected")
                     .frame(width: 24, height: 24)
+                    .accessibilityIdentifier("PaymentsIconCircleSelected")
             } else {
                 
                 Image("Payments Icon Circle Empty")
                     .frame(width: 24, height: 24)
+                    .accessibilityIdentifier("PaymentsIconCircleEmpty")
+                    
             }
         }
     }

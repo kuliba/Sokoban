@@ -45,6 +45,7 @@ struct PaymentsSuccessLogoView: View {
                 .renderingMode(.original)
                 .resizable()
                 .frame(width: viewModel.iconSize.width, height: viewModel.iconSize.height)
+                .accessibilityIdentifier("SuccessPageLogo")
             
             if let title = viewModel.title {
                 
