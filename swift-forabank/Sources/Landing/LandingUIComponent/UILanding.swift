@@ -81,3 +81,16 @@ extension UILanding {
         return headerTitleAlwaysFixed()
     }
 }
+
+extension UILanding {
+
+  func shouldShowNavigationTitle(offset: CGFloat, offsetForDisplayHeader: CGFloat) -> Bool {
+      if headerTitleAlwaysFixed().isEmpty {
+          if offset > offsetForDisplayHeader {
+              return true
+          }
+      }
+      return false
+  }
+
+}

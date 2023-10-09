@@ -14,14 +14,14 @@ public struct LandingView: View {
     @State private var position: CGFloat = 0
     @State private var scrollViewContentSize: CGSize = .zero
     
-    private let action: (LandingAction) -> Void
+    private let action: (LandingEvent) -> Void
     private let openURL: (URL) -> Void
     private let images: [String: Image]
     
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
-        action: @escaping (LandingAction) -> Void,
+        action: @escaping (LandingEvent) -> Void,
         openURL: @escaping (URL) -> Void
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
@@ -41,7 +41,7 @@ public struct LandingView: View {
     var backButton : some View {
         
         Button(action: {
-            action(.goToMain)
+            action(.card(.goToMain))
         }) { Image(systemName: "chevron.backward") }
     }
     
@@ -73,11 +73,23 @@ public struct LandingView: View {
                 set: viewModel.setDestination(to:)
             ),
             content: destinationView)
-        .navigationBarTitle(
-            viewModel.landing.navigationTitle(
-                offset: position,
-                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
-            displayMode: .inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                if viewModel.landing.shouldShowNavigationTitle(
+                    offset: position,
+                    offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
+                    componentsView(viewModel.landing.header)
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        
+        // MARK: есть дублирование title на orderCard
+//        .navigationBarTitle(
+//            viewModel.landing.navigationTitle(
+//                offset: position,
+//                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
+//            displayMode: .inline)
         .navigationBarItems(leading: backButton)
     }
     
@@ -97,7 +109,7 @@ public struct LandingView: View {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) {
             
-            action(.orderCard(cardTarif: tarif, cardType: type))
+            action(.card(.order(cardTarif: tarif, cardType: type)))
         }
     }
 
@@ -151,7 +163,7 @@ extension LandingView {
         let images: [String: Image]
         let config: UILanding.Component.Config
         let selectDetail: (DetailDestination?) -> Void
-        let action: (LandingAction) -> Void
+        let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
         
         var body: some View {
@@ -176,8 +188,9 @@ extension LandingView {
                     config: config.multiTextsWithIconsHorizontal)
                 
                 // заголовок отображается в navBar !!!
-            case .pageTitle:
-                EmptyView()
+            case .pageTitle(let model):
+               // EmptyView()
+                PageTitleView(model: model, config: config.pageTitle)
                 
             case let .multi(.texts(model)):
                 UILanding.Multi.TextsView(
