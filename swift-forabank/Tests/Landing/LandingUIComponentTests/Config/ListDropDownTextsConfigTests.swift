@@ -33,7 +33,8 @@ final class ListDropDownTextsConfigTests: XCTestCase {
                 itemHorizontal: 14),
             heights: .init(title: 1, item: 2),
             backgroundColor: .blue,
-            cornerRadius: 12)
+            cornerRadius: 12, 
+            chevronDownImage: Image(systemName: "chevron.down"))
         
         XCTAssertEqual(config.fonts.title, .title)
         XCTAssertEqual(config.fonts.itemTitle, .body)

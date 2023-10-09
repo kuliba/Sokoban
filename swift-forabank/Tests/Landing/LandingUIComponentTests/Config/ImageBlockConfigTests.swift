@@ -85,7 +85,8 @@ final class ImageBlockConfigTests: XCTestCase {
         defaultColor: Color = .black,
         horizontal: CGFloat = 1,
         vertical: CGFloat = 2,
-        cornerRadius: CGFloat = 3
+        cornerRadius: CGFloat = 3,
+        stickerWidth: CGFloat = 0
     ) -> Config {
         
         return .init(
@@ -95,6 +96,7 @@ final class ImageBlockConfigTests: XCTestCase {
                 white: white,
                 defaultColor: defaultColor),
             paddings: .init(horizontal: horizontal, vertical: vertical),
-            cornerRadius: cornerRadius)
+            cornerRadius: cornerRadius,
+            stickerWidth: stickerWidth)
     }
 }

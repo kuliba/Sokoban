@@ -30,7 +30,7 @@ final class ListVerticalRoundImageConfigTests: XCTestCase {
                 itemVStackBetweenTitleSubtitle: 6),
             item: .init(
                 imageWidthHeight: 7,
-                fonts: .init(title: .title2, subtitle: .title3),
+                fonts: .init(title: .title2, titleWithOutSubtitle: .title2, subtitle: .title3),
                 colors: .init(title: .blue, subtitle: .clear),
                 paddings: .init(horizontal: 8, vertical: 9)),
             listVerticalPadding: 10,
