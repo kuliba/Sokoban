@@ -1,0 +1,24 @@
+//
+//  LandingEvent.swift
+//  
+//
+//  Created by Igor Malyarov on 04.09.2023.
+//
+
+public enum LandingEvent: Equatable {
+    
+    case card(Card)
+    case sticker(Sticker)
+    
+    public enum Card: Equatable {
+        
+        case goToMain
+        case order(cardTarif: Int, cardType: Int)
+    }
+    
+    public enum Sticker: Equatable {
+        
+        case goToMain
+        case order
+    }
+}

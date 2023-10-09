@@ -14,20 +14,19 @@ public final class LandingWrapperViewModel: ObservableObject {
     public typealias Images = [String: Image]
     public typealias ImagePublisher = AnyPublisher<Images, Never>
     public typealias ImageLoader = ([ImageRequest]) -> Void
-
+    
     public typealias State = Result<UILanding?, Error>
     public typealias StatePublisher = AnyPublisher<State, Never>
     
     @Published public private(set) var state: State
-        
+    
     @Published private(set) var images: Images = .init()
     @Published var requests: [ImageRequest] = .init()
-
+    
     private var bindings = Set<AnyCancellable>()
-    private var goMain: () -> Void
-    private var orderCard: (_ cardTarif: Int, _ cardType: Int) -> Void
+    private var landingActions: (LandingEvent) -> Void
     let config: UILanding.Component.Config
-
+    
     public init(
         initialState: State = .success(nil),
         statePublisher: StatePublisher,
@@ -35,12 +34,10 @@ public final class LandingWrapperViewModel: ObservableObject {
         imageLoader: @escaping ImageLoader,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
-        goMain: @escaping () -> Void,
-        orderCard: @escaping (_ cardTarif: Int, _ cardType: Int) -> Void
+        landingActions: @escaping (LandingEvent) -> Void
     ) {
         self.state = initialState
-        self.goMain = goMain
-        self.orderCard = orderCard
+        self.landingActions = landingActions
         self.config = config
         
         let landing = try? initialState.get()
@@ -59,7 +56,7 @@ public final class LandingWrapperViewModel: ObservableObject {
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] result in
-               
+                
                 if case let .success(.some(landing)) = result {
                     self?.requests = landing.imageRequests()
                 }
@@ -68,16 +65,28 @@ public final class LandingWrapperViewModel: ObservableObject {
             }
             .store(in: &bindings)
     }
-        
-    public func action(_ action: LandingAction) {
+    
+    public func action(_ action: LandingEvent) {
         
         switch action {
-        case .goToMain:
-            self.goMain()
             
-        case let .orderCard(cardTarif: tarif, cardType: type):
+        case .card(let card):
+            switch card {
+                
+            case .goToMain:
+                self.landingActions(.card(.goToMain))
+            case .order(cardTarif: let cardTarif, cardType: let cardType):
+                self.landingActions(.card(.order(cardTarif: cardTarif, cardType: cardType)))
+            }
             
-            self.orderCard(tarif, type)
+        case .sticker(let sticker):
+            switch sticker {
+                
+            case .goToMain:
+                self.landingActions(.sticker(.goToMain))
+            case .order:
+                self.landingActions(.sticker(.order))
+            }
         }
     }
     
@@ -127,7 +136,6 @@ public struct LandingWrapperView: View {
         _ images: [String: Image],
         _ config: UILanding.Component.Config
     ) -> LandingView {
-        
         .init(
             viewModel: .init(landing: landing, config: config),
             images: images,
@@ -152,8 +160,7 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     imageLoader: { _ in },
                     scheduler: .immediate,
                     config: .defaultValue,
-                    goMain: { },
-                    orderCard: { _, _ in }
+                    landingActions: { _ in }
                 )
             )
             
@@ -164,26 +171,24 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     imageLoader: { _ in },
                     scheduler: .immediate,
                     config: .defaultValue,
-                    goMain: { },
-                    orderCard: { _, _ in }
+                    landingActions: { _ in }
                 )
             )
-            
-           /* ZStack {
-                LandingWrapperView(
-                    viewModel: .init(
-                        initialState: .success((.preview, .detail(.init(groupID: "a", viewID: "1")))),
-                        statePublisher: Just(.success(.preview))
-                            .delay(for: 3, scheduler: DispatchQueue.main)
-                            .eraseToAnyPublisher(),
-                        imagePublisher: imagePublisher,
-                        scheduler: .immediate
-                    )
-                )
-                   
-                Text("TBD: navigate to detail programmatically")
-                    .foregroundColor(.red)
-            }*/
+            /* ZStack {
+                 LandingWrapperView(
+                     viewModel: .init(
+                         initialState: .success((.preview, .detail(.init(groupID: "a", viewID: "1")))),
+                         statePublisher: Just(.success(.preview))
+                             .delay(for: 3, scheduler: DispatchQueue.main)
+                             .eraseToAnyPublisher(),
+                         imagePublisher: imagePublisher,
+                         scheduler: .immediate
+                     )
+                 )
+                    
+                 Text("TBD: navigate to detail programmatically")
+                     .foregroundColor(.red)
+             }*/
         }
         
     }
@@ -193,7 +198,7 @@ struct LandingWrapperView_Previews: PreviewProvider {
         return Just(["1": Image.bolt])
             .eraseToAnyPublisher()
     }()
-
+    
 }
 
 private extension LandingWrapperViewModel.Error {
@@ -209,7 +214,7 @@ public extension UILanding {
 extension UILanding {
     
     func imageRequests() -> [ImageRequest] {
-
+        
         let headerImages = self.header.flatMap { $0.imageRequests() }
         let main = self.main.flatMap { $0.imageRequests() }
         let footer = self.footer.flatMap { $0.imageRequests() }
