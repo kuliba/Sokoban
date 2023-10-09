@@ -161,7 +161,9 @@ extension UILanding.List.DropDownTexts.Config {
             itemHorizontal: 16),
         heights: .init(title: 48, item: 64),
         backgroundColor: .mainColorsGrayLightest,
-        cornerRadius: 16)
+        cornerRadius: 16, 
+        chevronDownImage: Image("chevron-downnew")
+    )
 }
 
 extension UILanding.List.VerticalRoundImage.Config {
@@ -179,7 +181,7 @@ extension UILanding.List.VerticalRoundImage.Config {
             itemVStackBetweenTitleSubtitle: 4),
         item: ListItem(
             imageWidthHeight: 40,
-            fonts: .init(title: .headline, subtitle: .caption),
+            fonts: .init(title: .headline, titleWithOutSubtitle: .subheadline, subtitle: .caption),
             colors: .init(title: .textSecondary, subtitle: .textPlaceholder),
             paddings: .init(horizontal: 16, vertical: 3)),
         listVerticalPadding: 13,
@@ -232,7 +234,8 @@ extension UILanding.ImageBlock.Config {
             white: .textWhite,
             defaultColor: .textWhite),
         paddings: .init(horizontal: 16, vertical: 12),
-        cornerRadius: 12)
+        cornerRadius: 12,
+        stickerWidth: 0)
 }
 
 extension UILanding.ImageSvg.Config {

@@ -14,6 +14,7 @@ public extension UILanding.ImageBlock {
         public let background: Background
         public let paddings: Paddings
         public let cornerRadius: CGFloat
+        public let stickerWidth: CGFloat
         
         public struct Background {
             let black: Color
@@ -45,10 +46,14 @@ public extension UILanding.ImageBlock {
             }
         }
         
-        public init(background: Background, paddings: Paddings, cornerRadius: CGFloat) {
+        public init(background: Background, 
+                    paddings: Paddings,
+                    cornerRadius: CGFloat,
+                    stickerWidth: CGFloat) {
             self.background = background
             self.paddings = paddings
             self.cornerRadius = cornerRadius
+            self.stickerWidth = stickerWidth
         }
         
         func backgroundColor(_ backgroundColor: String, defaultColor: Color) -> Color {

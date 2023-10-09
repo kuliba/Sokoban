@@ -13,7 +13,7 @@ struct ContentView: View {
     @Environment(\.openURL) var openURL
     
     let landing: UILanding
-    let action: (LandingAction) -> Void
+    let action: (LandingEvent) -> Void
     
     var body: some View {
         
@@ -23,9 +23,9 @@ struct ContentView: View {
                 
                 VStack(spacing: 24) {
                     
-                    Button("Go to Main") { action(.goToMain) }
+                    Button("Go to Main") { action(.card(.goToMain)) }
                     
-                    Button("Wanna Card?") { action(.orderCard(cardTarif: 11, cardType: 77)) }
+                    Button("Wanna Card?") { action(.card(.order(cardTarif: 11, cardType: 77))) }
                 }
                 .frame(maxWidth: .infinity)
             } label: {
@@ -35,13 +35,13 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             
-            LandingView(
-                viewModel: .init(),
-                landing: landing,
-                images: [:],
-                action: action,
-                openURL: { openURL($0) }
-            )
+//            LandingView(
+//                viewModel: .init(),
+//                landing: landing,
+//                images: [:],
+//                action: action,
+//                openURL: { openURL($0) }
+//            )
         }
     }
 }

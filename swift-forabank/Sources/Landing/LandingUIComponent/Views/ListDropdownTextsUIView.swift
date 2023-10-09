@@ -81,7 +81,7 @@ extension ListDropdownTextsUIView {
                     
                     Spacer()
                     
-                    Image(systemName: "chevron.down")
+                    config.chevronDownImage
                         .rotationEffect(selectedItem == item ? .degrees(180) : .degrees(0))
                 }
                 .frame(height: config.heights.item)

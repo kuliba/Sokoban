@@ -31,7 +31,7 @@ struct PageTitleView: View {
             }
         }
         .padding(.horizontal)
-        .frame(maxWidth: .infinity,  alignment: .leading)
+        .frame(maxWidth: .infinity,  alignment: .center)
         .background(config.background(model.transparency))
     }
 }

@@ -69,10 +69,12 @@ public extension UILanding.List.VerticalRoundImage {
             public struct Fonts {
                 
                 public let title: Font
+                public let titleWithOutSubtitle: Font
                 public let subtitle: Font
                 
-                public init(title: Font, subtitle: Font) {
+                public init(title: Font, titleWithOutSubtitle: Font, subtitle: Font) {
                     self.title = title
+                    self.titleWithOutSubtitle = titleWithOutSubtitle
                     self.subtitle = subtitle
                 }
             }
@@ -164,7 +166,7 @@ public extension UILanding.List.VerticalRoundImage {
             public let background: Color
             public let cornerRadius: CGFloat
             public let horizontalPad: CGFloat
-            public let verticalPad: CGFloat // need?
+            public let verticalPad: CGFloat
             
             public init(
                 background: Color,

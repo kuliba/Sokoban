@@ -79,7 +79,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - makeLandingViewModel
+    // MARK: - makeCardLandingViewModel
     
     func test_makeOrderProductViewModel_orderCard() {
         

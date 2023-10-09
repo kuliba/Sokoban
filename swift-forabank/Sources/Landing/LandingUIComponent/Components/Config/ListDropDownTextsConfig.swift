@@ -17,6 +17,7 @@ public extension UILanding.List.DropDownTexts {
         public let heights: Heights
         public let backgroundColor: Color
         public let cornerRadius: CGFloat
+        public let chevronDownImage: Image
         
         public struct Fonts {
             public let title: Font
@@ -77,7 +78,8 @@ public extension UILanding.List.DropDownTexts {
             paddings: Paddings,
             heights: Heights,
             backgroundColor: Color,
-            cornerRadius: CGFloat
+            cornerRadius: CGFloat,
+            chevronDownImage: Image
         ) {
             self.fonts = fonts
             self.colors = colors
@@ -85,6 +87,7 @@ public extension UILanding.List.DropDownTexts {
             self.heights = heights
             self.backgroundColor = backgroundColor
             self.cornerRadius = cornerRadius
+            self.chevronDownImage = chevronDownImage
         }
     }
 }
