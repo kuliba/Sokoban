@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import LandingUIComponent
 
 class MainViewModel: ObservableObject, Resetable {
     
@@ -28,13 +29,18 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
+    private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
+    init(navButtonsRight: [NavigationBarButtonViewModel],
+         sections: [MainSectionViewModel],
+         model: Model = .emptyMock,
+         factory: ModelAuthLoginViewModelFactory) {
         
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
+        self.factory = factory
     }
     
     init(_ model: Model) {
@@ -48,6 +54,7 @@ class MainViewModel: ObservableObject, Resetable {
                          MainSectionAtmView.ViewModel.initial]
         
         self.model = model
+        self.factory = ModelAuthLoginViewModelFactory.init(model: .emptyMock, rootActions: .emptyMock)
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -391,6 +398,9 @@ class MainViewModel: ObservableObject, Resetable {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
                         self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+                        
+                    case _ as MainSectionViewModelAction.Products.StickerDidTapped:
+                        handleLandingAction(.sticker)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)

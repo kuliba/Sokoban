@@ -28,6 +28,9 @@ class Model {
     //MARK: Pre-Auth
     let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never> 
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    
+    //MARK: Sticker
+    let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
 
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
@@ -179,6 +182,7 @@ class Model {
         self.statementsUpdating = .init([:])
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
+        self.stickerLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
@@ -1194,6 +1198,7 @@ private extension Model {
         
         self.transferLanding.value = .success(localAgent.load(.transfer))
         self.orderCardLanding.value = .success(localAgent.load(.orderCard))
+        self.stickerLanding.value = .success(localAgent.load(.sticker))
     }
 
     func loadCachedAuthorizedData() {
@@ -1456,6 +1461,11 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadOrderCard.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .sticker:
+            return load(type: LocalAgentDomain.AbroadSticker.self)
+                .map(\.landing)
+                .map(UILanding.init)
         }
     }
 }
@@ -1478,6 +1488,11 @@ extension LocalAgentDomain {
     }
     
     struct AbroadTransfer: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AbroadSticker: Codable {
         
         let landing: Landing
     }

@@ -97,6 +97,16 @@ extension MainSectionProductsView {
                 }
                 .store(in: &bindings)
             
+            typealias CarouselStickerDidTapped = ProductCarouselViewModelAction.Products.StickerDidTapped
+            
+            productCarouselViewModel.action
+                .compactMap { $0 as? CarouselStickerDidTapped }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    self.action.send(MainSectionViewModelAction.Products.StickerDidTapped())
+                }
+                .store(in: &bindings)
+            
             productCarouselViewModel.$content
                 .map(\.isEmpty)
                 .receive(on: DispatchQueue.main)

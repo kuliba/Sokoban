@@ -251,6 +251,7 @@ extension ProductView {
 enum ProductViewModelAction {
 
     struct ProductDidTapped: Action {}
+    struct StickerDidTapped: Action {}
     
     enum CardActivation {
         
