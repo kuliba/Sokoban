@@ -37,7 +37,7 @@ extension ProductCarouselView {
         private var groups: [ProductGroupView.ViewModel] = []
 
         private let selectedProductId: ProductData.ID?
-        private let mode: Mode
+        let mode: Mode
         
         let style: Style
 
@@ -132,6 +132,7 @@ extension ProductCarouselView {
                                     // create new product view model
                                     let productViewModel = ProductView.ViewModel(with: product, size: style.productAppearanceSize, style: .main, model: model)
                                     bind(productViewModel)
+                                    bind(sticker: productViewModel)
                                     
                                     return productViewModel
                                 }
@@ -155,17 +156,14 @@ extension ProductCarouselView {
                         }
                         
                     } else {
-                    
                         let updatedGroups = model.update(
                             groups: groups,
                             products: products,
                             productsUpdating: productsUpdating,
                             productGroupDimensions: style.productGroupDimensions
                         )
-                    
                         updatedGroups.last?.isSeparator = false
                         groups = updatedGroups
-                    
                         content = content(with: groups)
                     
                         bind(groups)
@@ -238,8 +236,22 @@ extension ProductCarouselView {
                 .compactMap { $0 as? ProductDidTapped }
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] _ in
-                    
                     self.action.send(CarouselProductDidTapped(productId: product.id))
+                }
+                .store(in: &bindings)
+        }
+        
+        private func bind(sticker: ProductView.ViewModel) {
+            
+            typealias StickerDidTapped = ProductViewModelAction.StickerDidTapped
+            typealias CarouselProductDidTapped = ProductCarouselViewModelAction.Products.StickerDidTapped
+            
+            sticker.action
+                .compactMap { $0 as? StickerDidTapped }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    self.action.send(StickerDidTapped())
                 }
                 .store(in: &bindings)
         }
@@ -366,7 +378,7 @@ private extension Model {
             guard let productsForType = products[productType] else {
                 return nil
             }
-
+            
             let isGroupUpdating = productsUpdating.contains(productType)
             let group = groups.first(where: { $0.productType == productType}) ?? .init(
                 productType: productType,
@@ -544,13 +556,15 @@ private extension ProductCarouselView.ViewModel.Style {
 //MARK: - Action
 
 enum ProductCarouselViewModelAction {
-    
+   
     enum Products {
         
         struct ProductDidTapped: Action {
             
             let productId: ProductData.ID
         }
+        
+        struct StickerDidTapped: Action {}
         
         struct ScrollToGroup: Action {
             
@@ -676,7 +690,17 @@ struct ProductCarouselView: View {
                                 ForEach(groups) { groupViewModel in
                                     ProductGroupView(viewModel: groupViewModel)
                                         .accessibilityIdentifier("productScrollView")
+                                    
+                                    switch viewModel.mode {
+                                    case .main:
+                                        if groupViewModel.productType == .card {
+                                            StickerView(viewModel: viewModel)
+                                        }
+                                    default: EmptyView()
+                                    
+                                    }
                                 }
+                               
                             }
                         }
                         
@@ -820,6 +844,103 @@ extension ProductCarouselView {
         }
     }
     
+}
+
+extension ProductCarouselView {
+    
+      struct StickerView: View {
+         
+        @ObservedObject var viewModel: ViewModel
+        
+        var body: some View {
+            
+            VStack {
+                HStack {
+                    
+                    ZStack(alignment: .leading) {
+                        Image("stickerBGBlur")
+                            .frame(width: 164, height: 104)
+                        
+                        HStack {
+                            Spacer()
+                           // Image("iphone")
+                            ZStack(alignment: .trailing) {
+                                Image("stickerIphone")
+                                Image("sticker")
+                                    //.frame(width: 26.27029, height: 49.46893)
+                                    .shadow(color: .black.opacity(0.25), radius: 0.972, x: -0.648, y: 0.648)
+                                    //.rotationEffect(Angle(degrees: -75.51))
+                                    //.frame(width: 113.93245, height: 162.58112)
+                            }
+                        }
+                        // TODO: Стили с комментами пока оставлю, хотя как я понял там все удалится и будет просто фон одной картинкой, но пока тут все можно менять как угодно
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Button {
+                                    print("delete and closed") // TODO: стикер должен будет удалиться до переавторизации
+                                } label: {
+                                    ZStack {
+                                        Circle()
+                                            .foregroundColor(.gray)
+                                            .frame(width: 20, height: 20)
+                                        
+                                        Image("close")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
+                                            .foregroundColor(.white)
+                                    }
+                                    .frame(width: 20, height: 20)
+                                }
+                                Spacer()
+                            }
+                        }
+                        .padding(4)
+                        
+                            VStack(alignment: .leading) {
+                                Image("stickerSmartphone")
+                                //Image("ic24Smartphone") // в макете
+                                
+                                Spacer()
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Платежный")
+                                        .font(.textBodyMR14200())
+                                    Text("Стикер")
+                                        .font(.textBodyMSB14200())
+                                }
+                                .foregroundColor(.textSecondary)
+                            }
+                            .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 0))
+                    }
+                    .frame(width: 164, height: 104, alignment: .top)
+                    .background(
+                        LinearGradient(
+                            stops: [
+                                Gradient.Stop(color: Color(red: 0.96, green: 0.88, blue: 0.98), location: 0.00),
+                                Gradient.Stop(color: Color(red: 0.89, green: 0.94, blue: 1), location: 0.31),
+                                Gradient.Stop(color: Color(red: 1, green: 0.92, blue: 0.99), location: 0.60),
+                                Gradient.Stop(color: Color(red: 0.96, green: 0.89, blue: 1), location: 0.80),
+                            ],
+                            startPoint: UnitPoint(x: 0.03, y: 0.08),
+                            endPoint: UnitPoint(x: 1.32, y: 1.97)
+                        )
+                    )
+                    .cornerRadius(12)
+               
+                    Capsule(style: .continuous)
+                        .foregroundColor(.bordersDivider)
+                        .frame(width: 1, height: 104 / 2)
+                }
+                
+                Spacer()
+            }
+            .onTapGesture {
+                viewModel.action.send(ProductCarouselViewModelAction.Products.StickerDidTapped())
+            }
+        }
+    }
 }
 
 //MARK: - Preview
