@@ -75,13 +75,12 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     func showTransfers() {
-        
         handleLandingAction(.transfer)
     }
     
     func showProducts() {
-        
         handleLandingAction(.orderCard)
+        //handleLandingAction(.sticker) // for tests
     }
 }
 
@@ -105,14 +104,19 @@ protocol AuthLoginViewModelFactory {
         productData: CatalogProductData
     ) -> OrderProductView.ViewModel
     
-    typealias GoMainAction = () -> Void
-    typealias OrderCardAction = (Int, Int) -> Void
-    
-    func makeLandingViewModel(
+    func makeCardLandingViewModel(
         _ type: AbroadType,
         config: UILanding.Component.Config,
-        goMain: @escaping GoMainAction,
-        orderCard: @escaping OrderCardAction
+        landingActions: @escaping (LandingEvent.Card) -> () -> Void
+    ) -> LandingWrapperViewModel
+}
+
+protocol MainViewModelFactory {
+    
+    func makeStickerLandingViewModel(
+        _ type: AbroadType,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
     ) -> LandingWrapperViewModel
 }
 
@@ -290,16 +294,28 @@ private extension AuthLoginViewModel {
     
     func handleLandingAction(_ abroadType: AbroadType) {
         
-        let viewModel = factory.makeLandingViewModel(
+        let viewModel = factory.makeCardLandingViewModel(
             abroadType,
             config: .default,
-            goMain: handleCloseLinkAction,
-            orderCard: orderCard
+            landingActions: landingAction
         )
         
         UIApplication.shared.endEditing()
         
         link = .landing(viewModel)
+    }
+    
+    private func landingAction(for event: LandingEvent.Card) -> () -> Void {
+        
+            switch event {
+            case .goToMain:
+                return handleCloseLinkAction
+                
+             case let .order(cardTarif, cardType):
+                return { [weak self] in
+                    self?.orderCard(cardTarif, cardType) }
+                
+            }
     }
     
     func handleShowScannerAction() {

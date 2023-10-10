@@ -526,11 +526,9 @@ final class ModelAuthLoginViewModelFactory {
         )
     }
  
-    // TODO: Tests makeLandingViewModel?
     func makeCardLandingViewModel(
         _ type: AbroadType,
         config: UILanding.Component.Config,
-        //landingActions: @escaping (LandingEvent.Card) -> Void
         landingActions: @escaping (LandingEvent.Card) -> () -> Void
     ) -> LandingWrapperViewModel {
         
@@ -541,7 +539,6 @@ final class ModelAuthLoginViewModelFactory {
         )
     }
     
-    // TODO: Extension to MainViewModel?
     func makeStickerLandingViewModel(
         _ type: AbroadType,
         config: UILanding.Component.Config,

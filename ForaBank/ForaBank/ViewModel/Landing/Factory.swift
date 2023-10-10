@@ -5,57 +5,97 @@
 //  Created by Andryusina Nataly on 14.09.2023.
 //
 
-import Foundation
+import SwiftUI
 import LandingUIComponent
 import Combine
 
 extension Model {
     
-    func landingViewModelFactory(
+    fileprivate typealias Images = [String: Image]
+    fileprivate typealias ImagePublisher = AnyPublisher<Images, Never>
+    fileprivate typealias ImageLoader = ([ImageRequest]) -> Void
+    fileprivate typealias CurrentValueSubjectTA = CurrentValueSubject<Result<UILanding?, Error>, Never>
+    fileprivate typealias StatePublisher = () -> AnyPublisher<Result<UILanding?, LandingWrapperViewModel.Error>, Never>
+    
+    func landingCardViewModelFactory(
         abroadType: AbroadType,
         config: UILanding.Component.Config,
-        goMain: @escaping () -> Void,
-        orderCard: @escaping (Int, Int) -> Void
+        landingActions: @escaping (LandingEvent.Card) -> () -> Void
     ) -> LandingWrapperViewModel {
-        
-        let imagePublisher = {
-            
-            return self.images
-                .map {
-                    
-                    return Dictionary(
-                        uniqueKeysWithValues:
-                            $0.compactMap { key, value in
-                                
-                                if let image = value.image { return (key, image) }
-                                else { return nil }
-                            })
-                }
-                .eraseToAnyPublisher()
-        }
-        
-        let imageLoader = self.imageLoader
-        
-        let currentValueSubject = {
-            switch abroadType {
-            case .orderCard:
-                return self.orderCardLanding
-                
-            case .transfer:
-                return self.transferLanding
-            }
-        }()
         
         let service = self.getLandingCachingService(abroadType: abroadType) {
             
-            currentValueSubject.value = .success($0)
+            self.currentValueSubject(abroadType).value = .success($0)
         }
-        
         service.process(("", abroadType)) { [service] _ in _ = service }
         
-        let statePublisher = {
+        return LandingWrapperViewModel(
+            statePublisher: statePublisher(abroadType)(),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            scheduler: .main,
+            config: config,
+            landingActions: { event in
+                switch event {
+                case let .card(card):
+                    return landingActions(card)()
+                    
+                case .sticker: break
+                }
+            }
+        )
+    }
+    
+    func landingStickerViewModelFactory(
+        abroadType: AbroadType,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
+    ) -> LandingWrapperViewModel {
+        
+        let service = self.getLandingCachingService(abroadType: abroadType) {
             
-            return currentValueSubject
+            self.currentValueSubject(abroadType).value = .success($0)
+        }
+        service.process(("", abroadType)) { [service] _ in _ = service }
+        
+        return LandingWrapperViewModel(
+            statePublisher: statePublisher(abroadType)(),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            scheduler: .main,
+            config: config,
+            landingActions: { event in
+                switch event {
+                case .card: break
+                case let .sticker(sticker):
+                    landingActions(sticker)()
+                }
+            }
+        )
+    }
+}
+
+private extension Model {
+    
+    // MARK: - Current Value Subject
+    func currentValueSubject(_ abroadType: AbroadType) -> CurrentValueSubjectTA {
+        let currentValueSubject: CurrentValueSubject<Result<UILanding?, Error>, Never> = {
+            switch abroadType {
+            case .orderCard:
+                return self.orderCardLanding
+            case .transfer:
+                return self.transferLanding
+            case .sticker:
+                return self.stickerLanding
+            }
+        }()
+        return currentValueSubject
+    }
+    
+    // MARK: - State Publisher
+    func statePublisher(_ abroadType: AbroadType) -> StatePublisher {
+        return {
+            return self.currentValueSubject(abroadType)
                 .map {
                     $0.mapError {
                         LandingWrapperViewModel.Error(
@@ -65,17 +105,24 @@ extension Model {
                 }
                 .eraseToAnyPublisher()
         }
-        
-        return LandingWrapperViewModel(
-            statePublisher: statePublisher(),
-            imagePublisher: imagePublisher(),
-            imageLoader: imageLoader,
-            scheduler: .main,
-            config: config,
-            goMain: goMain,
-            orderCard: orderCard
-        )
     }
+    
+    // MARK: - image Publisher
+    func imagePublisher() -> ImagePublisher {
+        
+        return self.images
+            .map {
+                return Dictionary(
+                    uniqueKeysWithValues:
+                        $0.compactMap { key, value in
+                            if let image = value.image { return (key, image) }
+                            else { return nil }
+                        })
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    
 }
 
 // MARK: - ImageLoader
@@ -140,9 +187,10 @@ private extension Model {
                 switch abroadType {
                 case .transfer:
                     return LocalAgentDomain.AbroadTransfer(landing: codableLanding)
-                    
                 case .orderCard:
                     return LocalAgentDomain.AbroadOrderCard(landing: codableLanding)
+                case .sticker:
+                    return LocalAgentDomain.AbroadSticker(landing: codableLanding)
                 }
             }()
             
