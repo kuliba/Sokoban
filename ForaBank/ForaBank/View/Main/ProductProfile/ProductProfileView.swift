@@ -96,10 +96,15 @@ struct ProductProfileView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-                    case let .changePin(pinCodeViewModel):
-                        pinCodeChangeView(
+                    case let .changePin(cardId, pinCodeViewModel):
+                        changePinCodeView(
+                            cardId: cardId,
+                            actionType: .changePin,
                             pinCodeViewModel,
-                            confirm: viewModel.confirmKeyBinding
+                            confirm: viewModel.confirmKeyBinding,
+                            showSpinner: {}, 
+                            resendRequest: {},
+                            resendRequestAfterClose: viewModel.closeLinkAndResendRequest
                         )
                         
                     case .productInfo(let productInfoViewModel):
@@ -126,9 +131,18 @@ struct ProductProfileView: View {
                     case let .paymentsTransfers(paymentsTransfersViewModel):
                         PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
                         
-                    case .confirmCode:
-                        viewModel.accentColor
-                        confirmCodeView()
+                    case let .confirmCode(cardId, actionType, phone, resendRequest):
+                        confirmCodeView(
+                            phoneNumber: phone,
+                            cardId: cardId,
+                            actionType: actionType,
+                            reset: {
+                                #warning("FIX THIS")
+                            },
+                            showSpinner: {},
+                            resendRequest: resendRequest,
+                            resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                        )
                     }
                 }
             }
@@ -147,7 +161,8 @@ struct ProductProfileView: View {
                     
                     SpinnerView(viewModel: spinner)
                 }
-                .frame(width: .infinity, height: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .zIndex(.greatestFiniteMagnitude)
             }
             
             Color.clear.frame(maxHeight: 0)
@@ -227,9 +242,14 @@ struct ProductProfileView: View {
         })
     }
     
-    private func pinCodeChangeView(
+    private func changePinCodeView(
+        cardId: ProductView.ViewModel.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
         _ viewModel: PinCodeViewModel,
-        confirm: @escaping (String, @escaping (Bool) -> Void) -> Void
+        confirm: @escaping (String, @escaping (String?) -> Void) -> Void,
+        showSpinner: @escaping () -> Void,
+        resendRequest: @escaping () -> Void,
+        resendRequestAfterClose: @escaping (Int, ConfirmViewModel.CVVPinAction) -> Void
     ) -> some View {
         
         let buttonConfig: ButtonConfig = .init(
@@ -258,8 +278,13 @@ struct ProductProfileView: View {
                 
                 ConfirmCodeView(
                     phoneNumber: $0.value,
+                    cardId: cardId.rawValue,
+                    actionType: actionType,
                     reset: viewModel.resetState,
-                    handler: confirm
+                    resendRequest: resendRequest,
+                    handler: confirm,
+                    showSpinner: showSpinner,
+                    resendRequestAfterClose: resendRequestAfterClose
                 )
             }
         )
@@ -268,16 +293,27 @@ struct ProductProfileView: View {
         .navigationBarTitle("")
     }
     
-    private func confirmCodeView() -> some View {
+    private func confirmCodeView(
+        phoneNumber: String,
+        cardId: ProductView.ViewModel.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
+        reset: @escaping () -> Void,
+        showSpinner: @escaping () -> Void,
+        resendRequest: @escaping () -> Void,
+        resendRequestAfterClose: @escaping (Int, ConfirmViewModel.CVVPinAction) -> Void
+    ) -> some View {
         
         ConfirmCodeView(
-            phoneNumber: "71234567899",
-            reset: {},
-            hasDefaultBackButton: true
-        ) { otp, action in
-            
-            action("123456" == otp)
-        }
+            phoneNumber: phoneNumber,
+            cardId: cardId.rawValue,
+            actionType: actionType,
+            reset: reset,
+            resendRequest: resendRequest,
+            hasDefaultBackButton: true,
+            handler: viewModel.confirmShowCVV,
+            showSpinner: showSpinner,
+            resendRequestAfterClose: resendRequestAfterClose
+        )
     }
 }
 

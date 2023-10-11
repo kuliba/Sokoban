@@ -18,7 +18,7 @@ final class TimerViewModelTests: XCTestCase {
         
         let sut = makeSUT(
             delay: 60,
-            phoneNumber: "71234567890"
+            phoneNumber: "+7 ... ... 78 90"
         )
         
         let formatter: DateComponentsFormatter = .timerViewFormatter
@@ -112,7 +112,8 @@ final class TimerViewModelTests: XCTestCase {
         let sut: ConfirmViewModel.TimerViewModel = .init(
             delay: delay,
             phoneNumber: phoneNumber,
-            completeAction: {})
+            completeAction: {}, 
+            resendRequest: {})
         
         trackForMemoryLeaks(sut, file: file, line: line)
             

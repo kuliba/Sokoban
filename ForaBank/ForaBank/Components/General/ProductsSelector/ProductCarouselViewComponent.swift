@@ -130,14 +130,13 @@ extension ProductCarouselView {
                                 } else {
                                     
                                     // create new product view model
-#warning("certificate does nothing")
                                     let productViewModel = ProductView.ViewModel(
                                         with: product,
                                         size: style.productAppearanceSize,
                                         style: .main,
                                         model: model,
                                         cardAction: nil,
-                                        certificate: HappyCertificateClient())
+                                        showCvv: nil)
                                     bind(productViewModel)
                                     
                                     return productViewModel

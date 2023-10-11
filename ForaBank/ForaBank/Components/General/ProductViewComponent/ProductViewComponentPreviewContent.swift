@@ -21,7 +21,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        certificate: HappyCertificateClient()
+        showCvv: nil
     )
     
     static let blocked = blockedCard(id: 1, .whiteSample())
@@ -42,7 +42,7 @@ extension ProductView.ViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            certificate: HappyCertificateClient()
+            showCvv: nil
         )
     }
     
@@ -64,7 +64,7 @@ extension ProductView.ViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            certificate: HappyCertificateClient()
+            showCvv: nil
         )
     }
     
@@ -78,7 +78,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
     
     static let accountSmall = ProductView.ViewModel(
@@ -92,7 +92,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
     
     static let notActivateProfile = ProductView.ViewModel(
@@ -108,7 +108,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
     
     static let blockedProfile = ProductView.ViewModel(
@@ -124,7 +124,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        certificate: HappyCertificateClient()
+        showCvv: nil
     )
     static let classicProfile = ProductView.ViewModel(
         id: 6,
@@ -143,7 +143,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        certificate: HappyCertificateClient()
+        showCvv: nil
     )
     
     static let accountProfile = ProductView.ViewModel(
@@ -156,7 +156,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
     
     static let depositProfile = ProductView.ViewModel(
@@ -178,7 +178,7 @@ extension ProductView.ViewModel {
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
     
     static let updating = ProductView.ViewModel(
@@ -198,7 +198,7 @@ extension ProductView.ViewModel {
         isUpdating: true,
         productType: .card,
         cardAction: { _ in },
-        certificate: nil
+        showCvv: nil
     )
 }
 

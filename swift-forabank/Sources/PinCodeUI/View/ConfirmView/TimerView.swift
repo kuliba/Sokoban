@@ -15,7 +15,7 @@ struct TimerView: View {
     var body: some View {
         
         VStack(spacing: 32) {
-            
+                        
             if viewModel.needRepeatButton {
                 
                 Text("Код отправлен на \(viewModel.phoneNumber)")

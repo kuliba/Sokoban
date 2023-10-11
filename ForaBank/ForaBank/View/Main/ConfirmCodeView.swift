@@ -11,15 +11,28 @@ import SwiftUI
 struct ConfirmCodeView: View {
     
     let phoneNumber: String
+    let cardId: Int
+    let actionType: ConfirmViewModel.CVVPinAction
     let reset: () -> Void
+    let resendRequest: () -> Void
+
     var hasDefaultBackButton: Bool = false
-    var handler: (String, @escaping (Bool) -> Void) -> Void
+    var handler: (String, @escaping (String?) -> Void) -> Void
+    let showSpinner: () -> Void
+    let resendRequestAfterClose: (Int, ConfirmViewModel.CVVPinAction) -> Void
     
     var body: some View {
         
         PinCodeUI.ConfirmView(
-            viewModel: .init(handler: handler),
-            phoneNumber: phoneNumber
+            viewModel: .init(
+                phoneNumber: phoneNumber,
+                cardId: cardId,
+                actionType: actionType,
+                handler: handler,
+                showSpinner: showSpinner,
+                resendRequestAfterClose: resendRequestAfterClose
+            ),
+            resendRequest: resendRequest
         )
         .if(!hasDefaultBackButton) { view in
             
@@ -61,7 +74,10 @@ struct ConfirmCodeView_Previews: PreviewProvider {
     
     private static func preview (
         phoneNumber: String = "71234567899",
+        cardId: Int = 1111111,
+        actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         reset: @escaping () -> Void = { },
+        resendRequest: @escaping () -> Void = { },
         hasDefaultBackButton: Bool = false,
         previewDisplayName: String
     ) -> some View {
@@ -69,10 +85,15 @@ struct ConfirmCodeView_Previews: PreviewProvider {
         NavigationView{
             
             ConfirmCodeView(
-                phoneNumber: phoneNumber,
+                phoneNumber: phoneNumber, 
+                cardId: cardId,
+                actionType: actionType,
                 reset: reset,
+                resendRequest: resendRequest,
                 hasDefaultBackButton: hasDefaultBackButton,
-                handler: { _, _ in }
+                handler: { _, _ in },
+                showSpinner: {},
+                resendRequestAfterClose: {_,_  in }
             )
         }
         .previewDisplayName(previewDisplayName)

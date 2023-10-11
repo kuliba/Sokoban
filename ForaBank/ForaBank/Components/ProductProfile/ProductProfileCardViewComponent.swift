@@ -15,6 +15,7 @@ extension ProductProfileCardView {
     class ViewModel: ObservableObject {
         
         typealias CardAction = (ProductView.ViewModel.CardEvent) -> Void
+        typealias ShowCVV = (ProductView.ViewModel.CardId, @escaping (ProductView.ViewModel.CardInfo.CVV?) -> Void) -> Void
 
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -25,8 +26,9 @@ extension ProductProfileCardView {
         let productType: ProductType
         
         private let model: Model
-        private let certificate: CertificateClient?
         private let cardAction: CardAction?
+        private let showCvv: ShowCVV?
+
         private var bindings = Set<AnyCancellable>()
         
         fileprivate init(
@@ -36,7 +38,7 @@ extension ProductProfileCardView {
             productType: ProductType,
             model: Model = .emptyMock,
             cardAction: CardAction? = nil,
-            certificate: CertificateClient? = nil
+            showCvv: ShowCVV? = nil
         ) {
             self.selector = selector
             self.products = products
@@ -44,14 +46,14 @@ extension ProductProfileCardView {
             self.productType = productType
             self.model = model
             self.cardAction = cardAction
-            self.certificate = certificate
+            self.showCvv = showCvv
         }
         
         init?(
             _ model: Model,
             productData: ProductData,
             cardAction: CardAction? = nil,
-            certificate: CertificateClient? = nil
+            showCvv: ShowCVV? = nil
         ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
@@ -70,7 +72,7 @@ extension ProductProfileCardView {
                     style: .profile,
                     model: model,
                     cardAction: cardAction,
-                    certificate: certificate
+                    showCvv: showCvv
                 )
                 productsViewModels.append(productViewModel)
             }
@@ -84,7 +86,7 @@ extension ProductProfileCardView {
             self.activeProductId = productData.id
             self.productType = productData.productType
             self.model = model
-            self.certificate = certificate
+            self.showCvv = showCvv
             self.cardAction = cardAction
             bind()
             bind(selector)
@@ -130,6 +132,22 @@ extension ProductProfileCardView {
         
         private func bind() {
             
+            // CVV
+
+            action
+                .compactMap { $0 as? ProductProfileCardView.ViewModel.CVVPinViewModelAction.ShowCVV }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    let product = self.products.filter {
+                        $0.id == action.cardId.rawValue
+                    }.first
+                    
+                    product?.action.send(ProductViewModelAction.ShowCVV(cardId: .init(action.cardId.rawValue), cvv: action.cvv))
+                    
+                }.store(in: &bindings)
+
+            
             model.products
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] productsData in
@@ -155,7 +173,7 @@ extension ProductProfileCardView {
                                     style: .profile,
                                     model: model,
                                     cardAction: cardAction,
-                                    certificate: certificate)
+                                    showCvv: showCvv)
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
@@ -405,6 +423,14 @@ extension ProductProfileCardView.ViewModel {
         
         struct MoreButtonTapped: Action {}
     }
+    
+    enum CVVPinViewModelAction {
+        
+        struct ShowCVV: Action {
+            let cardId: ProductView.ViewModel.CardId
+            let cvv: ProductView.ViewModel.CardInfo.CVV
+        }
+    }
 }
 
 struct ProductProfileCardView: View {
@@ -583,7 +609,7 @@ extension ProductProfileCardView.ViewModel {
         productType: .account,
         model: .emptyMock,
         cardAction: { _ in },
-        certificate: HappyCertificateClient())
+        showCvv: nil)
 }
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {

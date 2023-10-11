@@ -338,7 +338,7 @@ extension InfoProductViewModel {
                 list.append(
                     .init(
                         id: .cvv,
-                        subtitle: "123",
+                        subtitle: "***",
                         valueForCopy: "" // CVV не копируем!!!
                     )
                 )

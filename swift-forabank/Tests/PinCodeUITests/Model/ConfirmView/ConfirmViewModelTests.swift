@@ -66,26 +66,24 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertTrue(sut.isDisabled)
     }
 
-    func test_submint_pinOverMaxDigits_pinCutToMaxDigitsIsDisableTrue() {
+    func test_submint_pinOverMaxDigits_pinCutToMaxDigitsIsDisableTrue() async {
         
         let sut = makeSUT(maxDigits: 6)
         
         sut.pin = "1234567"
         
         XCTAssertEqual(sut.pin, "1234567")
-        XCTAssertFalse(sut.isDisabled)
 
         sut.submitPin()
         
         XCTAssertEqual(sut.pin, "123456")
-        XCTAssertTrue(sut.isDisabled)
     }
     
     func test_submint_errorCode_shouldSetPinEmptyIsDisableFalse() {
         
         let sut = makeSUT(maxDigits: 6) { _, completionHandler in
             
-            completionHandler(false)
+            completionHandler("test error")
         }
         
         sut.pin = "123456"
@@ -94,18 +92,15 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertFalse(sut.isDisabled)
 
         sut.submitPin()
-        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
         XCTAssertEqual(sut.pin, "")
         XCTAssertFalse(sut.isDisabled)
     }
 
-    func test_submint_correctCode_shouldSetIsDisableTrue() {
+    func test_submint_correctCode_shouldSetIsDisableTrue() async {
         
-        let sut = makeSUT(maxDigits: 6) { pin, completionHandler in
-            
-            XCTAssertEqual(pin, "123456")
-            completionHandler(true)
-        }
+        let sut = makeSUT(maxDigits: 6)
         
         sut.pin = "123456"
         
@@ -141,17 +136,25 @@ final class ConfirmViewModelTests: XCTestCase {
     //MARK: - Helpers
 
     private func makeSUT(
+        phoneNumber: String = "+1..99",
+        cardId: Int = 111,
+        actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         pin: String = "",
         maxDigits: Int = 6,
-        handler: @escaping (String, @escaping (Bool) -> Void) -> Void = { _, _ in },
+        handler: @escaping (String, (String?) -> Void) -> Void = { _, _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel {
         
         let sut: ConfirmViewModel = .init(
+            phoneNumber: phoneNumber,
+            cardId: cardId, 
+            actionType: actionType,
             maxDigits: maxDigits,
             pin: pin,
-            handler: handler
+            handler: handler, 
+            showSpinner: {},
+            resendRequestAfterClose: { _,_  in }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

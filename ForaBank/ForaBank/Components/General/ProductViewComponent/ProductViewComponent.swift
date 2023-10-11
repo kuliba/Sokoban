@@ -17,8 +17,7 @@ extension ProductView {
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
         @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
-        typealias CVVResult = Result<CardInfo.CVV, Error>
-        typealias ShowCVV = (@escaping (CVVResult) -> Void) -> Void
+        typealias ShowCVV = (CardId, @escaping (CardInfo.CVV?) -> Void) -> Void
         typealias CardAction = (CardEvent) -> Void
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -33,7 +32,8 @@ extension ProductView {
         var appearance: Appearance
         let productType: ProductType
         let cardAction: CardAction?
-        let certificate: CertificateClient?
+        let showCvv: ShowCVV?
+
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
         
@@ -48,7 +48,7 @@ extension ProductView {
             isUpdating: Bool,
             productType: ProductType,
             cardAction: CardAction? = nil,
-            certificate: CertificateClient? = nil
+            showCvv: ShowCVV? = nil
         ) {
             self.id = id
             self.header = header
@@ -60,7 +60,7 @@ extension ProductView {
             self.isUpdating = isUpdating
             self.productType = productType
             self.cardAction = cardAction
-            self.certificate = certificate
+            self.showCvv = showCvv
         }
         
         convenience init(
@@ -70,7 +70,7 @@ extension ProductView {
             style: Appearance.Style,
             model: Model,
             cardAction: CardAction? = nil,
-            certificate: CertificateClient? = nil
+            showCvv: ShowCVV? = nil
         ) {
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
@@ -114,7 +114,7 @@ extension ProductView {
                 isUpdating: false,
                 productType: productType,
                 cardAction: cardAction,
-                certificate: certificate
+                showCvv: showCvv
             )
             
             bind()
@@ -138,6 +138,17 @@ extension ProductView {
                         return
                     }
                     
+                }.store(in: &bindings)
+            
+            // CVV
+
+            action
+                .compactMap { $0 as? ProductViewModelAction.ShowCVV }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    if action.cardId.rawValue == self.id {
+                        self.cardInfo.state = .maskedNumberCVV(.init(action.cvv.rawValue))
+                    }
                 }.store(in: &bindings)
             
             $statusAction
@@ -374,6 +385,11 @@ enum ProductViewModelAction {
     struct ProductDidTapped: Action {}
     
     struct OnboardingShow: Action {}
+    
+    struct ShowCVV: Action {
+        let cardId: ProductView.ViewModel.CardId
+        let cvv: ProductView.ViewModel.CardInfo.CVV
+    }
     
     enum CardActivation {
         
@@ -732,10 +748,10 @@ struct ProductView: View {
         }
         .onDisappear {
             
-            if viewModel.cardInfo.isShowingCardBack {
+            /*if viewModel.cardInfo.isShowingCardBack {
                 
                 viewModel.productDidTapped()
-            }
+            }*/
         }
         
         ProductBackView(
@@ -749,7 +765,7 @@ struct ProductView: View {
             },
             cvvView: {
                 
-                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.showCVV)
+                ProductView.CVVView.init(cardInfo: $viewModel.cardInfo, action: viewModel.showCVVButtonTap)
             }
         )
         .card(
@@ -1125,42 +1141,10 @@ extension ProductView.ViewModel {
         cardAction?(.copyCardNumber("Номер карты скопирован"))
     }
     
-    func showCVV() {
-        
-        certificate?.showCVV { [weak self] result in
-            
-            guard let self else { return }
-
-            switch result {
-                
-            case let .failure(error):
-                // TODO: real error
-                switch error {
-                case let .check(checkError):
-                    switch checkError {
-                    case .certificate:
-                        // show certificate Alert
-                        cardAction?(.showActivateAlert)
-
-                    case .connectivity:
-                        // show connectivity Alert
-                        cardAction?(.showAlert("Истеклo время\nожидания ответа"))
-                    }
-                case let .activation(activationError):
-                    // show Alert with message
-                    cardAction?(.showAlert(activationError.message))
-                case let .otp(otpError):
-                    // show Alert with message
-                    let message = {
-                        if otpError.retryAttempts > 0 {
-                            return "Введен некорректный код. Попробуйте еще раз."
-                        } else {
-                            return "Возникла техническая ошибка."
-                        }
-                    }()
-                    cardAction?(.showAlert(message))
-                }
-            case let .success(cvv):
+    func showCVVButtonTap() {
+        let cardId = CardId.init(self.id)
+        showCvv?(cardId) {
+            if let cvv = $0 {
                 self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
             }
         }
@@ -1267,10 +1251,11 @@ extension Array where Element == (String, String) {
 
 extension ProductView.ViewModel {
     
+    typealias CardId = Tagged<_CardId, Int>
+    enum _CardId {}
+
     enum CardEvent {
         
         case copyCardNumber(String)
-        case showAlert(String)
-        case showActivateAlert
     }
 }

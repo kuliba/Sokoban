@@ -12,6 +12,8 @@ import SwiftUI
 
 class InfoProductViewModel: ObservableObject {
     
+    typealias ShowCVV = ProductView.ViewModel.ShowCVV
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var title: String
@@ -41,7 +43,8 @@ class InfoProductViewModel: ObservableObject {
     var sendSelectedButtonVM: ButtonModel?
     
     let product: ProductData
-    
+    let showCvv: ShowCVV?
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
@@ -52,7 +55,8 @@ class InfoProductViewModel: ObservableObject {
         listWithAction: [ItemViewModelForList],
         additionalList: [ItemViewModelForList]?,
         shareButton: ButtonViewModel?,
-        model: Model
+        model: Model,
+        showCvv: ShowCVV? = nil
     ) {
         
         self.product = product
@@ -62,15 +66,22 @@ class InfoProductViewModel: ObservableObject {
         self.additionalList = additionalList
         self.shareButton = shareButton
         self.model = model
+        self.showCvv = showCvv
     }
     
-    internal init(model: Model, product: ProductData, info: Bool = true) {
+    internal init(
+        model: Model,
+        product: ProductData,
+        info: Bool = true,
+        showCvv: ShowCVV? = nil
+    ) {
         
         self.model = model
         self.product = product
         self.title = ""
         self.list = []
         self.listWithAction = []
+        self.showCvv = showCvv
         
         if let cardProductData = product as? ProductCardData {
             
@@ -464,6 +475,12 @@ extension InfoProductViewModel {
     func cvvToogle(productCardData: ProductCardData) {
         
         needShowCvv.toggle()
+        
+        if needShowCvv {
+            self.showCvv?(.init(productCardData.id)) { _ in
+                
+            }
+        }
         
         if needShowNumber, needShowCvv {
             
