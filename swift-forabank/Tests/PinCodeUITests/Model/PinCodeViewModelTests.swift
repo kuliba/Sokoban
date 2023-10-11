@@ -137,7 +137,8 @@ final class PinCodeViewModelTests: XCTestCase {
                 Just(.init(value: "71234567899"))
                     .setFailureType(to: Error.self)
                     .eraseToAnyPublisher()
-            }
+            }, 
+            handler: {_,_ in }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

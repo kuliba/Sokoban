@@ -9,23 +9,24 @@ import SwiftUI
 
 public struct ConfirmView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
     let config: ConfirmView.Config
     @ObservedObject var viewModel: ConfirmViewModel
-    let phoneNumber: String
     private var timerViewModel: ConfirmViewModel.TimerViewModel
     
     public init(
         config: ConfirmView.Config = .defaultConfig,
         viewModel: ConfirmViewModel,
-        phoneNumber: String
+        resendRequest: @escaping () -> Void
     ) {
         self.config = config
         self.viewModel = viewModel
-        self.phoneNumber = phoneNumber
         self.timerViewModel = .init(
-            delay: 10,
-            phoneNumber: phoneNumber,
-            completeAction: { }
+            delay: 60,
+            phoneNumber: viewModel.phoneNumber,
+            completeAction: { }, 
+            resendRequest: resendRequest
         )
     }
     
@@ -57,8 +58,15 @@ public struct ConfirmView: View {
         .alert(isPresented: $viewModel.showAlert) {
             .init(
                 title: Text("Ошибка"),
-                message: Text("Введен некорректный код.\nПопробуйте еще раз")
+                message: Text(viewModel.alertMessage)
             )
+        }
+        .onReceive(viewModel.action) { action in
+            switch action {
+            case _ as ConfirmViewModel.Close.SelfView:
+                self.presentationMode.wrappedValue.dismiss()
+            default: break
+            }
         }
     }
 }
@@ -69,7 +77,7 @@ struct ConfirmView_Previews: PreviewProvider {
         
         ConfirmView(
             viewModel: .defaultViewModel,
-            phoneNumber: "Описание для таймера"
+            resendRequest: {}
         )
     }
 }
@@ -78,6 +86,12 @@ struct ConfirmView_Previews: PreviewProvider {
 
 private extension ConfirmViewModel {
     
-    static let defaultViewModel = ConfirmViewModel.init(handler: { _, _ in })
+    static let defaultViewModel = ConfirmViewModel.init(
+        phoneNumber: "+1....33",
+        cardId: 11111, 
+        actionType: .showCvv,
+        handler: { _, _ in },
+        showSpinner: {},
+        resendRequestAfterClose: {_,_  in })
 }
 

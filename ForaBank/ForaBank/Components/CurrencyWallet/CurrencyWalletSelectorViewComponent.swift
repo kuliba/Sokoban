@@ -267,8 +267,7 @@ extension CurrencyWalletSelectorView {
         static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
             
             let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
-#warning("certificate does nothing")
-            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model, certificate: HappyCertificateClient())}
+            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
             
             return products
         }

@@ -96,7 +96,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.alert)
         
-        sut.handlePinError(.certificate)
+        sut.handlePinError(111, .certificate)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -126,7 +126,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.alert)
         
-        sut.handlePinError(.connectivity)
+        sut.handlePinError(111, .connectivity)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -266,7 +266,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.optionsPannel)
         
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelUnBlockCardChangePin))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -283,8 +283,77 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNotNil(sut.link)
         XCTAssertTrue(sut.viewModelByLink is PinCodeViewModel)
+        sut.link = nil
     }
     
+    // MARK: - test showCvvByTap
+    
+    func test_showCvvByTap_happyPath_returnCVV() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: HappyCertificateClient()) { result in
+                XCTAssertNoDiff(result, .init("123"))
+            }
+    }
+    
+    func test_showCvvByTap_checkCertificateError_returNil() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: SadShowCVVSadCheckCertificateClient()) { result in
+                XCTAssertNil(result)
+            }
+    }
+    
+    func test_showCvvByTap_checkCertificateConnectivityError_returNil() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: SadShowCVVCheckCertificateConnectivityClient()) { result in
+                XCTAssertNil(result)
+            }
+    }
+
+    func test_showCvvByTap_activateCertificateError_returNil() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: SadShowCVVSadActivateCertificateClient()) { result in
+                XCTAssertNil(result)
+            }
+    }
+    
+    func test_showCvvByTap_otpErrorRetryAttempts0_returNil() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: SadShowCVVSadOtpRetryAttempts0CertificateClient()) { result in
+                XCTAssertNil(result)
+            }
+    }
+    
+    func test_showCvvByTap_otpErrorRetryAttempts_returNil() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        sut.showCvvByTap(
+            cardId: .init(111),
+            certificateClient: SadShowCVVSadOtpRetryAttemptsCertificateClient()) { result in
+                XCTAssertNil(result)
+            }
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(
@@ -399,7 +468,7 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .paymentsTransfers(viewModel):
             return viewModel
-        case let .changePin(viewModel):
+        case let .changePin(_, viewModel):
             return viewModel
         case .confirmCode:
             return nil
@@ -468,5 +537,207 @@ private extension ProductCardData {
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "")
+    }
+}
+
+final class HappyCheckSadActivateCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+        
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!!")))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.success("111"))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadCheckSadActivateCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.success("111"))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadShowCVVSadCheckCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.failure(.check(.certificate)))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadShowCVVCheckCertificateConnectivityClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.failure(.check(.connectivity)))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadShowCVVSadActivateCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.failure(.activation(.init(message: "error"))))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadShowCVVSadOtpRetryAttempts0CertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.success("+1..11"))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.failure(.otp(.init(errorMessage: "", retryAttempts: 0))))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+}
+
+final class SadShowCVVSadOtpRetryAttemptsCertificateClient: CertificateClient {
+    
+    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+        
+        completion(.failure(CVVPinError.CheckError.certificate))
+    }
+    
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+
+        completion(.success("+1..11"))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+        completion(.failure(.otp(.init(errorMessage: "", retryAttempts: 1))))
+    }
+    
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
     }
 }

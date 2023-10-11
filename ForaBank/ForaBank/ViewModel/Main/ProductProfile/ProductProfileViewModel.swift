@@ -39,7 +39,7 @@ enum CVVPinError {
     }
 }
 
-typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient & ConfirmWithOtpClient & ShowCVVClient
+typealias CertificateClient = CheckCertificateClient & ActivateCertificateClient & ConfirmWithOtpClient & ShowCVVClient & PinConfirmWithOtpClient & ChangePinClient
 
 protocol CheckCertificateClient {
     
@@ -48,17 +48,31 @@ protocol CheckCertificateClient {
 
 protocol ActivateCertificateClient {
     
-    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void)
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void)
 }
 
 protocol ConfirmWithOtpClient {
     
-    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void)
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void)
 }
 
 protocol ShowCVVClient {
     typealias CVV = ProductView.ViewModel.CardInfo.CVV
-    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void)
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void)
+}
+
+protocol ChangePinClient {
+    
+    func changePin(
+        cardId: Int,
+        newPin:String,
+        otp: String,
+        completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void)
+}
+
+protocol PinConfirmWithOtpClient {
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void)
 }
 
 final class HappyCertificateClient: CertificateClient {
@@ -67,36 +81,24 @@ final class HappyCertificateClient: CertificateClient {
         completion(.success(()))
     }
 
-    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+        completion(.success("+7...88"))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
         completion(.success(()))
     }
     
-    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
-    }
-    
-    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
         completion(.success("123"))
     }
-}
+    
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.success(()))
+    }
 
-final class HappyCheckSadActivateCertificateClient: CertificateClient {
-    
-    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
         completion(.success(()))
-    }
-    
-    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
-        
-        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!!")))
-    }
-    
-    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
-    }
-    
-    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
-        completion(.success("111"))
     }
 }
 
@@ -107,38 +109,25 @@ final class SadCertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
         
+        completion(.success("+7....77"))
+    }
+    
+    func confirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
         completion(.success(()))
     }
     
-    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
-    }
-    
-    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
+    func showCVV(cardId: Int, completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
         completion(.success("111"))
     }
-}
-
-final class SadCheckSadActivateCertificateClient: CertificateClient {
     
-    func checkCertificate(completion: @escaping (Result<Void, CVVPinError.CheckError>) -> Void) {
-        
-        completion(.failure(CVVPinError.CheckError.certificate))
-    }
-    
-    func activateCertificate(completion: @escaping (Result<Void, CVVPinError.ActivationError>) -> Void) {
-
-        completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
-    }
-    
-    func comfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
         completion(.success(()))
     }
     
-    func showCVV(completion: @escaping (Result<CVV, CVVPinError.ShowCVVError>) -> Void) {
-        completion(.success("111"))
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        completion(.failure(CVVPinError.OtpError.init(errorMessage: "error", retryAttempts: 1)))
     }
 }
 
@@ -171,6 +160,9 @@ func failedChangeCodePublisher() -> PinCodeViewModel.ConfirmationPublisher {
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = (ProductView.ViewModel.CardEvent) -> Void
+    typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
+    typealias CompletionShowCVV = (ResultShowCVV) -> Void
+    typealias ShowCVV = (ProductView.ViewModel.CardId, @escaping CompletionShowCVV) -> Void
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -203,7 +195,7 @@ class ProductProfileViewModel: ObservableObject {
     private let model: Model
     private let certificateClient: CertificateClient
     private var cardAction: CardAction?
-
+    
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
@@ -242,7 +234,7 @@ class ProductProfileViewModel: ObservableObject {
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel deinitialized")
     }
-        
+    
     convenience init?(
         _ model: Model,
         certificateClient: CertificateClient,
@@ -255,7 +247,7 @@ class ProductProfileViewModel: ObservableObject {
             model,
             productData: product,
             cardAction: { _ in },
-            certificate: certificateClient)
+            showCvv: nil)
         else { return nil }
         
         // status bar
@@ -269,7 +261,15 @@ class ProductProfileViewModel: ObservableObject {
             model,
             productData: product,
             cardAction: self.cardAction,
-            certificate: certificateClient)!
+            showCvv: { [weak self] cardId, completion in
+                
+                guard let self else { return }
+                
+                self.showCvvByTap(
+                    cardId: cardId,
+                    certificateClient: certificateClient,
+                    completion: completion)
+            })!
 
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -292,31 +292,86 @@ extension ProductProfileViewModel {
     
     func confirmKeyBinding(
         withOTP otp: String,
-        completion: @escaping (Bool) -> Void
+        completion: @escaping (String?) -> Void
     ) {
-        certificateClient.comfirmWith(otp: otp) { [weak self] result in
-            
-            guard self != nil else { return }
+        certificateClient.confirmWith(otp: otp) { result in
             
             switch result {
             case .success:
-                completion(true)
+                completion(nil)
                 
-            case .failure:
-                completion(false)
+            case let .failure(error):
+                completion(error.errorMessage)
             }
         }
     }
     
+    func closeLinkAndResendRequest(
+        cardId: Int,
+        actionType: ConfirmViewModel.CVVPinAction
+    ) {
+        switch actionType {
+        case .changePin:
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1200)) {
+                self.link = .changePin(.init(cardId), self.createPinCodeViewModel(displayNumber: "+1.."))
+            }
+            
+        case .showCvv:
+            DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
+                self.showCvvByTap(
+                    cardId: .init(cardId),
+                    certificateClient: self.certificateClient) { result in
+                        if let cvv = result {
+                            DispatchQueue.main.async {
+                                self.product.action.send(ProductProfileCardView.ViewModel.CVVPinViewModelAction.ShowCVV(cardId: .init(cardId), cvv: cvv))
+                            }
+                        }
+                    }
+            }
+        }
+    }
+    
+    func confirmShowCVV(
+        withOTP otp: String,
+        completion: @escaping (String?) -> Void
+    ) {
+        certificateClient.confirmWith(otp: otp) { result in
+            
+            switch result {
+            case .success:
+                completion(nil)
+                
+            case let .failure(error):
+                completion(error.errorMessage)
+            }
+        }
+    }
+    
+    func confirmChangePin(
+       /* cardId: Int,
+        newPin: String,*/
+        withOTP otp: String,
+        completion: @escaping (String?) -> Void
+    ) {
+        certificateClient.changePin(cardId: 111, newPin: "11", otp: otp) { result in
+            
+            switch result {
+            case .success:
+                completion(nil)
+                
+            case let .failure(error):
+                completion(error.errorMessage)
+            }
+        }
+    }
+
     func createCardAction(
         _ certificateClient: CertificateClient,
         _ model: Model
     ) -> CardAction? {
         
-        return { [weak self] in
-            
-            guard let self else { return }
-            
+        return {
             switch $0 {
             case let .copyCardNumber(message):
                 model.action.send(ModelAction.Informer.Show(
@@ -326,32 +381,6 @@ extension ProductProfileViewModel {
                         type: .copyInfo
                     )
                 ))
-            case let .showAlert(message):
-                self.makeAlert(message)
-            case .showActivateAlert:
-                self.showActivateCertificateAlert(action: {
-                    
-                    certificateClient.activateCertificate { [weak self] result in
-                        
-                        guard let self else { return }
-                        
-                        Task { @MainActor [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            switch result {
-                                
-                            case let .failure(error):
-                                
-                                self.makeAlert(error.message)
-                                
-                            case .success:
-                                self.alert = nil
-                                self.link = .confirmCode
-                            }
-                        }
-                    }
-                })
             }
         }
     }
@@ -379,6 +408,16 @@ private extension ProductProfileViewModel {
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)
                 
+            }.store(in: &bindings)
+        
+        // Confirm OTP
+
+        action
+            .compactMap { $0 as? ProductProfileViewModelAction.Show.ConfirmShow }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                self.alert = nil
+                self.link = .confirmCode(action.cardId, action.actionType, action.phone, action.resendOtp)
             }.store(in: &bindings)
         
         $isLinkActive
@@ -1086,7 +1125,20 @@ private extension ProductProfileViewModel {
                     case let payload as ProductProfileOptionsPannelViewModelAction.ButtonTapped:
                         switch payload.buttonType {
                         case .requisites:
-                            let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: false)
+                            let productInfoViewModel = InfoProductViewModel(
+                                model: self.model,
+                                product: productData,
+                                info: false,
+                                showCvv: { [weak self] cardId, completion in
+                                    
+                                    guard let self else { return }
+                                    
+                                    self.showCvvByTap(
+                                        cardId: cardId,
+                                        certificateClient: certificateClient,
+                                        completion: completion)
+                                }
+                            )
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .info:
@@ -1360,11 +1412,30 @@ private extension ProductProfileViewModel {
     
     func makeAlert(_ message: String) {
         
-        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+        let alertViewModel = Alert.ViewModel(
+            title: "Ошибка",
+            message: message,
+            primary: .init(type: .default, title: "ОК") { [weak self] in
             self?.action.send(ProductProfileViewModelAction.Close.Alert())
         })
-        
-        alert = .init(alertViewModel)
+        DispatchQueue.main.async { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+        }
+    }
+    
+    func confirmOtp(
+        cardId: ProductView.ViewModel.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
+        phone: String,
+        resendRequest: @escaping () -> Void
+    ) {
+        DispatchQueue.main.async {
+            self.action.send(ProductProfileViewModelAction.Show.ConfirmShow(
+                cardId: cardId,
+                actionType: actionType,
+                phone: phone,
+                resendOtp: resendRequest))
+        }
     }
 
     func customNameAlert(for productType: ProductType, alertTitle: String) ->  AlertTextFieldView.ViewModel? {
@@ -1601,16 +1672,18 @@ private extension ProductProfileViewModel {
                 action: action
             )
         )
-        self.alert = .init(alertViewModel)
+        DispatchQueue.main.async { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+        }
     }
     
     func createPinCodeViewModel(displayNumber: String?) -> PinCodeViewModel {
         
-        
         return .init(
             title: "Введите новый PIN-код для\nкарты *\(displayNumber ?? "")",
             pincodeLength: 4,
-            confirmationPublisher: getPinConfirmationCodePublisher
+            confirmationPublisher: getPinConfirmationCodePublisher, 
+            handler: confirmChangePin
         )
     }
 }
@@ -1647,13 +1720,15 @@ extension ProductProfileViewModel {
     
     enum Link {
         
+        typealias ResendRequest = () -> Void
+        
         case productInfo(InfoProductViewModel)
         case productStatement(ProductStatementViewModel)
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case changePin(PinCodeViewModel)
-        case confirmCode
+        case changePin(ProductView.ViewModel.CardId, PinCodeViewModel)
+        case confirmCode(ProductView.ViewModel.CardId, ConfirmViewModel.CVVPinAction, String, ResendRequest)
     }
     
     struct Sheet: Identifiable {
@@ -1738,6 +1813,14 @@ enum ProductProfileViewModelAction {
             
             let viewModel: Alert.ViewModel
         }
+        
+        struct ConfirmShow: Action {
+            
+            let cardId: ProductView.ViewModel.CardId
+            let actionType: ConfirmViewModel.CVVPinAction
+            let phone: String
+            let resendOtp: () -> Void
+        }
     }
     
     enum Close {
@@ -1781,13 +1864,17 @@ extension ProductProfileViewModel {
         blockCard(with: productData)
     }
     
-    private func checkCertificate(_ productCard: ProductCardData) {
+    private func checkCertificate(
+        _ cardId: ProductView.ViewModel.CardId,
+        certificate: CertificateClient,
+        _ productCard: ProductCardData
+    ) {
         
-        self.certificateClient.checkCertificate { [weak self] result in
+        certificate.checkCertificate { [weak self] result in
             
             guard let self else { return }
             
-            handleCheckCertificateResult(result, displayNumber: productCard.displayNumber)
+            handleCheckCertificateResult(cardId, result, displayNumber: productCard.displayNumber)
         }
     }
     
@@ -1806,52 +1893,72 @@ extension ProductProfileViewModel {
             
         case .changePin:
             
-            checkCertificate(productCard)
+            checkCertificate(.init(productCard.id), certificate: self.certificateClient, productCard)
         }
     }
     
     func handleCheckCertificateResult(
+        _ cardId: ProductView.ViewModel.CardId,
         _ result: Result<Void, CVVPinError.CheckError>,
         displayNumber: String?
     ) {
         switch result {
             
         case let .failure(pinError):
-            handlePinError(pinError)
+            handlePinError(cardId, pinError)
             
         case .success:
-            link = .changePin(createPinCodeViewModel(displayNumber: displayNumber))
+            link = .changePin(cardId, createPinCodeViewModel(displayNumber: displayNumber))
         }
     }
     
-    func handlePinError(_ pinError: (CVVPinError.CheckError)) {
+    func showActivateCertificate(
+        cardId: ProductView.ViewModel.CardId,
+        actionType: ConfirmViewModel.CVVPinAction
+    ) {
+        let action: () -> Void = { [unowned self] in
+            
+            self.certificateClient.activateCertificate { [unowned self] result in
+                
+                switch result {
+                case let .failure(error):
+                    self.makeAlert(error.message)
+                    
+                case let .success(phone):
+                    self.confirmOtp(
+                        cardId: cardId,
+                        actionType: actionType,
+                        phone: phone,
+                        resendRequest: self.resendOtp
+                    )
+                }
+            }
+        }
+        self.showActivateCertificateAlert(action: action)
+    }
+    
+    func resendOtp() {
+        self.certificateClient.activateCertificate { [weak self] result in
+            
+            guard let self else { return }
+            
+            Task { @MainActor in
+                if case let .failure(error) = result {
+                    self.makeAlert(error.message)
+                }
+            }
+        }
+    }
+    
+    func handlePinError(
+        _ cardId: ProductView.ViewModel.CardId,
+        _ pinError: (CVVPinError.CheckError)
+    ) {
         
         switch pinError {
             
         case .certificate:
-            // TODO: extract
-            let action: () -> Void = {
-                
-                self.certificateClient.activateCertificate { [weak self] result in
-                    
-                    guard let self else { return }
-                    Task { @MainActor in
-                        
-                        switch result {
-                            
-                        case let .failure(error):
-                            
-                            self.makeAlert(error.message)
-                            
-                        case .success:
-                            self.alert = nil
-                            self.link = .confirmCode
-                        }
-                    }
-                }
-            }
-            
-            self.showActivateCertificateAlert(action: action)
+            showActivateCertificate(cardId: cardId, actionType: .changePin)
 
         case .connectivity:
             makeAlert("Истеклo время\nожидания ответа")
@@ -1883,5 +1990,61 @@ extension ProductProfileViewModel {
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
         self.successChangePin = successViewModel
         bind(successViewModel)
+    }
+    
+    func showSpinner() {
+        Task { @MainActor [weak self] in
+            
+            guard let self else { return }
+            self.spinner = .init()
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func showCvvByTap(
+        cardId: ProductView.ViewModel.CardId,
+        certificateClient: CertificateClient,
+        completion: @escaping (ProductView.ViewModel.CardInfo.CVV?) -> Void
+    ) {
+        certificateClient.showCVV(cardId: cardId.rawValue) { [unowned self] result in
+                        
+            switch result {
+            case let .failure(error):
+                switch error {
+                case let .check(checkError):
+                    switch checkError {
+                    case .certificate:
+                        // show certificate Alert
+                        self.showActivateCertificate(cardId: cardId, actionType: .showCvv)
+                        completion(nil)
+                        
+                    case .connectivity:
+                        // show connectivity Alert
+                        self.makeAlert("Истеклo время\nожидания ответа")
+                        completion(nil)
+                    }
+                case let .activation(activationError):
+                    // show Alert with message
+                    self.makeAlert(activationError.message)
+                    completion(nil)
+
+                case let .otp(otpError):
+                    // show Alert with message
+                    let message = {
+                        if otpError.retryAttempts > 0 {
+                            return "Введен некорректный код. Попробуйте еще раз."
+                        } else {
+                            return "Возникла техническая ошибка."
+                        }
+                    }()
+                    self.makeAlert(message)
+                    completion(nil)
+                }
+            case let .success(cvv):
+                completion(cvv)
+            }
+        }
     }
 }

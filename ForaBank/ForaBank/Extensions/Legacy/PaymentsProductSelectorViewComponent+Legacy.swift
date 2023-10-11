@@ -17,13 +17,12 @@ extension PaymentsProductSelectorView.ViewModel {
         
         var products = [ProductView.ViewModel]()
         for product in productsData {
-            // для маленьких карт сертификат не нужен - нет функционал CVV/PIN
+            // для маленьких карт action не нужны - нет функционал CVV/PIN
             let productViewModel = ProductView.ViewModel(
                 with: product,
                 size: .small,
                 style: .main,
-                model: model,
-                certificate: nil
+                model: model
             )
             products.append(productViewModel)
         }

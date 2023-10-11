@@ -23,7 +23,7 @@ extension CvvPinService: CheckCertificateClient {
 
 extension CvvPinService: ActivateCertificateClient {
     
-    typealias ActivateCertificateResult = Result<Void, CVVPinError.ActivationError>
+    typealias ActivateCertificateResult = Result<String, CVVPinError.ActivationError>
     typealias ActivateCertificateCompletion = (ActivateCertificateResult) -> Void
     
     func activateCertificate(
@@ -39,7 +39,9 @@ extension CvvPinService: ActivateCertificateClient {
                 completion(.failure(.init(message: error.localizedDescription)))
                 
             case .success:
-                completion(.success(()))
+                #warning("fix this: should have phone")
+                let phone = "+1....77"
+                completion(.success(phone))
             }
         }
     }
@@ -50,7 +52,7 @@ extension CvvPinService: ConfirmWithOtpClient {
     typealias BindPublicKeyResult = Result<Void, CVVPinError.OtpError>
     typealias BindPublicKeyCompletion = (BindPublicKeyResult) -> Void
     
-    func comfirmWith(
+    func confirmWith(
         otp: String,
         completion: @escaping BindPublicKeyCompletion
     ) {
@@ -62,9 +64,10 @@ extension CvvPinService: ConfirmWithOtpClient {
             
             switch result {
             case let .failure(error):
-                #warning("fix error type: should have retry attempts")
+                #warning("fix error type: should have real message")
+                // alertMessage = (retryAttempts == 0) ? "Возникла техническая ошибка" : "Введен некорректный код.\nПопробуйте еще раз"
+
                 completion(.failure(.init(errorMessage: error.localizedDescription, retryAttempts: 1)))
-                
             case .success:
                 completion(.success(()))
             }
@@ -78,14 +81,43 @@ extension CvvPinService: ShowCVVClient {
     typealias ShowCVVCompletion = (Result<CVV, CVVPinError.ShowCVVError>) -> Void
 
     func showCVV(
+        cardId: Int, 
         completion: @escaping ShowCVVCompletion
     ) {
 #warning("fix this")
         // completion(.success(.init("3")))
-        // completion(.failure(.check(.certificate)))
+        completion(.failure(.check(.certificate)))
         // completion(.failure(.check(.connectivity)))
         // completion(.failure(.activation(.init(message: "Возникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения"))))
         // completion(.failure(.otp(.init(errorMessage: "error", retryAttempts: 1))))
-        completion(.failure(.otp(.init(errorMessage: "error", retryAttempts: 0))))
+        //completion(.failure(.otp(.init(errorMessage: "error", retryAttempts: 0))))
+    }
+}
+
+extension CvvPinService: PinConfirmWithOtpClient {
+    
+    func pinConfirmWith(
+        otp: String,
+        completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void
+    ) {
+#warning("fix this")
+        completion(.success(()))
+    }
+}
+
+extension CvvPinService: ChangePinClient {
+    
+    typealias ChangePinCompletion = (Result<Void, CVVPinError.OtpError>) -> Void
+
+    func changePin(
+        cardId: Int,
+        newPin: String,
+        otp: String,
+        completion: @escaping ChangePinCompletion
+    ) {
+#warning("fix this")
+        completion(.success(()))
+
+       // completion(.failure(CVVPinError.OtpError.init(errorMessage: "error", retryAttempts: 1)))
     }
 }

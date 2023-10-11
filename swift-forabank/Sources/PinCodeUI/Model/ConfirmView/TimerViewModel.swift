@@ -15,7 +15,8 @@ extension ConfirmViewModel {
         let delay: TimeInterval
         let phoneNumber: String
         let completeAction: () -> Void
-        
+        let resendRequest: () -> Void
+
         @Published var value: String
         
         @Published var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
@@ -28,13 +29,15 @@ extension ConfirmViewModel {
         init(
             delay: TimeInterval,
             phoneNumber: String,
-            completeAction: @escaping () -> Void
+            completeAction: @escaping () -> Void,
+            resendRequest: @escaping () -> Void
         ) {
             
             self.delay = delay
-            self.phoneNumber = phoneNumber.formattedPhoneNumber()
+            self.phoneNumber = phoneNumber
             self.value = ""
             self.completeAction = completeAction
+            self.resendRequest = resendRequest
 
             value = formatter.string(from: delay) ?? "0 :\(delay)"
         }
@@ -77,6 +80,7 @@ extension ConfirmViewModel {
                 
         func restartTimer() {
             self.needRepeatButton = false
+            resendRequest()
             self.value = formatter.string(from: delay) ?? "0 :\(delay)"
             self.startTime = Date.timeIntervalSinceReferenceDate
             self.cancelTimer()
@@ -101,11 +105,14 @@ extension DateComponentsFormatter {
 extension ConfirmViewModel.TimerViewModel {
     
     static let sample = ConfirmViewModel.TimerViewModel.init(
-        delay: 10,
+        delay: 60,
         phoneNumber: .testNumber,
         completeAction: {
             
             print("completeAction")
+        }, 
+        resendRequest: {
+            print("resenRequest")
         }
     )
 }
@@ -113,20 +120,5 @@ extension ConfirmViewModel.TimerViewModel {
 extension String {
     
     static let testNumber = "71234567890"
-}
-
-private extension String {
-    
-    func separate(
-        every stride: Int = 2,
-        with separator: Character = " "
-    ) -> String {
-        return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
-    }
-    
-    func formattedPhoneNumber() -> String {
-        
-        return "+" + self.prefix(1) + " ... ... " + String(self.suffix(4)).separate(every:2, with: " ")
-    }
 }
 

@@ -120,8 +120,8 @@ final class ProductConfigTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(
         size: ProductView.ViewModel.Appearance.Size = .small,
-        certificate: CertificateClient? = HappyCertificateClient(),
         cardAction: ProductView.ViewModel.CardAction? = nil,
+        showCVV: ProductView.ViewModel.ShowCVV? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -138,7 +138,7 @@ final class ProductConfigTests: XCTestCase {
             isUpdating: false,
             productType: .card,
             cardAction: cardAction,
-            certificate: certificate
+            showCvv: showCVV
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

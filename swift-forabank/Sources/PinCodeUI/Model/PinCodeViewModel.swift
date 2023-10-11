@@ -15,23 +15,27 @@ public class PinCodeViewModel: ObservableObject {
     public let title: String
     public let pincodeLength: Int
     
+    
     @Published public var state: CodeState
     @Published private(set) var phoneNumberState: PhoneNumberState?
 
     private let confirmationPublisher: () -> ConfirmationPublisher
-    
+    private let handler: (String, @escaping (String?) -> Void) -> Void
+
     private(set) var dots: [DotViewModel] = []
     
     public init(
         title: String,
         pincodeLength: Int,
-        confirmationPublisher: @escaping () -> ConfirmationPublisher
+        confirmationPublisher: @escaping () -> ConfirmationPublisher,
+        handler: @escaping (String, @escaping (String?) -> Void) -> Void
     ) {
         self.title = title
         self.pincodeLength = pincodeLength
         self.dots = Self.dots("", pincodeLength)
         self.state = .init(state: .empty, title: title)
         self.confirmationPublisher = confirmationPublisher
+        self.handler = handler
     }
     
     private func update(with pincodeValue: String, pincodeLength: Int) {
@@ -121,11 +125,27 @@ public class PinCodeViewModel: ObservableObject {
             //TODO: добавить обработку ошибок для аннимации
         }
         if state.currentStyle == .correct {
-                        
-            confirmationPublisher()
+                
+            handler(state.code) { text in
+                
+                if let message = text {
+                    DispatchQueue.main.async { [weak self]  in
+                        guard let self else { return }
+
+                      //  self.alertMessage = retryAttempts == 0 ? "Возникла техническая ошибка" : "Введен некорректный код.\nПопробуйте еще раз"
+                        //self.showAlert = true
+                    }
+                } else {
+                    // self.resendRequestAfterClose(self.cardId, self.actionType)
+                     DispatchQueue.main.async {
+                         //self.action.send(ConfirmViewModel.Close.SelfView())
+                     }
+                }
+            }
+           /* confirmationPublisher()
                 .map(PhoneNumberState.phone)
                 .catch { Just(PhoneNumberState.error($0)) }
-                .assign(to: &$phoneNumberState)
+                .assign(to: &$phoneNumberState)*/
         }
     }
         
@@ -203,6 +223,7 @@ extension PinCodeViewModel {
             Just(.init(value: "+1...90"))
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
-        }
+        }, 
+        handler: {_,_ in }
     )
 }
