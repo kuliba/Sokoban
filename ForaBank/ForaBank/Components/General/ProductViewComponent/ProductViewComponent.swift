@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 import Tagged
+import PinCodeUI
 
 //MARK: - ViewModel
 
@@ -17,8 +18,8 @@ extension ProductView {
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
         @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
-        typealias ShowCVV = (CardId, @escaping (CardInfo.CVV?) -> Void) -> Void
-        typealias CardAction = (CardEvent) -> Void
+        typealias ShowCVV = (CardDomain.CardId, @escaping (CardInfo.CVV?) -> Void) -> Void
+        typealias CardAction = (CardDomain.CardEvent) -> Void
         let action: PassthroughSubject<Action, Never> = .init()
         
         let id: ProductData.ID
@@ -387,7 +388,7 @@ enum ProductViewModelAction {
     struct OnboardingShow: Action {}
     
     struct ShowCVV: Action {
-        let cardId: ProductView.ViewModel.CardId
+        let cardId: CardDomain.CardId
         let cvv: ProductView.ViewModel.CardInfo.CVV
     }
     
@@ -1142,7 +1143,7 @@ extension ProductView.ViewModel {
     }
     
     func showCVVButtonTap() {
-        let cardId = CardId.init(self.id)
+        let cardId = CardDomain.CardId.init(self.id)
         showCvv?(cardId) {
             if let cvv = $0 {
                 self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
@@ -1247,15 +1248,4 @@ extension Array where Element == (String, String) {
         ("X", "*"),
         ("-", " ")
     ]
-}
-
-extension ProductView.ViewModel {
-    
-    typealias CardId = Tagged<_CardId, Int>
-    enum _CardId {}
-
-    enum CardEvent {
-        
-        case copyCardNumber(String)
-    }
 }

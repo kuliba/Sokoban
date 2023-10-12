@@ -9,10 +9,11 @@
 import Combine
 import UIKit
 import SwiftUI
+import PinCodeUI
 
 class MyProductsViewModel: ObservableObject {
     
-    typealias CardAction = (ProductView.ViewModel.CardEvent) -> Void
+    typealias CardAction = (CardDomain.CardEvent) -> Void
 
     let action: PassthroughSubject<Action, Never> = .init()
     

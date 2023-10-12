@@ -6,36 +6,32 @@
 //
 
 import Combine
-import Foundation
+import SwiftUI
 
 public class PinCodeViewModel: ObservableObject {
     
-    public typealias ConfirmationPublisher = AnyPublisher<PhoneNumber, Error>
-
     public let title: String
     public let pincodeLength: Int
     
-    
     @Published public var state: CodeState
     @Published private(set) var phoneNumberState: PhoneNumberState?
+    @Published private(set) var mistakes: Int = 0
+    var alertMessage: String = ""
 
-    private let confirmationPublisher: () -> ConfirmationPublisher
-    private let handler: (String, @escaping (String?) -> Void) -> Void
+    private let getPinConform: (@escaping (PhoneNumberState) -> Void) -> Void
 
     private(set) var dots: [DotViewModel] = []
     
     public init(
         title: String,
         pincodeLength: Int,
-        confirmationPublisher: @escaping () -> ConfirmationPublisher,
-        handler: @escaping (String, @escaping (String?) -> Void) -> Void
+        getPinConfirm: @escaping (@escaping (PhoneNumberState) -> Void) -> Void
     ) {
         self.title = title
         self.pincodeLength = pincodeLength
         self.dots = Self.dots("", pincodeLength)
         self.state = .init(state: .empty, title: title)
-        self.confirmationPublisher = confirmationPublisher
-        self.handler = handler
+        self.getPinConform = getPinConfirm
     }
     
     private func update(with pincodeValue: String, pincodeLength: Int) {
@@ -122,30 +118,15 @@ public class PinCodeViewModel: ObservableObject {
         }
         
         if state.currentStyle == .incorrect {
-            //TODO: добавить обработку ошибок для аннимации
+            withAnimation { [weak self] in
+                self?.mistakes += 1
+            }
         }
         if state.currentStyle == .correct {
-                
-            handler(state.code) { text in
-                
-                if let message = text {
-                    DispatchQueue.main.async { [weak self]  in
-                        guard let self else { return }
 
-                      //  self.alertMessage = retryAttempts == 0 ? "Возникла техническая ошибка" : "Введен некорректный код.\nПопробуйте еще раз"
-                        //self.showAlert = true
-                    }
-                } else {
-                    // self.resendRequestAfterClose(self.cardId, self.actionType)
-                     DispatchQueue.main.async {
-                         //self.action.send(ConfirmViewModel.Close.SelfView())
-                     }
-                }
+            getPinConform { result in
+                self.phoneNumberState = result
             }
-           /* confirmationPublisher()
-                .map(PhoneNumberState.phone)
-                .catch { Just(PhoneNumberState.error($0)) }
-                .assign(to: &$phoneNumberState)*/
         }
     }
         
@@ -167,7 +148,7 @@ public class PinCodeViewModel: ObservableObject {
         phoneNumberState = nil
     }
     
-    enum PhoneNumberState {
+    public enum PhoneNumberState {
         
         case phone(PhoneNumber)
         case error(Error)
@@ -217,13 +198,7 @@ extension PinCodeViewModel {
     
     static let defaultValue: PinCodeViewModel = .init(
         title: "Введите новый Pin код для карты *4279",
-        pincodeLength: 4,
-        confirmationPublisher: {
-            
-            Just(.init(value: "+1...90"))
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
-        }, 
-        handler: {_,_ in }
+        pincodeLength: 4, 
+        getPinConfirm: {_ in }
     )
 }

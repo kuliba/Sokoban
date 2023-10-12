@@ -94,14 +94,15 @@ extension CvvPinService: ShowCVVClient {
     }
 }
 
-extension CvvPinService: PinConfirmWithOtpClient {
+extension CvvPinService: PinConfirmationCodeClient {
     
-    func pinConfirmWith(
-        otp: String,
-        completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void
+    
+    func getPinConfirmCode(
+        completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void
     ) {
 #warning("fix this")
-        completion(.success(()))
+
+        completion(.success("+1..22"))
     }
 }
 

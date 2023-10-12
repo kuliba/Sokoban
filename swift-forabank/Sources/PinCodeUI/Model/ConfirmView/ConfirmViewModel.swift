@@ -7,96 +7,135 @@
 
 import Foundation
 import Combine
+import Tagged
 
 public class ConfirmViewModel: ObservableObject {
    
+    public typealias ChangePinHandler = (ChangePinStruct, @escaping ((Int, String)?) -> Void) -> Void
+    
     let maxDigits: Int
     
-    @Published var pin: String
+    @Published var otp: OtpDomain.Otp
     @Published var isDisabled: Bool
     @Published var showAlert: Bool 
 
     let action: PassthroughSubject<ComfirmViewAction, Never> = .init()
 
     let phoneNumber: String
-    let cardId: Int
+    let cardId: CardDomain.CardId
     let actionType: CVVPinAction
+    var newPin: PinDomain.NewPin = ""
 
-    let handler: (String, @escaping (String?) -> Void) -> Void
+    let handler: (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void
+    let handlerChangePin: ChangePinHandler?
+
     let showSpinner: () -> Void
-    let resendRequestAfterClose: (Int, CVVPinAction) -> Void
+    let resendRequestAfterClose: (CardDomain.CardId, CVVPinAction) -> Void
     var alertMessage: String = ""
     
     public init(
         phoneNumber: String,
-        cardId: Int,
+        cardId: CardDomain.CardId,
         actionType: CVVPinAction,
         maxDigits: Int = 6,
-        pin: String = "",
+        otp: OtpDomain.Otp = "",
+        newPin: PinDomain.NewPin = "",
         isDisable: Bool = false,
         showAlert: Bool = false,
-        handler: @escaping (String, @escaping (String?) -> Void) -> Void,
+        handler: @escaping (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void,
+        handlerChangePin: ChangePinHandler? = nil,
         showSpinner: @escaping () -> Void,
-        resendRequestAfterClose: @escaping (Int, CVVPinAction) -> Void
+        resendRequestAfterClose: @escaping (CardDomain.CardId, CVVPinAction) -> Void
     ) {
         self.phoneNumber = phoneNumber
         self.cardId = cardId
         self.actionType = actionType
         self.maxDigits = maxDigits
-        self.pin = pin
+        self.otp = otp
+        self.newPin = newPin
         self.isDisabled = isDisable
         self.showAlert = showAlert
         self.handler = handler
+        self.handlerChangePin = handlerChangePin
         self.showSpinner = showSpinner
         self.resendRequestAfterClose = resendRequestAfterClose
     }
 
-    func submitPin() {
+    func submitOtp() {
         
-        guard !pin.isEmpty else { return }
+        guard !otp.isEmpty else { return }
         
-        if pin.count == maxDigits && !isDisabled {
+        if otp.count == maxDigits && !isDisabled {
             
             isDisabled = true
             //showSpinner()
-            handler(pin) { [weak self] text in
-                
-                guard let self else { return }
-                
-                if let message = text {
-                    DispatchQueue.main.async { [weak self] in
-                        
-                        guard let self else { return }
-
-                        self.isDisabled = false
-                        self.pin = ""
-                        self.alertMessage = message
-                        self.showAlert = true
-                    }
-                } else {
-                    self.resendRequestAfterClose(self.cardId, self.actionType)
-                    DispatchQueue.main.async { [unowned self] in
-                        self.action.send(ConfirmViewModel.Close.SelfView())
+            if let handlerChangePin {
+                let changePin = ChangePinStruct(
+                    cardId: cardId,
+                    newPin: newPin,
+                    otp: otp)
+               handlerChangePin(changePin) { [weak self] result in
+                   
+                   guard let self else { return }
+                   
+                   if let result {
+                       DispatchQueue.main.async { [weak self] in
+                           
+                           guard let self else { return }
+                           
+                           self.isDisabled = false
+                           self.otp = ""
+                           self.alertMessage = result.1
+                           self.showAlert = true
+                       }
+                   } else {
+                       self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
+                       DispatchQueue.main.async { [unowned self] in
+                           self.action.send(ConfirmViewModelAction.Close.SelfView())
+                       }
+                   }
+               }
+            }
+            else {
+                handler(otp) { [weak self] result in
+                    
+                    guard let self else { return }
+                    
+                    if let result {
+                        DispatchQueue.main.async { [weak self] in
+                            
+                            guard let self else { return }
+                            
+                            self.isDisabled = false
+                            self.otp = ""
+                            self.alertMessage = result.0 == 0 ? "Возникла техническая ошибка" : "Введен некорректный код.\nПопробуйте еще раз"
+                            self.showAlert = true
+                        }
+                    } else {
+                        self.resendRequestAfterClose(self.cardId, self.actionType)
+                        DispatchQueue.main.async { [unowned self] in
+                            self.action.send(ConfirmViewModelAction.Close.SelfView())
+                        }
                     }
                 }
             }
         }
         
-        if pin.count > maxDigits {
+        if otp.count > maxDigits {
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
 
-                self.pin = String(self.pin.prefix(self.maxDigits))
+                self.otp = .init(String(self.otp.rawValue.prefix(self.maxDigits)))
             }
-            submitPin()
+            submitOtp()
         }
     }
     
     func getDigit(at index: Int) -> String? {
         
-        if index >= self.pin.count { return nil }
+        if index >= self.otp.count { return nil }
         
-        return self.pin.digits[index].numberString
+        return self.otp.digits[index].numberString
     }
 }
 
@@ -118,7 +157,7 @@ private extension Int {
     }
 }
 
-extension ConfirmViewModel {
+enum ConfirmViewModelAction {
     
     enum Close {
         struct SelfView: ComfirmViewAction {}
@@ -130,7 +169,19 @@ protocol ComfirmViewAction {}
 public extension ConfirmViewModel {
     
     enum CVVPinAction {
-        case changePin
+        case changePin(String?)
         case showCvv
+        case changePinResult(ChangePinResult)
+    }
+    
+    enum ChangePinResult {
+        case successScreen
+        case errorScreen
+    }
+    
+    struct ChangePinStruct {
+        public let cardId: CardDomain.CardId
+        public let newPin: PinDomain.NewPin
+        public let otp: OtpDomain.Otp
     }
 }

@@ -132,13 +132,7 @@ final class PinCodeViewModelTests: XCTestCase {
         let sut: PinCodeViewModel = .init(
             title: title,
             pincodeLength: pincodeLength,
-            confirmationPublisher: {
-                
-                Just(.init(value: "71234567899"))
-                    .setFailureType(to: Error.self)
-                    .eraseToAnyPublisher()
-            }, 
-            handler: {_,_ in }
+            getPinConfirm: {_ in }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

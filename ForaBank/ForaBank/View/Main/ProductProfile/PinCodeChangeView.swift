@@ -8,18 +8,20 @@
 import Combine
 import SwiftUI
 import PinCodeUI
+import Tagged
 
 struct PinCodeChangeView<ConfirmationView: View>: View {
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
     @ObservedObject private var viewModel: PinCodeViewModel
     
     private let config: PinCodeView.Config
-    private let confirmationView: (PinCodeViewModel.PhoneNumber) -> ConfirmationView
+    private let confirmationView: (PinCodeViewModel.PhoneNumber, PinDomain.NewPin) -> ConfirmationView
     
     init(
         config: PinCodeView.Config,
         viewModel: PinCodeViewModel,
-        confirmationView: @escaping (PinCodeViewModel.PhoneNumber) -> ConfirmationView
+        confirmationView: @escaping (PinCodeViewModel.PhoneNumber, PinDomain.NewPin) -> ConfirmationView
     ) {
         self.config = config
         self.viewModel = viewModel
@@ -49,12 +51,16 @@ struct PinCodeChangeView<ConfirmationView: View>: View {
                     get: { viewModel.phoneNumber },
                     set: viewModel.dismissFullCover
                 ),
-                onDismiss: { },
+                onDismiss: {
+                    self.presentationMode.wrappedValue.dismiss()
+ },
                 content: { phoneNumber in
                     
                     NavigationView {
-                        
-                        confirmationView(.init(value: phoneNumber.value))
+                        confirmationView(
+                            .init(value: phoneNumber.value),
+                            .init(viewModel.state.code)
+                        )
                     }
                 }
             )
@@ -98,16 +104,15 @@ struct PinCodeChangeView_Previews: PreviewProvider {
                 pinCodeConfig: pinConfig),
             viewModel: .init(
                 title: "String",
-                pincodeLength: 4,
-                confirmationPublisher: {
-                    
-                    Just(.init(value: "71234567899"))
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }, 
-                handler: {_,_ in }
+                pincodeLength: 4, 
+                getPinConfirm: {_ in }
             ),
-            confirmationView: { Text($0.value) }
+            confirmationView: { phone, code in
+                VStack {
+                    Text(phone.value)
+                    Text(code.rawValue)
+                }
+            }
         )
     }
 }

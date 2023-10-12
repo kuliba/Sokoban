@@ -47,15 +47,15 @@ public struct PasscodeField: View {
     private var BackgroundField: some View {
         
         let binding = Binding<String>(
-            get: { viewModel.pin },
+            get: { viewModel.otp.rawValue },
             set: { newValue in
                 
-                viewModel.pin = newValue
-                viewModel.submitPin()
+                viewModel.otp = .init(newValue)
+                viewModel.submitOtp()
             }
         )
         
-        return TextField("", text: binding, onCommit: viewModel.submitPin)
+        return TextField("", text: binding, onCommit: viewModel.submitOtp)
             .textContentType(.oneTimeCode)
             .accentColor(.clear)
             .foregroundColor(.clear)
