@@ -63,7 +63,7 @@ public struct ConfirmView: View {
         }
         .onReceive(viewModel.action) { action in
             switch action {
-            case _ as ConfirmViewModel.Close.SelfView:
+            case _ as ConfirmViewModelAction.Close.SelfView:
                 self.presentationMode.wrappedValue.dismiss()
             default: break
             }

@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 import Combine
 import SwiftUI
+import Tagged
+import PinCodeUI
 
 class InfoProductViewModel: ObservableObject {
     
@@ -375,6 +377,34 @@ class InfoProductViewModel: ObservableObject {
         return list
     }
     
+    func updateAdditionalList(
+        oldList: [ItemViewModelForList]?,
+        newCvv: String
+    ) -> [ItemViewModelForList]? {
+        guard let oldList else { return nil}
+        let list = oldList.map { item in
+            switch item {
+            case .single:
+                return item
+            case let .multiple(items):
+              let newItems = items.map {
+                  switch $0.id {
+                      
+                  case .cvv:
+                      var newItem = $0
+                      newItem.subtitle = newCvv
+                      return newItem
+                      
+                  default:
+                      return $0
+                  }
+                }
+                return .multiple(newItems)
+            }
+        }
+        return list
+    }
+    
     func copyValue(value: String, titleForInformer: String) {
         
         UIPasteboard.general.string = value
@@ -414,6 +444,11 @@ struct InfoProductModelAction {
     struct ToogleCVV: Action {
         
         let productCardData: ProductCardData
+    }
+    
+    struct ShowCVV: Action {
+        let cardId: CardDomain.CardId
+        let cvv: ProductView.ViewModel.CardInfo.CVV
     }
 }
 
@@ -476,21 +511,29 @@ extension InfoProductViewModel {
         
         needShowCvv.toggle()
         
-        if needShowCvv {
-            self.showCvv?(.init(productCardData.id)) { _ in
-                
-            }
-        }
-        
-        if needShowNumber, needShowCvv {
+        if self.needShowNumber, self.needShowCvv {
             
-            needShowNumber.toggle()
+            self.needShowNumber.toggle()
         }
+
         self.additionalList = self.setupAdditionalList(
             for: productCardData,
             needShowNumber: needShowNumber,
             needShowCvv: needShowCvv
         )
+        
+        if needShowCvv {
+            self.showCvv?(.init(productCardData.id)) { [weak self] in
+                guard let self else { return }
+                
+                if let cvv = $0 {
+                    self.additionalList = self.updateAdditionalList(
+                        oldList: self.additionalList,
+                        newCvv: cvv.rawValue
+                    )
+                }
+            }
+        }
     }
     
     func itemsToString(items: [Any]) -> String {

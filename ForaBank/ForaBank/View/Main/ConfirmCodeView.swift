@@ -7,19 +7,24 @@
 
 import PinCodeUI
 import SwiftUI
+import Tagged
 
 struct ConfirmCodeView: View {
     
     let phoneNumber: String
-    let cardId: Int
+    var newPin: PinDomain.NewPin = ""
+
+    let cardId: CardDomain.CardId
     let actionType: ConfirmViewModel.CVVPinAction
     let reset: () -> Void
     let resendRequest: () -> Void
 
     var hasDefaultBackButton: Bool = false
-    var handler: (String, @escaping (String?) -> Void) -> Void
+    var handler: (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void
+    let handlerChangePin: ConfirmViewModel.ChangePinHandler?
+
     let showSpinner: () -> Void
-    let resendRequestAfterClose: (Int, ConfirmViewModel.CVVPinAction) -> Void
+    let resendRequestAfterClose: (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void
     
     var body: some View {
         
@@ -28,7 +33,9 @@ struct ConfirmCodeView: View {
                 phoneNumber: phoneNumber,
                 cardId: cardId,
                 actionType: actionType,
+                newPin: newPin,
                 handler: handler,
+                handlerChangePin: handlerChangePin,
                 showSpinner: showSpinner,
                 resendRequestAfterClose: resendRequestAfterClose
             ),
@@ -36,21 +43,21 @@ struct ConfirmCodeView: View {
         )
         .if(!hasDefaultBackButton) { view in
             
-            view
-                .toolbar {
-                    
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        
-                        Button(
-                            action: reset,
-                            label: {
-                                Image.ic24ChevronLeft
-                                    .aspectRatio(contentMode: .fit)
-                            }
-                        )
-                        .buttonStyle(.plain)
+            VStack {
+                Button(
+                    action: reset,
+                    label: {
+                        Image.ic24ChevronLeft
+                            .frame(width: 24, height: 24)
+                            .aspectRatio(contentMode: .fit)
                     }
-                }
+                )
+                .buttonStyle(.plain)
+                .padding(.top, 12)
+                .padding(.leading, 20)
+                .maxWidthLeadingFrame()
+                view
+            }
         }
     }
 }
@@ -74,7 +81,7 @@ struct ConfirmCodeView_Previews: PreviewProvider {
     
     private static func preview (
         phoneNumber: String = "71234567899",
-        cardId: Int = 1111111,
+        cardId: CardDomain.CardId = 1111111,
         actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         reset: @escaping () -> Void = { },
         resendRequest: @escaping () -> Void = { },
@@ -91,7 +98,8 @@ struct ConfirmCodeView_Previews: PreviewProvider {
                 reset: reset,
                 resendRequest: resendRequest,
                 hasDefaultBackButton: hasDefaultBackButton,
-                handler: { _, _ in },
+                handler: { _, _ in }, 
+                handlerChangePin: {_,_ in },
                 showSpinner: {},
                 resendRequestAfterClose: {_,_  in }
             )

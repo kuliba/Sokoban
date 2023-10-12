@@ -31,11 +31,11 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT()
         
-        sut.pin = ""
+        sut.otp = ""
         
         XCTAssertFalse(sut.isDisabled)
 
-        sut.submitPin()
+        sut.submitOtp()
         
         XCTAssertFalse(sut.isDisabled)
     }
@@ -44,11 +44,11 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT(maxDigits: 6)
         
-        sut.pin = "1234"
+        sut.otp = "1234"
         
         XCTAssertFalse(sut.isDisabled)
 
-        sut.submitPin()
+        sut.submitOtp()
         
         XCTAssertFalse(sut.isDisabled)
     }
@@ -57,11 +57,11 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT(maxDigits: 6)
         
-        sut.pin = "123456"
+        sut.otp = "123456"
         
         XCTAssertFalse(sut.isDisabled)
 
-        sut.submitPin()
+        sut.submitOtp()
         
         XCTAssertTrue(sut.isDisabled)
     }
@@ -70,31 +70,31 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT(maxDigits: 6)
         
-        sut.pin = "1234567"
+        sut.otp = "1234567"
         
-        XCTAssertEqual(sut.pin, "1234567")
+        XCTAssertEqual(sut.otp, "1234567")
 
-        sut.submitPin()
+        sut.submitOtp()
         
-        XCTAssertEqual(sut.pin, "123456")
+        XCTAssertEqual(sut.otp, "123456")
     }
     
     func test_submint_errorCode_shouldSetPinEmptyIsDisableFalse() {
         
         let sut = makeSUT(maxDigits: 6) { _, completionHandler in
             
-            completionHandler("test error")
+            completionHandler((1, "test error"))
         }
         
-        sut.pin = "123456"
+        sut.otp = "123456"
         
-        XCTAssertEqual(sut.pin, "123456")
+        XCTAssertEqual(sut.otp, "123456")
         XCTAssertFalse(sut.isDisabled)
 
-        sut.submitPin()
+        sut.submitOtp()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
-        XCTAssertEqual(sut.pin, "")
+        XCTAssertEqual(sut.otp, "")
         XCTAssertFalse(sut.isDisabled)
     }
 
@@ -102,14 +102,14 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT(maxDigits: 6)
         
-        sut.pin = "123456"
+        sut.otp = "123456"
         
-        XCTAssertEqual(sut.pin, "123456")
+        XCTAssertEqual(sut.otp, "123456")
         XCTAssertFalse(sut.isDisabled)
 
-        sut.submitPin()
+        sut.submitOtp()
         
-        XCTAssertEqual(sut.pin, "123456")
+        XCTAssertEqual(sut.otp, "123456")
         XCTAssertTrue(sut.isDisabled)
     }
     
@@ -117,7 +117,7 @@ final class ConfirmViewModelTests: XCTestCase {
     
     func test_getDigit_indexOverPinLength_returnNil() {
         
-        let sut = makeSUT(pin: "123")
+        let sut = makeSUT(otp: "123")
                 
         let digit = sut.getDigit(at: 4)
                 
@@ -126,7 +126,7 @@ final class ConfirmViewModelTests: XCTestCase {
     
     func test_getDigit_indexLessPinLength_returnStringDigit() {
         
-        let sut = makeSUT(pin: "123")
+        let sut = makeSUT(otp: "123")
                 
         let digit = sut.getDigit(at: 1)
                 
@@ -137,11 +137,11 @@ final class ConfirmViewModelTests: XCTestCase {
 
     private func makeSUT(
         phoneNumber: String = "+1..99",
-        cardId: Int = 111,
+        cardId: CardDomain.CardId = 111,
         actionType: ConfirmViewModel.CVVPinAction = .showCvv,
-        pin: String = "",
+        otp: OtpDomain.Otp = "",
         maxDigits: Int = 6,
-        handler: @escaping (String, (String?) -> Void) -> Void = { _, _ in },
+        handler: @escaping (OtpDomain.Otp, ((Int,String)?) -> Void) -> Void = { _, _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel {
@@ -151,8 +151,8 @@ final class ConfirmViewModelTests: XCTestCase {
             cardId: cardId, 
             actionType: actionType,
             maxDigits: maxDigits,
-            pin: pin,
-            handler: handler, 
+            otp: otp,
+            handler: handler,
             showSpinner: {},
             resendRequestAfterClose: { _,_  in }
         )

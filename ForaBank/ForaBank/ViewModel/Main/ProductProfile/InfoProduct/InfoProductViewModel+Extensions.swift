@@ -76,17 +76,18 @@ extension InfoProductViewModel {
         
         static func == (lhs: InfoProductViewModel.ItemViewModelWithAction, rhs: InfoProductViewModel.ItemViewModelWithAction) -> Bool {
             
-            lhs.id == rhs.id
+            lhs.id == rhs.id && lhs.subtitle == rhs.subtitle
         }
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(id)
+            hasher.combine(subtitle)
         }
         
         let id: DocumentItemModel.ID
         let title: String
         let titleForInformer: String
-        let subtitle: String
+        var subtitle: String
         let valueForCopy: String
         let actionForLongPress: (String, String) -> Void
         let actionForIcon: () -> Void
@@ -334,7 +335,6 @@ extension InfoProductViewModel {
                 )
             )
             if needShowCvv {
-                //TODO: add CVV value.
                 list.append(
                     .init(
                         id: .cvv,

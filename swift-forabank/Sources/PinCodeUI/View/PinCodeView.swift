@@ -48,8 +48,8 @@ public struct PinCodeView: View {
                         style: viewModel.state.currentStyle
                     )
                 }
+                .modifier(PinCodeView.Shake(animatableData: CGFloat(viewModel.mistakes)))
             }
-            .modifier(PinCodeView.Shake(animatableData: CGFloat(0)))
             .padding(.top, 32)
         }
         .frame(maxWidth: .infinity)

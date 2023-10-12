@@ -96,7 +96,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.alert)
         
-        sut.handlePinError(111, .certificate)
+        sut.handlePinError(111, .certificate, "*4585")
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -126,7 +126,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.alert)
         
-        sut.handlePinError(111, .connectivity)
+        sut.handlePinError(111, .connectivity, "*4585")
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -468,10 +468,8 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .paymentsTransfers(viewModel):
             return viewModel
-        case let .changePin(_, viewModel):
+        case let .changePin(_, _, viewModel):
             return viewModel
-        case .confirmCode:
-            return nil
         }
     }
 }
@@ -563,8 +561,8 @@ final class HappyCheckSadActivateCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -592,8 +590,8 @@ final class SadCheckSadActivateCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -621,8 +619,8 @@ final class SadShowCVVSadCheckCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -650,8 +648,8 @@ final class SadShowCVVCheckCertificateConnectivityClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -679,8 +677,8 @@ final class SadShowCVVSadActivateCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -708,8 +706,8 @@ final class SadShowCVVSadOtpRetryAttempts0CertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }
 
@@ -737,7 +735,7 @@ final class SadShowCVVSadOtpRetryAttemptsCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func pinConfirmWith(otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.success(()))
+    func getPinConfirmCode(completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void) {
+        completion(.success("+1..22"))
     }
 }

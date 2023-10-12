@@ -40,6 +40,7 @@ let package = Package(
     dependencies: [
         .combineSchedulers,
         .customDump,
+        .tagged
     ],
     targets: [
         .cryptoSwaddler,
@@ -406,7 +407,10 @@ private extension Target {
     )
     
     static let pinCodeUI = target(
-        name: .pinCodeUI
+        name: .pinCodeUI,
+        dependencies: [
+            .tagged,
+        ]
     )
     static let pinCodeUITests = testTarget(
         name: .pinCodeUITests,
