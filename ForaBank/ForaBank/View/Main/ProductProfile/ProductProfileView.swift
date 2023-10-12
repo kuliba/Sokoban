@@ -96,17 +96,6 @@ struct ProductProfileView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
-                    case let .changePin(cardId, displayNumber, pinCodeViewModel):
-                        changePinCodeView(
-                            cardId: cardId,
-                            actionType: .changePin(displayNumber),
-                            pinCodeViewModel,
-                            confirm: viewModel.confirmShowCVV,
-                            confirmChangePin: viewModel.confirmChangePin,
-                            showSpinner: {},
-                            resendRequest: {},
-                            resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-                        )
                         
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
@@ -181,6 +170,20 @@ struct ProductProfileView: View {
                         },
                         showSpinner: {},
                         resendRequest: $0.request,
+                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                    ).transition(.move(edge: .leading))
+                }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.changePin) {
+                    changePinCodeView(
+                        cardId: $0.cardId,
+                        actionType: .changePin($0.displayNumber),
+                        $0.model,
+                        confirm: viewModel.confirmShowCVV,
+                        confirmChangePin: viewModel.confirmChangePin,
+                        showSpinner: {},
+                        resendRequest: {},
                         resendRequestAfterClose: viewModel.closeLinkAndResendRequest
                     ).transition(.move(edge: .leading))
                 }
