@@ -173,6 +173,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var successZeroAccount: ZeroAccount?
     @Published var successChangePin: PaymentsSuccessViewModel?
     @Published var confirmOtpView: FullCover.ConfirmCode?
+    @Published var changePin: FullCover.ChangePin?
 
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
 
@@ -304,10 +305,10 @@ extension ProductProfileViewModel {
         case let .changePin(displayNumber):
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1200)) {
-                self.link = .changePin(
-                    cardId,
-                    displayNumber,
-                    self.createPinCodeViewModel(displayNumber: displayNumber))
+                self.changePin = .init(
+                    cardId: cardId,
+                    displayNumber: displayNumber,
+                    model: self.createPinCodeViewModel(displayNumber: displayNumber))
             }
             
         case .showCvv:
@@ -1766,7 +1767,6 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case changePin(CardDomain.CardId, String?, PinCodeViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -1798,6 +1798,13 @@ extension ProductProfileViewModel {
             let action: ConfirmViewModel.CVVPinAction
             let phone: String
             let request: ResendRequest
+        }
+        
+        struct ChangePin: Identifiable {
+            let id = UUID()
+            let cardId: CardDomain.CardId
+            let displayNumber: String?
+            let model: PinCodeViewModel
         }
     }
     
@@ -1956,7 +1963,10 @@ extension ProductProfileViewModel {
             handlePinError(cardId, pinError, displayNumber)
             
         case .success:
-            link = .changePin(cardId, displayNumber, createPinCodeViewModel(displayNumber: displayNumber))
+            changePin = .init(
+                cardId: cardId,
+                displayNumber: displayNumber,
+                model: self.createPinCodeViewModel(displayNumber: displayNumber))
         }
     }
     

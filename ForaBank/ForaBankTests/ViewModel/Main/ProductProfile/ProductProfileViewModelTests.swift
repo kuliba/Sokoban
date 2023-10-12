@@ -272,7 +272,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNotNil(sut.optionsPannel)
         
-        XCTAssertNil(sut.link)
+        XCTAssertNil(sut.changePin)
         
         let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
         
@@ -281,9 +281,9 @@ final class ProductProfileViewModelTests: XCTestCase {
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
         
-        XCTAssertNotNil(sut.link)
-        XCTAssertTrue(sut.viewModelByLink is PinCodeViewModel)
-        sut.link = nil
+        XCTAssertNotNil(sut.changePin)
+        XCTAssertTrue(sut.changePin?.model is PinCodeViewModel)
+        sut.changePin = nil
     }
     
     // MARK: - test showCvvByTap
@@ -467,8 +467,6 @@ private extension ProductProfileViewModel {
         case let .myProducts(viewModel):
             return viewModel
         case let .paymentsTransfers(viewModel):
-            return viewModel
-        case let .changePin(_, _, viewModel):
             return viewModel
         }
     }

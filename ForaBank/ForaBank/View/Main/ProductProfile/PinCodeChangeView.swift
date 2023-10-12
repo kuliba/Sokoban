@@ -32,6 +32,19 @@ struct PinCodeChangeView<ConfirmationView: View>: View {
         
         VStack(alignment: .center) {
             
+            Button(
+                action: { self.presentationMode.wrappedValue.dismiss() },
+                label: {
+                    Image.ic24ChevronLeft
+                        .frame(width: 24, height: 24)
+                        .aspectRatio(contentMode: .fit)
+                }
+            )
+            .buttonStyle(.plain)
+            .padding(.top, 12)
+            .padding(.leading, 20)
+            .maxWidthLeadingFrame()
+
             PinCodeView(
                 viewModel: viewModel,
                 config: config.pinCodeConfig)
