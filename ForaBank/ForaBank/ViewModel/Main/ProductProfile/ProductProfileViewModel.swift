@@ -80,7 +80,7 @@ protocol ChangePinClient {
         cardId: Int,
         newPin:String,
         otp: String,
-        completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void)
+        completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void)
 }
 
 protocol PinConfirmationCodeClient {
@@ -110,7 +110,7 @@ final class HappyCertificateClient: CertificateClient {
         completion(.success("+1..22"))
     }
 
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
 }
@@ -139,8 +139,8 @@ final class SadCertificateClient: CertificateClient {
         completion(.success("+1..22"))
     }
 
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
-        completion(.failure(.init(errorMessage: "error", retryAttempts: 1)))
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
+            completion(.failure(.init(errorMessage: "error", retryAttempts: 1, statusCode: 7021)))
     }
 }
 
@@ -339,7 +339,7 @@ extension ProductProfileViewModel {
         
     func confirmShowCVV(
         withOTP otp: OtpDomain.Otp,
-        completion: @escaping ((Int, String)?) -> Void
+        completion: @escaping (ErrorDomain?) -> Void
     ) {
         certificateClient.confirmWith(otp: otp.rawValue) { result in
             
@@ -348,7 +348,7 @@ extension ProductProfileViewModel {
                 completion(nil)
                 
             case let .failure(error):
-                completion((error.retryAttempts, error.errorMessage))
+                completion(CVVPinErrorMapper.map(error))
             }
         }
     }
@@ -371,7 +371,7 @@ extension ProductProfileViewModel {
     
     func confirmChangePin(
         info: ConfirmViewModel.ChangePinStruct,
-        completion: @escaping ((Int, String)?) -> Void
+        completion: @escaping (ErrorDomain?) -> Void
     ) {
         certificateClient.changePin(
             cardId: info.cardId.rawValue,
@@ -384,7 +384,8 @@ extension ProductProfileViewModel {
                 completion(nil)
                 
             case let .failure(error):
-                completion((error.retryAttempts, error.errorMessage))
+            
+                completion(CVVPinErrorMapper.map(error))
             }
         }
     }

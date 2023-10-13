@@ -108,7 +108,7 @@ extension CvvPinService: PinConfirmationCodeClient {
 
 extension CvvPinService: ChangePinClient {
     
-    typealias ChangePinCompletion = (Result<Void, CVVPinError.OtpError>) -> Void
+    typealias ChangePinCompletion = (Result<Void, CVVPinError.ChangePinError>) -> Void
 
     func changePin(
         cardId: Int,
@@ -117,8 +117,7 @@ extension CvvPinService: ChangePinClient {
         completion: @escaping ChangePinCompletion
     ) {
 #warning("fix this")
-        completion(.success(()))
-
-       // completion(.failure(CVVPinError.OtpError.init(errorMessage: "error", retryAttempts: 1)))
+        completion(.failure(.init(errorMessage: "error", retryAttempts: nil, statusCode: 7056)))
+       // completion(.success(()))
     }
 }

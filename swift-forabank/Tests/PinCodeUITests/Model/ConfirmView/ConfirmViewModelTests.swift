@@ -83,7 +83,7 @@ final class ConfirmViewModelTests: XCTestCase {
         
         let sut = makeSUT(maxDigits: 6) { _, completionHandler in
             
-            completionHandler((1, "test error"))
+            completionHandler(.errorForAlert(.init("error")))
         }
         
         sut.otp = "123456"
@@ -141,7 +141,7 @@ final class ConfirmViewModelTests: XCTestCase {
         actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         otp: OtpDomain.Otp = "",
         maxDigits: Int = 6,
-        handler: @escaping (OtpDomain.Otp, ((Int,String)?) -> Void) -> Void = { _, _ in },
+        handler: @escaping (OtpDomain.Otp, (ErrorDomain?) -> Void) -> Void = { _, _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel {

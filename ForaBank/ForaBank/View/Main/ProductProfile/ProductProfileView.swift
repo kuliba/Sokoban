@@ -253,8 +253,8 @@ struct ProductProfileView: View {
         cardId: CardDomain.CardId,
         actionType: ConfirmViewModel.CVVPinAction,
         _ viewModel: PinCodeViewModel,
-        confirm: @escaping (OtpDomain.Otp, @escaping ((Int,String)?) -> Void) -> Void,
-        confirmChangePin:  @escaping  (ConfirmViewModel.ChangePinStruct, @escaping ((Int, String)?) -> Void) -> Void,
+        confirm: @escaping (OtpDomain.Otp, @escaping (ErrorDomain?) -> Void) -> Void,
+        confirmChangePin:  @escaping  (ConfirmViewModel.ChangePinStruct, @escaping (ErrorDomain?) -> Void) -> Void,
         showSpinner: @escaping () -> Void,
         resendRequest: @escaping () -> Void,
         resendRequestAfterClose: @escaping (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void

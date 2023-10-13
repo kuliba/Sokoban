@@ -555,7 +555,7 @@ final class HappyCheckSadActivateCertificateClient: CertificateClient {
         completion(.success("111"))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -584,7 +584,7 @@ final class SadCheckSadActivateCertificateClient: CertificateClient {
         completion(.success("111"))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -613,7 +613,7 @@ final class SadShowCVVSadCheckCertificateClient: CertificateClient {
         completion(.failure(.check(.certificate)))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -642,7 +642,7 @@ final class SadShowCVVCheckCertificateConnectivityClient: CertificateClient {
         completion(.failure(.check(.connectivity)))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -671,7 +671,7 @@ final class SadShowCVVSadActivateCertificateClient: CertificateClient {
         completion(.failure(.activation(.init(message: "error"))))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -700,7 +700,7 @@ final class SadShowCVVSadOtpRetryAttempts0CertificateClient: CertificateClient {
         completion(.failure(.otp(.init(errorMessage: "", retryAttempts: 0))))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
@@ -729,7 +729,7 @@ final class SadShowCVVSadOtpRetryAttemptsCertificateClient: CertificateClient {
         completion(.failure(.otp(.init(errorMessage: "", retryAttempts: 1))))
     }
     
-    func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.OtpError>) -> Void) {
+        func changePin(cardId: Int, newPin: String, otp: String, completion: @escaping (Result<Void, CVVPinError.ChangePinError>) -> Void) {
         completion(.success(()))
     }
     
