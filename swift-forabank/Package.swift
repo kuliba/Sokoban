@@ -27,8 +27,10 @@ let package = Package(
         .uiKitHelpers,
         .userModel,
         // services
+        .cvvPINService,
         .genericRemoteService,
         .getProcessingSessionCodeService,
+        .urlRequestFactory,
         // landing
         .landingMapping,
         .landingUICompoment,
@@ -77,10 +79,14 @@ let package = Package(
         .userModel,
         .userModelTests,
         // services
+        .cvvPINService,
+        .cvvPINServiceTests,
         .genericRemoteService,
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
+        .urlRequestFactory,
+        .urlRequestFactoryTests,
         // landing
         .landingMapping,
         .landingMappingTests,
@@ -234,6 +240,22 @@ private extension Product {
         name: .userModel,
         targets: [
             .userModel
+        ]
+    )
+    
+    // MARK: - Services
+    
+    static let cvvPINService = library(
+        name: .cvvPINService,
+        targets: [
+            .cvvPINService
+        ]
+    )
+    
+    static let urlRequestFactory = library(
+        name: .urlRequestFactory,
+        targets: [
+            .urlRequestFactory
         ]
     )
     
@@ -556,6 +578,49 @@ private extension Target {
         ]
     )
     
+    // MARK: - Services
+    
+    static let cvvPINService = target(
+        name: .cvvPINService,
+        path: "Sources/Services/\(String.cvvPINService)"
+    )
+    static let cvvPINServiceTests = testTarget(
+        name: .cvvPINServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cvvPINService,
+        ],
+        path: "Tests/Services/\(String.cvvPINServiceTests)"
+    )
+    
+    static let cvvPINServiceWithCryptoTests = testTarget(
+        name: .cvvPINServiceWithCryptoTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cvvPINService,
+        ],
+        path: "Tests/Services/\(String.cvvPINServiceWithCryptoTests)"
+    )
+    
+    static let urlRequestFactory = target(
+        name: .urlRequestFactory,
+        path: "Sources/Services/\(String.urlRequestFactory)"
+    )
+    static let urlRequestFactoryTests = testTarget(
+        name: .urlRequestFactoryTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+        ],
+        path: "Tests/Services/\(String.urlRequestFactoryTests)"
+    )
+    
     // landing
     
     static let landingMapping = target(
@@ -681,6 +746,16 @@ private extension Target.Dependency {
         name: .userModel
     )
     
+    // MARK: - Services
+    
+    static let cvvPINService = byName(
+        name: .cvvPINService
+    )
+    
+    static let urlRequestFactory = byName(
+        name: .urlRequestFactory
+    )
+    
     // landing
     static let landingMapping = byName(
         name: .landingMapping
@@ -762,6 +837,15 @@ private extension String {
     static let userModel = "UserModel"
     static let userModelTests = "UserModelTests"
     
+    // MARK: - Services
+    
+    static let cvvPINService = "CVVPINService"
+    static let cvvPINServiceTests = "CVVPINServiceTests"
+    static let cvvPINServiceWithCryptoTests = "CVVPINServiceWithCryptoTests"
+    
+    static let urlRequestFactory = "URLRequestFactory"
+    static let urlRequestFactoryTests = "URLRequestFactoryTests"
+
     // landing
     static let landingMapping = "LandingMapping"
     static let landingMappingTests = "LandingMappingTests"

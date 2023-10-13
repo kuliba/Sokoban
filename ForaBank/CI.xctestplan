@@ -149,6 +149,27 @@
         "identifier" : "CryptoSwaddlerTests",
         "name" : "CryptoSwaddlerTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPINServiceTests",
+        "name" : "CVVPINServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
+      }
     }
   ],
   "version" : 1

@@ -24,9 +24,9 @@ extension FormSessionKeyDomain {
     public struct SecretRequest: Equatable {
         
         public let code: String
-        public let data: String
+        public let data: Data
         
-        public init(code: String, data: String) {
+        public init(code: String, data: Data) {
             
             self.code = code
             self.data = data

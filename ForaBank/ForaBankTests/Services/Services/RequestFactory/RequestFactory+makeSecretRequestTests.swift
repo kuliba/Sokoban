@@ -7,39 +7,30 @@
 
 import CvvPin
 @testable import ForaBank
+import URLRequestFactory
 import XCTest
 
 final class RequestFactory_makeSecretRequestTests: XCTestCase {
     
-    // MARK: - makeSecretRequest
-    
-    func test_makeSecretRequest_shouldThrowOnEmptyCode() throws {
+    func test_makeRequest_shouldThrowOnEmptyCode() throws {
         
-        XCTAssertThrowsError(
-            try makeSecretRequest(code: "")
-        ) {
-            XCTAssertNoDiff(
-                $0 as? RequestFactory.SecretRequestError,
-                .emptyCode
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            makeRequest(code: ""),
+            error: URLRequestFactory.Service.Error.formSessionKeyEmptyCode
+        )
     }
     
-    func test_makeSecretRequest_shouldThrowOnEmptyData() throws {
+    func test_makeRequest_shouldThrowOnEmptyData() throws {
         
-        XCTAssertThrowsError(
-            try makeSecretRequest(data: "")
-        ) {
-            XCTAssertNoDiff(
-                $0 as? RequestFactory.SecretRequestError,
-                .emptyData
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            makeRequest(data: .empty),
+            error: URLRequestFactory.Service.Error.formSessionKeyEmptyData
+        )
     }
     
-    func test_makeSecretRequest_shouldSetRequestURL() throws {
+    func test_makeRequest_shouldSetRequestURL() throws {
         
-        let request = try makeSecretRequest().request
+        let request = try makeRequest().request
         
         XCTAssertEqual(
             request.url?.absoluteString,
@@ -47,16 +38,16 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
         )
     }
     
-    func test_makeSecretRequest_shouldSetRequestMethodToPost() throws {
+    func test_makeRequest_shouldSetRequestMethodToPost() throws {
         
-        let request = try makeSecretRequest().request
+        let request = try makeRequest().request
         
         XCTAssertEqual(request.httpMethod, "POST")
     }
     
-    func test_makeSecretRequest_shouldSetRequestBody() throws {
+    func test_makeRequest_shouldSetRequestBody() throws {
         
-        let (secretRequest, request) = try makeSecretRequest()
+        let (secretRequest, request) = try makeRequest()
         let data = try XCTUnwrap(request.httpBody)
         let decodedRequest = try JSONDecoder().decode(DecodableSecretRequest.self, from: data)
         
@@ -67,9 +58,9 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
     
     typealias SecretRequest = FormSessionKeyDomain.Request
     
-    private func makeSecretRequest(
+    private func makeRequest(
         code: String = "any code",
-        data: String = "any data"
+        data: Data = anyData()
     ) throws -> (
         secretRequest: SecretRequest,
         request: URLRequest
@@ -83,7 +74,7 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
     
     private func anySecretRequest(
         code: String = "any code",
-        data: String = "any data"
+        data: Data = anyData()
     ) -> SecretRequest {
         
         .init(code: code, data: data)
@@ -97,12 +88,12 @@ final class RequestFactory_makeSecretRequestTests: XCTestCase {
         init(secretRequest: SecretRequest) {
             
             self.code = secretRequest.code
-            self.data = secretRequest.data
+            self.data = secretRequest.data.base64EncodedString()
         }
         
         var secretRequest: SecretRequest {
             
-            .init(code: code, data: data)
+            .init(code: code, data: Data(base64Encoded: data)!)
         }
     }
 }

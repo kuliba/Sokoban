@@ -8,6 +8,7 @@
 import CvvPin
 import Foundation
 import TransferPublicKey
+import URLRequestFactory
 
 typealias BindKeyExchangePayload = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.Payload
 
@@ -26,29 +27,14 @@ extension RequestFactory {
         with payload: PublicKeyWithEventID
     ) throws -> URLRequest {
         
-        guard !payload.eventID.isEmpty else {
-            throw PublicKeyWithEventIDError.emptyEventID
-        }
+        let factory = try factory(for: .bindPublicKeyWithEventID)
         
-        guard !payload.key.isEmpty else {
-            throw PublicKeyWithEventIDError.emptyKeyString
-        }
-        
-        let base = APIConfig.processingServerURL
-        let endpoint = Services.Endpoint.bindPublicKeyWithEventID
-        let url = try! endpoint.url(withBase: base)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = try? payload.json
-        
-        return request
-    }
-    
-    enum PublicKeyWithEventIDError: Error, Equatable {
-        
-        case emptyEventID
-        case emptyKeyString
+        return try factory.makeRequest(
+            for: .bindPublicKeyWithEventID(.init(
+                eventID: .init(value: payload.eventID.value),
+                key: .init(value: payload.key.keyData)
+            ))
+        )
     }
 }
 
@@ -62,19 +48,5 @@ private extension PublicKeyWithEventID {
             key: .init(keyData: payload.data),
             eventID: .init(value: payload.eventID.value)
         )
-    }
-}
-
-private extension PublicKeyWithEventID {
-    
-    var json: Data {
-        
-        get throws {
-            
-            try JSONSerialization.data(withJSONObject: [
-                "eventId": eventID.value,
-                "data": key.base64String
-            ] as [String: Any])
-        }
     }
 }

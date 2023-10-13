@@ -252,20 +252,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BindPublicKeyWithEventID"
-               BuildableName = "BindPublicKeyWithEventID"
-               BlueprintName = "BindPublicKeyWithEventID"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "LandingComponentsOld"
                BuildableName = "LandingComponentsOld"
                BlueprintName = "LandingComponentsOld"
@@ -384,6 +370,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "swift-forabank_ForaCrypto"
+               BuildableName = "swift-forabank_ForaCrypto"
+               BlueprintName = "swift-forabank_ForaCrypto"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CVVPINService"
+               BuildableName = "CVVPINService"
+               BlueprintName = "CVVPINService"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -472,16 +486,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BindPublicKeyWithEventIDTests"
-               BuildableName = "BindPublicKeyWithEventIDTests"
-               BlueprintName = "BindPublicKeyWithEventIDTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "LandingMappingTests"
                BuildableName = "LandingMappingTests"
                BlueprintName = "LandingMappingTests"
@@ -505,6 +509,16 @@
                BlueprintIdentifier = "CryptoSwaddlerTests"
                BuildableName = "CryptoSwaddlerTests"
                BlueprintName = "CryptoSwaddlerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CVVPINServiceTests"
+               BuildableName = "CVVPINServiceTests"
+               BlueprintName = "CVVPINServiceTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

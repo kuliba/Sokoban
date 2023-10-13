@@ -32,11 +32,10 @@ public final class SecretRequestMaker {
         let publicKeyData = try publicKeyData()
         let wrapped = try Wrapper.wrap(publicKeyData)
         let encrypted = try encrypt(wrapped)
-        let base64 = encrypted.base64EncodedString()
         
         return .init(
             code: .init(value: sessionCode.value),
-            data: base64
+            data: encrypted
         )
     }
 }
@@ -47,10 +46,10 @@ enum PublicApplicationSessionKeyJSONWrapper {
         _ keyRawRepresentation: Data
     ) throws -> Data {
         
-        let pasKey = "publicApplicationSessionKey"
         let base64 = keyRawRepresentation.base64EncodedString()
-        let json: [String: Any] = [pasKey: base64]
-        let data = try JSONSerialization.data(withJSONObject: json)
+        let data = try JSONSerialization.data(withJSONObject: [
+            "publicApplicationSessionKey": base64
+        ]as [String: Any])
         
         return data
     }

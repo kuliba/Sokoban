@@ -24,14 +24,14 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
         
         let formSessionKeySpy = makeSUT().formSessionKeySpy
         
-        XCTAssertEqual(formSessionKeySpy.messages, [])
+        XCTAssertEqual(formSessionKeySpy.callCount, 0)
     }
     
     func test_init_shouldNotSendMessagesToExtractSharedSecret() {
         
         let extractSharedSecretSpy = makeSUT().extractSharedSecretSpy
         
-        XCTAssertEqual(extractSharedSecretSpy.messages, [])
+        XCTAssertEqual(extractSharedSecretSpy.callCount, 0)
     }
     
     // MARK: - makeSymmetricKey
@@ -92,15 +92,15 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
     
     func test_makeSymmetricKey_shouldNotReceivePublicServerSessionKeyResultAfterSUTInstanceHasBeenDeallocated() {
         
-        let makeSecretRequestSpy = MakeSecretRequestSpy([
+        let makeSecretRequestSpy = MakeSecretRequestSpy(stub: [
             .success(uniqueCryptoSecretRequest())
         ])
         let formSessionKeySpy = FormSessionKeySpy()
         let extractSharedSecretSpy = ExtractSharedSecretSpy()
         var sut: KeyExchangeService? = .init(
             makeSecretRequest: makeSecretRequestSpy.make,
-            formSessionKey: formSessionKeySpy.form,
-            extractSharedSecret: extractSharedSecretSpy.extract
+            formSessionKey: formSessionKeySpy.process,
+            extractSharedSecret: extractSharedSecretSpy.process
         )
         var makeSymmetricKeyResults = [KeyExchangeDomain.Result]()
         let sessionCode = uniqueCryptoSessionCode()
@@ -114,15 +114,15 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
     
     func test_makeSymmetricKey_shouldNotReceiveSymmetricKeyResultAfterSUTInstanceHasBeenDeallocated() {
         
-        let makeSecretRequestSpy = MakeSecretRequestSpy([
+        let makeSecretRequestSpy = MakeSecretRequestSpy(stub: [
             .success(uniqueCryptoSecretRequest())
         ])
         let formSessionKeySpy = FormSessionKeySpy()
         let extractSharedSecretSpy = ExtractSharedSecretSpy()
         var sut: KeyExchangeService? = .init(
             makeSecretRequest: makeSecretRequestSpy.make,
-            formSessionKey: formSessionKeySpy.form,
-            extractSharedSecret: extractSharedSecretSpy.extract
+            formSessionKey: formSessionKeySpy.process,
+            extractSharedSecret: extractSharedSecretSpy.process
         )
         var makeSymmetricKeyResults = [KeyExchangeDomain.Result]()
         let sessionCode = uniqueCryptoSessionCode()
@@ -137,6 +137,10 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias FormSessionKeySpy = RemoteServiceSpy<FormSessionKeyDomain.PublicServerSessionKeyPayload, Error, FormSessionKeyDomain.Request>
+    private typealias ExtractSharedSecretSpy = RemoteServiceSpy<Data, Error, String>
+    typealias MakeSecretRequestSpy = StubbedSpyOf<KeyExchangeDomain.SessionCode, KeyExchangeDomain.SecretRequest>
+    
     private typealias SecretRequestResult = Result<KeyExchangeDomain.SecretRequest, Error>
     
     private func makeSUT(
@@ -149,13 +153,13 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
         formSessionKeySpy: FormSessionKeySpy,
         extractSharedSecretSpy: ExtractSharedSecretSpy
     ) {
-        let makeSecretRequestSpy = MakeSecretRequestSpy(stubbedResults)
+        let makeSecretRequestSpy = MakeSecretRequestSpy(stub: stubbedResults)
         let formSessionKeySpy = FormSessionKeySpy()
         let extractSharedSecretSpy = ExtractSharedSecretSpy()
         let sut = KeyExchangeService(
             makeSecretRequest: makeSecretRequestSpy.make,
-            formSessionKey: formSessionKeySpy.form,
-            extractSharedSecret: extractSharedSecretSpy.extract
+            formSessionKey: formSessionKeySpy.process,
+            extractSharedSecret: extractSharedSecretSpy.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -166,95 +170,18 @@ final class ComposedKeyExchangeServiceTests: XCTestCase {
         return (sut, makeSecretRequestSpy, formSessionKeySpy, extractSharedSecretSpy)
     }
     
-    private final class MakeSecretRequestSpy {
-        
-        private var stubbedResults: [SecretRequestResult]
-        
-        init(_ stubbedResults: [SecretRequestResult]) {
-            
-            self.stubbedResults = stubbedResults
-        }
-        
-        func make(
-            sessionCode: KeyExchangeDomain.SessionCode
-        ) throws -> KeyExchangeDomain.SecretRequest {
-            
-            messages.append(.makeSecretRequest)
-            return try stubbedResults.removeFirst().get()
-        }
-        
-        private(set) var messages = [Message]()
-        
-        enum Message: Equatable {
-            
-            case makeSecretRequest
-        }
-    }
-    
-    private final class FormSessionKeySpy {
-        
-        func form(
-            _ request: FormSessionKeyDomain.Request,
-            completion: @escaping FormSessionKeyDomain.Completion
-        ) {
-            messages.append(.formSessionKey)
-            completions.append(completion)
-        }
-        
-        private(set) var messages = [Message]()
-        
-        private(set) var completions = [FormSessionKeyDomain.Completion]()
-        
-        func complete(
-            with result: FormSessionKeyDomain.Result,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-        
-        enum Message: Equatable {
-            
-            case formSessionKey
-        }
-    }
-    
-    private final class ExtractSharedSecretSpy {
-        
-        func extract(
-            from string: String,
-            completion: @escaping SharedSecretDomain.Completion
-        ) {
-            messages.append(.extractSymmetricKey)
-            completions.append(completion)
-        }
-        
-        private(set) var messages = [Message]()
-        
-        private(set) var completions = [SharedSecretDomain.Completion]()
-        
-        func complete(
-            with result: SharedSecretDomain.Result,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-        
-        enum Message: Equatable {
-            
-            case extractSymmetricKey
-        }
-    }
-    
-    private func uniqueCryptoSessionCode() -> KeyExchangeDomain.SessionCode {
+    private func uniqueCryptoSessionCode(
+    ) -> KeyExchangeDomain.SessionCode {
         
         .init(value: UUID().uuidString)
     }
     
-    private func uniqueCryptoSecretRequest() -> KeyExchangeDomain.SecretRequest {
+    private func uniqueCryptoSecretRequest(
+    ) -> KeyExchangeDomain.SecretRequest {
         
         .init(
             code: .init(value: UUID().uuidString),
-            data: UUID().uuidString
+            data: anyData()
         )
     }
     
