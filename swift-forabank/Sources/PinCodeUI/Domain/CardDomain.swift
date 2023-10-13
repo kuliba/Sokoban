@@ -39,3 +39,22 @@ public extension OtpDomain {
     typealias Otp = Tagged<_Otp, String>
     enum _Otp {}
 }
+
+public enum ErrorDomain: Equatable {
+    
+    public typealias ErrorMessage = Tagged<_ErrorMessage, String>
+    public enum _ErrorMessage {}
+
+    case errorForAlert(ErrorMessage)
+    case errorScreen
+    
+    public var message: ErrorMessage? {
+        switch self {
+            
+        case let .errorForAlert(errorMessage):
+            return errorMessage
+        case .errorScreen:
+            return nil
+        }
+    }
+}

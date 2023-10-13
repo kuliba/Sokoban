@@ -20,7 +20,7 @@ struct ConfirmCodeView: View {
     let resendRequest: () -> Void
 
     var hasDefaultBackButton: Bool = false
-    var handler: (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void
+    let handler: ConfirmViewModel.OtpHandler
     let handlerChangePin: ConfirmViewModel.ChangePinHandler?
 
     let showSpinner: () -> Void

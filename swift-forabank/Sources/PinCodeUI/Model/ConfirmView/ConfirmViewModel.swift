@@ -11,8 +11,8 @@ import Tagged
 
 public class ConfirmViewModel: ObservableObject {
    
-    public typealias ChangePinHandler = (ChangePinStruct, @escaping ((Int, String)?) -> Void) -> Void
-    
+    public typealias ChangePinHandler = (ChangePinStruct, @escaping (ErrorDomain?) -> Void) -> Void
+    public typealias OtpHandler =  (OtpDomain.Otp, @escaping (ErrorDomain?) -> Void) -> Void
     let maxDigits: Int
     
     @Published var otp: OtpDomain.Otp
@@ -26,7 +26,7 @@ public class ConfirmViewModel: ObservableObject {
     let actionType: CVVPinAction
     var newPin: PinDomain.NewPin = ""
 
-    let handler: (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void
+    let handler: OtpHandler
     let handlerChangePin: ChangePinHandler?
 
     let showSpinner: () -> Void
@@ -42,7 +42,7 @@ public class ConfirmViewModel: ObservableObject {
         newPin: PinDomain.NewPin = "",
         isDisable: Bool = false,
         showAlert: Bool = false,
-        handler: @escaping (OtpDomain.Otp, @escaping ((Int, String)?) -> Void) -> Void,
+        handler: @escaping OtpHandler,
         handlerChangePin: ChangePinHandler? = nil,
         showSpinner: @escaping () -> Void,
         resendRequestAfterClose: @escaping (CardDomain.CardId, CVVPinAction) -> Void
@@ -79,14 +79,21 @@ public class ConfirmViewModel: ObservableObject {
                    guard let self else { return }
                    
                    if let result {
-                       DispatchQueue.main.async { [weak self] in
-                           
-                           guard let self else { return }
-                           
-                           self.isDisabled = false
-                           self.otp = ""
-                           self.alertMessage = result.1
-                           self.showAlert = true
+                       if let message = result.message {
+                           DispatchQueue.main.async { [weak self] in
+                               
+                               guard let self else { return }
+                               
+                               self.isDisabled = false
+                               self.otp = ""
+                               self.alertMessage = message.rawValue
+                               self.showAlert = true
+                           }
+                       } else {
+                           self.resendRequestAfterClose(self.cardId, .changePinResult(.errorScreen))
+                           DispatchQueue.main.async { [unowned self] in
+                               self.action.send(ConfirmViewModelAction.Close.SelfView())
+                           }
                        }
                    } else {
                        self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
@@ -108,7 +115,7 @@ public class ConfirmViewModel: ObservableObject {
                             
                             self.isDisabled = false
                             self.otp = ""
-                            self.alertMessage = result.0 == 0 ? "Возникла техническая ошибка" : "Введен некорректный код.\nПопробуйте еще раз"
+                            self.alertMessage = result.message?.rawValue ?? ""
                             self.showAlert = true
                         }
                     } else {
