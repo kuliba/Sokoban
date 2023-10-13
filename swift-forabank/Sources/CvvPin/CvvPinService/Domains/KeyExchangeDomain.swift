@@ -60,10 +60,12 @@ extension KeyExchangeDomain {
     public struct SecretRequest: Equatable {
         
         public let code: KeyExchangeDomain.SessionCode
-        public let data: String
+        public let data: Data
         
-        public init(code: KeyExchangeDomain.SessionCode, data: String) {
-            
+        public init(
+            code: KeyExchangeDomain.SessionCode,
+            data: Data
+        ) {
             self.code = code
             self.data = data
         }

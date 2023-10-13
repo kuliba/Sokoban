@@ -7,39 +7,30 @@
 
 import CvvPin
 @testable import ForaBank
+import URLRequestFactory
 import XCTest
 
 final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase {
     
-    // MARK: - makeBindPublicKeyWithEventIDRequest
-    
     func test_makeBindPublicKeyWithEventIDRequest_shouldThrowOnEmptyEventID() throws {
         
-        XCTAssertThrowsError(
-            try makeBindPublicKeyWithEventIDRequest(eventID: "")
-        ) {
-            XCTAssertNoDiff(
-                $0 as? RequestFactory.PublicKeyWithEventIDError,
-                .emptyEventID
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            makeRequest(eventID: ""),
+            error: URLRequestFactory.Service.Error.bindPublicKeyWithEventIDEmptyEventID
+        )
     }
     
-    func test_makeBindPublicKeyWithEventIDRequest_shouldThrowOnEmptyKey() throws {
+    func test_makeRequest_shouldThrowOnEmptyKey() throws {
         
-        XCTAssertThrowsError(
-            try makeBindPublicKeyWithEventIDRequest(keyString: "")
-        ) {
-            XCTAssertNoDiff(
-                $0 as? RequestFactory.PublicKeyWithEventIDError,
-                .emptyKeyString
-            )
-        }
+        try XCTAssertThrowsAsNSError(
+            makeRequest(keyString: ""),
+            error: URLRequestFactory.Service.Error.bindPublicKeyWithEventIDEmptyKey
+        )
     }
     
-    func test_makeBindPublicKeyWithEventIDRequest_shouldSetRequestURL() throws {
+    func test_makeRequest_shouldSetRequestURL() throws {
         
-        let request = try makeBindPublicKeyWithEventIDRequest().request
+        let request = try makeRequest().request
         
         XCTAssertEqual(
             request.url?.absoluteString,
@@ -47,16 +38,16 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
         )
     }
     
-    func test_makeBindPublicKeyWithEventIDRequest_shouldSetRequestMethodToPost() throws {
+    func test_makeRequest_shouldSetRequestMethodToPost() throws {
         
-        let request = try makeBindPublicKeyWithEventIDRequest().request
+        let request = try makeRequest().request
         
         XCTAssertEqual(request.httpMethod, "POST")
     }
     
-    func test_makeBindPublicKeyWithEventIDRequest_shouldSetRequestBody() throws {
+    func test_makeRequest_shouldSetRequestBody() throws {
         
-        let (publicKeyWithEventID, request) = try makeBindPublicKeyWithEventIDRequest()
+        let (publicKeyWithEventID, request) = try makeRequest()
         let httpBody = try XCTUnwrap(request.httpBody)
         let decodedRequest = try JSONDecoder().decode(
             DecodablePublicKeyWithEventID.self,
@@ -71,7 +62,7 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
     
     // MARK: - Helpers
     
-    private func makeBindPublicKeyWithEventIDRequest(
+    private func makeRequest(
         eventID: String = "any eventID",
         keyString: String = "any data"
     ) throws -> (

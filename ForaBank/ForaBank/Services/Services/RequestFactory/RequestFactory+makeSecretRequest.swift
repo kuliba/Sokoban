@@ -14,39 +14,13 @@ extension RequestFactory {
         from secretRequest: FormSessionKeyDomain.Request
     ) throws -> URLRequest {
         
-        guard !secretRequest.code.isEmpty else {
-            throw SecretRequestError.emptyCode
-        }
+        let factory = try factory(for: .formSessionKey)
         
-        guard !secretRequest.data.isEmpty else {
-            throw SecretRequestError.emptyData
-        }
-        
-        let base = APIConfig.processingServerURL
-        let endpoint = Services.Endpoint.formSessionKey
-        let url = try! endpoint.url(withBase: base)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = secretRequest.json
-        
-        return request
-    }
-    
-    enum SecretRequestError: Error, Equatable {
-        
-        case emptyCode
-        case emptyData
-    }
-}
-
-private extension FormSessionKeyDomain.Request {
-    
-    var json: Data? {
-        
-        try? JSONSerialization.data(withJSONObject: [
-            "code": code,
-            "data": data
-        ] as [String: Any])
+        return try factory.makeRequest(
+            for: .formSessionKey(.init(
+                code: .init(value: secretRequest.code),
+                data: secretRequest.data
+            ))
+        )
     }
 }

@@ -145,6 +145,27 @@
         "identifier" : "WIPTests",
         "name" : "WIPTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPINServiceTests",
+        "name" : "CVVPINServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
+      }
     }
   ],
   "version" : 1

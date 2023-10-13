@@ -48,9 +48,7 @@ final class SecretRequestMakerTests: XCTestCase {
         )
         
         XCTAssertEqual(request.code.value, sessionCode)
-        let unwrapped = try unwrap(
-            XCTUnwrap(Data(base64Encoded: request.data))
-        )
+        let unwrapped = try unwrap(XCTUnwrap(request.data))
         XCTAssertEqual(
             String(data: unwrapped, encoding: .utf8),
             message
