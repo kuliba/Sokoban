@@ -13,7 +13,7 @@ extension ConfirmViewModel {
     class TimerViewModel: ObservableObject {
         
         let delay: TimeInterval
-        let phoneNumber: String
+        let phoneNumber: PhoneDomain.Phone
         let completeAction: () -> Void
         let resendRequest: () -> Void
 
@@ -28,13 +28,16 @@ extension ConfirmViewModel {
         
         init(
             delay: TimeInterval,
-            phoneNumber: String,
+            phoneNumber: PhoneDomain.Phone,
             completeAction: @escaping () -> Void,
             resendRequest: @escaping () -> Void
         ) {
             
             self.delay = delay
-            self.phoneNumber = phoneNumber
+            self.phoneNumber = {
+                if phoneNumber.contains(".") { return phoneNumber }
+                return .init(phoneNumber.rawValue.formattedPhoneNumber())
+            }()
             self.value = ""
             self.completeAction = completeAction
             self.resendRequest = resendRequest
@@ -117,8 +120,23 @@ extension ConfirmViewModel.TimerViewModel {
     )
 }
 
-extension String {
+extension PhoneDomain.Phone {
     
-    static let testNumber = "71234567890"
+    static let testNumber: Self = "71234567890"
 }
 
+private extension String {
+    
+    func separate(
+        every stride: Int = 2,
+        with separator: Character = " "
+    ) -> String {
+        return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
+    }
+    
+    func formattedPhoneNumber() -> String {
+        let cleanNumber = self.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+
+        return "+" + cleanNumber.prefix(1) + " ... ... " + String(self.suffix(4)).separate(every:2, with: " ")
+    }
+}

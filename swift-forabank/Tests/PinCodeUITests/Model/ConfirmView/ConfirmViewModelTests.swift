@@ -136,7 +136,7 @@ final class ConfirmViewModelTests: XCTestCase {
     //MARK: - Helpers
 
     private func makeSUT(
-        phoneNumber: String = "+1..99",
+        phoneNumber: PhoneDomain.Phone = "+1..99",
         cardId: CardDomain.CardId = 111,
         actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         otp: OtpDomain.Otp = "",

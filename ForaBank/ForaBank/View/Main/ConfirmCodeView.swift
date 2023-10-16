@@ -11,7 +11,7 @@ import Tagged
 
 struct ConfirmCodeView: View {
     
-    let phoneNumber: String
+    let phoneNumber: PhoneDomain.Phone
     var newPin: PinDomain.NewPin = ""
 
     let cardId: CardDomain.CardId
@@ -80,7 +80,7 @@ struct ConfirmCodeView_Previews: PreviewProvider {
     }
     
     private static func preview (
-        phoneNumber: String = "71234567899",
+        phoneNumber: PhoneDomain.Phone = "71234567899",
         cardId: CardDomain.CardId = 1111111,
         actionType: ConfirmViewModel.CVVPinAction = .showCvv,
         reset: @escaping () -> Void = { },

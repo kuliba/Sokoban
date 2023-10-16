@@ -142,6 +142,146 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert?.secondary)
     }
     
+    func test_showActivateCertificateAlert() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.handlePinError(111, .certificate, "*4585")
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
+        XCTAssertNoDiff(sut.alert?.message, "\nСертификат позволяет просматривать CVV по картам и изменять PIN-код\nв течение 6 месяцев\n\nЭто мера предосторожности во избежание мошеннических операций")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNotNil(sut.alert?.secondary)
+    }
+    
+    func test_activateCertificateAction_happyPathActivateCertificate_shouldShowConfirmOtpViewHideSpinner() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+        XCTAssertNil(sut.confirmOtpView)
+        XCTAssertNil(sut.spinner)
+        
+        sut.action.send(ProductProfileViewModelAction.Spinner.Show())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.spinner)
+
+        sut.activateCertificateAction(
+            certificateClient: SadShowCVVSadOtpRetryAttempts0CertificateClient(),
+            cardId: 111,
+            actionType: .showCvv)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.confirmOtpView)
+        XCTAssertNil(sut.spinner)
+
+        sut.confirmOtpView = nil
+        sut.alert = nil
+    }
+    
+    func test_activateCertificateAction_sadPathActivateCertificate_shouldShowAlertHideSpinner() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.alert)
+        XCTAssertNil(sut.confirmOtpView)
+        XCTAssertNil(sut.spinner)
+        
+        sut.action.send(ProductProfileViewModelAction.Spinner.Show())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.spinner)
+
+        sut.activateCertificateAction(
+            certificateClient: SadShowCVVSadActivateCertificateClient(),
+            cardId: 111,
+            actionType: .showCvv)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNil(sut.spinner)
+
+        sut.alert = nil
+    }
+    
+    // MARK: - test showSpinner
+    func test_showSpinner_linkNotInfoProductModel() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.spinner)
+        XCTAssertNil(sut.link)
+
+        sut.action.send(ProductProfileViewModelAction.Spinner.Show())
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.spinner)
+        sut.spinner = nil
+    }
+
+    func test_showSpinner_linkInfoProductModel() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.spinner)
+        XCTAssertNil(sut.link)
+        
+
+        sut.action.send(ProductProfileViewModelAction.Spinner.Show())
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.spinner)
+        sut.spinner = nil
+    }
+  // MARK: - optionsPannelAction
+
+    func test_optionsPannelAction_requisites_showRequisites() throws {
+        
+        let model = makeModelWithProducts()
+        let product = try XCTUnwrap(model.products.value[.card]?.first)
+        let sut = try XCTUnwrap(makeSUT(model: model, product: product))
+        
+        XCTAssertNil(sut.optionsPannel)
+        XCTAssertNil(sut.link)
+        
+        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelRequisites))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.optionsPannel)
+
+        XCTAssertNil(sut.link)
+        
+        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .requisites)
+        
+        sut.optionsPannel?.action.send(action)
+        
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.link)
+        XCTAssertTrue(sut.viewModelByLink is InfoProductViewModel)
+
+        sut.link = nil
+    }
+
     func test_optionsPannelAction_blockCard_showAlert() throws {
         
         let (sut, _) = try makeSUT()
@@ -354,16 +494,59 @@ final class ProductProfileViewModelTests: XCTestCase {
             }
     }
     
+    // MARK: - test show/hide spinner
+    func test_showHideSpinner() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.spinner)
+        
+        sut.action.send(ProductProfileViewModelAction.Spinner.Show())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.spinner)
+        
+        sut.action.send(ProductProfileViewModelAction.Spinner.Hide())
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNil(sut.spinner)
+    }
+    
+    // MARK: - test show confirm otp
+    func test_showConfirmOtp() throws {
+        
+        let (sut, _) = try makeSUT()
+        
+        XCTAssertNil(sut.confirmOtpView)
+        
+        sut.action.send(ProductProfileViewModelAction.CVVPin.ConfirmShow(
+            cardId: 11,
+            actionType: .showCvv,
+            phone: "99",
+            resendOtp: {}))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.confirmOtpView)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
         model: Model = .mockWithEmptyExcept(),
         certificateClient: CertificateClient = HappyCertificateClient(),
         product: ProductData,
-        rootView: String = ""
+        rootView: String = "",
+        file: StaticString = #file,
+        line: UInt = #line
+
     ) -> ProductProfileViewModel? {
         
-        .init(
+        trackForMemoryLeaks(model, file: file, line: line)
+
+        return .init(
             model,
             certificateClient: certificateClient,
             product: product,
@@ -432,6 +615,15 @@ private extension ProductProfileViewModel {
         }
     }
     
+    var panelViewModelRequisites: ProductProfileOptionsPannelView.ViewModel {
+        .init(
+            buttonsTypes: [
+                .requisites
+            ],
+            productType: .card
+        )
+    }
+
     var panelViewModelBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
         .init(
             buttonsTypes: [
@@ -542,7 +734,7 @@ final class HappyCheckSadActivateCertificateClient: CertificateClient {
         completion(.success(()))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!!")))
     }
@@ -571,7 +763,7 @@ final class SadCheckSadActivateCertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
     }
@@ -600,7 +792,7 @@ final class SadShowCVVSadCheckCertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
     }
@@ -629,7 +821,7 @@ final class SadShowCVVCheckCertificateConnectivityClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
     }
@@ -658,7 +850,7 @@ final class SadShowCVVSadActivateCertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.failure(.init(message: "ТЕСТОВАЯ ОШИБКА!!!\nВозникла техническая ошибка 3100. Свяжитесь с поддержкой банка для уточнения")))
     }
@@ -687,7 +879,7 @@ final class SadShowCVVSadOtpRetryAttempts0CertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.success("+1..11"))
     }
@@ -716,7 +908,7 @@ final class SadShowCVVSadOtpRetryAttemptsCertificateClient: CertificateClient {
         completion(.failure(CVVPinError.CheckError.certificate))
     }
     
-    func activateCertificate(completion: @escaping (Result<String, CVVPinError.ActivationError>) -> Void) {
+    func activateCertificate(completion: @escaping (Result<PhoneDomain.Phone, CVVPinError.ActivationError>) -> Void) {
         
         completion(.success("+1..11"))
     }

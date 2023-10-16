@@ -19,87 +19,99 @@ struct InfoProductView: View {
     
     var body: some View {
         
-        VStack(spacing: 0) {
-            
-            ScrollView(showsIndicators: false) {
+        ZStack {
+            VStack(spacing: 0) {
                 
-                VStack(spacing: 20) {
+                ScrollView(showsIndicators: false) {
                     
-                    if !viewModel.list.isEmpty {
+                    VStack(spacing: 20) {
                         
-                        ItemsViewOld(items: viewModel.list)
-                    }
-                    
-                    if !viewModel.listWithAction.isEmpty {
+                        if !viewModel.list.isEmpty {
+                            
+                            ItemsViewOld(items: viewModel.list)
+                        }
                         
-                        ItemsViewNew(
-                            items: viewModel.listWithAction,
-                            title: "Реквизиты счета",
-                            showCheckbox: viewModel.needShowCheckbox,
-                            isCheck: $viewModel.accountInfoSelected
-                        )
-                    }
-                    
-                    if let items = viewModel.additionalList {
+                        if !viewModel.listWithAction.isEmpty {
+                            
+                            ItemsViewNew(
+                                items: viewModel.listWithAction,
+                                title: "Реквизиты счета",
+                                showCheckbox: viewModel.needShowCheckbox,
+                                isCheck: $viewModel.accountInfoSelected
+                            )
+                        }
                         
-                        ItemsViewNew(
-                            items: items,
-                            title: "Реквизиты карты",
-                            showCheckbox: viewModel.needShowCheckbox,
-                            isCheck: $viewModel.cardInfoSelected
-                        )
+                        if let items = viewModel.additionalList {
+                            
+                            ItemsViewNew(
+                                items: items,
+                                title: "Реквизиты карты",
+                                showCheckbox: viewModel.needShowCheckbox,
+                                isCheck: $viewModel.cardInfoSelected
+                            )
+                        }
                     }
+                    .padding(.top, 20)
                 }
-                .padding(.top, 20)
-            }
-            if let buttonViewModel = viewModel.shareButton {
-                
-                Button(action: buttonViewModel.action) {
+                if let buttonViewModel = viewModel.shareButton {
                     
-                    Text(buttonViewModel.title)
-                        .font(.textH3M18240())
-                        .frame (height: 48,
-                                alignment: .center)
-                        .frame(maxWidth:.infinity)
-                        .padding(.leading, 16)
-                        .padding(.trailing, 15)
+                    Button(action: buttonViewModel.action) {
+                        
+                        Text(buttonViewModel.title)
+                            .font(.textH3M18240())
+                            .frame (height: 48,
+                                    alignment: .center)
+                            .frame(maxWidth:.infinity)
+                            .padding(.leading, 16)
+                            .padding(.trailing, 15)
+                    }
+                    .frame(height: 56, alignment: .center)
+                    .background(Color.mainColorsGrayLightest)
+                    .cornerRadius(12)
+                    .foregroundColor(buttonForegroundColor)
+                    .padding()
+                    .disabled(viewModel.isDisableShareButton)
                 }
-                .frame(height: 56, alignment: .center)
-                .background(Color.mainColorsGrayLightest)
-                .cornerRadius(12)
-                .foregroundColor(buttonForegroundColor)
-                .padding()
-                .disabled(viewModel.isDisableShareButton)
             }
-        }
-        .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: navigationLeadingItem,
-            trailing: navigationTrailingItem
-        )
-        .sheet(
-            isPresented: $viewModel.isShareViewPresented,
-            onDismiss: viewModel.hideCheckBox,
-            content: {
-                
-                ActivityView(viewModel: .init(
-                    activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
-                )
+            .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(
+                leading: navigationLeadingItem,
+                trailing: navigationTrailingItem
+            )
+            .sheet(
+                isPresented: $viewModel.isShareViewPresented,
+                onDismiss: viewModel.hideCheckBox,
+                content: {
+                    
+                    ActivityView(viewModel: .init(
+                        activityItems: [viewModel.itemsToString(items: viewModel.dataForShare)])
+                    )
+                })
+            .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+                if let sendAll = viewModel.sendAllButtonVM,
+                   let sendSelected = viewModel.sendSelectedButtonVM {
+                    
+                    InfoProductSheet(
+                        sendAll: sendAll,
+                        sendSelected: sendSelected
+                    )
+                }
+            }
+            .alert(item: $viewModel.alert, content: { alertViewModel in
+                Alert(with: alertViewModel)
             })
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
-            if let sendAll = viewModel.sendAllButtonVM,
-               let sendSelected = viewModel.sendSelectedButtonVM {
-                
-                InfoProductSheet(
-                    sendAll: sendAll,
-                    sendSelected: sendSelected
-                )
+            viewModel.spinner.map { spinner in
+                ZStack {
+                    Color.black
+                        .opacity(0.3)
+                        .ignoresSafeArea()
+                    
+                    SpinnerRefreshView(icon: spinner.icon)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
     }
     
     @ViewBuilder
@@ -120,6 +132,7 @@ struct InfoProductView: View {
             Button(action: {
                 
                 self.presentationMode.wrappedValue.dismiss()
+                self.viewModel.close()
             }) {
                 HStack {
                     Image.ic24ChevronLeft

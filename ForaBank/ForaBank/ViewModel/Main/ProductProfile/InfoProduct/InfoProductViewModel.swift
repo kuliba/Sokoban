@@ -28,6 +28,7 @@ class InfoProductViewModel: ObservableObject {
     @Published var cardInfoSelected = false
     @Published var alert: Alert.ViewModel?
     @Published var bottomSheet: BottomSheet?
+    @Published var spinner: SpinnerView.ViewModel?
     
     private var needShowNumber = false
     private var needShowCvv = false
@@ -450,6 +451,14 @@ struct InfoProductModelAction {
         let cardId: CardDomain.CardId
         let cvv: ProductView.ViewModel.CardInfo.CVV
     }
+    
+    enum Spinner {
+        
+        struct Show: Action {}
+        struct Hide: Action {}
+    }
+    
+    struct Close: Action {}
 }
 
 extension InfoProductViewModel {
@@ -563,5 +572,12 @@ extension InfoProductViewModel {
             }
         }
         return allValues
+    }
+}
+
+extension InfoProductViewModel {
+    
+    func close() {
+        self.action.send(InfoProductModelAction.Close())
     }
 }

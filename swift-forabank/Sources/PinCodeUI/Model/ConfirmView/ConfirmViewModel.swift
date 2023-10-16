@@ -21,7 +21,7 @@ public class ConfirmViewModel: ObservableObject {
 
     let action: PassthroughSubject<ComfirmViewAction, Never> = .init()
 
-    let phoneNumber: String
+    let phoneNumber: PhoneDomain.Phone
     let cardId: CardDomain.CardId
     let actionType: CVVPinAction
     var newPin: PinDomain.NewPin = ""
@@ -34,7 +34,7 @@ public class ConfirmViewModel: ObservableObject {
     var alertMessage: String = ""
     
     public init(
-        phoneNumber: String,
+        phoneNumber: PhoneDomain.Phone,
         cardId: CardDomain.CardId,
         actionType: CVVPinAction,
         maxDigits: Int = 6,
@@ -176,7 +176,7 @@ protocol ComfirmViewAction {}
 public extension ConfirmViewModel {
     
     enum CVVPinAction {
-        case changePin(String?)
+        case changePin(PhoneDomain.Phone)
         case showCvv
         case changePinResult(ChangePinResult)
     }
