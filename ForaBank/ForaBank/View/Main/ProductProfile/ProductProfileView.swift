@@ -133,10 +133,9 @@ struct ProductProfileView: View {
                 CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }
             
-            if let spinner = viewModel.spinner {
+            viewModel.spinner.map { spinner in
                 
                 VStack {
-                    
                     SpinnerView(viewModel: spinner)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -285,7 +284,7 @@ struct ProductProfileView: View {
             confirmationView: { phone, code in
                 
                 ConfirmCodeView(
-                    phoneNumber: phone.value,
+                    phoneNumber: .init(phone.value),
                     newPin: code,
                     cardId: cardId,
                     actionType: actionType,
@@ -304,7 +303,7 @@ struct ProductProfileView: View {
     }
     
     private func confirmCodeView(
-        phoneNumber: String,
+        phoneNumber: PhoneDomain.Phone,
         cardId: CardDomain.CardId,
         actionType: ConfirmViewModel.CVVPinAction,
         reset: @escaping () -> Void,

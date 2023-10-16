@@ -14,7 +14,7 @@ final class TimerViewModelTests: XCTestCase {
 
     //MARK: - test init
     
-    func test_init_shouldSetAllValue() {
+    func test_init_numberMasked_shouldSetAllValue() {
         
         let sut = makeSUT(
             delay: 60,
@@ -25,6 +25,21 @@ final class TimerViewModelTests: XCTestCase {
 
         XCTAssertEqual(sut.delay, 60)
         XCTAssertEqual(sut.phoneNumber, "+7 ... ... 78 90")
+        XCTAssertNotNil(sut.completeAction)
+        XCTAssertEqual(sut.value, formatter.string(from: 60))
+    }
+    
+    func test_init_numberNotMasked_shouldSetAllValue() {
+        
+        let sut = makeSUT(
+            delay: 60,
+            phoneNumber: "+7999999990"
+        )
+        
+        let formatter: DateComponentsFormatter = .timerViewFormatter
+
+        XCTAssertEqual(sut.delay, 60)
+        XCTAssertEqual(sut.phoneNumber, "+7 ... ... 99 90")
         XCTAssertNotNil(sut.completeAction)
         XCTAssertEqual(sut.value, formatter.string(from: 60))
     }
@@ -104,7 +119,7 @@ final class TimerViewModelTests: XCTestCase {
 
     private func makeSUT(
         delay: TimeInterval = 2,
-        phoneNumber: String = "71234567891",
+        phoneNumber: PhoneDomain.Phone = "71234567891",
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel.TimerViewModel {

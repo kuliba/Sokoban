@@ -7,6 +7,7 @@
 
 import CvvPin
 import Foundation
+import PinCodeUI
 
 extension CvvPinService: CheckCertificateClient {
     
@@ -23,7 +24,7 @@ extension CvvPinService: CheckCertificateClient {
 
 extension CvvPinService: ActivateCertificateClient {
     
-    typealias ActivateCertificateResult = Result<String, CVVPinError.ActivationError>
+    typealias ActivateCertificateResult = Result<PhoneDomain.Phone, CVVPinError.ActivationError>
     typealias ActivateCertificateCompletion = (ActivateCertificateResult) -> Void
     
     func activateCertificate(
@@ -40,7 +41,7 @@ extension CvvPinService: ActivateCertificateClient {
                 
             case .success:
                 #warning("fix this: should have phone")
-                let phone = "+1....77"
+                let phone: PhoneDomain.Phone = "+1....77"
                 completion(.success(phone))
             }
         }
@@ -96,13 +97,12 @@ extension CvvPinService: ShowCVVClient {
 
 extension CvvPinService: PinConfirmationCodeClient {
     
-    
     func getPinConfirmCode(
         completion: @escaping (Result<String, CVVPinError.PinConfirmationError>) -> Void
     ) {
 #warning("fix this")
 
-        completion(.success("+1..22"))
+        completion(.success("+79630000022"))
     }
 }
 

@@ -58,3 +58,12 @@ public enum ErrorDomain: Equatable {
         }
     }
 }
+
+/// A namespace.
+public enum PhoneDomain {}
+
+public extension PhoneDomain {
+    
+    typealias Phone = Tagged<_Phone, String>
+    enum _Phone {}
+}

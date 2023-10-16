@@ -18,7 +18,7 @@ struct TimerView: View {
                         
             if viewModel.needRepeatButton {
                 
-                Text("Код отправлен на \(viewModel.phoneNumber)")
+                Text("Код отправлен на \(viewModel.phoneNumber.rawValue)")
                     .font(config.descFont)
                     .foregroundColor(config.descForegroundColor)
                     .multilineTextAlignment(.center)
@@ -33,7 +33,7 @@ struct TimerView: View {
                 )
             } else {
                 
-                Text("Код отправлен на \(viewModel.phoneNumber)\nЗапросить повторно можно через")
+                Text("Код отправлен на \(viewModel.phoneNumber.rawValue)\nЗапросить повторно можно через")
                     .font(config.descFont)
                     .foregroundColor(config.descForegroundColor)
                     .multilineTextAlignment(.center)
