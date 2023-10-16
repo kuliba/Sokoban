@@ -79,7 +79,7 @@ final class InMemoryStoreTests: XCTestCase {
         
         let results = insert((makeModel(), .init()), to: sut)
         
-        assert(results, equalsTo: [.success(())])
+        assertVoid(results, equalsTo: [.success(())])
     }
     
     func test_insert_deliversNoErrorOnNonEmptyCache() {
@@ -89,7 +89,7 @@ final class InMemoryStoreTests: XCTestCase {
         
         let insertionResults = insert((makeModel("other"), .init()), to: sut)
         
-        assert(insertionResults, equalsTo: [.success(())])
+        assertVoid(insertionResults, equalsTo: [.success(())])
     }
     
     func test_insert_shouldOverridePreviouslyInsertedCacheValues() {
@@ -111,7 +111,7 @@ final class InMemoryStoreTests: XCTestCase {
         
         let deletionResults = deleteCache(from: sut)
         
-        assert(deletionResults, equalsTo: [.success(())])
+        assertVoid(deletionResults, equalsTo: [.success(())])
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
@@ -131,7 +131,7 @@ final class InMemoryStoreTests: XCTestCase {
         
         let deletionResults = deleteCache(from: sut)
         
-        assert(deletionResults, equalsTo: [.success(())])
+        assertVoid(deletionResults, equalsTo: [.success(())])
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {

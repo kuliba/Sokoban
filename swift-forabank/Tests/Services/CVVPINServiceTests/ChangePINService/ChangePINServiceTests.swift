@@ -29,7 +29,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .loadSessionIDFailure,
+            delivers: .missing(.sessionID),
             on: {
                 sessionIDLoader.complete(with: .failure(loadSessionIDError))
             }
@@ -43,7 +43,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .loadSymmetricKeyFailure,
+            delivers: .missing(.symmetricKey),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: .failure(loadSymmetricKeyError))
@@ -58,7 +58,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .loadEventIDFailure,
+            delivers: .missing(.eventID),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
@@ -74,7 +74,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .loadRSAPrivateKeyFailure,
+            delivers: .missing(.rsaPrivateKey),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
@@ -105,7 +105,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverWeakPinOnProcessWeakPin() {
         
-        let weakPIN = SUT.Error.weakPIN(
+        let weakPIN = ChangePINError.APIError.weakPIN(
             statusCode: 7506,
             errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
         )
@@ -113,7 +113,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: weakPIN,
+            delivers: ChangePINError.apiError(weakPIN),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
@@ -125,7 +125,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverRetryOnProcessRetry() {
         
-        let retry = SUT.Error.retry(
+        let retry = ChangePINError.APIError.retry(
             statusCode: 7512,
             errorMessage: "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
             retryAttempts: 2
@@ -134,7 +134,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: retry,
+            delivers: ChangePINError.apiError(retry),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
@@ -151,10 +151,10 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .error(
+            delivers: .apiError(.error(
                 statusCode: 7506,
                 errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
-            ),
+            )),
             on: {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
@@ -193,7 +193,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         
         sut?.changePIN { results.append($0) }
         sut = nil
@@ -211,7 +211,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -230,7 +230,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -250,7 +250,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -271,7 +271,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -304,7 +304,7 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
         rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
-        service: ServiceSpyOf<SUT.Error?>
+        service: ServiceSpyOf<ChangePINError.APIError?>
     ) {
         let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeInfra(file: file, line: line)
         let sut = SUT(
@@ -327,13 +327,13 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
         rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
-        service: ServiceSpyOf<SUT.Error?>
+        service: ServiceSpyOf<ChangePINError.APIError?>
     ) {
         let sessionIDLoader = SessionIDLoaderSpy()
         let symmetricKeyLoader = SymmetricKeyLoaderSpy()
         let eventIDLoader = EventIDLoaderSpy()
         let rsaPrivateKeyLoader = RSAPrivateKeyLoaderSpy()
-        let service = ServiceSpyOf<SUT.Error?>()
+        let service = ServiceSpyOf<ChangePINError.APIError?>()
         let infra = SUT.Infra(
             loadSessionID: sessionIDLoader.load(completion:),
             loadSymmetricKey: symmetricKeyLoader.load(completion:),
@@ -353,12 +353,12 @@ final class ChangePINServiceTests: XCTestCase {
     
     private func assert(
         _ sut: SUT,
-        delivers expectedError: SUT.Error?,
+        delivers expectedError: ChangePINError?,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var results = [SUT.Error?]()
+        var results = [ChangePINError?]()
         let exp = expectation(description: "wait for completion")
         
         sut.changePIN {

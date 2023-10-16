@@ -30,7 +30,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             keyPairLoader.complete(with: .failure(loadRSAKeyPairError))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(loadRSAKeyPairError)])
+        assert(showCVVResults, equalsTo: [.failure(.missing(.rsaKeyPair))])
     }
     
     func test_showCVV_shouldDeliverErrorOnSessionIDLoadFailure() {
@@ -44,7 +44,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             sessionIDLoader.complete(with: .failure(loadSessionIDError))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(loadSessionIDError)])
+        assert(showCVVResults, equalsTo: [.failure(.missing(.sessionID))])
     }
     
     func test_showCVV_shouldDeliverErrorOnSymmetricKeyLoadFailure() {
@@ -59,7 +59,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .failure(loadSymmetricKeyError))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(loadSymmetricKeyError)])
+        assert(showCVVResults, equalsTo: [.failure(.missing(.symmetricKey))])
     }
     
     func test_showCVV_shouldDeliverErrorOnSigningFailure() {
@@ -76,7 +76,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(signingError)])
+        assert(showCVVResults, equalsTo: [.failure(.makeJSONFailure)])
     }
     
     func test_showCVV_shouldDeliverErrorOnSignatureCreationFailure() {
@@ -93,7 +93,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(signatureCreationError)])
+        assert(showCVVResults, equalsTo: [.failure(.makeJSONFailure)])
     }
     
     func test_showCVV_shouldDeliverErrorOnSignatureVerificationFailure() {
@@ -110,7 +110,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(signatureVerificationError)])
+        assert(showCVVResults, equalsTo: [.failure(.makeJSONFailure)])
     }
     
     func test_showCVV_shouldDeliverErrorOnAESEncryptionFailure() {
@@ -127,12 +127,12 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(aesEncryptionError)])
+        assert(showCVVResults, equalsTo: [.failure(.makeJSONFailure)])
     }
     
     func test_showCVV_shouldDeliverErrorOnServiceProcessFailure() {
         
-        let serviceProcessError = anyError("ServiceProcess Failure")
+        let serviceProcessError = ShowCVVError.APIError.invalidData(statusCode: 111, data: .init())
         let (sut, cvvService, keyPairLoader, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let showCVVResults = showCVVResults(sut, on: {
@@ -143,7 +143,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             cvvService.complete(with: .failure(serviceProcessError))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(serviceProcessError)])
+        assert(showCVVResults, equalsTo: [.failure(.apiError(serviceProcessError))])
     }
     
     func test_showCVV_shouldDeliverErrorOnNonBase64RemoteCVV() {
@@ -159,7 +159,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             cvvService.complete(with: .success(remoteCVV))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(Composer.TranscodeError.base64ConversionFailure)])
+        assert(showCVVResults, equalsTo: [.failure(.transcodeFailure)])
     }
     
     func test_showCVV_shouldDeliverErrorOnDecryptionFailure() {
@@ -177,7 +177,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             cvvService.complete(with: .success(makeBased64RemoteCVV()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(decryptionError)])
+        assert(showCVVResults, equalsTo: [.failure(.transcodeFailure)])
     }
     
     func test_showCVV_shouldDeliverDataToStringConversionErrorOnNonStringRemoteCVV() {
@@ -196,7 +196,7 @@ final class ShowCVVComposerTests: MakeComposerInfraTests {
             cvvService.complete(with: .success(makeBased64RemoteCVV()))
         })
         
-        assert(showCVVResults, equalsTo: [.failure(Composer.TranscodeError.dataToStringConversionFailure)])
+        assert(showCVVResults, equalsTo: [.failure(.transcodeFailure)])
     }
     
     func test_showCVV_shouldDeliverSVVOnSuccess() {

@@ -25,7 +25,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let loadError = anyError("Key Load Error")
         let (sut, keyPairLoader, _, _, _) = makeSUT()
         
-        assert(sut, delivers: .failure(loadError), on: {
+        assert(sut, delivers: .failure(.missing(.rsaKeyPair)), on: {
             
             keyPairLoader.complete(with: .failure(loadError))
         })
@@ -36,7 +36,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let loadError = anyError("SessionID Load Error")
         let (sut, keyPairLoader, sessionIDLoader, _, _) = makeSUT()
         
-        assert(sut, delivers: .failure(loadError), on: {
+        assert(sut, delivers: .failure(.missing(.sessionID)), on: {
             
             keyPairLoader.complete(with: anySuccess())
             sessionIDLoader.complete(with: .failure(loadError))
@@ -48,7 +48,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let makeJSONError = anyError("SessionID Load Error")
         let (sut, keyPairLoader, sessionIDLoader, symmetricKeyLoader, _) = makeSUT(makeJSON: { _,_,_,_,_  in throw makeJSONError })
         
-        assert(sut, delivers: .failure(makeJSONError), on: {
+        assert(sut, delivers: .failure(.makeJSONFailure), on: {
             
             keyPairLoader.complete(with: anySuccess())
             sessionIDLoader.complete(with: anySuccess())
@@ -61,7 +61,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let loadSymmetricKeyError = anyError("SymmetricKey Load Error")
         let (sut, keyPairLoader, sessionIDLoader, symmetricKeyLoader, _) = makeSUT()
         
-        assert(sut, delivers: .failure(loadSymmetricKeyError), on: {
+        assert(sut, delivers: .failure(.missing(.symmetricKey)), on: {
             
             keyPairLoader.complete(with: anySuccess())
             sessionIDLoader.complete(with: anySuccess())
@@ -71,10 +71,10 @@ final class ShowCVVServiceTests: XCTestCase {
     
     func test_showCVV_shouldDeliverErrorOnServicerFailure() {
         
-        let serviceError = anyError("SessionID Load Error")
+        let serviceError = ShowCVVError.APIError.error(statusCode: 1234, errorMessage: "error message")
         let (sut, keyPairLoader, sessionIDLoader, symmetricKeyLoader, service) = makeSUT()
         
-        assert(sut, delivers: .failure(serviceError), on: {
+        assert(sut, delivers: .failure(.apiError(serviceError)), on: {
             
             keyPairLoader.complete(with: anySuccess())
             sessionIDLoader.complete(with: anySuccess())
@@ -90,7 +90,7 @@ final class ShowCVVServiceTests: XCTestCase {
             transcodeCVV: { _,_ in throw transcodeCVVError }
         )
         
-        assert(sut, delivers: .failure(transcodeCVVError), on: {
+        assert(sut, delivers: .failure(.transcodeFailure), on: {
             
             keyPairLoader.complete(with: anySuccess())
             sessionIDLoader.complete(with: anySuccess())
@@ -283,7 +283,7 @@ final class ShowCVVServiceTests: XCTestCase {
     private typealias KeyPairLoaderSpy = LoaderSpyOf<RSAKeyPairDomain.KeyPair>
     private typealias SessionIDLoaderSpy = LoaderSpyOf<SessionID>
     private typealias SymmetricKeyLoaderSpy = LoaderSpyOf<SymmetricKey>
-    private typealias PINServiceSpy = RemoteServiceSpyOf<RemoteCVV>
+    private typealias PINServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
     
     private func makeSUT(
         makeJSON: SUT.MakeJSON? = nil,
@@ -359,7 +359,7 @@ final class ShowCVVServiceTests: XCTestCase {
         _ domain: String = "any error"
     ) -> ShowCVVServiceTests.SUT.Infra.ServiceDomain.Result {
         
-        .failure(anyError(domain))
+        .failure(.error(statusCode: 1234, errorMessage: "error message"))
     }
     
     private func anyFailure(

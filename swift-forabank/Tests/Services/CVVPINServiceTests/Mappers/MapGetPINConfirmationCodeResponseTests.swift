@@ -128,15 +128,3 @@ private extension ResponseMapper.GetPINConfirmationCodeError {
         case server(statusCode: Int, errorMessage: String)
     }
 }
-
-private func anyHTTPURLResponse(
-    with statusCode: Int
-) -> HTTPURLResponse {
-    
-    .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-}
-
-private func anyURL(string: String = "any.url") -> URL {
-    
-    .init(string: string)!
-}

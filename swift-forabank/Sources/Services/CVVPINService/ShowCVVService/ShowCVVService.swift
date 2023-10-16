@@ -33,7 +33,7 @@ where CardID: RawRepresentable<Int>,
 
 public extension ShowCVVService {
     
-    typealias CVVDomain = DomainOf<CVV>
+    typealias CVVDomain = Domain<CVV, ShowCVVError>
     typealias CVVCompletion = CVVDomain.Completion
     
     func showCVV(
@@ -45,8 +45,8 @@ public extension ShowCVVService {
             guard let self else { return }
             
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(.missing(.rsaKeyPair)))
                 
             case let .success(keyPair):
                 loadSessionID(cardID, keyPair, completion)
@@ -56,6 +56,30 @@ public extension ShowCVVService {
 }
 
 // MARK: - Interface
+
+public enum ShowCVVError: Error, Equatable {
+    
+    case apiError(APIError)
+    case makeJSONFailure
+    case missing(Missing)
+    case transcodeFailure
+    
+    public enum APIError: Error, Equatable {
+        
+        case invalidData(statusCode: Int, data: Data)
+        case error(
+            statusCode: Int,
+            errorMessage: String
+        )
+    }
+    
+    public enum Missing: Equatable {
+        
+        case rsaKeyPair
+        case sessionID
+        case symmetricKey
+    }
+}
 
 public struct ShowCVVInfra<RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey> {
     
@@ -68,7 +92,7 @@ public struct ShowCVVInfra<RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, Sy
     public typealias SymmetricKeyDomain = DomainOf<SymmetricKey>
     public typealias LoadSymmetricKey = SymmetricKeyDomain.AsyncGet
     
-    public typealias ServiceDomain = RemoteServiceDomain<Data, RemoteCVV, Error>
+    public typealias ServiceDomain = RemoteServiceDomain<Data, RemoteCVV, ShowCVVError.APIError>
     public typealias Process = ServiceDomain.AsyncGet
     
     let loadRSAKeyPair: LoadRSAKeyPair
@@ -103,8 +127,8 @@ private extension ShowCVVService {
             guard let self else { return }
             
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(.missing(.sessionID)))
                 
             case let .success(sessionID):
                 loadSymmetricKey(cardID, keyPair, sessionID, completion)
@@ -123,8 +147,8 @@ private extension ShowCVVService {
             guard let self else { return }
             
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(.missing(.symmetricKey)))
                 
             case let .success(symmetricKey):
                 process(cardID, keyPair, sessionID, symmetricKey, completion)
@@ -151,20 +175,22 @@ private extension ShowCVVService {
                 
                 guard self != nil else { return }
                 
-                completion(result.map(transcode))
+                switch result {
+                    
+                case let .failure(error):
+                    completion(.failure(.apiError(error)))
+                    
+                case let .success(remoteCVV):
+                    do {
+                        let cvv = try transcode(remoteCVV)
+                        completion(.success(cvv))
+                    } catch {
+                        completion(.failure(.transcodeFailure))
+                    }
+                }
             }
         } catch {
-            completion(.failure(error))
+            completion(.failure(.makeJSONFailure))
         }
-    }
-}
-
-private extension Result where Failure == Error {
-    
-    func map<NewSuccess>(
-        _ transform: (Success) throws -> NewSuccess
-    ) -> Result<NewSuccess, Failure> {
-        
-        .init { try transform(get()) }
     }
 }

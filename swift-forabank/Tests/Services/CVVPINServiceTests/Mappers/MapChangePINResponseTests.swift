@@ -22,7 +22,7 @@ final class MapChangePINResponseTests: XCTestCase {
                 anyHTTPURLResponse(with: code)
             )
             
-            assert(result, .failure(.invalidData(statusCode: code)))
+            assert(result, .failure(.invalidData(statusCode: code, data: invalidData)))
         }
     }
     
@@ -43,7 +43,7 @@ final class MapChangePINResponseTests: XCTestCase {
                 anyHTTPURLResponse(with: code)
             )
             
-            assert(result, .failure(.server(
+            assert(result, .failure(.error(
                 statusCode: serverStatusCode,
                 errorMessage: errorMessage
             )))
@@ -125,7 +125,7 @@ final class MapChangePINResponseTests: XCTestCase {
         
         let result = map(validData, response500)
         
-        assert(result, .failure(.server(
+        assert(result, .failure(.error(
             statusCode: serverStatusCode,
             errorMessage: errorMessage
         )))
@@ -138,7 +138,7 @@ final class MapChangePINResponseTests: XCTestCase {
         
         let result = map(nonEmptyData, response200)
         
-        assert(result, .failure(.invalidData(statusCode: 200)))
+        assert(result, .failure(.invalidData(statusCode: 200, data: nonEmptyData)))
         XCTAssertFalse(nonEmptyData.isEmpty)
     }
     
@@ -196,18 +196,18 @@ final class MapChangePINResponseTests: XCTestCase {
     }
 }
 
-private extension ResponseMapper.ChangePINError {
+private extension ChangePINError.APIError {
     
     var view: View {
         
         switch self {
-        case let .invalidData(statusCode):
-            return .invalidData(statusCode: statusCode)
+        case let .invalidData(statusCode, data):
+            return .invalidData(statusCode: statusCode, data: data)
             
         case let .retry(statusCode, errorMessage, retryAttempts):
             return .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
             
-        case let .server(statusCode, errorMessage):
+        case let .error(statusCode, errorMessage):
             return .server(statusCode: statusCode, errorMessage: errorMessage)
             
         case let .weakPIN(statusCode, errorMessage):
@@ -217,21 +217,9 @@ private extension ResponseMapper.ChangePINError {
     
     enum View: Equatable {
         
-        case invalidData(statusCode: Int)
+        case invalidData(statusCode: Int, data: Data)
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
         case weakPIN(statusCode: Int, errorMessage: String)
     }
-}
-
-private func anyHTTPURLResponse(
-    with statusCode: Int
-) -> HTTPURLResponse {
-    
-    .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-}
-
-private func anyURL(string: String = "any.url") -> URL {
-    
-    .init(string: string)!
 }

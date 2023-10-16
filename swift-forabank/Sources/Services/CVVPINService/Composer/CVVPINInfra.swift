@@ -28,14 +28,14 @@ public struct CVVPINInfra<CardID, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RS
     public typealias LoadSymmetricKey = SymmetricKeyDomain.AsyncGet
     
     public typealias PinChanger = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
-    public typealias ChangePINCompletion = (PinChanger.Error?) -> Void
+    public typealias ChangePINCompletion = (ChangePINError.APIError?) -> Void
     public typealias ChangePINProcess = (Data, @escaping ChangePINCompletion) -> Void
     
-    public typealias RemoteCVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, Error>
+    public typealias RemoteCVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, ShowCVVError.APIError>
     public typealias RemoteCVVProcess = RemoteCVVServiceDomain.AsyncGet
     
     public typealias Response = PublicKeyAuthenticationResponse
-    public typealias KeyServiceDomain = RemoteServiceDomain<Data, Response, Error>
+    public typealias KeyServiceDomain = RemoteServiceDomain<Data, Response, KeyExchangeError.APIError>
     public typealias ProcessKey = KeyServiceDomain.AsyncGet
     
     public typealias CVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, Error>

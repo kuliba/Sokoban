@@ -33,13 +33,13 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
             keyPairLoader.complete(with: .failure(loadRSAKeyPairError))
         })
         
-        assert(authResults, equalsTo: [.failure(loadRSAKeyPairError)])
+        assertVoid(authResults, equalsTo: [.failure(.missing(.rsaKeyPair))])
     }
     
     func test_authenticateWithPublicKey_shouldDeliverErrorOnServiceFailure() {
         
         let loadSessionKeyWithEventError = anyError("Load SessionKeyWithEvent Failure")
-        let processError = anyError("Process Failure")
+        let processError = KeyExchangeError.APIError.error(statusCode: 1234, errorMessage: "error message")
         let (sut, keyPairLoader, keyService, sessionKeyWithEventLoader, _, _, _, _) = makeSUT()
         
         let authResults = authenticateWithPublicKey(sut, on: {
@@ -49,7 +49,7 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
             keyService.complete(with: .failure(processError))
         })
         
-        assert(authResults, equalsTo: [.failure(processError)])
+        assertVoid(authResults, equalsTo: [.failure(.apiError(processError))])
     }
     
     func test_authenticateWithPublicKey_shouldDeliverSuccessOnSuccessfulSessionKeyWithEventLoad() {
@@ -62,7 +62,7 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
             sessionKeyWithEventLoader.complete(with: .success(makeSessionKeyWithEvent()))
         })
         
-        assert(authResults, equalsTo: [.success(())])
+        assertVoid(authResults, equalsTo: [.success(())])
     }
     
     func test_authenticateWithPublicKey_shouldDeliverSuccessOnServiceSuccess() {
@@ -77,7 +77,7 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
             keyService.complete(with: .success(publicKeyAuthenticationResponse))
         })
         
-        assert(authResults, equalsTo: [.success(())])
+        assertVoid(authResults, equalsTo: [.success(())])
     }
     
     func test_authenticateWithPublicKey_shouldCacheSessionIDOnKeyServiceSuccess() {
@@ -186,9 +186,9 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
     private func authenticateWithPublicKey(
         _ sut: SUT,
         on action: @escaping () -> Void
-    ) -> [Result<Void, Error>] {
+    ) -> [Result<Void, KeyExchangeError>] {
         
-        var authResults = [Result<Void, Error>]()
+        var authResults = [Result<Void, KeyExchangeError>]()
         let exp = expectation(description: "wait for completion")
         
         sut.authenticateWithPublicKey {

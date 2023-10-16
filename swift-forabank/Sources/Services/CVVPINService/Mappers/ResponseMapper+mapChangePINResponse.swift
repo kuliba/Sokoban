@@ -9,7 +9,7 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias ChangePINResult = Result<Void, ChangePINError>
+    typealias ChangePINResult = Result<Void, ChangePINError.APIError>
     
     static func mapChangePINResponse(
         _ data: Data,
@@ -22,7 +22,7 @@ public extension ResponseMapper {
                 if data.isEmpty {
                     return .success(())
                 } else {
-                    return .failure(.invalidData(statusCode: 200))
+                    return .failure(.invalidData(statusCode: 200, data: data))
                 }
                 
             case 406:
@@ -42,7 +42,7 @@ public extension ResponseMapper {
                     ))
                 } catch {
                     let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                    return .failure(.server(
+                    return .failure(.error(
                         statusCode: serverError.statusCode,
                         errorMessage: serverError.errorMessage
                     ))
@@ -50,24 +50,16 @@ public extension ResponseMapper {
                 
             default:
                 let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                return .failure(.server(
+                return .failure(.error(
                     statusCode: serverError.statusCode,
                     errorMessage: serverError.errorMessage
                 ))
             }
         } catch {
             return .failure(.invalidData(
-                statusCode: httpURLResponse.statusCode
+                statusCode: httpURLResponse.statusCode, data: data
             ))
         }
-    }
-    
-    enum ChangePINError: Error {
-        
-        case invalidData(statusCode: Int)
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case weakPIN(statusCode: Int, errorMessage: String)
     }
     
     private struct Retry: Decodable {
@@ -77,5 +69,3 @@ public extension ResponseMapper {
         let retryAttempts: Int
     }
 }
-
-

@@ -8,6 +8,7 @@
 import CryptoKit
 import Foundation
 
+/// ProcessPublicKeyAuthentication
 public struct KeyExchange<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
 where ECDHPublicKey: RawRepresentable<Data>,
       RSAPublicKey: RawRepresentable<Data> {
@@ -15,7 +16,7 @@ where ECDHPublicKey: RawRepresentable<Data>,
     public typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
     public typealias MakeECDHKeyPair = ECDHKeyPairDomain.Get
     public typealias Sign = (Data, RSAPrivateKey) throws -> Data
-    public typealias PublicKeyAuthDomain = RemoteServiceDomain<Data, PublicKeyAuthenticationResponse, Error>
+    public typealias PublicKeyAuthDomain = RemoteServiceDomain<Data, PublicKeyAuthenticationResponse, KeyExchangeError.APIError>
     public typealias Process = PublicKeyAuthDomain.AsyncGet
     public typealias MakeSymmetricKey = (PublicKeyAuthenticationResponse, ECDHPrivateKey) throws -> SymmetricKey
     
@@ -40,7 +41,7 @@ where ECDHPublicKey: RawRepresentable<Data>,
 public extension KeyExchange {
     
     typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
-    typealias SymmetricKeyDomain = DomainOf<SymmetricKey>
+    typealias SymmetricKeyDomain = Domain<SymmetricKey, KeyExchangeError>
     typealias Completion = SymmetricKeyDomain.Completion
     
     func exchangeKeys(
@@ -60,14 +61,41 @@ public extension KeyExchange {
             // processPublicKeyAuthenticationRequest
             process(json) { result in
                 
-                completion(.init {
+                switch result {
+                case let .failure(error):
+                    completion(.failure(.apiError(error)))
                     
-                    try makeSymmetricKey(result.get(), saS)
-                })
+                case let .success(response):
+                    do {
+                        let symmetricKey = try makeSymmetricKey(response, saS)
+                        completion(.success(symmetricKey))
+                    } catch {
+                        completion(.failure(.makeSymmetricKeyFailure))
+                    }
+                }
             }
         } catch {
-            completion(.failure(error))
+            completion(.failure(.makeECDHKeyPairOrWrapInJSONFailure))
         }
+    }
+}
+
+public enum KeyExchangeError: Error {
+    
+    case apiError(APIError)
+    case makeECDHKeyPairOrWrapInJSONFailure
+    case makeSymmetricKeyFailure
+    case missing(Missing)
+    
+    public enum APIError: Error {
+        
+        case invalidData(statusCode: Int, data: Data)
+        case error(statusCode: Int, errorMessage: String)
+    }
+    
+    public enum Missing {
+        
+        case rsaKeyPair
     }
 }
 
