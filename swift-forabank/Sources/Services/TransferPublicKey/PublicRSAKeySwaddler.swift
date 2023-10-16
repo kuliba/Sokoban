@@ -63,17 +63,20 @@ public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
         dump(clientPublicKeyRSA)
         print(">>> json:\n", String(data: json, encoding: .utf8)!)
         
-        do {
-            let publicKeyData = try (publicKey as! SecKey).publicKeyRepresentation()
-            let (modulus, exponent) = try publicKeyData.extractRSAModulusAndExponent()
-            print(">>> Public Key modulus")
-            dump(modulus.hexEncodedString())
-            dump(modulus.base64EncodedString())
-            print(">>> Public Key exponent")
-            dump(exponent.hexEncodedString())
-            dump(exponent.base64EncodedString())
-        } catch {
-            print(">>> ", error.localizedDescription, "\(#file):\(#line)")
+        if type(of: publicKey) is SecKey {
+            
+            do {
+                let publicKeyData = try (publicKey as! SecKey).publicKeyRepresentation()
+                let (modulus, exponent) = try publicKeyData.extractRSAModulusAndExponent()
+                print(">>> Public Key modulus")
+                dump(modulus.hexEncodedString())
+                dump(modulus.base64EncodedString())
+                print(">>> Public Key exponent")
+                dump(exponent.hexEncodedString())
+                dump(exponent.base64EncodedString())
+            } catch {
+                print(">>> ", error.localizedDescription, "\(#file):\(#line)")
+            }
         }
 #endif
         

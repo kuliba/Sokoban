@@ -2,7 +2,7 @@
 //  CVVPINInfra+ext.swift
 //  
 //
-//  Created by Igor Malyarov on 10.10.2023.
+//  Created by Igor Malyarov on 15.10.2023.
 //
 
 import Foundation
@@ -12,26 +12,44 @@ public extension CVVPINInfra {
     typealias RSAKeyPair = (publicKey: RSAPublicKey, privateKey: RSAPrivateKey)
     
     /// Create `CVVPINInfra` using `Store`s.
+    @inlinable
     init(
         eventIDStore: any Store<EventID>,
-        loadRSAKeyPair: @escaping LoadRSAKeyPair,
+        rsaKeyPairStore: any Store<RSAKeyPair>,
         sessionIDStore: any Store<SessionID>,
-        loadSessionKeyWithEvent: @escaping LoadSessionKeyWithEvent,
+        sessionKeyWithEventStore: any Store<SessionKeyWithEvent>,
+        symmetricKeyStore: any Store<SymmetricKey>,
         changePINProcess: @escaping ChangePINProcess,
         remoteCVVProcess: @escaping RemoteCVVProcess,
         processKey: @escaping ProcessKey,
-        symmetricKeyStore: any Store<SymmetricKey>,
         currentDate: @escaping () -> Date = Date.init
     ) {
-        let eventIDLoader = GenericLoaderOf(store: eventIDStore, currentDate: currentDate)
-        let sessionIDLoader = GenericLoaderOf(store: sessionIDStore, currentDate: currentDate)
-        let symmetricKeyLoader = GenericLoaderOf(store: symmetricKeyStore, currentDate: currentDate)
+        let eventIDLoader = GenericLoaderOf(
+            store: eventIDStore,
+            currentDate: currentDate
+        )
+        let rsaKeyPairLoader = GenericLoaderOf(
+            store: rsaKeyPairStore,
+            currentDate: currentDate
+        )
+        let sessionIDLoader = GenericLoaderOf(
+            store: sessionIDStore,
+            currentDate: currentDate
+        )
+        let sessionKeyWithEventLoader = GenericLoaderOf(
+            store: sessionKeyWithEventStore,
+            currentDate: currentDate
+        )
+        let symmetricKeyLoader = GenericLoaderOf(
+            store: symmetricKeyStore,
+            currentDate: currentDate
+        )
         
         self.init(
             loadEventID: eventIDLoader.load(completion:),
-            loadRSAKeyPair: loadRSAKeyPair,
+            loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
             loadSessionID: sessionIDLoader.load(completion:),
-            loadSessionKeyWithEvent: loadSessionKeyWithEvent,
+            loadSessionKeyWithEvent: sessionKeyWithEventLoader.load(completion:),
             loadSymmetricKey: symmetricKeyLoader.load(completion:),
             changePINProcess: changePINProcess,
             remoteCVVProcess: remoteCVVProcess,
@@ -42,9 +60,9 @@ public extension CVVPINInfra {
     }
 }
 
-typealias GenericLoaderOf<Model> = GenericLoader<Model, Model>
+public typealias GenericLoaderOf<Model> = GenericLoader<Model, Model>
 
-extension GenericLoaderOf where Local == Model {
+public extension GenericLoaderOf where Local == Model {
     
     convenience init(
         store: any Store<Model>,
@@ -61,7 +79,7 @@ extension GenericLoaderOf where Local == Model {
 
 // MARK: - Adapter
 
-extension GenericLoader {
+public extension GenericLoader {
     
     func saveAndForget(
         _ model: Model,

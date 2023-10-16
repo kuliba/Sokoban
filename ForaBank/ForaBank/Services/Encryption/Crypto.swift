@@ -71,7 +71,7 @@ extension Crypto {
                 throw CryptoError.publicTransportKeyExternalRepresentationFailure
             }
             
-            let symmetricKey = SymmetricKey(data: publicTransportKeyData)
+            let symmetricKey = CryptoKit.SymmetricKey(data: publicTransportKeyData)
             dump(symmetricKey)
            // let sealedBox = try CryptoKit.AES.GCM.SealedBox(combined: serverPublicKeyEncryptedData)
             let sealedBox = try CryptoKit.AES.GCM.SealedBox(

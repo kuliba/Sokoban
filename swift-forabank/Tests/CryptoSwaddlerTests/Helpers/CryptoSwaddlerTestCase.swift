@@ -21,8 +21,8 @@ class CryptoSwaddlerTestCase: XCTestCase {
         publicKey: SecKey
     ) {
         try Crypto.createRandomSecKeys(
-            keyType: kSecAttrKeyTypeRSA,
-            keySizeInBits: 4096
+            keyType: .rsa,
+            keySize: .bits4096
         )
     }
     

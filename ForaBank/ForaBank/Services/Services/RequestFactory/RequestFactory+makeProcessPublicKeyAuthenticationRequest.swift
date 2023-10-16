@@ -10,34 +10,13 @@ import Foundation
 extension RequestFactory {
     
     static func makeProcessPublicKeyAuthenticationRequest(
-        clientPublicKeyRSA: ClientPublicKeyRSA,
-        publicApplicationSessionKey: PublicApplicationSessionKey,
-        signature: Signature
+        data: Data
     ) throws -> URLRequest {
         
         let factory = try factory(for: .processPublicKeyAuthenticationRequest)
         
         return try factory.makeRequest(
-            for: .processPublicKeyAuthenticationRequest(
-                .init(
-                    clientPublicKeyRSA: .init(rawValue: clientPublicKeyRSA.rawValue),
-                    publicApplicationSessionKey: .init(rawValue: publicApplicationSessionKey.rawValue),
-                    signature: .init(rawValue: signature.rawValue)
-                )
-            )
+            for: .processPublicKeyAuthenticationRequest(data)
         )
-    }
-    
-    struct ClientPublicKeyRSA {
-        
-        let rawValue: Data
-    }
-    struct PublicApplicationSessionKey {
-        
-        let rawValue: Data
-    }
-    struct Signature {
-        
-        let rawValue: Data
     }
 }

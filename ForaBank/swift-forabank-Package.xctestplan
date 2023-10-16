@@ -166,6 +166,13 @@
         "identifier" : "URLRequestFactoryTests",
         "name" : "URLRequestFactoryTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
     }
   ],
   "version" : 1

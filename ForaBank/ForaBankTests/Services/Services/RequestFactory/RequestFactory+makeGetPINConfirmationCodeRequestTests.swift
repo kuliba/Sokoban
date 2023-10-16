@@ -47,7 +47,7 @@ final class RequestFactory_makeGetPINConfirmationCodeRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        with sessionID: SessionID = anySessionID()
+        with sessionID: ForaBank.SessionID = anySessionID()
     ) throws -> URLRequest {
         
         let request = try RequestFactory.makeGetPINConfirmationCodeRequest(sessionID: sessionID)

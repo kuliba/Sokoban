@@ -22,11 +22,12 @@ public extension Crypto {
         case decryptionFailure(Swift.Error?)
         case dataCreationFromBase64StringFailure(String)
         case notFoundServerCertificateData
+        case extractPublicKeyFromPrivateKeyFailure
         case unableExtractPublicKeyFromServerCertificate
         case unableDecodeDataFromBase64String
         case unableExtractCertFromDerData
         case unableCopyExternalRepresentation(String)
-        case secKeyCreationWithDataFailure(String)
+        case secKeyCreationWithDataFailure(bits: Int, keyType: CFString, keyClass: CFString, String)
         case keysGenerationFailure(bits: Int, keyType: CFString, Swift.Error)
         case keysPairGenerationFailure(keySize: Int, keyType: CFString, OSStatus)
         case keyExchangeResultFailure(Swift.Error)

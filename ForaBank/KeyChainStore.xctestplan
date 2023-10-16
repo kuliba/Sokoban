@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "12D322CB-028D-4D48-BBAB-7CD06A06385F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}

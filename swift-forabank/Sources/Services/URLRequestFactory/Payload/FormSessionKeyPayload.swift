@@ -22,16 +22,6 @@ extension URLRequestFactory.Service {
             self.data = data
         }
         
-        public struct Code {
-            
-            public let value: String
-            
-            public init(value: String) {
-             
-                self.value = value
-            }
-        }
-        
         func json() throws -> Data {
             
             guard !code.value.isEmpty
@@ -48,6 +38,16 @@ extension URLRequestFactory.Service {
                 "code": code.value,
                 "data": data.base64EncodedString()
             ] as [String: String])
+        }
+        
+        public struct Code {
+            
+            public let value: String
+            
+            public init(value: String) {
+             
+                self.value = value
+            }
         }
     }
 }

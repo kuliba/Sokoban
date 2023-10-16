@@ -20,6 +20,24 @@ extension URLRequestFactory.Service {
             self.key = key
         }
         
+        func json() throws -> Data {
+            
+            guard !eventID.value.isEmpty
+            else {
+                throw Error.bindPublicKeyWithEventIDEmptyEventID
+            }
+            
+            guard !key.value.isEmpty
+            else {
+                throw Error.bindPublicKeyWithEventIDEmptyKey
+            }
+            
+            return try JSONSerialization.data(withJSONObject: [
+                "eventId": eventID.value,
+                "data": key.value.base64EncodedString()
+            ] as [String: Any])
+        }
+        
         public struct EventID {
             
             public let value: String
@@ -38,24 +56,6 @@ extension URLRequestFactory.Service {
              
                 self.value = value
             }
-        }
-        
-        func json() throws -> Data {
-            
-            guard !eventID.value.isEmpty
-            else {
-                throw Error.bindPublicKeyWithEventIDEmptyEventID
-            }
-            
-            guard !key.value.isEmpty
-            else {
-                throw Error.bindPublicKeyWithEventIDEmptyKey
-            }
-            
-            return try JSONSerialization.data(withJSONObject: [
-                "eventId": eventID.value,
-                "data": key.value.base64EncodedString()
-            ] as [String: Any])
         }
     }
 }

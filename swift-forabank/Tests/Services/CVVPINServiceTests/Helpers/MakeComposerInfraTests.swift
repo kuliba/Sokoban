@@ -73,6 +73,7 @@ class MakeComposerInfraTests: XCTestCase {
         return (infra, cvvService, eventIDLoader, keyPairLoader, keyService, pinService, sessionIDCache, sessionIDLoader, sessionKeyWithEventLoader, symmetricKeyCache, symmetricKeyLoader)
     }
     
+    
     func makeCVVPINInfra<T>(
         _ t: T.Type = T.self,
         currentDate: @escaping () -> Date = Date.init,
@@ -81,18 +82,18 @@ class MakeComposerInfraTests: XCTestCase {
     ) -> (
         infra: Infra<T>,
         eventIDStore: StoreSpy<EventID>,
-        keyPairLoader: LoaderSpyOf<RSAKeyPair>,
+        rsaKeyPairStore: StoreSpy<RSAKeyPair>,
         sessionIDStore: StoreSpy<T>,
-        sessionKeyWithEventLoader: LoaderSpyOf<SessionKeyWithEvent>,
+        sessionKeyWithEventStore: StoreSpy<SessionKeyWithEvent>,
+        symmetricKeyStore: StoreSpy<SymmetricKey>,
         pinService: ServiceSpyOf<PINChanger<T>.Error?>,
         remoteCVVService: RemoteServiceSpyOf<RemoteCVV>,
-        keyService: RemoteServiceSpyOf<PublicKeyAuthenticationResponse>,
-        symmetricKeyStore: StoreSpy<SymmetricKey>
+        keyService: RemoteServiceSpyOf<PublicKeyAuthenticationResponse>
     ) {
         let eventIDStore = StoreSpy<EventID>()
-        let keyPairLoader = LoaderSpyOf<RSAKeyPair>()
+        let rsaKeyPairStore = StoreSpy<RSAKeyPair>()
         let sessionIDStore = StoreSpy<T>()
-        let sessionKeyWithEventLoader = LoaderSpyOf<SessionKeyWithEvent>()
+        let sessionKeyWithEventStore = StoreSpy<SessionKeyWithEvent>()
         let pinService = ServiceSpyOf<PINChanger<T>.Error?>()
         let remoteCVVService = RemoteServiceSpyOf<RemoteCVV>()
         let keyService = RemoteServiceSpyOf<PublicKeyAuthenticationResponse>()
@@ -100,19 +101,19 @@ class MakeComposerInfraTests: XCTestCase {
         
         let infra = Infra<T>(
             eventIDStore: eventIDStore,
-            loadRSAKeyPair: keyPairLoader.load(completion:),
+            rsaKeyPairStore: rsaKeyPairStore,
             sessionIDStore: sessionIDStore,
-            loadSessionKeyWithEvent: sessionKeyWithEventLoader.load(completion:),
+            sessionKeyWithEventStore: sessionKeyWithEventStore,
+            symmetricKeyStore: symmetricKeyStore,
             changePINProcess: pinService.process(_:completion:),
             remoteCVVProcess: remoteCVVService.process(_:completion:),
             processKey: keyService.process(_:completion:),
-            symmetricKeyStore: symmetricKeyStore,
             currentDate: currentDate
         )
         
         // TODO: fix this and restore memory leak tracking
         // trackForMemoryLeaks(eventIDStore, file: file, line: line)
         
-        return (infra, eventIDStore, keyPairLoader, sessionIDStore, sessionKeyWithEventLoader, pinService, remoteCVVService, keyService, symmetricKeyStore)
+        return (infra, eventIDStore, rsaKeyPairStore, sessionIDStore, sessionKeyWithEventStore, symmetricKeyStore, pinService, remoteCVVService, keyService)
     }
 }

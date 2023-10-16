@@ -92,7 +92,7 @@ where OTP == CryptoSwaddlerTestCase.TestOTP,
             generateRSA4096BitKeys: generateRSA4096BitKeys,
             signEncryptOTP: signWithPadding,
             saveKeys: saveKeys,
-            x509Representation: { _ in throw NSError(domain: "Unimplemented", code: -1)},
+            x509Representation: ForaCrypto.Crypto.x509Representation(of:),
             aesEncrypt128bitChunks: { data, secret in
                 
                 let aesGCMEncryptionAgent = AESGCMEncryptionAgent(data: secret.data)

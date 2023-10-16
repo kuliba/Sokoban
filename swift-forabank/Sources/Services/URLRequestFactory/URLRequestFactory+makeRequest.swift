@@ -55,8 +55,12 @@ extension URLRequestFactory.Service {
         case let .formSessionKey(payload):
             return try payload.json()
             
-        case let .processPublicKeyAuthenticationRequest(payload):
-            return try payload.json()
+        case let .processPublicKeyAuthenticationRequest(data):
+            guard !data.isEmpty
+            else {
+                throw Error.emptyData
+            }
+            return data
             
         case let .showCVV(payload):
             return try payload.json()
