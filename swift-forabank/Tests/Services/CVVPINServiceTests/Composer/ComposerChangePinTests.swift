@@ -30,7 +30,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
             sessionIDLoader.complete(with: .failure(anyError()))
         }
         
-        assert(results, equalsTo: .loadSessionIDFailure)
+        assert(results, equalsTo: .missing(.sessionID))
     }
     
     func test_changePIN_shouldDeliverLoadSymmetricKeyFailureOnSymmetricKeyLoadFailure() {
@@ -43,7 +43,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .failure(anyError()))
         }
         
-        assert(results, equalsTo: .loadSymmetricKeyFailure)
+        assert(results, equalsTo: .missing(.symmetricKey))
     }
     
     func test_changePIN_shouldDeliverLoadEventIDFailureOnEventIDLoadFailure() {
@@ -57,7 +57,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
             eventIDLoader.complete(with: .failure(anyError()))
         }
         
-        assert(results, equalsTo: .loadEventIDFailure)
+        assert(results, equalsTo: .missing(.eventID))
     }
     
     func test_changePIN_shouldDeliverLoadRSAPrivateKeyFailureOnRSAPrivateKeyLoadFailure() {
@@ -72,12 +72,12 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
             keyPairLoader.complete(with: .failure(anyError()))
         }
         
-        assert(results, equalsTo: .loadRSAPrivateKeyFailure)
+        assert(results, equalsTo: .missing(.rsaPrivateKey))
     }
     
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure() {
         
-        let pinServiceError = PINError.error(statusCode: 123, errorMessage: "PIN Service Error")
+        let pinServiceError = ChangePINError.APIError.error(statusCode: 123, errorMessage: "PIN Service Error")
         let (sut, eventIDLoader, keyPairLoader, pinService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
@@ -89,7 +89,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
             pinService.complete(with: pinServiceError)
         }
         
-        assert(results, equalsTo: pinServiceError)
+        assert(results, equalsTo: .apiError(pinServiceError))
     }
     
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure_() {
@@ -112,9 +112,8 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     fileprivate typealias SessionID = PublicKeyAuthenticationResponse.SessionID
     fileprivate typealias SUT = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
-    fileprivate typealias PINError = SUT.PINChanger.Error
     
-    fileprivate typealias ChangePINService = RemoteServiceSpy<Void, PINError, Data>
+    fileprivate typealias ChangePINService = RemoteServiceSpy<Void, ChangePINError, Data>
     
     private func makeSUT(
         aesEncrypt: SUT.Crypto.AESEncrypt? = nil,
@@ -126,7 +125,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         sut: SUT,
         eventIDLoader: EventIDLoaderSpy,
         keyPairLoader: RSAKeyPairLoaderSpy,
-        pinService: ServiceSpyOf<PINError?>,
+        pinService: ServiceSpyOf<ChangePINError.APIError?>,
         sessionIDLoader: SessionIDLoaderSpy<SessionID>,
         symmetricKeyLoader: SymmetricKeyLoaderSpy
     ) {
@@ -151,9 +150,9 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         otp: OTP = makeOTP(),
         pin: PIN = makePIN(),
         on action: @escaping () -> Void
-    ) -> [PINError?] {
+    ) -> [ChangePINError?] {
         
-        var results = [PINError?]()
+        var results = [ChangePINError?]()
         let exp = expectation(description: "wait for completion")
         
         let changePIN = sut.changePIN()
@@ -171,8 +170,8 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     }
     
     private func assert(
-        _ receivedResults: [PINError?],
-        equalsTo expectedResult: PINError?,
+        _ receivedResults: [ChangePINError?],
+        equalsTo expectedResult: ChangePINError?,
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line

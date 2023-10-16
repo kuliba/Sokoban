@@ -29,7 +29,7 @@ public final class ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, Se
 
 public extension ChangePINService {
     
-    typealias Completion = (Error?) -> Void
+    typealias Completion = (ChangePINError?) -> Void
     
     func changePIN(
         cardID: CardID,
@@ -39,32 +39,42 @@ public extension ChangePINService {
     ) {
         loadSessionID(cardID, otp, pin, completion)
     }
+}
+
+// MARK: - Interface
+
+public enum ChangePINError: Error, Equatable {
     
-    enum Error: Swift.Error, Equatable {
+    case apiError(APIError)
+    case makeSecretPINRequestFailure
+    case missing(Missing)
+    
+    public enum APIError: Error, Equatable {
         
         case error(
             statusCode: Int,
             errorMessage: String
         )
-        case loadEventIDFailure
-        case loadRSAPrivateKeyFailure
-        case loadSessionIDFailure
-        case loadSymmetricKeyFailure
-        case makeSecretPINRequestFailure
+        case invalidData(statusCode: Int, data: Data)
         case retry(
             statusCode: Int,
             errorMessage: String,
             retryAttempts: Int
         )
-        case unknown(statusCode: Int, data: Data)
         case weakPIN(
             statusCode: Int,
             errorMessage: String
         )
     }
+    
+    public enum Missing: Equatable {
+        
+        case eventID
+        case rsaPrivateKey
+        case sessionID
+        case symmetricKey
+    }
 }
-
-// MARK: - Interface
 
 extension ChangePINService {
     
@@ -82,7 +92,8 @@ extension ChangePINService {
         public typealias RSAPrivateKeyDomain = DomainOf<RSAPrivateKey>
         public typealias LoadRSAPrivateKey = RSAPrivateKeyDomain.AsyncGet
         
-        public typealias Process = (Data, @escaping Completion) -> Void
+        public typealias ProcessCompletion = (ChangePINError.APIError?) -> Void
+        public typealias Process = (Data, @escaping ProcessCompletion) -> Void
         
         let loadSessionID: LoadSessionID
         let loadSymmetricKey: LoadSymmetricKey
@@ -122,7 +133,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.loadSessionIDFailure)
+                completion(.missing(.sessionID))
                 
             case let .success(sessionID):
                 loadSymmetricKey(cardID, otp, pin, sessionID, completion)
@@ -143,7 +154,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.loadSymmetricKeyFailure)
+                completion(.missing(.symmetricKey))
                 
             case let .success(symmetricKey):
                 loadEventID(cardID, otp, pin, sessionID, symmetricKey, completion)
@@ -165,7 +176,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.loadEventIDFailure)
+                completion(.missing(.eventID))
                 
             case let .success(eventID):
                 loadRSAPrivateKey(cardID, otp, pin, sessionID, symmetricKey, eventID, completion)
@@ -188,7 +199,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.loadRSAPrivateKeyFailure)
+                completion(.missing(.rsaPrivateKey))
                 
             case let .success(rsaPrivateKey):
                 process(cardID, otp, pin, sessionID, symmetricKey, eventID, rsaPrivateKey, completion)
@@ -214,7 +225,7 @@ private extension ChangePINService {
                 
                 guard self != nil else { return }
                 
-                completion(result)
+                completion(result.map { ChangePINError.apiError($0) })
             }
         } catch {
             completion(.makeSecretPINRequestFailure)

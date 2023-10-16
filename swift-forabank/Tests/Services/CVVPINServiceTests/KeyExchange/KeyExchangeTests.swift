@@ -35,7 +35,7 @@ final class KeyExchangeTests: XCTestCase {
             makeSymmetricKeyStub: .failure(anyError())
         )
         
-        assert(sut, delivers: .failure(makeECDHKeyPairError))
+        assert(sut, delivers: .failure(.makeECDHKeyPairOrWrapInJSONFailure))
     }
     
     func test_exchangeKeys_shouldDeliverErrorOnSignFailure() {
@@ -48,7 +48,7 @@ final class KeyExchangeTests: XCTestCase {
             makeSymmetricKeyStub: .failure(anyError())
         )
         
-        assert(sut, delivers: .failure(signError), with: keyPair)
+        assert(sut, delivers: .failure(.makeECDHKeyPairOrWrapInJSONFailure), with: keyPair)
     }
     
     func test_exchangeKeys_shouldInvokeSigningWithPrivateKey() {
@@ -61,21 +61,21 @@ final class KeyExchangeTests: XCTestCase {
             makeSymmetricKeyStub: .failure(anyError())
         )
         
-        assert(sut, delivers: .failure(anyError()), with: keyPair)
+        assert(sut, delivers: .failure(.makeECDHKeyPairOrWrapInJSONFailure), with: keyPair)
         
         XCTAssertEqual(sign.messages.map(\.key), [.init(privateKeyValue)])
     }
     
     func test_exchangeKeys_shouldDeliverErrorOnServiceFailure() {
         
-        let serviceError = anyError("ProcessFailure")
+        let serviceError = anyKeyExchangeAPIError()
         let (sut, service, _, _) = makeSUT(
             makeECDHKeyPairStub: anySuccessECDHKeyPairStub(),
             signStub: anySuccessSignStub(),
             makeSymmetricKeyStub: .failure(anyError())
         )
         
-        assert(sut, delivers: .failure(serviceError), on: {
+        assert(sut, delivers: .failure(.apiError(serviceError)), on: {
             
             service.complete(with: .failure(serviceError))
         })
@@ -90,7 +90,7 @@ final class KeyExchangeTests: XCTestCase {
             makeSymmetricKeyStub: .failure(symmetricKeyError)
         )
         
-        assert(sut, delivers: .failure(symmetricKeyError), on: {
+        assert(sut, delivers: .failure(.makeSymmetricKeyFailure), on: {
             
             service.complete(with: anySuccess())
         })
@@ -136,8 +136,8 @@ final class KeyExchangeTests: XCTestCase {
     private typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
     private typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
     typealias Success = PublicKeyAuthenticationResponse
-    typealias AuthResult = Result<PublicKeyAuthenticationResponse, Error>
-    typealias AuthServiceSpy = ServiceSpyOf<AuthResult>
+    typealias AuthResult = Result<PublicKeyAuthenticationResponse, KeyExchangeError.APIError>
+    typealias AuthServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
     
     private func makeSUT(
         makeECDHKeyPairStub: ECDHKeyPairDomain.Result,
@@ -208,6 +208,23 @@ final class KeyExchangeTests: XCTestCase {
             
             return try stub.get()
         }
+    }
+    
+    private func anyKeyExchangeError(
+    ) -> KeyExchangeError {
+        
+        .apiError(anyKeyExchangeAPIError())
+    }
+    
+    private func anyKeyExchangeAPIError(
+        statusCode: Int = 1234,
+        errorMessage: String = "error message"
+    ) -> KeyExchangeError.APIError {
+        
+        .error(
+            statusCode: statusCode,
+            errorMessage: errorMessage
+        )
     }
     
     private func anySuccessECDHKeyPairStub() -> ECDHKeyPairDomain.Result {

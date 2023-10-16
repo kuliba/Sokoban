@@ -26,7 +26,7 @@ public struct ProcessPublicKeyAuthenticationResponse: Equatable {
 
 public extension ResponseMapper {
     
-    typealias ProcessPublicKeyAuthenticationResult = Result<ProcessPublicKeyAuthenticationResponse, ProcessPublicKeyAuthenticationError>
+    typealias ProcessPublicKeyAuthenticationResult = Result<ProcessPublicKeyAuthenticationResponse, KeyExchangeError.APIError>
     
     static func mapProcessPublicKeyAuthenticationResponse(
         _ data: Data,
@@ -45,22 +45,17 @@ public extension ResponseMapper {
                 
             default:
                 let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                return .failure(.server(
+                return .failure(.error(
                     statusCode: serverError.statusCode,
                     errorMessage: serverError.errorMessage
                 ))
             }
         } catch {
             return .failure(.invalidData(
-                statusCode: httpURLResponse.statusCode
+                statusCode: httpURLResponse.statusCode,
+                data: data
             ))
         }
-    }
-    
-    enum ProcessPublicKeyAuthenticationError: Error {
-        
-        case invalidData(statusCode: Int)
-        case server(statusCode: Int, errorMessage: String)
     }
     
     private struct Auth: Decodable {
@@ -70,4 +65,3 @@ public extension ResponseMapper {
         let sessionTTL: Int
     }
 }
-

@@ -12,12 +12,11 @@ class MakeComposerInfraTests: XCTestCase {
     
     typealias Infra<SessionID> = CVVPINInfra<CardID, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
     typealias PINChanger<SessionID> = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
-    typealias PINError<SessionID> = PINChanger<SessionID>.Error
     
-    typealias PINChangeServiceSpy<SessionID> = ServiceSpyOf<PINChanger<SessionID>.Error?>
-    typealias CVVServiceSpy = RemoteServiceSpyOf<RemoteCVV>
+    typealias PINChangeServiceSpy<SessionID> = ServiceSpyOf<ChangePINError.APIError?>
+    typealias CVVServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
     typealias EventIDLoaderSpy = LoaderSpyOf<EventID>
-    typealias KeyServiceSpy = RemoteServiceSpyOf<PublicKeyAuthenticationResponse>
+    typealias KeyServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
     typealias RSAKeyPairLoaderSpy = LoaderSpyOf<RSAKeyPair>
     typealias RSAPrivateKeyLoaderSpy = LoaderSpyOf<RSAPrivateKey>
     typealias SessionIDCache<SessionID> = CacheSpyOf<(SessionID, Date)>
@@ -47,7 +46,7 @@ class MakeComposerInfraTests: XCTestCase {
         let eventIDLoader = EventIDLoaderSpy()
         let keyPairLoader = RSAKeyPairLoaderSpy()
         let keyService = KeyServiceSpy()
-        let pinService = ServiceSpyOf<PINChanger<T>.Error?>()
+        let pinService = PINChangeServiceSpy<T>()
         let sessionIDCache = SessionIDCache<T>()
         let sessionIDLoader = SessionIDLoaderSpy<T>()
         let sessionKeyWithEventLoader = SessionKeyWithEventLoaderSpy()
@@ -86,17 +85,17 @@ class MakeComposerInfraTests: XCTestCase {
         sessionIDStore: StoreSpy<T>,
         sessionKeyWithEventStore: StoreSpy<SessionKeyWithEvent>,
         symmetricKeyStore: StoreSpy<SymmetricKey>,
-        pinService: ServiceSpyOf<PINChanger<T>.Error?>,
-        remoteCVVService: RemoteServiceSpyOf<RemoteCVV>,
-        keyService: RemoteServiceSpyOf<PublicKeyAuthenticationResponse>
+        pinService: PINChangeServiceSpy<T>,
+        cvvService: CVVServiceSpy,
+        keyService: KeyServiceSpy
     ) {
         let eventIDStore = StoreSpy<EventID>()
         let rsaKeyPairStore = StoreSpy<RSAKeyPair>()
         let sessionIDStore = StoreSpy<T>()
         let sessionKeyWithEventStore = StoreSpy<SessionKeyWithEvent>()
-        let pinService = ServiceSpyOf<PINChanger<T>.Error?>()
-        let remoteCVVService = RemoteServiceSpyOf<RemoteCVV>()
-        let keyService = RemoteServiceSpyOf<PublicKeyAuthenticationResponse>()
+        let pinService = PINChangeServiceSpy<T>()
+        let cvvService = CVVServiceSpy()
+        let keyService = KeyServiceSpy()
         let symmetricKeyStore = StoreSpy<SymmetricKey>()
         
         let infra = Infra<T>(
@@ -106,7 +105,7 @@ class MakeComposerInfraTests: XCTestCase {
             sessionKeyWithEventStore: sessionKeyWithEventStore,
             symmetricKeyStore: symmetricKeyStore,
             changePINProcess: pinService.process(_:completion:),
-            remoteCVVProcess: remoteCVVService.process(_:completion:),
+            remoteCVVProcess: cvvService.process(_:completion:),
             processKey: keyService.process(_:completion:),
             currentDate: currentDate
         )
@@ -114,6 +113,6 @@ class MakeComposerInfraTests: XCTestCase {
         // TODO: fix this and restore memory leak tracking
         // trackForMemoryLeaks(eventIDStore, file: file, line: line)
         
-        return (infra, eventIDStore, rsaKeyPairStore, sessionIDStore, sessionKeyWithEventStore, symmetricKeyStore, pinService, remoteCVVService, keyService)
+        return (infra, eventIDStore, rsaKeyPairStore, sessionIDStore, sessionKeyWithEventStore, symmetricKeyStore, pinService, cvvService, keyService)
     }
 }

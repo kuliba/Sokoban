@@ -65,4 +65,3 @@ public extension ResponseMapper {
         let phone: String
     }
 }
-

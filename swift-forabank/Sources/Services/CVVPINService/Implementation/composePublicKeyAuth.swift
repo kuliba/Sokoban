@@ -63,7 +63,7 @@ private extension KeyExchange {
     
     func exchangeKeysVoid(
         keyPair: (publicKey: RSAPublicKey, privateKey: RSAPrivateKey),
-        completion: @escaping (Swift.Result<Void, Error>) -> Void
+        completion: @escaping (Swift.Result<Void, KeyExchangeError>) -> Void
     ) {
         exchangeKeys(
             rsaKeyPair: (keyPair.publicKey, keyPair.privateKey)

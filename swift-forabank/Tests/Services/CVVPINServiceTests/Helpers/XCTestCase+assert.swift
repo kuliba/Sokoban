@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  XCTestCase+assert.swift
 //  
 //
 //  Created by Igor Malyarov on 08.10.2023.
@@ -9,9 +9,9 @@ import XCTest
 
 extension XCTestCase {
     
-    func assert<T: Equatable>(
-        _ receivedResults: [Result<T, Error>],
-        equalsTo expectedResults: [Result<T, Error>],
+    func assert<T: Equatable, E: Error>(
+        _ receivedResults: [Result<T, E>],
+        equalsTo expectedResults: [Result<T, E>],
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line
@@ -51,9 +51,9 @@ extension XCTestCase {
             }
     }
     
-    func assert(
-        _ receivedResults: [Result<Void, Error>],
-        equalsTo expectedResults: [Result<Void, Error>],
+    func assertVoid<E: Error>(
+        _ receivedResults: [Result<Void, E>],
+        equalsTo expectedResults: [Result<Void, E>],
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line

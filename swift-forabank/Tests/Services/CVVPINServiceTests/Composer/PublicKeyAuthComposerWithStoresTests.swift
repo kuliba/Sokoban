@@ -34,7 +34,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
             rsaKeyPairStore.completeRetrieval(with: loadRSAKeyPairError)
         })
         
-        assert(results, equalsTo: [.failure(loadRSAKeyPairError)])
+        assertVoid(results, equalsTo: [.failure(.missing(.rsaKeyPair))])
     }
     
     func test_authenticateWithPublicKey_shouldDeliverErrorOnInvalidRSAKeyPair() {
@@ -68,13 +68,13 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
             sessionKeyWithEventStore.completeRetrieval(with: validSessionKeyWithEvent)
         })
         
-        assert(results, equalsTo: [.success(())])
+        assertVoid(results, equalsTo: [.success(())])
     }
     
     func test_authenticateWithPublicKey_shouldDeliverErrorOnKeyServiceFailure() {
         
         let validRSAKeyPair = (makeRSAKeyPair(), Date().addingTimeInterval(5))
-        let keyServiceError = anyError("Key Service Failure")
+        let keyServiceError = KeyExchangeError.APIError.error(statusCode: 1234, errorMessage: "error message")
         let (sut, _, rsaKeyPairStore, _, sessionKeyWithEventStore, _, _, _, keyService) = makeSUT()
         
         let results = authResults(sut, on: {
@@ -84,7 +84,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
             keyService.complete(with: .failure(keyServiceError))
         })
         
-        assert(results, equalsTo: [.failure(keyServiceError)])
+        assertVoid(results, equalsTo: [.failure(.apiError(keyServiceError))])
     }
      
     func test_authenticateWithPublicKey_shouldDeliverSuccessOnKeyServiceSuccess() {
@@ -99,7 +99,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
             keyService.complete(with: .success(makePublicKeyAuthenticationResponse()))
         })
         
-        assert(results, equalsTo: [.success(())])
+        assertVoid(results, equalsTo: [.success(())])
     }
     
     func test_authenticateWithPublicKey_shouldRequestSessionIDDeleteOnKeyServiceSuccess() {
@@ -219,9 +219,9 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
     private typealias Composer = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, PublicKeyAuthenticationResponse.SessionID, SymmetricKey>
     private typealias SUT = Composer.PublicKeyAuth
     
-    private typealias PINServiceSpy = ServiceSpyOf<PINChanger<SessionID>.Error?>
-    private typealias RemoteCVVServiceSpy = RemoteServiceSpyOf<RemoteCVV>
-    private typealias KeyServiceSpy = RemoteServiceSpyOf<PublicKeyAuthenticationResponse>
+    private typealias PINServiceSpy = ServiceSpyOf<ChangePINError.APIError?>
+    private typealias RemoteCVVServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
+    private typealias KeyServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
     
     private func makeSUT(
         makeSymmetricKey: Composer.Crypto.MakeSymmetricKey? = nil,
@@ -258,9 +258,9 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
     private func authResults(
         _ sut: SUT,
         on action: @escaping () -> Void
-    ) -> [Result<Void, Error>] {
+    ) -> [Result<Void, KeyExchangeError>] {
         
-        var receivedResults = [Result<Void, Error>]()
+        var receivedResults = [Result<Void, KeyExchangeError>]()
         let exp = expectation(description: "wait for completion")
         
         sut.authenticateWithPublicKey {

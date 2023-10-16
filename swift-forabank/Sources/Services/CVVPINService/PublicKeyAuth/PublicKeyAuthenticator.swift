@@ -9,7 +9,7 @@ import Foundation
 
 public final class PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey> {
     
-    public typealias KeyExchangeDomain = RemoteServiceDomainOf<(RSAPublicKey, RSAPrivateKey), Void>
+    public typealias KeyExchangeDomain = RemoteServiceDomain<(RSAPublicKey, RSAPrivateKey), Void, KeyExchangeError>
     public typealias ExchangeKeys = KeyExchangeDomain.AsyncGet
     
     private let infra: Infra
@@ -26,7 +26,7 @@ public final class PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey> {
 
 public extension PublicKeyAuthenticator {
     
-    typealias Completion = (Result<Void, Error>) -> Void
+    typealias Completion = (Result<Void, KeyExchangeError>) -> Void
     
     func authenticateWithPublicKey(
         completion: @escaping Completion
@@ -36,8 +36,8 @@ public extension PublicKeyAuthenticator {
             guard let self else { return }
             
             switch result {
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(.missing(.rsaKeyPair)))
                 
             case let .success(rsaKeyPair):
                 loadSessionKeyWithEvent(rsaKeyPair.publicKey, rsaKeyPair.privateKey, completion)

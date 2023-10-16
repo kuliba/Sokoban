@@ -7,12 +7,12 @@
 
 extension ResponseMapper {
     
-    public struct ServerError: Decodable {
+    struct ServerError: Decodable {
         
-        public let statusCode: Int
-        public let errorMessage: String
+        let statusCode: Int
+        let errorMessage: String
         
-        public init(
+        init(
             statusCode: Int,
             errorMessage: String
         ) {

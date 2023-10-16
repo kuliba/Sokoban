@@ -92,7 +92,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
      */
     func test_map_shouldDeliverVoidOnOKStatusCode() {
         
-        let response = anyHTTPURLResponse(statusCode: statusCodeOK())
+        let response = anyHTTPURLResponse(with: statusCodeOK())
         
         XCTAssertNil(map(response: response))
     }
@@ -110,7 +110,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
         
         let result = map(
             data: makeRetryData(),
-            response: anyHTTPURLResponse(statusCode: 500)
+            response: anyHTTPURLResponse(with: 500)
         )
         
         XCTAssertEqual(
@@ -135,7 +135,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
         
         let result = map(
             data: makeNoRetryData(),
-            response: anyHTTPURLResponse(statusCode: 500)
+            response: anyHTTPURLResponse(with: 500)
         )
         
         XCTAssertEqual(
@@ -159,7 +159,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
         
         let result = map(
             data: makeNoRetryData(),
-            response: anyHTTPURLResponse(statusCode: 406)
+            response: anyHTTPURLResponse(with: 406)
         )
         
         XCTAssertEqual(
@@ -176,7 +176,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
         let data = makeNoRetryData()
         let result = map(
             data: data,
-            response: anyHTTPURLResponse(statusCode: 111)
+            response: anyHTTPURLResponse(with: 111)
         )
         
         XCTAssertEqual(
@@ -190,7 +190,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
         let data = Data("bad data".utf8)
         let result = map(
             data: data,
-            response: anyHTTPURLResponse(statusCode: 111)
+            response: anyHTTPURLResponse(with: 111)
         )
         
         XCTAssertEqual(
@@ -269,7 +269,7 @@ final class ChangePINResponseMapperTests: XCTestCase {
             
             let result = map(
                 data: data,
-                response: anyHTTPURLResponse(statusCode: code)
+                response: anyHTTPURLResponse(with: code)
             )
             
             XCTAssertEqual(
@@ -278,17 +278,4 @@ final class ChangePINResponseMapperTests: XCTestCase {
             )
         }
     }
-}
-
-private func anyHTTPURLResponse(
-    url: URL = anyURL(),
-    statusCode: Int
-) -> HTTPURLResponse {
-    
-    .init(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-}
-
-private func anyURL(_ string: String = "any-url") -> URL {
-    
-    .init(string: string)!
 }

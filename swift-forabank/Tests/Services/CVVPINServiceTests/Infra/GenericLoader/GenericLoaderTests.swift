@@ -385,7 +385,7 @@ final class GenericLoaderTests: XCTestCase {
         
         wait(for: [exp], timeout: 0.1)
         
-        assert(receivedResults, equalsTo: [expectedResult], message(), file: file, line: line)
+        assertVoid(receivedResults, equalsTo: [expectedResult], message(), file: file, line: line)
     }
 }
 
