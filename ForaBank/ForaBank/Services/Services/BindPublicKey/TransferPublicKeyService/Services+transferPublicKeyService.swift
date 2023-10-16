@@ -75,8 +75,10 @@ extension Services {
 #warning("try P384 direct encryption?")
         let signWithPadding: TransferSignEncryptOTP = { otp, privateKey in
             
-            let key = try ForaCrypto.Crypto.createSecKeyWith(
-                data: privateKey.derRepresentation
+            let key = try ForaCrypto.Crypto.createSecKey(
+                from: privateKey.derRepresentation,
+                keyType: .rsa,
+                keyClass: .privateKey
             )
             
             return try ForaCrypto.Crypto.sign(

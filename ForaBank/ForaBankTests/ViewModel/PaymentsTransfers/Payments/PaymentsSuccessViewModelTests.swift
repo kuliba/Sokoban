@@ -284,7 +284,7 @@ private extension PaymentsSuccessViewModelTests {
     ) -> Payments.Success {
         
         .init(
-            model: .emptyMock,
+            model: .mockWithEmptyExcept(),
             mode: mode,
             paymentOperationDetailId: paymentOperationDetailId,
             documentStatus: status,

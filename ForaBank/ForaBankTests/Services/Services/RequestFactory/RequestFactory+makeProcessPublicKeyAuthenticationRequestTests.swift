@@ -11,27 +11,11 @@ import URLRequestFactory
 
 final class RequestFactory_makeProcessPublicKeyAuthenticationRequestTests: XCTestCase {
     
-    func test_makeRequest_shouldThrowOnEmptyClientPublicKeyRSA() throws {
+    func test_makeRequest_shouldThrowOnEmptyDat() throws {
         
         try XCTAssertThrowsAsNSError(
-            makeRequest(clientPublicKeyRSAValue: .init()),
-            error: URLRequestFactory.Service.Error.processPublicKeyAuthenticationRequestEmptyClientPublicKeyRSA
-        )
-    }
-    
-    func test_makeRequest_shouldThrowOnEmptyPublicApplicationSessionKey() throws {
-        
-        try XCTAssertThrowsAsNSError(
-            makeRequest(publicApplicationSessionKeyValue: .init()),
-            error: URLRequestFactory.Service.Error.processPublicKeyAuthenticationRequestEmptyPublicApplicationSessionKey
-        )
-    }
-    
-    func test_makeRequest_shouldThrowOnEmptySignature() throws {
-        
-        try XCTAssertThrowsAsNSError(
-            makeRequest(signatureValue: .init()),
-            error: URLRequestFactory.Service.Error.processPublicKeyAuthenticationRequestEmptySignature
+            makeRequest(data: .init()),
+            error: URLRequestFactory.Service.Error.emptyData
         )
     }
     
@@ -54,66 +38,21 @@ final class RequestFactory_makeProcessPublicKeyAuthenticationRequestTests: XCTes
     
     func test_makeRequest_shouldSetRequestBody() throws {
         
-        let clientPublicKeyRSA = anyData()
-        let publicApplicationSessionKey = anyData()
-        let signature = anyData()
-        let request = try makeRequest(
-            clientPublicKeyRSAValue: clientPublicKeyRSA,
-            publicApplicationSessionKeyValue: publicApplicationSessionKey,
-            signatureValue: signature
-        )
+        let data = anyData()
+        let request = try makeRequest(data: data)
         
         let httpBody = try XCTUnwrap(request.httpBody)
-        let decodedRequest = try JSONDecoder().decode(
-            DecodableRequest.self,
-            from: httpBody
-        )
-        
-        XCTAssertNoDiff(
-            decodedRequest.dataAsData.clientPublicKeyRSA,
-            clientPublicKeyRSA
-        )
-        XCTAssertNoDiff(
-            decodedRequest.dataAsData.publicApplicationSessionKey,
-            publicApplicationSessionKey
-        )
-        XCTAssertNoDiff(
-            decodedRequest.dataAsData.signature,
-            signature
-        )
+        XCTAssertNoDiff(httpBody, data)
     }
     
     // MARK: - Helpers
     
     private func makeRequest(
-        clientPublicKeyRSAValue: Data = anyData(),
-        publicApplicationSessionKeyValue: Data = anyData(),
-        signatureValue: Data = anyData()
+        data: Data = anyData()
     ) throws -> URLRequest {
         
         try RequestFactory.makeProcessPublicKeyAuthenticationRequest(
-            clientPublicKeyRSA: .init(rawValue: clientPublicKeyRSAValue),
-            publicApplicationSessionKey: .init(rawValue: publicApplicationSessionKeyValue),
-            signature: .init(rawValue: signatureValue)
+            data: data
         )
-    }
-    
-    private struct DecodableRequest: Decodable {
-        
-        let clientPublicKeyRSA: String
-        let publicApplicationSessionKey: String
-        let signature: String
-        
-        var dataAsData: (
-            clientPublicKeyRSA: Data?,
-            publicApplicationSessionKey: Data?,
-            signature: Data?
-        ) {
-            (
-                .init(base64Encoded: clientPublicKeyRSA, options: .ignoreUnknownCharacters),
-                .init(base64Encoded: publicApplicationSessionKey, options: .ignoreUnknownCharacters),
-                .init(base64Encoded: signature, options: .ignoreUnknownCharacters)
-            )
-        }
     }
 }

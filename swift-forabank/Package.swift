@@ -26,6 +26,8 @@ let package = Package(
         .textFieldModel,
         .uiKitHelpers,
         .userModel,
+        // infra
+        .keyChainStore,
         // services
         .cvvPINService,
         .genericRemoteService,
@@ -78,6 +80,9 @@ let package = Package(
         .wipTests,
         .userModel,
         .userModelTests,
+        // infra
+        .keyChainStore,
+        .keyChainStoreTests,
         // services
         .cvvPINService,
         .cvvPINServiceTests,
@@ -240,6 +245,15 @@ private extension Product {
         name: .userModel,
         targets: [
             .userModel
+        ]
+    )
+    
+    // MARK: - Infra
+    
+    static let keyChainStore = library(
+        name: .keyChainStore,
+        targets: [
+            .keyChainStore
         ]
     )
     
@@ -578,6 +592,23 @@ private extension Target {
         ]
     )
     
+    // MARK: - Infra
+    
+    static let keyChainStore = target(
+        name: .keyChainStore,
+        path: "Sources/Infra/\(String.keyChainStore)"
+    )
+    static let keyChainStoreTests = testTarget(
+        name: .keyChainStoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .keyChainStore,
+        ],
+        path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
     // MARK: - Services
     
     static let cvvPINService = target(
@@ -593,17 +624,6 @@ private extension Target {
             .cvvPINService,
         ],
         path: "Tests/Services/\(String.cvvPINServiceTests)"
-    )
-    
-    static let cvvPINServiceWithCryptoTests = testTarget(
-        name: .cvvPINServiceWithCryptoTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .cvvPINService,
-        ],
-        path: "Tests/Services/\(String.cvvPINServiceWithCryptoTests)"
     )
     
     static let urlRequestFactory = target(
@@ -746,6 +766,12 @@ private extension Target.Dependency {
         name: .userModel
     )
     
+    // MARK: - Infra
+    
+    static let keyChainStore = byName(
+        name: .keyChainStore
+    )
+    
     // MARK: - Services
     
     static let cvvPINService = byName(
@@ -837,11 +863,15 @@ private extension String {
     static let userModel = "UserModel"
     static let userModelTests = "UserModelTests"
     
+    // MARK: - Infra
+    
+    static let keyChainStore = "KeyChainStore"
+    static let keyChainStoreTests = "KeyChainStoreTests"
+
     // MARK: - Services
     
     static let cvvPINService = "CVVPINService"
     static let cvvPINServiceTests = "CVVPINServiceTests"
-    static let cvvPINServiceWithCryptoTests = "CVVPINServiceWithCryptoTests"
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"

@@ -20,7 +20,7 @@ final class URLRequestFactoryTests: XCTestCase {
             .formSessionKey(makeFormSessionKeyPayload()),
             .getPINConfirmationCode(anySessionID()),
             .getProcessingSessionCode,
-            .processPublicKeyAuthenticationRequest(makeProcessPublicKeyAuthenticationRequest()),
+            .processPublicKeyAuthenticationRequest(anyData()),
             .showCVV(makeShowCVVPayload())
         ]
         
@@ -86,7 +86,7 @@ final class URLRequestFactoryTests: XCTestCase {
     
     func test_makeRequest_shouldSetHTTPMethodToPOST_processPublicKeyAuthenticationRequestService() throws {
         
-        let service: SUT.Service = .processPublicKeyAuthenticationRequest(makeProcessPublicKeyAuthenticationRequest())
+        let service: SUT.Service = .processPublicKeyAuthenticationRequest(anyData())
         let sut = makeSUT()
         
         let request = try sut.makeRequest(for: service)
@@ -258,69 +258,23 @@ final class URLRequestFactoryTests: XCTestCase {
     
     // MARK: - HTTPBody processPublicKeyAuthenticationRequest
     
-    func test_makeRequest_shouldThrowOnEmptyClientPublicKeyRSA() throws {
+    func test_makeRequest_shouldThrowOnEmptyData() throws {
         
-        let payload = makeProcessPublicKeyAuthenticationRequest(
-            clientPublicKeyRSA: .empty
-        )
+        let payload: Data = .empty
         let service: SUT.Service = .processPublicKeyAuthenticationRequest(payload)
         
-        try assertMakeRequest(for: service, delivers: .processPublicKeyAuthenticationRequestEmptyClientPublicKeyRSA)
+        try assertMakeRequest(for: service, delivers: .emptyData)
     }
-    
-    func test_makeRequest_shouldThrowOnEmptyPublicApplicationSessionKey() throws {
         
-        let payload = makeProcessPublicKeyAuthenticationRequest(
-            publicApplicationSessionKey: .empty
-        )
-        let service: SUT.Service = .processPublicKeyAuthenticationRequest(payload)
-        
-        try assertMakeRequest(for: service, delivers: .processPublicKeyAuthenticationRequestEmptyPublicApplicationSessionKey)
-    }
-    
-    func test_makeRequest_shouldThrowOnEmptySignature() throws {
-        
-        let payload = makeProcessPublicKeyAuthenticationRequest(
-            signature: .empty
-        )
-        let service: SUT.Service = .processPublicKeyAuthenticationRequest(payload)
-        
-        try assertMakeRequest(for: service, delivers: .processPublicKeyAuthenticationRequestEmptySignature)
-    }
-    
     func test_makeRequest_shouldSetHTTPBody_processPublicKeyAuthenticationRequestService() throws {
         
-        let clientPublicKeyRSA = anyData()
-        let publicApplicationSessionKey = anyData()
-        let signature = anyData()
-        let payload = makeProcessPublicKeyAuthenticationRequest(
-            clientPublicKeyRSA: clientPublicKeyRSA,
-            publicApplicationSessionKey: publicApplicationSessionKey,
-            signature: signature
-        )
-        let service: SUT.Service = .processPublicKeyAuthenticationRequest(payload)
+        let data = anyData()
+        let service: SUT.Service = .processPublicKeyAuthenticationRequest(data)
         let sut = makeSUT()
         
         let request = try sut.makeRequest(for: service)
         
-        let httpBody = try XCTUnwrap(request.httpBody)
-        let decodedBody = try JSONDecoder().decode(
-            ProcessPublicKeyAuthenticationRequest.self,
-            from: httpBody
-        )
-        
-        XCTAssertNoDiff(
-            decodedBody.asData.clientPublicKeyRSA,
-            clientPublicKeyRSA
-        )
-        XCTAssertNoDiff(
-            decodedBody.asData.publicApplicationSessionKey,
-            publicApplicationSessionKey
-        )
-        XCTAssertNoDiff(
-            decodedBody.asData.signature,
-            signature
-        )
+        XCTAssertNoDiff(request.httpBody, data)
     }
     
     // MARK: - HTTPBody showCVV
@@ -468,40 +422,6 @@ final class URLRequestFactoryTests: XCTestCase {
         var dataAsData: Data? {
             
             .init(base64Encoded: data)
-        }
-    }
-    
-    // MARK: - processPublicKeyAuthenticationRequest
-    
-    private func makeProcessPublicKeyAuthenticationRequest(
-        clientPublicKeyRSA: Data = anyData(),
-        publicApplicationSessionKey: Data = anyData(),
-        signature: Data = anyData()
-    ) -> URLRequestFactory.Service.ProcessPublicKeyAuthenticationRequestPayload {
-        
-        .init(
-            clientPublicKeyRSA: .init(rawValue: clientPublicKeyRSA),
-            publicApplicationSessionKey: .init(rawValue: publicApplicationSessionKey),
-            signature: .init(rawValue: signature)
-        )
-    }
-    
-    private struct ProcessPublicKeyAuthenticationRequest: Decodable {
-        
-        let clientPublicKeyRSA: String
-        let publicApplicationSessionKey: String
-        let signature: String
-        
-        var asData: (
-            clientPublicKeyRSA: Data?,
-            publicApplicationSessionKey: Data?,
-            signature: Data?
-        ) {
-            (
-                .init(base64Encoded: clientPublicKeyRSA),
-                .init(base64Encoded: publicApplicationSessionKey),
-                .init(base64Encoded: signature)
-            )
         }
     }
     

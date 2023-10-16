@@ -10,7 +10,7 @@ import Foundation
 
 func anySessionID(
     _ value: String = UUID().uuidString
-) -> SessionID {
+) -> ForaBank.SessionID {
     
     .init(value: value)
 }

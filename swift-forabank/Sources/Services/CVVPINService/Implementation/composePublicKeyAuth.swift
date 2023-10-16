@@ -9,12 +9,12 @@ import Foundation
 
 // MARK: - Public Key Authentication
 
-extension CVVPINComposer
+public extension CVVPINComposer
 where ECDHPublicKey: RawRepresentable<Data>,
       RSAPublicKey: RawRepresentable<Data>,
       SessionID == PublicKeyAuthenticationResponse.SessionID {
     
-    public typealias PublicKeyAuth = PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey>
+    typealias PublicKeyAuth = PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey>
     
     func composePublicKeyAuth(
         currentDate: @escaping () -> Date = Date.init

@@ -170,6 +170,13 @@
         "identifier" : "URLRequestFactoryTests",
         "name" : "URLRequestFactoryTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
     }
   ],
   "version" : 1

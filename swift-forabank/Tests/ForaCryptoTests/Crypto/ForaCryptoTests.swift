@@ -402,11 +402,10 @@ final class ForaCryptoTests: XCTestCase {
     
     func test_decryptPublicKey_shouldNotFailForSelectedParameters() throws {
         
-        let keyTypes: [CFString] = [
-            kSecAttrKeyTypeRSA,
-            // kSecAttrKeyTypeAES,
-            kSecAttrKeyTypeEC,
-            kSecAttrKeyTypeECSECPrimeRandom,
+        let keyTypes: [Crypto.KeyType] = [
+            .ec,
+            .ecsecPrimeRandom,
+            .rsa,
         ]
         
         for string in strings {
@@ -418,8 +417,8 @@ final class ForaCryptoTests: XCTestCase {
                         
                         switch (algorithm, keyType, amount) {
                             
-                        case (.rsaEncryptionRaw, kSecAttrKeyTypeEC, 415),
-                            (.rsaEncryptionRaw, kSecAttrKeyTypeECSECPrimeRandom, 415):
+                        case (.rsaEncryptionRaw, .ec, 415),
+                            (.rsaEncryptionRaw, .ecsecPrimeRandom, 415):
                             try XCTAssertNoThrow(
                                 Crypto.decryptPublicKey(
                                     from: string,
@@ -899,8 +898,8 @@ final class ForaCryptoTests: XCTestCase {
         publicKey: SecKey
     ) {
         try Crypto.createRandomSecKeys(
-            keyType: kSecAttrKeyTypeRSA,
-            keySizeInBits: 4096
+            keyType: .rsa,
+            keySize: .bits4096
         )
     }
 }

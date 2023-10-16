@@ -119,20 +119,20 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
     
     // MARK: - Helpers
     
+    fileprivate typealias SUT = PublicRSAKeySwaddler<TestOTP, TestPrivateKey, TestPublicKey>
+    
     private func makeSUT(
         generateRSA4096BitKeysResults: [GenerateRSA4096BitKeysResult] = [success(), success()],
         encryptOTPWithRSAKeyResults: [EncryptOTPWithRSAKeyResult] = [success()],
         aesEncrypt128bitChunksResult: AESEncrypt128bitChunksResult = success(),
         saveResult: SaveResult = success(),
-        
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: TestPublicRSAKeySwaddler,
+        sut: SUT,
         keyStorageSpy: KeyStorageSpy,
         swaddlerSpy: SwaddlerSpy
     ) {
-        
         let keyStorageSpy = KeyStorageSpy(saveResult: saveResult)
         let swaddlerSpy = SwaddlerSpy(
             generateRSA4096BitKeysResults: generateRSA4096BitKeysResults,
@@ -140,11 +140,11 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
             aesEncrypt128bitChunksResult: aesEncrypt128bitChunksResult
         )
         
-        let sut = TestPublicRSAKeySwaddler(
+        let sut = SUT(
             generateRSA4096BitKeys: swaddlerSpy.generateRSA4096BitKeys,
             signEncryptOTP: swaddlerSpy.encryptOTPWithRSAKey,
             saveKeys: keyStorageSpy.saveKeys,
-            x509Representation: { _ in throw NSError(domain: "Unimplemented", code: -1)},
+            x509Representation: { $0.rawRepresentation },
             aesEncrypt128bitChunks: swaddlerSpy.aesEncrypt128bitChunks
         )
         
@@ -243,15 +243,12 @@ final class PublicRSAKeySwaddlerTests: XCTestCase {
     }
 }
 
-fileprivate typealias TestPublicRSAKeySwaddler = PublicRSAKeySwaddler<
-    TestOTP,
-    PublicRSAKeySwaddlerTests.TestPrivateKey,
-    PublicRSAKeySwaddlerTests.TestPublicKey
->
-fileprivate typealias GenerateRSA4096BitKeysResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.GenerateRSA4096BitKeysResult
-fileprivate typealias EncryptOTPWithRSAKeyResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.EncryptOTPWithRSAKeyResult
-fileprivate typealias AESEncrypt128bitChunksResult = PublicRSAKeySwaddlerTests.SwaddlerSpy.AESEncrypt128bitChunksResult
-fileprivate typealias SaveResult = PublicRSAKeySwaddlerTests.KeyStorageSpy.SaveResult
+private typealias SwaddlerSpy = PublicRSAKeySwaddlerTests.SwaddlerSpy
+private typealias GenerateRSA4096BitKeysResult = SwaddlerSpy.GenerateRSA4096BitKeysResult
+private typealias EncryptOTPWithRSAKeyResult = SwaddlerSpy.EncryptOTPWithRSAKeyResult
+private typealias AESEncrypt128bitChunksResult = SwaddlerSpy.AESEncrypt128bitChunksResult
+
+private typealias SaveResult = PublicRSAKeySwaddlerTests.KeyStorageSpy.SaveResult
 
 private func success() -> GenerateRSA4096BitKeysResult {
     
@@ -285,7 +282,7 @@ private func anyOTP(_ value: String = "any OTP") -> TestOTP {
 
 // MARK: - DSL
 
-private extension TestPublicRSAKeySwaddler {
+private extension PublicRSAKeySwaddlerTests.SUT {
     
     func swaddleKey() throws -> Data {
         

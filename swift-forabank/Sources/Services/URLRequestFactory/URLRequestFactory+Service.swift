@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 12.10.2023.
 //
 
+import Foundation
+
 public extension URLRequestFactory {
     
     enum Service {
@@ -14,7 +16,7 @@ public extension URLRequestFactory {
         case formSessionKey(FormSessionKeyPayload)
         case getPINConfirmationCode(SessionIDWithDataPayload.SessionID)
         case getProcessingSessionCode
-        case processPublicKeyAuthenticationRequest(ProcessPublicKeyAuthenticationRequestPayload)
+        case processPublicKeyAuthenticationRequest(Data)
         case showCVV(ShowCVVPayload)
     }
 }

@@ -66,7 +66,7 @@ final class RequestFactory_makeShowCVVRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        _ sessionID: SessionID = anySessionID(),
+        _ sessionID: ForaBank.SessionID = anySessionID(),
         _ data: Data = .init("any data".utf8)
     ) throws -> URLRequest {
         

@@ -22,8 +22,8 @@ extension SecKeySwaddleCryptographer {
     ) throws -> (privateKey: SecKey, publicKey: SecKey)  {
         
         try ForaCrypto.Crypto.createRandomSecKeys(
-            keyType: kSecAttrKeyTypeRSA,
-            keySizeInBits: 4096
+            keyType: .rsa,
+            keySize: .bits4096
         )
     }
     
@@ -85,7 +85,10 @@ extension SecKeySwaddleCryptographer {
         publicKey: SecKey
     ) throws -> Data {
         
-        try publicKey.x509Representation()
+        let x509Representation = try ForaCrypto.Crypto.x509Representation(of: publicKey)
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".")
+
+        return x509Representation
     }
     
     private static func aesEncrypt128bitChunks(
@@ -97,7 +100,7 @@ extension SecKeySwaddleCryptographer {
         LoggerAgent.shared.log(level: .debug, category: .crypto, message: "Create AES256CBC with key \"\(secret.data)\"")
         
         let result = try aes256CBC.encrypt(data)
-        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypt data \"\(data)\"")
+        LoggerAgent.shared.log(level: .debug, category: .crypto, message: "AES encrypted data \"\(data)\" with result \"\(result.base64EncodedString())\".")
         
         return result
     }
