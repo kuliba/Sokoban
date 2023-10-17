@@ -7,11 +7,12 @@
 
 import Foundation
 
-public final class ShowCVVService<CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
-where CardID: RawRepresentable<Int>,
+public final class ShowCVVService<APIError, CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+where APIError: Error,
+      CardID: RawRepresentable<Int>,
       SessionID: RawRepresentable<String> {
     
-    public typealias Infra = ShowCVVInfra<RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    public typealias Infra = ShowCVVInfra<APIError, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
     public typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
     public typealias MakeJSON = (CardID, SessionID, RSAPublicKey, RSAPrivateKey, SymmetricKey) throws -> Data
     public typealias TranscodeCVV = (RemoteCVV, RSAPrivateKey) throws -> CVV
@@ -33,7 +34,7 @@ where CardID: RawRepresentable<Int>,
 
 public extension ShowCVVService {
     
-    typealias CVVDomain = Domain<CVV, ShowCVVError>
+    typealias CVVDomain = Domain<CVV, ShowCVVError<APIError>>
     typealias CVVCompletion = CVVDomain.Completion
     
     func showCVV(
@@ -57,21 +58,12 @@ public extension ShowCVVService {
 
 // MARK: - Interface
 
-public enum ShowCVVError: Error, Equatable {
+public enum ShowCVVError<APIError>: Error {
     
     case apiError(APIError)
     case makeJSONFailure
     case missing(Missing)
     case transcodeFailure
-    
-    public enum APIError: Error, Equatable {
-        
-        case invalidData(statusCode: Int, data: Data)
-        case error(
-            statusCode: Int,
-            errorMessage: String
-        )
-    }
     
     public enum Missing: Equatable {
         
@@ -81,7 +73,8 @@ public enum ShowCVVError: Error, Equatable {
     }
 }
 
-public struct ShowCVVInfra<RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey> {
+public struct ShowCVVInfra<APIError, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+where APIError: Error {
     
     public typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
     public typealias LoadRSAKeyPair = RSAKeyPairDomain.AsyncGet
@@ -92,7 +85,7 @@ public struct ShowCVVInfra<RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, Sy
     public typealias SymmetricKeyDomain = DomainOf<SymmetricKey>
     public typealias LoadSymmetricKey = SymmetricKeyDomain.AsyncGet
     
-    public typealias ServiceDomain = RemoteServiceDomain<Data, RemoteCVV, ShowCVVError.APIError>
+    public typealias ServiceDomain = RemoteServiceDomain<Data, RemoteCVV, APIError>
     public typealias Process = ServiceDomain.AsyncGet
     
     let loadRSAKeyPair: LoadRSAKeyPair

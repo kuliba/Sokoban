@@ -78,7 +78,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         var sut: SUT?
         let rsaKeyPairLoader: RSAKeyPairLoaderSpy
         (sut, rsaKeyPairLoader, _, _) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         sut = nil
@@ -94,7 +94,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         var sut: SUT?
         let rsaKeyPairLoader: RSAKeyPairLoaderSpy
         (sut, rsaKeyPairLoader, _, _) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         sut = nil
@@ -111,7 +111,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         let rsaKeyPairLoader: RSAKeyPairLoaderSpy
         let sessionKeyLoader: SessionKeyWithEventLoaderSpy
         (sut, rsaKeyPairLoader, sessionKeyLoader, _) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         rsaKeyPairLoader.complete(with: anySuccess())
@@ -129,7 +129,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         let rsaKeyPairLoader: RSAKeyPairLoaderSpy
         let sessionKeyLoader: SessionKeyWithEventLoaderSpy
         (sut, rsaKeyPairLoader, sessionKeyLoader, _) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         rsaKeyPairLoader.complete(with: anySuccess())
@@ -148,7 +148,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         let sessionKeyLoader: SessionKeyWithEventLoaderSpy
         let keyExchange: KeyExchangeSpy
         (sut, rsaKeyPairLoader, sessionKeyLoader, keyExchange) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         rsaKeyPairLoader.complete(with: anySuccess())
@@ -168,7 +168,7 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         let sessionKeyLoader: SessionKeyWithEventLoaderSpy
         let keyExchange: KeyExchangeSpy
         (sut, rsaKeyPairLoader, sessionKeyLoader, keyExchange) = makeSUT()
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         
         sut?.authenticateWithPublicKey { results.append($0) }
         rsaKeyPairLoader.complete(with: anySuccess())
@@ -182,12 +182,16 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    
-    private typealias SUT = PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey>
+
+    private typealias KeyServiceAPIError = Error
+    private typealias KeyExchError = KeyExchangeError<KeyServiceAPIError>
+    private typealias KeyExchangeResult = Result<Void, KeyExchError>
+
+    private typealias SUT = PublicKeyAuthenticator<KeyServiceAPIError, RSAPublicKey, RSAPrivateKey>
     private typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
     private typealias RSAKeyPairLoaderSpy = LoaderSpyOf<RSAKeyPairDomain.Success>
     private typealias SessionKeyWithEventLoaderSpy = LoaderSpyOf<SessionKeyWithEvent>
-    private typealias KeyExchangeSpy = RemoteServiceSpy<Void, KeyExchangeError, (RSAPublicKey, RSAPrivateKey)>
+    private typealias KeyExchangeSpy = RemoteServiceSpy<Void, KeyExchError, (RSAPublicKey, RSAPrivateKey)>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -231,15 +235,15 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         
         .failure(anyError())
     }
-    
+
     private func assert(
         _ sut: SUT,
-        delivers expected: Result<Void, KeyExchangeError>,
+        delivers expected: KeyExchangeResult,
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var results = [Result<Void, KeyExchangeError>]()
+        var results = [KeyExchangeResult]()
         let exp = expectation(description: "wait for completion")
         
         sut.authenticateWithPublicKey {
@@ -255,16 +259,13 @@ final class PublicKeyAuthenticatorTests: XCTestCase {
         assertVoid(results, equalsTo: [expected], file: file, line: line)
     }
     
-    private func anyKeyExchangeError() -> KeyExchangeError {
+    private func anyKeyExchangeError() -> KeyExchError {
         
         .apiError(anyAPIError())
     }
     
-    private func anyAPIError() -> KeyExchangeError.APIError {
+    private func anyAPIError() -> KeyServiceAPIError {
         
-        .error(
-            statusCode: 1234,
-            errorMessage: "error message"
-        )
+        anyError()
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 
 struct LoggingDecoratedRequestCreator<Input> {
     
-    typealias CreateRequest = RemoteService<Input, Void>.CreateRequest
+    typealias CreateRequest = (Input) throws -> URLRequest
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     let createRequest: CreateRequest

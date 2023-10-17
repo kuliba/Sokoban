@@ -7,9 +7,10 @@
 
 import Foundation
 
-public final class PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey> {
+public final class PublicKeyAuthenticator<KeyServiceAPIError, RSAPublicKey, RSAPrivateKey>
+where KeyServiceAPIError: Error {
     
-    public typealias KeyExchangeDomain = RemoteServiceDomain<(RSAPublicKey, RSAPrivateKey), Void, KeyExchangeError>
+    public typealias KeyExchangeDomain = RemoteServiceDomain<(RSAPublicKey, RSAPrivateKey), Void, KeyExchangeError<KeyServiceAPIError>>
     public typealias ExchangeKeys = KeyExchangeDomain.AsyncGet
     
     private let infra: Infra
@@ -26,7 +27,7 @@ public final class PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey> {
 
 public extension PublicKeyAuthenticator {
     
-    typealias Completion = (Result<Void, KeyExchangeError>) -> Void
+    typealias Completion = (Result<Void, KeyExchangeError<KeyServiceAPIError>>) -> Void
     
     func authenticateWithPublicKey(
         completion: @escaping Completion

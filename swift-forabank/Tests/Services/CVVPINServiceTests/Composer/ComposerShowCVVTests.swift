@@ -132,7 +132,7 @@ final class ComposerShowCVVTests: MakeComposerInfraTests {
     
     func test_showCVV_shouldDeliverErrorOnServiceProcessFailure() {
         
-        let serviceProcessError = ShowCVVError.APIError.error(statusCode: 1234, errorMessage: "error message")
+        let serviceProcessError = anyShowCVVAPIError()
         let (sut, cvvService, keyPairLoader, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let showCVVResults = showCVVResults(sut, on: {
@@ -219,7 +219,7 @@ final class ComposerShowCVVTests: MakeComposerInfraTests {
     // MARK: - Helpers
     
     fileprivate typealias SessionID = PublicKeyAuthenticationResponse.SessionID
-    private typealias SUT = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    private typealias SUT = Composer<SessionID>
     private typealias Crypto = CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
     private typealias CVVResult = SUT.CVVService.CVVDomain.Result
     

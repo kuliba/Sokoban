@@ -132,12 +132,12 @@ final class KeyExchangeTests: XCTestCase {
     
     // MARK: - Helpers
     
-    fileprivate typealias TestKeyExchange = KeyExchange<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
+    fileprivate typealias APIError = ResponseMapper.KeyExchangeMapperError
+    fileprivate typealias SUT = KeyExchange<APIError, ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
     private typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
-    private typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
     typealias Success = PublicKeyAuthenticationResponse
-    typealias AuthResult = Result<PublicKeyAuthenticationResponse, KeyExchangeError.APIError>
-    typealias AuthServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
+    private typealias AuthResult = Result<PublicKeyAuthenticationResponse, APIError>
+    private typealias AuthServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, APIError, Data>
     
     private func makeSUT(
         makeECDHKeyPairStub: ECDHKeyPairDomain.Result,
@@ -146,7 +146,7 @@ final class KeyExchangeTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: TestKeyExchange,
+        sut: SUT,
         service: AuthServiceSpy,
         sign: SignSpy,
         symmetricKeySpy: MakeSymmetricKeySpy
@@ -156,7 +156,7 @@ final class KeyExchangeTests: XCTestCase {
         let makeSymmetricKey = MakeSymmetricKeySpy(
             stub: makeSymmetricKeyStub
         )
-        let sut = TestKeyExchange(
+        let sut = SUT(
             makeECDHKeyPair: { try makeECDHKeyPairStub.get() },
             sign: sign.sign(data:key:),
             process: service.process(_:completion:),
@@ -211,7 +211,7 @@ final class KeyExchangeTests: XCTestCase {
     }
     
     private func anyKeyExchangeError(
-    ) -> KeyExchangeError {
+    ) -> KeyExchangeError<APIError> {
         
         .apiError(anyKeyExchangeAPIError())
     }
@@ -219,7 +219,7 @@ final class KeyExchangeTests: XCTestCase {
     private func anyKeyExchangeAPIError(
         statusCode: Int = 1234,
         errorMessage: String = "error message"
-    ) -> KeyExchangeError.APIError {
+    ) -> APIError {
         
         .error(
             statusCode: statusCode,
@@ -243,14 +243,14 @@ final class KeyExchangeTests: XCTestCase {
     }
     
     private func assert(
-        _ sut: TestKeyExchange,
-        delivers expected: TestKeyExchange.SymmetricKeyDomain.Result,
-        with keyPair: RSAKeyPairDomain.KeyPair = makeRSAKeyPair(),
+        _ sut: SUT,
+        delivers expected: SUT.ExchangeKeysResult,
+        with keyPair: RSAKeyPair = makeRSAKeyPair(),
         on action: () throws -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var results = [TestKeyExchange.SymmetricKeyDomain.Result]()
+        var results = [SUT.ExchangeKeysResult]()
         let exp = expectation(description: "wait for completion")
         
         sut.exchangeKeys(rsaKeyPair: keyPair) {

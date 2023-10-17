@@ -19,7 +19,7 @@ public struct RemoteCVV: Equatable {
 
 public extension ResponseMapper {
     
-    typealias ShowCVVResult = Result<RemoteCVV, ShowCVVError.APIError>
+    typealias ShowCVVResult = Result<RemoteCVV, ShowCVVMapperError>
     
     static func mapShowCVVResponse(
         _ data: Data,
@@ -45,6 +45,15 @@ public extension ResponseMapper {
                 data: data
             ))
         }
+    }
+    
+    enum ShowCVVMapperError: Error, Equatable {
+        
+        case invalidData(statusCode: Int, data: Data)
+        case error(
+            statusCode: Int,
+            errorMessage: String
+        )
     }
     
     private struct CVV: Decodable {

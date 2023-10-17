@@ -10,149 +10,106 @@ import XCTest
 
 final class RemoteServiceTests: XCTestCase {
     
-    func test_init_shouldNotRequestHTTPClient() {
+    func test_init_shouldNotCallHTTPClient() {
         
-        let request = anyRequest("some.url")
-        let (_, client) = makeSUT(createRequest: { _ in request })
+        let request = anyRequest()
+        let (_, client) = makeSUT(createRequest: { _ in .success(request) })
         
-        XCTAssertEqual(client.requests, [])
+        XCTAssertEqual(client.callCount, 0)
     }
     
     func test_process_shouldDeliverErrorOnMakeRequestError() {
         
-        let createRequestError = anyError(domain: "make request error")
-        let (sut, _) = makeSUT(createRequest: { _ in throw createRequestError })
-        let exp = expectation(description: "wait for completion")
+        let createRequestError = CreateRequestError("make request error")
+        let (sut, _) = makeSUT(createRequest: { _ in .failure(createRequestError) })
         
-        sut.process(()) { result in
-            
-            switch result {
-            case let .failure(error as NSError):
-                XCTAssertNoDiff(error, createRequestError as NSError)
-                
-            default:
-                XCTFail("Expected \(createRequestError), got \(result) instead.")
-            }
-            
-            exp.fulfill()
-        }
-        
-        waitForExpectations(timeout: 1.0)
+        assert(sut, delivers: [.failure(.createRequest(createRequestError))])
     }
     
-    func test_process_shouldRequestHTTPClient() {
+    func test_process_shouldCallHTTPClientWithRequest() {
         
-        let request = anyRequest("some.url")
-        let (sut, client) = makeSUT(createRequest: { _ in request })
+        let request = anyRequest()
+        let (sut, client) = makeSUT(createRequest: { _ in .success(request) })
         
         sut.process(()) { _ in }
         
         XCTAssertEqual(client.requests, [request])
     }
     
-    func test_process_shouldDeliverErrorOnHTTPClientError() {
+    func test_process_shouldDeliverPerformRequestErrorOnHTTPClientError() {
         
-        let httpError = anyError(domain: "HTTP Error")
+        let httpError = PerformRequestError("HTTP Error")
         let (sut, client) = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.process(()) { result in
+        assert(sut, delivers: [
+            .failure(.performRequest(.init()))
+        ], on: {
             
-            switch result {
-            case let .failure(error as NSError):
-                XCTAssertNoDiff(error, httpError as NSError)
-                
-            default:
-                XCTFail("Expected \(httpError), got \(result) instead.")
-            }
-            
-            exp.fulfill()
-        }
-        client.complete(with: .failure(httpError))
-        
-        waitForExpectations(timeout: 1.0)
+            client.complete(with: .failure(httpError))
+        })
     }
     
     func test_process_shouldNotDeliverHTTPClientResultOnSUTInstanceDeallocation() {
         
         let client = HTTPClientSpy()
-        var sut: ProcessingSessionCodeService? = .init(
-            createRequest: { _ in anyRequest() },
+        var sut: SUT? = .init(
+            createRequest: { _ in .success(anyRequest()) },
             performRequest: client.get(_:completion:),
-            mapResponse: { _, _ in serverResponseError() }
+            mapResponse: { _,_ in .failure(.init()) }
         )
         
-        var result: Result<Output, Error>?
+        var result: SUT.ProcessResult?
         sut?.process(()) {
             result = $0
         }
         sut = nil
-        client.complete(with: .failure(anyError()))
+        client.complete(with: .failure(.init()))
         
         XCTAssertNil(result)
     }
     
-    func test_process_shouldDeliverServerErrorOnServerError() {
+    func test_process_shouldDeliverMapResponseErrorOnMapResponseError() {
         
-        let (sut, client) = makeSUT(mapResponse: { _, _ in serverResponseError() })
-        let exp = expectation(description: "wait for completion")
+        let mapResponseError = MapResponseError("important!")
+        let (sut, client) = makeSUT(mapResponse: { _,_ in .failure(mapResponseError) })
         
-        sut.process(()) { result in
+        assert(sut, delivers: [
+            .failure(.mapResponse(mapResponseError))
+        ], on: {
             
-            switch result {
-            case let .success(.error(error)):
-                XCTAssertNoDiff(error, serverError())
-                
-            default:
-                XCTFail("Expected result, got \(result) instead.")
-            }
-            
-            exp.fulfill()
-        }
-        client.complete(with: .success(successResponse()))
-        
-        waitForExpectations(timeout: 1.0)
+            client.complete(with: .success(successResponse()))
+        })
     }
     
-    func test_process_shouldDeliverValueOnServerResponseOK() {
+    func test_process_shouldDeliverValueOnSuccess() {
         
-        let (sut, client) = makeSUT(mapResponse: { _, _ in serverResponseOK() })
-        let exp = expectation(description: "wait for completion")
+        let output = Output()
+        let (sut, client) = makeSUT(mapResponse: { _,_ in .success(output) })
         
-        sut.process(()) { result in
+        assert(sut, delivers: [.success(output)], on: {
             
-            switch result {
-            case let .success(.response(response)):
-                XCTAssertNoDiff(response, anyProcessingSessionCode())
-                
-            default:
-                XCTFail("Expected result, got \(result) instead.")
-            }
-            
-            exp.fulfill()
-        }
-        client.complete(with: .success(successResponse()))
-        
-        waitForExpectations(timeout: 1.0)
+            client.complete(with: .success(successResponse()))
+        })
     }
     
     // MARK: - Helpers
     
     private typealias Input = Void
-    private typealias Output = ServerResponse<ProcessingSessionCode>
-    private typealias ProcessingSessionCodeService = RemoteService<Input, Output>
+    private typealias SUT = RemoteService<Input, Output, CreateRequestError, PerformRequestError, MapResponseError>
     
     private func makeSUT(
-        createRequest: @escaping ProcessingSessionCodeService.CreateRequest = { _ in anyRequest() },
-        mapResponse: @escaping ProcessingSessionCodeService.MapResponse = { _ in serverResponseError() },
+        createRequest: SUT.CreateRequest? = nil,
+        mapResponse: SUT.MapResponse? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: ProcessingSessionCodeService,
+        sut: SUT,
         client: HTTPClientSpy
     ) {
+        let createRequest = createRequest ?? { _ in .success(anyRequest()) }
+        let mapResponse = mapResponse ?? { _ in .success(.init()) }
         let client = HTTPClientSpy()
-        let sut = ProcessingSessionCodeService(
+        let sut = SUT(
             createRequest: createRequest,
             performRequest: client.get(_:completion:),
             mapResponse: mapResponse
@@ -164,65 +121,99 @@ final class RemoteServiceTests: XCTestCase {
         return (sut, client)
     }
     
+    private struct Output: Equatable {
+        
+        let value: String
+        
+        init(_ value: String = UUID().uuidString) {
+            
+            self.value = value
+        }
+    }
+    
+    private struct CreateRequestError: Error {
+        
+        let message: String
+        
+        init(_ message: String = UUID().uuidString) {
+            
+            self.message = message
+        }
+    }
+    
+    private struct PerformRequestError: Error {
+        
+        let message: String
+        
+        init(_ message: String = UUID().uuidString) {
+            
+            self.message = message
+        }
+    }
+    
+    private struct MapResponseError: Error {
+        
+        let message: String
+        
+        init(_ message: String = UUID().uuidString) {
+            
+            self.message = message
+        }
+    }
+    
     private final class HTTPClientSpy {
         
         func get(
-            _ request: HTTPDomain.Request,
-            completion: @escaping HTTPDomain.Completion
+            _ request: URLRequest,
+            completion: @escaping SUT.PerformCompletion
         ) {
             messages.append((request, completion))
         }
         
-        private typealias Message = (request: HTTPDomain.Request, completion: HTTPDomain.Completion)
+        private typealias Message = (
+            request: URLRequest,
+            completion: SUT.PerformCompletion
+        )
         
         private var messages = [Message]()
         
-        var requests: [HTTPDomain.Request] {
-            
-            messages.map(\.request)
-        }
+        var requests: [URLRequest] { messages.map(\.request) }
+        var callCount: Int { requests.count }
         
         func complete(
-            with result: HTTPDomain.Result,
+            with result: SUT.PerformResult,
             at index: Int = 0
         ) {
             messages[index].completion(result)
         }
     }
     
-    private func successResponse() -> (Data, HTTPURLResponse) {
+    private func assert(
+        _ sut: SUT,
+        with input: Input = (),
+        delivers expectedResults: [SUT.ProcessResult],
+        on action: @escaping () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.ProcessResult]()
+        let exp = expectation(description: "wait for completion")
         
-        return (
-            makeSuccessResponseData(),
-            makeHTTPURLResponse(statusCode: statusCodeOK)
-        )
+        sut.process(input) {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        waitForExpectations(timeout: 1.0)
+        
+        assert(receivedResults, equalsTo: expectedResults, file: file, line: line)
     }
-    
-    private func makeSuccessResponseData(
-        code: String = "22345200-abe8-4f60-90c8-0d43c5f6c0f6",
-        phone: String = "71234567890"
-    ) -> Data {
-        
-        let json: [String: Any] = [
-            "code": code,
-            "phone": phone
-        ]
-        
-        return try! JSONSerialization.data(withJSONObject: json)
-    }
-    
-    private func makeHTTPURLResponse(
-        statusCode: Int
-    ) -> HTTPURLResponse {
-        
-        .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-    }
-    
-    private let statusCodeOK = 200
-    private let statusCode500 = 500
 }
 
-private enum ServerResponse<Response> {
+private enum ServerResponse<Response: Equatable>: Equatable {
     
     case response(Response)
     case error(ServerError)
@@ -234,50 +225,43 @@ private enum ServerResponse<Response> {
     }
 }
 
-private struct ProcessingSessionCode: Equatable {
-    
-    let code: String
-    let phone: String
-}
-
-private func serverResponseError() -> ServerResponse<ProcessingSessionCode> {
-    
-    .error(serverError())
-}
-private func serverError() -> ServerResponse<ProcessingSessionCode>.ServerError {
-    
-    .init(statusCode: 3100, errorMessage: "Error 3100")
-}
-
-private func serverResponseOK() -> ServerResponse<ProcessingSessionCode> {
-    
-    .response(anyProcessingSessionCode())
-}
-
-private func anyProcessingSessionCode(
-) -> ProcessingSessionCode {
-    
-    .init(
-        code: "22345200-abe8-4f60-90c8-0d43c5f6c0f6",
-        phone: "71234567890"
-    )
-}
-
-private func anyError(domain: String = "", code: Int = 0) -> Error {
-    
-    NSError(domain: domain, code: code)
-}
-
 private func anyRequest(
-    _ urlString: String = "http://any.url"
-) -> HTTPDomain.Request {
+    _ url: URL = anyURL()
+) -> URLRequest {
     
-    .init(url: anyURL(urlString))
+    .init(url: url)
 }
 
 private func anyURL(
-    _ urlString: String = "http://any.url"
+    _ urlString: String = UUID().uuidString
 ) -> URL {
     
     .init(string: urlString)!
 }
+
+private func successResponse(
+    _ string: String = UUID().uuidString
+) -> (Data, HTTPURLResponse) {
+    
+    return (
+        makeSuccessResponseData(string),
+        makeHTTPURLResponse(statusCode: statusCodeOK)
+    )
+}
+
+private func makeSuccessResponseData(
+    _ string: String = UUID().uuidString
+) -> Data {
+    
+    .init(string.utf8)
+}
+
+private func makeHTTPURLResponse(
+    statusCode: Int
+) -> HTTPURLResponse {
+    
+    .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+}
+
+private let statusCodeOK = 200
+private let statusCode500 = 500

@@ -15,7 +15,7 @@ where CardID: RawRepresentable<Int>,
       RemoteCVV: RawRepresentable<String>,
       SessionID: RawRepresentable<String> {
     
-    public typealias CVVService = ShowCVVService<CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    public typealias CVVService = ShowCVVService<ShowCVVAPIError, CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
     
     func composeShowCVV() -> CVVService {
         

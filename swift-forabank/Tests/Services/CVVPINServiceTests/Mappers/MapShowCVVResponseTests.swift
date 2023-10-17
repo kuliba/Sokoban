@@ -113,7 +113,7 @@ final class MapShowCVVResponseTests: XCTestCase {
     }
 }
 
-private extension ShowCVVError.APIError {
+private extension ResponseMapper.ShowCVVMapperError {
     
     var view: View {
         

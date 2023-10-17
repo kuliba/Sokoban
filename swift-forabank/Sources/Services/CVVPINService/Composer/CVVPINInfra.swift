@@ -7,7 +7,10 @@
 
 import Foundation
 
-public struct CVVPINInfra<CardID, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey> {
+public struct CVVPINInfra<CardID, ChangePINAPIError, EventID, KeyServiceAPIError, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, ShowCVVAPIError, SymmetricKey>
+where ChangePINAPIError: Error,
+      KeyServiceAPIError: Error,
+      ShowCVVAPIError: Error {
     
     public typealias EventIDDomain = DomainOf<EventID>
     public typealias LoadEventID = EventIDDomain.AsyncGet
@@ -27,15 +30,15 @@ public struct CVVPINInfra<CardID, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RS
     public typealias SymmetricKeyDomain = DomainOf<SymmetricKey>
     public typealias LoadSymmetricKey = SymmetricKeyDomain.AsyncGet
     
-    public typealias PinChanger = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
-    public typealias ChangePINCompletion = (ChangePINError.APIError?) -> Void
+    public typealias PinChanger = ChangePINService<ChangePINAPIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    public typealias ChangePINCompletion = (ChangePINAPIError?) -> Void
     public typealias ChangePINProcess = (Data, @escaping ChangePINCompletion) -> Void
     
-    public typealias RemoteCVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, ShowCVVError.APIError>
+    public typealias RemoteCVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, ShowCVVAPIError>
     public typealias RemoteCVVProcess = RemoteCVVServiceDomain.AsyncGet
     
     public typealias Response = PublicKeyAuthenticationResponse
-    public typealias KeyServiceDomain = RemoteServiceDomain<Data, Response, KeyExchangeError.APIError>
+    public typealias KeyServiceDomain = RemoteServiceDomain<Data, Response, KeyServiceAPIError>
     public typealias ProcessKey = KeyServiceDomain.AsyncGet
     
     public typealias CVVServiceDomain = RemoteServiceDomain<Data, RemoteCVV, Error>

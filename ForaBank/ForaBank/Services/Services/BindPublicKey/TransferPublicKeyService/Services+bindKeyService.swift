@@ -13,7 +13,7 @@ import TransferPublicKey
 extension Services {
     
     typealias Input = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
-    typealias BindKeyService = RemoteService<Input, Void>
+    typealias BindKeyService = RemoteServiceOf<Input, Void>
     
     static func bindKeyService(
         httpClient: HTTPClient

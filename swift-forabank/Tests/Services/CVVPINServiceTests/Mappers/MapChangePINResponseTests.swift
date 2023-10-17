@@ -196,7 +196,7 @@ final class MapChangePINResponseTests: XCTestCase {
     }
 }
 
-private extension ChangePINError.APIError {
+private extension ResponseMapper.ChangePINMappingError {
     
     var view: View {
         

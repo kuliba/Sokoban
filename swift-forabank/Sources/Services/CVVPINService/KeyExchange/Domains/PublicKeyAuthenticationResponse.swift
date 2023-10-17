@@ -11,7 +11,7 @@ public struct PublicKeyAuthenticationResponse: Equatable {
     
     public typealias PublicServerSessionKey = Data
     
-    let publicServerSessionKey: PublicServerSessionKey
+    public let publicServerSessionKey: PublicServerSessionKey
     public let sessionID: SessionID
     public let sessionTTL: SessionTTL
     
