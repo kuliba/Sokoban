@@ -932,7 +932,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-
+        case landingSticker(LandingWrapperViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -961,6 +961,38 @@ extension MainViewModel {
             lhs.id == rhs.id
         }
     }
+}
+
+extension MainViewModel {
+    
+        func handleLandingAction(_ abroadType: AbroadType) {
+            
+            let viewModel = factory.makeStickerLandingViewModel(
+                abroadType,
+                config: .default,//.stickerDefault,
+                landingActions: landingAction
+            )
+            
+            UIApplication.shared.endEditing()
+            link = .landingSticker(viewModel)
+        }
+    
+    private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
+        
+            switch event {
+            case .goToMain:
+                return handleCloseLinkAction
+            case .order:
+                return handleCloseLinkAction
+            }
+           }
+    
+    func handleCloseLinkAction() {
+        
+        LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
+        link = nil
+    }
+  
 }
 
 //MARK: - Action

@@ -863,14 +863,11 @@ extension ProductCarouselView {
                         
                         HStack {
                             Spacer()
-                           // Image("iphone")
+                            
                             ZStack(alignment: .trailing) {
                                 Image("stickerIphone")
                                 Image("sticker")
-                                    //.frame(width: 26.27029, height: 49.46893)
                                     .shadow(color: .black.opacity(0.25), radius: 0.972, x: -0.648, y: 0.648)
-                                    //.rotationEffect(Angle(degrees: -75.51))
-                                    //.frame(width: 113.93245, height: 162.58112)
                             }
                         }
                         // TODO: Стили с комментами пока оставлю, хотя как я понял там все удалится и будет просто фон одной картинкой, но пока тут все можно менять как угодно

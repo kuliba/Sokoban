@@ -52,7 +52,7 @@ extension Model {
         landingActions: @escaping (LandingEvent.Sticker) -> () -> Void
     ) -> LandingWrapperViewModel {
         
-        let service = self.getLandingCachingService(abroadType: abroadType) {
+      let service = self.getLandingCachingService(abroadType: abroadType) {
             
             self.currentValueSubject(abroadType).value = .success($0)
         }
@@ -169,7 +169,14 @@ private extension Model {
         observe: @escaping (UILanding) -> Void
     ) -> Services.GetLandingService {
         
-        let httpClient: HTTPClient =  HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
+        let httpClient: HTTPClient = {
+            switch abroadType {
+            case .sticker:
+                return authorizedHTTPClient()
+            default:
+                return HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
+            }
+        }()
         
         // TODO:
         /* let serial = localAgent.serial(for type: T.Type) -> String? {*/
@@ -201,4 +208,5 @@ private extension Model {
             httpClient: httpClient,
             withCache: cache)
     }
+    
 }
