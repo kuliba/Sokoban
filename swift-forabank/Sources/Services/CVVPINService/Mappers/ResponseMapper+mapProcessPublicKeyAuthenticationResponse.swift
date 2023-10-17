@@ -26,7 +26,7 @@ public struct ProcessPublicKeyAuthenticationResponse: Equatable {
 
 public extension ResponseMapper {
     
-    typealias ProcessPublicKeyAuthenticationResult = Result<ProcessPublicKeyAuthenticationResponse, KeyExchangeError.APIError>
+    typealias ProcessPublicKeyAuthenticationResult = Result<ProcessPublicKeyAuthenticationResponse, KeyExchangeMapperError>
     
     static func mapProcessPublicKeyAuthenticationResponse(
         _ data: Data,
@@ -58,6 +58,11 @@ public extension ResponseMapper {
         }
     }
     
+    enum KeyExchangeMapperError: Error {
+        
+        case invalidData(statusCode: Int, data: Data)
+        case error(statusCode: Int, errorMessage: String)
+    }
     private struct Auth: Decodable {
         
         let sessionId: String

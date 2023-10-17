@@ -39,7 +39,7 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
     func test_authenticateWithPublicKey_shouldDeliverErrorOnServiceFailure() {
         
         let loadSessionKeyWithEventError = anyError("Load SessionKeyWithEvent Failure")
-        let processError = KeyExchangeError.APIError.error(statusCode: 1234, errorMessage: "error message")
+        let processError = anyProcessError()
         let (sut, keyPairLoader, keyService, sessionKeyWithEventLoader, _, _, _, _) = makeSUT()
         
         let authResults = authenticateWithPublicKey(sut, on: {
@@ -148,13 +148,14 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
     // MARK: - Helpers
     
     private typealias SessionID = PublicKeyAuthenticationResponse.SessionID
-    private typealias Composer = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
-    private typealias SUT = Composer.PublicKeyAuth
+    private typealias SUT = Composer<SessionID>.PublicKeyAuth
+    private typealias Crypto = Composer<SessionID>.Crypto
+    private typealias ECDHKeyPair = ECDHKeyPairDomain.KeyPair
     
     private func makeSUT(
         publicTransportDecrypt: ((Data) throws -> Data)? = nil,
         makeSymmetricKey: ((Data, ECDHPrivateKey) throws -> SymmetricKey)? = nil,
-        makeECDHKeyPair: (() throws -> (publicKey: ECDHPublicKey, privateKey: ECDHPrivateKey))? = nil,
+        makeECDHKeyPair: (() throws -> ECDHKeyPair)? = nil,
         sign: ((Data, RSAPrivateKey) throws -> Data)? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -168,7 +169,7 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
         symmetricKeyCache: SymmetricKeyCache,
         symmetricKeyLoader: SymmetricKeyLoaderSpy
     ) {
-        let crypto = Composer.Crypto.test(
+        let crypto = Crypto.test(
             publicTransportDecrypt: publicTransportDecrypt,
             makeSymmetricKey: makeSymmetricKey,
             makeECDHKeyPair: makeECDHKeyPair,
@@ -186,9 +187,9 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
     private func authenticateWithPublicKey(
         _ sut: SUT,
         on action: @escaping () -> Void
-    ) -> [Result<Void, KeyExchangeError>] {
+    ) -> [KeyExchangeResult] {
         
-        var authResults = [Result<Void, KeyExchangeError>]()
+        var authResults = [KeyExchangeResult]()
         let exp = expectation(description: "wait for completion")
         
         sut.authenticateWithPublicKey {
@@ -202,5 +203,16 @@ final class PublicKeyAuthenticatorComposerTests: MakeComposerInfraTests {
         wait(for: [exp], timeout: 1.0)
         
         return authResults
+    }
+    
+    private func anyProcessError(
+        statusCode: Int = 1234,
+        errorMessage: String = "error message"
+    ) -> KeyServiceAPIError {
+        
+        .error(
+            statusCode: statusCode,
+            errorMessage: errorMessage
+        )
     }
 }

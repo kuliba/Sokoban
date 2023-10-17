@@ -10,8 +10,8 @@ import CryptoKit
 import CryptoSwaddler
 import ForaCrypto
 import Foundation
-import TransferPublicKey
 import GenericRemoteService
+import TransferPublicKey
 
 // MARK: - P384
 
@@ -142,7 +142,7 @@ private extension BindPublicKeyWithEventIDMapper {
 extension Services.PublicKeyTransferService {
     
     typealias Input = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.PublicKeyWithEventID
-    typealias BindKeyService = RemoteService<Input, Void>
+    typealias BindKeyService = RemoteServiceOf<Input, Void>
     
     convenience init(
         swaddler: Services.P384Swaddler,

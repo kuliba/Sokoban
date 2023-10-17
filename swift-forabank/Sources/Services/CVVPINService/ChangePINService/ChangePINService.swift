@@ -7,7 +7,8 @@
 
 import Foundation
 
-public final class ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey> {
+public final class ChangePINService<APIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+where APIError: Error {
     
     public typealias MakePINChangeJSON = (SessionID, CardID, OTP, PIN, EventID, RSAPrivateKey) throws -> Data
     public typealias MakeSecretPINRequest = (SessionID, Data, SymmetricKey) throws -> Data
@@ -29,7 +30,7 @@ public final class ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, Se
 
 public extension ChangePINService {
     
-    typealias Completion = (ChangePINError?) -> Void
+    typealias Completion = (ChangePINError<APIError>?) -> Void
     
     func changePIN(
         cardID: CardID,
@@ -43,29 +44,11 @@ public extension ChangePINService {
 
 // MARK: - Interface
 
-public enum ChangePINError: Error, Equatable {
+public enum ChangePINError<APIError>: Error {
     
     case apiError(APIError)
     case makeSecretPINRequestFailure
     case missing(Missing)
-    
-    public enum APIError: Error, Equatable {
-        
-        case error(
-            statusCode: Int,
-            errorMessage: String
-        )
-        case invalidData(statusCode: Int, data: Data)
-        case retry(
-            statusCode: Int,
-            errorMessage: String,
-            retryAttempts: Int
-        )
-        case weakPIN(
-            statusCode: Int,
-            errorMessage: String
-        )
-    }
     
     public enum Missing: Equatable {
         
@@ -92,7 +75,7 @@ extension ChangePINService {
         public typealias RSAPrivateKeyDomain = DomainOf<RSAPrivateKey>
         public typealias LoadRSAPrivateKey = RSAPrivateKeyDomain.AsyncGet
         
-        public typealias ProcessCompletion = (ChangePINError.APIError?) -> Void
+        public typealias ProcessCompletion = (APIError?) -> Void
         public typealias Process = (Data, @escaping ProcessCompletion) -> Void
         
         let loadSessionID: LoadSessionID

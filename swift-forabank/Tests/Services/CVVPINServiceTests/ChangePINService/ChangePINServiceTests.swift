@@ -105,7 +105,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverWeakPinOnProcessWeakPin() {
         
-        let weakPIN = ChangePINError.APIError.weakPIN(
+        let weakPIN = APIError.weakPIN(
             statusCode: 7506,
             errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
         )
@@ -125,7 +125,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverRetryOnProcessRetry() {
         
-        let retry = ChangePINError.APIError.retry(
+        let retry = APIError.retry(
             statusCode: 7512,
             errorMessage: "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
             retryAttempts: 2
@@ -151,7 +151,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         assert(
             sut,
-            delivers: .apiError(.error(
+            delivers: ChangePINError.apiError(.error(
                 statusCode: 7506,
                 errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
             )),
@@ -193,14 +193,14 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         
         sut?.changePIN { results.append($0) }
         sut = nil
         sessionIDLoader.complete(with: anySuccess())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(results, [])
+        XCTAssertTrue(results.isEmpty)
     }
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadSymmetricKeyComplete() {
@@ -211,7 +211,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -219,7 +219,7 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader.complete(with: anySuccess())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(results, [])
+        XCTAssertTrue(results.isEmpty)
     }
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadEventIDComplete() {
@@ -230,7 +230,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -239,7 +239,7 @@ final class ChangePINServiceTests: XCTestCase {
         eventIDLoader.complete(with: anySuccess())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(results, [])
+        XCTAssertTrue(results.isEmpty)
     }
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadRSAPrivateKeyComplete() {
@@ -250,7 +250,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -260,7 +260,7 @@ final class ChangePINServiceTests: XCTestCase {
         rsaPrivateKeyLoader.complete(with: anySuccess())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(results, [])
+        XCTAssertTrue(results.isEmpty)
     }
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeProcessComplete() {
@@ -271,7 +271,7 @@ final class ChangePINServiceTests: XCTestCase {
             makePINChangeJSON: { _,_,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         
         sut?.changePIN { results.append($0) }
         sessionIDLoader.complete(with: anySuccess())
@@ -282,16 +282,18 @@ final class ChangePINServiceTests: XCTestCase {
         service.complete(with: nil)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertEqual(results, [])
+        XCTAssertTrue(results.isEmpty)
     }
     
     // MARK: - Helpers
     
-    fileprivate typealias SUT = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    fileprivate typealias APIError = ResponseMapper.ChangePINMappingError
+    fileprivate typealias SUT = ChangePINService<APIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
     private typealias SessionIDLoaderSpy = LoaderSpyOf<SessionID>
     private typealias SymmetricKeyLoaderSpy = LoaderSpyOf<SymmetricKey>
     private typealias EventIDLoaderSpy = LoaderSpyOf<EventID>
     private typealias RSAPrivateKeyLoaderSpy = LoaderSpyOf<RSAPrivateKey>
+    private typealias PINError = ChangePINError<APIError>
     
     private func makeSUT(
         pinChangeStub: Result<Data, Error> = .success(.init()),
@@ -304,7 +306,7 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
         rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
-        service: ServiceSpyOf<ChangePINError.APIError?>
+        service: ServiceSpyOf<APIError?>
     ) {
         let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeInfra(file: file, line: line)
         let sut = SUT(
@@ -327,13 +329,13 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
         rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
-        service: ServiceSpyOf<ChangePINError.APIError?>
+        service: ServiceSpyOf<APIError?>
     ) {
         let sessionIDLoader = SessionIDLoaderSpy()
         let symmetricKeyLoader = SymmetricKeyLoaderSpy()
         let eventIDLoader = EventIDLoaderSpy()
         let rsaPrivateKeyLoader = RSAPrivateKeyLoaderSpy()
-        let service = ServiceSpyOf<ChangePINError.APIError?>()
+        let service = ServiceSpyOf<APIError?>()
         let infra = SUT.Infra(
             loadSessionID: sessionIDLoader.load(completion:),
             loadSymmetricKey: symmetricKeyLoader.load(completion:),
@@ -353,12 +355,12 @@ final class ChangePINServiceTests: XCTestCase {
     
     private func assert(
         _ sut: SUT,
-        delivers expectedError: ChangePINError?,
+        delivers expectedError: PINError?,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         let exp = expectation(description: "wait for completion")
         
         sut.changePIN {
@@ -369,8 +371,51 @@ final class ChangePINServiceTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 0.1)
         
-        XCTAssertEqual(results, [expectedError], file: file, line: line)
+        assert(results, equalsTo: [expectedError], file: file, line: line)
     }
+    
+    private func assert<E: Error>(
+        _ receivedResults: [E?],
+        equalsTo expectedResults: [E?],
+        _ message: @autoclosure () -> String = "",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(
+            receivedResults.count,
+            expectedResults.count,
+            "Received \(receivedResults.count) values, but expected \(expectedResults.count).",
+            file: file, line: line
+        )
+        
+        zip(receivedResults, expectedResults)
+            .enumerated()
+            .forEach { index, value in
+                
+                let (received, expected) = value
+                
+                switch (received, expected) {
+                case (
+                    .none,
+                    .none
+                ):
+                    break
+                    
+                case let (
+                    .some(received as NSError),
+                    .some(expected as NSError)
+                ):
+                    XCTAssertEqual(received, expected, file: file, line: line)
+                    
+                default:
+                    XCTFail(
+                        "\nReceived \(String(describing: received)) values, but expected \(String(describing: expected)) at index \(index).",
+                        file: file, line: line
+                    )
+                }
+            }
+    }
+
 }
 
 private func anySuccess(

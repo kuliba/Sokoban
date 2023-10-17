@@ -43,7 +43,7 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
             symmetricKeyLoader.complete(with: .failure(anyError()))
         }
         
-            assert(results, equalsTo: .missing(.symmetricKey))
+        assert(results, equalsTo: .missing(.symmetricKey))
     }
     
     func test_changePIN_shouldDeliverLoadEventIDFailureOnEventIDLoadFailure() {
@@ -77,7 +77,7 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure() {
         
-        let pinServiceError = ChangePINError.APIError.error(statusCode: 123, errorMessage: "PIN Service Error")
+        let pinServiceError = anyChangePINAPIError()
         let (sut, eventIDLoader, keyPairLoader, pinService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
@@ -110,25 +110,26 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
     
     // MARK: - Helpers
     
-    fileprivate typealias Composer = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
-    fileprivate typealias SUT = Composer.PINChanger
+    fileprivate typealias SUT = Composer<SessionID>.PINChanger
+    private typealias Crypto = Composer<SessionID>.Crypto
+    private typealias PINService = PINChangeServiceSpy<SessionID>
     
     private func makeSUT(
-        aesEncrypt: Composer.Crypto.AESEncrypt? = nil,
-        rsaEncrypt: Composer.Crypto.RSAEncrypt? = nil,
-        sha256Hash: Composer.Crypto.SHA256Hash? = nil,
+        aesEncrypt: Crypto.AESEncrypt? = nil,
+        rsaEncrypt: Crypto.RSAEncrypt? = nil,
+        sha256Hash: Crypto.SHA256Hash? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         eventIDLoader: EventIDLoaderSpy,
         keyPairLoader: RSAKeyPairLoaderSpy,
-        pinService: ServiceSpyOf<ChangePINError.APIError?>,
+        pinService: PINService,
         sessionIDLoader: SessionIDLoaderSpy<SessionID>,
         symmetricKeyLoader: SymmetricKeyLoaderSpy
     ) {
         let (infra, _, eventIDLoader, keyPairLoader, _, pinService, _, sessionIDLoader, _, _, symmetricKeyLoader) = makeCVVPINInfra(SessionID.self, file: file, line: line)
-        let composer = Composer(
+        let composer = Composer<SessionID>(
             crypto: .test(
                 aesEncrypt: aesEncrypt,
                 rsaEncrypt: rsaEncrypt,
@@ -149,9 +150,9 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
         otp: OTP = makeOTP(),
         pin: PIN = makePIN(),
         on action: @escaping () -> Void
-    ) -> [ChangePINError?] {
+    ) -> [PINError?] {
         
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         let exp = expectation(description: "wait for completion")
         
         sut.changePIN(cardID: cardID, otp: otp, pin: pin) {
@@ -168,8 +169,8 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
     }
     
     private func assert(
-        _ receivedResults: [ChangePINError?],
-        equalsTo expectedResult: ChangePINError?,
+        _ receivedResults: [PINError?],
+        equalsTo expectedResult: PINError?,
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line
@@ -187,7 +188,10 @@ final class ChangePinComposerTests: MakeComposerInfraTests {
         case (.none, .none):
             break
             
-        case let (.some(received), .some(expected)):
+        case let (
+            .some(received as NSError),
+            .some(expected as NSError)
+        ):
             XCTAssertEqual(received, expected, file: file, line: line)
             
         default:

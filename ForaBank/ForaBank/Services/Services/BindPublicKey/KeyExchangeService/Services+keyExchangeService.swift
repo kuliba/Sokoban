@@ -75,7 +75,7 @@ struct KeyExchangeCryptographer {
 
 private extension KeyExchangeService {
     
-    typealias FormSessionKeyService = RemoteService<FormSessionKeyDomain.Request, FormSessionKeyDomain.Response>
+    typealias FormSessionKeyService = RemoteServiceOf<FormSessionKeyDomain.Request, FormSessionKeyDomain.Response>
     
     convenience init(
         secretRequestMaker: SecretRequestMaker,
@@ -92,10 +92,15 @@ private extension KeyExchangeService {
 
 extension RemoteService {
     
-    public func get(
+    typealias AnyErrorCompletion = (Result<Output, Error>) -> Void
+    
+    func get(
         _ request: Input,
-        completion: @escaping Completion
+        completion: @escaping AnyErrorCompletion
     ) {
-        process(request, completion: completion)
+        process(request) { result in
+            
+            completion(.init { try result.get() })
+        }
     }
 }

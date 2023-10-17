@@ -7,11 +7,20 @@
 
 import Foundation
 
-public final class RemoteService<Input, Output> {
+public final class RemoteService<Input, Output, CreateRequestError, PerformRequestError, MapResponseError>
+where CreateRequestError: Error,
+      PerformRequestError: Error,
+      MapResponseError: Error {
     
-    public typealias CreateRequest = (Input) throws -> HTTPDomain.Request
-    public typealias PerformRequest = (HTTPDomain.Request, @escaping HTTPDomain.Completion) -> Void
-    public typealias MapResponse = (HTTPDomain.Response) throws -> Output
+    public typealias CreateRequest = (Input) -> Result<URLRequest, CreateRequestError>
+    
+    public typealias Response = (Data, HTTPURLResponse)
+    
+    public typealias PerformResult = Result<Response, PerformRequestError>
+    public typealias PerformCompletion = (PerformResult) -> Void
+    public typealias PerformRequest = (URLRequest, @escaping PerformCompletion) -> Void
+    
+    public typealias MapResponse = (Response) -> Result<Output, MapResponseError>
     
     private let createRequest: CreateRequest
     private let performRequest: PerformRequest
@@ -26,34 +35,56 @@ public final class RemoteService<Input, Output> {
         self.performRequest = performRequest
         self.mapResponse = mapResponse
     }
+}
+
+public extension RemoteService {
     
-    public typealias Completion = (Result<Output, Error>) -> Void
+    typealias ProcessResult = Result<Output, ProcessError>
+    typealias ProcessCompletion = (ProcessResult) -> Void
     
-    public func process(
+    func process(
         _ input: Input,
-        completion: @escaping Completion
+        completion: @escaping ProcessCompletion
     ) {
-        do {
-            let request = try createRequest(input)
+        let request = createRequest(input)
+        
+        switch request {
+        case let .failure(createRequestError):
+            completion(.failure(.createRequest(createRequestError)))
             
-            performRequest(request) { [weak self] result in
+        case let .success(urlRequest):
+            performRequest(urlRequest) { [weak self] result in
                 
                 self?.handle(result, with: completion)
             }
-        } catch {
-            
-            completion(.failure(error))
         }
     }
     
+    enum ProcessError: Error {
+        
+        case createRequest(CreateRequestError)
+        case performRequest(PerformRequestError)
+        case mapResponse(MapResponseError)
+    }
+    
     private func handle(
-        _ result: HTTPDomain.Result,
-        with completion: @escaping Completion
+        _ result: PerformResult,
+        with completion: @escaping ProcessCompletion
     ) {
-        completion(.init { [mapResponse] in
+        switch result {
+        case let .failure(error):
+            completion(.failure(.performRequest(error)))
             
-            let (data, response) = try result.get()
-            return try mapResponse((data, response))
-        })
+        case let .success(response):
+            let result = mapResponse(response)
+            
+            switch result {
+            case let .failure(mapResponseError):
+                completion(.failure(.mapResponse(mapResponseError)))
+                
+            case let .success(output):
+                completion(.success(output))
+            }
+        }
     }
 }

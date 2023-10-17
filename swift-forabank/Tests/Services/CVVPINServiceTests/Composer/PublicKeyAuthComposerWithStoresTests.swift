@@ -74,7 +74,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
     func test_authenticateWithPublicKey_shouldDeliverErrorOnKeyServiceFailure() {
         
         let validRSAKeyPair = (makeRSAKeyPair(), Date().addingTimeInterval(5))
-        let keyServiceError = KeyExchangeError.APIError.error(statusCode: 1234, errorMessage: "error message")
+        let keyServiceError = anyKeyServiceAPIError()
         let (sut, _, rsaKeyPairStore, _, sessionKeyWithEventStore, _, _, _, keyService) = makeSUT()
         
         let results = authResults(sut, on: {
@@ -86,7 +86,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
         
         assertVoid(results, equalsTo: [.failure(.apiError(keyServiceError))])
     }
-     
+    
     func test_authenticateWithPublicKey_shouldDeliverSuccessOnKeyServiceSuccess() {
         
         let validRSAKeyPair = (makeRSAKeyPair(), Date().addingTimeInterval(5))
@@ -212,19 +212,17 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
             .insert(symmetricKey, validUntil)
         ])
     }
-
+    
     // MARK: - Helpers
     
     private typealias SessionID = PublicKeyAuthenticationResponse.SessionID
-    private typealias Composer = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, PublicKeyAuthenticationResponse.SessionID, SymmetricKey>
-    private typealias SUT = Composer.PublicKeyAuth
+    private typealias SUT = Composer<SessionID>.PublicKeyAuth
+    private typealias Crypto = Composer<SessionID>.Crypto
     
-    private typealias PINServiceSpy = ServiceSpyOf<ChangePINError.APIError?>
-    private typealias RemoteCVVServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
-    private typealias KeyServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
+    private typealias PINServiceSpy = PINChangeServiceSpy<SessionID>
     
     private func makeSUT(
-        makeSymmetricKey: Composer.Crypto.MakeSymmetricKey? = nil,
+        makeSymmetricKey: Crypto.MakeSymmetricKey? = nil,
         currentDate: @escaping () -> Date = Date.init,
         file: StaticString = #file,
         line: UInt = #line
@@ -236,7 +234,7 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
         sessionKeyWithEventStore: StoreSpy<SessionKeyWithEvent>,
         symmetricKeyStore: StoreSpy<SymmetricKey>,
         pinService: PINServiceSpy,
-        remoteCVVService: RemoteCVVServiceSpy,
+        remoteCVVService: CVVServiceSpy,
         keyService: KeyServiceSpy
     ) {
         let (infra, eventIDStore, rsaKeyPairStore, sessionIDStore, sessionKeyWithEventStore, symmetricKeyStore, pinService, remoteCVVService, keyService) = makeCVVPINInfra(SessionID.self, file: file, line: line)
@@ -258,9 +256,9 @@ final class PublicKeyAuthComposerWithStoresTests: MakeComposerInfraTests {
     private func authResults(
         _ sut: SUT,
         on action: @escaping () -> Void
-    ) -> [Result<Void, KeyExchangeError>] {
+    ) -> [KeyExchangeResult] {
         
-        var receivedResults = [Result<Void, KeyExchangeError>]()
+        var receivedResults = [KeyExchangeResult]()
         let exp = expectation(description: "wait for completion")
         
         sut.authenticateWithPublicKey {

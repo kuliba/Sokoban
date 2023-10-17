@@ -112,7 +112,7 @@ final class MapProcessPublicKeyAuthenticationResponseTests: XCTestCase {
     }
 }
 
-private extension KeyExchangeError.APIError {
+private extension ResponseMapper.KeyExchangeMapperError {
     
     var view: View {
         

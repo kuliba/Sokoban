@@ -9,7 +9,7 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias ChangePINResult = Result<Void, ChangePINError.APIError>
+    typealias ChangePINResult = Result<Void, ChangePINMappingError>
     
     static func mapChangePINResponse(
         _ data: Data,
@@ -60,6 +60,24 @@ public extension ResponseMapper {
                 statusCode: httpURLResponse.statusCode, data: data
             ))
         }
+    }
+    
+    enum ChangePINMappingError: Error {
+        
+        case error(
+            statusCode: Int,
+            errorMessage: String
+        )
+        case invalidData(statusCode: Int, data: Data)
+        case retry(
+            statusCode: Int,
+            errorMessage: String,
+            retryAttempts: Int
+        )
+        case weakPIN(
+            statusCode: Int,
+            errorMessage: String
+        )
     }
     
     private struct Retry: Decodable {

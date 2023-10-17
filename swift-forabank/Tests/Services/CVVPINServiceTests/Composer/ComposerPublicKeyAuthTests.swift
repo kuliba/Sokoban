@@ -39,7 +39,7 @@ final class ComposerPublicKeyAuthTests: MakeComposerInfraTests {
     func test_authenticateWithPublicKey_shouldDeliverErrorOnServiceFailure() {
         
         let loadSessionKeyWithEventError = anyError("Load SessionKeyWithEvent Failure")
-        let processError = KeyExchangeError.APIError.error(statusCode: 1234, errorMessage: "error message")
+        let processError = anyKeyServiceAPIError()
         let (sut, keyPairLoader, keyService, sessionKeyWithEventLoader, _, _, _, _) = makeSUT()
         
         let authResults = authenticateWithPublicKey(sut, on: {
@@ -148,7 +148,7 @@ final class ComposerPublicKeyAuthTests: MakeComposerInfraTests {
     // MARK: - Helpers
     
     private typealias SessionID = PublicKeyAuthenticationResponse.SessionID
-    private typealias SUT = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    private typealias SUT = Composer<SessionID>
     
     private func makeSUT(
         publicTransportDecrypt: ((Data) throws -> Data)? = nil,
@@ -184,9 +184,9 @@ final class ComposerPublicKeyAuthTests: MakeComposerInfraTests {
     private func authenticateWithPublicKey(
         _ sut: SUT,
         on action: @escaping () -> Void
-    ) -> [Result<Void, KeyExchangeError>] {
+    ) -> [Result<Void, KeyExchangeError<KeyServiceAPIError>>] {
         
-        var authResults = [Result<Void, KeyExchangeError>]()
+        var authResults = [Result<Void, KeyExchangeError<KeyServiceAPIError>>]()
         let exp = expectation(description: "wait for completion")
         
         let authenticateWithPublicKey = sut.authenticateWithPublicKey()

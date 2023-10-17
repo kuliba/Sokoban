@@ -9,21 +9,26 @@ import CryptoKit
 import Foundation
 
 /// ProcessPublicKeyAuthentication
-public struct KeyExchange<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
-where ECDHPublicKey: RawRepresentable<Data>,
+public struct KeyExchange<APIError, ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
+where APIError: Error,
+      ECDHPublicKey: RawRepresentable<Data>,
       RSAPublicKey: RawRepresentable<Data> {
     
     public typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
     public typealias MakeECDHKeyPair = ECDHKeyPairDomain.Get
-    public typealias Sign = (Data, RSAPrivateKey) throws -> Data
-    public typealias PublicKeyAuthDomain = RemoteServiceDomain<Data, PublicKeyAuthenticationResponse, KeyExchangeError.APIError>
-    public typealias Process = PublicKeyAuthDomain.AsyncGet
     public typealias MakeSymmetricKey = (PublicKeyAuthenticationResponse, ECDHPrivateKey) throws -> SymmetricKey
+    public typealias Sign = (Data, RSAPrivateKey) throws -> Data
+    
+    public typealias ProcessResult = Result<PublicKeyAuthenticationResponse, APIError>
+    public typealias ProcessCompletion = (ProcessResult) -> Void
+    public typealias Process = (Data, @escaping ProcessCompletion) -> Void
+    
     
     private let makeECDHKeyPair: MakeECDHKeyPair
-    private let sign: Sign
-    private let process: Process
     private let makeSymmetricKey: MakeSymmetricKey
+    private let sign: Sign
+    
+    private let process: Process
     
     public init(
         makeECDHKeyPair: @escaping MakeECDHKeyPair,
@@ -40,12 +45,12 @@ where ECDHPublicKey: RawRepresentable<Data>,
 
 public extension KeyExchange {
     
-    typealias RSAKeyPairDomain = KeyPairDomain<RSAPublicKey, RSAPrivateKey>
-    typealias SymmetricKeyDomain = Domain<SymmetricKey, KeyExchangeError>
-    typealias Completion = SymmetricKeyDomain.Completion
+    typealias RSAKeyPair = (publicKey: RSAPublicKey, privateKey: RSAPrivateKey)
+    typealias ExchangeKeysResult = Result<SymmetricKey, KeyExchangeError<APIError>>
+    typealias Completion = (ExchangeKeysResult) -> Void
     
     func exchangeKeys(
-        rsaKeyPair: RSAKeyPairDomain.KeyPair,
+        rsaKeyPair: RSAKeyPair,
         completion: @escaping Completion
     ) {
         do {
@@ -80,18 +85,12 @@ public extension KeyExchange {
     }
 }
 
-public enum KeyExchangeError: Error {
+public enum KeyExchangeError<APIError>: Error {
     
     case apiError(APIError)
     case makeECDHKeyPairOrWrapInJSONFailure
     case makeSymmetricKeyFailure
     case missing(Missing)
-    
-    public enum APIError: Error {
-        
-        case invalidData(statusCode: Int, data: Data)
-        case error(statusCode: Int, errorMessage: String)
-    }
     
     public enum Missing {
         

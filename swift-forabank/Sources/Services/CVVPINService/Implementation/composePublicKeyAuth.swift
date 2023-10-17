@@ -14,7 +14,7 @@ where ECDHPublicKey: RawRepresentable<Data>,
       RSAPublicKey: RawRepresentable<Data>,
       SessionID == PublicKeyAuthenticationResponse.SessionID {
     
-    typealias PublicKeyAuth = PublicKeyAuthenticator<RSAPublicKey, RSAPrivateKey>
+    typealias PublicKeyAuth = PublicKeyAuthenticator<KeyServiceAPIError, RSAPublicKey, RSAPrivateKey>
     
     func composePublicKeyAuth(
         currentDate: @escaping () -> Date = Date.init
@@ -38,7 +38,7 @@ where ECDHPublicKey: RawRepresentable<Data>,
             }
         )
         
-        typealias Exchange = KeyExchange<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
+        typealias Exchange = KeyExchange<KeyServiceAPIError, ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
         
         let keyExchange = Exchange(
             makeECDHKeyPair: crypto.makeECDHKeyPair,
@@ -63,7 +63,7 @@ private extension KeyExchange {
     
     func exchangeKeysVoid(
         keyPair: (publicKey: RSAPublicKey, privateKey: RSAPrivateKey),
-        completion: @escaping (Swift.Result<Void, KeyExchangeError>) -> Void
+        completion: @escaping (Swift.Result<Void, KeyExchangeError<APIError>>) -> Void
     ) {
         exchangeKeys(
             rsaKeyPair: (keyPair.publicKey, keyPair.privateKey)

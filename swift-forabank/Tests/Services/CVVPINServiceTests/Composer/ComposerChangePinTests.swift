@@ -77,7 +77,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure() {
         
-        let pinServiceError = ChangePINError.APIError.error(statusCode: 123, errorMessage: "PIN Service Error")
+        let pinServiceError = anyChangePINAPIError()
         let (sut, eventIDLoader, keyPairLoader, pinService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
@@ -111,9 +111,9 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     // MARK: - Helpers
     
     fileprivate typealias SessionID = PublicKeyAuthenticationResponse.SessionID
-    fileprivate typealias SUT = CVVPINComposer<CardID, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    fileprivate typealias SUT = Composer<SessionID>
     
-    fileprivate typealias ChangePINService = RemoteServiceSpy<Void, ChangePINError, Data>
+    fileprivate typealias ChangePINService = PINChangeServiceSpy<SessionID>
     
     private func makeSUT(
         aesEncrypt: SUT.Crypto.AESEncrypt? = nil,
@@ -125,7 +125,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         sut: SUT,
         eventIDLoader: EventIDLoaderSpy,
         keyPairLoader: RSAKeyPairLoaderSpy,
-        pinService: ServiceSpyOf<ChangePINError.APIError?>,
+        pinService: ChangePINService,
         sessionIDLoader: SessionIDLoaderSpy<SessionID>,
         symmetricKeyLoader: SymmetricKeyLoaderSpy
     ) {
@@ -150,9 +150,9 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         otp: OTP = makeOTP(),
         pin: PIN = makePIN(),
         on action: @escaping () -> Void
-    ) -> [ChangePINError?] {
+    ) -> [PINError?] {
         
-        var results = [ChangePINError?]()
+        var results = [PINError?]()
         let exp = expectation(description: "wait for completion")
         
         let changePIN = sut.changePIN()
@@ -170,8 +170,8 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     }
     
     private func assert(
-        _ receivedResults: [ChangePINError?],
-        equalsTo expectedResult: ChangePINError?,
+        _ receivedResults: [PINError?],
+        equalsTo expectedResult: PINError?,
         _ message: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line
@@ -189,7 +189,10 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         case (.none, .none):
             break
             
-        case let (.some(received), .some(expected)):
+        case let (
+            .some(received as NSError),
+            .some(expected as NSError)
+        ):
             XCTAssertEqual(received, expected, file: file, line: line)
             
         default:

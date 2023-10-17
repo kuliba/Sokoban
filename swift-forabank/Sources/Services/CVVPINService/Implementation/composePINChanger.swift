@@ -16,7 +16,7 @@ where CardID: RawRepresentable<Int>,
       PIN: RawRepresentable<String>,
       SessionID: RawRepresentable<String> {
     
-    public typealias PINChanger = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    public typealias PINChanger = ChangePINService<ChangePINAPIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
     typealias PINRequestMaker = SecretPINRequestMaker<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
     
     func composePINChanger() -> PINChanger {

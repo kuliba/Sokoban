@@ -10,20 +10,46 @@ import XCTest
 
 class MakeComposerInfraTests: XCTestCase {
     
-    typealias Infra<SessionID> = CVVPINInfra<CardID, EventID, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
-    typealias PINChanger<SessionID> = ChangePINService<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    // MARK: - API errors
     
-    typealias PINChangeServiceSpy<SessionID> = ServiceSpyOf<ChangePINError.APIError?>
-    typealias CVVServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
+    typealias ChangePINAPIError = ResponseMapper.ChangePINMappingError
+    typealias KeyServiceAPIError = ResponseMapper.KeyExchangeMapperError
+    typealias ShowCVVAPIError = ResponseMapper.ShowCVVMapperError
+
+    // MARK: - errors
+
+    typealias PINError = ChangePINError<ChangePINAPIError>
+
+    // MARK: - results
+    
+    typealias KeyExchangeResult = Result<Void, KeyExchangeError<KeyServiceAPIError>>
+    
+    // MARK: - components
+    
+    typealias Composer<SessionID> = CVVPINComposer<CardID, ChangePINAPIError, CVV, ECDHPublicKey, ECDHPrivateKey, EventID, KeyServiceAPIError, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, ShowCVVAPIError, SymmetricKey>
+    typealias Infra<SessionID> = CVVPINInfra<CardID, ChangePINAPIError, EventID, KeyServiceAPIError, OTP, PIN, RemoteCVV, RSAPublicKey, RSAPrivateKey, SessionID, ShowCVVAPIError, SymmetricKey>
+    
+    typealias PINChanger<SessionID> = ChangePINService<ChangePINAPIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    
+    // MARK: - services
+    
+    typealias PINChangeServiceSpy<SessionID> = ServiceSpyOf<ChangePINAPIError?>
+    typealias CVVServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVAPIError, Data>
+    typealias KeyServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyServiceAPIError, Data>
+
+    // MARK: - loaders
+    
     typealias EventIDLoaderSpy = LoaderSpyOf<EventID>
-    typealias KeyServiceSpy = RemoteServiceSpy<PublicKeyAuthenticationResponse, KeyExchangeError.APIError, Data>
     typealias RSAKeyPairLoaderSpy = LoaderSpyOf<RSAKeyPair>
     typealias RSAPrivateKeyLoaderSpy = LoaderSpyOf<RSAPrivateKey>
-    typealias SessionIDCache<SessionID> = CacheSpyOf<(SessionID, Date)>
     typealias SessionIDLoaderSpy<SessionID> = LoaderSpyOf<SessionID>
     typealias SessionKeyWithEventLoaderSpy = LoaderSpyOf<SessionKeyWithEvent>
-    typealias SymmetricKeyCache = CacheSpyOf<(SymmetricKey, Date)>
     typealias SymmetricKeyLoaderSpy = LoaderSpyOf<SymmetricKey>
+
+    // MARK: - caches
+    
+    typealias SessionIDCache<SessionID> = CacheSpyOf<(SessionID, Date)>
+    typealias SymmetricKeyCache = CacheSpyOf<(SymmetricKey, Date)>
     
     func makeCVVPINInfra<T>(
         _ t: T.Type = T.self,

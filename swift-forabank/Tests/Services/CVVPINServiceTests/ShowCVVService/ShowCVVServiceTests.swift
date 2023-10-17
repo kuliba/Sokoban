@@ -71,7 +71,7 @@ final class ShowCVVServiceTests: XCTestCase {
     
     func test_showCVV_shouldDeliverErrorOnServicerFailure() {
         
-        let serviceError = ShowCVVError.APIError.error(statusCode: 1234, errorMessage: "error message")
+        let serviceError = APIError.error(statusCode: 1234, errorMessage: "error message")
         let (sut, keyPairLoader, sessionIDLoader, symmetricKeyLoader, service) = makeSUT()
         
         assert(sut, delivers: .failure(.apiError(serviceError)), on: {
@@ -279,11 +279,12 @@ final class ShowCVVServiceTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = ShowCVVService<CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
+    private typealias APIError = ResponseMapper.ShowCVVMapperError
+    private typealias SUT = ShowCVVService<APIError, CardID, RemoteCVV, CVV, RSAPublicKey, RSAPrivateKey, SessionID, SymmetricKey>
     private typealias KeyPairLoaderSpy = LoaderSpyOf<RSAKeyPairDomain.KeyPair>
     private typealias SessionIDLoaderSpy = LoaderSpyOf<SessionID>
     private typealias SymmetricKeyLoaderSpy = LoaderSpyOf<SymmetricKey>
-    private typealias PINServiceSpy = RemoteServiceSpy<RemoteCVV, ShowCVVError.APIError, Data>
+    private typealias PINServiceSpy = RemoteServiceSpy<RemoteCVV, APIError, Data>
     
     private func makeSUT(
         makeJSON: SUT.MakeJSON? = nil,
