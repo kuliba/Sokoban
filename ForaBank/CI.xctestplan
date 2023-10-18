@@ -142,6 +142,13 @@
         "identifier" : "LoadableModelTests",
         "name" : "LoadableModelTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
     }
   ],
   "version" : 1
