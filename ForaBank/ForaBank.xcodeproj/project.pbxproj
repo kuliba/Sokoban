@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -3443,6 +3443,7 @@
 		83E455EA2AC590C60045BEC1 /* QrDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrDataMapperTests.swift; sourceTree = "<group>"; };
 		83E82B722A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsValidationRulesSystemRule.swift; sourceTree = "<group>"; };
 		83E84BC329E42CD800E1A445 /* PaymentsServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesData.swift; sourceTree = "<group>"; };
+		83F948EB2AE02ACB009AD8E2 /* PhoneNumberWrapper.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PhoneNumberWrapper.xctestplan; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -9509,6 +9510,7 @@
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
 				833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */,
+				83F948EB2AE02ACB009AD8E2 /* PhoneNumberWrapper.xctestplan */,
 				2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */,
 				2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */,
 				779511A52A6A7F9400A570F8 /* SymmetricEncryption.xctestplan */,

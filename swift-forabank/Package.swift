@@ -9,12 +9,9 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
-        // TODO: remove unused old landing components
-        .landingComponentsOld,
-        .landingEngineOld,
-        
         .loadableModel,
         .loadableResourceComponent,
+        .phoneNumberWrapper,
         .sharedAPIInfra,
         .textFieldModel,
         .userModel,
@@ -48,14 +45,12 @@ let package = Package(
         .shimmer,
     ],
     targets: [
-        // TODO: remove unused old landing components
-        .landingComponentsOld,
-        .landingEngineOld,
-        
-            .loadableModel,
+        .loadableModel,
         .loadableModelTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
+        .phoneNumberWrapper,
+        .phoneNumberWrapperTests,
         .sharedAPIInfra,
         .sharedAPIInfraTests,
         .textFieldDomain,
@@ -107,21 +102,6 @@ let package = Package(
 
 private extension Product {
     
-    // TODO: remove unused old landing components
-    static let landingComponentsOld = library(
-        name: .landingComponentsOld,
-        targets: [
-            .landingComponentsOld,
-        ]
-    )
-    
-    static let landingEngineOld = library(
-        name: .landingEngineOld,
-        targets: [
-            .landingEngineOld,
-        ]
-    )
-    
     static let loadableModel = library(
         name: .loadableModel,
         targets: [
@@ -133,6 +113,13 @@ private extension Product {
         name: .loadableResourceComponent,
         targets: [
             .loadableResourceComponent,
+        ]
+    )
+    
+    static let phoneNumberWrapper = library(
+        name: .phoneNumberWrapper,
+        targets: [
+            .phoneNumberWrapper,
         ]
     )
     
@@ -293,20 +280,7 @@ private extension Product {
 
 private extension Target {
     
-    // TODO: remove unused old landing components
-    static let landingComponentsOld = target(
-        name: .landingComponentsOld,
-        dependencies: [],
-        resources: [.process("Preview")]
-    )
-    
-    static let landingEngineOld = target(
-        name: .landingEngineOld,
-        dependencies: [
-            .landingComponentsOld
-        ]
-    )
-    
+        
     static let loadableModel = target(
         name: .loadableModel,
         dependencies: [
@@ -340,6 +314,20 @@ private extension Target {
             .customDump,
             // internal modules
             .loadableResourceComponent,
+        ]
+    )
+    
+    static let phoneNumberWrapper = target(
+        name: .phoneNumberWrapper,
+        dependencies: []
+    )
+    
+    static let phoneNumberWrapperTests = testTarget(
+        name: .phoneNumberWrapperTests,
+        dependencies: [
+            // external packages
+            // internal modules
+            .phoneNumberWrapper,
         ]
     )
     
@@ -652,17 +640,16 @@ private extension Target {
 
 private extension Target.Dependency {
     
-    // TODO: remove unused old landing components
-    static let landingComponentsOld = byName(
-        name: .landingComponentsOld
-    )
-    
     static let loadableModel = byName(
         name: .loadableModel
     )
     
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
+    )
+    
+    static let phoneNumberWrapper = byName(
+        name: .phoneNumberWrapper
     )
     
     static let sharedAPIInfra = byName(
@@ -750,15 +737,14 @@ private extension Target.Dependency {
 
 private extension String {
     
-    // TODO: remove unused old landing components
-    static let landingComponentsOld = "LandingComponentsOld"
-    static let landingEngineOld = "LandingEngineOld"
-    
     static let loadableModel = "LoadableModel"
     static let loadableModelTests = "LoadableModelTests"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let phoneNumberWrapper = "PhoneNumberWrapper"
+    static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
     
     static let sharedAPIInfra = "SharedAPIInfra"
     static let sharedAPIInfraTests = "SharedAPIInfraTests"
