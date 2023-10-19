@@ -29,7 +29,7 @@ let package = Package(
         // infra
         .keyChainStore,
         // services
-        .cvvPINService,
+        .cvvPINServices,
         .genericRemoteService,
         .getProcessingSessionCodeService,
         .urlRequestFactory,
@@ -84,8 +84,8 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // services
-        .cvvPINService,
-        .cvvPINServiceTests,
+        .cvvPINServices,
+        .cvvPINServicesTests,
         .genericRemoteService,
         .genericRemoteServiceTests,
         .getProcessingSessionCodeService,
@@ -259,10 +259,10 @@ private extension Product {
     
     // MARK: - Services
     
-    static let cvvPINService = library(
-        name: .cvvPINService,
+    static let cvvPINServices = library(
+        name: .cvvPINServices,
         targets: [
-            .cvvPINService
+            .cvvPINServices
         ]
     )
     
@@ -611,19 +611,19 @@ private extension Target {
     
     // MARK: - Services
     
-    static let cvvPINService = target(
-        name: .cvvPINService,
-        path: "Sources/Services/\(String.cvvPINService)"
+    static let cvvPINServices = target(
+        name: .cvvPINServices,
+        path: "Sources/Services/\(String.cvvPINServices)"
     )
-    static let cvvPINServiceTests = testTarget(
-        name: .cvvPINServiceTests,
+    static let cvvPINServicesTests = testTarget(
+        name: .cvvPINServicesTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .cvvPINService,
+            .cvvPINServices,
         ],
-        path: "Tests/Services/\(String.cvvPINServiceTests)"
+        path: "Tests/Services/\(String.cvvPINServicesTests)"
     )
     
     static let urlRequestFactory = target(
@@ -774,8 +774,8 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
-    static let cvvPINService = byName(
-        name: .cvvPINService
+    static let cvvPINServices = byName(
+        name: .cvvPINServices
     )
     
     static let urlRequestFactory = byName(
@@ -870,8 +870,8 @@ private extension String {
 
     // MARK: - Services
     
-    static let cvvPINService = "CVVPINService"
-    static let cvvPINServiceTests = "CVVPINServiceTests"
+    static let cvvPINServices = "CVVPINServices"
+    static let cvvPINServicesTests = "CVVPINServicesTests"
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"

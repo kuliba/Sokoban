@@ -153,13 +153,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CVVPINServiceTests",
-        "name" : "CVVPINServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
       }
@@ -176,6 +169,20 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "KeyChainStoreTests",
         "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
       }
     }
   ],

@@ -39,14 +39,11 @@ public extension Crypto {
         padding: SecPadding = .PKCS1
     ) throws -> Data {
         
-        let key = try Crypto.transportKey()
-        
-        guard let data = Crypto.encryptWithRSAKey(data, publicKey: key, padding: padding)
-        else {
-            throw Crypto.Error.encryptionFailed
-        }
-        
-        return data
+        try Crypto.encryptWithRSAKey(
+            data,
+            publicKey: Crypto.transportKey(),
+            padding: padding
+        )
     }
     
     /// Decrypts given string using transport key.

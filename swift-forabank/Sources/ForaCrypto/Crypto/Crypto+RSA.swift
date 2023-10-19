@@ -32,12 +32,12 @@ public extension Crypto {
         return encrypted
     }
     
-    // From ForaBank
+    // From ForaBank, modified
     static func encryptWithRSAKey(
         _ data: Data,
         publicKey key: SecKey,
         padding: SecPadding
-    ) -> Data? {
+    ) throws -> Data {
         
         let blockSize = SecKeyGetBlockSize(key)
         let maxChunkSize = blockSize - 11
@@ -61,13 +61,10 @@ public extension Crypto {
             var encryptedDataLength = blockSize
             
             let status = SecKeyEncrypt(key, padding, chunkData, idxEnd-idx, &encryptedDataBuffer, &encryptedDataLength)
-            if ( status != noErr ) {
-                NSLog("Error while ecrypting: %i", status)
-                return nil
+            if (status != noErr) {
+                throw Crypto.Error.encryptionFailed("Encryption failed: \(String(describing: SecCopyErrorMessageString(status, nil)))")
             }
-            //let finalData = removePadding(encryptedDataBuffer)
             encryptedData += encryptedDataBuffer
-            
             
             idx += maxChunkSize
         }
