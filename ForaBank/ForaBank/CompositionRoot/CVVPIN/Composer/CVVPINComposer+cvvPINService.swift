@@ -1,0 +1,83 @@
+//
+//  CVVPINComposer+cvvPINService.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 18.10.2023.
+//
+
+import CVVPINServices
+import Foundation
+import PinCodeUI
+
+// `CVVPINService` conforms to `CertificateClient` by complying with the protocols of which it is composed.
+
+extension CVVPINComposer: CheckCertificateClient {
+    
+    // TODO: move implementation to the module and hide fields of CVVPINComposer
+    func checkCertificate(
+        completion: @escaping CheckCertificateCompletion
+    ) {
+        infra.loadRSAKeyPair { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case .failure:
+                completion(.failure(.certificate))
+                
+            case .success:
+                completion(.success(()))
+            }
+        }
+    }
+}
+
+extension CVVPINComposer: ActivateCertificateClient {
+    
+    func activateCertificate(
+        completion: @escaping ActivateCertificateCompletion
+    ) {
+        fatalError()
+    }
+}
+
+extension CVVPINComposer: ConfirmWithOtpClient {
+    
+    func confirmWith(
+        otp: String,
+        completion: @escaping ConfirmationCompletion
+    ) {
+        fatalError()
+    }
+}
+
+extension CVVPINComposer: ShowCVVClient {
+    
+    func showCVV(
+        cardId: Int,
+        completion: @escaping ShowCVVCompletion
+    ) {
+        fatalError()
+    }
+}
+
+extension CVVPINComposer: PinConfirmationCodeClient {
+    
+    func getPinConfirmCode(
+        completion: @escaping GetPinConfirmCodeCompletion
+    ) {
+        fatalError()
+    }
+}
+
+extension CVVPINComposer: ChangePinClient {
+    
+    func changePin(
+        cardId: Int,
+        newPin: String,
+        otp: String,
+        completion: @escaping ChangePINCompletion
+    ) {
+        fatalError()
+    }
+}

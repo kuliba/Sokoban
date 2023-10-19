@@ -149,13 +149,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CVVPINServiceTests",
-        "name" : "CVVPINServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
       }
@@ -172,6 +165,13 @@
         "containerPath" : "container:",
         "identifier" : "KeyChainStoreTests",
         "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
       }
     }
   ],

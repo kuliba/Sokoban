@@ -27,6 +27,7 @@ public final class InMemoryKeyStore<Key> {
         }
     }
     
+    #warning("what `payload: Void` is for????")
     public func loadKey(
         _ payload: Void,
         completion: @escaping KeyLoadDomain<Void, Key>.Completion

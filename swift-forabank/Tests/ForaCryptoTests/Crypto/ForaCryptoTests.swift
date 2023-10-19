@@ -664,9 +664,22 @@ final class ForaCryptoTests: XCTestCase {
         let message = try XCTUnwrap("important message".data(using: .utf8))
         
         // also try OAEP, etc
-        let encrypted = Crypto.encryptWithRSAKey(message, publicKey: publicKey, padding: .PKCS1)
+        let encrypted = try Crypto.encryptWithRSAKey(message, publicKey: publicKey, padding: .PKCS1)
+        
         XCTAssertNotNil(encrypted)
-        XCTAssertEqual(encrypted?.count, 512)
+        XCTAssertEqual(encrypted.count, 512)
+    }
+    
+    func test_encryptWithRSAKey_shouldEncryptDecryptable() throws {
+        
+        let (privateKey, publicKey) = try createRandom4096RSAKeys()
+        let message = try XCTUnwrap("important message".data(using: .utf8))
+        
+        // also try OAEP, etc
+        let encrypted = try Crypto.encryptWithRSAKey(message, publicKey: publicKey, padding: .PKCS1)
+        let decrypted = try Crypto.decrypt(encrypted, using: .rsaEncryptionPKCS1, secKey: privateKey)
+        
+        XCTAssertNoDiff(decrypted, message)
     }
     
     func test_encryptWithRSAKey_shouldFailToEncryptWithPrivateKey() throws {
@@ -675,8 +688,10 @@ final class ForaCryptoTests: XCTestCase {
         let message = try XCTUnwrap("important message".data(using: .utf8))
         
         // also try OAEP, etc
-        let encrypted = Crypto.encryptWithRSAKey(message, publicKey: privateKey, padding: .PKCS1)
-        XCTAssertNil(encrypted)
+        try XCTAssertThrowsAsNSError(
+            Crypto.encryptWithRSAKey(message, publicKey: privateKey, padding: .PKCS1),
+            error: Crypto.Error.encryptionFailed()
+        )
     }
     
     func test_rsaPKCS1Encrypt_shouldEncryptData() throws {
@@ -931,23 +946,20 @@ extension Crypto {
         var encryptedLength = blockSize
         var encryptedData = [UInt8](repeating: 0, count: encryptedLength)
         
-        
         guard let mutableData = NSMutableData(length: blockSize)
         else {
-#warning("replace with CryptoError")
-            throw NSError(domain: "Decryption failed", code: 0)
+            throw Crypto.Error.encryptionFailed()
         }
         
         let metadata = data
-        let encryptedMetadata = (metadata as NSData).bytes.bindMemory(to: UInt8.self, capacity: metadata.count)
+        _ = (metadata as NSData).bytes.bindMemory(to: UInt8.self, capacity: metadata.count)
         let mutableDataBytes = mutableData.mutableBytes.assumingMemoryBound(to: UInt8.self)
         
         let status = SecKeyEncrypt(key, padding, /*data.withUnsafeBytes { $0 }*/ mutableDataBytes, data.count, &encryptedData, &encryptedLength)
         
-        guard noErr != status else {
-            
-#warning("replace with CryptoError")
-            throw NSError(domain: "Encryption failed: \(String(describing: SecCopyErrorMessageString(status, nil)))", code: 0)
+        guard noErr != status
+        else {
+            throw Crypto.Error.encryptionFailed("Encryption failed: \(String(describing: SecCopyErrorMessageString(status, nil)))")
         }
         
         return .init(bytes: encryptedData, count: encryptedLength)
@@ -963,8 +975,7 @@ extension Crypto {
         
         guard let decryptedMetadata = NSMutableData(length: blockSize)
         else {
-#warning("replace with CryptoError")
-            throw NSError(domain: "Decryption failed", code: 0)
+            throw Crypto.Error.decryptionFailed()
         }
         
         let metadata = data
@@ -974,10 +985,9 @@ extension Crypto {
         var decryptedMetadataLength = blockSize
         let decryptionStatus = SecKeyDecrypt(key, padding, encryptedMetadata, blockSize, decryptedMetadataBytes, &decryptedMetadataLength)
         
-        guard noErr != decryptionStatus else {
-            
-#warning("replace with CryptoError")
-            throw NSError(domain: "Decryption failed: \(String(describing: SecCopyErrorMessageString(decryptionStatus, nil)))", code: 0)
+        guard noErr != decryptionStatus
+        else {
+            throw Crypto.Error.decryptionFailed("Decryption failed: \(String(describing: SecCopyErrorMessageString(decryptionStatus, nil)))")
         }
         
         return .init(bytes: decryptedMetadataBytes, count: decryptedMetadataLength)

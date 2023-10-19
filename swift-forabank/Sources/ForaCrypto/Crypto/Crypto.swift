@@ -32,7 +32,7 @@ public extension Crypto {
         case keysPairGenerationFailure(keySize: Int, keyType: CFString, OSStatus)
         case keyExchangeResultFailure(Swift.Error)
         case base64StringEncodedData(String)
-        case encryptionFailed
-        case decryptionFailed
+        case encryptionFailed(String? = nil)
+        case decryptionFailed(String? = nil)
     }
 }

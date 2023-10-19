@@ -39,6 +39,7 @@ where CreateRequestError: Error,
 
 public extension RemoteService {
     
+    typealias ProcessError = RemoteServiceError<CreateRequestError, PerformRequestError, MapResponseError>
     typealias ProcessResult = Result<Output, ProcessError>
     typealias ProcessCompletion = (ProcessResult) -> Void
     
@@ -59,15 +60,18 @@ public extension RemoteService {
             }
         }
     }
+}
+
+public enum RemoteServiceError<CreateRequestError, PerformRequestError, MapResponseError>: Error {
     
-    enum ProcessError: Error {
-        
-        case createRequest(CreateRequestError)
-        case performRequest(PerformRequestError)
-        case mapResponse(MapResponseError)
-    }
+    case createRequest(CreateRequestError)
+    case performRequest(PerformRequestError)
+    case mapResponse(MapResponseError)
+}
+
+private extension RemoteService {
     
-    private func handle(
+    func handle(
         _ result: PerformResult,
         with completion: @escaping ProcessCompletion
     ) {
