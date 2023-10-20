@@ -54,7 +54,7 @@ class MainViewModel: ObservableObject, Resetable {
                          MainSectionAtmView.ViewModel.initial]
         
         self.model = model
-        self.factory = ModelAuthLoginViewModelFactory.init(model: .emptyMock, rootActions: .emptyMock)
+        self.factory = ModelAuthLoginViewModelFactory.init(model: model, rootActions: .emptyMock)
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -278,10 +278,12 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             case .card:
                                 
-                                let authProductsViewModel = AuthProductsViewModel(self.model,
-                                                                                      products: self.model.catalogProducts.value,
-                                                                                      dismissAction: { [weak self] in
-                                        self?.action.send(MainViewModelAction.Close.Link()) })
+                                let authProductsViewModel = AuthProductsViewModel(
+                                    self.model,
+                                    products: self.model.catalogProducts.value,
+                                    dismissAction: { [weak self] in
+                                        self?.action.send(MainViewModelAction.Close.Link())
+                                    })
                                     
                                     self.link = .openCard(authProductsViewModel)
                                 
@@ -932,7 +934,8 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case landingSticker(LandingWrapperViewModel)
+        case landing(LandingWrapperViewModel)
+        case orderSticker(LandingWrapperViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -974,7 +977,7 @@ extension MainViewModel {
             )
             
             UIApplication.shared.endEditing()
-            link = .landingSticker(viewModel)
+            link = .landing(viewModel)
         }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -983,16 +986,45 @@ extension MainViewModel {
             case .goToMain:
                 return handleCloseLinkAction
             case .order:
-                return handleCloseLinkAction
+                return orderSticker
             }
            }
     
-    func handleCloseLinkAction() {
+    private func handleCloseLinkAction() {
         
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
         link = nil
     }
-  
+
+    func orderSticker() {
+        
+        if model.products(.card)?.contains(where: { ($0 as? ProductCardData)?.isMain == true }) == false {
+            self.alert = .init(title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Продолжить", action: {
+                
+                DispatchQueue.main.async {
+                    let authProductsViewModel = AuthProductsViewModel(self.model,
+                                                                      products: self.model.catalogProducts.value,
+                                                                      dismissAction: { [weak self] in
+                        self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                    
+                    self.link = .openCard(authProductsViewModel)
+                }
+            }))
+        }
+        
+        testHandleOrderSticker() // TODO: link to OrderSticker here
+        
+        /* TODO: v4 сейчас нет
+         если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
+         cardType: MAIN - главная карта. или cardType: REGULAR - обычная карта.
+         */
+    }
+    
+    func testHandleOrderSticker() { // TODO: Delete
+        let viewModel = factory.makeStickerLandingViewModel(.sticker, config: .default,landingActions: landingAction)
+        UIApplication.shared.endEditing()
+        link = .orderSticker(viewModel)
+    }
 }
 
 //MARK: - Action

@@ -40,9 +40,11 @@ public struct LandingView: View {
     
     var backButton : some View {
         
-        Button(action: {
-            action(.card(.goToMain))
-        }) { Image(systemName: "chevron.backward") }
+                Button(action: {
+                    
+                    action(.card(.goToMain))
+                    action(.sticker(.goToMain))
+                }) { Image(systemName: "chevron.backward") }
     }
     
     public var body: some View {
@@ -81,16 +83,18 @@ public struct LandingView: View {
                     componentsView(viewModel.landing.header)
                 }
             }
+            ToolbarItem(placement: .topBarLeading) {
+                backButton
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
-        
-        // MARK: есть дублирование title на orderCard
-//        .navigationBarTitle(
-//            viewModel.landing.navigationTitle(
-//                offset: position,
-//                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
-//            displayMode: .inline)
-        .navigationBarItems(leading: backButton)
+        .navigationBarBackButtonHidden()
+        //        .navigationBarTitle(
+        //            viewModel.landing.navigationTitle(
+        //                offset: position,
+        //                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
+        //            displayMode: .inline)
+        //.navigationBarItems(leading: backButton)
     }
     
     private func componentsView(
@@ -112,7 +116,7 @@ public struct LandingView: View {
             action(.card(.order(cardTarif: tarif, cardType: type)))
         }
     }
-
+    
     
     private func itemView(
         component: UILanding.Component
