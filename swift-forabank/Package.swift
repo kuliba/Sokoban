@@ -689,7 +689,7 @@ private extension Target.Dependency {
     static let paymentsComponents = byName(
         name: .paymentsComponents
     )
-    
+
     static let serverAgent = byName(
         name: .serverAgent
     )

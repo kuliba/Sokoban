@@ -2,7 +2,7 @@
 //  StickerPreviewApp.swift
 //  StickerPreview
 //
-//  Created by Дмитрий Савушкин on 26.09.2023.
+//  Created by Дмитрий Савушкин on 20.10.2023.
 //
 
 import SwiftUI
