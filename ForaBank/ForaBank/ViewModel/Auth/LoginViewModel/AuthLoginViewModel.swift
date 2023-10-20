@@ -80,7 +80,6 @@ class AuthLoginViewModel: ObservableObject {
     
     func showProducts() {
         handleLandingAction(.orderCard)
-        //handleLandingAction(.sticker) // for tests
     }
 }
 
