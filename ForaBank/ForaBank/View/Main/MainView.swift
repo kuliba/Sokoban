@@ -262,7 +262,7 @@ extension MainView {
                             ZStack {
                                 
                                 Circle()
-                                    .foregroundColor(.bGIconGrayLightest)
+                                    .foregroundColor(.bgIconGrayLightest)
                                     .frame(width: 40, height: 40)
                                 
                                 Image.ic24User

@@ -36,7 +36,7 @@ struct PaymentsSuccessTextView: View {
         switch viewModel.style {
         case .title:
             Text(viewModel.text)
-                .font(.textH3SB18240())
+                .font(.textH3Sb18240())
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
                 .frame(width: 250)
@@ -44,7 +44,7 @@ struct PaymentsSuccessTextView: View {
             
         case .amount:
             Text(viewModel.text)
-                .font(.textH1SB24322())
+                .font(.textH1Sb24322())
                 .foregroundColor(.textSecondary)
                 .padding(.horizontal, 20)
                 .accessibilityIdentifier("SuccessPageAmount")

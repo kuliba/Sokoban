@@ -44,10 +44,10 @@ extension DocumentCellType {
         
         switch self {
             
-        case .passport:     return .bGIconDeepPurpleMedium
-        case .inn:          return .bGIconTealLight
-        case .adressPass:   return .bGIconDeepPurpleMedium
-        case .adress:       return .bGIconBlueLightest
+        case .passport:     return .bgIconDeepPurpleMedium
+        case .inn:          return .bgIconTealLight
+        case .adressPass:   return .bgIconDeepPurpleMedium
+        case .adress:       return .bgIconBlueLightest
         }
     }
     

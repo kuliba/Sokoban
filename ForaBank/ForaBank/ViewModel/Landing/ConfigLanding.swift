@@ -52,11 +52,11 @@ extension UILanding.List.HorizontalRoundImage.Config {
         backgroundColor: .mainColorsGrayLightest,
         title: .init(
             color: .textSecondary,
-            font: .textH3SB18240()),
+            font: .textH3Sb18240()),
         subtitle: .init(
             color: .mainColorsGray,
             background: .white,
-            font: .textBodyXSSB11140(),
+            font: .textBodyXsSb11140(),
             cornerRadius: 90,
             padding: .init(
                 horizontal: 7,
@@ -133,7 +133,7 @@ extension UILanding.IconWithTwoTextLines.Config {
         icon: .init(size: 64, paddingBottom: 24),
         horizontalPadding: 50,
         title: .init(
-            font: .textH3SB18240(),
+            font: .textH3Sb18240(),
             color: .textSecondary,
             paddingBottom: 12),
         subTitle: .init(
@@ -147,7 +147,7 @@ extension UILanding.List.DropDownTexts.Config {
     
     static let `default`: Self = .init(
         fonts: Fonts(
-            title: .textH3SB18240(),
+            title: .textH3Sb18240(),
             itemTitle: .textBodyMR14180(),
             itemDescription: .textBodyMR14180()),
         colors: Colors(
@@ -168,7 +168,7 @@ extension UILanding.List.VerticalRoundImage.Config {
     
     static let `default`: Self = .init(
         title: Title(
-            font: .textH3SB18240(),
+            font: .textH3Sb18240(),
             color: .textSecondary,
             paddingHorizontal: 16,
             paddingTop: 16),
@@ -192,7 +192,7 @@ extension UILanding.List.VerticalRoundImage.Config {
             circleFill: .white,
             circleWidthHeight: 40,
             ellipsisForegroundColor: .textSecondary,
-            text: .init(font: .textH3SB18240(), color: .textSecondary),
+            text: .init(font: .textH3Sb18240(), color: .textSecondary),
             padding: .init(horizontal: 16, vertical: 3)))
 }
 
@@ -206,7 +206,7 @@ extension UILanding.Multi.Buttons.Config {
             backgroundColors: .init(first: .buttonPrimary, second: .buttonSecondary),
             textColors: .init(first: .white, second: .textSecondary),
             padding: .init(horiontal: 16, vertical: 12),
-            font: .textH3SB18240(),
+            font: .textH3Sb18240(),
             height: 56,
             cornerRadius: 12))
 
@@ -262,7 +262,7 @@ extension UILanding.Multi.TypeButtons.Config {
         cornerRadius: 12,
         fonts: .init(
             into: .textBodyMR14200(),
-            button: .textH3SB18240()),
+            button: .textH3Sb18240()),
         spacing: 44,
         sizes: .init(imageInfo: 24, heightButton: 56),
         colors: .init(

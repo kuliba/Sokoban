@@ -43,7 +43,7 @@ struct UserAccountExitInfoView: View {
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 32)
-                    .foregroundColor(.bGIconGrayLightest)
+                    .foregroundColor(.bgIconGrayLightest)
                     .frame(width: 64, height: 64)
                 
                 viewModel.icon
@@ -53,7 +53,7 @@ struct UserAccountExitInfoView: View {
             }
             
             Text(verbatim: viewModel.title)
-                .font(.textH4SB16240())
+                .font(.textH4Sb16240())
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
             

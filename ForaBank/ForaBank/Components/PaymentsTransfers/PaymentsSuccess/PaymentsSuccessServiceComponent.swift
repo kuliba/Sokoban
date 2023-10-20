@@ -41,7 +41,7 @@ struct PaymentsSuccessServiceView: View {
                 .foregroundColor(.mainColorsGray)
             
             Text(viewModel.description)
-                .font(.textH3SB18240())
+                .font(.textH3Sb18240())
                 .foregroundColor(.mainColorsBlack)
         }
     }

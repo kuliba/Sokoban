@@ -91,17 +91,17 @@ struct UserAccountDocumentInfoView: View {
                 VStack(spacing: 16) {
                     
                     Text(verbatim: viewModel.itemType.title)
-                        .font(.textH4SB16240())
+                        .font(.textH4Sb16240())
                         .foregroundColor(.textSecondary)
                     
                     Text(verbatim: viewModel.content)
-                        .font(.textH1SB24322())
+                        .font(.textH1Sb24322())
                         .foregroundColor(.textSecondary)
                 }
                 
             case .adress, .adressPass:
                 Text(verbatim: viewModel.content)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                     .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)

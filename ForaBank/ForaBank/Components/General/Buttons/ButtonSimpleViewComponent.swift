@@ -70,7 +70,7 @@ struct ButtonSimpleView: View {
                     .foregroundColor(ViewModel.ButtonStyle.inactive.backgroundColor)
                 
                 Text(viewModel.title)
-                    .font(.buttonLargeSB16180())
+                    .font(.buttonLargeSb16180())
                     .foregroundColor(ViewModel.ButtonStyle.inactive.foregroundColor)
             }
             
@@ -87,7 +87,7 @@ struct ButtonSimpleView: View {
                         .foregroundColor(viewModel.style.backgroundColor)
                     
                     Text(viewModel.title)
-                        .font(.buttonLargeSB16180())
+                        .font(.buttonLargeSb16180())
                         .foregroundColor(viewModel.style.foregroundColor)
                 }
             }

@@ -49,7 +49,7 @@ struct CollapsableSectionView<Content: View>: View {
                 HStack(alignment: .center, spacing: 4) {
 
                     Text(title)
-                        .font(.textH2SB20282())
+                        .font(.textH2Sb20282())
                         .foregroundColor(.textSecondary)
                     
                     if maxWidth { backgroundColor.frame(maxHeight: 20) }
@@ -76,7 +76,7 @@ struct CollapsableSectionView<Content: View>: View {
                 HStack(alignment: .center, spacing: 4) {
 
                     Text(title)
-                        .font(.textH2SB20282())
+                        .font(.textH2Sb20282())
                         .foregroundColor(.textDisabled)
 
                     Image.ic24ChevronDown

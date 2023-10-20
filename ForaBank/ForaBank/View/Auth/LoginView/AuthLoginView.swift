@@ -42,7 +42,7 @@ extension AuthLoginView {
                 HStack(spacing: 8) {
                     
                     Text(viewModel.title)
-                        .font(.textH1SB24322())
+                        .font(.textH1Sb24322())
                         .foregroundColor(.textSecondary)
                     
                     viewModel.icon

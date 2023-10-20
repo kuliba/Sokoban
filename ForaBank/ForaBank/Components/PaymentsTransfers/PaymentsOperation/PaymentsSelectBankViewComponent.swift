@@ -678,7 +678,7 @@ struct PaymentsSelectBankView: View {
                     .accessibilityIdentifier("SelectBankItemBankIcon")
                 
                 Text(viewModel.name)
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
@@ -687,7 +687,7 @@ struct PaymentsSelectBankView: View {
                 if let subtitle = viewModel.subtitle {
                     
                     Text(subtitle)
-                        .font(.textBodyXSR11140())
+                        .font(.textBodyXsR11140())
                         .foregroundColor(.textPlaceholder)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)
@@ -721,7 +721,7 @@ struct PaymentsSelectBankView: View {
                 }.frame(width: 40, height: 40)
                 
                 Text(viewModel.name)
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.textSecondary)
             }
             .contentShape(Rectangle())

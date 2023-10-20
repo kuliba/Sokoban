@@ -15,7 +15,7 @@ extension PaymentStickerViewConfig {
         
         rectangleColor: .mainColorsGrayLightest,
         configHeader: .init(
-            titleFont: .textH3SB18240(),
+            titleFont: .textH3Sb18240(),
             titleColor: .mainColorsBlack,
             descriptionFont: .textBodySR12160(),
             descriptionColor: .mainColorsGray
