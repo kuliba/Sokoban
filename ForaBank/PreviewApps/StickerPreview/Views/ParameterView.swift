@@ -1,0 +1,65 @@
+//
+//  ParameterView.swift
+//  StickerPreview
+//
+//  Created by Igor Malyarov on 19.10.2023.
+//
+
+import SwiftUI
+
+struct ParameterView: View {
+    
+    let viewModel: ParameterViewModel
+    
+    var body: some View {
+        
+        switch viewModel {
+        case let .tip(tipViewModel):
+            TipView(viewModel: tipViewModel)
+            
+        case let .sticker(stickerViewModel):
+            StickerView(
+                viewModel: stickerViewModel,
+                openAccountCardView: {
+                    
+                    Color.red
+                        .frame(width: 120)
+                    
+                },
+                config: .default
+            )
+            
+        case let .select(selectViewModel):
+            SelectView(
+                viewModel: selectViewModel,
+                config: .default
+            )
+            
+        case let .product(productViewModel):
+            ProductView(
+                appearance: .default,
+                viewModel: productViewModel
+            )
+            
+        case let .amount(amountViewModel):
+            AmountView(
+                viewModel: .init(
+                    parameter: .init(
+                        title: amountViewModel.parameter.title,
+                        value: amountViewModel.parameter.value
+                    )
+                ),
+                text: amountViewModel.parameter.value
+            )
+        }
+    }
+}
+
+struct ParameterView_Previews: PreviewProvider {
+    static var previews: some View {
+       
+        #warning("add previews")
+        // ParameterView()
+        EmptyView()
+    }
+}

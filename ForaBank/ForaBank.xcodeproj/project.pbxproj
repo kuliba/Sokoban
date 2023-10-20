@@ -1560,11 +1560,6 @@
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
 		C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3732A8FBE11002F99BC /* PaymentsTests.swift */; };
 		C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3752A8FC184002F99BC /* C2BOperation.swift */; };
-		C134B1912AC31864008AC17E /* StickerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B1902AC31864008AC17E /* StickerPreviewApp.swift */; };
-		C134B1932AC31864008AC17E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B1922AC31864008AC17E /* ContentView.swift */; };
-		C134B1952AC31865008AC17E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C134B1942AC31865008AC17E /* Assets.xcassets */; };
-		C134B1982AC31865008AC17E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C134B1972AC31865008AC17E /* Preview Assets.xcassets */; };
-		C134B19F2AC31941008AC17E /* OpenAccountItemViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */; };
 		C13825452AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */; };
 		C13825472AB9D6E200AD2AF2 /* Model+RequisitesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
@@ -1619,10 +1614,29 @@
 		C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A7FF212A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift */; };
 		C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AA99E52A28F051009B208B /* PaymentsTemplateDataTests.swift */; };
 		C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B6B5D32A8F63AD0073741A /* Model+PaymentsC2BTests.swift */; };
-		C1BA23DC2AC5AACF00425B10 /* PaymentsComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */; };
 		C1BA23DF2AC701EC00425B10 /* StickersStyleConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */; };
 		C1BA23E52ACD543B00425B10 /* Service+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E42ACD543B00425B10 /* Service+Payments.swift */; };
 		C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */; };
+		C1BC73D22AE277A20022D849 /* StickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73BE2AE277A10022D849 /* StickerViewModel.swift */; };
+		C1BC73D32AE277A20022D849 /* AmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73BF2AE277A10022D849 /* AmountViewModel.swift */; };
+		C1BC73D42AE277A20022D849 /* ParameterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C02AE277A10022D849 /* ParameterViewModel.swift */; };
+		C1BC73D52AE277A20022D849 /* TipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C12AE277A10022D849 /* TipViewModel.swift */; };
+		C1BC73D62AE277A20022D849 /* SelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C22AE277A10022D849 /* SelectViewModel.swift */; };
+		C1BC73D72AE277A20022D849 /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C32AE277A10022D849 /* ProductViewModel.swift */; };
+		C1BC73D82AE277A20022D849 /* ParameterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C52AE277A10022D849 /* ParameterView.swift */; };
+		C1BC73D92AE277A20022D849 /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C62AE277A10022D849 /* TipView.swift */; };
+		C1BC73DA2AE277A20022D849 /* SelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C72AE277A10022D849 /* SelectView.swift */; };
+		C1BC73DB2AE277A20022D849 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C82AE277A10022D849 /* StickerView.swift */; };
+		C1BC73DC2AE277A20022D849 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73C92AE277A10022D849 /* SpinnerView.swift */; };
+		C1BC73DD2AE277A20022D849 /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73CA2AE277A10022D849 /* ProductView.swift */; };
+		C1BC73DE2AE277A20022D849 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73CB2AE277A10022D849 /* AmountView.swift */; };
+		C1BC73DF2AE277A20022D849 /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73CD2AE277A20022D849 /* Amount.swift */; };
+		C1BC73E02AE277A20022D849 /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73CE2AE277A20022D849 /* Tip.swift */; };
+		C1BC73E12AE277A20022D849 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73CF2AE277A20022D849 /* Sticker.swift */; };
+		C1BC73E22AE277A20022D849 /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73D02AE277A20022D849 /* Select.swift */; };
+		C1BC73E32AE277A20022D849 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73D12AE277A20022D849 /* Product.swift */; };
+		C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1BC73E42AE277CE0022D849 /* TextFieldComponent */; };
+		C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73E62AE2781C0022D849 /* PreviewContent.swift */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
@@ -1633,6 +1647,15 @@
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
 		C1ECBA9D28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */; };
+		C1F346D62AE25C6000EE1E87 /* StickerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */; };
+		C1F346D82AE25C6000EE1E87 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346D72AE25C6000EE1E87 /* ContentView.swift */; };
+		C1F346DA2AE25C6100EE1E87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F346D92AE25C6100EE1E87 /* Assets.xcassets */; };
+		C1F346DD2AE25C6100EE1E87 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1F346DC2AE25C6100EE1E87 /* Preview Assets.xcassets */; };
+		C1F346E82AE2727F00EE1E87 /* ModelToViewModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E32AE2727E00EE1E87 /* ModelToViewModelMapper.swift */; };
+		C1F346E92AE2727F00EE1E87 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E42AE2727E00EE1E87 /* Operation.swift */; };
+		C1F346EA2AE2727F00EE1E87 /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E52AE2727F00EE1E87 /* OperationView.swift */; };
+		C1F346EB2AE2727F00EE1E87 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E62AE2727F00EE1E87 /* Event.swift */; };
+		C1F346EC2AE2727F00EE1E87 /* OperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */; };
 		C1F7999F29CD18BF0048346B /* Model+ReturnAbroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F7999E29CD18BF0048346B /* Model+ReturnAbroad.swift */; };
 		C1F799A329CD18DF0048346B /* Model+ChangeAbroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A229CD18DF0048346B /* Model+ChangeAbroad.swift */; };
 		C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */; };
@@ -1976,6 +1999,15 @@
 				A51568332821B927000D4455 /* ForaPushServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1D6BB9B2AD613730006B151 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -3514,12 +3546,6 @@
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
 		C130E3732A8FBE11002F99BC /* PaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTests.swift; sourceTree = "<group>"; };
 		C130E3752A8FC184002F99BC /* C2BOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BOperation.swift; sourceTree = "<group>"; };
-		C134B18E2AC31863008AC17E /* StickerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C134B1902AC31864008AC17E /* StickerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewApp.swift; sourceTree = "<group>"; };
-		C134B1922AC31864008AC17E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		C134B1942AC31865008AC17E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C134B1972AC31865008AC17E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAccountItemViewComponent.swift; sourceTree = "<group>"; };
 		C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakePaymentsSuccessOptionButtonsViewModelTests.swift; sourceTree = "<group>"; };
 		C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+RequisitesTests.swift"; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
@@ -3575,16 +3601,46 @@
 		C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStyleConfiguration.swift; sourceTree = "<group>"; };
 		C1BA23E42ACD543B00425B10 /* Service+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+Payments.swift"; sourceTree = "<group>"; };
 		C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+stickerPayment.swift"; sourceTree = "<group>"; };
+		C1BC73BE2AE277A10022D849 /* StickerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerViewModel.swift; sourceTree = "<group>"; };
+		C1BC73BF2AE277A10022D849 /* AmountViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountViewModel.swift; sourceTree = "<group>"; };
+		C1BC73C02AE277A10022D849 /* ParameterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterViewModel.swift; sourceTree = "<group>"; };
+		C1BC73C12AE277A10022D849 /* TipViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipViewModel.swift; sourceTree = "<group>"; };
+		C1BC73C22AE277A10022D849 /* SelectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectViewModel.swift; sourceTree = "<group>"; };
+		C1BC73C32AE277A10022D849 /* ProductViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
+		C1BC73C52AE277A10022D849 /* ParameterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterView.swift; sourceTree = "<group>"; };
+		C1BC73C62AE277A10022D849 /* TipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipView.swift; sourceTree = "<group>"; };
+		C1BC73C72AE277A10022D849 /* SelectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectView.swift; sourceTree = "<group>"; };
+		C1BC73C82AE277A10022D849 /* StickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
+		C1BC73C92AE277A10022D849 /* SpinnerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		C1BC73CA2AE277A10022D849 /* ProductView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
+		C1BC73CB2AE277A10022D849 /* AmountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
+		C1BC73CD2AE277A20022D849 /* Amount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Amount.swift; sourceTree = "<group>"; };
+		C1BC73CE2AE277A20022D849 /* Tip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
+		C1BC73CF2AE277A20022D849 /* Sticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
+		C1BC73D02AE277A20022D849 /* Select.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Select.swift; sourceTree = "<group>"; };
+		C1BC73D12AE277A20022D849 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		C1BC73E62AE2781C0022D849 /* PreviewContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
 		C1CCFC3929828EF20059212C /* Model+Abroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Abroad.swift"; sourceTree = "<group>"; };
+		C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaymentsViewModelMapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponent.swift; sourceTree = "<group>"; };
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
 		C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
+		C1F346D32AE25C6000EE1E87 /* StickerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPreviewApp.swift; sourceTree = "<group>"; };
+		C1F346D72AE25C6000EE1E87 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C1F346D92AE25C6100EE1E87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1F346DC2AE25C6100EE1E87 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C1F346E32AE2727E00EE1E87 /* ModelToViewModelMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelToViewModelMapper.swift; sourceTree = "<group>"; };
+		C1F346E42AE2727E00EE1E87 /* Operation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
+		C1F346E52AE2727F00EE1E87 /* OperationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
+		C1F346E62AE2727F00EE1E87 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationViewModel.swift; sourceTree = "<group>"; };
 		C1F7999E29CD18BF0048346B /* Model+ReturnAbroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ReturnAbroad.swift"; sourceTree = "<group>"; };
 		C1F799A229CD18DF0048346B /* Model+ChangeAbroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ChangeAbroad.swift"; sourceTree = "<group>"; };
 		C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsReturn.swift"; sourceTree = "<group>"; };
@@ -3919,13 +3975,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C134B18B2AC31863008AC17E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C1A4D3782A67CDFC001DD9E4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3933,6 +3982,21 @@
 				C1A4D3912A694D72001DD9E4 /* SearchBarComponent in Frameworks */,
 				C1A4D3932A694EF2001DD9E4 /* TextFieldComponent in Frameworks */,
 				C1A4D38C2A67CFAF001DD9E4 /* ManageSubscriptionsUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1D6BB9A2AD613730006B151 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1F346D02AE25C6000EE1E87 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3963,7 +4027,6 @@
 				2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */,
 				ED374CEC2863C5CD00A97219 /* Presentation in Frameworks */,
 				2A3F1B182A47768A00D8FE55 /* LoadableResourceComponent in Frameworks */,
-				C1BA23DC2AC5AACF00425B10 /* PaymentsComponents in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
@@ -5686,8 +5749,8 @@
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
-				C134B18F2AC31863008AC17E /* StickerPreview */,
 				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
+				C1F346D42AE25C6000EE1E87 /* StickerPreview */,
 			);
 			path = PreviewApps;
 			sourceTree = "<group>";
@@ -8654,26 +8717,6 @@
 			path = PaymentsTests;
 			sourceTree = "<group>";
 		};
-		C134B18F2AC31863008AC17E /* StickerPreview */ = {
-			isa = PBXGroup;
-			children = (
-				C134B1902AC31864008AC17E /* StickerPreviewApp.swift */,
-				C134B19E2AC31941008AC17E /* OpenAccountItemViewComponent.swift */,
-				C134B1922AC31864008AC17E /* ContentView.swift */,
-				C134B1942AC31865008AC17E /* Assets.xcassets */,
-				C134B1962AC31865008AC17E /* Preview Content */,
-			);
-			path = StickerPreview;
-			sourceTree = "<group>";
-		};
-		C134B1962AC31865008AC17E /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				C134B1972AC31865008AC17E /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		C14093F72A43D2E600B82E1F /* OperationDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -8759,6 +8802,73 @@
 				C1BA23E42ACD543B00425B10 /* Service+Payments.swift */,
 			);
 			path = PaymentService;
+			sourceTree = "<group>";
+		};
+		C1BC73BD2AE277A10022D849 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				C1BC73BE2AE277A10022D849 /* StickerViewModel.swift */,
+				C1BC73BF2AE277A10022D849 /* AmountViewModel.swift */,
+				C1BC73C02AE277A10022D849 /* ParameterViewModel.swift */,
+				C1BC73C12AE277A10022D849 /* TipViewModel.swift */,
+				C1BC73C22AE277A10022D849 /* SelectViewModel.swift */,
+				C1BC73C32AE277A10022D849 /* ProductViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C1BC73C42AE277A10022D849 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C1BC73C52AE277A10022D849 /* ParameterView.swift */,
+				C1BC73C62AE277A10022D849 /* TipView.swift */,
+				C1BC73C72AE277A10022D849 /* SelectView.swift */,
+				C1BC73C82AE277A10022D849 /* StickerView.swift */,
+				C1BC73C92AE277A10022D849 /* SpinnerView.swift */,
+				C1BC73CA2AE277A10022D849 /* ProductView.swift */,
+				C1BC73CB2AE277A10022D849 /* AmountView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C1BC73CC2AE277A20022D849 /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				C1BC73CD2AE277A20022D849 /* Amount.swift */,
+				C1BC73CE2AE277A20022D849 /* Tip.swift */,
+				C1BC73CF2AE277A20022D849 /* Sticker.swift */,
+				C1BC73D02AE277A20022D849 /* Select.swift */,
+				C1BC73D12AE277A20022D849 /* Product.swift */,
+			);
+			path = Parameters;
+			sourceTree = "<group>";
+		};
+		C1F346D42AE25C6000EE1E87 /* StickerPreview */ = {
+			isa = PBXGroup;
+			children = (
+				C1BC73CC2AE277A20022D849 /* Parameters */,
+				C1BC73BD2AE277A10022D849 /* ViewModels */,
+				C1BC73C42AE277A10022D849 /* Views */,
+				C1F346E62AE2727F00EE1E87 /* Event.swift */,
+				C1F346E32AE2727E00EE1E87 /* ModelToViewModelMapper.swift */,
+				C1F346E42AE2727E00EE1E87 /* Operation.swift */,
+				C1F346E52AE2727F00EE1E87 /* OperationView.swift */,
+				C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */,
+				C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */,
+				C1F346D72AE25C6000EE1E87 /* ContentView.swift */,
+				C1F346D92AE25C6100EE1E87 /* Assets.xcassets */,
+				C1F346DB2AE25C6100EE1E87 /* Preview Content */,
+			);
+			path = StickerPreview;
+			sourceTree = "<group>";
+		};
+		C1F346DB2AE25C6100EE1E87 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				C1BC73E62AE2781C0022D849 /* PreviewContent.swift */,
+				C1F346DC2AE25C6100EE1E87 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		C1F7999B29CD181C0048346B /* Abroad */ = {
@@ -9538,7 +9648,8 @@
 				2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */,
 				C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */,
 				83378AB52AA0DFE10087F8B1 /* LandingPreview.app */,
-				C134B18E2AC31863008AC17E /* StickerPreview.app */,
+				C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */,
+				C1F346D32AE25C6000EE1E87 /* StickerPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -10432,23 +10543,6 @@
 			productReference = A515682C2821B927000D4455 /* ForaPushServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		C134B18D2AC31863008AC17E /* StickerPreview */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C134B19D2AC31865008AC17E /* Build configuration list for PBXNativeTarget "StickerPreview" */;
-			buildPhases = (
-				C134B18A2AC31863008AC17E /* Sources */,
-				C134B18B2AC31863008AC17E /* Frameworks */,
-				C134B18C2AC31863008AC17E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = StickerPreview;
-			productName = StickerPreview;
-			productReference = C134B18E2AC31863008AC17E /* StickerPreview.app */;
-			productType = "com.apple.product-type.application";
-		};
 		C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */;
@@ -10469,6 +10563,43 @@
 			);
 			productName = ManageSubscriptionUIPreview;
 			productReference = C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C1D6BB9C2AD613730006B151 /* PaymentsViewModelMapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1D6BBA52AD613730006B151 /* Build configuration list for PBXNativeTarget "PaymentsViewModelMapper" */;
+			buildPhases = (
+				C1D6BB992AD613730006B151 /* Sources */,
+				C1D6BB9A2AD613730006B151 /* Frameworks */,
+				C1D6BB9B2AD613730006B151 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PaymentsViewModelMapper;
+			productName = PaymentsViewModelMapper;
+			productReference = C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C1F346D22AE25C6000EE1E87 /* StickerPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1F346DE2AE25C6100EE1E87 /* Build configuration list for PBXNativeTarget "StickerPreview" */;
+			buildPhases = (
+				C1F346CF2AE25C6000EE1E87 /* Sources */,
+				C1F346D02AE25C6000EE1E87 /* Frameworks */,
+				C1F346D12AE25C6000EE1E87 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StickerPreview;
+			packageProductDependencies = (
+				C1BC73E42AE277CE0022D849 /* TextFieldComponent */,
+			);
+			productName = StickerPreview;
+			productReference = C1F346D32AE25C6000EE1E87 /* StickerPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EDB1437C265FDA410028EF5A /* ForaBank */ = {
@@ -10529,7 +10660,6 @@
 				2A5EB43C2AAB29C900CA931D /* LandingUIComponent */,
 				830C91BA2AAF9051005EC90C /* CodableLanding */,
 				2A4630082AC454E400020B73 /* ServerAgent */,
-				C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -10598,10 +10728,13 @@
 					A515682B2821B927000D4455 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
-					C134B18D2AC31863008AC17E = {
+					C1A4D37A2A67CDFC001DD9E4 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
-					C1A4D37A2A67CDFC001DD9E4 = {
+					C1D6BB9C2AD613730006B151 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					C1F346D22AE25C6000EE1E87 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
 					EDB1437C265FDA410028EF5A = {
@@ -10661,7 +10794,8 @@
 				2A14A8512A2750440018511E /* TextFieldViewVithBindingPreview */,
 				C1A4D37A2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				83378AB42AA0DFE10087F8B1 /* LandingPreview */,
-				C134B18D2AC31863008AC17E /* StickerPreview */,
+				C1D6BB9C2AD613730006B151 /* PaymentsViewModelMapper */,
+				C1F346D22AE25C6000EE1E87 /* StickerPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -10701,21 +10835,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C134B18C2AC31863008AC17E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C134B1982AC31865008AC17E /* Preview Assets.xcassets in Resources */,
-				C134B1952AC31865008AC17E /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C1A4D3792A67CDFC001DD9E4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C1A4D3852A67CDFD001DD9E4 /* Preview Assets.xcassets in Resources */,
 				C1A4D3822A67CDFD001DD9E4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1F346D12AE25C6000EE1E87 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1F346DD2AE25C6100EE1E87 /* Preview Assets.xcassets in Resources */,
+				C1F346DA2AE25C6100EE1E87 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11126,22 +11260,52 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C134B18A2AC31863008AC17E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C134B1932AC31864008AC17E /* ContentView.swift in Sources */,
-				C134B1912AC31864008AC17E /* StickerPreviewApp.swift in Sources */,
-				C134B19F2AC31941008AC17E /* OpenAccountItemViewComponent.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C1A4D3772A67CDFC001DD9E4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C1A4D3802A67CDFC001DD9E4 /* ContentView.swift in Sources */,
 				C1A4D37E2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1D6BB992AD613730006B151 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1F346CF2AE25C6000EE1E87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1BC73D62AE277A20022D849 /* SelectViewModel.swift in Sources */,
+				C1BC73E02AE277A20022D849 /* Tip.swift in Sources */,
+				C1BC73D52AE277A20022D849 /* TipViewModel.swift in Sources */,
+				C1BC73D42AE277A20022D849 /* ParameterViewModel.swift in Sources */,
+				C1F346D82AE25C6000EE1E87 /* ContentView.swift in Sources */,
+				C1F346D62AE25C6000EE1E87 /* StickerPreviewApp.swift in Sources */,
+				C1BC73DB2AE277A20022D849 /* StickerView.swift in Sources */,
+				C1BC73E32AE277A20022D849 /* Product.swift in Sources */,
+				C1BC73DE2AE277A20022D849 /* AmountView.swift in Sources */,
+				C1BC73D72AE277A20022D849 /* ProductViewModel.swift in Sources */,
+				C1BC73DA2AE277A20022D849 /* SelectView.swift in Sources */,
+				C1BC73D82AE277A20022D849 /* ParameterView.swift in Sources */,
+				C1BC73D22AE277A20022D849 /* StickerViewModel.swift in Sources */,
+				C1BC73DC2AE277A20022D849 /* SpinnerView.swift in Sources */,
+				C1F346EA2AE2727F00EE1E87 /* OperationView.swift in Sources */,
+				C1F346E82AE2727F00EE1E87 /* ModelToViewModelMapper.swift in Sources */,
+				C1F346EB2AE2727F00EE1E87 /* Event.swift in Sources */,
+				C1F346EC2AE2727F00EE1E87 /* OperationViewModel.swift in Sources */,
+				C1BC73E12AE277A20022D849 /* Sticker.swift in Sources */,
+				C1BC73D32AE277A20022D849 /* AmountViewModel.swift in Sources */,
+				C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */,
+				C1BC73DF2AE277A20022D849 /* Amount.swift in Sources */,
+				C1BC73DD2AE277A20022D849 /* ProductView.swift in Sources */,
+				C1F346E92AE2727F00EE1E87 /* Operation.swift in Sources */,
+				C1BC73D92AE277A20022D849 /* TipView.swift in Sources */,
+				C1BC73E22AE277A20022D849 /* Select.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -13309,130 +13473,6 @@
 			};
 			name = Release;
 		};
-		C134B1992AC31865008AC17E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C134B19A2AC31865008AC17E /* Mock */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Mock;
-		};
-		C134B19B2AC31865008AC17E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		C134B19C2AC31865008AC17E /* Preprod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
-				DEVELOPMENT_TEAM = CK7QF6SQ3W;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Preprod;
-		};
 		C137D6782A28C72400EC337E /* Preprod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13718,6 +13758,190 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.PreviewPrototypes;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
+		C1D6BBA12AD613730006B151 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1D6BBA22AD613730006B151 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		C1D6BBA32AD613730006B151 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C1D6BBA42AD613730006B151 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
+		C1F346DF2AE25C6100EE1E87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1F346E02AE25C6100EE1E87 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		C1F346E12AE25C6100EE1E87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C1F346E22AE25C6100EE1E87 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/StickerPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.StickerPreview;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -14056,17 +14280,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		C134B19D2AC31865008AC17E /* Build configuration list for PBXNativeTarget "StickerPreview" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C134B1992AC31865008AC17E /* Debug */,
-				C134B19A2AC31865008AC17E /* Mock */,
-				C134B19B2AC31865008AC17E /* Release */,
-				C134B19C2AC31865008AC17E /* Preprod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		C1A4D38A2A67CDFD001DD9E4 /* Build configuration list for PBXNativeTarget "ManageSubscriptionUIPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -14074,6 +14287,28 @@
 				C1A4D3872A67CDFD001DD9E4 /* Mock */,
 				C1A4D3882A67CDFD001DD9E4 /* Release */,
 				C1A4D3892A67CDFD001DD9E4 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C1D6BBA52AD613730006B151 /* Build configuration list for PBXNativeTarget "PaymentsViewModelMapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1D6BBA12AD613730006B151 /* Debug */,
+				C1D6BBA22AD613730006B151 /* Mock */,
+				C1D6BBA32AD613730006B151 /* Release */,
+				C1D6BBA42AD613730006B151 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C1F346DE2AE25C6100EE1E87 /* Build configuration list for PBXNativeTarget "StickerPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1F346DF2AE25C6100EE1E87 /* Debug */,
+				C1F346E02AE25C6100EE1E87 /* Mock */,
+				C1F346E12AE25C6100EE1E87 /* Release */,
+				C1F346E22AE25C6100EE1E87 /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14466,9 +14701,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
 		};
-		C1BA23DB2AC5AACF00425B10 /* PaymentsComponents */ = {
+		C1BC73E42AE277CE0022D849 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = PaymentsComponents;
+			productName = TextFieldComponent;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;
