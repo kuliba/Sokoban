@@ -46,7 +46,7 @@ struct QRInfoViewComponent: View {
             
             Text(viewModel.title)
                 .foregroundColor(Color.textSecondary)
-                .font(Font.textH4SB16240())
+                .font(Font.textH4Sb16240())
             
             VStack(spacing: 20) {
                 

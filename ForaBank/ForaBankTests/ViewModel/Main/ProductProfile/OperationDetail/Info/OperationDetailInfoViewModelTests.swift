@@ -834,7 +834,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         
         let logo = OperationDetailInfoViewModel.logo(model: model, operation: detail)
         
-        XCTAssertNoDiff(logo, .ic40ZKXServices)
+        XCTAssertNoDiff(logo, .ic40ZkxServices)
     }
     
     func test_logo_transport() {

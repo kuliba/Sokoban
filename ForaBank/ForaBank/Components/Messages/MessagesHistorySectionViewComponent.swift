@@ -52,7 +52,7 @@ struct MessagesHistorySectionView: View {
         VStack(alignment: .leading, spacing: 24)  {
             
             Text(viewModel.title)
-                .font(.textBodyMSB14200())
+                .font(.textBodyMSb14200())
                 .foregroundColor(.textSecondary)
                 .padding(.top, 30)
                 .lineLimit(2)

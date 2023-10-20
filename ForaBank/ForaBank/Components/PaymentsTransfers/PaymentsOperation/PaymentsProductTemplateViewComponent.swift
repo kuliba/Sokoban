@@ -755,13 +755,13 @@ extension PaymentsProductTemplateView {
                                             .foregroundColor(.textPrimary)
                                     
                                         Text(template.numberPostfix)
-                                        .font(.textBodyXSR11140())
+                                        .font(.textBodyXsR11140())
                                         .foregroundColor(.textPrimary)
                                     }
                                     .padding(.bottom, 9)
                                         
                                     Text(template.name)
-                                        .font(.textBodyXSR11140())
+                                        .font(.textBodyXsR11140())
                                         .foregroundColor(.textPrimary)
                                         .opacity(0.5)
                                     

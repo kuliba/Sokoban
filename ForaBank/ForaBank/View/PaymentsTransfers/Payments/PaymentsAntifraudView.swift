@@ -79,7 +79,7 @@ struct PaymentsAntifraudView: View {
                 }
                 
                 Text(viewModel.amount)
-                    .font(.textH1SB24322())
+                    .font(.textH1Sb24322())
                     .foregroundColor(.textSecondary)
                 
                 TimerView(viewModel: viewModel.timer)

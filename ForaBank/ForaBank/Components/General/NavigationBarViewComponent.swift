@@ -552,17 +552,17 @@ struct NavigationBarView_Previews: PreviewProvider {
                 
                 ZStack {
                     
-                    Color.bGIconGrayLightest
+                    Color.bgIconGrayLightest
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack(spacing: 20) {
-                        Color.bGIconDeepBlueLight
+                        Color.bgIconDeepBlueLight
                             .frame(height: 50)
-                        Color.bGIconDeepLimeLight
+                        Color.bgIconDeepLimeLight
                             .frame(height: 50)
-                        Color.bGIconDeepIndigoLight
+                        Color.bgIconDeepIndigoLight
                             .frame(height: 50)
-                        Color.bGIconDeepOrangeLight
+                        Color.bgIconDeepOrangeLight
                             .frame(height: 50)
                     }
                 }

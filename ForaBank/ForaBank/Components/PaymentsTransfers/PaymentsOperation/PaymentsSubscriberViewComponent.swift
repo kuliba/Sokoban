@@ -114,7 +114,7 @@ struct PaymentsSubscriberView: View {
                 VStack(spacing: 8) {
                     
                     Text(viewModel.name)
-                        .font(.textH3SB18240())
+                        .font(.textH3Sb18240())
                         .foregroundColor(.textSecondary)
                     
                     if let description = viewModel.description {

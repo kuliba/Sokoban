@@ -29,7 +29,7 @@ struct PlacesDetailView: View {
                     .padding(.top, 16)
                 
                 Text(viewModel.name)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                     .multilineTextAlignment(.center)
                     .foregroundColor(.mainColorsBlack)
                     .padding(.top, 8)
@@ -150,7 +150,7 @@ extension PlacesDetailView {
             VStack(spacing: 12) {
                 
                 Text(viewModel.title)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                     .foregroundColor(.mainColorsBlack)
                 
                 HStack {

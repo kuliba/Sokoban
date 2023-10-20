@@ -57,7 +57,7 @@ struct UserAccountPhotoSourceView: View {
                         ZStack {
                             
                             RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(.bGIconGrayLightest)
+                                .foregroundColor(.bgIconGrayLightest)
                                 .frame(width: 40, height: 40)
                             
                             item.icon

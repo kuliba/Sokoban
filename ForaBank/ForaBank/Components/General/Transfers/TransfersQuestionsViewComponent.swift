@@ -120,7 +120,7 @@ struct TransfersQuestionsView: View {
             VStack(alignment: .leading) {
                 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.mainColorsBlack)
                     .padding(.horizontal)
                 

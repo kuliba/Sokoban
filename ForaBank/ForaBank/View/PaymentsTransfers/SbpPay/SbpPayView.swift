@@ -66,7 +66,7 @@ extension SbpPayView {
                 }
                 
                 Text(viewModel.title)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
             }
         }
     }

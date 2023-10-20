@@ -325,7 +325,7 @@ extension MainSectionCurrencyMetallView {
         var body: some View {
             
             ZStack {
-                Color.bGIconGrayLightest
+                Color.bgIconGrayLightest
                     .cornerRadius(12)
                     .frame(height: 124)
                 

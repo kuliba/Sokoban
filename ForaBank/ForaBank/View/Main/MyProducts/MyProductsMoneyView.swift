@@ -23,7 +23,7 @@ struct MyProductsMoneyView: View {
                 HStack {
                             
                     Text(viewModel.allMoneyTitle)
-                        .font(.textH2SB20282())
+                        .font(.textH2Sb20282())
                         .foregroundColor(.mainColorsBlack)
                         .lineLimit(1)
                         .layoutPriority(1)
@@ -57,7 +57,7 @@ struct MyProductsMoneyView: View {
                                     
                         CurrencyButtonView(viewModel: viewModel.currencyButtonVM)
                     }
-                    .font(.textH2SB20282())
+                    .font(.textH2Sb20282())
                     .foregroundColor(.mainColorsBlack)
                             
                 }  else {
@@ -65,13 +65,13 @@ struct MyProductsMoneyView: View {
                     VStack(alignment: .leading, spacing: 4) {
                                 
                         Text(viewModel.allMoneyTitle)
-                            .font(.textH2SB20282())
+                            .font(.textH2Sb20282())
                             .foregroundColor(.mainColorsBlack)
                                 
                         HStack {
                                         
                             Text(balanceStr)
-                                .font(.textH2SB20282())
+                                .font(.textH2Sb20282())
                                 .foregroundColor(.mainColorsBlack)
                                         
                             Spacer()

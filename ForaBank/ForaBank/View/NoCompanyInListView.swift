@@ -19,7 +19,7 @@ struct NoCompanyInListView: View {
             VStack(spacing: 16) {
                 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                 
                 Text(viewModel.content)
