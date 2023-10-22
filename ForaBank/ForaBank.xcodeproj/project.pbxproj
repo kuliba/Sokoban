@@ -7697,7 +7697,6 @@
 		77DC125C277098C600C917B0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				C1BA23E02ACD513600425B10 /* PaymentSystem */,
 				83E455E22AC2E07B0045BEC1 /* C2B */,
 				83CDE98F2AAF4BF600212FAA /* Landing */,
 				0BE0BDF92906F8BA0064549E /* QR */,
@@ -8787,13 +8786,6 @@
 				C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */,
 			);
 			path = StickersOrder;
-			sourceTree = "<group>";
-		};
-		C1BA23E02ACD513600425B10 /* PaymentSystem */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PaymentSystem;
 			sourceTree = "<group>";
 		};
 		C1BA23E32ACD542400425B10 /* PaymentService */ = {

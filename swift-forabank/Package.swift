@@ -43,6 +43,7 @@ let package = Package(
         .customDump,
         .tagged,
         .shimmer,
+        .phoneNumberKit,
     ],
     targets: [
         .loadableModel,
@@ -319,7 +320,10 @@ private extension Target {
     
     static let phoneNumberWrapper = target(
         name: .phoneNumberWrapper,
-        dependencies: []
+        dependencies: [
+            .customDump,
+            .phoneNumberKit
+        ]
     )
     
     static let phoneNumberWrapperTests = testTarget(
@@ -853,6 +857,10 @@ private extension Package.Dependency {
         url: .swift_shimmer_path,
         from: .init(1, 0, 0)
     )
+    static let phoneNumberKit = Package.Dependency.package(
+        url: .phoneNumberKit_path,
+        from: .init(3, 5, 8)
+    )
 }
 
 private extension Target.Dependency {
@@ -889,6 +897,10 @@ private extension Target.Dependency {
         name: .shimmer,
         package: .swift_shimmer
     )
+    static let phoneNumberKit = product(
+        name: .phoneNumberKit,
+        package: .phoneNumberKit
+    )
 }
 
 private extension String {
@@ -919,4 +931,9 @@ private extension String {
     static let shimmer = "Shimmer"
     static let swift_shimmer = "SwiftUI-Shimmer"
     static let swift_shimmer_path = "https://github.com/markiv/SwiftUI-Shimmer"
+    
+    static let phoneNumberKit = "PhoneNumberKit"
+    static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
+
+    
 }
