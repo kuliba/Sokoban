@@ -10,7 +10,7 @@
 public final class CachingFormSessionKeyServiceDecorator {
     
     public typealias Service = FormSessionKeyService
-    public typealias Cache = (FormSessionKeyService.SessionKey) -> Void
+    public typealias Cache = (FormSessionKeyService.Success) -> Void
     
     private let decoratee: Service
     private let cache: Cache
@@ -37,9 +37,9 @@ public extension CachingFormSessionKeyServiceDecorator {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .success(response):
-                cache(response)
-                completion(.success(response))
+            case let .success(success):
+                cache(success)
+                completion(.success(success))
             }
         }
     }

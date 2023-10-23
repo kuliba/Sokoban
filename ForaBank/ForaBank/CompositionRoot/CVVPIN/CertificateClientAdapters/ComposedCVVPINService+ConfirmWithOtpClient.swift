@@ -14,7 +14,7 @@ extension ComposedCVVPINService: ConfirmWithOtpClient {
         completion: @escaping ConfirmWithOtpClient.ConfirmationCompletion
     ) {
         confirmActivation(
-            withOTP: .init(otp: otp)
+            withOTP: .init(otpValue: otp)
         ) { [weak self] result in
             
             guard self != nil else { return }

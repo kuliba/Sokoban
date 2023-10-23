@@ -18,7 +18,7 @@ extension RequestFactory {
         
         return try factory.makeRequest(
             for: .formSessionKey(.init(
-                code: .init(value: payload.code.code),
+                code: .init(value: payload.code.codeValue),
                 data: payload.data
             ))
         )

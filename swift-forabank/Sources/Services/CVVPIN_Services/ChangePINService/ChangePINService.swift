@@ -129,46 +129,46 @@ extension ChangePINService {
     
     public struct CardID {
         
-        let cardID: Int
+        let cardIDValue: Int
         
-        public init(cardID: Int) {
+        public init(cardIDValue: Int) {
          
-            self.cardID = cardID
+            self.cardIDValue = cardIDValue
         }
     }
     
     struct EventID {
         
-        let eventID: String
+        let eventIDValue: String
     }
     
     public struct OTP {
         
-        let otp: String
+        let otpValue: String
         
-        public init(otp: String) {
+        public init(otpValue: String) {
          
-            self.otp = otp
+            self.otpValue = otpValue
         }
     }
     
     public struct PIN {
         
-        let pin: String
+        let pinValue: String
         
-        public init(pin: String) {
+        public init(pinValue: String) {
          
-            self.pin = pin
+            self.pinValue = pinValue
         }
     }
     
     public struct SessionID {
         
-        public let sessionID: String
+        public let sessionIDValue: String
         
-        public init(sessionID: String) {
+        public init(sessionIDValue: String) {
          
-            self.sessionID = sessionID
+            self.sessionIDValue = sessionIDValue
         }
     }
 }
@@ -284,9 +284,8 @@ private extension ChangePINService {
 
 private extension ChangePINService.Error {
     
-    init(
-        _ error: ChangePINService.ConfirmAPIError
-    ) {
+    init(_ error: ChangePINService.ConfirmAPIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)
@@ -299,9 +298,8 @@ private extension ChangePINService.Error {
         }
     }
 
-    init(
-        _ error: ChangePINService.ChangePINAPIError
-    ) {
+    init(_ error: ChangePINService.ChangePINAPIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

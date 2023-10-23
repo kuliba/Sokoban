@@ -76,7 +76,7 @@ extension Services {
         let getCodeService = GetProcessingSessionCodeService(
             process: { completion in
                 
-                getCodeRemoteService.get {
+                getCodeRemoteService.process {
                     
                     completion($0.mapError { .init($0) })
                 }
@@ -88,8 +88,9 @@ extension Services {
             cache: {
                 
                 sessionCodeLoader.saveAndForget(
-                    .init(sessionCode: $0.code),
-                    currentDate()
+                    .init(sessionCodeValue: $0.code),
+                    // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
+                    currentDate() + 15
                 )
             }
         )
@@ -101,7 +102,7 @@ extension Services {
                 
                 sessionCodeLoader.load {
                     
-                    completion($0.map { .init(code: $0.sessionCode) })
+                    completion($0.map { .init(codeValue: $0.sessionCodeValue) })
                 }
             },
             makeSecretRequestJSON: { completion in
@@ -124,7 +125,7 @@ extension Services {
                 
                 completion(
                     .init(catching: { try .init(
-                        sessionKey: cryptographer.sharedSecret(string, keyPair.privateKey)
+                        sessionKeyValue: cryptographer.sharedSecret(string, keyPair.privateKey)
                     )})
                 )
             }
@@ -132,9 +133,11 @@ extension Services {
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
             decoratee: formSessionKeyService,
-            cache: {
+            cache: { sessionKey, sessionTTL in
+                
                 sessionKeyLoader.saveAndForget(
-                    .init(sessionKey: $0.sessionKey), currentDate()
+                    .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                    currentDate() + TimeInterval(sessionTTL)
                 )
             }
         )
@@ -144,7 +147,7 @@ extension Services {
                 
                 eventIDLoader.load {
                     
-                    completion($0.map { .init(eventID: $0.value) })
+                    completion($0.map { .init(eventIDValue: $0.value) })
                 }
             },
             makeSecretJSON: { _, completion in
@@ -183,7 +186,7 @@ extension Services {
                     
                     completion(
                         result
-                            .map { .init(sessionKey: $0.sessionKey) }
+                            .map { .init(sessionKeyValue: $0.sessionKey.sessionKeyValue) }
                             .mapError { $0 }
                     )
                 }
@@ -191,7 +194,7 @@ extension Services {
             bindPublicKeyWithEventID: { otp, completion in
                 
                 rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind(
-                    otp: .init(otp: otp.otp)
+                    otp: .init(otpValue: otp.otpValue)
                 ) {
                     completion($0.mapError { $0 })
                 }
@@ -203,7 +206,10 @@ extension Services {
         let showCVVService = ShowCVVService(
             checkSession: { completion in
                 
-                checkSession { completion($0.map { .init(sessionID: $0.value) }) }
+                checkSession {
+                    
+                    completion($0.map { .init(sessionIDValue: $0.value) })
+                }
             },
             makeJSON: { _,_, completion in
                 
@@ -213,7 +219,7 @@ extension Services {
             process: { payload, completion in
                 
                 showCVVRemoteService.process((
-                    .init(value: payload.sessionID.sessionID),
+                    .init(value: payload.sessionID.sessionIDValue),
                     payload.data
                 )) {
                     completion($0.mapError { .init($0) })
@@ -228,7 +234,10 @@ extension Services {
         let changePINService = ChangePINService(
             checkSession: { completion in
                 
-                checkSession { completion($0.map { .init(sessionID: $0.value) }) }
+                checkSession {
+                    
+                    completion($0.map { .init(sessionIDValue: $0.value) })
+                }
             },
             publicRSAKeyDecrypt: { _, completion in
                 
@@ -241,7 +250,7 @@ extension Services {
             confirmProcess: { payload, completion in
                 
                 confirmChangePINRemoteService.process(
-                    .init(value: payload.sessionID)
+                    .init(value: payload.sessionIDValue)
                 ) {
                     completion(
                         $0
@@ -260,7 +269,7 @@ extension Services {
             changePINProcess: { payload, completion in
                 
                 changePINRemoteService.process((
-                    .init(value: payload.0.sessionID),
+                    .init(value: payload.0.sessionIDValue),
                     payload.1
                 )) {
                     completion($0.mapError { .init($0) })
@@ -331,12 +340,12 @@ extension Services {
 
 struct SessionCode {
     
-    let sessionCode: String
+    let sessionCodeValue: String
 }
 
 struct SessionKey {
     
-    let sessionKey: Data
+    let sessionKeyValue: Data
 }
 
 // MARK: - Error Mappers
@@ -441,7 +450,7 @@ private extension CVVPINFunctionalityActivationService.GetCodeResponse {
 
 extension RemoteService where Input == Void {
     
-    func get(completion: @escaping ProcessCompletion) {
+    func process(completion: @escaping ProcessCompletion) {
         
         process((), completion: completion)
     }

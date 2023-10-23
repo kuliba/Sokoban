@@ -208,9 +208,8 @@ private extension AuthenticateWithPublicKeyService {
 
 private extension AuthenticateWithPublicKeyService.Error {
     
-    init(
-        _ error: AuthenticateWithPublicKeyService.APIError
-    ) {
+    init(_ error: AuthenticateWithPublicKeyService.APIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

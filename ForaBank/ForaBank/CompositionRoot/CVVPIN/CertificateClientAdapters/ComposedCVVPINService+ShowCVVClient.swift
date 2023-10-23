@@ -14,14 +14,14 @@ extension ComposedCVVPINService: ShowCVVClient {
         completion: @escaping ShowCVVCompletion
     ) {
         showCVV(
-            cardID: .init(cardID: cardId)
+            cardID: .init(cardIDValue: cardId)
         ) { [weak self] result in
             
             guard self != nil else { return }
             
             completion(
                 result
-                    .map(\.cvv)
+                    .map(\.cvvValue)
                     .map { .init($0) }
                     .mapError(CVVPinError.ShowCVVError.init)
             )
@@ -31,9 +31,8 @@ extension ComposedCVVPINService: ShowCVVClient {
 
 private extension CVVPinError.ShowCVVError {
     
-    init(
-        _ error: ShowCVVService.Error
-    ) {
+    init(_ error: ShowCVVService.Error) {
+        
         switch error {
         case .invalid:
             self = .check(.connectivity)

@@ -25,9 +25,8 @@ extension ComposedCVVPINService: CheckCertificateClient {
 
 private extension CVVPinError.CheckError {
     
-    init(
-        _ error: CVVPINFunctionalityCheckingService.Error
-    ) {
+    init(_ error: CVVPINFunctionalityCheckingService.Error) {
+        
         switch error {
         case .checkSessionFailure:
             self = .certificate
