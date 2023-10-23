@@ -58,7 +58,7 @@ class AuthLoginViewModelTests: XCTestCase {
     }
     
     final class AuthLoginViewModelFactorySpy: AuthLoginViewModelFactory {
-
+       
         private let products: [CatalogProductData]
         
         init(products: [CatalogProductData]) {
@@ -119,14 +119,14 @@ class AuthLoginViewModelTests: XCTestCase {
         
         private(set) var abroadType: AbroadType?
         private(set) var cardOrders = [CardOrder]()
+        private(set) var stickerOrders = [Int]()
         private(set) var goToMainCount = 0
         
-        func makeLandingViewModel(
+        func makeCardLandingViewModel(
             _ type: ForaBank.AbroadType,
             config: LandingUIComponent.UILanding.Component.Config,
-            goMain: @escaping GoMainAction,
-            orderCard: @escaping OrderCardAction
-        ) -> LandingWrapperViewModel {
+            landingActions: @escaping (LandingUIComponent.LandingEvent.Card) -> () -> Void
+        ) -> LandingUIComponent.LandingWrapperViewModel {
             
             self.abroadType = type
             
@@ -140,19 +140,30 @@ class AuthLoginViewModelTests: XCTestCase {
                 statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
                 imagePublisher: imagePublisher,
                 imageLoader: { _ in },
-                scheduler: .immediate,
-                config: .default,
-                goMain: { [weak self] in
-                    
-                    self?.goToMainCount += 1
-                },
-                orderCard: { [weak self] in
-                    
-                    self?.cardOrders.append(
-                        .init(cardTarif: $0, cardType: $1)
-                    )
+                config: .default) { [weak self] event in
+                    switch event {
+                        
+                    case let .card(card):
+                        switch card {
+                            
+                        case .goToMain:
+                            self?.goToMainCount += 1
+                        case let .order(cardTarif, cardType):
+                            self?.cardOrders.append(
+                                .init(cardTarif: cardTarif, cardType: cardType)
+                            )
+                        }
+                        
+                    case let .sticker(sticker):
+                        switch sticker {
+                            
+                        case .goToMain:
+                            self?.goToMainCount += 1
+                        case .order:
+                            self?.stickerOrders.append(Int.random(in: 1...10))
+                        }
+                    }
                 }
-            )
         }
     }
 }
@@ -218,14 +229,13 @@ extension AuthLoginViewModel {
     func orderCard(cardTarif: Int, cardType: Int) {
         
         XCTAssertNotNil(link)
-        link?.landingWrapperViewModel?.action(.orderCard(cardTarif: cardTarif, cardType: cardType)
-        )
+        link?.landingWrapperViewModel?.action(.card(.order(cardTarif: cardTarif, cardType: cardType)))
     }
     
     func goToMain() {
         
         XCTAssertNotNil(link)
-        link?.landingWrapperViewModel?.action(.goToMain)
+        link?.landingWrapperViewModel?.action(.card(.goToMain))
     }
     
     // MARK: - Actions on scheduler
