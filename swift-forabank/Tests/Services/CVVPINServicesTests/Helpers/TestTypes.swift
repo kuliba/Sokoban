@@ -55,18 +55,11 @@ struct ECDHPublicKey {
     }
 }
 
-extension ECDHPublicKey: RawRepresentable {
+extension ECDHPublicKey: Base64StringEncodable {
     
-    init?(rawValue: Data) {
+    func base64EncodedString() throws -> String {
         
-        guard let value = String(data: rawValue, encoding: .utf8)
-        else { return nil }
-        
-        self.init(value)
-    }
-    
-    var rawValue: Data {
-        .init(value.utf8)
+        value.appending("==")
     }
 }
 
@@ -132,18 +125,11 @@ struct RSAPublicKey {
     }
 }
 
-extension RSAPublicKey: RawRepresentable {
+extension RSAPublicKey: Base64StringEncodable {
     
-    init?(rawValue: Data) {
+    func base64EncodedString() throws -> String {
         
-        guard let value = String(data: rawValue, encoding: .utf8)
-        else { return nil }
-        
-        self.init(value)
-    }
-    
-    var rawValue: Data {
-        .init(value.utf8)
+        value.appending("==")
     }
 }
 

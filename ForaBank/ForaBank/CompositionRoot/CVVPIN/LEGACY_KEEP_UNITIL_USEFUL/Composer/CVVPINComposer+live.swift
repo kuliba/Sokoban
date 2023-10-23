@@ -14,9 +14,9 @@ where RemoteCVV == ForaBank.RemoteCVV,
       RSAPublicKey == SecKey,
       SymmetricKey == ForaBank.SymmetricKey,
       SessionID == ForaBank.SessionID,
-      ShowCVVAPIError == RemoteServiceErrorOf<ResponseMapper.ShowCVVMapperError>,
-      ChangePINAPIError == RemoteServiceErrorOf<ResponseMapper.ChangePINMappingError>,
-      KeyServiceAPIError == RemoteServiceErrorOf<ResponseMapper.KeyExchangeMapperError> {
+      ShowCVVAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.ShowCVVMapperError>,
+      ChangePINAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.ChangePINMappingError>,
+      KeyServiceAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.KeyExchangeMapperError> {
     
     static func live(
         httpClient: HTTPClient

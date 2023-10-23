@@ -8,8 +8,8 @@
 import Foundation
 
 public extension CVVPINComposer
-where ECDHPublicKey: RawRepresentable<Data>,
-      RSAPublicKey: RawRepresentable<Data>,
+where ECDHPublicKey: Base64StringEncodable,
+      RSAPublicKey: Base64StringEncodable,
       SessionID == PublicKeyAuthenticationResponse.SessionID {
     
     typealias AuthWithPublicKey = (@escaping PublicKeyAuth.Completion) -> Void

@@ -8,11 +8,16 @@
 import CryptoKit
 import Foundation
 
+public protocol Base64StringEncodable {
+    
+    func base64EncodedString() throws -> String
+}
+
 /// ProcessPublicKeyAuthentication
 public struct KeyExchange<APIError, ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey>
 where APIError: Error,
-      ECDHPublicKey: RawRepresentable<Data>,
-      RSAPublicKey: RawRepresentable<Data> {
+      ECDHPublicKey: Base64StringEncodable,
+      RSAPublicKey: Base64StringEncodable {
     
     public typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
     public typealias MakeECDHKeyPair = ECDHKeyPairDomain.Get
@@ -58,8 +63,8 @@ public extension KeyExchange {
             let (clientPublicKeyRSA, privateKey) = rsaKeyPair
             
             let json = try KeyExchangeHelper.wrapInJSON(
-                clientPublicKeyRSABase64: clientPublicKeyRSA.rawValue.base64EncodedString(),
-                publicApplicationSessionKeyBase64: paS.rawValue.base64EncodedString(),
+                clientPublicKeyRSABase64: clientPublicKeyRSA.base64EncodedString(),
+                publicApplicationSessionKeyBase64: paS.base64EncodedString(),
                 signWithClientSecretKey: { try sign($0, privateKey) }
             )
             

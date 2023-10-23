@@ -10,8 +10,8 @@ import Foundation
 // MARK: - Public Key Authentication
 
 public extension CVVPINComposer
-where ECDHPublicKey: RawRepresentable<Data>,
-      RSAPublicKey: RawRepresentable<Data>,
+where ECDHPublicKey: Base64StringEncodable,
+      RSAPublicKey: Base64StringEncodable,
       SessionID == PublicKeyAuthenticationResponse.SessionID {
     
     typealias PublicKeyAuth = PublicKeyAuthenticator<KeyServiceAPIError, RSAPublicKey, RSAPrivateKey>

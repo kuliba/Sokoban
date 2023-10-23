@@ -29,6 +29,7 @@ let package = Package(
         // infra
         .keyChainStore,
         // services
+        .cvvPIN_Services,
         .cvvPINServices,
         .genericRemoteService,
         .getProcessingSessionCodeService,
@@ -84,6 +85,7 @@ let package = Package(
         .keyChainStore,
         .keyChainStoreTests,
         // services
+        .cvvPIN_Services,
         .cvvPINServices,
         .cvvPINServicesTests,
         .genericRemoteService,
@@ -258,6 +260,13 @@ private extension Product {
     )
     
     // MARK: - Services
+    
+    static let cvvPIN_Services = library(
+        name: .cvvPIN_Services,
+        targets: [
+            .cvvPIN_Services
+        ]
+    )
     
     static let cvvPINServices = library(
         name: .cvvPINServices,
@@ -611,6 +620,10 @@ private extension Target {
     
     // MARK: - Services
     
+    static let cvvPIN_Services = target(
+        name: .cvvPIN_Services,
+        path: "Sources/Services/\(String.cvvPIN_Services)"
+    )
     static let cvvPINServices = target(
         name: .cvvPINServices,
         path: "Sources/Services/\(String.cvvPINServices)"
@@ -774,6 +787,10 @@ private extension Target.Dependency {
     
     // MARK: - Services
     
+    static let cvvPIN_Services = byName(
+        name: .cvvPIN_Services
+    )
+    
     static let cvvPINServices = byName(
         name: .cvvPINServices
     )
@@ -869,6 +886,8 @@ private extension String {
     static let keyChainStoreTests = "KeyChainStoreTests"
 
     // MARK: - Services
+    
+    static let cvvPIN_Services = "CVVPIN_Services"
     
     static let cvvPINServices = "CVVPINServices"
     static let cvvPINServicesTests = "CVVPINServicesTests"

@@ -14,9 +14,9 @@ typealias RemoteServiceErrorOf<APIError> = RemoteServiceError<Error, Error, APIE
 extension CVVPINRemote
 where RemoteCVV == ForaBank.RemoteCVV,
       SessionID == ForaBank.SessionID,
-      ShowCVVAPIError == RemoteServiceErrorOf<ResponseMapper.ShowCVVMapperError>,
-      ChangePINAPIError == RemoteServiceErrorOf<ResponseMapper.ChangePINMappingError>,
-      KeyServiceAPIError == RemoteServiceErrorOf<ResponseMapper.KeyExchangeMapperError> {
+      ShowCVVAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.ShowCVVMapperError>,
+      ChangePINAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.ChangePINMappingError>,
+      KeyServiceAPIError == RemoteServiceErrorOf<CVVPINServices.ResponseMapper.KeyExchangeMapperError> {
     
     static func live(
         httpClient: HTTPClient,
@@ -26,19 +26,19 @@ where RemoteCVV == ForaBank.RemoteCVV,
         let changePINService = RemoteService(
             createRequest: RequestFactory.makeChangePINRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: ResponseMapper.mapChangePINResponse
+            mapResponse: CVVPINServices.ResponseMapper.mapChangePINResponse
         )
         
         let cvvService = RemoteService(
             createRequest: RequestFactory.makeShowCVVRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: ResponseMapper.mapShowCVVResponse
+            mapResponse: CVVPINServices.ResponseMapper.mapShowCVVResponse
         )
         
         let keyService = RemoteService(
             createRequest: RequestFactory.makeProcessPublicKeyAuthenticationRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: ResponseMapper.mapProcessPublicKeyAuthenticationResponse
+            mapResponse: CVVPINServices.ResponseMapper.mapProcessPublicKeyAuthenticationResponse
         )
         
         return .init(
@@ -51,9 +51,9 @@ where RemoteCVV == ForaBank.RemoteCVV,
 
 // MARK: - Adapters
 
-private extension RemoteService<(SessionID, Data), CVVPINServices.RemoteCVV, Error, Error, ResponseMapper.ShowCVVMapperError> {
+private extension RemoteService<(SessionID, Data), CVVPINServices.RemoteCVV, Error, Error, CVVPINServices.ResponseMapper.ShowCVVMapperError> {
     
-    typealias Error = RemoteServiceErrorOf<ResponseMapper.ShowCVVMapperError>
+    typealias Error = RemoteServiceErrorOf<CVVPINServices.ResponseMapper.ShowCVVMapperError>
     
     func process(
         request: (SessionID, Data),
@@ -100,7 +100,7 @@ private extension RequestFactory {
     }
 }
 
-private extension ResponseMapper {
+private extension CVVPINServices.ResponseMapper {
     
     static func mapProcessPublicKeyAuthenticationResponse(
         response: (

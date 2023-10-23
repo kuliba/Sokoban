@@ -27,7 +27,9 @@ where KeyServiceAPIError: Error {
 
 public extension PublicKeyAuthenticator {
     
-    typealias Completion = (Result<Void, KeyExchangeError<KeyServiceAPIError>>) -> Void
+    typealias AuthError = KeyExchangeError<KeyServiceAPIError>
+    typealias AuthResult = Swift.Result<Void, AuthError>
+    typealias Completion = (AuthResult) -> Void
     
     func authenticateWithPublicKey(
         completion: @escaping Completion

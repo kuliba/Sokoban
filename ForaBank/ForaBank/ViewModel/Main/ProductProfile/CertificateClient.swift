@@ -19,7 +19,8 @@ protocol CheckCertificateClient {
 
 protocol ActivateCertificateClient {
     
-    typealias ActivateCertificateResult = Result<PinCodeUI.PhoneDomain.Phone, CVVPinError.ActivationError>
+    typealias Phone = PinCodeUI.PhoneDomain.Phone
+    typealias ActivateCertificateResult = Result<Phone, CVVPinError.ActivationError>
     typealias ActivateCertificateCompletion = (ActivateCertificateResult) -> Void
     
     func activateCertificate(completion: @escaping ActivateCertificateCompletion)
