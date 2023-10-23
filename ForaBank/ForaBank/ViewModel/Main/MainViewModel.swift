@@ -972,7 +972,7 @@ extension MainViewModel {
             
             let viewModel = factory.makeStickerLandingViewModel(
                 abroadType,
-                config: .default,//.stickerDefault,
+                config: .stickerDefault,
                 landingActions: landingAction
             )
             
@@ -1012,7 +1012,7 @@ extension MainViewModel {
             }))
         }
         
-        testHandleOrderSticker() // TODO: link to OrderSticker here
+        testHandleOrderSticker() // TODO: Me, link to OrderSticker here
         
         /* TODO: v4 сейчас нет
          если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
@@ -1020,8 +1020,8 @@ extension MainViewModel {
          */
     }
     
-    func testHandleOrderSticker() { // TODO: Delete
-        let viewModel = factory.makeStickerLandingViewModel(.sticker, config: .default,landingActions: landingAction)
+    func testHandleOrderSticker() { // TODO: Me, Delete
+        let viewModel = factory.makeStickerLandingViewModel(.sticker, config: .stickerDefault,landingActions: landingAction)
         UIApplication.shared.endEditing()
         link = .orderSticker(viewModel)
     }
