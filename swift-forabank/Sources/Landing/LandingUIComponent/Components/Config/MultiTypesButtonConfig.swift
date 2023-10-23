@@ -11,11 +11,25 @@ public extension UILanding.Multi.TypeButtons {
     
     struct Config {
         
+        let paddings: Paddings
         let cornerRadius: CGFloat
         let fonts: Fonts
         let spacing: CGFloat
         let sizes: Sizes
         let colors: Colors
+        
+        public struct Paddings {
+            
+            let horizontal: CGFloat
+            let top: CGFloat
+            let bottom: CGFloat
+            
+            public init(horizontal: CGFloat, top: CGFloat, bottom: CGFloat) {
+                self.horizontal = horizontal
+                self.top = top
+                self.bottom = bottom
+            }
+        }
         
         public struct Fonts {
             
@@ -35,19 +49,6 @@ public extension UILanding.Multi.TypeButtons {
             public init(imageInfo: CGFloat, heightButton: CGFloat) {
                 self.imageInfo = imageInfo
                 self.heightButton = heightButton
-            }
-        }
-        
-        let paddings: Paddings
-        
-        public struct Paddings {
-            
-            let horizontal: CGFloat
-            let vertical: CGFloat
-            
-            public init(horizontal: CGFloat, vertical: CGFloat) {
-                self.horizontal = horizontal
-                self.vertical = vertical
             }
         }
         
@@ -88,23 +89,16 @@ public extension UILanding.Multi.TypeButtons {
                 self.foreground = foreground
             }
         }
-        
-        public init(
-            cornerRadius: CGFloat,
-            fonts: Fonts,
-            spacing: CGFloat,
-            sizes: Sizes,
-            colors: Colors,
-            paddings: Paddings
-        ) {
+       
+        public init(paddings: Paddings, cornerRadius: CGFloat, fonts: Fonts, spacing: CGFloat, sizes: Sizes, colors: Colors) {
+            self.paddings = paddings
             self.cornerRadius = cornerRadius
             self.fonts = fonts
             self.spacing = spacing
             self.sizes = sizes
             self.colors = colors
-            self.paddings = paddings
         }
-                
+        
         func backgroundColor(_ backgroundColor: String) -> Color {
             
             let colorType: BackgroundColorType = .init(rawValue: backgroundColor) ?? .white

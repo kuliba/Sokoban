@@ -42,7 +42,7 @@ public struct LandingView: View {
         
         Button(action: {
             action(.goToMain)
-        }) { Image(systemName: "chevron.backward") }
+        }) { Image(systemName: "chevron.backward").font(.system(size: 14)) }
     }
     
     public var body: some View {

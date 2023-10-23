@@ -42,7 +42,8 @@ extension UILanding.VerticalSpacing.Config {
         background: .init(
             black: .mainColorsBlack,
             gray: .mainColorsGrayLightest,
-            white: .textWhite)
+            white: .textWhite
+        )
     )
 }
 
@@ -52,7 +53,8 @@ extension UILanding.List.HorizontalRoundImage.Config {
         backgroundColor: .mainColorsGrayLightest,
         title: .init(
             color: .textSecondary,
-            font: .textH3Sb18240()),
+            font: .textH3Sb18240()
+        ),
         subtitle: .init(
             color: .mainColorsGray,
             background: .white,
@@ -60,33 +62,51 @@ extension UILanding.List.HorizontalRoundImage.Config {
             cornerRadius: 90,
             padding: .init(
                 horizontal: 7,
-                vertical: 5)),
+                vertical: 5
+            )
+        ),
         detail: .init(
             color: .textSecondary,
-            font: .textBodySR12160()),
+            font: .textBodySR12160()
+        ),
         item: .init(
             cornerRadius: 90,
             width: 56,
             spacing: 8,
-            size: .init(width: 80, height: 80)
+            size: .init(
+                width: 80,
+                height: 80
+            )
         ),
         cornerRadius: 12,
-        spacing: 4,
+        spacing: 16,
         height: 144,
-        paddings: .init(horizontal: 16, vertical: 8))
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8,
+            vStackContentHorizontal: 4
+        )
+    )
 }
 
 extension UILanding.Multi.LineHeader.Config {
     
     static let `default`: Self = .init(
+        paddings: .init(
+            horizontal: 16,
+            vertical: 12
+        ),
         item: .init(
             fontRegular: .marketingH0L40X480(),
-            fontBold: .marketingH0B40X480()),
+            fontBold: .marketingH0B40X480()
+        ),
         background: .init(
             black: .mainColorsBlack,
             gray: .mainColorsGrayLightest,
             white: .textWhite),
-        foreground: .init(fgBlack: .textSecondary, fgWhite: .textWhite)
+        foreground: .init(
+            fgBlack: .textSecondary,
+            fgWhite: .textWhite)
     )
 }
 
@@ -95,8 +115,12 @@ extension UILanding.Multi.TextsWithIconsHorizontal.Config {
     static let `default`: Self = .init(
         color: .mainColorsGrayMedium,
         font: .textBodySM12160(),
-        size: 12,
-        padding: 8
+        size: 14,
+        padding: .init(
+            horizontal: 12,
+            vertical: 8,
+            itemVertical: 8
+        )
     )
 }
 
@@ -104,10 +128,18 @@ extension UILanding.Multi.Texts.Config {
     
     static let `default`: Self = .init(
         font: .textBodySR12160(),
-        colors: .init(text: .textPlaceholder, background: .mainColorsGrayLightest),
+        colors: .init(
+            text: .textPlaceholder,
+            background: .mainColorsGrayLightest),
         paddings: .init(
-            main: .init(horizontal: 16, vertical: 8),
-            inside: .init(horizontal: 20, vertical: 16)),
+            main: .init(
+                horizontal: 16,
+                vertical: 8),
+            inside: .init(
+                horizontal: 20,
+                vertical: 16
+            )
+        ),
         cornerRadius: 12,
         spacing: 16
     )
@@ -130,16 +162,22 @@ extension UILanding.PageTitle.Config {
 extension UILanding.IconWithTwoTextLines.Config {
     
     static let `default`: Self = .init(
-        icon: .init(size: 64, paddingBottom: 24),
-        horizontalPadding: 50,
+        paddings: .init(
+            horizontal: 50,
+            vertical: 8),
+        icon: .init(
+            size: 64,
+            paddingBottom: 24),
         title: .init(
             font: .textH3Sb18240(),
             color: .textSecondary,
-            paddingBottom: 12),
+            paddingBottom: 12
+        ),
         subTitle: .init(
             font: .textBodyMR14200(),
             color: .textPlaceholder,
-            paddingBottom: 8)
+            paddingBottom: 8
+        )
     )
 }
 
@@ -149,51 +187,86 @@ extension UILanding.List.DropDownTexts.Config {
         fonts: Fonts(
             title: .textH3Sb18240(),
             itemTitle: .textBodyMR14180(),
-            itemDescription: .textBodyMR14180()),
+            itemDescription: .textBodyMR14180()
+        ),
         colors: Colors(
             title: .textSecondary,
             itemTitle: .mainColorsBlack,
-            itemDescription: .mainColorsGray),
+            itemDescription: .mainColorsGray
+        ),
         paddings: .init(
+            horizontal: 16,
+            vertical: 8,
             titleTop: 12,
-            list: 8,
+            titleHorizontal: 16,
             itemVertical: 16,
-            itemHorizontal: 16),
-        heights: .init(title: 48, item: 64),
+            itemHorizontal: 16
+        ),
+        heights: .init(
+            title: 24,
+            item: 64
+        ),
         backgroundColor: .mainColorsGrayLightest,
-        cornerRadius: 16)
+        cornerRadius: 16,
+        divider: .blurMediumGray30,
+        chevronDownImage: Image("chevron-downnew")
+    )
 }
 
 extension UILanding.List.VerticalRoundImage.Config {
     
     static let `default`: Self = .init(
+        padding: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
         title: Title(
             font: .textH3Sb18240(),
             color: .textSecondary,
             paddingHorizontal: 16,
-            paddingTop: 16),
+            paddingTop: 16
+        ),
+        divider: .blurMediumGray30,
         spacings: Spacings(
             lazyVstack: 13,
             itemHstack: 16,
             buttonHStack: 16,
-            itemVStackBetweenTitleSubtitle: 4),
+            itemVStackBetweenTitleSubtitle: 4
+        ),
         item: ListItem(
             imageWidthHeight: 40,
-            fonts: .init(title: .headline, subtitle: .caption),
-            colors: .init(title: .textSecondary, subtitle: .textPlaceholder),
-            paddings: .init(horizontal: 16, vertical: 3)),
+            font: .init(
+                title: .textH4M16240(),
+                titleWithOutSubtitle: .textH4M16240(),
+                subtitle: .textBodyMR14180()
+            ),
+            color: .init(
+                title: .textSecondary,
+                subtitle: .textPlaceholder
+            ),
+            padding: .init(
+                horizontal: 16,
+                vertical: 3
+            )
+        ),
         listVerticalPadding: 13,
         componentSettings: .init(
             background: .blurMediumGray30,
-            cornerRadius: 12,
-            horizontalPad: 16,
-            verticalPad: 8),
+            cornerRadius: 12),
         buttonSettings: .init(
             circleFill: .white,
             circleWidthHeight: 40,
             ellipsisForegroundColor: .textSecondary,
-            text: .init(font: .textH3Sb18240(), color: .textSecondary),
-            padding: .init(horizontal: 16, vertical: 3)))
+            text: .init(
+                font: .textH3Sb18240(),
+                color: .textSecondary
+            ),
+            padding: .init(
+                horizontal: 16,
+                vertical: 3
+            )
+        )
+    )
 }
 
 extension UILanding.Multi.Buttons.Config {
@@ -201,26 +274,58 @@ extension UILanding.Multi.Buttons.Config {
     static let `default`: Self = .init(
         settings: .init(
             spacing: 8,
-            padding: .init(horiontal: 16, vertical: 12)),
+            padding: .init(
+                horiontal: 16,
+                top: 8,
+                bottom: 8
+            )
+        ),
         buttons: .init(
-            backgroundColors: .init(first: .buttonPrimary, second: .buttonSecondary),
-            textColors: .init(first: .white, second: .textSecondary),
-            padding: .init(horiontal: 16, vertical: 12),
+            backgroundColors: .init(
+                first: .buttonPrimary,
+                second: .buttonSecondary
+            ),
+            textColors: .init(
+                first: .white,
+                second: .textSecondary
+            ),
+            padding: .init(
+                horiontal: 16,
+                vertical: 16),
             font: .textH3Sb18240(),
             height: 56,
-            cornerRadius: 12))
-
+            cornerRadius: 12
+        )
+    )
+    
 }
 
 extension UILanding.TextsWithIconHorizontal.Config {
     
     static let `default`: Self = .init(
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
         backgroundColor: .mainColorsGrayLightest,
         cornerRadius: 20,
-        icon: .init(iconSize: 28, placeholderColor: .buttonSecondary),
-        height: 48,
-        spacing: 10,
-        text: .init(color: .textSecondary, font: .textBodyMR14200()))
+        circleSize: 32,
+        icon: .init(
+            width: 24,
+            height: 24,
+            placeholderColor: .buttonSecondary,
+            padding: .init(
+                vertical: 0,
+                leading: 12
+            )
+        ),
+        height: 40,
+        spacing: 12,
+        text: .init(
+            color: .textSecondary,
+            font: .textBodyMR14200()
+        )
+    )
 }
 
 extension UILanding.ImageBlock.Config {
@@ -231,8 +336,12 @@ extension UILanding.ImageBlock.Config {
             gray: .mainColorsGrayLightest,
             white: .textWhite,
             defaultColor: .textWhite),
-        paddings: .init(horizontal: 16, vertical: 12),
-        cornerRadius: 12)
+        paddings: .init(
+            horizontal: 16,
+            vertical: 12
+        ),
+        cornerRadius: 12
+    )
 }
 
 extension UILanding.ImageSvg.Config {
@@ -242,38 +351,64 @@ extension UILanding.ImageSvg.Config {
             black: .mainColorsBlack,
             gray: .mainColorsGrayLightest,
             white: .textWhite,
-            defaultColor: .textWhite),
-        paddings: .init(horizontal: 16, vertical: 12),
-        cornerRadius: 12)
+            defaultColor: .textWhite
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 12
+        ),
+        cornerRadius: 12
+    )
 }
 
 extension UILanding.List.HorizontalRectangleImage.Config {
     
     static let `default`: Self = .init(
         cornerRadius: 12,
-        size: .init(height: 124, width: 272),
-        paddings: .init(horizontal: 16, vertical: 8),
-        spacing: 8)
+        size: .init(
+            height: 124,
+            width: 272
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
+        spacing: 8
+    )
 }
 
 extension UILanding.Multi.TypeButtons.Config {
     
     static let `default`: Self = .init(
+        paddings: .init(
+            horizontal: 16,
+            top: 12,
+            bottom: 24
+        ),
         cornerRadius: 12,
         fonts: .init(
             into: .textBodyMR14200(),
-            button: .textH3Sb18240()),
+            button: .textH3Sb18240()
+        ),
         spacing: 44,
-        sizes: .init(imageInfo: 24, heightButton: 56),
+        sizes: .init(
+            imageInfo: 24,
+            heightButton: 56
+        ),
         colors: .init(
             background: .init(
                 black: .mainColorsBlack,
                 gray: .mainColorsGrayLightest,
-                white: .textWhite),
+                white: .textWhite
+            ),
             button: .buttonPrimary,
             buttonText: .mainColorsWhite,
-            foreground: .init(fgBlack: .textSecondary, fgWhite: .textWhite)),
-        paddings: .init(horizontal: 16, vertical: 12))
+            foreground: .init(
+                fgBlack: .textSecondary,
+                fgWhite: .textWhite
+            )
+        )
+    )
 }
 
 extension UILanding.Multi.MarkersText.Config {
@@ -283,16 +418,27 @@ extension UILanding.Multi.MarkersText.Config {
             foreground: .init(
                 black: .textSecondary,
                 white: .mainColorsWhite,
-                defaultColor: .white),
+                defaultColor: .white
+            ),
             backgroud: .init(
                 gray: .mainColorsGrayLightest,
                 black: .mainColorsBlack,
                 white: .textWhite,
-                defaultColor: .white)),
-        vstack: .init(padding: .init(leading: 16, trailing: 23, vertical: 8)),
+                defaultColor: .white
+            )
+        ),
+        vstack: .init(
+            padding: .init(
+                leading: 16,
+                trailing: 23,
+                vertical: 8
+            )
+        ),
         internalContent: .init(
             spacing: 4,
             cornerRadius: 12,
             lineTextLeadingPadding: 8,
-            textFont: .textBodyMR14200()))
+            textFont: .textBodyMR14200()
+        )
+    )
 }

@@ -25,10 +25,12 @@ public extension UILanding.List.HorizontalRoundImage {
             
             public let horizontal: CGFloat
             public let vertical: CGFloat
+            public let vStackContentHorizontal: CGFloat
             
-            public init(horizontal: CGFloat, vertical: CGFloat) {
+            public init(horizontal: CGFloat, vertical: CGFloat, vStackContentHorizontal: CGFloat) {
                 self.horizontal = horizontal
                 self.vertical = vertical
+                self.vStackContentHorizontal = vStackContentHorizontal
             }
         }
         

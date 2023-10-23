@@ -11,21 +11,45 @@ import XCTest
 final class MultiTextsWithIconsHorizontalViewConfigTests: XCTestCase {
 
     typealias Config = UILanding.Multi.TextsWithIconsHorizontal.Config
-
-    //MARK: - test init config
     
-    func test_init_config_shouldSetAllValue() {
+    func test_init_shouldSetColor() {
         
-        let sut: Config = .init(
+        let config = makeConfig()
+        XCTAssertEqual(config.color, .grayColor)
+    }
+
+    func test_init_shouldSetFont() {
+        
+        let config = makeConfig()
+        XCTAssertEqual(config.font, .body)
+    }
+
+    func test_init_shouldSetSize() {
+        
+        let config = makeConfig()
+        XCTAssertEqual(config.size, 10)
+    }
+
+    func test_init_shouldSetPadding() {
+        
+        let config = makeConfig()
+        
+        XCTAssertEqual(config.padding.horizontal, 11)
+        XCTAssertEqual(config.padding.vertical, 12)
+        XCTAssertEqual(config.padding.itemVertical, 13)
+    }
+
+    // MARK: - Helpers
+    
+    func makeConfig() -> Config {
+        
+        return .init(
             color: .grayColor,
             font: .body,
             size: 10,
-            padding: 11
-        )
-        
-        XCTAssertEqual(sut.color, .grayColor)
-        XCTAssertEqual(sut.font, .body)
-        XCTAssertEqual(sut.size, 10)
-        XCTAssertEqual(sut.padding, 11)
+            padding: .init(
+                horizontal: 11,
+                vertical: 12,
+                itemVertical: 13))
     }
 }

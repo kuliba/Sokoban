@@ -31,7 +31,7 @@ final class MultiTypesButtonConfigTests: XCTestCase {
             buttonText: .blue,
             foregroundBlack: .black,
             foregroundWhite: .white,
-            paddings: .init(horizontal: 7, vertical: 8)
+            paddings: .init(horizontal: 7, top: 12, bottom: 8)
         )
         
         XCTAssertEqual(config.cornerRadius, 3)
@@ -52,7 +52,7 @@ final class MultiTypesButtonConfigTests: XCTestCase {
         XCTAssertEqual(config.sizes.heightButton, 6)
         
         XCTAssertEqual(config.paddings.horizontal, 7)
-        XCTAssertEqual(config.paddings.vertical, 8)
+        XCTAssertEqual(config.paddings.bottom, 8)
     }
     
     //MARK: - test background
@@ -147,11 +147,11 @@ final class MultiTypesButtonConfigTests: XCTestCase {
         buttonText: Color = .blue,
         foregroundBlack: Color = .black,
         foregroundWhite: Color = .white,
-        paddings: Config.Paddings = .init(horizontal: 7, vertical: 8)
+        paddings: Config.Paddings = .init(horizontal: 7, top: 12, bottom: 8)
     ) -> Config {
         
         return .init(
-            cornerRadius: cornerRadius,
+            paddings: paddings, cornerRadius: cornerRadius,
             fonts: fonts,
             spacing: spacing,
             sizes: size,
@@ -162,8 +162,7 @@ final class MultiTypesButtonConfigTests: XCTestCase {
                     white: white),
                 button: buttonColor,
                 buttonText: buttonColor,
-                foreground: .init(fgBlack: foregroundBlack, fgWhite: foregroundWhite)),
-            paddings: paddings)
+                foreground: .init(fgBlack: foregroundBlack, fgWhite: foregroundWhite)))
     }
 }
 

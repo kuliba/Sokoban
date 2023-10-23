@@ -53,7 +53,8 @@ struct MultiTypeButtonsView: View {
             .background(config.colors.button)
             .cornerRadius(config.cornerRadius)
         }
-        .padding(.vertical, config.paddings.vertical)
+        .padding(.top, config.paddings.top)
+        .padding(.bottom, config.paddings.bottom)
         .padding(.horizontal, config.paddings.horizontal)
         .frame(maxWidth: .infinity)
         .background(config.backgroundColor(model.data.backgroundColor))

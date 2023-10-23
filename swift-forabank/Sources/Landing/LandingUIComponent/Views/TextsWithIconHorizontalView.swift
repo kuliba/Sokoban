@@ -25,18 +25,18 @@ struct TextsWithIconHorizontalView: View {
                     
                     Circle()
                         .foregroundColor(.white)
-                        .frame(width: config.icon.size, height: config.icon.size)
+                        .frame(width: config.circleSize, height: config.circleSize)
                     
                     switch model.image(byMd5Hash: model.data.md5hash) {
                     case .none:
                         Color.grayLightest
-                            .frame(width: config.icon.size, height: config.icon.size)
+                            .frame(width: config.icon.width, height: config.icon.width)
                         
                     case let .some(image):
                         image
                             .renderingMode(.original)
                             .resizable()
-                            .frame(width: config.icon.size, height: config.icon.size)
+                            .frame(width: config.icon.width, height: config.icon.height)
                     }
                 }
                 
@@ -45,11 +45,11 @@ struct TextsWithIconHorizontalView: View {
                     .foregroundColor(config.text.color)
                     .padding(.trailing)
             }
-            .padding(.leading)
+            .padding(.leading, config.icon.padding.leading)
         }
         .frame(height: config.height)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.vertical, config.paddings.vertical)
+        .padding(.horizontal, config.paddings.horizontal)
         .modifier(CustomFrameModifier(active: model.data.contentCenterAndPull))
     }
 }
