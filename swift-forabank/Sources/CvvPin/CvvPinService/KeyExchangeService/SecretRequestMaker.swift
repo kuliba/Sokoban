@@ -49,7 +49,7 @@ enum PublicApplicationSessionKeyJSONWrapper {
         let base64 = keyRawRepresentation.base64EncodedString()
         let data = try JSONSerialization.data(withJSONObject: [
             "publicApplicationSessionKey": base64
-        ]as [String: Any])
+        ] as [String: Any])
         
         return data
     }

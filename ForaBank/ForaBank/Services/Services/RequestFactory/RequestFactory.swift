@@ -13,28 +13,40 @@ enum RequestFactory {}
 
 extension RequestFactory {
     
-    enum APIConfig {
-        
-#if RELEASE
-        static let processingServerURL = "https://dmz-api-gate.forabank.ru"
-#else
-        static let processingServerURL = "https://dmz-api-gate-test.forabank.ru"
-#endif
-    }
-}
-
-extension RequestFactory {
-    
     static func factory(
         for endpoint: Services.Endpoint,
         with parameters: [(String, String)] = []
     ) throws -> URLRequestFactory {
         
         let url = try endpoint.url(
-            withBase: APIConfig.processingServerURL,
+            withBase: endpoint.serviceName.baseURL,
             parameters: parameters
         )
         
         return .init(url: url)
+    }
+}
+
+extension Services.Endpoint.ServiceName {
+    
+    var baseURL: String {
+        
+        switch self {
+            
+        case .getProcessingSessionCode:
+#if RELEASE
+            return "https://bg.forabank.ru/dbo/api/v3"
+#else
+            return "https://pl.forabank.ru/dbo/api/v3"
+#endif
+            
+        default:
+#if RELEASE
+            return "https://dmz-api-gate.forabank.ru"
+#else
+            return "https://dmz-api-gate-test.forabank.ru"
+#endif
+            
+        }
     }
 }

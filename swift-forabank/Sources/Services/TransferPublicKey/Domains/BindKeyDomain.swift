@@ -24,5 +24,13 @@ extension BindKeyDomain {
         
         public let eventID: EventID
         public let data: Data
+        
+        public init(
+            eventID: EventID,
+            data: Data
+        ) {
+            self.eventID = eventID
+            self.data = data
+        }
     }
 }

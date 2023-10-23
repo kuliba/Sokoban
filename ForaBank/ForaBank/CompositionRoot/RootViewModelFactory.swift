@@ -14,17 +14,18 @@ enum RootViewModelFactory {
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
-        let cvvPinService = Services.cvvPinService(
+        #warning("replace `cvvPinService` with `certificateClient`")
+        let certificateClient = Services.cvvPinService(
             httpClient: httpClient
         )
         let mainViewModel = MainViewModel(
             model,
-            certificateClient: cvvPinService
+            certificateClient: certificateClient
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            certificateClient: cvvPinService
+            certificateClient: certificateClient
         )
         
         let chatViewModel = ChatViewModel()
