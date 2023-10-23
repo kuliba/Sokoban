@@ -19,7 +19,7 @@ struct ListVerticalRoundImageView: View {
         
         VStack(alignment: .leading) {
             
-            model.data.title.map { Header(text: $0, config: config.title) }
+            model.data.title.map { Header(text: $0, config: config) }
             
             LazyVStack(alignment: .leading, spacing: config.spacings.lazyVstack) {
                                 
@@ -29,13 +29,13 @@ struct ListVerticalRoundImageView: View {
                     buttonShowAll
                 }
             }
-            .padding(.top, config.listVerticalPadding)
+            .padding(.top, 7) // минус магические 6 с item
             .padding(.bottom, config.listVerticalPadding)
         }
         .background(config.componentSettings.background)
         .cornerRadius(config.componentSettings.cornerRadius)
-        .padding(.horizontal, config.componentSettings.horizontalPad)
-        .padding(.vertical, config.componentSettings.verticalPad)
+        .padding(.horizontal, config.padding.horizontal)
+        .padding(.vertical, config.padding.vertical)
     }
     
     private func itemView (
@@ -50,6 +50,7 @@ struct ListVerticalRoundImageView: View {
     }
         
     private var buttonShowAll: some View {
+        
         Button(action: { showAll.toggle() }) {
             
             HStack(spacing: config.spacings.buttonHStack) {
@@ -78,17 +79,21 @@ struct ListVerticalRoundImageView: View {
     struct Header: View {
         
         let text: String
-        let config: UILanding.List.VerticalRoundImage.Config.Title
+        let config: UILanding.List.VerticalRoundImage.Config
         
         var body: some View {
             
-            Text(text)
-                .font(config.font)
-                .foregroundColor(config.color)
-                .padding(.horizontal, config.paddingHorizontal)
-                .padding(.top, config.paddingTop)
-            
-            Divider()
+            VStack(alignment: .leading) {
+                
+                Text(text)
+                    .font(config.title.font)
+                    .foregroundColor(config.title.color)
+                    .padding(.horizontal, config.title.paddingHorizontal)
+                    .padding(.top, config.title.paddingTop)
+                
+                config.divider
+                    .frame(height: 0.5)
+            }
         }
     }
     
@@ -98,7 +103,7 @@ struct ListVerticalRoundImageView: View {
         let item: UILanding.List.VerticalRoundImage.ListItem
         let image: Image?
         let action: () -> Void
-
+        
         var body: some View {
             
             Button(action: action) {
@@ -109,16 +114,17 @@ struct ListVerticalRoundImageView: View {
                     
                     VStack(alignment: .leading, spacing: config.spacings.itemVStackBetweenTitleSubtitle) {
                         
-                        item.title.map {
-                            Text($0)
-                                .font(config.item.font.title)
-                                .foregroundColor(config.item.color.title)
-                        }
-                        item.subInfo.map {
-                            Text($0)
+                        if let subInfo = item.subInfo, !subInfo.isEmpty {
+                            
+                            TitleView(item: item, config: config)
+
+                            Text(subInfo)
                                 .font(config.item.font.subtitle)
                                 .foregroundColor(config.item.color.subtitle)
                                 .multilineTextAlignment(.leading)
+                        } else {
+                            
+                            TitleView(item: item, config: config)
                         }
                     }
                 }
@@ -129,7 +135,25 @@ struct ListVerticalRoundImageView: View {
         }
     }
     
+    struct TitleView: View {
+        
+        let item: UILanding.List.VerticalRoundImage.ListItem
+        let config: UILanding.List.VerticalRoundImage.Config
+        
+        var body: some View {
+            
+            item.title.map {
+                
+                Text($0)
+                    .font(config.item.font.titleWithOutSubtitle)
+                    .foregroundColor(config.item.color.title)
+                    .multilineTextAlignment(.leading)
+            }
+        }
+    }
+    
     struct ImageView: View {
+        
         let image: Image?
         let config: UILanding.List.VerticalRoundImage.Config.ListItem
         

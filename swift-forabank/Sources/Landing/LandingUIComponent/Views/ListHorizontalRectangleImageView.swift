@@ -16,18 +16,15 @@ struct ListHorizontalRectangleImageView: View {
     let selectDetail: SelectDetail
     
     var body: some View {
-        
-        VStack {
             
             ScrollView(.horizontal, showsIndicators: false) {
-                
+               
                 HStack(spacing: config.spacing) {
                     ForEach(model.data.list, content: itemView)
                 }
             }
-        }
-        .padding(.horizontal, config.paddings.horizontal)
-        .padding(.vertical, config.paddings.vertical)
+            .padding(.horizontal, config.paddings.horizontal)
+            .padding(.vertical, config.paddings.vertical)
     }
     
     private func itemView (item: UILanding.List.HorizontalRectangleImage.Item) -> some View {
@@ -60,14 +57,16 @@ extension ListHorizontalRectangleImageView {
                     case .none:
                         Color.grayLightest
                             .cornerRadius(config.cornerRadius)
-                            .frame(width: config.size.width, height: config.size.height)
+                            .frame(width: config.size.width)
+                            .frame(maxHeight: config.size.height)
                             .shimmering(active: true, bounce: false)
                         
                     case let .some(image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: config.size.width, height: config.size.height)
+                            .frame(width: config.size.width)
+                            .frame(maxHeight: config.size.height)
                             .cornerRadius(config.cornerRadius)
                     }
                 }

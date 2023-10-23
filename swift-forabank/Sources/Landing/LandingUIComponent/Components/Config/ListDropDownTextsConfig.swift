@@ -17,6 +17,8 @@ public extension UILanding.List.DropDownTexts {
         public let heights: Heights
         public let backgroundColor: Color
         public let cornerRadius: CGFloat
+        public let divider: Color
+        public let chevronDownImage: Image
         
         public struct Fonts {
             public let title: Font
@@ -53,38 +55,32 @@ public extension UILanding.List.DropDownTexts {
         }
         
         public struct Paddings {
+            public let horizontal: CGFloat
+            public let vertical: CGFloat
             public let titleTop: CGFloat
-            public let list: CGFloat
+            public let titleHorizontal: CGFloat
             public let itemVertical: CGFloat
             public let itemHorizontal: CGFloat
             
-            public init(
-                titleTop: CGFloat,
-                list: CGFloat,
-                itemVertical: CGFloat,
-                itemHorizontal: CGFloat
-            ) {
+            public init(horizontal: CGFloat, vertical: CGFloat, titleTop: CGFloat, titleHorizontal: CGFloat, itemVertical: CGFloat, itemHorizontal: CGFloat) {
+                self.horizontal = horizontal
+                self.vertical = vertical
                 self.titleTop = titleTop
-                self.list = list
+                self.titleHorizontal = titleHorizontal
                 self.itemVertical = itemVertical
                 self.itemHorizontal = itemHorizontal
             }
         }
         
-        public init(
-            fonts: Fonts,
-            colors: Colors,
-            paddings: Paddings,
-            heights: Heights,
-            backgroundColor: Color,
-            cornerRadius: CGFloat
-        ) {
+        public init(fonts: Fonts, colors: Colors, paddings: Paddings, heights: Heights, backgroundColor: Color, cornerRadius: CGFloat, divider: Color, chevronDownImage: Image) {
             self.fonts = fonts
             self.colors = colors
             self.paddings = paddings
             self.heights = heights
             self.backgroundColor = backgroundColor
             self.cornerRadius = cornerRadius
+            self.divider = divider
+            self.chevronDownImage = chevronDownImage
         }
     }
 }

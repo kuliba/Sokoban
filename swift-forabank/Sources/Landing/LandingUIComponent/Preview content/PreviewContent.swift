@@ -119,7 +119,9 @@ extension UILanding.List.HorizontalRoundImage.Config {
         cornerRadius: 12,
         spacing: 16,
         height: 184,
-        paddings: .init(horizontal: 16, vertical: 8))
+        paddings: .init(horizontal: 16,
+                        vertical: 8,
+                        vStackContentHorizontal: 16))
 }
 
 extension UILanding.List.HorizontalRoundImage.Config.Title {
@@ -152,6 +154,7 @@ extension UILanding.List.HorizontalRoundImage.Config.Detail {
 extension UILanding.Multi.LineHeader.Config {
     
     static let defaultValue: Self = .init(
+        paddings: .init(horizontal: 0, vertical: 0),
         item: .defaultValueWhite,
         background: .init(
             black: /*Main colors/Black*/.black,
@@ -176,7 +179,7 @@ extension UILanding.Multi.TextsWithIconsHorizontal.Config {
         color: .black,
         font: .body,
         size: 12,
-        padding: 8
+        padding: .init(horizontal: 16, vertical: 8, itemVertical: 8)
     )
 }
 
@@ -319,8 +322,9 @@ extension UILanding.IconWithTwoTextLines {
 extension UILanding.IconWithTwoTextLines.Config {
     
     static let defaultValue: Self = .init(
+        paddings: .init(horizontal: 50, vertical: 8),
         icon: .init(size: 64, paddingBottom: 24),
-        horizontalPadding: 50,
+       // horizontalPadding: 50,
         title: TextConfig(font: .system(size: 18), color: .textSecondary, paddingBottom: 12),
         subTitle: TextConfig(font: .system(size: 14), color: .grayColor, paddingBottom: 8)
     )
@@ -331,10 +335,13 @@ extension UILanding.List.DropDownTexts.Config {
     static let defaultDropDownTextsConfig: Self = .init(
         fonts: Fonts(title: .title2, itemTitle: .body, itemDescription: .callout),
         colors: Colors(title: .black, itemTitle: .black, itemDescription: .gray),
-        paddings: .init(titleTop: 12, list: 20, itemVertical: 20, itemHorizontal: 16),
+        paddings: .init(horizontal: 16, vertical: 8, titleTop: 12, titleHorizontal: 16, itemVertical: 20, itemHorizontal: 16),
         heights: .init(title: 48, item: 64),
         backgroundColor: Color.gray,
-        cornerRadius: 16)
+        cornerRadius: 16, 
+        divider: .gray, 
+        chevronDownImage: Image("chevron-downnew")
+    )
 }
 
 extension UILanding.List.DropDownTexts {
@@ -385,11 +392,14 @@ extension UILanding.List.VerticalRoundImage {
 extension UILanding.List.VerticalRoundImage.Config {
     
     static let `default`: Self = .init(
+        padding: .init(horizontal: 16,
+                       vertical: 8),
         title: Title(
             font: .system(size: 18),
             color: .textSecondary,
             paddingHorizontal: 16,
-            paddingTop: 16),
+            paddingTop: 16), 
+        divider: .gray,
         spacings: Spacings(
             lazyVstack: 13,
             itemHstack: 16,
@@ -397,15 +407,13 @@ extension UILanding.List.VerticalRoundImage.Config {
             itemVStackBetweenTitleSubtitle: 4),
         item: ListItem(
             imageWidthHeight: 40,
-            fonts: .init(title: .headline, subtitle: .caption),
-            colors: .init(title: Color.textSecondary, subtitle: .gray),
-            paddings: .init(horizontal: 16, vertical: 3)),
+            font: .init(title: .headline, titleWithOutSubtitle: .subheadline, subtitle: .caption),
+            color: .init(title: Color.textSecondary, subtitle: .gray),
+            padding: .init(horizontal: 16, vertical: 3)),
         listVerticalPadding: 13,
         componentSettings: .init(
             background: .grayLightest,
-            cornerRadius: 12,
-            horizontalPad: 16,
-            verticalPad: 8),
+            cornerRadius: 12),
         buttonSettings: .init(
             circleFill: .white,
             circleWidthHeight: 40,
@@ -417,11 +425,17 @@ extension UILanding.List.VerticalRoundImage.Config {
 extension UILanding.TextsWithIconHorizontal.Config {
     
     static let `default`: Self = .init(
+        paddings: .init(horizontal: 16,
+                        vertical: 8),
         backgroundColor: .black,
         cornerRadius: 20,
-        icon: .init(iconSize: 28, placeholderColor: .grayColor),
-        height: 48,
-        spacing: 10,
+        circleSize: 32,
+        icon: .init(width: 24,
+                    height: 24,
+                    placeholderColor: .grayColor,
+                    padding: .init(vertical: 0, leading: 12)),
+        height: 40,
+        spacing: 12,
         text: .init(color: .green, font: .body))
 }
 
@@ -454,7 +468,7 @@ extension UILanding.List.HorizontalRectangleImage.Config {
     static let `default`: Self = .init(
         cornerRadius: 12,
         size: .init(height: 124, width: 272),
-        paddings: .init(horizontal: 8, vertical: 8),
+        paddings: .init(horizontal: 16, vertical: 8),
         spacing: 8)
 }
 
@@ -463,11 +477,20 @@ extension UILanding.Multi.Buttons.Config {
     static let `default`: Self = .init(
         settings: .init(
             spacing: 8,
-            padding: .init(horiontal: 16, vertical: 12)),
+            padding: .init(
+                horiontal: 16,
+                top: 8,
+                bottom: 8)),
         buttons: .init(
-            backgroundColors: .init(first: .red, second: .white),
-            textColors: .init(first: .white, second: .black),
-            padding: .init(horiontal: 16, vertical: 12),
+            backgroundColors: .init(
+                first: .red,
+                second: .white),
+            textColors: .init(
+                first: .white,
+                second: .black),
+            padding: .init(
+                horiontal: 16,
+                vertical: 16),
             font: .title,
             height: 56,
             cornerRadius: 12))
@@ -476,6 +499,9 @@ extension UILanding.Multi.Buttons.Config {
 extension UILanding.Multi.TypeButtons.Config {
     
     static let `default`: Self = .init(
+        paddings: .init(horizontal: 16,
+                        top: 12,
+                        bottom: 24),
         cornerRadius: 12,
         fonts: .init(
             into: Font.custom("Inter", size: 14),
@@ -489,8 +515,7 @@ extension UILanding.Multi.TypeButtons.Config {
                 white: .white /*Text/White*/),
             button: .red /*Button/primary*/,
             buttonText: .white,
-            foreground: .init(fgBlack: .black /*Text/secondary*/, fgWhite: .white/*Text/White*/)),
-        paddings: .init(horizontal: 16, vertical: 12))
+            foreground: .init(fgBlack: .black /*Text/secondary*/, fgWhite: .white/*Text/White*/)))
 }
 
 extension UILanding.Multi.TypeButtons {

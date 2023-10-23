@@ -30,7 +30,8 @@ struct MultiButtonsView: View {
             ForEach(model.data.list, content: itemView)
         }
         .padding(.horizontal, config.settings.padding.horiontal)
-        .padding(.vertical, config.settings.padding.vertical)
+        .padding(.top, config.settings.padding.top)
+        .padding(.bottom, config.settings.padding.bottom)
     }
     
     private func itemView (
@@ -65,6 +66,7 @@ extension MultiButtonsView {
                     .foregroundColor(config.textColor(style: item.style))
                     .cornerRadius(config.buttons.cornerRadius)
             }
+            .frame(height: config.buttons.height)
         }
     }
 }

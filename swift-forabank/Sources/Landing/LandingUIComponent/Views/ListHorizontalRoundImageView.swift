@@ -33,17 +33,23 @@ struct ListHorizontalRoundImageView: View {
                     Text($0)
                         .font(config.title.font)
                         .foregroundColor(config.title.color)
+                        .padding(.leading, config.paddings.horizontal)
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack {
                         
-                        ForEach(model.data.list, content: itemView)
+                        ForEach(model.data.list.indices, id: \.self) { index in
+                            
+                            let item = model.data.list[index]
+                            itemView(item: item)
+                                .padding(.trailing, index == model.data.list.count - 1 ? config.paddings.vStackContentHorizontal : 0)
+                        }
                     }
                 }
+                .padding(.leading, config.paddings.vStackContentHorizontal)
             }
-            .padding(.horizontal)
         }
         .frame(height: config.height)
         .padding(.horizontal, config.paddings.horizontal)

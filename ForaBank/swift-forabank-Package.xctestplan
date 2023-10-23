@@ -162,6 +162,13 @@
         "identifier" : "PhoneNumberWrapperTests",
         "name" : "PhoneNumberWrapperTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
     }
   ],
   "version" : 1

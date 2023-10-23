@@ -40,6 +40,7 @@ struct MultiMarkersTextView: View {
             }
             .padding(.leading, config.getLeadingPadding(model.style))
             .padding(.trailing, config.getTrailingPadding(model.style))
+            .padding(.vertical, config.vstack.padding.vertical)
             .background(config.backgroundColor(model.style, model.backgroundColor))
         }
     }

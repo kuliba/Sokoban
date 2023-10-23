@@ -12,12 +12,25 @@ public extension UILanding.List.VerticalRoundImage {
     
     struct Config {
         
+        public let padding: Paddings
         public let title: Title
+        public let divider: Color
         public let spacings: Spacings
         public let item: ListItem
         public let listVerticalPadding: CGFloat
         public let componentSettings: ComponentSettings
         public let buttonSettings: ButtonSettings
+        
+        public struct Paddings {
+            
+            public let horizontal: CGFloat
+            public let vertical: CGFloat
+            
+            public init(horizontal: CGFloat, vertical: CGFloat) {
+                self.horizontal = horizontal
+                self.vertical = vertical
+            }
+        }
         
         public struct Title {
             
@@ -26,12 +39,7 @@ public extension UILanding.List.VerticalRoundImage {
             public let paddingHorizontal: CGFloat
             public let paddingTop: CGFloat
             
-            public init(
-                font: Font,
-                color: Color,
-                paddingHorizontal: CGFloat,
-                paddingTop: CGFloat
-            ) {
+            public init(font: Font, color: Color, paddingHorizontal: CGFloat, paddingTop: CGFloat) {
                 self.font = font
                 self.color = color
                 self.paddingHorizontal = paddingHorizontal
@@ -46,12 +54,7 @@ public extension UILanding.List.VerticalRoundImage {
             public let buttonHStack: CGFloat
             public let itemVStackBetweenTitleSubtitle: CGFloat
             
-            public init(
-                lazyVstack: CGFloat,
-                itemHstack: CGFloat,
-                buttonHStack: CGFloat,
-                itemVStackBetweenTitleSubtitle: CGFloat
-            ) {
+            public init(lazyVstack: CGFloat, itemHstack: CGFloat, buttonHStack: CGFloat, itemVStackBetweenTitleSubtitle: CGFloat) {
                 self.lazyVstack = lazyVstack
                 self.itemHstack = itemHstack
                 self.buttonHStack = buttonHStack
@@ -69,10 +72,12 @@ public extension UILanding.List.VerticalRoundImage {
             public struct Fonts {
                 
                 public let title: Font
+                public let titleWithOutSubtitle: Font
                 public let subtitle: Font
                 
-                public init(title: Font, subtitle: Font) {
+                public init(title: Font, titleWithOutSubtitle: Font, subtitle: Font) {
                     self.title = title
+                    self.titleWithOutSubtitle = titleWithOutSubtitle
                     self.subtitle = subtitle
                 }
             }
@@ -88,28 +93,12 @@ public extension UILanding.List.VerticalRoundImage {
                 }
             }
             
-            public struct Paddings {
-                
-                public let horizontal: CGFloat
-                public let vertical: CGFloat
-                
-                public init(horizontal: CGFloat, vertical: CGFloat) {
-                    self.horizontal = horizontal
-                    self.vertical = vertical
-                }
+            public init(imageWidthHeight: CGFloat, font: Fonts, color: Colors, padding: Paddings) {
+                self.imageWidthHeight = imageWidthHeight
+                self.font = font
+                self.color = color
+                self.padding = padding
             }
-            
-            public init(
-                imageWidthHeight: CGFloat,
-                fonts: Fonts,
-                colors: Colors,
-                paddings: Paddings
-            ) {
-                    self.imageWidthHeight = imageWidthHeight
-                    self.font = fonts
-                    self.color = colors
-                    self.padding = paddings
-                }
         }
         
         public struct ButtonSettings {
@@ -131,27 +120,7 @@ public extension UILanding.List.VerticalRoundImage {
                 }
             }
             
-            public struct Paddings {
-                
-                public let horizontal: CGFloat
-                public let vertical: CGFloat
-                
-                public init(
-                    horizontal: CGFloat,
-                    vertical: CGFloat
-                ) {
-                    self.horizontal = horizontal
-                    self.vertical = vertical
-                }
-            }
-            
-            public init(
-                circleFill: Color,
-                circleWidthHeight: CGFloat,
-                ellipsisForegroundColor: Color,
-                text: Text,
-                padding: Paddings
-            ) {
+            public init(circleFill: Color, circleWidthHeight: CGFloat, ellipsisForegroundColor: Color, text: Text, padding: Paddings) {
                 self.circleFill = circleFill
                 self.circleWidthHeight = circleWidthHeight
                 self.ellipsisForegroundColor = ellipsisForegroundColor
@@ -163,31 +132,17 @@ public extension UILanding.List.VerticalRoundImage {
         public struct ComponentSettings {
             public let background: Color
             public let cornerRadius: CGFloat
-            public let horizontalPad: CGFloat
-            public let verticalPad: CGFloat // need?
             
-            public init(
-                background: Color,
-                cornerRadius: CGFloat,
-                horizontalPad: CGFloat,
-                verticalPad: CGFloat
-            ) {
+            public init(background: Color, cornerRadius: CGFloat) {
                 self.background = background
                 self.cornerRadius = cornerRadius
-                self.horizontalPad = horizontalPad
-                self.verticalPad = verticalPad
             }
         }
         
-        public init(
-            title: Title,
-            spacings: Spacings,
-            item: ListItem,
-            listVerticalPadding: CGFloat,
-            componentSettings: ComponentSettings,
-            buttonSettings: ButtonSettings
-        ) {
+        public init(padding: Paddings, title: Title, divider: Color, spacings: Spacings, item: ListItem, listVerticalPadding: CGFloat, componentSettings: ComponentSettings, buttonSettings: ButtonSettings) {
+            self.padding = padding
             self.title = title
+            self.divider = divider
             self.spacings = spacings
             self.item = item
             self.listVerticalPadding = listVerticalPadding
