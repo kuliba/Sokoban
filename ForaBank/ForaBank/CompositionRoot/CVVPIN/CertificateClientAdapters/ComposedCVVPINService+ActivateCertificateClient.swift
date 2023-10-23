@@ -18,7 +18,7 @@ extension ComposedCVVPINService: ActivateCertificateClient {
             
             completion(
                 result
-                    .map(\.phone)
+                    .map(\.phoneValue)
                     .map { .init($0) }
                     .mapError(CVVPinError.ActivationError.init)
             )

@@ -19,7 +19,7 @@ extension ResponseMapper {
             switch httpURLResponse.statusCode {
             case 200:
                 let response = try JSONDecoder().decode(Response.self, from: data)
-                return .success(.init(encryptedCVV: response.cvv))
+                return .success(.init(encryptedCVVValue: response.cvv))
                 
             default:
                 let serverError = try JSONDecoder().decode(ServerError.self, from: data)

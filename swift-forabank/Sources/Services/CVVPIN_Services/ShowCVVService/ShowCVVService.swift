@@ -82,41 +82,41 @@ extension ShowCVVService {
     
     public struct CardID {
         
-        let cardID: Int
+        let cardIDValue: Int
         
-        public init(cardID: Int) {
+        public init(cardIDValue: Int) {
          
-            self.cardID = cardID
+            self.cardIDValue = cardIDValue
         }
     }
     
     public struct EncryptedCVV {
         
-        public let encryptedCVV: String
+        public let encryptedCVVValue: String
         
-        public init(encryptedCVV: String) {
+        public init(encryptedCVVValue: String) {
          
-            self.encryptedCVV = encryptedCVV
+            self.encryptedCVVValue = encryptedCVVValue
         }
     }
     
     public struct CVV {
         
-        public let cvv: String
+        public let cvvValue: String
         
-        public init(cvv: String) {
+        public init(cvvValue: String) {
          
-            self.cvv = cvv
+            self.cvvValue = cvvValue
         }
     }
     
     public struct SessionID {
         
-        public let sessionID: String
+        public let sessionIDValue: String
         
-        public init(sessionID: String) {
+        public init(sessionIDValue: String) {
             
-            self.sessionID = sessionID
+            self.sessionIDValue = sessionIDValue
         }
     }
     
@@ -202,9 +202,8 @@ private extension ShowCVVService {
 
 private extension ShowCVVService.Error {
     
-    init(
-        _ error: ShowCVVService.APIError
-    ) {
+    init(_ error: ShowCVVService.APIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

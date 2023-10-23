@@ -13,7 +13,7 @@ extension CVVPINFunctionalityActivationService {
         getCodeService: GetProcessingSessionCodeService,
         cacheGetCode: @escaping (GetProcessingSessionCodeService.Response) -> Void,
         formSessionKeyService: FormSessionKeyService,
-        cacheSessionKey: @escaping (FormSessionKeyService.SessionKey) -> Void,
+        cacheSessionKey: @escaping (FormSessionKeyService.Success) -> Void,
         bindPublicKeyWithEventIDService: BindPublicKeyWithEventIDService,
         clearCache: @escaping () -> Void
     ) {
@@ -48,6 +48,7 @@ extension CVVPINFunctionalityActivationService {
                     
                     completion(
                         result
+                            .map(\.sessionKey)
                             .map(CVVPINFunctionalityActivationService.SessionKey.init)
                             .mapError { _ in Error.formSessionKeyFailure }
                     )
@@ -56,7 +57,7 @@ extension CVVPINFunctionalityActivationService {
             bindPublicKeyWithEventID: { otp, completion in
                 
                 bindPublicKeyWithEventIDService.bind(
-                    otp: .init(otp: otp.otp)
+                    otp: .init(otpValue: otp.otpValue)
                 ) { [completion] result in
                     
                     completion(result.mapError { _ in Error.bindKeyFailure })
@@ -68,10 +69,9 @@ extension CVVPINFunctionalityActivationService {
 
 private extension CVVPINFunctionalityActivationService.SessionKey {
     
-    init(
-        _ key: FormSessionKeyService.SessionKey
-    ) {
-        self.init(sessionKey: key.sessionKey)
+    init(_ key: FormSessionKeyService.SessionKey) {
+        
+        self.init(sessionKeyValue: key.sessionKeyValue)
     }
 }
 

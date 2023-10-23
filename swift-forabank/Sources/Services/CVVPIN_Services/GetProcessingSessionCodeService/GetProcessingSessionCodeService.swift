@@ -72,9 +72,8 @@ extension GetProcessingSessionCodeService {
 
 private extension GetProcessingSessionCodeService.Error {
     
-    init(
-        _ error: GetProcessingSessionCodeService.APIError
-    ) {
+    init(_ error: GetProcessingSessionCodeService.APIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

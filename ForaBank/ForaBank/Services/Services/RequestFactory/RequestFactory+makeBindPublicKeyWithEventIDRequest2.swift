@@ -19,7 +19,7 @@ extension RequestFactory {
         
         return try factory.makeRequest(
             for: .bindPublicKeyWithEventID(.init(
-                eventID: .init(value: payload.eventID.eventID),
+                eventID: .init(value: payload.eventID.eventIDValue),
                 key: .init(value: payload.data)
             ))
         )

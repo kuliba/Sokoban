@@ -78,21 +78,21 @@ extension BindPublicKeyWithEventIDService {
     
     public struct EventID {
         
-        public let eventID: String
+        public let eventIDValue: String
         
-        public init(eventID: String) {
+        public init(eventIDValue: String) {
          
-            self.eventID = eventID
+            self.eventIDValue = eventIDValue
         }
     }
     
     public struct OTP {
         
-        public let otp: String
+        public let otpValue: String
         
-        public init(otp: String) {
+        public init(otpValue: String) {
             
-            self.otp = otp
+            self.otpValue = otpValue
         }
     }
     
@@ -160,9 +160,8 @@ private extension BindPublicKeyWithEventIDService {
 
 private extension BindPublicKeyWithEventIDService.Error {
     
-    init(
-        _ error: BindPublicKeyWithEventIDService.APIError
-    ) {    
+    init(_ error: BindPublicKeyWithEventIDService.APIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

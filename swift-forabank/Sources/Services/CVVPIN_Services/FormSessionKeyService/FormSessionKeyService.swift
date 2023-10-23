@@ -48,7 +48,9 @@ public final class FormSessionKeyService {
 
 public extension FormSessionKeyService {
     
-    typealias Result = Swift.Result<SessionKey, Error>
+    typealias TTL = Int
+    typealias Success = (sessionKey: SessionKey, ttl: TTL)
+    typealias Result = Swift.Result<Success, Error>
     typealias Completion = (Result) -> Void
     
     func formSessionKey(
@@ -84,21 +86,21 @@ extension FormSessionKeyService {
     
     public struct SessionKey {
         
-        public let sessionKey: Data
+        public let sessionKeyValue: Data
         
-        public init(sessionKey: Data) {
+        public init(sessionKeyValue: Data) {
          
-            self.sessionKey = sessionKey
+            self.sessionKeyValue = sessionKeyValue
         }
     }
     
     public struct Code {
         
-        public let code: String
+        public let codeValue: String
         
-        public init(code: String) {
+        public init(codeValue: String) {
             
-            self.code = code
+            self.codeValue = codeValue
         }
     }
     
@@ -202,16 +204,19 @@ private extension FormSessionKeyService {
             
             guard self != nil else { return }
             
-            completion(result.mapError { _ in .other(.makeSessionKeyFailure) })
+            completion(
+                result
+                    .map { (sessionKey: $0, ttl: response.sessionTTL) }
+                    .mapError { _ in .other(.makeSessionKeyFailure) }
+            )
         }
     }
 }
 
 private extension FormSessionKeyService.Error {
     
-    init(
-        _ error: FormSessionKeyService.APIError
-    ) {
+    init(_ error: FormSessionKeyService.APIError) {
+        
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)

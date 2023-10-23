@@ -87,11 +87,11 @@ extension CVVPINFunctionalityActivationService {
     
     public struct SessionKey {
         
-        let sessionKey: Data
+        let sessionKeyValue: Data
         
-        public init(sessionKey: Data) {
+        public init(sessionKeyValue: Data) {
          
-            self.sessionKey = sessionKey
+            self.sessionKeyValue = sessionKeyValue
         }
     }
 
@@ -111,21 +111,21 @@ extension CVVPINFunctionalityActivationService {
     
     public struct OTP {
         
-        public let otp: String
+        public let otpValue: String
         
-        public init(otp: String) {
+        public init(otpValue: String) {
          
-            self.otp = otp
+            self.otpValue = otpValue
         }
     }
     
     public struct Phone {
         
-        public let phone: String
+        public let phoneValue: String
         
-        public init(phone: String) {
+        public init(phoneValue: String) {
          
-            self.phone = phone
+            self.phoneValue = phoneValue
         }
     }
 }
@@ -142,7 +142,7 @@ private extension CVVPINFunctionalityActivationService {
             
             completion(
                 result
-                    .map { _ in .init(phone: response.phone) }
+                    .map { _ in .init(phoneValue: response.phone) }
                     .mapError { _ in .formSessionKeyFailure }
             )
         }
