@@ -50,7 +50,7 @@ final class StringExtensionsTests: XCTestCase {
     
     func test_changeCodeIfNeeded_8_notChange() {
         
-        XCTAssertNoDiff("8".changeCodeIfNeeded(), "8")
+        XCTAssertNoDiff("8".changeCodeIfNeeded(), "7")
     }
 
     func test_changeCodeIfNeeded_89_needChange() {
@@ -60,7 +60,7 @@ final class StringExtensionsTests: XCTestCase {
 
     func test_changeCodeIfNeeded_80_notChange() {
         
-        XCTAssertNoDiff("80".changeCodeIfNeeded(), "80")
+        XCTAssertNoDiff("80".changeCodeIfNeeded(), "70")
     }
 
     func test_changeCodeIfNeeded_9_notChange() {
@@ -79,82 +79,103 @@ final class StringExtensionsTests: XCTestCase {
         
         XCTAssertNoDiff("dgfdg".applyPatternOnPhoneNumber(), "")
     }
+    
+    func test_applyPatternOnPhoneNumber_startWith7_1Digits() {
+        
+        XCTAssertNoDiff("7".applyPatternOnPhoneNumber(), "+7")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWithPlus7_1Digits() {
+        
+        XCTAssertNoDiff("+7".applyPatternOnPhoneNumber(), "+7")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWith8_1Digits() {
+        
+        XCTAssertNoDiff("8".applyPatternOnPhoneNumber(), "+7")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWithOther_1Digits() {
+        
+        XCTAssertNoDiff("5".applyPatternOnPhoneNumber(), "+5")
+    }
 
-    func test_applyPatternOnPhoneNumber_startWith7_lessThen5Digits() {
+    func test_applyPatternOnPhoneNumber_startWith7_moreThen1lessThen5Digits() {
        
-        XCTAssertNoDiff("7".applyPatternOnPhoneNumber(), "7")
         XCTAssertNoDiff("79".applyPatternOnPhoneNumber(), "+7 9")
         XCTAssertNoDiff("796".applyPatternOnPhoneNumber(), "+7 96")
         XCTAssertNoDiff("7963".applyPatternOnPhoneNumber(), "+7 963")
     }
     
-    func test_applyPatternOnPhoneNumber_startWithPlus7_lessThen5Digits() {
+    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen1lessThen5Digits() {
        
-        XCTAssertNoDiff("+7".applyPatternOnPhoneNumber(), "7")
         XCTAssertNoDiff("+79".applyPatternOnPhoneNumber(), "+7 9")
         XCTAssertNoDiff("+796".applyPatternOnPhoneNumber(), "+7 96")
         XCTAssertNoDiff("+7963".applyPatternOnPhoneNumber(), "+7 963")
     }
-    
-    func test_applyPatternOnPhoneNumber_startWith7_moreThen4lessThen7Digits() {
-       
-        XCTAssertNoDiff("79630".applyPatternOnPhoneNumber(), "+7 963 0")
-        XCTAssertNoDiff("796300".applyPatternOnPhoneNumber(), "+7 963 00")
-    }
-    
-    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen4lessThen7Digits() {
-       
-        XCTAssertNoDiff("+79630".applyPatternOnPhoneNumber(), "+7 963 0")
-        XCTAssertNoDiff("+796300".applyPatternOnPhoneNumber(), "+7 963 00")
-    }
-    
-    func test_applyPatternOnPhoneNumber_startWith7_moreThen6lessThen9Digits() {
-       
-        XCTAssertNoDiff("7963000".applyPatternOnPhoneNumber(), "+7 963 00-0")
-        XCTAssertNoDiff("79630000".applyPatternOnPhoneNumber(), "+7 963 00-00")
-    }
-    
-    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen6lessThen9Digits() {
-        
-        XCTAssertNoDiff("+7963000".applyPatternOnPhoneNumber(), "+7 963 00-0")
-        XCTAssertNoDiff("+79630000".applyPatternOnPhoneNumber(), "+7 963 00-00")
-    }
 
-    func test_applyPatternOnPhoneNumber_startWith7_moreThen9Digits() {
+    func test_applyPatternOnPhoneNumber_startWith8_moreThen1lessThen5Digits() {
        
-        XCTAssertNoDiff("796300000".applyPatternOnPhoneNumber(), "+7 963 00-00-0")
-        XCTAssertNoDiff("7963000000".applyPatternOnPhoneNumber(), "+7 963 00-00-00")
-    }
-    
-    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen9Digits() {
-       
-        XCTAssertNoDiff("+796300000".applyPatternOnPhoneNumber(), "+7 963 00-00-0")
-        XCTAssertNoDiff("+7963000000".applyPatternOnPhoneNumber(), "+7 963 00-00-00")
-    }
-
-    func test_applyPatternOnPhoneNumber_startWith8_lessThen5Digits() {
-        
-        XCTAssertNoDiff("8".applyPatternOnPhoneNumber(), "8")
         XCTAssertNoDiff("89".applyPatternOnPhoneNumber(), "+7 9")
         XCTAssertNoDiff("896".applyPatternOnPhoneNumber(), "+7 96")
         XCTAssertNoDiff("8963".applyPatternOnPhoneNumber(), "+7 963")
     }
-    
-    func test_applyPatternOnPhoneNumber_startWith8_moreThen4lessThen7Digits() {
-        
-        XCTAssertNoDiff("89630".applyPatternOnPhoneNumber(), "+7 963 0")
-        XCTAssertNoDiff("896300".applyPatternOnPhoneNumber(), "+7 963 00")
+
+    func test_applyPatternOnPhoneNumber_startWith7_moreThen4lessThen8Digits() {
+       
+        XCTAssertNoDiff("79630".applyPatternOnPhoneNumber(), "+7 963 0")
+        XCTAssertNoDiff("796300".applyPatternOnPhoneNumber(), "+7 963 00")
+        XCTAssertNoDiff("7963000".applyPatternOnPhoneNumber(), "+7 963 000")
     }
     
-    func test_applyPatternOnPhoneNumber_startWith8_moreThen6lessThen9Digits() {
+    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen4lessThen8Digits() {
+       
+        XCTAssertNoDiff("+79630".applyPatternOnPhoneNumber(), "+7 963 0")
+        XCTAssertNoDiff("+796300".applyPatternOnPhoneNumber(), "+7 963 00")
+        XCTAssertNoDiff("+7963000".applyPatternOnPhoneNumber(), "+7 963 000")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWith8_moreThen4lessThen8Digits() {
+       
+        XCTAssertNoDiff("89630".applyPatternOnPhoneNumber(), "+7 963 0")
+        XCTAssertNoDiff("896300".applyPatternOnPhoneNumber(), "+7 963 00")
+        XCTAssertNoDiff("8963000".applyPatternOnPhoneNumber(), "+7 963 000")
+    }
+
+    func test_applyPatternOnPhoneNumber_startWith7_moreThen8lessThen10Digits() {
+       
+        XCTAssertNoDiff("79630000".applyPatternOnPhoneNumber(), "+7 963 000-0")
+        XCTAssertNoDiff("796300000".applyPatternOnPhoneNumber(), "+7 963 000-00")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen8lessThen10Digits() {
+       
+        XCTAssertNoDiff("+79630000".applyPatternOnPhoneNumber(), "+7 963 000-0")
+        XCTAssertNoDiff("+796300000".applyPatternOnPhoneNumber(), "+7 963 000-00")
+    }
+
+    func test_applyPatternOnPhoneNumber_startWith8_moreThen8lessThen10Digits() {
+       
+        XCTAssertNoDiff("89630000".applyPatternOnPhoneNumber(), "+7 963 000-0")
+        XCTAssertNoDiff("896300000".applyPatternOnPhoneNumber(), "+7 963 000-00")
+    }
+
+    func test_applyPatternOnPhoneNumber_startWith7_moreThen9Digits() {
         
-        XCTAssertNoDiff("8963000".applyPatternOnPhoneNumber(), "+7 963 00-0")
-        XCTAssertNoDiff("89630000".applyPatternOnPhoneNumber(), "+7 963 00-00")
+        XCTAssertNoDiff("7963000000".applyPatternOnPhoneNumber(), "+7 963 000-00-0")
+        XCTAssertNoDiff("79630000000".applyPatternOnPhoneNumber(), "+7 963 000-00-00")
+    }
+    
+    func test_applyPatternOnPhoneNumber_startWithPlus7_moreThen9Digits() {
+        
+        XCTAssertNoDiff("+7963000000".applyPatternOnPhoneNumber(), "+7 963 000-00-0")
+        XCTAssertNoDiff("+79630000000".applyPatternOnPhoneNumber(), "+7 963 000-00-00")
     }
 
     func test_applyPatternOnPhoneNumber_startWith8_moreThen9Digits() {
-        XCTAssertNoDiff("896300000".applyPatternOnPhoneNumber(), "+7 963 00-00-0")
-        XCTAssertNoDiff("8963000000".applyPatternOnPhoneNumber(), "+7 963 00-00-00")
+        
+        XCTAssertNoDiff("8963000000".applyPatternOnPhoneNumber(), "+7 963 000-00-0")
+        XCTAssertNoDiff("89630000000".applyPatternOnPhoneNumber(), "+7 963 000-00-00")
     }
 
     // MARK: - Helpers
