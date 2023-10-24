@@ -24,11 +24,6 @@ struct AmountView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    Text(viewModel.parameter.title)
-                        .font(.body)
-                        .foregroundColor(.gray)
-                        .padding(.top, 4)
-                    
                     HStack {
                         
                         TextField("Сумма", text: $text)
@@ -41,16 +36,19 @@ struct AmountView: View {
                     
                 }
                 
-                TransferButtonView(viewModel: .active(action: {}))
+                TransferButtonView(
+                    viewModel: .active(action: viewModel.continueButtonTapped )
+                )
                     .frame(width: 113, height: 40)
             }
             
-            Text("Без комиссии")
+            Text("Включая стоимость доставки")
                 .font(.body)
                 .foregroundColor(.gray.opacity(0.5))
             
         }
         .padding(.horizontal, 20)
+        .padding(.top, 15)
         .background(
             Color.black
                 .ignoresSafeArea(.container, edges: .bottom)
@@ -94,7 +92,7 @@ struct AmountView: View {
                 ZStack {
                     
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(Color("#FF3636"))
+                        .foregroundColor(.red)
                     
                     Text(title)
                         .font(.headline)

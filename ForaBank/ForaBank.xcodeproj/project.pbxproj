@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1539,6 +1539,10 @@
 		C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */; };
 		C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */ = {isa = PBXBuildFile; productRef = C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */; };
 		C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10423982A735A3700D0AC63 /* Model+C2B.swift */; };
+		C10905522AE6D629005B5CF6 /* GenericRemoteService in Frameworks */ = {isa = PBXBuildFile; productRef = C10905512AE6D629005B5CF6 /* GenericRemoteService */; };
+		C10905542AE78218005B5CF6 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10905532AE78218005B5CF6 /* Input.swift */; };
+		C10905562AE78240005B5CF6 /* InputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10905552AE78240005B5CF6 /* InputViewModel.swift */; };
+		C10905582AE7829D005B5CF6 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10905572AE7829D005B5CF6 /* InputView.swift */; };
 		C1097D8E2942FC16002459F6 /* Model+Requisites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1097D8D2942FC16002459F6 /* Model+Requisites.swift */; };
 		C1097D9029438242002459F6 /* PaymentCheckViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1097D8F29438242002459F6 /* PaymentCheckViewComponent.swift */; };
 		C1097D922947188C002459F6 /* BicAccountCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1097D912947188C002459F6 /* BicAccountCheck.swift */; };
@@ -1638,6 +1642,7 @@
 		C1BC73E32AE277A20022D849 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73D12AE277A20022D849 /* Product.swift */; };
 		C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1BC73E42AE277CE0022D849 /* TextFieldComponent */; };
 		C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73E62AE2781C0022D849 /* PreviewContent.swift */; };
+		C1BC73EA2AE642700022D849 /* BusinessLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73E92AE642700022D849 /* BusinessLogic.swift */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
@@ -1656,7 +1661,7 @@
 		C1F346E92AE2727F00EE1E87 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E42AE2727E00EE1E87 /* Operation.swift */; };
 		C1F346EA2AE2727F00EE1E87 /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E52AE2727F00EE1E87 /* OperationView.swift */; };
 		C1F346EB2AE2727F00EE1E87 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E62AE2727F00EE1E87 /* Event.swift */; };
-		C1F346EC2AE2727F00EE1E87 /* OperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */; };
+		C1F346EC2AE2727F00EE1E87 /* OperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346E72AE2727F00EE1E87 /* OperationStateViewModel.swift */; };
 		C1F7999F29CD18BF0048346B /* Model+ReturnAbroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F7999E29CD18BF0048346B /* Model+ReturnAbroad.swift */; };
 		C1F799A329CD18DF0048346B /* Model+ChangeAbroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A229CD18DF0048346B /* Model+ChangeAbroad.swift */; };
 		C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */; };
@@ -3530,6 +3535,9 @@
 		C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeBounceView.swift; sourceTree = "<group>"; };
 		C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagingSubscriptionViewComponent.swift; sourceTree = "<group>"; };
 		C10423982A735A3700D0AC63 /* Model+C2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+C2B.swift"; sourceTree = "<group>"; };
+		C10905532AE78218005B5CF6 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
+		C10905552AE78240005B5CF6 /* InputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputViewModel.swift; sourceTree = "<group>"; };
+		C10905572AE7829D005B5CF6 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
 		C1097D8D2942FC16002459F6 /* Model+Requisites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Requisites.swift"; sourceTree = "<group>"; };
 		C1097D8F29438242002459F6 /* PaymentCheckViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCheckViewComponent.swift; sourceTree = "<group>"; };
 		C1097D912947188C002459F6 /* BicAccountCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BicAccountCheck.swift; sourceTree = "<group>"; };
@@ -3621,6 +3629,7 @@
 		C1BC73D02AE277A20022D849 /* Select.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Select.swift; sourceTree = "<group>"; };
 		C1BC73D12AE277A20022D849 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		C1BC73E62AE2781C0022D849 /* PreviewContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
+		C1BC73E92AE642700022D849 /* BusinessLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessLogic.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
@@ -3641,7 +3650,7 @@
 		C1F346E42AE2727E00EE1E87 /* Operation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
 		C1F346E52AE2727F00EE1E87 /* OperationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
 		C1F346E62AE2727F00EE1E87 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationViewModel.swift; sourceTree = "<group>"; };
+		C1F346E72AE2727F00EE1E87 /* OperationStateViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationStateViewModel.swift; sourceTree = "<group>"; };
 		C1F7999E29CD18BF0048346B /* Model+ReturnAbroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ReturnAbroad.swift"; sourceTree = "<group>"; };
 		C1F799A229CD18DF0048346B /* Model+ChangeAbroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ChangeAbroad.swift"; sourceTree = "<group>"; };
 		C1F799A429D3ED030048346B /* Model+PaymentsReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsReturn.swift"; sourceTree = "<group>"; };
@@ -3997,6 +4006,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C10905522AE6D629005B5CF6 /* GenericRemoteService in Frameworks */,
 				C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8801,12 +8811,13 @@
 		C1BC73BD2AE277A10022D849 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				C1BC73C02AE277A10022D849 /* ParameterViewModel.swift */,
 				C1BC73BE2AE277A10022D849 /* StickerViewModel.swift */,
 				C1BC73BF2AE277A10022D849 /* AmountViewModel.swift */,
-				C1BC73C02AE277A10022D849 /* ParameterViewModel.swift */,
 				C1BC73C12AE277A10022D849 /* TipViewModel.swift */,
 				C1BC73C22AE277A10022D849 /* SelectViewModel.swift */,
 				C1BC73C32AE277A10022D849 /* ProductViewModel.swift */,
+				C10905552AE78240005B5CF6 /* InputViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -8821,6 +8832,7 @@
 				C1BC73C92AE277A10022D849 /* SpinnerView.swift */,
 				C1BC73CA2AE277A10022D849 /* ProductView.swift */,
 				C1BC73CB2AE277A10022D849 /* AmountView.swift */,
+				C10905572AE7829D005B5CF6 /* InputView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -8833,6 +8845,7 @@
 				C1BC73CF2AE277A20022D849 /* Sticker.swift */,
 				C1BC73D02AE277A20022D849 /* Select.swift */,
 				C1BC73D12AE277A20022D849 /* Product.swift */,
+				C10905532AE78218005B5CF6 /* Input.swift */,
 			);
 			path = Parameters;
 			sourceTree = "<group>";
@@ -8847,9 +8860,10 @@
 				C1F346E32AE2727E00EE1E87 /* ModelToViewModelMapper.swift */,
 				C1F346E42AE2727E00EE1E87 /* Operation.swift */,
 				C1F346E52AE2727F00EE1E87 /* OperationView.swift */,
-				C1F346E72AE2727F00EE1E87 /* OperationViewModel.swift */,
-				C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */,
+				C1F346E72AE2727F00EE1E87 /* OperationStateViewModel.swift */,
 				C1F346D72AE25C6000EE1E87 /* ContentView.swift */,
+				C1BC73E92AE642700022D849 /* BusinessLogic.swift */,
+				C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */,
 				C1F346D92AE25C6100EE1E87 /* Assets.xcassets */,
 				C1F346DB2AE25C6100EE1E87 /* Preview Content */,
 			);
@@ -10591,6 +10605,7 @@
 			name = StickerPreview;
 			packageProductDependencies = (
 				C1BC73E42AE277CE0022D849 /* TextFieldComponent */,
+				C10905512AE6D629005B5CF6 /* GenericRemoteService */,
 			);
 			productName = StickerPreview;
 			productReference = C1F346D32AE25C6000EE1E87 /* StickerPreview.app */;
@@ -11289,16 +11304,20 @@
 				C1BC73D82AE277A20022D849 /* ParameterView.swift in Sources */,
 				C1BC73D22AE277A20022D849 /* StickerViewModel.swift in Sources */,
 				C1BC73DC2AE277A20022D849 /* SpinnerView.swift in Sources */,
+				C10905542AE78218005B5CF6 /* Input.swift in Sources */,
+				C1BC73EA2AE642700022D849 /* BusinessLogic.swift in Sources */,
 				C1F346EA2AE2727F00EE1E87 /* OperationView.swift in Sources */,
 				C1F346E82AE2727F00EE1E87 /* ModelToViewModelMapper.swift in Sources */,
 				C1F346EB2AE2727F00EE1E87 /* Event.swift in Sources */,
-				C1F346EC2AE2727F00EE1E87 /* OperationViewModel.swift in Sources */,
+				C1F346EC2AE2727F00EE1E87 /* OperationStateViewModel.swift in Sources */,
 				C1BC73E12AE277A20022D849 /* Sticker.swift in Sources */,
 				C1BC73D32AE277A20022D849 /* AmountViewModel.swift in Sources */,
+				C10905562AE78240005B5CF6 /* InputViewModel.swift in Sources */,
 				C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */,
 				C1BC73DF2AE277A20022D849 /* Amount.swift in Sources */,
 				C1BC73DD2AE277A20022D849 /* ProductView.swift in Sources */,
 				C1F346E92AE2727F00EE1E87 /* Operation.swift in Sources */,
+				C10905582AE7829D005B5CF6 /* InputView.swift in Sources */,
 				C1BC73D92AE277A20022D849 /* TipView.swift in Sources */,
 				C1BC73E22AE277A20022D849 /* Select.swift in Sources */,
 			);
@@ -14687,6 +14706,10 @@
 		C10423962A72B96900D0AC63 /* ManageSubscriptionsUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ManageSubscriptionsUI;
+		};
+		C10905512AE6D629005B5CF6 /* GenericRemoteService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GenericRemoteService;
 		};
 		C1A4D38B2A67CFAF001DD9E4 /* ManageSubscriptionsUI */ = {
 			isa = XCSwiftPackageProductDependency;

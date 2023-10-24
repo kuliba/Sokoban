@@ -157,3 +157,20 @@ extension ProductView.Appearance {
         background: .init(color: .yellow, image: nil)
     )
 }
+
+struct ProductView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ProductView(appearance: .default, viewModel: .init(
+            header: .init(title: "Счет списания"),
+            main: .init(
+                cardLogo: .init(""),
+                paymentSystem: nil,
+                name: "Gold",
+                balance: "625 193 Р"
+            ),
+            footer: .init(description: "description")
+        ))
+    }
+}

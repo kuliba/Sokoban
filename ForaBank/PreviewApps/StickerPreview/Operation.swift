@@ -22,5 +22,40 @@ extension Operation {
         case select(Select)
         case product(Product)
         case amount(Amount)
+        case input(Input)
+    }
+}
+
+//MARK: Helpers
+
+extension [Operation.Parameter] {
+    
+    func getParameterIndex(with id: String) -> Index? {
+        
+        return self.firstIndex(where: { $0.id.rawValue == id })
+    }
+    
+    func replaceParameter(newParameter: Operation.Parameter) -> [Operation.Parameter] {
+        
+        guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
+        else { return self }
+        
+        var parameters = self
+        parameters[index] = newParameter
+        return parameters
+    }
+}
+
+extension Operation {
+    
+    func updateOperation(
+        operation: Operation,
+        newParameter: Operation.Parameter
+    ) -> Operation {
+        
+        var operation = operation
+        operation.parameters = operation.parameters.replaceParameter(newParameter: newParameter)
+        
+        return operation
     }
 }
