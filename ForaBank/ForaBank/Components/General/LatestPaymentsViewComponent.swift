@@ -277,12 +277,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             if let phoneNumber = paymentData.additionalList.first?.fieldValue,
                !phoneNumber.isEmpty {
-                
-                let phoneNumberRu = "+7" + phoneNumber
-                let phoneFormatter = PhoneNumberKitFormater()
-                
-                self.avatar = model.avatar(for: phoneNumberRu) ?? icon
-                self.description = model.fullName(for: phoneNumberRu)
+                                
+                self.avatar = model.avatar(for: phoneNumber) ?? icon
+                self.description = model.fullName(for: phoneNumber)
                 
             } else {
                 

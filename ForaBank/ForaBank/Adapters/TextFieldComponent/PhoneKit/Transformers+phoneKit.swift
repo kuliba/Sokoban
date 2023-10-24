@@ -22,7 +22,7 @@ extension Transformers {
                 
                 guard !$0.isEmpty else { return $0 }
                 
-                return PhoneNumberKitWrapper.formatPartial("+\($0)")
+                return PhoneNumberKitWrapper.formatPartial($0)
             },
             limit: limit
         )

@@ -34,32 +34,19 @@ extension SearchFactory {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> RegularFieldViewModel {
         
-        let cleanup: (String) -> String = {
-            
-            guard $0.hasPrefix("8"),
-                  $0.count > 1
-            else { return $0 }
-            
-            return $0.shouldChangeTextIn(
-                range: .init(location: 0, length: 1),
-                with: "7"
-            )
-        }
-        
-        let substitutions = [CountryCodeReplace].russian
-            .map(\.substitution)
+        let cleanup: (String) -> String = { $0 }
         
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
             
-            return PhoneNumberKitWrapper.formatPartial("+\($0)")
+            return PhoneNumberKitWrapper.formatPartial($0)
         }
         
         let contactsTextField = TextFieldFactory.contactTextField(
             placeholderText: mode.title,
             cleanup: cleanup,
-            substitutions: substitutions,
+            substitutions: [],
             format: format,
             keyboardType: .default,
             scheduler: scheduler

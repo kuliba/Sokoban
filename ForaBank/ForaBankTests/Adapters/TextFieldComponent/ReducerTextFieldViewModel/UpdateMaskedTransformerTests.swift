@@ -218,8 +218,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-#warning("this assertion differs from original `test_updateMasked_shouldNotInsertAtFirst_onLengthEqualToLimit`: XCTAssertEqual(updated, value)")
-        XCTAssertNoDiff(updated, "+879252798613")
+        XCTAssertNoDiff(updated, "+7 792 527-98-613")
     }
     
     func test_updateMasked_shouldEnterInMiddleRange() throws {
@@ -232,7 +231,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
-        XCTAssertEqual(updated, "+7 8252798613")
+        XCTAssertEqual(updated, "+7 825 279-86-13")
     }
     
     func test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate() throws {

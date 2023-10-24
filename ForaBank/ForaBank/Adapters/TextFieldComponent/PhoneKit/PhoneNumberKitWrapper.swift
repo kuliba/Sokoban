@@ -6,6 +6,7 @@
 //
 
 import PhoneNumberKit
+import PhoneNumberWrapper
 
 enum PhoneNumberKitWrapper {
     
@@ -20,6 +21,6 @@ enum PhoneNumberKitWrapper {
     
     static func formatPartial(_ input: String) -> String {
         
-        partialFormatter.formatPartial(input)
+        PhoneNumberWrapper().format(input)
     }
 }

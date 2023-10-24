@@ -92,7 +92,7 @@ extension String {
         
         if self.hasPrefix("8") {
             return "7" + self.dropFirst(1)
-        }
+        } 
         return self
     }
 }
