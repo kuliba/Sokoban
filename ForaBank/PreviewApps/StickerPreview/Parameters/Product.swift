@@ -14,5 +14,15 @@ extension Operation.Parameter {
         let nameProduct: String
         let balance: String
         let description: String
+        let options: [Option]
+        
+        struct Option: Hashable {
+            
+            let name: String
+            let balance: String
+            let number: String
+            let paymentSystem: String
+            let background: String
+        }
     }
 }

@@ -12,4 +12,5 @@ struct AmountViewModel {
     typealias Parameter = Operation.Parameter.Amount
     
     let parameter: Parameter
+    let continueButtonTapped: () -> Void
 }

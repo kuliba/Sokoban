@@ -45,12 +45,15 @@ struct ParameterView: View {
             AmountView(
                 viewModel: .init(
                     parameter: .init(
-                        title: amountViewModel.parameter.title,
                         value: amountViewModel.parameter.value
-                    )
+                    ),
+                    continueButtonTapped: amountViewModel.continueButtonTapped
                 ),
                 text: amountViewModel.parameter.value
             )
+        
+        case let .input(inputViewModel):
+            InputView(model: inputViewModel)
         }
     }
 }

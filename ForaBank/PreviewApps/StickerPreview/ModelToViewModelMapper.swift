@@ -77,7 +77,15 @@ extension ModelToViewModelMapper {
             
         case let .amount(amountViewModel):
             return .amount(
-                .init(parameter: amountViewModel))
+                .init(
+                    parameter: amountViewModel,
+                    continueButtonTapped: {
+                        action(.continueButtonTapped)
+                    }
+                ))
+            
+        case let .input(input):
+            return .input(.init(parameter: input))
         }
     }
 }
