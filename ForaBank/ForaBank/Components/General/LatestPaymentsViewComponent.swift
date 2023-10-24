@@ -200,7 +200,7 @@ extension LatestPaymentsView.ViewModel {
 }
 
 //MARK: LatestPaymentButtonVM init
-
+// TODO: добавить тесты!!!
 extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, mode: LatestPaymentsView.ViewModel.Mode? = .regular, action: @escaping () -> Void) {
@@ -231,12 +231,11 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            let phoneNumberRu = paymentData.phoneNumberRu
+            let phoneNumber = paymentData.phoneNumber
             
-            self.avatar = model.avatar(for: phoneNumberRu) ?? icon
+            self.avatar = model.avatar(for: phoneNumber) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
-            self.description = model.fullName(for: phoneNumberRu)
-            
+            self.description = model.fullName(for: phoneNumber)
             
         case (.outside, let paymentData as PaymentServiceData):
             
@@ -318,11 +317,11 @@ extension Model {
         if case .available = self.contactsPermissionStatus,
            let contact = self.contact(for: phoneNumber) {
             
-            return contact.fullName ?? phoneFormatter.partialFormatter(phoneNumber)
+            return contact.fullName ?? phoneFormatter.format(phoneNumber)
 
         } else {
             
-            return phoneFormatter.partialFormatter(phoneNumber)
+            return phoneFormatter.format(phoneNumber)
         }
     }
     

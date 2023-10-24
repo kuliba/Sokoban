@@ -7,6 +7,7 @@
 
 import Foundation
 import PhoneNumberKit
+import PhoneNumberWrapper
 
 protocol PhoneNumberFormaterProtocol {
     
@@ -19,14 +20,11 @@ protocol PhoneNumberFormaterProtocol {
 struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     private let phoneNumberKit = PhoneNumberKit()
+    private let phoneNumberWrapper = PhoneNumberWrapper()
     
     func format(_ phoneNumber: String) -> String {
         
-        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true) else {
-            return phoneNumber
-        }
-                
-        return phoneNumberKit.format(phoneNumberParsed, toType: .international)
+        return phoneNumberWrapper.format(phoneNumber)
     }
     
     func partialFormatter(_ phoneNumber: String) -> String {
