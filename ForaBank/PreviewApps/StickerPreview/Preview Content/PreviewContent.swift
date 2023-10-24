@@ -6,10 +6,41 @@
 //
 
 import Foundation
+import Combine
 
-extension OperationViewModel {
+extension BusinessLogic {
+
+    static let preview: BusinessLogic = .init(
+        dictionaryService: { fatalError() }(),
+        transfer: { fatalError() }(),
+        reduce: { fatalError() }()
+    )
+}
+
+extension OperationStateViewModel {
+
+    static let previewWithBusinessLogic: OperationStateViewModel = .init(
+        businessLogic: .preview
+    )
     
-    static let preview: OperationViewModel = .init(
+    convenience init(
+        businessLogic: BusinessLogic
+    ) {
+        self.init(blackBoxGet: { request, completion in
+            
+            let (operation, event) = request
+            businessLogic.operationResult(
+                operation: operation,
+                event: event,
+                completion: completion
+            )
+        })
+    }
+}
+
+extension OperationStateViewModel {
+    
+    static let preview: OperationStateViewModel = .init(
         parameters: .preview
     )
     
@@ -17,36 +48,46 @@ extension OperationViewModel {
         parameters: [Operation.Parameter] = []
     ) {
         self.init(
-            operation: .init(parameters: parameters),
+            state: .operation(.init(parameters: parameters)),
             blackBoxGet: { request, completion in
                 
                 let (operation, event) = request
-                completion(Self.reduce(operation, with: event))
-            }
-        )
+                let result = Self.reduce(operation, with: event)
+                
+                switch result {
+                case let .success(operation):
+                    completion(.success(.operation(operation)))
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            })
     }
     
     // MARK: - Reducer
     
     // TODO: maybe replace generic `Error` with error type
-    typealias OperationResult = Result<Operation, Error>
+    typealias OperationStateResult = Result<Operation, Error>
     
     static func reduce(
         _ operation: Operation,
         with event: Event
-    ) -> OperationResult {
+    ) -> OperationStateResult {
         
         var newOperation: Operation?
         
         switch event {
-        case let .select(select):
-            newOperation = Self.reduce(operation, with: select)
+        case let .select(selectEvents):
+            newOperation = Self.reduce(operation, with: selectEvents)
             
-        case let .product(parameter):
+        case let .product(productEvents):
             break
             
         case .continueButtonTapped:
             newOperation = Self.reduceWithContinueButtonTapped(operation)
+        
+        case let .input(inputEvents):
+            newOperation = Self.reduceInput(operation, with: inputEvents)
         }
         
         if let newOperation {
@@ -56,6 +97,27 @@ extension OperationViewModel {
         } else {
             
             return .failure(NSError(domain: "No Operation", code: -1))
+        }
+    }
+    
+    static func reduceInput(
+        _ operation: Operation,
+        with event: Event.InputEvent
+    ) -> Operation {
+        
+        switch event {
+        case .getOtpCode:
+            
+            #warning("setup getCode request")
+            //TODO: setup getCode request
+            return operation
+            
+        case let .valueUpdate(input):
+            
+            return operation.updateOperation(
+                operation: operation,
+                newParameter: .input(input)
+            )
         }
     }
     
@@ -88,25 +150,21 @@ extension OperationViewModel {
                     )
                 )
                 
-                // TODO: replace with settable subscript
-                guard let index = operation.parameters.firstIndex(where: { $0.id == parameter.id })
-                else { return nil }
-                
-                var operation = operation
-                operation.parameters[index] = .select(parameter)
-                return operation
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
                 
             case let .selected(selectedViewModel):
                 
-                let parameter = parameter.updateState(iconName: selectedViewModel.iconName)
+                let parameter = parameter.updateState(
+                    iconName: selectedViewModel.iconName
+                )
                 
-                // TODO: repeated pattern - extract to settable subscript
-                guard let index = operation.parameters.firstIndex(where: { $0.id == parameter.id })
-                else { return nil }
-                
-                var operation = operation
-                operation.parameters[index] = .select(parameter)
-                return operation
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
                 
             case let .list(listViewModel):
                 
@@ -115,32 +173,42 @@ extension OperationViewModel {
                     title: listViewModel.title
                 )
                 
-                // TODO: repeated pattern - extract to settable subscript
-                guard let index = operation.parameters.firstIndex(where: { $0.id == parameter.id })
-                else { return nil }
-                
-                var operation = operation
-                operation.parameters[index] = .select(parameter)
-                return operation
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
             }
             
         case let .selectOption(id, parameter):
             
-            print("select \(id), \(parameter)")
-            
             // TODO: repeated pattern - extract to settable subscript
             guard let option = parameter.options.first(where: { $0.id == id })
             else { return nil }
-            
+
             let parameter = parameter.updateState(with: option)
             
-            // TODO: repeated pattern - extract to settable subscript
-            guard let index = operation.parameters.firstIndex(where: { $0.id == parameter.id })
-            else { return nil }
+            return operation.updateOperation(
+                operation: operation,
+                newParameter: .select(parameter)
+            )
             
-            var operation = operation
-            operation.parameters[index] = .select(parameter)
-            return operation
+        case let .filterOptions(parameter, options):
+            
+            return operation.updateOperation(
+                operation: operation,
+                newParameter: .select(.init(
+                    id: parameter.id,
+                    value: parameter.value,
+                    title: parameter.title,
+                    placeholder: parameter.placeholder,
+                    options: options,
+                    state: parameter.state
+                ))
+            )
+            
+        case .openBranch:
+            //TODO: send Branch View
+            return nil
         }
     }
     
@@ -148,8 +216,8 @@ extension OperationViewModel {
         _ operation: Operation
     ) -> Operation {
         
-        if operation.parameters.contains(where: { $0.id == "transferType" }),
-           !operation.parameters.contains(where: { $0.id == "city" }) {
+        if operation.parameters.contains(where: { $0.id == .transferType }),
+           !operation.parameters.contains(where: { $0.id == .city }) {
             
             var operation = operation
             operation.parameters.append(
@@ -176,10 +244,23 @@ extension OperationViewModel {
             
             return operation
             
+        } else if operation.parameters.contains(where: { $0.id == .amount }) {
+            
+            var operation = operation
+            
+            if let indexAmountParameter = operation.parameters.firstIndex(where: { $0.id == .amount }) {
+                
+                operation.parameters.remove(at: indexAmountParameter)
+            }
+            
+            operation.parameters.append(.input(.init(value: "", title: "Введите код", icon: "system name")))
+            
+            return operation
+            
         } else {
             
             var operation = operation
-            operation.parameters.append(.amount(.init(title: "Продолжить", value: "790 Р")))
+            operation.parameters.append(.amount(.init(value: "790 Р")))
             
             return operation
         }
@@ -273,7 +354,8 @@ extension Array where Element == Operation.Parameter {
             title: "Счет списания",
             nameProduct: "Gold",
             balance: "654 367 ₽",
-            description: "・3387・Все включено"
+            description: "・3387・Все включено",
+            options: []
         )),
         .select(.init(
             id: "transferType",
