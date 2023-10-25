@@ -69,7 +69,7 @@ struct MyProductsOpenProductView: View {
         VStack(alignment: .leading, spacing: 24) {
             
             Text(viewModel.title)
-                .font(.textH3SB18240())
+                .font(.textH3Sb18240())
                 .foregroundColor(.mainColorsBlack)
                 
             LazyVGrid(columns: [GridItem(spacing: 12), GridItem()], spacing: 20) {

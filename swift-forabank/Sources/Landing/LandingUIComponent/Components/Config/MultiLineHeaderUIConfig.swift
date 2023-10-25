@@ -13,9 +13,21 @@ public extension UILanding.Multi.LineHeader {
         
         public var id: Self { self }
         
+        public let paddings: Paddings
         public let item: Item
         public let background: Background
         public let foreground: Foreground
+        
+        public struct Paddings {
+            
+            let horizontal: CGFloat
+            let vertical: CGFloat
+            
+            public init(horizontal: CGFloat, vertical: CGFloat) {
+                self.horizontal = horizontal
+                self.vertical = vertical
+            }
+        }
         
         public struct Foreground {
             
@@ -54,7 +66,8 @@ public extension UILanding.Multi.LineHeader {
             }
         }
         
-        public init(item: Item, background: Background, foreground: Foreground) {
+        public init(paddings: Paddings, item: Item, background: Background, foreground: Foreground) {
+            self.paddings = paddings
             self.item = item
             self.background = background
             self.foreground = foreground

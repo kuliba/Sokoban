@@ -118,11 +118,11 @@ struct CurrencyExchangeSuccessView: View {
                 Group {
                     
                     Text(viewModel.title)
-                        .font(.textH3SB18240())
+                        .font(.textH3Sb18240())
                         .foregroundColor(.textSecondary)
                 
                     Text(viewModel.amount)
-                        .font(.textH1SB24322())
+                        .font(.textH1Sb24322())
                         .foregroundColor(.textSecondary)
                 }
                 

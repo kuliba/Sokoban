@@ -7,6 +7,7 @@
 
 import Combine
 @testable import ForaBank
+import ServerAgent
 
 final class ServerAgentSpy: ServerAgentProtocol {
     
@@ -56,6 +57,4 @@ final class ServerAgentSpy: ServerAgentProtocol {
         
         fatalError("unimplemented")
     }
-    
-    let action = PassthroughSubject<Action, Never>()
 }

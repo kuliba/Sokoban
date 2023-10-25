@@ -36,43 +36,6 @@ final class PaymentsTests: XCTestCase {
         XCTAssertNoDiff(viewModel.paymentOperationDetailID, 12345)
     }
     
-    // MARK: paymentsStepC2B source C2B
-    
-    func test_paymentsStepC2B_shouldReturnParameters_amount_qrcId_onStepZero() async throws {
-        
-        let getScenarioData = getScenarioQRDataStub(
-            parameters: anyParameterAmount()
-        )
-        
-        let sut = makeSUT(serverStub: getScenarioData)
-        let operation = c2bOperationWithParameter()
-        
-        let paymentsStepC2B = try await sut.paymentsStepC2B(operation, for: 0)
-        
-        XCTAssertNoDiff(paymentsStepC2B.parametersIds, [
-            "ru.forabank.sense.amount",
-            "qrcId"
-        ])
-    }
-    
-    func test_paymentsStepC2B_withAmountParameterNil_shouldReturnParameter_c2bIsAmountComplete() async throws {
-        
-        let getScenarioData = getScenarioQRDataStub(
-            parameters: anyParameterAmount(amount: nil)
-        )
-        
-        let sut = makeSUT(serverStub: getScenarioData)
-        let operation = c2bOperationWithParameter()
-        
-        let paymentsStepC2B = try await sut.paymentsStepC2B(operation, for: 0)
-        
-        XCTAssertNoDiff(paymentsStepC2B.parametersIds, [
-            "ru.forabank.sense.amount",
-            "qrcId",
-            "c2bIsAmountComplete"
-        ])
-    }
-    
     // MARK: - Helpers
     
     private func c2bQrcIdMockParameter() -> Payments.ParameterMock {

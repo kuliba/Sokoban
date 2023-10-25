@@ -1,6 +1,6 @@
 //
 //  IconWithTwoTextLinesConfigTests.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 25.09.2023.
 //
@@ -13,28 +13,58 @@ final class IconWithTwoTextLinesConfigTests: XCTestCase {
     
     typealias Config = UILanding.IconWithTwoTextLines.Config
     
-    //MARK: - test init config
-    
-    func test_init_config_shouldSetAllValue() {
+    func test_init_shouldSetPaddings() {
         
-        let config: Config = .init(
+        let paddings = makeConfig().paddings
+        
+        XCTAssertEqual(paddings.horizontal, 16)
+        XCTAssertEqual(paddings.vertical, 12)
+    }
+    
+    func test_init_shouldSetIcon() {
+        
+        let icon = makeConfig().icon
+        
+        XCTAssertEqual(icon.size, 10)
+        XCTAssertEqual(icon.paddingBottom, 11)
+    }
+    
+    func test_init_shouldSetTitle() {
+        
+        let title = makeConfig().title
+        
+        XCTAssertEqual(title.font, .body)
+        XCTAssertEqual(title.color, .black)
+        XCTAssertEqual(title.paddingBottom, 1)
+    }
+    
+    func test_init_shouldSetSubtitle() {
+        
+        let subtitle = makeConfig().subTitle
+        
+        XCTAssertEqual(subtitle.font, .title)
+        XCTAssertEqual(subtitle.color, .blue)
+        XCTAssertEqual(subtitle.paddingBottom, 2)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeConfig() -> Config {
+        
+        return .init(
+            paddings: .init(
+                horizontal: 16,
+                vertical: 12),
             icon: .init(
                 size: 10,
                 paddingBottom: 11),
-            horizontalPadding: 12,
-            title: .init(font: .body, color: .black, paddingBottom: 1),
-            subTitle: .init(font: .title, color: .blue, paddingBottom: 2))
-        
-        XCTAssertEqual(config.icon.size, 10)
-        XCTAssertEqual(config.icon.paddingBottom, 11)
-        XCTAssertEqual(config.horizontalPadding, 12)
-        
-        XCTAssertEqual(config.title.font, .body)
-        XCTAssertEqual(config.title.color, .black)
-        XCTAssertEqual(config.title.paddingBottom, 1)
-        
-        XCTAssertEqual(config.subTitle.font, .title)
-        XCTAssertEqual(config.subTitle.color, .blue)
-        XCTAssertEqual(config.subTitle.paddingBottom, 2)
+            title: .init(
+                font: .body,
+                color: .black,
+                paddingBottom: 1),
+            subTitle: .init(
+                font: .title,
+                color: .blue,
+                paddingBottom: 2))
     }
 }

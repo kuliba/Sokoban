@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import ServerAgent
 import XCTest
 
 final class Model_signRequestTests: XCTestCase {
@@ -24,7 +25,14 @@ final class Model_signRequestTests: XCTestCase {
     
     func test_signRequest_shouldSetCookies() throws {
         
-        let serverAgent = ServerAgent(enviroment: .test)
+        let serverAgent = ServerAgent(
+            baseURL: "abc",
+            encoder: .init(),
+            decoder: .init(),
+            logError: { _ in },
+            logMessage: { _ in },
+            sendAction: { _ in }
+        )
         serverAgent.cookies = [try anyHTTPCookie()]
         let (sut, request, token) = makeSUT(serverAgent: serverAgent)
         

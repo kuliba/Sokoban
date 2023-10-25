@@ -87,7 +87,7 @@ final class MultiLineHeaderViewConfigTests: XCTestCase {
     ) -> Config {
         
         return .init(
-            item: item,
+            paddings: .init(horizontal: 16, vertical: 12), item: item,
             background: .init(black: .black, gray: .gray, white: .white),
             foreground: .init(fgBlack: .black, fgWhite: .white)
         )

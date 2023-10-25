@@ -67,3 +67,16 @@ public final class RemoteService<Input, Output> {
         })
     }
 }
+
+public extension RemoteService {
+    
+    func process(
+        _ input: Input
+    ) async throws -> Output {
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            
+            process(input, completion: continuation.resume(with:))
+        }
+    }
+}

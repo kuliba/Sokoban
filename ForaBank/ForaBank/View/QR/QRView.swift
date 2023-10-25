@@ -28,12 +28,12 @@ struct QRView: View {
                         
                         Text(viewModel.title)
                             .foregroundColor(.white)
-                            .font(Font.textH1SB24322())
+                            .font(Font.textH1Sb24322())
                             .frame(maxWidth: .infinity)
                         
                         Text(viewModel.subTitle)
                             .foregroundColor(.white)
-                            .font(Font.textH1SB24322())
+                            .font(Font.textH1Sb24322())
                             .frame(alignment: .center)
                         
                     }

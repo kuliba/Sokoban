@@ -43,7 +43,8 @@ struct MultiLineHeaderView: View {
                 }
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, config.paddings.horizontal)
+        .padding(.vertical, config.paddings.vertical)
         .frame(
             maxWidth: .infinity,
             alignment: .leading

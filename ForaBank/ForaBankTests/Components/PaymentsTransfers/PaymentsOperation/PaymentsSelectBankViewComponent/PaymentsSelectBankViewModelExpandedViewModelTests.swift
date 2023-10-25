@@ -215,7 +215,7 @@ private extension ViewModel.ListState {
     var simplified: Simplified {
         
         switch self {
-        case let .filterred(selectAll: selectAll, banks: banks):
+        case let .filtered(selectAll: selectAll, banks: banks):
             return .filtered(
                 selectAllTitle: selectAll?.name,
                 bankNames: banks.map(\.name)

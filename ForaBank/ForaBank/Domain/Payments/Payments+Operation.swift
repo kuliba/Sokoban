@@ -95,13 +95,13 @@ extension Payments.Operation {
     /// - Returns: Updated operation.
     func reseted(visible: [Parameter.ID]) -> Payments.Operation {
         
-        let visibleFilterred = visible.filter({ parametersIds.contains($0) })
+        let visibleFiltered = visible.filter({ parametersIds.contains($0) })
         
-        guard visibleFilterred.isEmpty == false else {
+        guard visibleFiltered.isEmpty == false else {
             return self
         }
         
-        return .init(service: service, source: source, steps: steps, visible: visibleFilterred)
+        return .init(service: service, source: source, steps: steps, visible: visibleFiltered)
     }
     
     /// Updates operation parameters

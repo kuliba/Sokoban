@@ -27,6 +27,8 @@ struct MultiTextsWithIconsHorizontalView: View {
                     config: config)
             }
         }
+        .padding(.horizontal, config.padding.horizontal)
+        .padding(.vertical, config.padding.vertical)
     }
 }
 
@@ -56,7 +58,7 @@ extension MultiTextsWithIconsHorizontalView {
                         .foregroundColor(config.color)
                 }
             }
-            .padding(.vertical, config.padding)
+            .padding(.vertical, config.padding.itemVertical)
         }
     }
 }

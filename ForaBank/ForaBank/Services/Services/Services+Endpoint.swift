@@ -19,6 +19,7 @@ extension Services {
             
             case processingRegistration = "processing/registration"
             case dict = "dict"
+            case binding = "rest/binding"
         }
         
         enum Version: String {
@@ -31,8 +32,10 @@ extension Services {
             
             case bindPublicKeyWithEventId
             case formSessionKey
-            case getProcessingSessionCode
             case getJsonAbroad
+            case getProcessingSessionCode
+            case getScenarioQRData
+            case getStickerPayment
         }
     }
 }
@@ -60,6 +63,7 @@ extension Services.Endpoint {
         var components = URLComponents()
         components.scheme = baseURL.scheme
         components.host = baseURL.host
+        components.port = baseURL.port
         components.path = baseURL.path + path
         
         guard let url = components.url(relativeTo: baseURL)
@@ -98,6 +102,18 @@ extension Services.Endpoint {
         version: .v2,
         serviceName: .getJsonAbroad
     )
+    
+    static let getScenarioQRDataRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getScenarioQRData
+    )
+    
+    static let getStickerPaymentRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v2,
+        serviceName: .getStickerPayment
+    )
 }
 
 extension Services.Endpoint {
@@ -119,6 +135,7 @@ extension Services.Endpoint {
         var components = URLComponents()
         components.scheme = baseURL.scheme
         components.host = baseURL.host
+        components.port = baseURL.port
         components.path = baseURL.path + path
         
         if !parameters.isEmpty {

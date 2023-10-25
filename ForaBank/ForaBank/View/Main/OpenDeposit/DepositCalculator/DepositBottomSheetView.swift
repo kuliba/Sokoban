@@ -16,7 +16,7 @@ struct DepositBottomSheetView: View {
         VStack(alignment: .leading, spacing: 12) {
             
             Text(viewModel.title)
-                .font(.textH3SB18240())
+                .font(.textH3Sb18240())
                 .padding(.bottom, 8)
             
             ForEach(viewModel.items) { item in

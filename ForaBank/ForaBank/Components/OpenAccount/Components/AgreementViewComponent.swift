@@ -66,26 +66,26 @@ struct AgreementView: View {
                 .frame(width: 16, height: 16)
 
             Text(viewModel.agreeTitle)
-                .font(.textBodyXSR11140())
+                .font(.textBodyXsR11140())
                 .foregroundColor(.mainColorsGray)
 
             Button(action: viewModel.termsButton.action) {
 
                 Text(viewModel.termsTitle)
                     .underline()
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.mainColorsGray)
             }
 
             Text(viewModel.andTitle)
-                .font(.textBodyXSR11140())
+                .font(.textBodyXsR11140())
                 .foregroundColor(.mainColorsGray)
 
             Button(action: viewModel.ratesButton.action) {
 
                 Text(viewModel.tariffsTitle)
                     .underline()
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.mainColorsGray)
             }
         }

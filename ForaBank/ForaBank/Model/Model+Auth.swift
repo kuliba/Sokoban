@@ -5,9 +5,10 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
-import Foundation
-import UIKit
 import FirebaseMessaging
+import Foundation
+import ServerAgent
+import UIKit
 
 //MARK: - Actions
 

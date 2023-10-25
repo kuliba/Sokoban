@@ -108,7 +108,7 @@ struct PTSectionLatestPaymentsView: View {
         
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.textH1SB24322())
+            .font(.textH1Sb24322())
             .foregroundColor(.textSecondary)
             .padding(.vertical, 16)
             .padding(.leading, 20)

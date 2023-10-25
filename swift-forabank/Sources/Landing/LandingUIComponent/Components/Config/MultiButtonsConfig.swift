@@ -15,9 +15,9 @@ public extension UILanding.Multi.Buttons {
         
         public struct Settings {
             public let spacing: CGFloat
-            public let padding: Paddings
+            public let padding: PaddingForMain
             
-            public init(spacing: CGFloat, padding: Paddings) {
+            public init(spacing: CGFloat, padding: PaddingForMain) {
                 self.spacing = spacing
                 self.padding = padding
             }
@@ -27,7 +27,7 @@ public extension UILanding.Multi.Buttons {
             
             public let backgroundColors: Colors
             public let textColors: Colors
-            public let padding: Paddings
+            public let padding: PaddingForButtons
             public let font: Font
             public let height: CGFloat
             public let cornerRadius: CGFloat
@@ -35,7 +35,7 @@ public extension UILanding.Multi.Buttons {
             public init(
                 backgroundColors: Colors,
                 textColors: Colors,
-                padding: Paddings,
+                padding: PaddingForButtons,
                 font: Font,
                 height: CGFloat,
                 cornerRadius: CGFloat
@@ -49,7 +49,20 @@ public extension UILanding.Multi.Buttons {
             }
         }
         
-        public struct Paddings {
+        public struct PaddingForMain {
+            
+            public let horiontal: CGFloat
+            public let top: CGFloat
+            public let bottom: CGFloat
+            
+            public init(horiontal: CGFloat, top: CGFloat, bottom: CGFloat) {
+                self.horiontal = horiontal
+                self.top = top
+                self.bottom = bottom
+            }
+        }
+        
+        public struct PaddingForButtons {
             
             public let horiontal: CGFloat
             public let vertical: CGFloat

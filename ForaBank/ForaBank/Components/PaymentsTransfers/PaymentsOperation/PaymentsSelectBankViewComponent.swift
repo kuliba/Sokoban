@@ -257,7 +257,7 @@ extension PaymentsSelectBankView.ViewModel {
         
         enum ListState: Equatable {
             
-            case filterred(selectAll: SelectAllItemViewModel?, banks: [BankItemViewModel])
+            case filtered(selectAll: SelectAllItemViewModel?, banks: [BankItemViewModel])
             case empty(EmptyListViewModel)
         }
     }
@@ -379,7 +379,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
             icon: icon,
             title: parameter.title,
             textField: textField,
-            list: .filterred(selectAll: selectAllOption, banks: banksList),
+            list: .filtered(selectAll: selectAllOption, banks: banksList),
             selectAll: selectAllOption,
             banksList: banksList,
             scheduler: scheduler
@@ -411,11 +411,11 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
             
             return filteredBanks.isEmpty
             ? .empty(.init())
-            : .filterred(selectAll: selectAll, banks: filteredBanks)
+            : .filtered(selectAll: selectAll, banks: filteredBanks)
             
         } else {
             
-            return .filterred(selectAll: selectAll, banks: banksList)
+            return .filtered(selectAll: selectAll, banks: banksList)
         }
     }
 }
@@ -629,7 +629,7 @@ struct PaymentsSelectBankView: View {
                 .padding(.top, 13)
                 
                 switch viewModel.list {
-                case let .filterred(selectAll: selectAllItemViewModel, banks: banks):
+                case let .filtered(selectAll: selectAllItemViewModel, banks: banks):
                    
                     ScrollView(.horizontal, showsIndicators: false) {
 
@@ -678,7 +678,7 @@ struct PaymentsSelectBankView: View {
                     .accessibilityIdentifier("SelectBankItemBankIcon")
                 
                 Text(viewModel.name)
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
@@ -687,7 +687,7 @@ struct PaymentsSelectBankView: View {
                 if let subtitle = viewModel.subtitle {
                     
                     Text(subtitle)
-                        .font(.textBodyXSR11140())
+                        .font(.textBodyXsR11140())
                         .foregroundColor(.textPlaceholder)
                         .multilineTextAlignment(.center)
                         .lineLimit(1)
@@ -721,7 +721,7 @@ struct PaymentsSelectBankView: View {
                 }.frame(width: 40, height: 40)
                 
                 Text(viewModel.name)
-                    .font(.textBodyXSR11140())
+                    .font(.textBodyXsR11140())
                     .foregroundColor(.textSecondary)
             }
             .contentShape(Rectangle())

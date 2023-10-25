@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 import SVGKit
 
 extension ServerCommands {

@@ -145,15 +145,29 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LandingMappingTests",
-        "name" : "LandingMappingTests"
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LoadableModelTests",
-        "name" : "LoadableModelTests"
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
       }
     }
   ],

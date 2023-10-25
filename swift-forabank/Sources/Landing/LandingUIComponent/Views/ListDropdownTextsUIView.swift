@@ -28,8 +28,8 @@ struct ListDropdownTextsUIView: View {
                 ListView(model: model, config: config, selectedItem: $selectedItem)
             }
         }
-        .padding(.vertical, config.paddings.list)
-        .padding(.horizontal, config.paddings.itemHorizontal)
+        .padding(.horizontal, config.paddings.horizontal)
+        .padding(.vertical, config.paddings.vertical)
     }
 }
 
@@ -56,15 +56,17 @@ extension ListDropdownTextsUIView {
         
         private var headerView: some View {
             
-            VStack {
+            VStack(alignment: .leading) {
                 if let title = model.title, !title.isEmpty {
                     Text(title.rawValue)
                         .font(config.fonts.title)
                         .foregroundColor(config.colors.title)
                         .frame(height: config.heights.title)
                         .padding(.top, config.paddings.titleTop)
+                        .padding(.horizontal, config.paddings.titleHorizontal)
                     
-                    Divider()
+                    config.divider
+                        .frame(height: 0.5)
                 }
             }
         }
@@ -100,7 +102,9 @@ extension ListDropdownTextsUIView {
                 }
             }
             .padding(.horizontal, config.paddings.itemHorizontal)
-            Divider()
+            
+            config.divider
+                .frame(height: 0.5)
         }
     }
 }

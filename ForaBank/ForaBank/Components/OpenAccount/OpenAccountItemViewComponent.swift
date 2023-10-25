@@ -161,7 +161,7 @@ extension OpenAccountItemView {
                 VStack(alignment: .leading, spacing: 4) {
 
                     Text(viewModel.title)
-                        .font(.textH3SB18240())
+                        .font(.textH3Sb18240())
                         .foregroundColor(.mainColorsBlack)
 
                     Text(viewModel.detailTitle)

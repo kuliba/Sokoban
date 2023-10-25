@@ -57,7 +57,8 @@ struct IconWithTwoTextLinesView: View {
             }
         }
         .multilineTextAlignment(.center)
-        .padding(.horizontal, config.horizontalPadding)
+        .padding(.horizontal, config.paddings.vertical)
+        .padding(.vertical, config.paddings.vertical)
     }
 }
 

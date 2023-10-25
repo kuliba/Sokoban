@@ -19,7 +19,7 @@ struct ContactsView: View {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                 
                 DefaultCancellableSearchBarView(
                     viewModel: viewModel.searchFieldModel,

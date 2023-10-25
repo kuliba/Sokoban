@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 
 typealias StatementsData = [ProductData.ID: ProductStatementsStorage]
 

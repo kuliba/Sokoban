@@ -5,13 +5,14 @@
 //  Created by Max Gribov on 21.12.2021.
 //
 
-import Foundation
-import Combine
-import os
-import UserModel
-import SymmetricEncryption
 import CodableLanding
+import Combine
+import Foundation
 import LandingUIComponent
+import os
+import ServerAgent
+import SymmetricEncryption
+import UserModel
 
 class Model {
     
@@ -250,8 +251,27 @@ class Model {
         let sessionAgent = SessionAgent()
         
         // server agent
-        let enviroment = Config.serverAgentEnvironment
-        let serverAgent = ServerAgent(enviroment: enviroment)
+        let environment = Config.serverAgentEnvironment
+        let serverAgent = ServerAgent(
+            baseURL: environment.baseURL,
+            encoder: .serverDate,
+            decoder: .serverDate,
+            logError: { LoggerAgent.shared.log(level: .error, category: .network, message: $0) },
+            logMessage: { LoggerAgent.shared.log(category: .network, message: $0) },
+            sendAction: { action in
+                
+                switch action {
+                case .networkActivityEvent:
+                    sessionAgent.action.send(SessionAgentAction.Event.Network())
+                    
+                case .notAuthorized:
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.notAuthorized")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
+                }
+            }
+        )
 
         // keychain agent
         let keychainAgent = ValetKeychainAgent(valetName: "ru.forabank.sense.valet")
@@ -408,28 +428,6 @@ class Model {
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Request")
                     self.action.send(ModelAction.Auth.Session.Timeout.Request())
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-        
-        //MARK: - Server Agent Action
-        
-        serverAgent.action
-            .receive(on: queue)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as ServerAgentAction.NetworkActivityEvent:
-                    sessionAgent.action.send(SessionAgentAction.Event.Network())
-                    
-                case _ as ServerAgentAction.NotAuthorized:
-                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.NotAuthorized")
-                    
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
-                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 default:
                     break
@@ -1029,6 +1027,10 @@ class Model {
         }.store(in: &bindings)
     }
 }
+
+// MARK: - Protocol Conformances
+
+extension ServerAgent: ServerAgentProtocol {}
 
 //MARK: - Public Methods
 

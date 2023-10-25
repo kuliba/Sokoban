@@ -50,7 +50,7 @@ extension PlacesListView {
                 VStack(alignment: .leading, spacing: 8) {
                     
                     Text(viewModel.name)
-                        .font(.textH4SB16240())
+                        .font(.textH4Sb16240())
                         .multilineTextAlignment(.leading)
                         .foregroundColor(.mainColorsBlack)
                     

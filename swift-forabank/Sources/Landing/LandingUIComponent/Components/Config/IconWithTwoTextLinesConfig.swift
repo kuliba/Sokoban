@@ -11,10 +11,21 @@ public extension UILanding.IconWithTwoTextLines {
     
     struct Config {
         
+        let paddings: Paddings
         let icon: Icon
-        let horizontalPadding: CGFloat
         let title: TextConfig
         let subTitle: TextConfig
+        
+        public struct Paddings {
+            
+            let horizontal: CGFloat
+            let vertical: CGFloat
+            
+            public init(horizontal: CGFloat, vertical: CGFloat) {
+                self.horizontal = horizontal
+                self.vertical = vertical
+            }
+        }
         
         public struct Icon {
             let size: CGFloat
@@ -25,6 +36,7 @@ public extension UILanding.IconWithTwoTextLines {
                 self.paddingBottom = paddingBottom
             }
         }
+        
         public struct TextConfig {
             let font: Font
             let color: Color
@@ -37,9 +49,9 @@ public extension UILanding.IconWithTwoTextLines {
             }
         }
         
-        public init(icon: Icon, horizontalPadding: CGFloat, title: TextConfig, subTitle: TextConfig) {
+        public init(paddings: Paddings, icon: Icon, title: TextConfig, subTitle: TextConfig) {
+            self.paddings = paddings
             self.icon = icon
-            self.horizontalPadding = horizontalPadding
             self.title = title
             self.subTitle = subTitle
         }

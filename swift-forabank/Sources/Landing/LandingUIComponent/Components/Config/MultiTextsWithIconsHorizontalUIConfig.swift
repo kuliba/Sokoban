@@ -14,13 +14,26 @@ public extension UILanding.Multi.TextsWithIconsHorizontal {
         public let color: Color
         public let font: Font
         public let size: CGFloat
-        public let padding: CGFloat
+        public let padding: Paddings
+        
+        public struct Paddings {
+            
+            public let horizontal: CGFloat
+            public let vertical: CGFloat
+            public let itemVertical: CGFloat
+            
+            public init(horizontal: CGFloat, vertical: CGFloat, itemVertical: CGFloat) {
+                self.horizontal = horizontal
+                self.vertical = vertical
+                self.itemVertical = itemVertical
+            }
+        }
         
         public init(
             color: Color,
             font: Font,
             size: CGFloat,
-            padding: CGFloat
+            padding: Paddings
         ) {
             self.color = color
             self.font = font

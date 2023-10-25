@@ -31,7 +31,7 @@ extension Model {
                   let currencySymbol = dictionaryCurrencySymbol(for: product.currency)
             else { throw Payments.Error.unableCreateRepresentable(productParameterId) }
             
-            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productId = productWithSource(source: operation.source, productId: String(product.id))
             let productParameter = Payments.ParameterProduct
                 .init(value: productId,
                       title: "Откуда",

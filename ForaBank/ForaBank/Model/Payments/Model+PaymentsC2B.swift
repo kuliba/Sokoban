@@ -6,27 +6,10 @@
 //
 
 import Foundation
+import ServerAgent
 
 extension Model {
-    
-    func handleC2BScenario<Command: ServerCommand>(
-        makeCommand: @escaping (String) -> Command,
-        map: @escaping (Command.Response.Payload) -> QRScenarioData,
-        consume: @escaping (QRScenarioData) throws -> Void
-    ) async throws {
         
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        let command = makeCommand(token)
-
-        let response = try await serverAgent.executeCommand(command: command)
-        
-        try consume(map(response))
-    }
-    
     internal func c2BParameters(
         data: QRScenarioData,
         parameters: [PaymentsParameterRepresentable],
@@ -62,7 +45,10 @@ extension Model {
         return (parameters, visible)
     }
     
-    func paymentsStepC2B(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
+    func paymentsStepC2B(
+        _ operation: Payments.Operation,
+        for stepIndex: Int
+    ) async throws -> Payments.Operation.Step {
         
         switch stepIndex {
         case 0:
@@ -72,51 +58,29 @@ extension Model {
             
             switch source {
             case .c2b(let url):
-                guard let token = token else {
-                    throw Payments.Error.notAuthorized
-                }
                 
-                let makeCommand = { (token: String) in
-                    
-                    ServerCommands.SBPController.GetScenarioQRData(
-                        token: token,
-                        payload: .init(
-                            QRLink: url.absoluteString
-                        ))
-                }
+                let qrLink = QRLink(link: .init(url.absoluteString))
+                let parameters = try await paymentsStepC2B(by: qrLink)
                 
-                var parameters = [PaymentsParameterRepresentable]()
-                var visible = [Payments.Operation.Step.Parameter.ID]()
+                let required: [Payments.Parameter.ID] = [
+                    Payments.Parameter.Identifier.product.rawValue,
+                    Payments.Parameter.Identifier.c2bQrcId.rawValue
+                ]
                 
-                try await handleC2BScenario(makeCommand: makeCommand) { response in
-                    
-                    response
-                    
-                } consume: { data in
-                    
-                    let (newParameters, visibleParam) = try self.c2BParameters(
-                        data: data,
-                        parameters: parameters,
-                        visible: visible
-                    )
-                    
-                    parameters = newParameters
-                    visible = visibleParam
-                }
-                
-                var required = [Payments.Parameter.ID]()
-                required.append(Payments.Parameter.Identifier.product.rawValue)
-                required.append(Payments.Parameter.Identifier.c2bQrcId.rawValue)
-                
-                return .init(parameters: parameters, front: .init(visible: visible, isCompleted: false), back: .init(stage: .remote(.complete), required: required, processed: nil))
+                return .init(
+                    parameters: parameters.parameters,
+                    front: .init(
+                        visible: parameters.visible,
+                        isCompleted: false),
+                    back: .init(
+                        stage: .remote(.complete),
+                        required: required,
+                        processed: nil))
                 
             case .c2bSubscribe(let url):
-                guard let token = token else {
-                    throw Payments.Error.notAuthorized
-                }
                 
-                let command = ServerCommands.SBPController.GetScenarioQRData(token: token, payload: .init(QRLink: url.absoluteString))
-                let response = try await serverAgent.executeCommand(command: command)
+                let qrLink = QRLink(link: .init(url.absoluteString))
+                let response = try await paymentsStepC2BSubscribe(by: qrLink)
                 
                 var parameters = [PaymentsParameterRepresentable]()
                 
