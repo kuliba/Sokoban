@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1469,6 +1469,7 @@
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */; };
 		83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 83B2B8832AE7A90500DAD486 /* PhoneNumberWrapper */; };
+		83B2B8892AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */; };
 		83B6F3D62AB1EF0C00A4C427 /* LandingToCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B6F3D52AB1EF0C00A4C427 /* LandingToCodable.swift */; };
 		83B6F3D82AB1EF8600A4C427 /* CodableToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B6F3D72AB1EF8600A4C427 /* CodableToUILanding.swift */; };
 		83B6F3DD2AB21E5600A4C427 /* ConfigLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B6F3DC2AB21E5600A4C427 /* ConfigLanding.swift */; };
@@ -3467,6 +3468,7 @@
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		83A59F972A9C987E002F8AD4 /* LandingUIComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LandingUIComponent.xctestplan; sourceTree = "<group>"; };
 		83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift"; sourceTree = "<group>"; };
+		83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListSectionViewModelTests.swift; sourceTree = "<group>"; };
 		83B6F3D52AB1EF0C00A4C427 /* LandingToCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToCodable.swift; sourceTree = "<group>"; };
 		83B6F3D72AB1EF8600A4C427 /* CodableToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableToUILanding.swift; sourceTree = "<group>"; };
 		83B6F3DC2AB21E5600A4C427 /* ConfigLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigLanding.swift; sourceTree = "<group>"; };
@@ -5221,6 +5223,7 @@
 			isa = PBXGroup;
 			children = (
 				2A3086C129FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift */,
+				83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -12803,6 +12806,7 @@
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
 				C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */,
+				83B2B8892AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
 				2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */,
 				7757DB522A711BDA00745EFF /* LocalAgentOldSymmetricKeyCleanerTests.swift in Sources */,

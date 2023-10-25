@@ -128,7 +128,7 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
 
 extension ContactsListSectionViewModel {
     
-    private static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
+    static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
         
         guard !items.isEmpty else {
             
