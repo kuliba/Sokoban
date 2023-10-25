@@ -151,7 +151,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         XCTAssertEqual(value.count, location)
-        XCTAssertEqual(updated, "+7 925-5")
+        XCTAssertEqual(updated, "+7 925 5")
     }
     
     func test_updateMasked_shouldNotAppendSpace() throws {

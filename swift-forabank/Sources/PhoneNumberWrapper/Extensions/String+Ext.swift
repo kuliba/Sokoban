@@ -11,13 +11,13 @@ extension String {
     
     func onlyDigits() -> String {
         
-        self
-            .filter(("0"..."9").contains)
-            .replacingOccurrences(
-                of: "^0+",
-                with: "",
-                options: .regularExpression
-            )
+        let onlyDigits = self.filter(("0"..."9").contains)
+        return onlyDigits.count > 10 ?
+        onlyDigits.replacingOccurrences(
+            of: "^0+",
+            with: "",
+            options: .regularExpression
+        ) : onlyDigits
     }
 }
 
