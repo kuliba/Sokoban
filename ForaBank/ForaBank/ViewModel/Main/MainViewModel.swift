@@ -999,7 +999,9 @@ extension MainViewModel {
 
     func orderSticker() {
         
-        if model.products(.card)?.contains(where: { ($0 as? ProductCardData)?.isMain == true }) == false {
+        if model.products(.card)?.contains(where: { 
+            ($0 as? ProductCardData)?.isMain == true }) == false
+        {
             self.alert = .init(title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Продолжить", action: {
                 
                 DispatchQueue.main.async {

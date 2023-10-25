@@ -108,7 +108,7 @@ struct ListVerticalRoundImageView: View {
             
             Button(action: action) {
                 
-                HStack(alignment: .center, spacing: config.spacings.itemHstack) {
+                HStack(alignment: config.item.hstackAlignment, spacing: config.spacings.itemHstack) {
                     
                     ImageView(image: image, config: config.item)
                     

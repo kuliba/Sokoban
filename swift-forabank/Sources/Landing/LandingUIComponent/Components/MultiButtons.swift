@@ -111,19 +111,18 @@ extension MultiButtonsView {
         ) {
             
             if let type = item.action?.type,
-               item.actionType(by: type) == .goToMain {
-                action(.card(.goToMain))
-            }
-            else if let type = item.action?.type,
-                    item.actionType(by: type) == .goToOrderSticker {
-                
-                action(.sticker(.order))
-            }
-            else if let detailDestination = item.detailDestination {
-                
+                let actionType = item.actionType(by: type) {
+                switch actionType {
+                case .goToMain:
+                    action(.card(.goToMain))
+                case .orderCard:
+                    break
+                case .goToOrderSticker:
+                    action(.sticker(.order))
+                }
+            } else if let detailDestination = item.detailDestination {
                 selectDetail(detailDestination)
             } else {
-                
                 openLink()
             }
         }

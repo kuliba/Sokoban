@@ -40,11 +40,11 @@ public struct LandingView: View {
     
     var backButton : some View {
         
-                Button(action: {
-                    
-                    action(.card(.goToMain))
-                    action(.sticker(.goToMain))
-                }) { Image(systemName: "chevron.backward") }
+        Button(action: {
+            // TODO: Me, Struct
+            action(.card(.goToMain))
+            action(.sticker(.goToMain))
+        }) { Image(systemName: "chevron.backward") }
     }
     
     public var body: some View {
@@ -77,11 +77,16 @@ public struct LandingView: View {
             content: destinationView)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                if viewModel.landing.shouldShowNavigationTitle(
-                    offset: position,
-                    offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
-                    componentsView(viewModel.landing.header)
-                }
+               
+                    if viewModel.landing.shouldShowNavigationTitle(
+                        offset: position,
+                        offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
+                        componentsView(viewModel.landing.header)
+                    } else {
+                        Text(viewModel.landing.titleInMain().text)
+                            .font(.system(size: 18, weight: .medium))
+                    }
+                   
             }
             ToolbarItem(placement: .topBarLeading) {
                 backButton
@@ -89,12 +94,6 @@ public struct LandingView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
-        //        .navigationBarTitle(
-        //            viewModel.landing.navigationTitle(
-        //                offset: position,
-        //                offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader),
-        //            displayMode: .inline)
-        //.navigationBarItems(leading: backButton)
     }
     
     private func componentsView(
@@ -118,18 +117,33 @@ public struct LandingView: View {
     }
     
     
+    @ViewBuilder
     private func itemView(
         component: UILanding.Component
     ) -> some View {
         
-        return LandingComponentView(
+        let landingView = LandingComponentView(
             component: component,
             images: images,
             config: viewModel.config,
             selectDetail: viewModel.selectDetail,
             action: action,
             orderCard: orderCard
-        )
+            )
+        
+        switch component {
+            
+        case .pageTitle:
+            
+            if !viewModel.landing.titleInMain().text.isEmpty { // viewModel.landing.titleInMainBool() ||
+               EmptyView()
+            } else {
+                landingView
+            }
+            
+        default:
+            landingView
+        }
     }
     
     @ViewBuilder
@@ -191,9 +205,7 @@ extension LandingView {
                     model: .init(data: model, images: images),
                     config: config.multiTextsWithIconsHorizontal)
                 
-                // заголовок отображается в navBar !!!
             case .pageTitle(let model):
-               // EmptyView()
                 PageTitleView(model: model, config: config.pageTitle)
                 
             case let .multi(.texts(model)):

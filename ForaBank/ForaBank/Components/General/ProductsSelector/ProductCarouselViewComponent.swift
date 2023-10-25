@@ -960,7 +960,7 @@ extension ProductCarouselView {
                                             .foregroundColor(.gray)
                                             .frame(width: 20, height: 20)
                                         
-                                        Image("close")
+                                        Image(.close)
                                             .renderingMode(.template)
                                             .resizable()
                                             .frame(width: 16, height: 16)
@@ -982,7 +982,7 @@ extension ProductCarouselView {
                                 Text("Платежный")
                                     .font(.textBodyMR14200())
                                 Text("Стикер")
-                                    .font(.textBodyMSB14200())
+                                    .font(.textBodyMSb14200())
                             }
                             .foregroundColor(.textSecondary)
                         }
