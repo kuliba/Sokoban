@@ -23,55 +23,48 @@ final class ContactsListSectionViewModelTests: XCTestCase {
         XCTAssertNil(sut.selfContact)
         XCTAssertEqual(sut.filter.value, nil)
     }
+      
+    // MARK: - test filter
+
+    func test_filterEmpty_visibleContactsNotChange() {
+        
+        assertContacts(defaultFiltered(by: nil), .default)
+        assertContacts(defaultFiltered(by: ""), .default)
+        assertContacts(defaultFiltered(by: "   "), .default)
+    }
+
+    func test_filter_notContainsValue() {
+        
+        assertContacts(defaultFiltered(by: "7"), [])
+        assertContacts(defaultFiltered(by: "й"), [])
+        assertContacts(defaultFiltered(by: "контакт1 1"), [])
+
+    }
+
+    func test_filter_containsValue() {
+        
+        assertContacts(defaultFiltered(by: "+"), .default)
+        assertContacts(defaultFiltered(by: "5"), .default)
+        assertContacts(defaultFiltered(by: "5 5"), .default)
+        assertContacts(defaultFiltered(by: "5 1"), [.phone55_11])
+        assertContacts(defaultFiltered(by: "+5 5"), .default)
+        assertContacts(defaultFiltered(by: "+5 1"), [.phone55_11])
+        assertContacts(defaultFiltered(by: "н"), .default)
+        assertContacts(defaultFiltered(by: "кон"), .default)
+        assertContacts(defaultFiltered(by: "контакт1"), [.phone55_55])
+        assertContacts(defaultFiltered(by: "контакт1 "), [.phone55_55])
+    }
     
-    func test_test_filter_containsValue() {
-        
-        XCTAssertContacts(filter("5"), .default)
-    }
+    // MARK: - items is empty - check by style
     
-    func test_test_filter_filterNil() {
-        
-        XCTAssertContacts(filter(nil), .default)
-    }
-
-    func test_test_filter_filterEmpty() {
-        
-        XCTAssertContacts(filter("   "), .default)
-    }
-
-    func test_test_filter_notContainsValue() {
-        
-        XCTAssertContacts(filter("7"), [])
-    }
-
-    func test_test_filter_itemsEmpty() {
+    func test_filter_itemsEmpty() {
         
         let result = filter(
             items: [],
             "7"
         )
         
-        XCTAssertContactsByStyle(result, .empty)
-    }
-
-    func test_test_filter_filterWithSpaces_containsAllValue() {
-        
-        XCTAssertContacts(filter("5 5"), .default)
-    }
-    
-    func test_test_filter_filterWithSpaces_contains1Value() {
-        
-        XCTAssertContacts(filter("5 1"), [.phone55_11])
-    }
-    
-    func test_test_filter_filterWithSpacesAndPlus_containsAllValue() {
-        
-        XCTAssertContacts(filter("+5 5"), .default)
-    }
-    
-    func test_test_filter_filterWithSpacesAndPlus_contains1Value() {
-        
-        XCTAssertContacts(filter("+5 1"), [.phone55_11])
+        assertContactsByStyle(result, .empty)
     }
 
     // TODO: add tests for other ContactsListSectionViewModel behaviour
@@ -95,7 +88,7 @@ final class ContactsListSectionViewModelTests: XCTestCase {
     }
     
     private func filter(
-        items: [ContactsItemViewModel] = .default,
+        items: [ContactsItemViewModel],
         _ filter: String?
     ) -> [ContactsItemViewModel] {
         return ContactsListSectionViewModel.reduce(
@@ -104,20 +97,29 @@ final class ContactsListSectionViewModelTests: XCTestCase {
         )
     }
     
-    private func XCTAssertContacts(
+    private func defaultFiltered(
+        by filter: String?
+    ) -> [ContactsItemViewModel] {
+        return ContactsListSectionViewModel.reduce(
+            items: .default,
+            filter: filter
+        )
+    }
+    
+    private func assertContacts(
         _ contacts: [ContactsItemViewModel],
         _ otherContacts: [ContactsItemViewModel]
     ) {
-        XCTAssertNoDiff(contacts.map{ $0.id }, otherContacts.map{ $0.id })
+        XCTAssertNoDiff(contacts.map(\.id), otherContacts.map(\.id))
     }
     
-    private func XCTAssertContactsByStyle(
+    private func assertContactsByStyle(
         _ contacts: [ContactsItemViewModel],
         _ otherContacts: [ContactsItemViewModel]
     ) {
         XCTAssertNoDiff(
-            contacts.map{ ($0 as? ContactsPlaceholderItemView.ViewModel)?.style },
-            otherContacts.map{ ($0 as? ContactsPlaceholderItemView.ViewModel)?.style }
+            contacts.map { ($0 as? ContactsPlaceholderItemView.ViewModel) }.map(\.?.style),
+            otherContacts.map { ($0 as? ContactsPlaceholderItemView.ViewModel) }.map(\.?.style)
         )
     }
 
@@ -138,7 +140,7 @@ extension ContactsItemViewModel {
     static let phone55_55 = ContactsPersonItemView.ViewModel(
         id: "+55 55",
         icon: .image(.checkImage),
-        name: "контакт",
+        name: "контакт1",
         phone: "+55 55",
         isBankIcon: false,
         action: {})
@@ -146,7 +148,7 @@ extension ContactsItemViewModel {
     static let phone55_11 = ContactsPersonItemView.ViewModel(
         id: "+55 11",
         icon: .image(.checkImage),
-        name: "контакт",
+        name: "контакт2",
         phone: "+55 11",
         isBankIcon: false,
         action: {})

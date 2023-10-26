@@ -244,7 +244,7 @@ extension String {
         if self.notContainsLetters {
             return self.filtered()
         }
-        return self
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 
