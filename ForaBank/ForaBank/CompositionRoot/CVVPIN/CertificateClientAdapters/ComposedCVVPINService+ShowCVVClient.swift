@@ -14,7 +14,7 @@ extension ComposedCVVPINService: ShowCVVClient {
         completion: @escaping ShowCVVCompletion
     ) {
         showCVV(
-            cardID: .init(cardIDValue: cardId)
+            .init(cardIDValue: cardId)
         ) { [weak self] result in
             
             guard self != nil else { return }

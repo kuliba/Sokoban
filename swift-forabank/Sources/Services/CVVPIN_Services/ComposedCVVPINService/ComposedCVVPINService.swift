@@ -7,68 +7,33 @@
 
 public final class ComposedCVVPINService {
     
-    public typealias CVVPINCheckingService = CVVPINFunctionalityCheckingService
-    public typealias CVVPINActivationService = CVVPINFunctionalityActivationService
-    
-    private let cvvPINCheckingService: CVVPINCheckingService
-    private let cvvPINActivationService: CVVPINActivationService
-    private let showCVVService: ShowCVVService
-    private let changePINService: ChangePINService
+    public typealias Activate = (@escaping CVVPINFunctionalityActivationService.ActivationCompletion) -> Void
+    public typealias ChangePIN = (ChangePINService.CardID, ChangePINService.PIN, ChangePINService.OTP, @escaping ChangePINService.ChangePINCompletion) -> Void
+    public typealias CheckActivation = (@escaping CVVPINFunctionalityCheckingService.Activate, @escaping CVVPINFunctionalityCheckingService.Completion) -> Void
+    public typealias ConfirmActivation = (CVVPINFunctionalityActivationService.OTP, @escaping CVVPINFunctionalityActivationService.ConfirmationCompletion) -> Void
+    public typealias GetPINConfirmationCode = (@escaping ChangePINService.PINConfirmCompletion) -> Void
+    public typealias ShowCVV = (ShowCVVService.CardID, @escaping ShowCVVService.Completion) -> Void
+
+    public let activate: Activate
+    public let changePIN: ChangePIN
+    public let checkActivation: CheckActivation
+    public let confirmActivation: ConfirmActivation
+    public let getPINConfirmationCode: GetPINConfirmationCode
+    public let showCVV: ShowCVV
     
     public init(
-        cvvPINCheckingService: CVVPINCheckingService,
-        cvvPINActivationService: CVVPINActivationService,
-        showCVVService: ShowCVVService,
-        changePINService: ChangePINService
+        activate: @escaping Activate,
+        changePIN: @escaping ChangePIN,
+        checkActivation: @escaping CheckActivation,
+        confirmActivation: @escaping ConfirmActivation,
+        getPINConfirmationCode: @escaping GetPINConfirmationCode,
+        showCVV: @escaping ShowCVV
     ) {
-        self.cvvPINCheckingService = cvvPINCheckingService
-        self.cvvPINActivationService = cvvPINActivationService
-        self.showCVVService = showCVVService
-        self.changePINService = changePINService
-    }
-}
-
-public extension ComposedCVVPINService {
-    
-    func checkActivation(
-        withFallback activate: @escaping CVVPINCheckingService.Activate,
-        completion: @escaping CVVPINCheckingService.Completion
-    ) {
-        cvvPINCheckingService.checkActivation(withFallback: activate, completion: completion)
-    }
-    
-    func activate(
-        completion: @escaping CVVPINActivationService.ActivationCompletion
-    ) {
-        cvvPINActivationService.activate(completion: completion)
-    }
-    
-    func confirmActivation(
-        withOTP otp: CVVPINActivationService.OTP,
-        completion: @escaping CVVPINActivationService.ConfirmationCompletion
-    ) {
-        cvvPINActivationService.confirmActivation(withOTP: otp, completion: completion)
-    }
-    
-    func showCVV(
-        cardID: ShowCVVService.CardID,
-        completion: @escaping ShowCVVService.Completion
-    ) {
-        showCVVService.showCVV(cardID: cardID, completion: completion)
-    }
-    
-    func getPINConfirmationCode(
-        completion: @escaping ChangePINService.PINConfirmCompletion
-    ) {
-        changePINService.getPINConfirmationCode(completion: completion)
-    }
-
-    func changePIN(
-        for cardID: ChangePINService.CardID,
-        to pin: ChangePINService.PIN,
-        otp: ChangePINService.OTP,
-        completion: @escaping ChangePINService.ChangePINCompletion
-    ) {
-        changePINService.changePIN(for: cardID, to: pin, otp: otp, completion: completion)
+        self.activate = activate
+        self.changePIN = changePIN
+        self.checkActivation = checkActivation
+        self.confirmActivation = confirmActivation
+        self.getPINConfirmationCode = getPINConfirmationCode
+        self.showCVV = showCVV
     }
 }

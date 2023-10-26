@@ -7,7 +7,7 @@
 
 import CVVPINServices
 import Foundation
-
+#warning("remove if unused")
 final class LoggingStoreDecorator<T> {
     
     let decoratee: any Store<T>
@@ -31,7 +31,13 @@ extension LoggingStoreDecorator: Store {
     ) {
         decoratee.retrieve { [log] result in
             
-            log("Store: Retrieval result: \(result).")
+            switch result {
+            case let .failure(error):
+                log("Store \(String(describing: self)): Retrieval failure: \(error).")
+                
+            case let .success((model, validUntil)):
+                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).")                
+            }
             completion(result)
         }
     }
@@ -43,7 +49,7 @@ extension LoggingStoreDecorator: Store {
     ) {
         decoratee.insert(local, validUntil: validUntil) { [log] result in
             
-            log("Store: Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).")
+            log("Store \(String(describing: self)): Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).")
             completion(result)
         }
     }
@@ -53,7 +59,7 @@ extension LoggingStoreDecorator: Store {
     ) {
         decoratee.deleteCache { [log] result in
             
-            log("Store: Asked to delete cache. Deletion result: \(result).")
+            log("Store \(String(describing: self)): Asked to delete cache. Deletion result: \(result).")
             completion(result)
         }
     }

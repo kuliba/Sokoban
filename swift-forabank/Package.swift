@@ -361,6 +361,7 @@ private extension Target {
             .copy("Resources/public.crt"),
             .copy("Resources/der.crt"),
             .copy("Resources/publicCert.pem"),
+            .copy("Resources/generatepin.pem"),
         ]
     )
     static let foraCryptoTests = testTarget(

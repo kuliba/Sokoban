@@ -48,8 +48,6 @@ public final class FormSessionKeyService {
 
 public extension FormSessionKeyService {
     
-    typealias TTL = Int
-    typealias Success = (sessionKey: SessionKey, ttl: TTL)
     typealias Result = Swift.Result<Success, Error>
     typealias Completion = (Result) -> Void
     
@@ -83,6 +81,25 @@ public extension FormSessionKeyService {
 }
 
 extension FormSessionKeyService {
+    
+    public struct Success {
+        
+        public let sessionKey: SessionKey
+        public let eventID: EventID
+        public let sessionTTL: SessionTTL
+        
+        public typealias SessionTTL = Int
+
+        public struct EventID {
+            
+            public let eventIDValue: String
+            
+            public init(eventIDValue: String) {
+             
+                self.eventIDValue = eventIDValue
+            }
+        }
+    }
     
     public struct SessionKey {
         
@@ -121,16 +138,16 @@ extension FormSessionKeyService {
     public struct Response {
         
         public let publicServerSessionKey: String
-        public let eventId: String
+        public let eventID: String
         public let sessionTTL: Int
         
         public init(
             publicServerSessionKey: String,
-            eventId: String,
+            eventID: String,
             sessionTTL: Int
         ) {
             self.publicServerSessionKey = publicServerSessionKey
-            self.eventId = eventId
+            self.eventID = eventID
             self.sessionTTL = sessionTTL
         }
     }
@@ -206,7 +223,13 @@ private extension FormSessionKeyService {
             
             completion(
                 result
-                    .map { (sessionKey: $0, ttl: response.sessionTTL) }
+                    .map {
+                        .init(
+                            sessionKey: $0,
+                            eventID: .init(eventIDValue: response.eventID),
+                            sessionTTL: response.sessionTTL
+                        )
+                    }
                     .mapError { _ in .other(.makeSessionKeyFailure) }
             )
         }

@@ -10,6 +10,7 @@ import Foundation
 public struct CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKey, SymmetricKey> {
     
     public typealias PublicTransportDecrypt = (Data) throws -> Data
+    public typealias EncryptWithProcessingPublicRSAKey = (Data) throws -> Data
     
     public typealias MakeSymmetricKey = (Data, ECDHPrivateKey) throws -> SymmetricKey
     public typealias ECDHKeyPairDomain = KeyPairDomain<ECDHPublicKey, ECDHPrivateKey>
@@ -28,7 +29,8 @@ public struct CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPriva
     public typealias SHA256Hash = (String) -> Data
     
     let publicTransportDecrypt: PublicTransportDecrypt
-    
+    let encryptWithProcessingPublicRSAKey: EncryptWithProcessingPublicRSAKey
+
     let makeSymmetricKey: MakeSymmetricKey
     let makeECDHKeyPair: ECDHKeyPairDomain.Get
     
@@ -44,6 +46,7 @@ public struct CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPriva
     
     public init(
         publicTransportDecrypt: @escaping PublicTransportDecrypt,
+        encryptWithProcessingPublicRSAKey: @escaping EncryptWithProcessingPublicRSAKey,
         makeSymmetricKey: @escaping MakeSymmetricKey,
         makeECDHKeyPair: @escaping ECDHKeyPairDomain.Get,
         aesEncrypt: @escaping AESEncrypt,
@@ -55,6 +58,7 @@ public struct CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPriva
         sha256Hash: @escaping SHA256Hash
     ) {
         self.publicTransportDecrypt = publicTransportDecrypt
+        self.encryptWithProcessingPublicRSAKey = encryptWithProcessingPublicRSAKey
         self.makeSymmetricKey = makeSymmetricKey
         self.makeECDHKeyPair = makeECDHKeyPair
         self.aesEncrypt = aesEncrypt

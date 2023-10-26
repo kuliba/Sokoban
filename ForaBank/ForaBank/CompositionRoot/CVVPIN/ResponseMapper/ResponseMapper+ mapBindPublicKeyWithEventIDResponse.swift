@@ -18,7 +18,7 @@ extension ResponseMapper {
         do {
             switch httpURLResponse.statusCode {
             case 200:
-                if data.isEmpty {
+                if data.isEmpty || data == .init("{}".utf8) {
                     return .success(())
                 } else {
                     return .failure(.invalid(statusCode: 200, data: data))

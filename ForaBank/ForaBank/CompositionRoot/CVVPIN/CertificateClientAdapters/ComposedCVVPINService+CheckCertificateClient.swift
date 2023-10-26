@@ -13,7 +13,7 @@ extension ComposedCVVPINService: CheckCertificateClient {
         completion: @escaping CheckCertificateCompletion
     ) {
         checkActivation(
-            withFallback: { _ in }
+            { _ in }
         ) { [weak self] result in
             
             guard self != nil else { return }

@@ -15,7 +15,7 @@ public final class CVVPINFunctionalityActivationService {
     public typealias GetCodeCompletion = (GetCodeResult) -> Void
     public typealias GetCode = (@escaping GetCodeCompletion) -> Void
     
-    public typealias FormSessionKeyResult = Swift.Result<SessionKey, Swift.Error>
+    public typealias FormSessionKeyResult = Swift.Result<FormSessionKeySuccess, Swift.Error>
     public typealias FormSessionKeyCompletion = (FormSessionKeyResult) -> Void
     public typealias FormSessionKey = (@escaping FormSessionKeyCompletion) -> Void
     
@@ -85,13 +85,42 @@ public extension CVVPINFunctionalityActivationService {
 
 extension CVVPINFunctionalityActivationService {
     
-    public struct SessionKey {
+    public struct FormSessionKeySuccess {
         
-        let sessionKeyValue: Data
+        public let sessionKey: SessionKey
+        public let eventID: EventID
+        public let sessionTTL: SessionTTL
         
-        public init(sessionKeyValue: Data) {
-         
-            self.sessionKeyValue = sessionKeyValue
+        public init(
+            sessionKey: SessionKey,
+            eventID: EventID,
+            sessionTTL: SessionTTL
+        ) {
+            self.sessionKey = sessionKey
+            self.eventID = eventID
+            self.sessionTTL = sessionTTL
+        }
+        
+        public typealias SessionTTL = Int
+        
+        public struct EventID {
+            
+            public let eventIDValue: String
+            
+            public init(eventIDValue: String) {
+                
+                self.eventIDValue = eventIDValue
+            }
+        }
+        
+        public struct SessionKey {
+            
+            let sessionKeyValue: Data
+            
+            public init(sessionKeyValue: Data) {
+                
+                self.sessionKeyValue = sessionKeyValue
+            }
         }
     }
 

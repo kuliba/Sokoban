@@ -22,25 +22,25 @@ where RemoteCVV == ForaBank.RemoteCVV,
         httpClient: HTTPClient,
         currentDate: @escaping () -> Date = Date.init
     ) -> Self {
-        
+
         let changePINService = RemoteService(
             createRequest: RequestFactory.makeChangePINRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: CVVPINServices.ResponseMapper.mapChangePINResponse
         )
-        
+
         let cvvService = RemoteService(
             createRequest: RequestFactory.makeShowCVVRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: CVVPINServices.ResponseMapper.mapShowCVVResponse
         )
-        
+
         let keyService = RemoteService(
             createRequest: RequestFactory.makeProcessPublicKeyAuthenticationRequestResult,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: CVVPINServices.ResponseMapper.mapProcessPublicKeyAuthenticationResponse
         )
-        
+
         return .init(
             changePINProcess: changePINService.process(_:completion:),
             remoteCVVProcess: cvvService.process(request:completion:),
@@ -93,9 +93,7 @@ private extension RequestFactory {
     ) -> Result<URLRequest, Error> {
         
         .init {
-            try makeProcessPublicKeyAuthenticationRequest(
-                data: data
-            )
+            try makeProcessPublicKeyAuthenticationRequest(data: data)
         }
     }
 }

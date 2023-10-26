@@ -10,7 +10,7 @@ import Foundation
 public final class ChangePINService<APIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
 where APIError: Error {
     
-    public typealias MakePINChangeJSON = (SessionID, CardID, OTP, PIN, EventID, RSAPrivateKey) throws -> Data
+    public typealias MakePINChangeJSON = (SessionID, CardID, OTP, PIN, EventID) throws -> Data
     public typealias MakeSecretPINRequest = (SessionID, Data, SymmetricKey) throws -> Data
     
     private let infra: Infra
@@ -72,9 +72,6 @@ extension ChangePINService {
         public typealias EventIDDomain = DomainOf<EventID>
         public typealias LoadEventID = EventIDDomain.AsyncGet
         
-        public typealias RSAPrivateKeyDomain = DomainOf<RSAPrivateKey>
-        public typealias LoadRSAPrivateKey = RSAPrivateKeyDomain.AsyncGet
-        
         public typealias ProcessResult = Result<Void, APIError>
         public typealias ProcessCompletion = (ProcessResult) -> Void
         public typealias Process = ((SessionID, Data), @escaping ProcessCompletion) -> Void
@@ -82,20 +79,17 @@ extension ChangePINService {
         let loadSessionID: LoadSessionID
         let loadSymmetricKey: LoadSymmetricKey
         let loadEventID: LoadEventID
-        let loadRSAPrivateKey: LoadRSAPrivateKey
         let process: Process
         
         public init(
             loadSessionID: @escaping LoadSessionID,
             loadSymmetricKey: @escaping LoadSymmetricKey,
             loadEventID: @escaping LoadEventID,
-            loadRSAPrivateKey: @escaping LoadRSAPrivateKey,
             process: @escaping Process
         ) {
             self.loadSessionID = loadSessionID
             self.loadSymmetricKey = loadSymmetricKey
             self.loadEventID = loadEventID
-            self.loadRSAPrivateKey = loadRSAPrivateKey
             self.process = process
         }
     }
@@ -163,30 +157,7 @@ private extension ChangePINService {
                 completion(.failure(.missing(.eventID)))
                 
             case let .success(eventID):
-                loadRSAPrivateKey(cardID, otp, pin, sessionID, symmetricKey, eventID, completion)
-            }
-        }
-    }
-    
-    func loadRSAPrivateKey(
-        _ cardID: CardID,
-        _ otp: OTP,
-        _ pin: PIN,
-        _ sessionID: SessionID,
-        _ symmetricKey: SymmetricKey,
-        _ eventID: EventID,
-        _ completion: @escaping Completion
-    ) {
-        infra.loadRSAPrivateKey { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                completion(.failure(.missing(.rsaPrivateKey)))
-                
-            case let .success(rsaPrivateKey):
-                process(cardID, otp, pin, sessionID, symmetricKey, eventID, rsaPrivateKey, completion)
+                process(cardID, otp, pin, sessionID, symmetricKey, eventID, completion)
             }
         }
     }
@@ -198,11 +169,10 @@ private extension ChangePINService {
         _ sessionID: SessionID,
         _ symmetricKey: SymmetricKey,
         _ eventID: EventID,
-        _ rsaPrivateKey: RSAPrivateKey,
         _ completion: @escaping Completion
     ) {
         do {
-            let pinChangeJSON = try makePINChangeJSON(sessionID, cardID, otp, pin, eventID, rsaPrivateKey)
+            let pinChangeJSON = try makePINChangeJSON(sessionID, cardID, otp, pin, eventID)
             let request = try makeSecretPINRequest(sessionID, pinChangeJSON, symmetricKey)
             
             infra.process((sessionID, request)) { [weak self] result in

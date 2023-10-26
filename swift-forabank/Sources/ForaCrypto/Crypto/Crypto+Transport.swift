@@ -39,9 +39,9 @@ public extension Crypto {
         padding: SecPadding = .PKCS1
     ) throws -> Data {
         
-        try Crypto.encryptWithRSAKey(
+        try encryptWithRSAKey(
             data,
-            publicKey: Crypto.transportKey(),
+            publicKey: transportKey(),
             padding: padding
         )
     }

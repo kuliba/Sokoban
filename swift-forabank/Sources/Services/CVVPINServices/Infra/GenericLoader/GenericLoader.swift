@@ -48,25 +48,25 @@ public extension GenericLoader {
             completion(.init {
                 
                 let (local, validUntil) = try result.get()
-                
-                guard self.isValid(validUntil)
-                else {
-                    throw LoadError.invalidCache
-                }
-                
+                try self.validate(validUntil)
                 return self.toModel(local)
             })
         }
     }
     
-    private func isValid(_ validUntil: Date) -> Bool {
+    private func validate(_ validUntil: Date) throws {
         
-        validUntil >= currentDate()
+        let current = currentDate()
+        
+        guard validUntil >= current
+        else {
+            throw LoadError.invalidCache(validatedAt: current, validUntil: validUntil)
+        }
     }
     
     enum LoadError: Error {
         
-        case invalidCache
+        case invalidCache(validatedAt: Date, validUntil: Date)
     }
 }
 

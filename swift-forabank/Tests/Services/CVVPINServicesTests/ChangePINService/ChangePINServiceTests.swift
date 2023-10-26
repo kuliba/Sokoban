@@ -12,12 +12,11 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeSUT()
         
         XCTAssertEqual(sessionIDLoader.callCount, 0)
         XCTAssertEqual(symmetricKeyLoader.callCount, 0)
         XCTAssertEqual(eventIDLoader.callCount, 0)
-        XCTAssertEqual(rsaPrivateKeyLoader.callCount, 0)
         XCTAssertEqual(service.callCount, 0)
         _ = sut
     }
@@ -25,7 +24,7 @@ final class ChangePINServiceTests: XCTestCase {
     func test_changePIN_shouldDeliverLoadSessionIDFailureOnSessionIDLoadError() {
         
         let loadSessionIDError = anyError("SessionIDLoader Failure")
-        let (sut, sessionIDLoader, _, _, _, _) = makeSUT()
+        let (sut, sessionIDLoader, _, _, _) = makeSUT()
         
         assert(
             sut,
@@ -39,7 +38,7 @@ final class ChangePINServiceTests: XCTestCase {
     func test_changePIN_shouldDeliverLoadSymmetricKeyFailureOnSymmetricKeyLoadError() {
         
         let loadSymmetricKeyError = anyError("SymmetricKeyLoader Failure")
-        let (sut, sessionIDLoader, symmetricKeyLoader, _, _, _) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, _, _) = makeSUT()
         
         assert(
             sut,
@@ -54,7 +53,7 @@ final class ChangePINServiceTests: XCTestCase {
     func test_changePIN_shouldDeliverLoadEventIDFailureOnEventIDLoadError() {
         
         let loadEventIDError = anyError("EventIDLoader Failure")
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, _, _) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, _) = makeSUT()
         
         assert(
             sut,
@@ -67,27 +66,10 @@ final class ChangePINServiceTests: XCTestCase {
         )
     }
     
-    func test_changePIN_shouldDeliverLoadRSAPrivateKeyFailureOnRSAPrivateKeyLoadError() {
-        
-        let loadRSAPrivateKeyError = anyError("RSAPrivateKeyLoader Failure")
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, _) = makeSUT()
-        
-        assert(
-            sut,
-            delivers: .failure(.missing(.rsaPrivateKey)),
-            on: {
-                sessionIDLoader.complete(with: anySuccess())
-                symmetricKeyLoader.complete(with: anySuccess())
-                eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: .failure(loadRSAPrivateKeyError))
-            }
-        )
-    }
-    
     func test_changePIN_shouldDeliverMakeSecretPINRequestFailureOnMakeSecretPINRequestError() {
         
         let makeSecretPINRequestError = anyError("MakeSecretPINRequest Failure")
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, _) = makeSUT(
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, _) = makeSUT(
             pinRequestStub: .failure(makeSecretPINRequestError)
         )
         
@@ -98,7 +80,6 @@ final class ChangePINServiceTests: XCTestCase {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
                 eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: anySuccess())
             }
         )
     }
@@ -109,7 +90,7 @@ final class ChangePINServiceTests: XCTestCase {
             statusCode: 7506,
             errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
         )
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeSUT()
         
         assert(
             sut,
@@ -118,7 +99,6 @@ final class ChangePINServiceTests: XCTestCase {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
                 eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: anySuccess())
                 service.complete(with: .failure(weakPIN))
             })
     }
@@ -130,7 +110,7 @@ final class ChangePINServiceTests: XCTestCase {
             errorMessage: "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
             retryAttempts: 2
         )
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeSUT()
         
         assert(
             sut,
@@ -139,7 +119,6 @@ final class ChangePINServiceTests: XCTestCase {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
                 eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: anySuccess())
                 service.complete(with: .failure(retry))
             }
         )
@@ -147,7 +126,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverFailureOnProcessError() {
         
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeSUT()
         
         assert(
             sut,
@@ -159,7 +138,6 @@ final class ChangePINServiceTests: XCTestCase {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
                 eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: anySuccess())
                 service.complete(with: .failure(.error(
                     statusCode: 7506,
                     errorMessage: "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
@@ -170,7 +148,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldDeliverSuccessOnSuccess() {
         
-        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeSUT()
+        let (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeSUT()
         
         assert(
             sut,
@@ -179,7 +157,6 @@ final class ChangePINServiceTests: XCTestCase {
                 sessionIDLoader.complete(with: anySuccess())
                 symmetricKeyLoader.complete(with: anySuccess())
                 eventIDLoader.complete(with: anySuccess())
-                rsaPrivateKeyLoader.complete(with: anySuccess())
                 service.complete(with: .success(()))
             }
         )
@@ -187,10 +164,10 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadSessionIDComplete() {
         
-        let (infra, sessionIDLoader, _, _, _, _) = makeInfra()
+        let (infra, sessionIDLoader, _, _, _) = makeInfra()
         var sut: SUT? = .init(
             infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in .init() },
+            makePINChangeJSON: { _,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
         var results = [Result<Void, PINError>]()
@@ -205,10 +182,10 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadSymmetricKeyComplete() {
         
-        let (infra, sessionIDLoader, symmetricKeyLoader, _, _, _) = makeInfra()
+        let (infra, sessionIDLoader, symmetricKeyLoader, _, _) = makeInfra()
         var sut: SUT? = .init(
             infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in .init() },
+            makePINChangeJSON: { _,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
         var results = [Result<Void, PINError>]()
@@ -224,10 +201,10 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadEventIDComplete() {
         
-        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, _, _) = makeInfra()
+        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, _) = makeInfra()
         var sut: SUT? = .init(
             infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in .init() },
+            makePINChangeJSON: { _,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
         var results = [Result<Void, PINError>]()
@@ -237,27 +214,6 @@ final class ChangePINServiceTests: XCTestCase {
         symmetricKeyLoader.complete(with: anySuccess())
         sut = nil
         eventIDLoader.complete(with: anySuccess())
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertTrue(results.isEmpty)
-    }
-    
-    func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeLoadRSAPrivateKeyComplete() {
-        
-        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, _) = makeInfra()
-        var sut: SUT? = .init(
-            infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in .init() },
-            makeSecretPINRequest: { _,_,_ in .init() }
-        )
-        var results = [Result<Void, PINError>]()
-        
-        sut?.changePIN { results.append($0) }
-        sessionIDLoader.complete(with: anySuccess())
-        symmetricKeyLoader.complete(with: anySuccess())
-        eventIDLoader.complete(with: anySuccess())
-        sut = nil
-        rsaPrivateKeyLoader.complete(with: anySuccess())
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertTrue(results.isEmpty)
@@ -265,10 +221,10 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_changePIN_shouldNotDeliverOnInstanceDeallocationBeforeProcessComplete() {
         
-        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeInfra()
+        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeInfra()
         var sut: SUT? = .init(
             infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in .init() },
+            makePINChangeJSON: { _,_,_,_,_ in .init() },
             makeSecretPINRequest: { _,_,_ in .init() }
         )
         var results = [Result<Void, PINError>]()
@@ -277,7 +233,6 @@ final class ChangePINServiceTests: XCTestCase {
         sessionIDLoader.complete(with: anySuccess())
         symmetricKeyLoader.complete(with: anySuccess())
         eventIDLoader.complete(with: anySuccess())
-        rsaPrivateKeyLoader.complete(with: anySuccess())
         sut = nil
         service.complete(with: .success(()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
@@ -305,19 +260,18 @@ final class ChangePINServiceTests: XCTestCase {
         sessionIDLoader: SessionIDLoaderSpy,
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
-        rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
         service: ServiceSpy<Result<Void, APIError>, (SessionID, Data)>
     ) {
-        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service) = makeInfra(file: file, line: line)
+        let (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service) = makeInfra(file: file, line: line)
         let sut = SUT(
             infra: infra,
-            makePINChangeJSON: { _,_,_,_,_,_ in try pinChangeStub.get() },
+            makePINChangeJSON: { _,_,_,_,_ in try pinChangeStub.get() },
             makeSecretPINRequest: { _,_,_ in try pinRequestStub.get() }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service)
+        return (sut, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service)
     }
     
     private func makeInfra(
@@ -328,29 +282,25 @@ final class ChangePINServiceTests: XCTestCase {
         sessionIDLoader: SessionIDLoaderSpy,
         symmetricKeyLoader: SymmetricKeyLoaderSpy,
         eventIDLoader: EventIDLoaderSpy,
-        rsaPrivateKeyLoader: RSAPrivateKeyLoaderSpy,
         service: ServiceSpy<Result<Void, APIError>, (SessionID, Data)>
     ) {
         let sessionIDLoader = SessionIDLoaderSpy()
         let symmetricKeyLoader = SymmetricKeyLoaderSpy()
         let eventIDLoader = EventIDLoaderSpy()
-        let rsaPrivateKeyLoader = RSAPrivateKeyLoaderSpy()
         let service = ServiceSpy<Result<Void, APIError>, (SessionID, Data)>()
         let infra = SUT.Infra(
             loadSessionID: sessionIDLoader.load(completion:),
             loadSymmetricKey: symmetricKeyLoader.load(completion:),
             loadEventID: eventIDLoader.load(completion:),
-            loadRSAPrivateKey: rsaPrivateKeyLoader.load(completion:),
             process: service.process
         )
         
         trackForMemoryLeaks(sessionIDLoader, file: file, line: line)
         trackForMemoryLeaks(symmetricKeyLoader, file: file, line: line)
         trackForMemoryLeaks(eventIDLoader, file: file, line: line)
-        trackForMemoryLeaks(rsaPrivateKeyLoader, file: file, line: line)
         trackForMemoryLeaks(service, file: file, line: line)
         
-        return (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, rsaPrivateKeyLoader, service)
+        return (infra, sessionIDLoader, symmetricKeyLoader, eventIDLoader, service)
     }
     
     private func assert(
@@ -394,13 +344,6 @@ private func anySuccess(
 ) -> ChangePINServiceTests.SUT.Infra.EventIDDomain.Result {
     
     .success(.init(rawValue: value))
-}
-
-private func anySuccess(
-    _ value: String = "RSAPrivateKey 123456"
-) -> ChangePINServiceTests.SUT.Infra.RSAPrivateKeyDomain.Result {
-    
-    .success(.init(value))
 }
 
 // MARK: - DSL
