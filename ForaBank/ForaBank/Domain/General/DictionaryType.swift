@@ -25,6 +25,7 @@ enum DictionaryType: CaseIterable  {
     case paymentSystemList
     case productCatalogList
     case bannerCatalogList
+    case bannersMyProductListWithSticker
     case atmList
     case atmServiceList
     case atmTypeList

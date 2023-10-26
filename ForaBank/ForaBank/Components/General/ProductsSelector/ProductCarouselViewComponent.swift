@@ -102,6 +102,15 @@ extension ProductCarouselView {
             bind()
         }
         
+        var stickerViewModel: ProductCarouselView.StickerViewModel? {
+            
+            guard let md5hash = model.productListBannersWithSticker.value.first?.md5hash,
+                  let image = model.images.value[md5hash]?.image
+            else { return nil }
+            
+            return self.model.productListBannersWithSticker.value.first?.mapper(backgroundImage: image)
+        }
+        
         var selectedType: ProductType? {
             
             guard let selected = selector?.selected,
@@ -757,7 +766,13 @@ struct ProductCarouselView: View {
                                     ProductGroupView(viewModel: groupViewModel)
                                         .accessibilityIdentifier("productScrollView")
                                     
-                                    stickerView(isCard: groupViewModel.productType == .card)
+                                    
+                                    if let vm = viewModel.stickerViewModel {
+                                        
+                                        stickerView(isCard: groupViewModel.productType == .card,
+                                                    model: vm)
+                                   }
+                                   
                                 }
                                 
                             }
@@ -782,14 +797,16 @@ struct ProductCarouselView: View {
     // MARK: StickerActions
     @ViewBuilder
     private func stickerView(
-        isCard: Bool
+        isCard: Bool,
+        model: StickerViewModel
     ) -> some View {
         
         if isCard && viewModel.sticker {
             
             StickerView(
                 onTap: viewModel.showSticker,
-                onHide: viewModel.hideSticker
+                onHide: viewModel.hideSticker,
+                viewModel: model
             )
         }
     }
@@ -923,84 +940,47 @@ extension ProductCarouselView {
 
 extension ProductCarouselView {
     
+    struct StickerViewModel {
+        
+        let title: String
+        let subTitle: String
+        let backgroundImage: Image
+    }
+    
     struct StickerView: View {
         
         let onTap: () -> Void
         let onHide: () -> Void
+        let viewModel: StickerViewModel
         
         var body: some View {
             
             VStack {
                 HStack {
-                    
-                    ZStack(alignment: .leading) {
+                    ZStack(alignment: .topTrailing) {
                         
-                        Image("stickerBGBlur")
+                        viewModel.backgroundImage
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 164, height: 104)
                         
-                        HStack {
-                            Spacer()
+                        Button(action: onHide) {
                             
-                            ZStack(alignment: .trailing) {
-                                Image("stickerIphone")
-                                Image("sticker")
-                                    .shadow(color: .black.opacity(0.25), radius: 0.972, x: -0.648, y: 0.648)
-                            }
-                        }
-                        
-                        HStack {
-                            
-                            Spacer()
-                            VStack {
-                                
-                                Button(action: onHide) {
-                                    
-                                    ZStack {
-                                        Circle()
-                                            .foregroundColor(.gray)
-                                            .frame(width: 20, height: 20)
-                                        
-                                        Image(.close)
-                                            .renderingMode(.template)
-                                            .resizable()
-                                            .frame(width: 16, height: 16)
-                                            .foregroundColor(.white)
-                                    }
+                            ZStack {
+                                Circle()
+                                    .foregroundColor(.gray)
                                     .frame(width: 20, height: 20)
-                                }
-                                Spacer()
+                                
+                                Image(.close)
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .foregroundColor(.white)
                             }
+                            .frame(width: 20, height: 20)
                         }
                         .padding(4)
-                        
-                        VStack(alignment: .leading) {
-                            Image("stickerSmartphone")
-                            
-                            Spacer()
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Платежный")
-                                    .font(.textBodyMR14200())
-                                Text("Стикер")
-                                    .font(.textBodyMSb14200())
-                            }
-                            .foregroundColor(.textSecondary)
-                        }
-                        .padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 0))
                     }
-                    .frame(width: 164, height: 104, alignment: .top)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.96, green: 0.88, blue: 0.98), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.89, green: 0.94, blue: 1), location: 0.31),
-                                Gradient.Stop(color: Color(red: 1, green: 0.92, blue: 0.99), location: 0.60),
-                                Gradient.Stop(color: Color(red: 0.96, green: 0.89, blue: 1), location: 0.80),
-                            ],
-                            startPoint: UnitPoint(x: 0.03, y: 0.08),
-                            endPoint: UnitPoint(x: 1.32, y: 1.97)
-                        )
-                    )
                     .cornerRadius(12)
                     
                     Capsule(style: .continuous)

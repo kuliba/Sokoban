@@ -996,23 +996,32 @@ extension MainViewModel {
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
         link = nil
     }
-
+    
     func orderSticker() {
         
-        if model.products(.card)?.contains(where: { 
-            ($0 as? ProductCardData)?.isMain == true }) == false
+        let productsCard = model.products(.card)
+        
+        if productsCard == nil ||
+            productsCard?.contains(where: {
+                ($0 as? ProductCardData)?.isMain == true }) == false
         {
-            self.alert = .init(title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Продолжить", action: {
-                
-                DispatchQueue.main.async {
-                    let authProductsViewModel = AuthProductsViewModel(self.model,
-                                                                      products: self.model.catalogProducts.value,
-                                                                      dismissAction: { [weak self] in
-                        self?.action.send(MyProductsViewModelAction.Close.Link()) })
-                    
-                    self.link = .openCard(authProductsViewModel)
-                }
-            }))
+            
+            self.alert = .init(
+                title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
+                    type: .default, title: "Отмена", action: {}), secondary: .init(
+                        type: .default, title: "Продолжить", action: {
+                            
+                            DispatchQueue.main.async {
+                                let authProductsViewModel = AuthProductsViewModel(
+                                    self.model,
+                                    products: self.model.catalogProducts.value,
+                                    dismissAction: { [weak self] in
+                                        self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                                
+                                self.link = .openCard(authProductsViewModel)
+                            }
+                        }
+                    ))
         }
         
         testHandleOrderSticker() // TODO: Me, link to OrderSticker here
@@ -1023,7 +1032,7 @@ extension MainViewModel {
          */
     }
     
-    func testHandleOrderSticker() { // TODO: Me, Delete
+    func testHandleOrderSticker() { // TODO: Delete
         let viewModel = factory.makeStickerLandingViewModel(.sticker, config: .stickerDefault,landingActions: landingAction)
         UIApplication.shared.endEditing()
         link = .orderSticker(viewModel)
