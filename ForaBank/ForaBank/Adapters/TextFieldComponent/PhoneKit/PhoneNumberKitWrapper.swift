@@ -11,6 +11,7 @@ import PhoneNumberWrapper
 enum PhoneNumberKitWrapper {
     
     private static let phoneNumberKit = PhoneNumberKit()
+    private static let phoneNumberWrapper = PhoneNumberWrapper()
     
     private static var partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
     
@@ -28,7 +29,7 @@ enum PhoneNumberKitWrapper {
         case .abroad:
             partialFormatter.formatPartial(input)
         default:
-            PhoneNumberWrapper().format(input)
+            phoneNumberWrapper.format(input)
         }
     }
 }
