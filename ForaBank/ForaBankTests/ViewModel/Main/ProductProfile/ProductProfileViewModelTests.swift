@@ -432,66 +432,68 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         let (sut, _) = try makeSUT()
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: HappyCertificateClient()) { result in
-                XCTAssertNoDiff(result, .init("123"))
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            
+            XCTAssertNoDiff(result, .init("123"))
+        }
     }
     
     func test_showCvvByTap_checkCertificateError_returNil() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _) = try makeSUT(
+            certificateClient: SadShowCVVSadCheckCertificateClient()
+        )
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: SadShowCVVSadCheckCertificateClient()) { result in
-                XCTAssertNil(result)
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            
+            XCTAssertNil(result)
+        }
     }
     
     func test_showCvvByTap_checkCertificateConnectivityError_returNil() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _) = try makeSUT(
+            certificateClient: SadShowCVVCheckCertificateConnectivityClient()
+        )
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: SadShowCVVCheckCertificateConnectivityClient()) { result in
-                XCTAssertNil(result)
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            
+            XCTAssertNil(result)
+        }
     }
     
-    func test_showCvvByTap_activateCertificateError_returNil() throws {
+    func test_showCvvByTap_activateCertificateError_returnNil() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _) = try makeSUT(
+            certificateClient: SadShowCVVSadActivateCertificateClient()
+        )
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: SadShowCVVSadActivateCertificateClient()) { result in
-                XCTAssertNil(result)
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            XCTAssertNil(result)
+        }
     }
     
     func test_showCvvByTap_otpErrorRetryAttempts0_returNil() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _) = try makeSUT(
+            certificateClient: SadShowCVVSadOtpRetryAttempts0CertificateClient()
+        )
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: SadShowCVVSadOtpRetryAttempts0CertificateClient()) { result in
-                XCTAssertNil(result)
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            XCTAssertNil(result)
+        }
     }
     
     func test_showCvvByTap_otpErrorRetryAttempts_returNil() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _) = try makeSUT(
+            certificateClient: SadShowCVVSadOtpRetryAttemptsCertificateClient()
+        )
         
-        sut.showCvvByTap(
-            cardId: .init(111),
-            certificateClient: SadShowCVVSadOtpRetryAttemptsCertificateClient()) { result in
-                XCTAssertNil(result)
-            }
+        sut.showCvvByTap(cardId: .init(111)) { result in
+            
+            XCTAssertNil(result)
+        }
     }
     
     // MARK: - test show/hide spinner

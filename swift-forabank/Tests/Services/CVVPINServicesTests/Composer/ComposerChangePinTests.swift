@@ -12,10 +12,9 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, eventIDLoader, keyPairLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
+        let (_, eventIDLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         XCTAssertEqual(eventIDLoader.callCount, 0)
-        XCTAssertEqual(keyPairLoader.callCount, 0)
         XCTAssertEqual(changePINService.callCount, 0)
         XCTAssertEqual(sessionIDLoader.callCount, 0)
         XCTAssertEqual(symmetricKeyLoader.callCount, 0)
@@ -23,7 +22,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverLoadSessionIDFailureOnSessionIDLoadFailure() {
         
-        let (sut, _, _, _, sessionIDLoader, _) = makeSUT()
+        let (sut, _, _, sessionIDLoader, _) = makeSUT()
         
         let results = changePINResults(sut) {
             
@@ -35,7 +34,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverLoadSymmetricKeyFailureOnSymmetricKeyLoadFailure() {
         
-        let (sut, _, _, _, sessionIDLoader, symmetricKeyLoader) = makeSUT()
+        let (sut, _, _, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
             
@@ -48,7 +47,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverLoadEventIDFailureOnEventIDLoadFailure() {
         
-        let (sut, eventIDLoader, _, _, sessionIDLoader, symmetricKeyLoader) = makeSUT()
+        let (sut, eventIDLoader, _, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
             
@@ -60,32 +59,16 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         assertVoid(results, equalsTo: [.failure(.missing(.eventID))])
     }
     
-    func test_changePIN_shouldDeliverLoadRSAPrivateKeyFailureOnRSAPrivateKeyLoadFailure() {
-        
-        let (sut, eventIDLoader, keyPairLoader, _, sessionIDLoader, symmetricKeyLoader) = makeSUT()
-        
-        let results = changePINResults(sut) {
-            
-            sessionIDLoader.complete(with: .success(makeSessionID()))
-            symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
-            eventIDLoader.complete(with: .success(makeEventID()))
-            keyPairLoader.complete(with: .failure(anyError()))
-        }
-        
-        assertVoid(results, equalsTo: [.failure(.missing(.rsaPrivateKey))])
-    }
-    
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure() {
         
         let changePINServiceError = anyChangePINAPIError()
-        let (sut, eventIDLoader, keyPairLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
+        let (sut, eventIDLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
             
             sessionIDLoader.complete(with: .success(makeSessionID()))
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
             eventIDLoader.complete(with: .success(makeEventID()))
-            keyPairLoader.complete(with: .success(makeRSAKeyPair()))
             changePINService.complete(with: .failure(changePINServiceError))
         }
         
@@ -94,14 +77,13 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     
     func test_changePIN_shouldDeliverErrorFailureOnPINServiceFailure_() {
         
-        let (sut, eventIDLoader, keyPairLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
+        let (sut, eventIDLoader, changePINService, sessionIDLoader, symmetricKeyLoader) = makeSUT()
         
         let results = changePINResults(sut) {
             
             sessionIDLoader.complete(with: .success(makeSessionID()))
             symmetricKeyLoader.complete(with: .success(makeSymmetricKey()))
             eventIDLoader.complete(with: .success(makeEventID()))
-            keyPairLoader.complete(with: .success(makeRSAKeyPair()))
             changePINService.complete(with: .success(()))
         }
         
@@ -124,12 +106,11 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
     ) -> (
         sut: SUT,
         eventIDLoader: EventIDLoaderSpy,
-        keyPairLoader: RSAKeyPairLoaderSpy,
         changePINService: ChangePINService,
         sessionIDLoader: SessionIDLoaderSpy<SessionID>,
         symmetricKeyLoader: SymmetricKeyLoaderSpy
     ) {
-        let (infra, eventIDLoader, keyPairLoader, _, sessionIDLoader, _, _, symmetricKeyLoader) = makeCVVPINInfra(SessionID.self, file: file, line: line)
+        let (infra, eventIDLoader, _, _, sessionIDLoader, _, _, symmetricKeyLoader) = makeCVVPINInfra(SessionID.self, file: file, line: line)
         let (remote, _, _, changePINService) = makeCVVPRemote(SessionID.self, file: file, line: line)
         let sut = SUT(
             crypto: .test(
@@ -143,7 +124,7 @@ final class ComposerChangePinTests: MakeComposerInfraTests {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, eventIDLoader, keyPairLoader, changePINService, sessionIDLoader, symmetricKeyLoader)
+        return (sut, eventIDLoader, changePINService, sessionIDLoader, symmetricKeyLoader)
     }
     
     private func changePINResults(

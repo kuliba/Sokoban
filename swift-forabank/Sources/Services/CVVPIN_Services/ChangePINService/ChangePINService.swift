@@ -109,7 +109,7 @@ extension ChangePINService {
     
     public struct ConfirmResponse {
         
-        let eventID: String
+        public let otpEventID: OTPEventID
         public let phone: String
     }
     
@@ -129,7 +129,7 @@ extension ChangePINService {
     
     public struct CardID {
         
-        let cardIDValue: Int
+        public let cardIDValue: Int
         
         public init(cardIDValue: Int) {
          
@@ -137,14 +137,19 @@ extension ChangePINService {
         }
     }
     
-    struct EventID {
+    public struct OTPEventID {
         
-        let eventIDValue: String
+        public let eventIDValue: String
+        
+        public init(eventIDValue: String) {
+
+            self.eventIDValue = eventIDValue
+        }
     }
     
     public struct OTP {
         
-        let otpValue: String
+        public let otpValue: String
         
         public init(otpValue: String) {
          
@@ -154,7 +159,7 @@ extension ChangePINService {
     
     public struct PIN {
         
-        let pinValue: String
+        public let pinValue: String
         
         public init(pinValue: String) {
          
@@ -223,13 +228,13 @@ private extension ChangePINService {
                 completion(.failure(.other(.decryptionFailure)))
                 
             case let .success(eventID):
-                decrypt(eventID, encrypted, completion)
+                decrypt(.init(eventIDValue: eventID), encrypted, completion)
             }
         }
     }
     
     func decrypt(
-        _ eventID: String,
+        _ eventID: OTPEventID,
         _ encrypted: EncryptedConfirmResponse,
         _ completion: @escaping PINConfirmCompletion
     ) {
@@ -239,7 +244,7 @@ private extension ChangePINService {
             
             completion(
                 result
-                    .map { .init(eventID: eventID, phone: $0)}
+                    .map { .init(otpEventID: eventID, phone: $0)}
                     .mapError { _ in .other(.decryptionFailure) }
             )
         }

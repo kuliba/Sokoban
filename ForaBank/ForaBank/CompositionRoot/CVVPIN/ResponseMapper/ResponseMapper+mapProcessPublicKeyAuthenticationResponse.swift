@@ -1,8 +1,8 @@
 //
-//  ResponseMapper+mapFormSessionKeyResponse.swift
+//  ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 22.10.2023.
+//  Created by Igor Malyarov on 24.10.2023.
 //
 
 import CVVPIN_Services
@@ -10,18 +10,18 @@ import Foundation
 
 extension ResponseMapper {
     
-    static func mapFormSessionKeyResponse(
+    static func mapProcessPublicKeyAuthenticationResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> FormSessionKeyService.ProcessResult {
+    ) -> AuthenticateWithPublicKeyService.ProcessResult {
         
         do {
             switch httpURLResponse.statusCode {
             case 200:
                 let response = try JSONDecoder().decode(Response.self, from: data)
                 return .success(.init(
+                    sessionID: response.sessionID,
                     publicServerSessionKey: response.publicServerSessionKey,
-                    eventID: response.eventId,
                     sessionTTL: response.sessionTTL
                 ))
                 
@@ -42,7 +42,7 @@ extension ResponseMapper {
     private struct Response: Decodable {
         
         let publicServerSessionKey: String
-        let eventId: String
+        let sessionID: String
         let sessionTTL: Int
     }
 }

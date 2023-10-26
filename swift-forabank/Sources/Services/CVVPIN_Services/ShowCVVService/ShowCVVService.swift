@@ -13,7 +13,7 @@ public final class ShowCVVService {
     public typealias CheckSessionCompletion = (CheckSessionResult) -> Void
     public typealias CheckSession = (@escaping CheckSessionCompletion) -> Void
     
-    public typealias MakeJSONResult = Swift.Result<Data, Error>
+    public typealias MakeJSONResult = Swift.Result<Data, Swift.Error>
     public typealias MakeJSONCompletion = (MakeJSONResult) -> Void
     public typealias MakeJSON = (CardID, SessionID, @escaping MakeJSONCompletion) -> Void
     
@@ -82,7 +82,7 @@ extension ShowCVVService {
     
     public struct CardID {
         
-        let cardIDValue: Int
+        public let cardIDValue: Int
         
         public init(cardIDValue: Int) {
          

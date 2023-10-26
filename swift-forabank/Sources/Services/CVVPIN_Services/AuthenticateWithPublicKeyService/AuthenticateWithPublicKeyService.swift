@@ -10,50 +10,35 @@ import Foundation
 /// Step 2.1 `authenticateWithPublicKey`
 /// - Note: `SessionKey` is `SymmetricKey` is `SharedSecret`
 ///
-final class AuthenticateWithPublicKeyService<RSAPublicKey, SessionKey> {
+public final class AuthenticateWithPublicKeyService {
     
-    typealias LoadRSAPublicKeyResult = Swift.Result<RSAPublicKey, Swift.Error>
-    typealias LoadRSAPublicKeyCompletion = (LoadRSAPublicKeyResult) -> Void
-    typealias LoadRSAPublicKey = (@escaping LoadRSAPublicKeyCompletion) -> Void
+    public typealias PrepareKeyExchangeResult = Swift.Result<Data, Swift.Error>
+    public typealias PrepareKeyExchangeCompletion = (PrepareKeyExchangeResult) -> Void
+    public typealias PrepareKeyExchange = (@escaping PrepareKeyExchangeCompletion) -> Void
     
-    typealias LoadSessionKeyResult = Swift.Result<SessionKey, Swift.Error>
-    typealias LoadSessionKeyCompletion = (LoadSessionKeyResult) -> Void
-    typealias LoadSessionKey = (@escaping LoadSessionKeyCompletion) -> Void
+    public typealias ProcessResult = Swift.Result<Response, APIError>
+    public typealias ProcessCompletion = (ProcessResult) -> Void
+    public typealias Process = (Data, @escaping ProcessCompletion) -> Void
     
-    typealias PrepareKeyExchangeResult = Swift.Result<Payload, Swift.Error>
-    typealias PrepareKeyExchangeCompletion = (PrepareKeyExchangeResult) -> Void
-    typealias PrepareKeyExchange = (@escaping PrepareKeyExchangeCompletion) -> Void
+    // fire and forget - cannot expect result since flow involves user interaction
+    public typealias ActivateCCVPIN = () -> Void
     
-    typealias ProcessResult = Swift.Result<Response, APIError>
-    typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias Process = (Payload, @escaping ProcessCompletion) -> Void
+    public typealias MakeSessionKeyResult = Swift.Result<Success.SessionKey, Swift.Error>
+    public typealias MakeSessionKeyCompletion = (MakeSessionKeyResult) -> Void
+    public typealias MakeSessionKey = (Response, @escaping MakeSessionKeyCompletion) -> Void
     
-    typealias ActivateCCVPINResult = Swift.Result<SessionKey, Swift.Error>
-    typealias ActivateCCVPINCompletion = (ActivateCCVPINResult) -> Void
-    typealias ActivateCCVPIN = (Swift.Error, @escaping ActivateCCVPINCompletion) -> Void
-    
-    typealias MakeSessionKeyResult = Swift.Result<SessionKey, Swift.Error>
-    typealias MakeSessionKeyCompletion = (MakeSessionKeyResult) -> Void
-    typealias MakeSessionKey = (String, @escaping MakeSessionKeyCompletion) -> Void
-    
-    private let loadRSAPublicKey: LoadRSAPublicKey
-    private let loadSessionKey: LoadSessionKey
     private let prepareKeyExchange: PrepareKeyExchange
     // processPublicKeyAuthenticationRequest
     private let process: Process
     private let activateCCVPIN: ActivateCCVPIN
     private let makeSessionKey: MakeSessionKey
     
-    init(
-        loadRSAPublicKey: @escaping LoadRSAPublicKey,
-        loadSessionKey: @escaping LoadSessionKey,
+    public init(
         prepareKeyExchange: @escaping PrepareKeyExchange,
         process: @escaping Process,
         activateCCVPIN: @escaping ActivateCCVPIN,
         makeSessionKey: @escaping MakeSessionKey
     ) {
-        self.loadRSAPublicKey = loadRSAPublicKey
-        self.loadSessionKey = loadSessionKey
         self.prepareKeyExchange = prepareKeyExchange
         self.process = process
         self.activateCCVPIN = activateCCVPIN
@@ -61,24 +46,25 @@ final class AuthenticateWithPublicKeyService<RSAPublicKey, SessionKey> {
     }
 }
 
-extension AuthenticateWithPublicKeyService {
+public extension AuthenticateWithPublicKeyService {
     
-    typealias Result = Swift.Result<SessionKey, Error>
+    typealias Result = Swift.Result<Success, Error>
     typealias Completion = (Result) -> Void
     
     func authenticateWithPublicKey(
         completion: @escaping Completion
     ) {
-        loadRSAPublicKey(completion)
+        prepareKeyExchange(completion)
     }
     
     enum Error: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
+        case network
         case server(statusCode: Int, errorMessage: String)
         case other(Other)
         
-        enum Other {
+        public enum Other {
             
             case activationFailure
             case makeSessionKeyFailure
@@ -90,71 +76,56 @@ extension AuthenticateWithPublicKeyService {
     enum APIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
+        case network
         case server(statusCode: Int, errorMessage: String)
     }
+}
+
+extension AuthenticateWithPublicKeyService {
     
-    struct Payload {
+    public struct Response {
         
-        let clientPublicKeyRSA: String
-        let publicApplicationSessionKey: String
-        let signature: String
+        public let sessionID: String
+        public let publicServerSessionKey: String
+        public let sessionTTL: Int
+        
+        public init(
+            sessionID: String,
+            publicServerSessionKey: String,
+            sessionTTL: Int
+        ) {
+            self.sessionID = sessionID
+            self.publicServerSessionKey = publicServerSessionKey
+            self.sessionTTL = sessionTTL
+        }
     }
     
-    struct Response {
+    public struct Success {
         
-        let sessionID: String
-        let publicServerSessionKey: String
-        let sessionTTL: Int
+        public let sessionID: SessionID
+        public let sessionKey: SessionKey
+        public let sessionTTL: SessionTTL
+        
+        public struct SessionID {
+            
+            public let sessionIDValue: String
+        }
+        
+        public typealias SessionTTL = Int
+        
+        public struct SessionKey {
+            
+            public let sessionKeyValue: Data
+            
+            public init(sessionKeyValue: Data) {
+                
+                self.sessionKeyValue = sessionKeyValue
+            }
+        }
     }
 }
 
 private extension AuthenticateWithPublicKeyService {
-    
-    func loadRSAPublicKey(
-        _ completion: @escaping Completion
-    ) {
-        loadRSAPublicKey { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                activateCCVPIN(.other(.missingRSAPublicKey), completion)
-                
-            case .success:
-                loadSessionKey(completion)
-            }
-        }
-    }
-    
-    func activateCCVPIN(
-        _ error: Error,
-        _ completion: @escaping Completion
-    ) {
-        activateCCVPIN(error) { [weak self] result in
-            
-            guard self != nil else { return }
-            
-            completion(result.mapError { _ in .other(.activationFailure) })
-        }
-    }
-    
-    func loadSessionKey(
-        _ completion: @escaping Completion
-    ) {
-        loadSessionKey { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                prepareKeyExchange(completion)
-                
-            case let .success(sessionKey):
-                completion(.success(sessionKey))
-            }
-        }
-    }
     
     func prepareKeyExchange(
         _ completion: @escaping Completion
@@ -167,41 +138,49 @@ private extension AuthenticateWithPublicKeyService {
             case .failure:
                 completion(.failure(.other(.prepareKeyExchangeFailure)))
                 
-            case let .success(payload):
-                process(payload, completion)
+            case let .success(data):
+                process(data, completion)
             }
         }
     }
     
     func process(
-        _ payload: Payload,
+        _ data: Data,
         _ completion: @escaping Completion
     ) {
-        process(payload) { [weak self] result in
+        process(data) { [weak self] result in
             
             guard let self else { return }
             
             switch result {
             case let .failure(error):
-                activateCCVPIN(.init(error), completion)
+                completion(.failure(.init(error)))
                 
             case let .success(response):
-                makeSessionKey(response, completion)
+                _makeSessionKey(response, completion)
             }
         }
     }
     
-    func makeSessionKey(
+    func _makeSessionKey(
         _ response: Response,
         _ completion: @escaping Completion
     ) {
-        makeSessionKey(
-            response.publicServerSessionKey
-        ) { [weak self] result in
+        makeSessionKey(response) { [weak self] result in
             
             guard self != nil else { return }
             
-            completion(result.mapError { _ in .other(.makeSessionKeyFailure)})
+            completion(
+                result
+                    .map {
+                        .init(
+                            sessionID: .init(sessionIDValue: response.sessionID),
+                            sessionKey: $0,
+                            sessionTTL: .init(response.sessionTTL)
+                        )
+                    }
+                    .mapError { _ in .other(.makeSessionKeyFailure)}
+            )
         }
     }
 }
@@ -213,6 +192,9 @@ private extension AuthenticateWithPublicKeyService.Error {
         switch error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
             
         case let.server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)

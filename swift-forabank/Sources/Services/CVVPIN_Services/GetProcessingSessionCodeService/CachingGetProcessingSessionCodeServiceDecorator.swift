@@ -7,7 +7,11 @@
 
 public final class CachingGetProcessingSessionCodeServiceDecorator {
     
-    public typealias Cache = (GetProcessingSessionCodeService.Response) -> Void
+    
+    public typealias CacheResult = Result<Void, Error>
+    public typealias CacheCompletion = (CacheResult) -> Void
+    public typealias Payload = GetProcessingSessionCodeService.Response
+    public typealias Cache = (Payload, @escaping CacheCompletion) -> Void
     
     private let decoratee: GetProcessingSessionCodeService
     private let cache: Cache
@@ -35,8 +39,11 @@ public extension CachingGetProcessingSessionCodeServiceDecorator {
                 completion(.failure(error))
                 
             case let .success(response):
-                cache(response)
-                completion(.success(response))
+                cache(response) { _ in
+                    
+                    // ignoring cache result
+                    completion(.success(response))
+                }
             }
         }
     }

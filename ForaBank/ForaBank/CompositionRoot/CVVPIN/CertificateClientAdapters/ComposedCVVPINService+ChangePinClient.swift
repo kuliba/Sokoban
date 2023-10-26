@@ -16,9 +16,9 @@ extension ComposedCVVPINService: ChangePinClient {
         completion: @escaping ChangePinClient.ChangePINCompletion
     ) {
         changePIN(
-            for: .init(cardIDValue: cardId),
-            to: .init(pinValue: newPin),
-            otp: .init(otpValue: otp)
+            .init(cardIDValue: cardId),
+            .init(pinValue: newPin),
+            .init(otpValue: otp)
         ) { [weak self] result in
             
             guard self != nil else { return }

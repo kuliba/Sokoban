@@ -12,6 +12,7 @@ extension CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKe
     
     static func test(
         publicTransportDecrypt: PublicTransportDecrypt? = nil,
+        encryptWithProcessingPublicRSAKey: EncryptWithProcessingPublicRSAKey? = nil,
         makeSymmetricKey: MakeSymmetricKey? = nil,
         makeECDHKeyPair: ECDHKeyPairDomain.Get? = nil,
         aesEncrypt: AESEncrypt? = nil,
@@ -25,6 +26,7 @@ extension CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKe
         
         .init(
             publicTransportDecrypt: publicTransportDecrypt ?? _publicTransportDecrypt,
+            encryptWithProcessingPublicRSAKey: encryptWithProcessingPublicRSAKey ?? _encryptWithProcessingPublicRSAKey,
             makeSymmetricKey: makeSymmetricKey ?? _makeSymmetricKey,
             makeECDHKeyPair: makeECDHKeyPair ?? _makeECDHKeyPair,
             aesEncrypt: aesEncrypt ?? _aesEncrypt,
@@ -38,6 +40,13 @@ extension CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKe
     }
     
     private static func _publicTransportDecrypt(
+        data: Data
+    ) throws -> Data {
+        
+        data
+    }
+    
+    private static func _encryptWithProcessingPublicRSAKey(
         data: Data
     ) throws -> Data {
         
@@ -77,6 +86,7 @@ extension CVVPINCrypto<ECDHPublicKey, ECDHPrivateKey, RSAPublicKey, RSAPrivateKe
         
         data
     }
+    
     private static func _rsaDecrypt(
         data: Data,
         rsaPrivateKey: RSAPrivateKey

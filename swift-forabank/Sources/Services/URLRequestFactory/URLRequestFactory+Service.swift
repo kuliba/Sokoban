@@ -11,6 +11,7 @@ public extension URLRequestFactory {
     
     enum Service {
         
+#warning("instead of BindPublicKeyWithEventIDPayload use typealias to `SessionIDWithDataPayload` as in `ChangePINPayload` and `ShowCVVPayload`")
         case bindPublicKeyWithEventID(BindPublicKeyWithEventIDPayload)
         case changePIN(ChangePINPayload)
         case formSessionKey(FormSessionKeyPayload)

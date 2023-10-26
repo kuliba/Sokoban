@@ -17,13 +17,13 @@ where CardID: RawRepresentable<Int>,
       SessionID: RawRepresentable<String> {
     
     public typealias PINChanger = ChangePINService<ChangePINAPIError, CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
-    typealias PINRequestMaker = SecretPINRequestMaker<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+    typealias PINRequestMaker = SecretPINRequestMaker<CardID, EventID, OTP, PIN, SessionID, SymmetricKey>
     
     func composePINChanger() -> PINChanger {
         
         let pinRequestMaker = PINRequestMaker(crypto: .init(
             aesEncrypt: crypto.aesEncrypt,
-            rsaEncrypt: crypto.rsaEncrypt,
+            encryptWithProcessingPublicRSAKey: crypto.encryptWithProcessingPublicRSAKey,
             sha256Hash: crypto.sha256Hash
         ))
         
@@ -32,7 +32,6 @@ where CardID: RawRepresentable<Int>,
                 loadSessionID: infra.loadSessionID,
                 loadSymmetricKey: infra.loadSymmetricKey,
                 loadEventID: infra.loadEventID,
-                loadRSAPrivateKey: infra.loadRSAPrivateKey,
                 process: remote.changePINProcess
             ),
             makePINChangeJSON: pinRequestMaker.makePINChangeJSON,

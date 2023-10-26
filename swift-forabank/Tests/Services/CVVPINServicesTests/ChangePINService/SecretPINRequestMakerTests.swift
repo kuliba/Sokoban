@@ -44,16 +44,16 @@ final class SecretPINRequestMakerTests: XCTestCase {
         XCTAssertEqual(decrypted, pinChangeJSON)
     }
     
-    func test_makePINChangeJSON_shouldDeliverErrorOnRSAEncryptError() throws {
+    func test_makePINChangeJSON_shouldDeliverErrorOnProcessingEncryptError() throws {
         
-        let rsaEncryptError = anyError("RSAEncrypt Failure")
+        let procEncryptError = anyError("RSAEncrypt Failure")
         let sut = makeSUT(
-            rsaEncrypt: { _, _ in throw rsaEncryptError }
+            encryptWithProcessingPublicRSAKey: { _ in throw procEncryptError }
         )
         
         try XCTAssertThrowsAsNSError(
             sut.makePINChangeJSON(),
-            error: rsaEncryptError
+            error: procEncryptError
         )
     }
     
@@ -92,12 +92,12 @@ final class SecretPINRequestMakerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    fileprivate typealias SUT = SecretPINRequestMaker<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
-    private typealias Crypto = ChangePINCrypto<SymmetricKey, RSAPrivateKey>
+    fileprivate typealias SUT = SecretPINRequestMaker<CardID, EventID, OTP, PIN, SessionID, SymmetricKey>
+    private typealias Crypto = ChangePINCrypto<SymmetricKey>
     
     private func makeSUT(
         aesEncrypt: SUT.Crypto.AESEncrypt? = nil,
-        rsaEncrypt: SUT.Crypto.RSAEncrypt? = nil,
+        encryptWithProcessingPublicRSAKey: SUT.Crypto.EncryptWithProcessingPublicRSAKey? = nil,
         sha256Hash: ((String) -> Data)? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -106,7 +106,7 @@ final class SecretPINRequestMakerTests: XCTestCase {
         
         let crypto = Crypto(
             aesEncrypt: aesEncrypt ?? _aesEncrypt,
-            rsaEncrypt: rsaEncrypt ?? _rsaEncrypt,
+            encryptWithProcessingPublicRSAKey: encryptWithProcessingPublicRSAKey ?? _encryptWithProcessingPublicRSAKey,
             sha256Hash: sha256Hash ?? _sha256Hash
         )
         let sut = SUT(crypto: crypto)
@@ -134,13 +134,13 @@ final class SecretPINRequestMakerTests: XCTestCase {
         data.dropLast(aesSuffix.count)
     }
     
-    private func _rsaEncrypt(
-        data: Data,
-        rsaPrivateKey: RSAPrivateKey
+    private func _encryptWithProcessingPublicRSAKey(
+        data: Data
     ) throws -> Data {
         
         data
     }
+    
     private func _rsaDecrypt(
         data: Data,
         rsaPrivateKey: RSAPrivateKey
@@ -208,8 +208,7 @@ private extension SecretPINRequestMakerTests.SUT {
             cardID: .init(rawValue: cardIDValue),
             otp: .init(rawValue: otpValue),
             pin: .init(rawValue: pinValue),
-            eventID: .init(rawValue: eventIDValue),
-            rsaPrivateKey: .init("any RSAPrivateKey")
+            eventID: .init(rawValue: eventIDValue)
         )
     }
 }

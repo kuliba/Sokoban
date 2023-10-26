@@ -17,6 +17,7 @@ extension CVVPINCrypto {
         
         .init(
             publicTransportDecrypt: publicTransportDecrypt(data:),
+            encryptWithProcessingPublicRSAKey: encryptWithProcessingPublicRSAKey(data:),
             makeSymmetricKey: makeSymmetricKey(data:withKey:),
             makeECDHKeyPair: makeECDHKeyPair,
             aesEncrypt: aesEncrypt(data:withKey:),
@@ -45,6 +46,19 @@ extension CVVPINCrypto {
         return try ForaCrypto.Crypto.encrypt(
             data: data,
             withPublicKey: transportKey,
+            algorithm: .rsaEncryptionRaw
+        )
+    }
+    
+    private static func encryptWithProcessingPublicRSAKey(
+        data: Data
+    ) throws -> Data {
+        
+        let processingKey = try ForaCrypto.Crypto.processingKey()
+        
+        return try ForaCrypto.Crypto.encrypt(
+            data: data,
+            withPublicKey: processingKey,
             algorithm: .rsaEncryptionRaw
         )
     }

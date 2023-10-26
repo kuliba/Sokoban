@@ -58,13 +58,11 @@ final class GenericLoaderTests: XCTestCase {
     func test_load_shouldDeliverInvalidCacheErrorOnExpiredCache() {
         
         let fixedCurrentDate = Date()
-        let expiredCache = (
-            anyLocal(),
-            expired(against: fixedCurrentDate)
-        )
+        let expiredAt = expired(against: fixedCurrentDate)
+        let expiredCache = (anyLocal(), expiredAt)
         let (sut, store) = makeSUT(currentDate: fixedCurrentDate)
         
-        assertLoad(sut, delivers: .failure(SUT.LoadError.invalidCache), on: {
+        assertLoad(sut, delivers: .failure(SUT.LoadError.invalidCache(validatedAt: fixedCurrentDate, validUntil: expiredAt)), on: {
             
             store.completeRetrieval(with: expiredCache)
         })
@@ -361,7 +359,62 @@ final class GenericLoaderTests: XCTestCase {
         
         wait(for: [exp], timeout: 0.1)
         
-        assert(receivedResults, equalsTo: [expectedResult], message(), file: file, line: line)
+        assertLoadResults(receivedResults, equalsTo: [expectedResult], message(), file: file, line: line)
+    }
+    
+    private func assertLoadResults(
+        _ receivedResults: [SUT.LoadResult],
+        equalsTo expectedResults: [SUT.LoadResult],
+        _ message: @autoclosure () -> String = "",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(
+            receivedResults.count,
+            expectedResults.count,
+            "Received \(receivedResults.count) values, but expected \(expectedResults.count).",
+            file: file, line: line
+        )
+        
+        zip(receivedResults, expectedResults)
+            .enumerated()
+            .forEach { index, value in
+                
+                let (received, expected) = value
+                
+                switch (received, expected) {
+                case let (
+                    .failure(SUT.LoadError.invalidCache(
+                        validatedAt: receivedValidatedAt,
+                        validUntil: receivedValidUntil
+                    )),
+                    .failure(SUT.LoadError.invalidCache(
+                        validatedAt: expectedValidatedAt,
+                        validUntil: expectedValidUntil
+                    ))
+                ):
+                    XCTAssertEqual(receivedValidatedAt, expectedValidatedAt, file: file, line: line)
+                    XCTAssertEqual(receivedValidUntil, expectedValidUntil, file: file, line: line)
+                    
+                case let (
+                    .failure(received as NSError),
+                    .failure(expected as NSError)
+                ):
+                    XCTAssertEqual(received, expected, file: file, line: line)
+                    
+                case let (
+                    .success(received),
+                    .success(expected)
+                ):
+                    XCTAssertEqual(received, expected, file: file, line: line)
+                    
+                default:
+                    XCTFail(
+                        "\nReceived \(received) values, but expected \(expected) at index \(index).",
+                        file: file, line: line
+                    )
+                }
+            }
     }
     
     private func assertSave(

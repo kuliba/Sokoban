@@ -21,25 +21,49 @@ where PerformRequestError: Error,
         createRequest: @escaping CreateRequest,
         performRequest: @escaping Decoratee.PerformRequest,
         mapResponse: @escaping Decoratee.MapResponse,
-        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
+        log: @escaping (String) -> Void
     ) {
         self.remoteService = .init(
             createRequest: { [log] input in
                 
-                let request = try RequestFactory.makeGetProcessingSessionCode()
-                log("RemoteService: Created request \(request) for input \(input)")
+                let request = try createRequest(input)
+                log("RemoteService: Created \(request.httpMethod ?? "n/a") request \(request) for input \(input)")
+                if let body = request.httpBody {
+                    log("RemoteService: request body: \(String(data: body, encoding: .utf8) ?? "nil")")
+                }
                 
                 return request
             },
             performRequest: performRequest,
             mapResponse: { data, httpURLResponse in
                 
-                log("RemoteService: Response: data: \(String(describing: String(data: data, encoding: .utf8))), status code: \(httpURLResponse.statusCode).")
                 let result = mapResponse((data, httpURLResponse))
-                log("RemoteService: mapResponse result: \(result).")
+                
+                switch result {
+                case let .failure(error):
+                    log("RemoteService: mapResponse failure: \(error): statusCode: \(httpURLResponse.statusCode), data: \(String(data: data, encoding: .utf8) ?? "nil").")
+                    
+                case let .success(output):
+                    log("RemoteService: mapResponse success: \(output).")
+                }
                 
                 return result
             }
+        )
+    }
+}
+
+private extension RemoteService where CreateRequestError == Error {
+    
+    convenience init(
+        createRequest: @escaping (Input) throws -> URLRequest,
+        performRequest: @escaping PerformRequest,
+        mapResponse: @escaping MapResponse
+    ) {
+        self.init(
+            createRequest: { input in .init { try createRequest(input) }},
+            performRequest: performRequest,
+            mapResponse: mapResponse
         )
     }
 }

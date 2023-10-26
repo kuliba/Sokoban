@@ -7,14 +7,14 @@
 
 import Foundation
 
-public struct SecretPINRequestMaker<CardID, EventID, OTP, PIN, RSAPrivateKey, SessionID, SymmetricKey>
+public struct SecretPINRequestMaker<CardID, EventID, OTP, PIN, SessionID, SymmetricKey>
 where SessionID: RawRepresentable<String>,
       CardID: RawRepresentable<Int>,
       EventID: RawRepresentable<String>,
       OTP: RawRepresentable<String>,
       PIN: RawRepresentable<String> {
     
-    public typealias Crypto = ChangePINCrypto<SymmetricKey, RSAPrivateKey>
+    public typealias Crypto = ChangePINCrypto<SymmetricKey>
     
     private let crypto: Crypto
     
@@ -69,11 +69,10 @@ public extension SecretPINRequestMaker {
         cardID: CardID,
         otp: OTP,
         pin: PIN,
-        eventID: EventID,
-        rsaPrivateKey: RSAPrivateKey
+        eventID: EventID
     ) throws -> Data {
         
-        let secretPIN = try crypto.rsaEncrypt(.init(pin.rawValue.utf8), rsaPrivateKey)
+        let secretPIN = try crypto.encryptWithProcessingPublicRSAKey(.init(pin.rawValue.utf8))
         let concat = sessionID.rawValue + "\(cardID.rawValue)" + otp.rawValue + eventID.rawValue + secretPIN.base64EncodedString()
         let signature = crypto.sha256Hash(concat)
         
@@ -90,23 +89,23 @@ public extension SecretPINRequestMaker {
     }
 }
 
-public struct ChangePINCrypto<SymmetricKey, RSAPrivateKey> {
+public struct ChangePINCrypto<SymmetricKey> {
     
     public typealias AESEncrypt = (Data, SymmetricKey) throws -> Data
-    public typealias RSAEncrypt = (Data, RSAPrivateKey) throws -> Data
+    public typealias EncryptWithProcessingPublicRSAKey = (Data) throws -> Data
     public typealias SHA256Hash = (String) -> Data
     
     let aesEncrypt: AESEncrypt
-    let rsaEncrypt: RSAEncrypt
+    let encryptWithProcessingPublicRSAKey: EncryptWithProcessingPublicRSAKey
     let sha256Hash: SHA256Hash
     
     public init(
         aesEncrypt: @escaping AESEncrypt,
-        rsaEncrypt: @escaping RSAEncrypt,
+        encryptWithProcessingPublicRSAKey: @escaping EncryptWithProcessingPublicRSAKey,
         sha256Hash: @escaping SHA256Hash
     ) {
         self.aesEncrypt = aesEncrypt
-        self.rsaEncrypt = rsaEncrypt
+        self.encryptWithProcessingPublicRSAKey = encryptWithProcessingPublicRSAKey
         self.sha256Hash = sha256Hash
     }
 }
