@@ -2978,6 +2978,7 @@ final class ContactsViewModelTests: XCTestCase {
     
     private func makeSUT(
         _ mode: ContactsViewModel.Mode,
+        type: ContactsViewModel.PaymentsType = .other,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -2989,6 +2990,7 @@ final class ContactsViewModelTests: XCTestCase {
         let scheduler = DispatchQueue.test
         let sut = model.makeContactsViewModel(
             forMode: mode,
+            forType: type,
             scheduler: scheduler.eraseToAnyScheduler()
         )
         

@@ -19,8 +19,16 @@ enum PhoneNumberKitWrapper {
         phoneNumberKit.isValidPhoneNumber(input)
     }
     
-    static func formatPartial(_ input: String) -> String {
+    static func formatPartial(
+        for type: ContactsViewModel.PaymentsType,
+        _ input: String
+    ) -> String {
         
-        PhoneNumberWrapper().format(input)
+        switch type {
+        case .abroad:
+            partialFormatter.formatPartial(input)
+        default:
+            PhoneNumberWrapper().format(input)
+        }
     }
 }

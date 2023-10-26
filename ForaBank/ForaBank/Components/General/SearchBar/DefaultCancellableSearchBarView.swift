@@ -91,6 +91,7 @@ struct DefaultCancellableSearchBarView_Previews: PreviewProvider {
         
         DefaultCancellableSearchBarView(
             viewModel: TextFieldFactory.makePhoneKitTextField(
+                for: .other,
                 initialPhoneNumber: initialPhoneNumber,
                 placeholderText: "Enter phone number",
                 filterSymbols: [],

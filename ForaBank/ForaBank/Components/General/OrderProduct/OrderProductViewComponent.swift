@@ -73,6 +73,7 @@ extension OrderProductView {
             
             let placeHolder: TextViewPhoneNumberView.ViewModel.PlaceHolder = .phone
             let phoneNumber = TextFieldFactory.makePhoneKitTextField(
+                for: .other,
                 initialPhoneNumber: nil,
                 placeholderText: placeHolder.title,
                 filterSymbols: [],

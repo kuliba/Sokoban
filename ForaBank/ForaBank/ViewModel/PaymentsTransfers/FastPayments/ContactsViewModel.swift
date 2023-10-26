@@ -288,6 +288,15 @@ extension ContactsViewModel {
 
 extension ContactsViewModel {
     
+    enum PaymentsType: Equatable {
+        
+        case abroad
+        case other
+    }
+}
+
+extension ContactsViewModel {
+    
     enum Mode: Equatable {
         
         case fastPayments(Phase)
@@ -360,6 +369,7 @@ extension Model {
     /// Factory method to create `ContactsViewModel` using `model`.
     func makeContactsViewModel(
         forMode mode: ContactsViewModel.Mode,
+        forType type: ContactsViewModel.PaymentsType,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ContactsViewModel {
         
@@ -380,7 +390,8 @@ extension Model {
         }
         
         let searchFieldModel = SearchFactory.makeSearchFieldModel(
-            for: mode,
+            for: mode, 
+            type: type,
             scheduler: scheduler
         )
         let sections = model.sections(for: mode)

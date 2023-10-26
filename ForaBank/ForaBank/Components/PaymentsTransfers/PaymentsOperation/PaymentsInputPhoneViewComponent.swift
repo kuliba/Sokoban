@@ -58,8 +58,10 @@ extension PaymentsInputPhoneView {
             let phone = parameterInput.parameter.value
             let placeholder = parameterInput.placeholder ?? parameterInput.title
             let countryCodes: [CountryCodeReplace] = parameterInput.countryCode ?? []
-            
+            let type: ContactsViewModel.PaymentsType = countryCodes.isEmpty ? .other : .abroad
+
             let textView = TextFieldFactory.makePhoneKitTextField(
+                for: type,
                 initialPhoneNumber: phone,
                 placeholderText: placeholder,
                 filterSymbols: [],
@@ -83,8 +85,9 @@ extension PaymentsInputPhoneView {
             }
             
             self.actionButton = .init(action: {[weak self] in
-                
-                let contactViewModel = model.makeContactsViewModel(forMode: .select(.contacts))
+
+                let contactViewModel = model.makeContactsViewModel(
+                    forMode: .select(.contacts), forType: type)
                 self?.bind(contactsViewModel: contactViewModel)
                 self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })
@@ -298,6 +301,7 @@ extension PaymentsInputPhoneView.ViewModel {
     
     static let samplePhone = PaymentsInputPhoneView.ViewModel(
         textView: TextFieldFactory.makePhoneKitTextField(
+            for: .other,
             initialPhoneNumber: "+7 925 555-5555",
             placeholderText: "Номер телефона получателя",
             filterSymbols: [],

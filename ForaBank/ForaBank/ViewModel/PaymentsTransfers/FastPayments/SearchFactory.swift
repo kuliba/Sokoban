@@ -16,37 +16,66 @@ extension SearchFactory {
     
     static func makeSearchBanksField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.banks))
+        makeSearchFieldModel(for: .select(.banks), type: .other)
     }
     
     static func makeSearchContactsField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.contacts))
+        makeSearchFieldModel(for: .select(.contacts), type: .other)
     }
     
     static func makeSearchCountriesField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.countries))
+        makeSearchFieldModel(for: .select(.countries), type: .other)
     }
     
     static func makeSearchFieldModel(
         for mode: ContactsViewModel.Mode,
+        type: ContactsViewModel.PaymentsType,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> RegularFieldViewModel {
         
-        let cleanup: (String) -> String = { $0 }
         
+        let cleanup: (String) -> String = {
+            switch type {
+            case .abroad:
+                guard $0.hasPrefix("8"),
+                      $0.count > 1
+                else { return $0 }
+                
+                return $0.shouldChangeTextIn(
+                    range: .init(location: 0, length: 1),
+                    with: "7"
+                )
+            default:
+                return $0
+            }
+        }
+        
+        let substitutions = {
+            switch type {
+            case .abroad:
+                
+                return [CountryCodeReplace].russian
+                    .map(\.substitution)
+            default:
+                return []
+            }
+        }()
+                
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
             
-            return PhoneNumberKitWrapper.formatPartial($0)
+            return type == .abroad ?
+            PhoneNumberKitWrapper.formatPartial(for: type, "+\($0)") :
+            PhoneNumberKitWrapper.formatPartial(for: type, $0)
         }
         
         let contactsTextField = TextFieldFactory.contactTextField(
             placeholderText: mode.title,
             cleanup: cleanup,
-            substitutions: [],
+            substitutions: substitutions,
             format: format,
             keyboardType: .default,
             scheduler: scheduler

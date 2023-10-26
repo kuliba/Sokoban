@@ -86,13 +86,14 @@ final class PhoneKitTransformerTests: XCTestCase {
     // MARK: - Helpers
     
     private func transform(
+        for type: ContactsViewModel.PaymentsType = .other,
         _ state: TextState,
         file: StaticString = #file,
         line: UInt = #line
     ) -> TextState {
         
         return Transformers
-            .phoneKit(filterSymbols: [], substitutions: [])
+            .phoneKit(for: type, filterSymbols: [], substitutions: [])
             .transform(state)
     }
 }
