@@ -15,6 +15,9 @@ struct Operation: Equatable {
     struct Parameter: Equatable {
         
         let productId: ProductID
+        let options: [Option]
+        
+        struct Option: Equatable {}
     }
 }
 
@@ -108,7 +111,10 @@ final class BusinessLogic {
             return
         }
         
-        let newOperation = Operation(parameter: .init(productId: productID))
+        let newOperation = Operation(parameter: .init(
+            productId: productID,
+            options: []
+        ))
         completion(.success(newOperation))
     }
     
@@ -235,7 +241,10 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         let existingID = ProductID(id: "existing")
         let operation = makeOperation()
         let (sut, _) = makeSUT(productIDs: [existingID])
-        let newOperation = Operation(parameter: .init(productId: existingID))
+        let newOperation = Operation(parameter: .init(
+            productId: existingID,
+            options: []
+        ))
         
         expect(sut, operation: operation, with: existingID, toDeliver: [.success(newOperation)]) {}
     }
@@ -297,7 +306,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     }
     
     private func makeOperation(
-        parameter: Operation.Parameter = .init(productId: .init(id: "123"))
+        parameter: Operation.Parameter = .init(productId: .init(id: "123"), options: [])
     ) -> Operation {
         
         .init(parameter: parameter)
