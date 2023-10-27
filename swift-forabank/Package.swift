@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .loadableModel,
         .loadableResourceComponent,
+        .paymentSticker,
         .phoneNumberWrapper,
         .sharedAPIInfra,
         .textFieldModel,
@@ -50,6 +51,8 @@ let package = Package(
         .loadableModelTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
+        .paymentSticker,
+        .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
         .sharedAPIInfra,
@@ -117,6 +120,13 @@ private extension Product {
         ]
     )
     
+    static let paymentSticker = library(
+        name: .paymentSticker,
+        targets: [
+            .paymentSticker,
+        ]
+    )
+        
     static let phoneNumberWrapper = library(
         name: .phoneNumberWrapper,
         targets: [
@@ -318,6 +328,20 @@ private extension Target {
         ]
     )
     
+    static let paymentSticker = target(
+        name: .paymentSticker
+    )
+    
+    static let paymentStickerTests = testTarget(
+        name: .paymentStickerTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .paymentSticker
+        ]
+    )
+        
     static let phoneNumberWrapper = target(
         name: .phoneNumberWrapper,
         dependencies: [
@@ -652,6 +676,10 @@ private extension Target.Dependency {
         name: .loadableResourceComponent
     )
     
+    static let paymentSticker = byName(
+        name: .paymentSticker
+    )
+
     static let phoneNumberWrapper = byName(
         name: .phoneNumberWrapper
     )
@@ -746,6 +774,9 @@ private extension String {
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let paymentSticker = "PaymentSticker"
+    static let paymentStickerTests = "PaymentStickerTests"
     
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"

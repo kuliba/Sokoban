@@ -53,6 +53,7 @@ extension BusinessLogic {
 
 extension BusinessLogic {
     
+    //TODO: rename process
     func reduce(
         operation: Operation,
         event: Event,
@@ -81,7 +82,7 @@ extension BusinessLogic {
                     )
                     
                 case let .selected(selectedViewModel):
-                    
+
                     let parameter = parameter.updateState(
                         iconName: selectedViewModel.iconName
                     )
@@ -116,7 +117,7 @@ extension BusinessLogic {
                     operation: operation,
                     parameter: parameter
                 )
-                
+            
                 return .success(.operation(operation))
                 
             case let .filterOptions(text, parameter, filteredOptions):
@@ -159,7 +160,6 @@ extension BusinessLogic {
             case .selectProduct:
                 return .success(.operation(operation))
             }
-            
         default:
             return .success(.operation(operation))
         }
