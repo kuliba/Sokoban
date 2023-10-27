@@ -152,7 +152,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "PaymentStickerTests",
         "name" : "PaymentStickerTests"
       }
