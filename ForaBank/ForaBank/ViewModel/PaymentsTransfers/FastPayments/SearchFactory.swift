@@ -35,7 +35,6 @@ extension SearchFactory {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> RegularFieldViewModel {
         
-        
         let cleanup: (String) -> String = {
             switch type {
             case .abroad:
@@ -55,7 +54,6 @@ extension SearchFactory {
         let substitutions = {
             switch type {
             case .abroad:
-                
                 return [CountryCodeReplace].russian
                     .map(\.substitution)
             default:
@@ -66,10 +64,8 @@ extension SearchFactory {
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
-            
-            return type == .abroad ?
-            PhoneNumberKitWrapper.formatPartial(for: type, "+\($0)") :
-            PhoneNumberKitWrapper.formatPartial(for: type, $0)
+            let input = type == .abroad ? "+\($0)" : $0
+            return PhoneNumberKitWrapper.formatPartial(for: type, input)
         }
         
         let contactsTextField = TextFieldFactory.contactTextField(
