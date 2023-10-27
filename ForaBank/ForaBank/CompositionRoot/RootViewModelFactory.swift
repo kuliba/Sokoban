@@ -22,7 +22,16 @@ enum RootViewModelFactory {
 
         let mainViewModel = MainViewModel(
             model,
-            certificateClient: certificateClient
+            productProfileViewModelFactory: { product, rootView, dismissAction in
+                
+                ProductProfileViewModel(
+                    model,
+                    certificateClient: certificateClient,
+                    product: product,
+                    rootView: rootView,
+                    dismissAction: dismissAction
+                )
+            }
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(

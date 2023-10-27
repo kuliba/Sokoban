@@ -813,33 +813,42 @@ private extension ProductProfileViewModel {
         
         product.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] productAction in
                 
-                switch action {
+                guard let self else { return }
+                
+                switch productAction {
                 case _ as ProductProfileCardViewModelAction.MoreButtonTapped:
                     
-                    if self.rootView == "\(MyProductsViewModel.self)" {
-                        self.action.send(ProductProfileViewModelAction.Close.SelfView())
+                    if rootView == "\(MyProductsViewModel.self)" {
                         
+                        action.send(ProductProfileViewModelAction.Close.SelfView())
                     } else {
                         let myProductsViewModel = MyProductsViewModel(
                             model,
                             cardAction: cardAction,
-                            certificateClient: certificateClient
+                            productProfileViewModelFactory: productProfileViewModelFactory
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                     }
                     
                 case let payload as ProductProfileCardViewModelAction.ShowAlert:
-                    self.alert = Alert.ViewModel(title: payload.title, message: payload.message, primary: .init(type: .default, title: "Ок", action: {}))
+                    alert = Alert.ViewModel(
+                        title: payload.title,
+                        message: payload.message,
+                        primary: .init(
+                            type: .default,
+                            title: "Ок",
+                            action: {}
+                        )
+                    )
                     
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
-        
+            }
+            .store(in: &bindings)
     }
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
@@ -1440,6 +1449,21 @@ private extension ProductProfileViewModel {
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
                 
             }.store(in: &bindings)
+    }
+    
+    func productProfileViewModelFactory(
+        product: ProductData,
+        rootView: String,
+        dismissAction: @escaping () -> Void
+    ) -> ProductProfileViewModel? {
+        
+        .init(
+            model,
+            certificateClient: certificateClient,
+            product: product,
+            rootView: rootView,
+            dismissAction: dismissAction
+        )
     }
 }
 

@@ -11,6 +11,8 @@ import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {
     
+    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
@@ -28,24 +30,24 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let certificateClient: CertificateClient
+    private let productProfileViewModelFactory: ProductProfileViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
         navButtonsRight: [NavigationBarButtonViewModel],
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
-        certificateClient: CertificateClient
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
-        self.certificateClient = certificateClient
+        self.productProfileViewModelFactory = productProfileViewModelFactory
     }
     
     init(
         _ model: Model,
-        certificateClient: CertificateClient
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -57,7 +59,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionAtmView.ViewModel.initial
         ]
         self.model = model
-        self.certificateClient = certificateClient
+        self.productProfileViewModelFactory = productProfileViewModelFactory
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -92,12 +94,10 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = ProductProfileViewModel(
-                            model,
-                            certificateClient: certificateClient,
-                            product: product,
-                            rootView: "\(type(of: self))",
-                            dismissAction: { [weak self] in self?.link = nil } )
+                          let productProfileViewModel = productProfileViewModelFactory(
+                            product,
+                            "\(type(of: self))",
+                            { [weak self] in self?.link = nil })
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions
@@ -403,7 +403,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
                             model,
-                            certificateClient: certificateClient
+                            productProfileViewModelFactory: productProfileViewModelFactory
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
