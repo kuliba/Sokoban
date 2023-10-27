@@ -3562,6 +3562,7 @@
 		C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+RequisitesTests.swift"; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
 		C140F1492AE8CE5100623E1D /* ContentPreviewForBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPreviewForBuild.swift; sourceTree = "<group>"; };
+		C140F14B2AEA719600623E1D /* PaymentSticker.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PaymentSticker.xctestplan; sourceTree = "<group>"; };
 		C14303F02A84259000FAD5AA /* AccountCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCellViewModelTests.swift; sourceTree = "<group>"; };
 		C14303F22A842B4B00FAD5AA /* ProductDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataTests.swift; sourceTree = "<group>"; };
 		C14303F42A84616D00FAD5AA /* GetC2BSubscriptionGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetC2BSubscriptionGeneric.json; sourceTree = "<group>"; };
@@ -9633,6 +9634,7 @@
 				2AEF71992AA0A51800480990 /* LinkableText.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
+				C140F14B2AEA719600623E1D /* PaymentSticker.xctestplan */,
 				833D4EB92A338652006E6A65 /* PickerWithPreviewComponent.xctestplan */,
 				83F948EB2AE02ACB009AD8E2 /* PhoneNumberWrapper.xctestplan */,
 				2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */,

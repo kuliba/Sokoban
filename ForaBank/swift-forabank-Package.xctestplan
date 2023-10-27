@@ -169,6 +169,13 @@
         "identifier" : "PaymentsComponentsTests",
         "name" : "PaymentsComponentsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
+      }
     }
   ],
   "version" : 1
