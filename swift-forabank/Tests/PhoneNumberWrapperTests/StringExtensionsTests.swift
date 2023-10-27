@@ -35,7 +35,7 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertNoDiff("001234567891".onlyDigits(), "1234567891")
         XCTAssertNoDiff("0001234567891".onlyDigits(), "1234567891")
     }
-        
+    
     // MARK: - test changeCodeIfNeeded
     
     func test_changeCodeIfNeeded_needChange() {
