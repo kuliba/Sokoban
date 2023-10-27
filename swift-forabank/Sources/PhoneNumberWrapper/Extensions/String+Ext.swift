@@ -11,13 +11,13 @@ extension String {
     
     func onlyDigits() -> String {
         
-        self
-            .filter(("0"..."9").contains)
-            .replacingOccurrences(
-                of: "^0+",
-                with: "",
-                options: .regularExpression
-            )
+        let onlyDigits = self.filter(("0"..."9").contains)
+        return onlyDigits.count > 10 ?
+        onlyDigits.replacingOccurrences(
+            of: "^0+",
+            with: "",
+            options: .regularExpression
+        ) : onlyDigits
     }
 }
 
@@ -44,17 +44,22 @@ extension String {
 
         let end = number.index(number.startIndex, offsetBy: number.count)
         let range = number.startIndex..<end
-        
 
         switch number.count {
-        case 1...4:
+        case 1:
+            number = number.replacingOccurrences(
+                of: "(\\d{1})",
+                with: "+$1",
+                options: .regularExpression
+            )
+        case 2...4:
             number = number.replacingOccurrences(
                 of: "(\\d{1})(\\d+)",
                 with: "+$1 $2",
                 options: .regularExpression,
                 range: range
             )
-        case 5...6:
+        case 5...7:
             number = number.replacingOccurrences(
                 of: "(\\d{1})(\\d{3})(\\d+)",
                 with: "+$1 $2 $3",
@@ -62,16 +67,16 @@ extension String {
                 range: range
             )
             
-        case 7...8:
+        case 8...9:
             number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d{3})(\\d{2})(\\d+)",
+                of: "(\\d{1})(\\d{3})(\\d{3})(\\d+)",
                 with: "+$1 $2 $3-$4",
                 options: .regularExpression,
                 range: range
             )
         default:
             number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d{3})(\\d{2})(\\d{2})(\\d+)",
+                of: "(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d+)",
                 with: "+$1 $2 $3-$4-$5",
                 options: .regularExpression,
                 range: range
@@ -85,8 +90,8 @@ extension String {
     
     func changeCodeIfNeeded() -> String {
         
-        if self.hasPrefix("89") {
-            return "79" + self.dropFirst(2)
+        if self.hasPrefix("8") {
+            return "7" + self.dropFirst(1)
         }
         return self
     }
