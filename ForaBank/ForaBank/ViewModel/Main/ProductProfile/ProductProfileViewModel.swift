@@ -212,9 +212,10 @@ extension ProductProfileViewModel {
                     delayMS: 200,
                     action: ProductProfileCardView.ViewModel.CVVPinViewModelAction.ShowCVV(cardId: cardId, cvv: cvv)
                 )
-                self.product.action.send(delayedShowCVVAction)
+                product.action.send(delayedShowCVVAction)
                 
-                if case let .productInfo(productInfoViewModel) = self.link {
+                if case let .productInfo(productInfoViewModel) = link {
+                    
                     productInfoViewModel.action.send(InfoProductModelAction.ShowCVV(cardId: cardId, cvv: cvv))
                 }
             }
@@ -227,9 +228,11 @@ extension ProductProfileViewModel {
     ) {
         certificateClient.confirmWith(otp: otp.rawValue) { [weak self] result in
             
+            guard let self else { return }
+            
             switch result {
             case .success:
-                self?.model.action.send(ModelAction.Informer.Show(informer: .init(message: "Сертификат Активирован", icon: .check)))
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: "Сертификат Активирован", icon: .check)))
                 completion(nil)
                 
             case let .failure(error):
@@ -241,7 +244,9 @@ extension ProductProfileViewModel {
     func pinConfirmation(
         completion: @escaping (PinCodeViewModel.PhoneNumberState) -> Void
     ) {
-        certificateClient.getPinConfirmCode { result in
+        certificateClient.getPinConfirmCode { [weak self] result in
+            
+            guard self != nil else { return }
             
             switch result {
             case let .success(phone):
@@ -262,14 +267,15 @@ extension ProductProfileViewModel {
             cardId: info.cardId.rawValue,
             newPin: info.newPin.rawValue,
             otp: info.otp.rawValue
-        ) { result in
+        ) { [weak self] result in
+            
+            guard self != nil else { return }
             
             switch result {
             case .success:
                 completion(nil)
                 
             case let .failure(error):
-                
                 completion(CVVPinErrorMapper.map(error))
             }
         }
@@ -302,29 +308,34 @@ private extension ProductProfileViewModel {
     func bind() {
         
         action
-            .compactMap({ $0 as? DelayWrappedAction })
-            .flatMap({
+            .compactMap { $0 as? DelayWrappedAction }
+            .flatMap {
                 
                 Just($0.action)
                     .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
                 
-            })
-            .sink(receiveValue: { [weak self] in
+            }
+            .sink { [weak self] in
                 
                 self?.action.send($0)
                 
-            }).store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         action
             .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ChangePin }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payload in
+            .sink { [weak self] payload in
+                
+                guard let self else { return }
+                
                 changePin = .init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
                     model: self.createPinCodeViewModel(displayNumber: payload.phone))
                 
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         // TransferButtonDidTapped
         
@@ -336,7 +347,7 @@ private extension ProductProfileViewModel {
                 model.setPreferredProductID(to: product.activeProductId)
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    certificateClient: certificateClient,
+                    productProfileViewModelFactory: productProfileViewModelFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )

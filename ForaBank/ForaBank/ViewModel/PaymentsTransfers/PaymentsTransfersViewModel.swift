@@ -13,6 +13,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
+    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -48,12 +49,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let certificateClient: CertificateClient
+    private let productProfileViewModelFactory: ProductProfileViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
-        certificateClient: CertificateClient,
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -66,7 +67,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
-        self.certificateClient = certificateClient
+        self.productProfileViewModelFactory = productProfileViewModelFactory
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -79,7 +80,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        certificateClient: CertificateClient,
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -88,7 +89,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
-        self.certificateClient = certificateClient
+        self.productProfileViewModelFactory = productProfileViewModelFactory
         
         self.navButtonsRight = navButtonsRight
         
@@ -121,14 +122,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
-                    // TODO: добавить factory
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = ProductProfileViewModel(
-                            model,
-                            certificateClient: certificateClient,
-                            product: product,
-                            rootView: "\(type(of: self))",
-                            dismissAction: { [weak self] in self?.link = nil })
+                          let productProfileViewModel = productProfileViewModelFactory(
+                            product,
+                            "\(type(of: self))",
+                            { [weak self] in self?.link = nil })
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions

@@ -90,7 +90,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
         let sut = PaymentsTransfersViewModel(
             model: model,
-            certificateClient: certificateClient
+            productProfileViewModelFactory: { product, rootView, dismissAction in
+                
+                ProductProfileViewModel(
+                    model,
+                    certificateClient: certificateClient,
+                    product: product,
+                    rootView: rootView,
+                    dismissAction: dismissAction
+                )
+            }
         )
         
         trackForMemoryLeaks(model, file: file, line: line)

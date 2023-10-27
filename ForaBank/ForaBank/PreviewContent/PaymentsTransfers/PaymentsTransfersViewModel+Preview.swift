@@ -76,7 +76,16 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        certificateClient: HappyCertificateClient(),
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+                
+            ProductProfileViewModel(
+                .emptyMock,
+                certificateClient: HappyCertificateClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
