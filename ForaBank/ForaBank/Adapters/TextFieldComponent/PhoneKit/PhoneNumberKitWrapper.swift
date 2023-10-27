@@ -27,9 +27,9 @@ enum PhoneNumberKitWrapper {
         
         switch type {
         case .abroad:
-            partialFormatter.formatPartial(input)
+            return partialFormatter.formatPartial(input)
         default:
-            phoneNumberWrapper.format(input)
+            return phoneNumberWrapper.format(input)
         }
     }
 }
