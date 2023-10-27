@@ -17,22 +17,13 @@ final class BusinessLogic {
     typealias Load = (Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     typealias Transfer = (TransferEvent, @escaping Completion) -> Void
     
-    private let dictionaryService: RemoteService<Operation, Error>
+    private let dictionaryService: RemoteService<Operation, Operation>
     private let transfer: Transfer
-    
-    enum TransferEvent {
-    
-        case operation(Operation)
-        case requestOTP
-    }
     
     private let reduce: Reducer.Reduce
     
-    //TODO: remove operation state from `OperationStateViewModel`
-    private let operationSubject = PassthroughSubject<OperationResult, Never>()
-    
     public init(
-        dictionaryService: RemoteService<Operation, Error>,
+        dictionaryService: RemoteService<Operation, Operation>,
         transfer: @escaping Transfer,
         reduce: @escaping Reducer.Reduce
     ) {
@@ -44,76 +35,168 @@ final class BusinessLogic {
 
 extension BusinessLogic {
     
-    func operationResult(operation: Operation, event: Event, completion: @escaping (OperationResult) -> Void) {
+    func operationResult(
+        operation: Operation,
+        event: Event,
+        completion: @escaping (OperationResult) -> Void
+    ) {
         
-        //TODO:
-        //1. reduce operation with event -> OperationResult
-        let result: OperationResult = { fatalError() }()
-        //2. complete with result
+        let result: OperationResult = reduce(
+            operation: operation,
+            event: event,
+            completion: completion
+        )
+        
         completion(result)
-    }
-    
-    func operationResult(operation: Operation, event: Event) -> AnyPublisher<OperationResult, Never> {
-        
-        reduce(operation: operation, event: event)
-        
-        return operationSubject.eraseToAnyPublisher()
     }
 }
 
 extension BusinessLogic {
-
-    func reduce(operation: Operation, event: Event) {
+    
+    func reduce(
+        operation: Operation,
+        event: Event,
+        completion: @escaping (OperationResult) -> Void
+    ) -> OperationResult {
         
         switch event {
         case let .select(selectEvent):
             
             switch selectEvent {
-            case .chevronTapped:
+            case let .chevronTapped(parameter):
                 
-                dictionaryService.process(operation) { result in
+                switch parameter.state {
+                case let .idle(idleViewModel):
                     
-                    switch result {
-                    case let .success(parameters):
-                            break
-//                        let operation = updateOperation(operation, with: parameters)
-//                        operationSubject.send(.success(.operation(operation)))
+                    let updateSelect = parameter.updateSelect(
+                        parameter: parameter,
+                        idleViewModel: idleViewModel
+                    )
+                    
+                    return .success(.operation(
+                        operation.updateOperation(
+                            operation: operation,
+                            newParameter: .select(updateSelect)
+                        ))
+                    )
+                    
+                case let .selected(selectedViewModel):
+                    
+                    let parameter = parameter.updateState(
+                        iconName: selectedViewModel.iconName
+                    )
+                    
+                    return .success(.operation(
+                        operation.updateOperation(
+                            operation: operation,
+                            newParameter: .select(parameter)
+                        ))
+                    )
+                    
+                case .list(_):
+                    
+                    dictionaryService.process(operation) { result in
                         
-                    case let .failure(error):
-                        break
+                        switch result {
+                        case let .success(operation):
+                            completion(.success(.operation(operation)))
+                            
+                        case let .failure(error):
+                            completion(.failure(error))
+                        }
                     }
+                    
+                    return .success(.operation(operation))
                 }
                 
-            case .selectOption:
-                break
+            case let .selectOption(id, parameter):
                 
-            case .filterOptions:
-                break
+                let operation = selectOption(
+                    id: id,
+                    operation: operation,
+                    parameter: parameter
+                )
+                
+                return .success(.operation(operation))
+                
+            case let .filterOptions(text, parameter, filteredOptions):
+                
+                let newParameter = parameter.updateOptions(
+                    parameter: parameter,
+                    options: filteredOptions(text)
+                )
+                
+                let parameters = operation.parameters.replaceParameterOptions(
+                    newParameter: newParameter
+                )
+                
+                return .success(.operation(.init(parameters: parameters)))
                 
             case .openBranch:
-                break
+                return .success(.operation(operation))
             }
             
         case .continueButtonTapped:
-            break
-        
+            
+            transfer(.requestOTP) { result in
+                
+                switch result {
+                case let .success(state):
+                    completion(.success(state))
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+            
+            return .success(.operation(operation))
+            
         case let .product(productEvents):
             
             switch productEvents {
             case .chevronTapped:
-                break
+                return .success(.operation(operation))
             case .selectProduct:
-                break
+                return .success(.operation(operation))
             }
             
-        default: break
+        default:
+            return .success(.operation(operation))
         }
+    }
+    
+    func selectOption(
+        id: String,
+        operation: Operation,
+        parameter: Operation.Parameter.Select
+    ) -> Operation {
+        
+        guard let option = parameter.options.first(where: { $0.id == id })
+        else { return operation }
+        
+        let parameter = parameter.updateValue(
+            parameter: parameter,
+            option: option
+        )
+        
+        let updateParameter = parameter.updateState(with: option)
+        
+        return operation.updateOperation(
+            operation: operation,
+            newParameter: .select(updateParameter)
+        )
     }
 }
 
 // MARK: - Types
 
 extension BusinessLogic {
+    
+    enum TransferEvent {
+    
+        case operation(Operation)
+        case requestOTP
+    }
     
     public enum State {
         

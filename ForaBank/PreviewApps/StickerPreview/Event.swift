@@ -36,7 +36,7 @@ enum Event {
     enum SelectEvent {
         
         case chevronTapped(ParameterSelect)
-        case filterOptions(ParameterSelect, [ParameterSelect.Option])
+        case filterOptions(String, ParameterSelect, (String) -> [ParameterSelect.Option])
         case selectOption(SelectOptionID, ParameterSelect)
         case openBranch
     }

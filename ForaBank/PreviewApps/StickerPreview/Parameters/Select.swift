@@ -61,10 +61,57 @@ extension Operation.Parameter {
     }
 }
 
-extension Operation.Parameter.Select.Option {
+//MARK: Helper
+
+extension Operation.Parameter.Select {
+
+    typealias IdleViewModel = Operation.Parameter.Select.State.IdleViewModel
     
-    typealias Select = Operation.Parameter.Select
-    typealias OptionViewModel = Select.State.OptionsListViewModel.OptionViewModel
+    func updateSelect(
+        parameter: Operation.Parameter.Select,
+        idleViewModel: IdleViewModel
+    ) -> Operation.Parameter.Select {
+     
+        .init(
+            id: parameter.id,
+            value: parameter.value,
+            title: parameter.title,
+            placeholder: parameter.title,
+            options: parameter.options,
+            state: .list(
+                .init(
+                    iconName: idleViewModel.iconName,
+                    title: parameter.title,
+                    placeholder: parameter.placeholder,
+                    options: parameter.options.map(Option.optionViewModelMapper(option:))
+                )
+            )
+        )
+    }
+}
+
+typealias Select = Operation.Parameter.Select
+typealias OptionViewModel = Select.State.OptionsListViewModel.OptionViewModel
+
+extension Operation.Parameter.Select {
+
+    func updateOptions(
+        parameter: Select,
+        options: [Select.Option]
+    ) -> Select {
+    
+        .init(
+            id: self.id,
+            value: self.value,
+            title: self.title,
+            placeholder: self.placeholder,
+            options: options,
+            state: self.state
+        )
+    }
+}
+
+extension Operation.Parameter.Select.Option {
     
     static func optionViewModelMapper(option: Select.Option) -> OptionViewModel {
         
