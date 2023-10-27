@@ -345,7 +345,6 @@ private extension Target {
     static let phoneNumberWrapper = target(
         name: .phoneNumberWrapper,
         dependencies: [
-            .customDump,
             .phoneNumberKit
         ]
     )
@@ -354,6 +353,7 @@ private extension Target {
         name: .phoneNumberWrapperTests,
         dependencies: [
             // external packages
+            .customDump,
             // internal modules
             .phoneNumberWrapper,
         ]
@@ -886,11 +886,11 @@ private extension Package.Dependency {
     )
     static let shimmer = Package.Dependency.package(
         url: .swift_shimmer_path,
-        from: .init(1, 0, 0)
+        exact: .init(1, 0, 1)
     )
     static let phoneNumberKit = Package.Dependency.package(
         url: .phoneNumberKit_path,
-        from: .init(3, 5, 8)
+        exact: .init(3, 5, 8)
     )
 }
 
@@ -965,6 +965,4 @@ private extension String {
     
     static let phoneNumberKit = "PhoneNumberKit"
     static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
-
-    
 }
