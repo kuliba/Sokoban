@@ -22,5 +22,85 @@ extension Operation {
         case select(Select)
         case product(Product)
         case amount(Amount)
+        case input(Input)
+    }
+}
+
+//MARK: Helpers
+
+extension [Operation.Parameter] {
+    
+    func getParameterTransferType() -> Operation.Parameter.Select? {
+    
+        switch self.first(where: { $0.id == .transferType }) {
+        case let .select(select):
+            return select
+        default:
+            return nil
+        }
+    }
+    
+    func getParameterIndex(with id: String) -> Index? {
+        
+        return self.firstIndex(where: { $0.id.rawValue == id })
+    }
+    
+    func replaceParameter(newParameter: Operation.Parameter) -> [Operation.Parameter] {
+        
+        guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
+        else { return self }
+        
+        var parameters = self
+        parameters[index] = newParameter
+        return parameters
+    }
+    
+    func replaceParameterOptions(
+        newParameter: Operation.Parameter.Select
+    ) -> [Operation.Parameter] {
+        
+        guard let index = self.getParameterIndex(with: newParameter.id)
+        else { return self }
+        
+        var parameters = self
+        parameters[index] = .select(newParameter)
+        return parameters
+    }
+}
+
+extension Operation {
+    
+    func updateOperation(
+        operation: Operation,
+        newParameter: Operation.Parameter
+    ) -> Operation {
+        
+        var operation = operation
+        operation.parameters = operation.parameters.replaceParameter(
+            newParameter: newParameter
+        )
+        
+        return operation
+    }
+}
+
+extension Operation.Parameter.Select {
+    
+    typealias ParameterSelect = Operation.Parameter.Select
+    typealias SelectOption = Operation.Parameter.Select.Option
+    
+    func updateValue(
+        parameter: ParameterSelect,
+        option: SelectOption
+    ) -> Self {
+        
+        ParameterSelect(
+            id: parameter.id,
+            value: option.id,
+            title: parameter.title,
+            placeholder: parameter.placeholder,
+            options: parameter.options,
+            state: parameter.state
+        )
     }
 }

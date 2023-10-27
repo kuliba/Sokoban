@@ -9,7 +9,6 @@ extension Operation.Parameter {
     
     struct Amount: Hashable {
         
-        let title: String
         let value: String
     }
 }
