@@ -158,8 +158,11 @@ extension Operation.Parameter: Identifiable {
             switch select.id {
             case "city":
                 return .city
-            default:
+            case "transferType":
                 return .transferType
+            
+            default:
+                return .branches
             }
         case .product: return .product
         case .amount: return .amount
@@ -173,6 +176,7 @@ extension Operation.Parameter: Identifiable {
         case sticker
         case city
         case transferType
+        case branches
         case product
         case amount
         case input
@@ -191,6 +195,6 @@ struct OperationView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OperationView(model: .preview)
+        EmptyView()
     }
 }

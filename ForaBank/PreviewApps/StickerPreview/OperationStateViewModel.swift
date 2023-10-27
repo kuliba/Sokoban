@@ -46,7 +46,20 @@ final class OperationStateViewModel: ObservableObject {
                 self.handleAPIError(error)
                 
             case let .success(state):
-                self.state = state
+                
+                if operation.parameters.contains(where: { $0.id == .input }) {
+                    
+                    self.state = .result(.init(
+                        result: .success,
+                        title: "Успешная заявка",
+                        description: "Спасибо за заказ! В ближайшее время с вами свяжется наш курьер для уточнения места и времени доставки.",
+                        amount: "790 Р"
+                    ))
+                    
+                } else {
+                    
+                    self.state = state
+                }
             }
         }
     }
