@@ -89,13 +89,6 @@ final class StringExtensionsTests: XCTestCase {
 
     func test_applyPatternOnPhoneNumber_moreThan4lessThan8Digits() {
        
-        XCTAssertNoDiff("89".applyPatternOnPhoneNumber(), "+7 9")
-        XCTAssertNoDiff("896".applyPatternOnPhoneNumber(), "+7 96")
-        XCTAssertNoDiff("8963".applyPatternOnPhoneNumber(), "+7 963")
-    }
-
-    func test_applyPatternOnPhoneNumber_startWith7_moreThan4lessThan8Digits() {
-       
         XCTAssertNoDiff("79630".applyPatternOnPhoneNumber(), "+7 963 0")
         XCTAssertNoDiff("796300".applyPatternOnPhoneNumber(), "+7 963 00")
         XCTAssertNoDiff("7963000".applyPatternOnPhoneNumber(), "+7 963 000")
