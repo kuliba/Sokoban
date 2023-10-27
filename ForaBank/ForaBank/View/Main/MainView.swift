@@ -322,7 +322,16 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        certificateClient: HappyCertificateClient()
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                certificateClient: HappyCertificateClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        }
     )
     
     static let sampleProducts = MainViewModel(
@@ -336,7 +345,16 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        certificateClient: HappyCertificateClient()
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                certificateClient: HappyCertificateClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        }
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -351,6 +369,15 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        certificateClient: HappyCertificateClient()
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                certificateClient: HappyCertificateClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        }
     )
 }

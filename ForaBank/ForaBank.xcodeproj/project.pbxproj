@@ -528,6 +528,7 @@
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
 		2A9E2AB22A94F42C00EBD05A /* Services+cvvPinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E2AB12A94F42C00EBD05A /* Services+cvvPinService.swift */; };
 		2A9E88242AE934C500551DF7 /* ChangePINSecretJSONMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E88232AE934C500551DF7 /* ChangePINSecretJSONMaker.swift */; };
+		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2A55F2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */; };
 		2AA2FFB32AE5A8F700705EA8 /* KeyExchangeCryptographer+makeSecretRequestJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2FFB22AE5A8F700705EA8 /* KeyExchangeCryptographer+makeSecretRequestJSON.swift */; };
 		2AA4C9F02A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */; };
@@ -2554,6 +2555,7 @@
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A9E2AB12A94F42C00EBD05A /* Services+cvvPinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPinService.swift"; sourceTree = "<group>"; };
 		2A9E88232AE934C500551DF7 /* ChangePINSecretJSONMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePINSecretJSONMaker.swift; sourceTree = "<group>"; };
+		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
 		2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelTests.swift; sourceTree = "<group>"; };
 		2AA2FFB22AE5A8F700705EA8 /* KeyExchangeCryptographer+makeSecretRequestJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyExchangeCryptographer+makeSecretRequestJSON.swift"; sourceTree = "<group>"; };
 		2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewModelExpandedViewModelTests.swift; sourceTree = "<group>"; };
@@ -5733,6 +5735,22 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		2AA1BB782AEB7EDA0027347C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2AA1BB792AEB7F090027347C /* MyProducts */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2AA1BB792AEB7F090027347C /* MyProducts */ = {
+			isa = PBXGroup;
+			children = (
+				2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */,
+			);
+			path = MyProducts;
+			sourceTree = "<group>";
+		};
 		2AA68E802A179C000063BBB0 /* Adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -7228,6 +7246,7 @@
 		774E318727A0506D005A067B /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
+				2AA1BB782AEB7EDA0027347C /* ViewModel */,
 				5071ADF928E1845100B83F26 /* Products */,
 				0C78331F28834564003ADC73 /* CurrencyWallet */,
 				0C78331A287DC1C6003ADC73 /* Main */,
@@ -11672,6 +11691,7 @@
 				EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
+				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,

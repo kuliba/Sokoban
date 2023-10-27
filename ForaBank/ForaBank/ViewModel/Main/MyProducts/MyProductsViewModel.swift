@@ -14,6 +14,7 @@ import PinCodeUI
 class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
+    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -34,7 +35,7 @@ class MyProductsViewModel: ObservableObject {
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
     private let cardAction: CardAction?
-    private let certificateClient: CertificateClient
+    private let productProfileViewModelFactory: ProductProfileViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     
@@ -45,13 +46,13 @@ class MyProductsViewModel: ObservableObject {
          editModeState: EditMode = .inactive,
          model: Model = .emptyMock,
          cardAction: CardAction? = nil,
-         certificateClient: CertificateClient,
+         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:]
     ) {
         self.model = model
         self.cardAction = cardAction
-        self.certificateClient = certificateClient
+        self.productProfileViewModelFactory = productProfileViewModelFactory
         self.editModeState = editModeState
         self.navigationBar = navigationBar
         self.totalMoneyVM = totalMoney
@@ -64,7 +65,7 @@ class MyProductsViewModel: ObservableObject {
     convenience init(
         _ model: Model,
         cardAction: CardAction? = nil,
-        certificateClient: CertificateClient
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
@@ -74,7 +75,7 @@ class MyProductsViewModel: ObservableObject {
             editModeState: .inactive,
             model: model,
             cardAction: cardAction,
-            certificateClient: certificateClient,
+            productProfileViewModelFactory: productProfileViewModelFactory,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:]
         )
@@ -255,12 +256,7 @@ class MyProductsViewModel: ObservableObject {
                             .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = ProductProfileViewModel(
-                            model,
-                            certificateClient: certificateClient,
-                            product: product,
-                            rootView: "\(type(of: self))",
-                            dismissAction: {[weak self] in self?.link = nil }
+                        guard let productProfileViewModel = productProfileViewModelFactory(product, "\(type(of: self))", { [weak self] in self?.link = nil }
                         )
                         else { return }
                         
@@ -596,36 +592,4 @@ enum MyProductsViewModelAction {
     
     struct StartOnboarding: Action {}
     
-}
-
-extension MyProductsViewModel {
-    
-    static let sample = MyProductsViewModel(
-        navigationBar: .init(
-            title: "Мои продукты",
-            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24BarInOrder, action: {})],
-            background: .mainColorsWhite),
-        totalMoney: .sampleBalance,
-        productSections: [.sample2, .sample3],
-        openProductVM: .previewSample,
-        cardAction: { _ in },
-        certificateClient: HappyCertificateClient(),
-        refreshingIndicator: .init(isActive: true)
-    )
-    
-    static let sampleOpenProduct = MyProductsViewModel(
-        navigationBar: .init(
-            title: "Мои продукты",
-            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Edit, action: { })],
-            background: .mainColorsWhite),
-        totalMoney: .sampleBalance,
-        productSections: [.sample2, .sample3],
-        openProductVM: .previewSample,
-        cardAction: { _ in },
-        certificateClient: HappyCertificateClient(),
-        refreshingIndicator: .init(isActive: true),
-        showOnboarding: [.hide: true, .ordered: false]
-    )
 }
