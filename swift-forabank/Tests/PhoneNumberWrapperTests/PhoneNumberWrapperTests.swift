@@ -11,72 +11,49 @@ final class PhoneNumberWrapperTests: XCTestCase {
     
     //MARK: - test isValidPhoneNumber - not valid
     
-    func test_isValidPhoneNumber_ru_NumberStartsWith8_notValid() {
+    func test_isValidPhoneNumber_ru_notValid() {
                 
         XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
-    }
-    
-    func test_isValidPhoneNumber_ru_NumberStartsWithPlus8_notValid() {
-                
         XCTAssertFalse(isValid(.ru(.startsWithPlus8(.equals10Digits))))
-    }
-    
-    func test_isValidPhoneNumber_ru_NumberLessThan10Digits_notValid() {
-        
         XCTAssertFalse(isValid(.ru(.startsWith8(.lessThen10Digits))))
-    }
-    
-    func test_isValidPhoneNumber_ru_NumberMoreThan10Digits_notValid() {
-        
         XCTAssertFalse(isValid(.ru(.startsWith8(.moreThen10Digits))))
     }
     
     //MARK: - test isValidPhoneNumber - valid
     
-    func test_isValidPhoneNumber_ru_NumberStartsWith7_10Digits_valid() {
+    func test_isValidPhoneNumber_valid() {
         
         XCTAssert(isValid(.ru(.startsWith7(.equals10Digits))))
-    }
-    
-    func test_isValidPhoneNumber_ru_NumberStartsWithPlus7_10Digits_valid() {
-        
         XCTAssert(isValid(.ru(.startsWithPlus7(.equals10Digits))))
-    }
-    
-    func test_isValidPhoneNumber_us_NumberStartsWith1_11Digits_valid() {
         
         XCTAssert(isValid(.us(.withOutPlus)))
-    }
-    
-    func test_isValidPhoneNumber_us_NumberStartsWithPlus1_11Digits_valid() {
-        
         XCTAssert(isValid(.us(.withPlus)))
     }
     
     //MARK: - test format - number starts at zero
     
-    func test_format_ru_NumberStartsWithZero() {
+    func test_format_ru_numberStartsWithZero() {
         
         let result = format(.ru(.startsWithZero(.moreThen10DigitsValid)))
         
         XCTAssertNoDiff(result, "+7 963 000-00-00")
     }
     
-    func test_format_am_NumberStartsWithZero() {
+    func test_format_am_numberStartsWithZero() {
         
         let result = format(.am(.startsWithZero(.moreThen8DigitsValid)))
         
         XCTAssertNoDiff(result, "+374 11 222333")
     }
     
-    func test_format_tr_NumberStartsWithZero() {
+    func test_format_tr_numberStartsWithZero() {
         
         let result = format(.tr(.startsWithZero(.moreThen10DigitsValid)))
         
         XCTAssertNoDiff(result, "+90 531 123 45 67")
     }
     
-    func test_format_us_NumberStartsWithZero() {
+    func test_format_us_numberStartsWithZero() {
         
         let result = format(.us(.startsWithZeroValid))
         
@@ -85,7 +62,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
 
     //MARK: - test format ru - number starts at 7
     
-    func test_format_ru_NumberStartsWith7_10Digits() {
+    func test_format_ru_numberStartsWith7_10Digits() {
         
         let result = format(.ru(.startsWith7(.equals10Digits)))
         
@@ -94,35 +71,35 @@ final class PhoneNumberWrapperTests: XCTestCase {
     
     //MARK: - test format ru - number starts at +7
     
-    func test_format_ru_NumberStartsWithPlus7_10Digits() {
+    func test_format_ru_numberStartsWithPlus7_10Digits() {
         
         let result = format(.ru(.startsWithPlus7(.equals10Digits)))
         
         XCTAssertNoDiff(result, "+7 963 000-00-00")
     }
     
-    func test_format_us_NumberStartsWith1_11Digits() {
+    func test_format_us_numberStartsWith1_11Digits() {
         
         let result = format(.us(.withOutPlus))
         
         XCTAssertNoDiff(result, "+1 800-469-9269")
     }
     
-    func test_format_us_NumberStartsWithPlus1_11Digits() {
+    func test_format_us_numberStartsWithPlus1_11Digits() {
                 
         let result = format(.us(.withPlus))
         
         XCTAssertNoDiff(result, "+1 800-469-9269")
     }
     
-    func test_format_ru_NumberStartsWith8() {
+    func test_format_ru_numberStartsWith8() {
         
         let result = format(.ru(.startsWith8(.equals10Digits)))
         
         XCTAssertNoDiff(result, "+7 963 000-00-00")
     }
     
-    func test_format_ru_NumberStartsWithPlus8() {
+    func test_format_ru_numberStartsWithPlus8() {
         
         let result = format(.ru(.startsWithPlus8(.equals10Digits)))
         
@@ -131,7 +108,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
     
     //MARK: - test format ru - number starts at 9
     
-    func test_format_ru_NumberStartsWith9_10Digits() {
+    func test_format_ru_numberStartsWith9_10Digits() {
         
         let result = format(.ru(.startsWith9(.equals10Digits)))
         
