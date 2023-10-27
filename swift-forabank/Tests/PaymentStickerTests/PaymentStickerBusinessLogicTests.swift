@@ -17,7 +17,10 @@ struct Operation: Equatable {
         let productId: ProductID
         let options: [Option]
         
-        struct Option: Equatable {}
+        struct Option: Equatable {
+            
+            let id: String
+        }
     }
 }
 
@@ -120,16 +123,28 @@ final class BusinessLogic {
     
     struct MissingID: Error {}
     
-    typealias EventResult = Result<Response, Error>
-    typealias Completion = (EventResult) -> Void
+    typealias Options = [Operation.Parameter.Option]
+    typealias TappedResult = Result<Operation, Error>
+    typealias ChevronTappedCompletion = (TappedResult) -> Void
     
-//    func handle(
-//        event: Event,
-//        completion: @escaping MakePaymentCompletion
-//    ) {
-//
-//
-//    }
+    func chevronTapped(
+        operation: Operation,
+        options: Options,
+        completion: @escaping ChevronTappedCompletion
+    ) {
+        
+        guard operation.parameter.options.isEmpty else {
+            completion(.failure(anyError()))
+            return
+        }
+       
+        let newOperation = Operation(parameter: .init(
+            productId: operation.parameter.productId,
+            options: options
+        ))
+        
+        completion(.success(newOperation))
+    }
     
     struct Payload {}
     
@@ -249,6 +264,19 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         expect(sut, operation: operation, with: existingID, toDeliver: [.success(newOperation)]) {}
     }
     
+    func test_chevronTapped_shouldReturnOption() {
+        
+        let operation = makeOperation()
+        let options = makeOptions()
+        let (sut, _) = makeSUT()
+        let newOperation = Operation(parameter: .init(
+            productId: .init(id: "123"),
+            options: options
+        ))
+        
+        expect(sut, operation: operation, with: options, toDeliver: [.success(newOperation)]){}
+    }
+    
     // MARK: - Helpers
     
     typealias SUT = BusinessLogic
@@ -312,6 +340,13 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         .init(parameter: parameter)
     }
     
+    private func makeOptions(
+        options: [Operation.Parameter.Option] = [.init(id: "1")]
+    ) -> [Operation.Parameter.Option] {
+        
+        options
+    }
+    
     private func makeRequestOtpEvent() -> TransferEvent {
     
         .requestOtp
@@ -325,6 +360,34 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     private func anyPayload() -> BusinessLogic.Payload {
         
         .init()
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        operation: Operation,
+        with options: [Operation.Parameter.Option],
+        toDeliver expectedResults: [SUT.TappedResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.TappedResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.chevronTapped(
+            operation: operation,
+            options: options
+        ) {
+                
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
+        
+        assert(receivedResults, equalsTo: expectedResults, file: file, line: line)
     }
     
     private func expect(
