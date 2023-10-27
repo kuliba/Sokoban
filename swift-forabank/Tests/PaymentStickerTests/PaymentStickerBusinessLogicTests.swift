@@ -124,7 +124,7 @@ final class BusinessLogic {
     struct MissingID: Error {}
     
     typealias Options = [Operation.Parameter.Option]
-    typealias TappedResult = Result<Operation, Error>
+    typealias TappedResult = Result<Operation, ProductOptionsError>
     typealias ChevronTappedCompletion = (TappedResult) -> Void
     
     func chevronTapped(
@@ -134,7 +134,7 @@ final class BusinessLogic {
     ) {
         
         guard operation.parameter.options.isEmpty else {
-            completion(.failure(anyError()))
+            completion(.failure(ProductOptionsError()))
             return
         }
        
@@ -161,6 +161,8 @@ final class BusinessLogic {
         case makePayment
         case otp
     }
+    
+    struct ProductOptionsError: Error {}
 }
 
 final class PaymentStickerBusinessLogicTests: XCTestCase {
@@ -275,6 +277,18 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         ))
         
         expect(sut, operation: operation, with: options, toDeliver: [.success(newOperation)]){}
+    }
+    
+    func test_chevronTapped_shouldReturnError() {
+
+        let operation = makeOperation(parameter: .init(
+            productId: .init(id: "123"),
+            options: [.init(id: "1")]
+        ))
+        let options = makeOptions()
+        let (sut, _) = makeSUT()
+
+        expect(sut, operation: operation, with: options, toDeliver: [.failure(.init())]){}
     }
     
     // MARK: - Helpers
