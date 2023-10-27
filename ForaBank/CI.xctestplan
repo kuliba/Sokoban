@@ -149,6 +149,13 @@
         "identifier" : "PhoneNumberWrapperTests",
         "name" : "PhoneNumberWrapperTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
+      }
     }
   ],
   "version" : 1
