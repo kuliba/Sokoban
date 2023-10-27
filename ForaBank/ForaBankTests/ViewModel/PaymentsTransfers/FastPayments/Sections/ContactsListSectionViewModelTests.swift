@@ -38,7 +38,6 @@ final class ContactsListSectionViewModelTests: XCTestCase {
         assertContacts(defaultFiltered(by: "7"), [])
         assertContacts(defaultFiltered(by: "й"), [])
         assertContacts(defaultFiltered(by: "контакт1 1"), [])
-
     }
 
     func test_filter_containsValue() {
@@ -59,10 +58,7 @@ final class ContactsListSectionViewModelTests: XCTestCase {
     
     func test_filter_itemsEmpty() {
         
-        let result = filter(
-            items: [],
-            "7"
-        )
+        let result = filter(items: [], "7")
         
         assertContactsByStyle(result, .empty)
     }
