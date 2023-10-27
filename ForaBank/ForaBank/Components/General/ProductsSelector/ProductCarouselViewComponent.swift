@@ -971,9 +971,8 @@ extension ProductCarouselView {
                                     .foregroundColor(.gray)
                                     .frame(width: 20, height: 20)
                                 
-                                Image(.close)
+                                Image.ic16Close
                                     .renderingMode(.template)
-                                    .resizable()
                                     .frame(width: 16, height: 16)
                                     .foregroundColor(.white)
                             }

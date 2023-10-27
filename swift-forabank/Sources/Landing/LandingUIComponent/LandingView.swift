@@ -70,14 +70,16 @@ public struct LandingView: View {
             componentsView(viewModel.landing.footer)
         }
         .bottomSheet(
+            
             item: .init(
                 get: { viewModel.destination },
                 set: viewModel.setDestination(to:)
             ),
             content: destinationView)
         .toolbar {
+            
             ToolbarItem(placement: .principal) {
-               
+
                     if viewModel.landing.shouldShowNavigationTitle(
                         offset: position,
                         offsetForDisplayHeader: viewModel.config.offsetForDisplayHeader) {
@@ -86,9 +88,8 @@ public struct LandingView: View {
                         Text(viewModel.landing.titleInMain().text)
                             .font(.system(size: 18, weight: .medium))
                     }
-                   
             }
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .navigationBarLeading) {
                 backButton
             }
         }
@@ -135,7 +136,7 @@ public struct LandingView: View {
             
         case .pageTitle:
             
-            if !viewModel.landing.titleInMain().text.isEmpty { // viewModel.landing.titleInMainBool() ||
+            if !viewModel.landing.titleInMain().text.isEmpty {
                EmptyView()
             } else {
                 landingView

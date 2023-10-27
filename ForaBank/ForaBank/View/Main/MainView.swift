@@ -173,12 +173,9 @@ struct MainView: View {
         case let .landing(viewModel):
                 LandingWrapperView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
-                // TODO: Me, check .navigationBar
+            
         case let .orderSticker(viewModel):
-            VStack {
-                Text("Order Sticker page").font(.title)
                 LandingWrapperView(viewModel: viewModel)
-            }
         }
     }
     

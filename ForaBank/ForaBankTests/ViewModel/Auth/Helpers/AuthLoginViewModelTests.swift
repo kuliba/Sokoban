@@ -160,7 +160,7 @@ class AuthLoginViewModelTests: XCTestCase {
                         case .goToMain:
                             self?.goToMainCount += 1
                         case .order:
-                            self?.stickerOrders.append(Int.random(in: 1...10))
+                            self?.stickerOrders.append(1)
                         }
                     }
                 }
