@@ -19,24 +19,26 @@ enum RootViewModelFactory {
             httpClient: httpClient,
             keyExchangeCrypto: .live
         )
+        
+        let productProfileViewModelFactory = { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                model,
+                certificateClient: certificateClient,
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        }
 
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: { product, rootView, dismissAction in
-                
-                ProductProfileViewModel(
-                    model,
-                    certificateClient: certificateClient,
-                    product: product,
-                    rootView: rootView,
-                    dismissAction: dismissAction
-                )
-            }
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            certificateClient: certificateClient
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()
