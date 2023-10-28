@@ -1453,6 +1453,7 @@
 		834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731DE2A13746B002590A3 /* NoCompanyInListView.swift */; };
 		834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */; };
 		834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834731E52A13BCB2002590A3 /* PaymentsServicesTests.swift */; };
+		834838F32AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834838F22AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift */; };
 		834D7C302ACC2BD40000E02E /* Model+cachelessAuthorizedHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834D7C2F2ACC2BD40000E02E /* Model+cachelessAuthorizedHTTPClient.swift */; };
 		834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F672AC2C40900E49C2B /* Services+getScenarioQRData.swift */; };
 		834E3F6A2AC2C77600E49C2B /* QRDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F692AC2C77600E49C2B /* QRDataMapper.swift */; };
@@ -3455,6 +3456,7 @@
 		834731DE2A13746B002590A3 /* NoCompanyInListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCompanyInListView.swift; sourceTree = "<group>"; };
 		834731E22A1388A6002590A3 /* Model+PaymentsTransfersServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransfersServices.swift"; sourceTree = "<group>"; };
 		834731E52A13BCB2002590A3 /* PaymentsServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesTests.swift; sourceTree = "<group>"; };
+		834838F22AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListSectionViewModelTests.swift; sourceTree = "<group>"; };
 		834D7C2F2ACC2BD40000E02E /* Model+cachelessAuthorizedHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+cachelessAuthorizedHTTPClient.swift"; sourceTree = "<group>"; };
 		834E3F672AC2C40900E49C2B /* Services+getScenarioQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getScenarioQRData.swift"; sourceTree = "<group>"; };
 		834E3F692AC2C77600E49C2B /* QRDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDataMapper.swift; sourceTree = "<group>"; };
@@ -5227,6 +5229,7 @@
 			children = (
 				2A3086C129FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift */,
 				83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */,
+				834838F22AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -12813,6 +12816,7 @@
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
 				C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */,
 				83B2B8892AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift in Sources */,
+				834838F32AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
 				2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */,
 				7757DB522A711BDA00745EFF /* LocalAgentOldSymmetricKeyCleanerTests.swift in Sources */,
