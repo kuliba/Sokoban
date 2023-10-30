@@ -37,22 +37,11 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     func transportKeyEncrypt(_ data: Data) throws -> Data {
         
-        do {
-            let transportKey = try Crypto.transportKey()
-            log("Loaded transport public key: \(transportKey)")
-            
-            let encrypted = try Crypto.encrypt(
-                data: data,
-                withPublicKey: transportKey,
-                algorithm: .rsaEncryptionRaw
-            )
-            log("Encrypted with transport public key: \(encrypted)")
-            
-            return encrypted
-        } catch {
-            log("Transport public key encryption error: \(error).")
-            throw error
-        }
+        try Crypto.encrypt(
+            data: data,
+            withPublicKey: Crypto.transportKey(),
+            algorithm: .rsaEncryptionRaw
+        )
     }
     
     // MARK: - ECDH Domain
