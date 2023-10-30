@@ -5566,9 +5566,11 @@
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
 			isa = PBXGroup;
 			children = (
+				2A1E76B52AEE9B2500B33AF7 /* CVVPINJSONMaker.swift */,
 				2A1E76C02AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift */,
 				2A9E88232AE934C500551DF7 /* ChangePINSecretJSONMaker.swift */,
 				2A1E76B92AEE9D2300B33AF7 /* LoggingCVVPINJSONMakerDecorator.swift */,
+				2AA2FFB22AE5A8F700705EA8 /* KeyExchangeCryptographer+makeSecretRequestJSON.swift */,
 			);
 			path = JSONMaker;
 			sourceTree = "<group>";
@@ -5586,10 +5588,6 @@
 			isa = PBXGroup;
 			children = (
 				2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */,
-				2A1E76B72AEE9B6400B33AF7 /* CVVPINCrypto.swift */,
-				2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */,
-				2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */,
-				2A1E76B52AEE9B2500B33AF7 /* CVVPINJSONMaker.swift */,
 				2A754A7B2AEFE620002FED0A /* ComposedCVVPINService */,
 				2A9E881E2AE9166500551DF7 /* Crypto */,
 				2A754A7A2AEFE60F002FED0A /* JSONMaker */,
@@ -5759,9 +5757,11 @@
 		2A9E881E2AE9166500551DF7 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				2A1E76B72AEE9B6400B33AF7 /* CVVPINCrypto.swift */,
+				2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */,
+				2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */,
 				2A1E76BE2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift */,
 				2A1E76BB2AEE9D9600B33AF7 /* LoggingCVVPINCryptoDecorator.swift */,
-				2AA2FFB22AE5A8F700705EA8 /* KeyExchangeCryptographer+makeSecretRequestJSON.swift */,
 				2A6434382AE7BA4B00B1CCEE /* ShowCVVCrypto.swift */,
 			);
 			path = Crypto;
