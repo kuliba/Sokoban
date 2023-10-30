@@ -29,8 +29,9 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     func transportEncrypt(data: Data) throws -> Data {
         
-        try Crypto.transportEncrypt(
+        try Crypto.encryptWithRSAKey(
             data,
+            publicKey: Crypto.transportKey(),
             padding: .PKCS1
         )
     }
