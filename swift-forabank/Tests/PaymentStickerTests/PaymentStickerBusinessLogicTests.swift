@@ -223,7 +223,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     
     func test_selectProductID_shouldDeliverError_onMissingProductID() {
         
-        let missingID = ProductID(id: "missing")
+        let missingID = Operation.Parameter.Product(id: ProductID(id: "missing"))
         let operation = makeOperation()
         let (sut, _) = makeSUT()
         
@@ -251,7 +251,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     typealias Response = SUT.TransferResponse
     
     private func makeSUT(
-        productIDs: [ProductID] = [],
+        products: [Operation.Parameter.Product] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -261,7 +261,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         let transferSpy = TransferSpy()
         let sut = SUT(
             transfer: transferSpy.transfer,
-            productIDs: productIDs
+            products: products
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -300,17 +300,17 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     }
     
     private func makeOperation(
-        parameter: Operation.Parameter = .init(productId: .init(id: "123"), options: [])
+        parameter: Operation.Parameter = .init(selectedProduct: .init(id: .init(id: "123")), allProducts: .init())
     ) -> Operation {
         
         .init(parameter: parameter)
     }
     
-    private func makeOptions(
-        options: [Operation.Parameter.Option] = [.init(id: "1")]
-    ) -> [Operation.Parameter.Option] {
+    private func makeProducts(
+        products: [Operation.Parameter.Product] = [.init(id: .init(id: "123"))]
+    ) -> [Operation.Parameter.Product] {
         
-        options
+        products
     }
     
     private func makeRequestOtpEvent() -> TransferEvent {
@@ -342,7 +342,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         sut.selectProductID(
             operation: operation,
-            productID: productID
+            product: product
         ) {
             receivedResults.append($0)
             exp.fulfill()
