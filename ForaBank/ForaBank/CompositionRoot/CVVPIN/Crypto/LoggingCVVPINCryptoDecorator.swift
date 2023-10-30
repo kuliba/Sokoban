@@ -26,10 +26,10 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     
     // MARK: - Transport Key Domain
     
-    func transportEncrypt(data: Data) throws -> Data {
+    func transportEncryptWithPadding(data: Data) throws -> Data {
         
         do {
-            let encrypted = try decoratee.transportEncrypt(data: data)
+            let encrypted = try decoratee.transportEncryptWithPadding(data: data)
             log("Encrypted with transport key (\(encrypted.count)).")
             
             return encrypted

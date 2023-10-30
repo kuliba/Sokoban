@@ -20,7 +20,7 @@ protocol CVVPINCrypto {
     
     // MARK: - Transport Key Domain
     
-    func transportEncrypt(data: Data) throws -> Data
+    func transportEncryptWithPadding(data: Data) throws -> Data
     
 #warning("there is transportEncrypt")
     func transportKeyEncrypt(_ data: Data) throws -> Data

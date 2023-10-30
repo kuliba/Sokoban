@@ -27,7 +27,7 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     // MARK: - Transport Key Domain
     
-    func transportEncrypt(data: Data) throws -> Data {
+    func transportEncryptWithPadding(data: Data) throws -> Data {
         
         try Crypto.encryptWithRSAKey(
             data,

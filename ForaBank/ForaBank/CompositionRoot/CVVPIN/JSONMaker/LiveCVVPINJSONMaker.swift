@@ -152,7 +152,7 @@ extension LiveCVVPINJSONMaker {
         let data = try JSONSerialization.data(withJSONObject: [
             "publicApplicationSessionKey": keyData.base64EncodedString()
         ] as [String: String])
-        let encrypted = try crypto.transportEncrypt(data: data)
+        let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
         return encrypted
     }
