@@ -10,11 +10,14 @@ import Foundation
 
 struct LiveExtraLoggingCVVPINCrypto {
     
-    typealias KeyPair = P384KeyAgreementDomain.KeyPair
-    typealias PublicKey = P384KeyAgreementDomain.PublicKey
-    typealias PrivateKey = P384KeyAgreementDomain.PrivateKey
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
-        
+    typealias ECDHPublicKey = ECDHDomain.PublicKey
+    typealias ECDHPrivateKey = ECDHDomain.PrivateKey
+    typealias ECDHKeyPair = ECDHDomain.KeyPair
+    
+    typealias RSAPublicKey = RSADomain.PublicKey
+    typealias RSAPrivateKey = RSADomain.PrivateKey
+    typealias RSAKeyPair = RSADomain.KeyPair
+    
     private typealias Crypto = ForaCrypto.Crypto
     
     let log: (String) -> Void
@@ -22,20 +25,7 @@ struct LiveExtraLoggingCVVPINCrypto {
 
 extension LiveExtraLoggingCVVPINCrypto {
     
-    func generateP384KeyPair() -> KeyPair {
-        
-        Crypto.generateP384KeyPair()
-    }
-}
-
-extension LiveExtraLoggingCVVPINCrypto {
-    
-    func publicKeyData(
-        forPublicKey publicKey: PublicKey
-    ) throws -> Data {
-        
-        publicKey.derRepresentation
-    }
+    // MARK: - Transport Key Domain
     
     func transportEncrypt(data: Data) throws -> Data {
         
@@ -43,58 +33,6 @@ extension LiveExtraLoggingCVVPINCrypto {
             data,
             padding: .PKCS1
         )
-    }
-}
-
-/// Used if `AuthenticateWithPublicKeyService`
-extension LiveExtraLoggingCVVPINCrypto {
-    
-    func makeSharedSecret(
-        from string: String,
-        using privateKey: P384KeyAgreementDomain.PrivateKey
-    ) throws -> Data {
-        
-        let serverPublicKey = try Crypto.transportDecryptP384PublicKey(
-            from: string
-        )
-        let sharedSecret = try Crypto.sharedSecret(
-            privateKey: privateKey,
-            publicKey: serverPublicKey
-        )
-        
-        return sharedSecret
-    }
-}
-
-/// `ChangePINSecretJSON`
-extension LiveExtraLoggingCVVPINCrypto {
-    
-    func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
-        
-        try Crypto.generateKeyPair(
-            keyType: .rsa,
-            keySize: .bits4096
-        )
-    }
-    
-    func signEncryptOTP(
-        otp: String,
-        privateKey: SecKey
-    ) throws -> Data {
-        
-        let clientSecretOTP = try Crypto.signNoHash(
-            .init(otp.utf8),
-            withPrivateKey: privateKey,
-            algorithm: .rsaSignatureDigestPKCS1v15Raw
-        )
-        log("Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
-        
-        let procClientSecretOTP = try transportKeyEncrypt(
-            clientSecretOTP
-        )
-        log("Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
-        
-        return procClientSecretOTP
     }
     
     func transportKeyEncrypt(_ data: Data) throws -> Data {
@@ -117,12 +55,97 @@ extension LiveExtraLoggingCVVPINCrypto {
         }
     }
     
-    func x509Representation(
-        publicKey: SecKey
+    // MARK: - ECDH Domain
+    
+    func generateP384KeyPair() -> ECDHKeyPair {
+        
+        Crypto.generateP384KeyPair()
+    }
+    
+    /// Used if `AuthenticateWithPublicKeyService`
+    func makeSharedSecret(
+        from string: String,
+        using privateKey: ECDHPrivateKey
     ) throws -> Data {
         
-        try Crypto.x509Representation(of: publicKey)
+        let serverPublicKey = try Crypto.transportDecryptP384PublicKey(
+            from: string
+        )
+        let sharedSecret = try Crypto.sharedSecret(
+            privateKey: privateKey,
+            publicKey: serverPublicKey
+        )
+        
+        return sharedSecret
     }
+    
+    func publicKeyData(
+        forPublicKey publicKey: ECDHPublicKey
+    ) throws -> Data {
+        
+        publicKey.derRepresentation
+    }
+    
+    // MARK: - RSA Domain
+    
+    /// `ChangePINSecretJSON`
+    func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
+        
+        let (publicKey, privateKey) = try Crypto.generateKeyPair(
+            keyType: .rsa,
+            keySize: .bits4096
+        )
+        
+        return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
+    }
+    
+    /// `ChangePINCrypto`
+#warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
+    func rsaDecrypt(
+        _ string: String,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> String {
+        
+        let data = try Crypto.decrypt(
+            string,
+            with: .rsaEncryptionPKCS1,
+            // with: .rsaSignatureDigestPKCS1v15Raw,
+            using: privateKey.key
+        )
+        
+        return try String(data: data, encoding: .utf8).get(orThrow: DataToStringConversionError())
+    }
+    
+    struct DataToStringConversionError: Error {}
+    
+    func signEncryptOTP(
+        otp: String,
+        privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        let clientSecretOTP = try Crypto.signNoHash(
+            .init(otp.utf8),
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15Raw
+        )
+        log("Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
+        
+        let procClientSecretOTP = try transportKeyEncrypt(
+            clientSecretOTP
+        )
+        log("Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
+        
+        return procClientSecretOTP
+    }
+    
+    func x509Representation(
+        publicKey: RSAPublicKey
+    ) throws -> Data {
+        
+        try Crypto.x509Representation(of: publicKey.key)
+    }
+    
+    // MARK: - AES
     
     func aesEncrypt(
         data: Data,
@@ -149,25 +172,4 @@ extension LiveExtraLoggingCVVPINCrypto {
             throw error
         }
     }
-}
-
-/// `ChangePINCrypto`
-extension LiveExtraLoggingCVVPINCrypto {
-    
-#warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
-    func rsaDecrypt(
-        _ string: String,
-        withPrivateKey privateKey: SecKey
-    ) throws -> String {
-        
-        let data = try Crypto.decrypt(
-            string,
-            with: .rsaSignatureDigestPKCS1v15Raw,
-            using: privateKey
-        )
-
-        return try String(data: data, encoding: .utf8).get(orThrow: DataToStringConversionError())
-    }
-    
-    struct DataToStringConversionError: Error {}
 }

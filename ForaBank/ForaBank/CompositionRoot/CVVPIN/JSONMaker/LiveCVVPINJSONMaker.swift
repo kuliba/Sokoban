@@ -18,8 +18,8 @@ struct LiveCVVPINJSONMaker {
 /// Used if `AuthenticateWithPublicKeyService`
 extension LiveCVVPINJSONMaker {
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
-    
+    typealias RSAKeyPair = RSADomain.KeyPair
+
     func makeRequestJSON(
         publicKey: P384KeyAgreementDomain.PublicKey,
         rsaKeyPair: RSAKeyPair
@@ -41,7 +41,7 @@ extension LiveCVVPINJSONMaker {
         //      val signature = signer.sign()
         //      return Base64.encodeToString(signature, Base64.NO_WRAP)
         
-        let rsaPublicKeyData = try rsaKeyPair.publicKey.x509Representation()
+        let rsaPublicKeyData = try crypto.x509Representation(publicKey: rsaKeyPair.publicKey)
         let rsaPublicKeyBase64 = rsaPublicKeyData.base64EncodedString()
         
         let keyData = publicKey.derRepresentation
@@ -55,7 +55,7 @@ extension LiveCVVPINJSONMaker {
 #warning("move signNoHash to type field")
         let signature = try ForaCrypto.Crypto.signNoHash(
             hash,
-            withPrivateKey: rsaKeyPair.privateKey,
+            withPrivateKey: rsaKeyPair.privateKey.key,
             algorithm: .rsaSignatureDigestPKCS1v15Raw
         )
         
@@ -98,7 +98,7 @@ extension LiveCVVPINJSONMaker {
         // Поэтому нужно сгенерировать новую пару, которыми будет повторно зашифрован тот же самый ОТР-код, но с вероятностью близкой к 100% этой ошибки уже не возникнет, поскольку p и q будут другими.
         let (encryptedSignedOTP, publicKey, privateKey) = try retry {
             
-            let (publicKey, privateKey) = try crypto.generateRSA4096BitKeyPair()
+            let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
             let encryptedSignedOTP = try crypto.signEncryptOTP(
                 otp: otp,
                 privateKey: privateKey
@@ -122,7 +122,7 @@ extension LiveCVVPINJSONMaker {
             sessionKey: sessionKey
         )
         
-        return (data, (publicKey, privateKey))
+        return (data, (privateKey, publicKey))
     }
 }
 
@@ -216,7 +216,7 @@ extension LiveCVVPINJSONMaker {
         let hashSignVerify = ShowCVVCrypto.hashSignVerify(string:publicKey:privateKey:)
         
         let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
-        let signature = try hashSignVerify(concatenation, publicKey, privateKey)
+        let signature = try hashSignVerify(concatenation, publicKey.key, privateKey.key)
         let signatureBase64 = signature.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [

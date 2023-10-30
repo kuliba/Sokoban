@@ -25,8 +25,8 @@ extension Services {
         
         // MARK: Configure Infra: Persistent Stores
         
-        typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
-        
+        typealias RSAKeyPair = RSADomain.KeyPair
+
         let persistentRSAKeyPairStore = KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa)
         
         // MARK: Configure Infra: Ephemeral Stores
@@ -383,7 +383,7 @@ struct SessionKey {
 
 private extension AuthenticateWithPublicKeyService {
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -392,7 +392,7 @@ private extension AuthenticateWithPublicKeyService {
     typealias _ProcessCompletion = (_ProcessResult) -> Void
     typealias _Process = (Data, @escaping _ProcessCompletion) -> Void
     
-    typealias _MakeRequestJSON = (P384KeyAgreementDomain.PublicKey, RSAKeyPair) throws -> Data
+    typealias _MakeRequestJSON = (ECDHDomain.PublicKey, RSAKeyPair) throws -> Data
     
     typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) -> Swift.Result<Data, Swift.Error>
     
@@ -610,7 +610,7 @@ private extension ChangePINService {
     
     typealias _Authenticate = ChangePINService.Authenticate
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -627,7 +627,7 @@ private extension ChangePINService {
     typealias _ChangePINProcessCompletion = (_ChangePINProcessResult) -> Void
     typealias _ChangePINProcess = ((ForaBank.SessionID, Data),@escaping _ChangePINProcessCompletion) -> Void
     
-    typealias _RSADecrypt = (String, SecKey) throws -> String
+    typealias _RSADecrypt = (String, RSADomain.PrivateKey) throws -> String
     
     typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID) throws -> Data
     
@@ -851,7 +851,7 @@ private extension ShowCVVService {
     
     typealias _Authenticate = ShowCVVService.Authenticate
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -864,7 +864,7 @@ private extension ShowCVVService {
     typealias _ProcessCompletion = (_ProcessResult) -> Void
     typealias _Process = ((ForaBank.SessionID, Data), @escaping _ProcessCompletion) -> Void
     
-    typealias _MakeSecretJSON = (CardID, SessionID, (publicKey: SecKey, privateKey: SecKey), SessionKey) throws -> Data
+    typealias _MakeSecretJSON = (CardID, SessionID, RSAKeyPair, SessionKey) throws -> Data
     
     convenience init(
         _authenticate: @escaping _Authenticate,
@@ -906,9 +906,10 @@ private extension ShowCVVService {
                     
                     do {
                         let privateKey = try result.get().privateKey
+                        #warning("inject `decrypt`")
                         let cvvValue = try ShowCVVCrypto.decrypt(
                             string: encryptedCVV.encryptedCVVValue,
-                            withPrivateKey: privateKey
+                            withPrivateKey: privateKey.key
                         )
                         completion(.success(.init(cvvValue: cvvValue)))
                     } catch {
