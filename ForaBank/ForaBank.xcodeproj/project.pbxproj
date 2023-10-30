@@ -5552,14 +5552,14 @@
 			path = LEGACY_KEEP_UNITIL_USEFUL;
 			sourceTree = "<group>";
 		};
-		2A669EAF2AE50D0A009A2F12 /* CertificateClientAdapters */ = {
+		2A669EAF2AE50D0A009A2F12 /* CVVPINServicesClientAdapters */ = {
 			isa = PBXGroup;
 			children = (
 				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
 				2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */,
 			);
-			path = CertificateClientAdapters;
+			path = CVVPINServicesClientAdapters;
 			sourceTree = "<group>";
 		};
 		2A67A01C2A43311B003BE637 /* Mappers */ = {
@@ -5581,7 +5581,7 @@
 				2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */,
 				2A9E881E2AE9166500551DF7 /* Crypto */,
 				2A2ECBC02AE5264C00F3C946 /* ResponseMapper */,
-				2A669EAF2AE50D0A009A2F12 /* CertificateClientAdapters */,
+				2A669EAF2AE50D0A009A2F12 /* CVVPINServicesClientAdapters */,
 				2A77B64F2ADFCD450022600F /* Infra */,
 				2A669EAA2AE50349009A2F12 /* LEGACY_KEEP_UNITIL_USEFUL */,
 			);
