@@ -36,7 +36,7 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
     
-    func transportKeyEncrypt(_ data: Data) throws -> Data {
+    func transportEncryptNoPadding(data: Data) throws -> Data {
         
         try Crypto.encrypt(
             data: data,
@@ -120,8 +120,8 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
         log("Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
         
-        let procClientSecretOTP = try transportKeyEncrypt(
-            clientSecretOTP
+        let procClientSecretOTP = try transportEncryptNoPadding(
+            data: clientSecretOTP
         )
         log("Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
         
