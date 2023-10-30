@@ -179,9 +179,17 @@ extension Services {
                     completion(.failure(.activationFailure))
                     
                 case .success:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                        
-                        completion($0.mapError { _ in .activationFailure })
+                    
+                    sessionIDLoader.load { result in
+                        switch result {
+                        case .failure:
+                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                                
+                                completion($0.mapError { _ in .authenticationFailure })
+                            }
+                        case let .success(sessionID):
+#warning("есть сессия")
+                        }
                     }
                 }
             }
@@ -1206,7 +1214,7 @@ private extension Date {
 #if RELEASE
         addingTimeInterval(15_778_463)
 #else
-        addingTimeInterval(600)
+        addingTimeInterval(60)
 #endif
     }
 }
