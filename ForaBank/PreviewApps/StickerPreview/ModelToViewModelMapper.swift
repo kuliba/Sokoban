@@ -52,7 +52,7 @@ extension ModelToViewModelMapper {
                     parameter: parameter,
                     chevronButtonTapped: {
                         
-                        action(.select(.chevronTapped(parameter)))
+//                        action(.select(.chevronTapped(parameter)))
                     },
                     select: { option in
                         
@@ -64,14 +64,11 @@ extension ModelToViewModelMapper {
         case let .product(parameterProduct):
             return .product(
                 .init(
-                    header: .init(title: parameterProduct.title),
-                    main: .init(
-                        cardLogo: Image(systemName: "creditcard.fill"),
-                        paymentSystem: Image(systemName: "photo.artframe"),
-                        name: parameterProduct.nameProduct,
-                        balance: parameterProduct.balance
-                    ),
-                    footer: .init(description: parameterProduct.description)
+                    state: parameterProduct.parameterState,
+                    chevronTapped: {
+                        
+                            action(.product(.chevronTapped(parameterProduct, .list)))
+                    }
                 )
             )
             
