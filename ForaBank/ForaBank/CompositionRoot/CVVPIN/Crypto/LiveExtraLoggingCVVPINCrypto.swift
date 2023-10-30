@@ -57,7 +57,7 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     // MARK: - ECDH Domain
     
-    func generateP384KeyPair() -> ECDHKeyPair {
+    func generateECDHKeyPair() -> ECDHKeyPair {
         
         Crypto.generateP384KeyPair()
     }

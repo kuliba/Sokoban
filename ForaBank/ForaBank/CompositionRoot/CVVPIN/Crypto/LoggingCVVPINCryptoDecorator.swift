@@ -54,9 +54,9 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     
     // MARK: - ECDH Domain
     
-    func generateP384KeyPair() -> ECDHKeyPair {
+    func generateECDHKeyPair() -> ECDHKeyPair {
         
-        let keyPair = decoratee.generateP384KeyPair()
+        let keyPair = decoratee.generateECDHKeyPair()
         log("Generated P384 Key Pair.")
         
         return keyPair

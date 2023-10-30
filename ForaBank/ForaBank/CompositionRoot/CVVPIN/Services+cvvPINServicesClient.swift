@@ -89,7 +89,7 @@ extension Services {
             currentDate: currentDate
         )
         
-        let keyPair = cvvPINCrypto.generateP384KeyPair()
+        let keyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
             _loadCode: sessionCodeLoader.load(completion:),

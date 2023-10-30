@@ -17,7 +17,7 @@ protocol CVVPINCrypto {
     typealias RSAPublicKey = RSADomain.PublicKey
     typealias RSAPrivateKey = RSADomain.PrivateKey
     typealias RSAKeyPair = RSADomain.KeyPair
-        
+    
     // MARK: - Transport Key Domain
     
     func transportEncrypt(data: Data) throws -> Data
@@ -27,8 +27,7 @@ protocol CVVPINCrypto {
     
     // MARK: - ECDH Domain
     
-    #warning("rename to `generateECDHKeyPair")
-    func generateP384KeyPair() -> ECDHKeyPair
+    func generateECDHKeyPair() -> ECDHKeyPair
     
     /// Used if `AuthenticateWithPublicKeyService`
     func extractSharedSecret(
@@ -60,7 +59,7 @@ protocol CVVPINCrypto {
     func x509Representation(
         publicKey: RSAPublicKey
     ) throws -> Data
-
+    
     // MARK: - AES
     
     func aesEncrypt(
