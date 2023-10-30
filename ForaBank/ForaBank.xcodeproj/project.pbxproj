@@ -5021,6 +5021,15 @@
 			path = Info;
 			sourceTree = "<group>";
 		};
+		2A1E76BD2AEEA1C200B33AF7 /* LiveImplementation */ = {
+			isa = PBXGroup;
+			children = (
+				2A1E76BE2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift */,
+				2A1E76C02AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift */,
+			);
+			path = LiveImplementation;
+			sourceTree = "<group>";
+		};
 		2A1F083A2A7901C900C5B11B /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
