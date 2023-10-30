@@ -29,7 +29,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func transportEncrypt(data: Data) throws -> Data {
         
         do {
-            let encrypted = try decoratee.transportKeyEncrypt(data)
+            let encrypted = try decoratee.transportEncrypt(data: data)
             log("Encrypted with transport key (\(encrypted.count)).")
             
             return encrypted
