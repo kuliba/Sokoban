@@ -106,17 +106,17 @@ final class BusinessLogic {
     
     func selectProductID(
         operation: Operation,
-        productID: ProductID,
+        product: Operation.Parameter.Product,
         completion: @escaping SelectCompletion
     ) {
-        guard productIDs.contains(productID) else {
+        guard products.contains(product) else {
             completion(.failure(MissingID()))
             return
         }
         
         let newOperation = Operation(parameter: .init(
-            productId: productID,
-            options: []
+            selectedProduct: product,
+            allProducts: products
         ))
         completion(.success(newOperation))
     }
