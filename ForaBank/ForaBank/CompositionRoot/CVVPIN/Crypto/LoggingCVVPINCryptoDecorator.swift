@@ -24,8 +24,8 @@ final class LoggingCVVPINCryptoDecorator {
 
 extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     
-    // MARK: - Transport Key Domain
-    
+    // MARK: - Transport & Processing Key Domain
+
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
         do {
@@ -52,6 +52,19 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
+    func processingEncrypt(data: Data) throws -> Data {
+        
+        do {
+            let encrypted = try decoratee.processingEncrypt(data: data)
+            log("Encryption with processing key success (\(encrypted.count)).")
+            
+            return encrypted
+        } catch {
+            log("Encryption with processing key failure: \(error).")
+            throw error
+        }
+    }
+
     // MARK: - ECDH Domain
     
     func generateECDHKeyPair() -> ECDHKeyPair {

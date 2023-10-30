@@ -17,11 +17,13 @@ protocol CVVPINCrypto {
     typealias RSAPrivateKey = RSADomain.PrivateKey
     typealias RSAKeyPair = RSADomain.KeyPair
     
-    // MARK: - Transport Key Domain
+    // MARK: - Transport & Processing Key Domain
     
     func transportEncryptWithPadding(data: Data) throws -> Data
     
     func transportEncryptNoPadding(data: Data) throws -> Data
+    
+    func processingEncrypt(data: Data) throws -> Data
     
     // MARK: - ECDH Domain
     

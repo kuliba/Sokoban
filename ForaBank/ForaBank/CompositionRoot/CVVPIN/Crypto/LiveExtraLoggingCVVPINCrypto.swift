@@ -26,8 +26,8 @@ struct LiveExtraLoggingCVVPINCrypto {
 
 extension LiveExtraLoggingCVVPINCrypto {
     
-    // MARK: - Transport Key Domain
-    
+    // MARK: - Transport & Processing Key Domain
+
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
         try Crypto.encryptWithRSAKey(
@@ -46,6 +46,15 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
     
+    func processingEncrypt(data: Data) throws -> Data {
+        
+        try Crypto.encrypt(
+            data: data,
+            withPublicKey: Crypto.processingKey(),
+            algorithm: .rsaEncryptionRaw
+        )
+    }
+
     // MARK: - ECDH Domain
     
     func generateECDHKeyPair() -> ECDHKeyPair {
