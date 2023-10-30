@@ -21,17 +21,20 @@ struct CVVPinErrorMapper {
         let errorMessage: String = {
             
             switch error {
+            case .activationFailure:
+                return .technicalError
                 
             case let .retry(_, _, retryAttempts):
-                return retryAttempts > 0 ? String.incorrectСode : String.technicalError
+                return retryAttempts > 0 ? .incorrectСode : .technicalError
+                
             case let .server(_, message):
                 return message
 
             case .serviceFailure:
-                return String.technicalError
+                return .technicalError
 
             case .weakPIN:
-                return String.simpleCode
+                return .simpleCode
             }
         }()
         

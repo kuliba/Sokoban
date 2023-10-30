@@ -9,7 +9,7 @@ import CVVPINServices
 import ForaCrypto
 import Foundation
 
-extension CVVPINCrypto {
+extension CVVPINServices.CVVPINCrypto {
     
     static func live(
         httpClient: HTTPClient

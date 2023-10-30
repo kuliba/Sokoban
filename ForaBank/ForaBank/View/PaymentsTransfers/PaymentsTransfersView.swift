@@ -277,15 +277,6 @@ struct PaymentsTransfersView: View {
             //         ]
             //     )
             // )
-        } extraView: {
-            
-            CvvPinFlowDemoView(
-                startCvvPinFlow: transportPaymentsViewModel.cvvPinService.exchangeKey,
-                submitOTP: { string, completion in
-                    
-                    transportPaymentsViewModel.cvvPinService.confirmExchange(withOTP: .init(value: string), completion)
-                }
-            )
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)

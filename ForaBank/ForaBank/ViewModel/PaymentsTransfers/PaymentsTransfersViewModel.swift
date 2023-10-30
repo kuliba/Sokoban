@@ -1009,12 +1009,7 @@ private extension Model {
         
         let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
         
-        let cvvPinService = Services.cvvPinService(
-            httpClient: authenticatedHTTPClient()
-        )
-        
         return .init(
-            cvvPinService: cvvPinService,
             operators: operators,
             latestPayments: latestPayments,
             makePaymentsViewModel: makePaymentsViewModel(source:),

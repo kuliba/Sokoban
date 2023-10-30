@@ -7,7 +7,7 @@
 
 import Foundation
 
-#warning("extract to module and test this alternative to `PublicRSAKeySwaddler`")
+#warning("delete `BindPublicKeySecretJSONMaker` - not used anymore")
 final class BindPublicKeySecretJSONMaker<PublicKey, PrivateKey> {
     
     typealias LoadSessionKeyResult = Result<SessionKey, Error>

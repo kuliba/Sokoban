@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
+import ForaCrypto
 import Foundation
 
 enum RootViewModelFactory {
@@ -14,23 +15,28 @@ enum RootViewModelFactory {
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
-
-        let cvvPINServicesClient = Services.cvvPINServicesClient(
+        
+        let cvvPINCrypto = LiveLoggingCVVPINCrypto(agent: LoggerAgent.shared)
+        let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
+        
+        let cvvPINServicesClient = Services.cryptoLoggingCVVPINServicesClient(
             httpClient: httpClient,
-            keyExchangeCrypto: .live
+            cvvPINCrypto: cvvPINCrypto,
+            cvvPINJSONMaker: cvvPINJSONMaker,
+            loggerAgent: LoggerAgent.shared
         )
         
-        let productProfileViewModelFactory = { product, rootView, dismissAction in
+        let productProfileViewModelFactory = {
             
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
+                product: $0,
+                rootView: $1,
+                dismissAction: $2
             )
         }
-
+        
         let mainViewModel = MainViewModel(
             model,
             productProfileViewModelFactory: productProfileViewModelFactory
@@ -54,5 +60,19 @@ enum RootViewModelFactory {
             informerViewModel: informerViewModel,
             model
         )
+    }
+}
+
+extension LiveLoggingCVVPINCrypto: CVVPINCrypto {}
+extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
+
+private extension LiveLoggingCVVPINCrypto {
+    
+    init(agent: LoggerAgentProtocol) {
+        
+        self = LiveLoggingCVVPINCrypto.live(log: {
+            
+            agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line)
+        })
     }
 }

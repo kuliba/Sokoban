@@ -12,8 +12,6 @@ import SwiftUI
 
 final class TransportPaymentsViewModel: ObservableObject {
     
-    let cvvPinService: CvvPinService
-    
     @Published private(set) var destination: Destination?
     
     let operators: [OperatorGroupData.OperatorData]
@@ -26,13 +24,11 @@ final class TransportPaymentsViewModel: ObservableObject {
     private let handleError: HandleError
     
     init(
-        cvvPinService: CvvPinService,
         operators: [OperatorGroupData.OperatorData],
         latestPayments: PaymentsServicesLatestPaymentsSectionViewModel,
         makePaymentsViewModel: @escaping MakePaymentsViewModel,
         handleError: @escaping HandleError
     ) {
-        self.cvvPinService = cvvPinService
         self.operators = operators
         self.latestPayments = latestPayments
         self.makePaymentsViewModel = makePaymentsViewModel
