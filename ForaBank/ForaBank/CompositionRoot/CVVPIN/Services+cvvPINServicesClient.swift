@@ -26,7 +26,7 @@ extension Services {
         // MARK: Configure Infra: Persistent Stores
         
         typealias RSAKeyPair = RSADomain.KeyPair
-
+        
         let persistentRSAKeyPairStore = KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa)
         
         // MARK: Configure Infra: Ephemeral Stores
@@ -197,14 +197,33 @@ extension Services {
         
         let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
             
-            authenticate { result in
+            rsaKeyPairLoader.load { result in
                 
-                completion(
-                    result
-                        .map(\.sessionID.sessionIDValue)
-                        .map(ShowCVVService.SessionID.init)
-                        .mapError(ShowCVVService.AuthenticateError.init)
-                )
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case .success:
+                    sessionIDLoader.load { result in
+                        
+                        switch result {
+                        case .failure:
+                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                                
+                                completion(
+                                    $0
+                                        .map(\.sessionID.sessionIDValue)
+                                        .map(ShowCVVService.SessionID.init)
+                                        .mapError { _ in .authenticationFailure })
+                            }
+                            
+                        case let .success(sessionID):
+                            completion(.success(
+                                .init(sessionIDValue: sessionID.value)
+                            ))
+                        }
+                    }
+                }
             }
         }
         
@@ -914,7 +933,7 @@ private extension ShowCVVService {
                     
                     do {
                         let privateKey = try result.get().privateKey
-                        #warning("inject `decrypt`")
+#warning("inject `decrypt`")
                         let cvvValue = try ShowCVVCrypto.decrypt(
                             string: encryptedCVV.encryptedCVVValue,
                             withPrivateKey: privateKey.key
