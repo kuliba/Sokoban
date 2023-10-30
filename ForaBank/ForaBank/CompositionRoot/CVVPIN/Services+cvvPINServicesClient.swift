@@ -732,32 +732,33 @@ private extension CVVPINFunctionalityActivationService {
         self.init(
             getCode: { completion in
                 
-//                _getCode {
-//
-//                    completion(
-//                        $0
-//                            .map { .init($0) }
-//                            .mapError(GetCodeResponseError.init)
-//                    )
-//                }
+                _getCode { result in
+                    
+                    completion(
+                        result
+                            .map(GetCodeResponse.init)
+                            .mapError(GetCodeResponseError.init)
+                    )
+                }
             },
             formSessionKey: { completion in
                 
-//                _formSessionKey { result in
-//
-//                    completion(
-//                        result
-//                            .map(FormSessionKeyService.Success.init)
-//                            .mapError(FormSessionKeyError.init))
-//                }
+                _formSessionKey { result in
+                    
+                    completion(
+                        result
+                            .map(FormSessionKeySuccess.init)
+                            .mapError(FormSessionKeyError.init)
+                    )
+                }
             },
             bindPublicKeyWithEventID: { otp, completion in
                 
-//                _bindPublicKeyWithEventID(
-//                    .init(otpValue: otp.otpValue)
-//                ) {
-//                    completion($0.mapError(BindPublicKeyError.init))
-//                }
+                _bindPublicKeyWithEventID(
+                    .init(otpValue: otp.otpValue)
+                ) {
+                    completion($0.mapError(BindPublicKeyError.init))
+                }
             }
         )
     }
@@ -1093,7 +1094,7 @@ private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
             
         case let .retry(statusCode, errorMessage, retryAttempts):
             self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-
+            
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
