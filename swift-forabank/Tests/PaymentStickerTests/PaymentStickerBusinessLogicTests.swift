@@ -14,12 +14,12 @@ struct Operation: Equatable {
     
     struct Parameter: Equatable {
         
-        let productId: ProductID
-        let options: [Option]
+        let selectedProduct: Product
+        let allProducts: [Product]
         
-        struct Option: Equatable {
+        struct Product: Equatable {
             
-            let id: String
+            let id: ProductID
         }
     }
 }
