@@ -528,7 +528,6 @@
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
-		2A9A86712AEE55D20082CC11 /* Services+loggingCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9A86702AEE55D20082CC11 /* Services+loggingCVVPINServicesClient.swift */; };
 		2A9E2AB22A94F42C00EBD05A /* Services+cvvPinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E2AB12A94F42C00EBD05A /* Services+cvvPinService.swift */; };
 		2A9E88242AE934C500551DF7 /* ChangePINSecretJSONMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9E88232AE934C500551DF7 /* ChangePINSecretJSONMaker.swift */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
@@ -2559,7 +2558,6 @@
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
-		2A9A86702AEE55D20082CC11 /* Services+loggingCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+loggingCVVPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A9E2AB12A94F42C00EBD05A /* Services+cvvPinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPinService.swift"; sourceTree = "<group>"; };
 		2A9E88232AE934C500551DF7 /* ChangePINSecretJSONMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePINSecretJSONMaker.swift; sourceTree = "<group>"; };
 		2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyProductsViewModel+sample.swift"; sourceTree = "<group>"; };
@@ -5583,7 +5581,6 @@
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
 			isa = PBXGroup;
 			children = (
-				2A9A86702AEE55D20082CC11 /* Services+loggingCVVPINServicesClient.swift */,
 				2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */,
 				2A1E76B72AEE9B6400B33AF7 /* CVVPINCrypto.swift */,
 				2A1E76B52AEE9B2500B33AF7 /* CVVPINJSONMaker.swift */,
@@ -12014,7 +12011,6 @@
 				0C5BFEAE2A5C87A500292346 /* PaymentTemplatesSettings.swift in Sources */,
 				68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */,
 				2AF9ACDC2AE6AFEB00AAB1DB /* Loader.swift in Sources */,
-				2A9A86712AEE55D20082CC11 /* Services+loggingCVVPINServicesClient.swift in Sources */,
 				774A3E4529264A980011D952 /* Model+Payments.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				774A82C927BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift in Sources */,
