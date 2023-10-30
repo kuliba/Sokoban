@@ -29,7 +29,7 @@ public final class CachingChangePINServiceDecorator {
 public extension CachingChangePINServiceDecorator {
     
     func getPINConfirmationCode(
-        completion: @escaping Service.PINConfirmCompletion
+        completion: @escaping Service.GetPINConfirmationCodeCompletion
     ) {
         decoratee.getPINConfirmationCode { [weak self] result in
             

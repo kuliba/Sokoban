@@ -11,32 +11,49 @@ import PinCodeUI
 struct CVVPinErrorMapper {
     
     static func map(
-        _ data: CVVPinError.ChangePinError
+        _ error: ChangePINError
     ) -> ErrorDomain  {
         
-        if data.statusCode != 7051, data.retryAttempts == nil {
+        if case let .server(statusCode, _) = error, statusCode != 7051 {
             return .errorScreen
         }
-
+        
         let errorMessage: String = {
-            if data.statusCode == 7051 { return String.simpleCode }
-            if let retryAttempts = data.retryAttempts, retryAttempts > 0 {
-                return String.incorrectСode
+            
+            switch error {
+                
+            case let .retry(_, _, retryAttempts):
+                return retryAttempts > 0 ? String.incorrectСode : String.technicalError
+            case let .server(_, message):
+                return message
+
+            case .serviceFailure:
+                return String.technicalError
+
+            case .weakPIN:
+                return String.simpleCode
             }
-            return data.errorMessage
         }()
         
         return .errorForAlert(.init(errorMessage))
     }
     
     static func map(
-        _ data: CVVPinError.OtpError
+        _ error: ConfirmationCodeError
     ) -> ErrorDomain  {
         
         let errorMessage: String = {
-            return data.retryAttempts > 0 ? String.incorrectСode : String.technicalError
+            
+            switch error {
+                
+            case let .retry(_, _, retryAttempts):
+                return retryAttempts > 0 ? String.incorrectСode : String.technicalError
+            case .serviceFailure:
+                return String.technicalError
+            case let .server(_, message):
+                return message
+            }
         }()
-        
         return .errorForAlert(.init(errorMessage))
     }
 }
@@ -47,4 +64,8 @@ extension String {
     static let incorrectСode: Self = "Введен некорректный код.\nПопробуйте еще раз"
     
     static let simpleCode: Self = "Введенный PIN-код слишком простой.\nНеобходимо изменить его для\nповышения уровня безопасности"
+    
+    static let cvvNotReceived: Self = "Не удалось получить CVV."
+
+    static let tryLater: Self = "Попробуйте позже."
 }

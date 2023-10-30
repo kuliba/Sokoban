@@ -7,11 +7,11 @@
 
 public final class ComposedCVVPINService {
     
-    public typealias Activate = (@escaping CVVPINFunctionalityActivationService.ActivationCompletion) -> Void
+    public typealias Activate = (@escaping CVVPINFunctionalityActivationService.ActivateCompletion) -> Void
     public typealias ChangePIN = (ChangePINService.CardID, ChangePINService.PIN, ChangePINService.OTP, @escaping ChangePINService.ChangePINCompletion) -> Void
-    public typealias CheckActivation = (@escaping CVVPINFunctionalityCheckingService.Activate, @escaping CVVPINFunctionalityCheckingService.Completion) -> Void
-    public typealias ConfirmActivation = (CVVPINFunctionalityActivationService.OTP, @escaping CVVPINFunctionalityActivationService.ConfirmationCompletion) -> Void
-    public typealias GetPINConfirmationCode = (@escaping ChangePINService.PINConfirmCompletion) -> Void
+    public typealias CheckActivation = (@escaping (Swift.Result<Void, Swift.Error>) -> Void) -> Void
+    public typealias ConfirmActivation = (CVVPINFunctionalityActivationService.OTP, @escaping CVVPINFunctionalityActivationService.ConfirmCompletion) -> Void
+    public typealias GetPINConfirmationCode = (@escaping ChangePINService.GetPINConfirmationCodeCompletion) -> Void
     public typealias ShowCVV = (ShowCVVService.CardID, @escaping ShowCVVService.Completion) -> Void
 
     public let activate: Activate

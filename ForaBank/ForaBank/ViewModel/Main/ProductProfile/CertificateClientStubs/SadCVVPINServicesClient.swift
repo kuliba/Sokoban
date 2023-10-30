@@ -1,5 +1,5 @@
 //
-//  SadCertificateClient.swift
+//  SadCVVPINServicesClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 18.10.2023.
@@ -7,16 +7,16 @@
 
 import PinCodeUI
 
-final class SadCertificateClient: CertificateClient {
+final class SadCVVPINServicesClient: CVVPINServicesClient {
     
-    func checkCertificate(
-        completion: @escaping CheckCertificateCompletion
+    func checkFunctionality(
+        completion: @escaping CheckFunctionalityCompletion
     ) {
-        completion(.failure(CVVPinError.CheckError.certificate))
+        completion(.failure(.activationFailure))
     }
     
-    func activateCertificate(
-        completion: @escaping ActivateCertificateCompletion
+    func activate(
+        completion: @escaping ActivateCompletion
     ) {
         completion(.success("+7....77"))
     }
@@ -35,8 +35,8 @@ final class SadCertificateClient: CertificateClient {
         completion(.success("111"))
     }
     
-    func getPinConfirmCode(
-        completion: @escaping GetPinConfirmCodeCompletion
+    func getPINConfirmationCode(
+        completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         completion(.success("+1..22"))
     }
@@ -47,6 +47,6 @@ final class SadCertificateClient: CertificateClient {
         otp: String,
         completion: @escaping ChangePINCompletion
     ) {
-        completion(.failure(.init(errorMessage: "error", retryAttempts: 1, statusCode: 7021)))
+        completion(.failure(.retry(statusCode: 7021, errorMessage: "error", retryAttempts: 1)))
     }
 }

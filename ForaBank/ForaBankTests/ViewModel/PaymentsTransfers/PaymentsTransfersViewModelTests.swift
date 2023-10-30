@@ -76,7 +76,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeSUT(
         products: [ProductData] = [],
-        certificateClient: CertificateClient = HappyCertificateClient(),
+        cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -94,7 +94,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 ProductProfileViewModel(
                     model,
-                    certificateClient: certificateClient,
+                    cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction

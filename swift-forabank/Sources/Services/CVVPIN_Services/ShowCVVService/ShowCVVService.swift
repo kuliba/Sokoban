@@ -9,9 +9,9 @@ import Foundation
 
 public final class ShowCVVService {
     
-    public typealias CheckSessionResult = Swift.Result<SessionID, Swift.Error>
-    public typealias CheckSessionCompletion = (CheckSessionResult) -> Void
-    public typealias CheckSession = (@escaping CheckSessionCompletion) -> Void
+    public typealias AuthenticateResult = Swift.Result<SessionID, AuthenticateError>
+    public typealias AuthenticateCompletion = (AuthenticateResult) -> Void
+    public typealias Authenticate = (@escaping AuthenticateCompletion) -> Void
     
     public typealias MakeJSONResult = Swift.Result<Data, Swift.Error>
     public typealias MakeJSONCompletion = (MakeJSONResult) -> Void
@@ -25,18 +25,18 @@ public final class ShowCVVService {
     public typealias DecryptCVVCompletion = (DecryptCVVResult) -> Void
     public typealias DecryptCVV = (EncryptedCVV, @escaping DecryptCVVCompletion) -> Void
     
-    private let checkSession: CheckSession
+    private let authenticate: Authenticate
     private let makeJSON: MakeJSON
     private let process: Process
     private let decryptCVV: DecryptCVV
     
     public init(
-        checkSession: @escaping CheckSession,
+        authenticate: @escaping Authenticate,
         makeJSON: @escaping MakeJSON,
         process: @escaping Process,
         decryptCVV: @escaping DecryptCVV
     ) {
-        self.checkSession = checkSession
+        self.authenticate = authenticate
         self.makeJSON = makeJSON
         self.process = process
         self.decryptCVV = decryptCVV
@@ -52,40 +52,47 @@ public extension ShowCVVService {
         cardID: CardID,
         completion: @escaping Completion
     ) {
-        checkSession(cardID, completion)
+        _authenticate(cardID, completion)
     }
+}
+
+extension ShowCVVService {
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         
+        case activationFailure
+        case authenticationFailure
         case invalid(statusCode: Int, data: Data)
-        case network
+        case connectivity
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
+        public enum ServiceError {
             
-            case checkSessionFailure
             case decryptionFailure
             case makeJSONFailure
         }
     }
     
-    enum APIError: Swift.Error {
+    public enum AuthenticateError: Swift.Error {
+        
+        case activationFailure
+        case authenticationFailure
+    }
+    
+    public enum APIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
-        case network
+        case connectivity
         case server(statusCode: Int, errorMessage: String)
     }
-}
-
-extension ShowCVVService {
     
     public struct CardID {
         
         public let cardIDValue: Int
         
         public init(cardIDValue: Int) {
-         
+            
             self.cardIDValue = cardIDValue
         }
     }
@@ -95,7 +102,7 @@ extension ShowCVVService {
         public let encryptedCVVValue: String
         
         public init(encryptedCVVValue: String) {
-         
+            
             self.encryptedCVVValue = encryptedCVVValue
         }
     }
@@ -105,7 +112,7 @@ extension ShowCVVService {
         public let cvvValue: String
         
         public init(cvvValue: String) {
-         
+            
             self.cvvValue = cvvValue
         }
     }
@@ -129,25 +136,25 @@ extension ShowCVVService {
 
 private extension ShowCVVService {
     
-    func checkSession(
+    func _authenticate(
         _ cardID: CardID,
         _ completion: @escaping Completion
     ) {
-        checkSession { [weak self] result in
+        authenticate { [weak self] result in
             
             guard let self else { return }
             
             switch result {
-            case .failure:
-                completion(.failure(.other(.checkSessionFailure)))
+            case let .failure(error):
+                completion(.failure(.init(error)))
                 
             case let .success(sessionID):
-                makeJSON(cardID, sessionID, completion)
+                _makeJSON(cardID, sessionID, completion)
             }
         }
     }
     
-    func makeJSON(
+    func _makeJSON(
         _ cardID: CardID,
         _ sessionID: SessionID,
         _ completion: @escaping Completion
@@ -158,15 +165,15 @@ private extension ShowCVVService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.makeJSONFailure)))
+                completion(.failure(.serviceError(.makeJSONFailure)))
                 
             case let .success(json):
-                process(sessionID, json, completion)
+                _process(sessionID, json, completion)
             }
         }
     }
     
-    func process(
+    func _process(
         _ sessionID: SessionID,
         _ data: Data,
         _ completion: @escaping Completion
@@ -182,12 +189,12 @@ private extension ShowCVVService {
                 completion(.failure(.init(apiError)))
                 
             case let .success(encryptedCVV):
-                decrypt(encryptedCVV, completion)
+                _decrypt(encryptedCVV, completion)
             }
         }
     }
     
-    func decrypt(
+    func _decrypt(
         _ encryptedCVV: EncryptedCVV,
         _ completion: @escaping Completion
     ) {
@@ -195,12 +202,23 @@ private extension ShowCVVService {
             
             guard self != nil else { return }
             
-            completion(result.mapError { _ in .other(.decryptionFailure) })
+            completion(result.mapError { _ in .serviceError(.decryptionFailure) })
         }
     }
 }
 
 private extension ShowCVVService.Error {
+    
+    init( _ error: ShowCVVService.AuthenticateError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+            
+        case .authenticationFailure:
+            self = .authenticationFailure
+        }
+    }
     
     init(_ error: ShowCVVService.APIError) {
         
@@ -208,8 +226,8 @@ private extension ShowCVVService.Error {
         case let .invalid(statusCode, data):
             self = .invalid(statusCode: statusCode, data: data)
             
-        case .network:
-            self = .network
+        case .connectivity:
+            self = .connectivity
             
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
