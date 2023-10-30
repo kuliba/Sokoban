@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: make generic to decouple from ForaCrypto
 protocol CVVPINCrypto {
     
     typealias ECDHPublicKey = ECDHDomain.PublicKey
