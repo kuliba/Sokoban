@@ -98,7 +98,7 @@ extension LiveCVVPINJSONMaker {
         // Поэтому нужно сгенерировать новую пару, которыми будет повторно зашифрован тот же самый ОТР-код, но с вероятностью близкой к 100% этой ошибки уже не возникнет, поскольку p и q будут другими.
         let (encryptedSignedOTP, publicKey, privateKey) = try retry {
             
-            let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
+            let (publicKey, privateKey) = try crypto.generateRSA4096BitKeyPair()
             let encryptedSignedOTP = try crypto.signEncryptOTP(
                 otp: otp,
                 privateKey: privateKey
