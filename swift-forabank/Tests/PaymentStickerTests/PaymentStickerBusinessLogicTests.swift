@@ -63,14 +63,14 @@ final class BusinessLogic {
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     private let transfer: Transfer
-    private let productIDs: [ProductID]
+    private let products: [Operation.Parameter.Product]
     
     init(
         transfer: @escaping Transfer,
-        productIDs: [ProductID]
+        products: [Operation.Parameter.Product]
     ) {
         self.transfer = transfer
-        self.productIDs = productIDs
+        self.products = products
     }
     
     typealias MakePaymentResult = Result<TransferResponse, TransferError>
