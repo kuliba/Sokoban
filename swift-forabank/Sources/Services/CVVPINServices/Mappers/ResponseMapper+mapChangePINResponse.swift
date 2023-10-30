@@ -19,7 +19,7 @@ public extension ResponseMapper {
         do {
             switch httpURLResponse.statusCode {
             case 200:
-                if data.isEmpty {
+                if data.isEmptyJSON {
                     return .success(())
                 } else {
                     return .failure(.invalidData(statusCode: 200, data: data))
