@@ -202,16 +202,20 @@ extension LiveCVVPINJSONMaker {
         otpEventID: ChangePINService.OTPEventID
     ) throws -> Data {
         
-#warning("replace with own implementation")
-        
-        let maker = ChangePINSecretJSONMaker.loggingLive
-        let json = try maker.makePINChangeJSON(
-            sessionID: sessionID,
-            cardID: .init(value: cardID.cardIDValue),
-            otp: .init(value: otp.otpValue),
-            pin: .init(value: pin.pinValue),
-            eventID: otpEventID
+        let secretPIN = try crypto.processingEncrypt(
+            data: .init(pin.pinValue.utf8)
         )
+        let concat = sessionID.sessionIDValue + "\(cardID.cardIDValue)" + otp.otpValue + otpEventID.eventIDValue + secretPIN.base64EncodedString()
+        let signature = crypto.sha256Hash(.init(concat.utf8))
+        
+        let json = try JSONSerialization.data(withJSONObject: [
+            "sessionId": sessionID.sessionIDValue, // String(40)
+            "cardId":    cardID.cardIDValue, // int(11)
+            "otpCode":   otp.otpValue, // String(6)
+            "eventId":   otpEventID.eventIDValue, // String(40)
+            "secretPIN": secretPIN.base64EncodedString(), // String(1024)
+            "signature": signature.base64EncodedString() // String(1024)
+        ] as [String: Any])
         
         return json
     }
