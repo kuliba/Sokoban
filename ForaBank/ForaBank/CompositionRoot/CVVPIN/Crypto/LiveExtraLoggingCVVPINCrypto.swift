@@ -167,7 +167,7 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     // MARK: - Hash
     
-    func hash(_ data: Data) -> Data {
+    func sha256Hash(_ data: Data) -> Data {
         
         SHA256
             .hash(data: data)

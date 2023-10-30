@@ -53,7 +53,7 @@ extension LiveCVVPINJSONMaker {
         
         let concat = rsaPublicKeyBase64 + publicApplicationSessionKeyBase64
         let concatData = Data(concat.utf8)
-        let hash = crypto.hash(concatData)
+        let hash = crypto.sha256Hash(concatData)
         
         let signature = try crypto.signNoHash(
             hash,
