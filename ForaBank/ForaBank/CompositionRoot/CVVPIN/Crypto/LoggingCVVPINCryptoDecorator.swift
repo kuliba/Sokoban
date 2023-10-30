@@ -43,11 +43,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportKeyEncrypt(data)
-            log("Encrypted with transport key (\(data.count))")
+            log("Encrypted with transport key (\(encrypted.count)).")
             
             return encrypted
         } catch {
-            log("Encrypted with transport key (\(data.count))")
+            log("Encrypted with transport failure: \(error).")
             throw error
         }
     }
@@ -70,8 +70,8 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 from: string,
                 using: privateKey
             )
-            log("Shared Secret creation success: \(sharedSecret.count)")
-            
+            log("Shared Secret generation success (\(sharedSecret.count)).")
+
             return sharedSecret
         } catch {
             log("Shared Secret creation failure: \(error)")
@@ -82,12 +82,12 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
         
         do {
-            let (privateKey, publicKey) = try decoratee.generateRSA4096BitKeyPair()
-            log("Generated key pair \((privateKey, publicKey))")
+            let rsaKeyPair = try decoratee.generateRSA4096BitKeyPair()
+            log("RSAKeyPair generation success \(rsaKeyPair)")
             
-            return (privateKey, publicKey)
+            return rsaKeyPair
         } catch {
-            log("Key pair generation failure: \(error).")
+            log("RSAKeyPair generation failure: \(error).")
             throw error
         }
     }

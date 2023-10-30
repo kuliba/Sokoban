@@ -10,6 +10,8 @@ import Foundation
 
 extension LiveLoggingCVVPINCrypto {
     
+    private typealias Crypto = ForaCrypto.Crypto
+    
     static func live(
         log: @escaping (String) -> Void
     ) -> Self {
@@ -27,12 +29,12 @@ extension LiveLoggingCVVPINCrypto {
     private static func _generateP384KeyPair(
     ) -> P384KeyAgreementDomain.KeyPair {
         
-        ForaCrypto.Crypto.generateP384KeyPair()
+        Crypto.generateP384KeyPair()
     }
     
     private static func _generateRSA4096BitKeyPair() throws -> RSAKeyPair {
         
-        try ForaCrypto.Crypto.generateKeyPair(
+        try Crypto.generateKeyPair(
             keyType: .rsa,
             keySize: .bits4096
         )
@@ -42,17 +44,17 @@ extension LiveLoggingCVVPINCrypto {
         publicKey: PublicKey
     ) throws -> Data {
         
-        let representation = publicKey.derRepresentation
-        let log: (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
-        log("Public Key representation: \(representation)")
-        return representation
+        publicKey.derRepresentation
     }
     
     private static func _transportEncrypt(
         _ data: Data
     ) throws -> Data {
         
-        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
+        try Crypto.transportEncrypt(
+            data,
+            padding: .PKCS1
+        )
     }
     
     private static func _sharedSecret(
@@ -60,8 +62,10 @@ extension LiveLoggingCVVPINCrypto {
         privateKey: PrivateKey
     ) throws -> Data {
         
-        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
+        let serverPublicKey = try Crypto.transportDecryptP384PublicKey(
+            from: string
+        )
+        let sharedSecret = try Crypto.sharedSecret(
             privateKey: privateKey,
             publicKey: serverPublicKey
         )

@@ -27,7 +27,9 @@ extension LiveLoggingCVVPINCrypto {
     
     func generateP384KeyPair() -> P384KeyAgreementDomain.KeyPair {
         
-        _generateP384KeyPair()
+        let keyPair = _generateP384KeyPair()
+        log("P384 Key Pair generated.")
+        return keyPair
     }
 }
 
@@ -42,7 +44,15 @@ extension LiveLoggingCVVPINCrypto {
     
     func transportEncrypt(data: Data) throws -> Data {
         
-        try _transportEncrypt(data)
+        do {
+            let encrypted = try _transportEncrypt(data)
+            log("Encryption with transport key success (\(encrypted.count)).")
+            
+            return encrypted
+        } catch {
+            log("Encryption with transport key failure: \(error).")
+            throw error
+        }
     }
 }
 
@@ -54,7 +64,15 @@ extension LiveLoggingCVVPINCrypto {
         using privateKey: P384KeyAgreementDomain.PrivateKey
     ) throws -> Data {
         
-        try _sharedSecret(string, privateKey)
+        do {
+            let sharedSecret = try _sharedSecret(string, privateKey)
+            log("Shared Secret generation success (\(sharedSecret.count)).")
+            
+            return sharedSecret
+        } catch {
+            log("Shared Secret generation failure: \(error).")
+            throw error
+        }
     }
 }
 
@@ -63,7 +81,15 @@ extension LiveLoggingCVVPINCrypto {
     
     func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
         
-        try _generateRSA4096BitKeyPair()
+        do {
+            let rsaKeyPair = try _generateRSA4096BitKeyPair()
+            log("RSAKeyPair generation success.")
+            
+            return rsaKeyPair
+        } catch {
+            log("RSAKeyPair generation failure: \(error).")
+            throw error
+        }
     }
     
     func signEncryptOTP(
