@@ -38,7 +38,7 @@ final class Services_EndpointProcessPublicKeyAuthenticationRequestTests: XCTestC
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "//any.url/processing/auth/v1/processPublicKeyAuthenticationRequest"
+            "//any.url/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
         )
     }
     
@@ -60,7 +60,7 @@ final class Services_EndpointProcessPublicKeyAuthenticationRequestTests: XCTestC
         
         XCTAssertNoDiff(
             url.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/processing/auth/v1/processPublicKeyAuthenticationRequest"
+            "https://pl.forabank.ru/dbo/api/v3/processing/authenticate/v1/processPublicKeyAuthenticationRequest"
         )
     }
     

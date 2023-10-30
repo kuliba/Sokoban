@@ -12,9 +12,15 @@ extension ComposedCVVPINService: CheckCertificateClient {
     func checkCertificate(
         completion: @escaping CheckCertificateCompletion
     ) {
-        checkActivation(
-            { _ in }
-        ) { [weak self] result in
+        checkActivation { [weak self] completion in
+            
+            self?.activateCertificate { [weak self] result in
+                
+                guard self != nil else { return }
+                
+                completion(result.map { _ in () }.mapError { $0 })
+            }
+        } _: { [weak self] result in
             
             guard self != nil else { return }
             
