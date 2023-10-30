@@ -488,6 +488,7 @@
 		2A73C2262A03A41600C68A32 /* getScenarioQRData_1_1_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2252A03A41600C68A32 /* getScenarioQRData_1_1_2.json */; };
 		2A73C2282A03A4C000C68A32 /* getScenarioQRData_1_2_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2272A03A4C000C68A32 /* getScenarioQRData_1_2_1.json */; };
 		2A73C22A2A03A57800C68A32 /* getScenarioQRData_1_2_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */; };
+		2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */; };
 		2A77B6462ADF213F0022600F /* CVVPINRemote+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */; };
 		2A77B6482ADFC2360022600F /* RemoteCVV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6472ADFC2360022600F /* RemoteCVV.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
@@ -2520,6 +2521,7 @@
 		2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_2_2.json; sourceTree = "<group>"; };
 		2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldComponent.xctestplan; sourceTree = "<group>"; };
 		2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldModel.xctestplan; sourceTree = "<group>"; };
+		2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+isEmptyJSON.swift"; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
 		2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINRemote+live.swift"; sourceTree = "<group>"; };
 		2A77B6472ADFC2360022600F /* RemoteCVV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCVV.swift; sourceTree = "<group>"; };
@@ -5149,6 +5151,7 @@
 				2AEF685B2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift */,
 				2AEF68572AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift */,
 				2AEF68592AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift */,
+				2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */,
 			);
 			path = ResponseMapper;
 			sourceTree = "<group>";
@@ -12456,6 +12459,7 @@
 				5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */,
 				77A76A9627FC475600A271B3 /* PlacesDetailViewModel.swift in Sources */,
 				2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */,
+				2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */,
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
