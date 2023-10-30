@@ -31,8 +31,7 @@ protocol CVVPINCrypto {
     func generateP384KeyPair() -> ECDHKeyPair
     
     /// Used if `AuthenticateWithPublicKeyService`
-    #warning("rename to `extractSharedSecret`")
-    func makeSharedSecret(
+    func extractSharedSecret(
         from string: String,
         using privateKey: ECDHPrivateKey
     ) throws -> Data

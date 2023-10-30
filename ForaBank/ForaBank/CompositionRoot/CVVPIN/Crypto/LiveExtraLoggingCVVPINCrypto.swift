@@ -63,7 +63,7 @@ extension LiveExtraLoggingCVVPINCrypto {
     }
     
     /// Used if `AuthenticateWithPublicKeyService`
-    func makeSharedSecret(
+    func extractSharedSecret(
         from string: String,
         using privateKey: ECDHPrivateKey
     ) throws -> Data {

@@ -95,7 +95,7 @@ extension Services {
             _loadCode: sessionCodeLoader.load(completion:),
             _process: formSessionKeyRemoteService.process,
             _makeSecretRequestJSON: cvvPINJSONMaker.makeSecretRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.makeSharedSecret,
+            _makeSharedSecret: cvvPINCrypto.extractSharedSecret,
             keyPair: keyPair
         )
         
@@ -956,7 +956,7 @@ private extension CVVPINCrypto {
     ) -> Result<Data, Error> {
         
         .init {
-            try makeSharedSecret(
+            try extractSharedSecret(
                 from: string,
                 using: privateKey
             )

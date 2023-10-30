@@ -62,13 +62,13 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         return keyPair
     }
     
-    func makeSharedSecret(
+    func extractSharedSecret(
         from string: String,
         using privateKey: ECDHPrivateKey
     ) throws -> Data {
         
         do {
-            let sharedSecret = try decoratee.makeSharedSecret(
+            let sharedSecret = try decoratee.extractSharedSecret(
                 from: string,
                 using: privateKey
             )
