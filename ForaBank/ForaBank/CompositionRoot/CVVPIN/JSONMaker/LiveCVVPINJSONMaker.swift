@@ -211,12 +211,15 @@ extension LiveCVVPINJSONMaker {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        let (publicKey, privateKey) = rsaKeyPair
         #warning("move to crypto")
         let hashSignVerify = ShowCVVCrypto.hashSignVerify(string:publicKey:privateKey:)
         
         let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
-        let signature = try hashSignVerify(concatenation, publicKey.key, privateKey.key)
+        let signature = try hashSignVerify(
+            concatenation,
+            rsaKeyPair.publicKey.key,
+            rsaKeyPair.privateKey.key
+        )
         let signatureBase64 = signature.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [
