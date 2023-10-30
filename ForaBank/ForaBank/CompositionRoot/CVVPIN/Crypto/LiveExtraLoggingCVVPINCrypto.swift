@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.10.2023.
 //
 
+import CryptoKit
 import ForaCrypto
 import Foundation
 
@@ -161,5 +162,14 @@ extension LiveExtraLoggingCVVPINCrypto {
             log("AES Encryption Failure: \(error).")
             throw error
         }
+    }
+    
+    // MARK: - Hash
+    
+    func hash(_ data: Data) -> Data {
+        
+        SHA256
+            .hash(data: data)
+            .withUnsafeBytes { Data($0) }
     }
 }

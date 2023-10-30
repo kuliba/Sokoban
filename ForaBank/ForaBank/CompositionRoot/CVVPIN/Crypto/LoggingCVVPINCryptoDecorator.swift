@@ -183,4 +183,14 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
             throw error
         }
     }
+    
+    // MARK: - Hash
+    
+    func hash(_ data: Data) -> Data {
+        
+        let hash = decoratee.hash(data)
+        log("Created hash (\(hash.count)) for data (\(data.count)).")
+        
+        return hash
+    }
 }

@@ -18,10 +18,11 @@ struct LiveCVVPINJSONMaker {
 /// Used if `AuthenticateWithPublicKeyService`
 extension LiveCVVPINJSONMaker {
     
+    typealias ECDHPublicKey = ECDHDomain.PublicKey
     typealias RSAKeyPair = RSADomain.KeyPair
 
     func makeRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey,
+        publicKey: ECDHPublicKey,
         rsaKeyPair: RSAKeyPair
     ) throws -> Data {
         
@@ -41,7 +42,9 @@ extension LiveCVVPINJSONMaker {
         //      val signature = signer.sign()
         //      return Base64.encodeToString(signature, Base64.NO_WRAP)
         
-        let rsaPublicKeyData = try crypto.x509Representation(publicKey: rsaKeyPair.publicKey)
+        let rsaPublicKeyData = try crypto.x509Representation(
+            publicKey: rsaKeyPair.publicKey
+        )
         let rsaPublicKeyBase64 = rsaPublicKeyData.base64EncodedString()
         
         let keyData = publicKey.derRepresentation
@@ -49,9 +52,8 @@ extension LiveCVVPINJSONMaker {
         
         let concat = rsaPublicKeyBase64 + publicApplicationSessionKeyBase64
         let concatData = Data(concat.utf8)
-        let hash = SHA256
-            .hash(data: concatData)
-            .withUnsafeBytes { Data($0) }
+        let hash = crypto.hash(concatData)
+        
 #warning("move signNoHash to type field")
         let signature = try ForaCrypto.Crypto.signNoHash(
             hash,
@@ -144,7 +146,7 @@ private func retry<T>(
 extension LiveCVVPINJSONMaker {
     
     func makeSecretRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey
+        publicKey: ECDHPublicKey
     ) throws -> Data {
         
         // see Services+keyExchangeService.swift:20

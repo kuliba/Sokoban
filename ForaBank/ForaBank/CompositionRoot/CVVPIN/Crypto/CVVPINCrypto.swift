@@ -64,4 +64,8 @@ protocol CVVPINCrypto {
         data: Data,
         sessionKey: SessionKey
     ) throws -> Data
+    
+    // MARK: - Hash
+    
+    func hash(_ data: Data) -> Data
 }
