@@ -27,7 +27,10 @@ extension KeyExchangeCryptographer {
         publicKey: PublicKey
     ) throws -> Data {
         
-        publicKey.derRepresentation
+        let representation = publicKey.derRepresentation
+        let log: (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
+        log("Public Key representation: \(representation)")
+        return representation
     }
     
     private static func transportEncrypt(

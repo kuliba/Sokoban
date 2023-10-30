@@ -30,6 +30,7 @@ extension Services {
             enum Processing: String {
                 
                 case auth
+                case authenticate
                 case cardInfo
                 case registration
             }
@@ -143,7 +144,7 @@ extension Services.Endpoint {
     )
     
     static let processPublicKeyAuthenticationRequest: Self = .init(
-        pathPrefix: .processing(.auth),
+        pathPrefix: .processing(.authenticate),
         version: .v1,
         serviceName: .processPublicKeyAuthenticationRequest
     )

@@ -164,43 +164,9 @@ extension Services {
         let changePINService = ChangePINService(
             _checkSession: cachingAuthWithPublicKeyService.authenticateWithPublicKey,
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
+            loadOTPEventID: otpEventIDLoader.load(completion:),
+            loadSessionID: sessionIDLoader.load(completion:),
             _confirmProcess: confirmChangePINRemoteService.process,
-            makePINChangeJSON: { cardID, pin, otp, completion in
-                
-                otpEventIDLoader.load { result in
-                    
-                    switch result {
-                    case let .failure(error):
-                        completion(.failure(error))
-                        
-                    case let .success(otpEventID):
-                        sessionIDLoader.load { result in
-                            
-                            switch result {
-                            case let .failure(error):
-                                completion(.failure(error))
-                                
-                            case let .success(sessionID):
-                                let sessionID = ChangePINService.SessionID(sessionIDValue: sessionID.value)
-                                
-                                completion( .init {
-                                    
-                                    let maker = ChangePINSecretJSONMaker.loggingLive
-                                    let json = try maker.makePINChangeJSON(
-                                        sessionID: sessionID,
-                                        cardID: .init(value: cardID.cardIDValue),
-                                        otp: .init(value: otp.otpValue),
-                                        pin: .init(value: pin.pinValue),
-                                        eventID: otpEventID
-                                    )
-                                    
-                                    return (sessionID, json)
-                                })
-                            }
-                        }
-                    }
-                }
-            },
             _changePINProcess: changePINRemoteService.process
         )
         
@@ -209,12 +175,36 @@ extension Services {
             _cache: otpEventIDLoader.save
         )
         
+        // TODO: add category `CVV-PIN`
         let log = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
         
         return ComposedCVVPINService(
+            log: log,
+            activate: activationService.activate(completion:),
+            changePIN: changePINService.changePIN(for:to:otp:completion:),
+            checkActivation: checkingService.checkActivation(withFallback:completion:),
+            confirmActivation: activationService.confirmActivation(withOTP:completion:),
+            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode(completion:),
+            showCVV: showCVVService.showCVV(cardID:completion:)
+        )
+    }
+}
+
+extension ComposedCVVPINService {
+    
+    convenience init(
+        log: @escaping (String) -> Void,
+        activate: @escaping Activate,
+        changePIN: @escaping ChangePIN,
+        checkActivation: @escaping CheckActivation,
+        confirmActivation: @escaping ConfirmActivation,
+        getPINConfirmationCode: @escaping GetPINConfirmationCode,
+        showCVV: @escaping ShowCVV
+    ) {
+        self.init(
             activate: { completion in
                 
-                activationService.activate { result in
+                activate { result in
                     
                     switch result {
                     case let .failure(error):
@@ -226,11 +216,63 @@ extension Services {
                     completion(result)
                 }
             },
-            changePIN: changePINService.changePIN(for:to:otp:completion:),
-            checkActivation: checkingService.checkActivation(withFallback:completion:),
-            confirmActivation: activationService.confirmActivation(withOTP:completion:),
-            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode(completion:),
-            showCVV: showCVVService.showCVV(cardID:completion:)
+            changePIN: { cardID, pin ,otp, completion in
+                
+                changePIN(cardID, pin, otp) { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log("Change PIN Failure: \(error)")
+                    case .success:
+                        log("Change PIN success.")
+                    }
+                    
+                    completion(result)
+                }
+            },
+            checkActivation: checkActivation,
+            confirmActivation: { otp, completion in
+                
+                confirmActivation(otp) { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log("Confirm Activation Failure: \(error)")
+                    case .success:
+                        log("Confirm Activation success.")
+                    }
+                    
+                    completion(result)
+                }
+            },
+            getPINConfirmationCode: { completion in
+                
+                getPINConfirmationCode { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log("Get PIN Confirmation Code Failure: \(error)")
+                    case let .success(response):
+                        log("Get PIN Confirmation Code success: \(response)")
+                    }
+                    
+                    completion(result)
+                }
+            },
+            showCVV: { cardID, completion in
+                
+                showCVV(cardID) { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log("Show CVV Failure: \(error)")
+                    case let .success(cvv):
+                        log("Show CVV success: \(cvv).")
+                    }
+                    
+                    completion(result)
+                }
+            }
         )
     }
 }
@@ -554,6 +596,14 @@ private extension ChangePINService {
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
     
+    typealias LoadOTPEventIDResult = Swift.Result<OTPEventID, Swift.Error>
+    typealias LoadOTPEventIDCompletion = (LoadOTPEventIDResult) -> Void
+    typealias LoadOTPEventID = (@escaping LoadOTPEventIDCompletion) -> Void
+    
+    typealias LoadSessionIDResult = Swift.Result<ForaBank.SessionID, Swift.Error>
+    typealias LoadSessionIDCompletion = (LoadSessionIDResult) -> Void
+    typealias LoadSessionID = (@escaping LoadSessionIDCompletion) -> Void
+    
     typealias _ConfirmProcessResult = Swift.Result<EncryptedConfirmResponse, MappingRemoteServiceError<ConfirmAPIError>>
     typealias _ConfirmProcessCompletion = (_ConfirmProcessResult) -> Void
     typealias _ConfirmProcess = (ForaBank.SessionID, @escaping _ConfirmProcessCompletion) -> Void
@@ -565,8 +615,9 @@ private extension ChangePINService {
     convenience init(
         _checkSession: @escaping _CheckSession,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
+        loadOTPEventID: @escaping LoadOTPEventID,
+        loadSessionID: @escaping LoadSessionID,
         _confirmProcess: @escaping _ConfirmProcess,
-        makePINChangeJSON: @escaping MakePINChangeJSON,
         _changePINProcess: @escaping _ChangePINProcess
     ) {
         self.init(
@@ -616,7 +667,42 @@ private extension ChangePINService {
                     )
                 }
             },
-            makePINChangeJSON: makePINChangeJSON,
+            makePINChangeJSON: { cardID, pin, otp, completion in
+                
+                loadOTPEventID { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        completion(.failure(error))
+                        
+                    case let .success(otpEventID):
+                        loadSessionID { result in
+                            
+                            switch result {
+                            case let .failure(error):
+                                completion(.failure(error))
+                                
+                            case let .success(sessionID):
+                                let sessionID = ChangePINService.SessionID(sessionIDValue: sessionID.value)
+                                
+                                completion( .init {
+                                    
+                                    let maker = ChangePINSecretJSONMaker.loggingLive
+                                    let json = try maker.makePINChangeJSON(
+                                        sessionID: sessionID,
+                                        cardID: .init(value: cardID.cardIDValue),
+                                        otp: .init(value: otp.otpValue),
+                                        pin: .init(value: pin.pinValue),
+                                        eventID: otpEventID
+                                    )
+                                    
+                                    return (sessionID, json)
+                                })
+                            }
+                        }
+                    }
+                }
+            },
             changePINProcess: { payload, completion in
                 
                 _changePINProcess((
@@ -719,7 +805,8 @@ private extension FormSessionKeyService {
             makeSecretRequestJSON: { completion in
                 
                 completion(.init {
-                    try keyExchangeCrypto.makeSecretRequestJSON(
+                    
+                    try keyExchangeCrypto.loggingMakeSecretRequestJSON(
                         publicKey: keyPair.publicKey
                     )
                 })
@@ -734,11 +821,12 @@ private extension FormSessionKeyService {
             },
             makeSessionKey: { string, completion in
                 
-                completion(
-                    .init { try .init(
+                completion(.init {
+                    
+                    try .init(
                         sessionKeyValue: keyExchangeCrypto.sharedSecret(string, keyPair.privateKey)
-                    )}
-                )
+                    )
+                })
             }
         )
     }
@@ -1067,7 +1155,7 @@ private extension ForaCrypto.Crypto {
         encryptedString string: String,
         withPrivateKey privateKey: SecKey,
         algorithm: SecKeyAlgorithm,
-        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0)}
+        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
     ) throws -> String {
         
         do {
@@ -1092,10 +1180,28 @@ private extension ForaCrypto.Crypto {
 
 private extension KeyExchangeCryptographer {
     
+    func loggingMakeSecretRequestJSON(
+        publicKey: P384KeyAgreementDomain.PublicKey,
+        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
+    ) throws -> Data {
+        
+        do {
+            let json = try makeSecretRequestJSON(
+                publicKey: publicKey
+            )
+            log("Make Secret JSON success: \"\(String(data: json, encoding: .utf8) ?? "n/a")\"")
+            
+            return json
+        } catch {
+            log("Make Secret JSON failure: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
     func loggingMakeRequestJSON(
         publicKey: P384KeyAgreementDomain.PublicKey,
         rsaKeyPair: RSAKeyPair,
-        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0)}
+        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
     ) throws -> Data {
         
         do {
@@ -1103,7 +1209,7 @@ private extension KeyExchangeCryptographer {
                 publicKey: publicKey,
                 rsaKeyPair: rsaKeyPair
             )
-            log("Make JSON success: \"\(String(describing: String(data: json, encoding: .utf8)))\"")
+            log("Make JSON success: \"\(String(data: json, encoding: .utf8) ?? "n/a")\"")
             
             return json
         } catch {
