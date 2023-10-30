@@ -1,5 +1,5 @@
 //
-//  Services+certificateClient.swift
+//  Services+cvvPINServicesClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 22.10.2023.
@@ -14,11 +14,11 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
-    static func certificateClient(
+    static func cvvPINServicesClient(
         httpClient: HTTPClient,
         keyExchangeCrypto: KeyExchangeCryptographer,
         currentDate: @escaping () -> Date = Date.init
-    ) -> CertificateClient {
+    ) -> CVVPINServicesClient {
         
         // MARK: Configure Infra: Persistent Stores
         
@@ -75,10 +75,6 @@ extension Services {
         let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(httpClient: httpClient)
         
         // MARK: Configure CVV-PIN Services
-        
-        let checkingService = CVVPINFunctionalityCheckingService(
-            _loadValidPublicKey: rsaKeyPairLoader.load
-        )
         
         let getCodeService = GetProcessingSessionCodeService(
             _process: getCodeRemoteService.process
@@ -154,15 +150,63 @@ extension Services {
             currentDate: currentDate
         )
         
+        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        typealias AuthResult = Result<AuthSuccess, AuthError>
+        typealias AuthCompletion = (AuthResult) -> Void
+        typealias Authenticate = (@escaping AuthCompletion) -> Void
+        
+        let authenticate: Authenticate = { completion in
+            
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case .success:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion($0.mapError { _ in .activationFailure })
+                    }
+                }
+            }
+        }
+        
+        let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
+            
+            authenticate { result in
+                
+                completion(
+                    result
+                        .map(\.sessionID.sessionIDValue)
+                        .map(ShowCVVService.SessionID.init)
+                        .mapError(ShowCVVService.AuthenticateError.init)
+                )
+            }
+        }
+        
         let showCVVService = ShowCVVService(
-            _checkSession: cachingAuthWithPublicKeyService.authenticateWithPublicKey,
+            _authenticate: showCVVServiceAuthenticate,
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
             loadSessionKey: sessionKeyLoader.load(completion:),
             _process: showCVVRemoteService.process
         )
         
+        let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
+            
+            authenticate { result in
+                
+                completion(
+                    result
+                        .map(\.sessionID.sessionIDValue)
+                        .map(ChangePINService.SessionID.init(sessionIDValue:))
+                        .mapError(ChangePINService.AuthenticateError.init)
+                )
+            }
+        }
+        
         let changePINService = ChangePINService(
-            _checkSession: cachingAuthWithPublicKeyService.authenticateWithPublicKey,
+            _authenticate: changePINServiceAuthenticate,
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
             loadOTPEventID: otpEventIDLoader.load(completion:),
             loadSessionID: sessionIDLoader.load(completion:),
@@ -175,6 +219,14 @@ extension Services {
             _cache: otpEventIDLoader.save
         )
         
+        let checkActivation: ComposedCVVPINService.CheckActivation = { completion in
+            
+            rsaKeyPairLoader.load {
+                
+                completion($0.map { _ in () }.mapError { $0 })
+            }
+        }
+        
         // TODO: add category `CVV-PIN`
         let log = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
         
@@ -182,11 +234,45 @@ extension Services {
             log: log,
             activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
-            checkActivation: checkingService.checkActivation(withFallback:completion:),
+            checkActivation: checkActivation,
             confirmActivation: activationService.confirmActivation(withOTP:completion:),
             getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:)
         )
+    }
+}
+
+enum AuthError: Error {
+    
+    case activationFailure
+    case authenticationFailure
+}
+
+private extension ShowCVVService.AuthenticateError {
+    
+    init(_ error: AuthError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+            
+        case .authenticationFailure:
+            self = .authenticationFailure
+        }
+    }
+}
+
+private extension ChangePINService.AuthenticateError {
+    
+    init(_ error: AuthError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+            
+        case .authenticationFailure:
+            self = .authenticationFailure
+        }
     }
 }
 
@@ -497,7 +583,7 @@ private extension CachingChangePINServiceDecorator {
     
     typealias _CacheOTPEventIDCompletion = (Result<Void, Error>) -> Void
     typealias _CacheOTPEventID = (Service.OTPEventID, Date, @escaping _CacheOTPEventIDCompletion) -> Void
-
+    
     convenience init(
         decoratee: Service,
         _cache: @escaping _CacheOTPEventID,
@@ -587,6 +673,8 @@ private extension CachingGetProcessingSessionCodeServiceDecorator {
 
 private extension ChangePINService {
     
+    typealias _Authenticate = ChangePINService.Authenticate
+
     typealias _CheckSessionResult = Swift.Result<AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Error>
     typealias _CheckSessionCompletion = (_CheckSessionResult) -> Void
     typealias _CheckSession = (@escaping _CheckSessionCompletion) -> Void
@@ -613,7 +701,7 @@ private extension ChangePINService {
     typealias _ChangePINProcess = ((ForaBank.SessionID, Data),@escaping _ChangePINProcessCompletion) -> Void
     
     convenience init(
-        _checkSession: @escaping _CheckSession,
+        _authenticate: @escaping _Authenticate,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
         loadOTPEventID: @escaping LoadOTPEventID,
         loadSessionID: @escaping LoadSessionID,
@@ -621,18 +709,7 @@ private extension ChangePINService {
         _changePINProcess: @escaping _ChangePINProcess
     ) {
         self.init(
-            checkSession: { completion in
-                
-                _checkSession { result in
-                    
-                    completion(
-                        result
-                            .map(\.sessionID.sessionIDValue)
-                            .map { .init(sessionIDValue: $0) }
-                            .mapError { $0 }
-                    )
-                }
-            },
+            authenticate: _authenticate,
             publicRSAKeyDecrypt: { string, completion in
                 
                 loadRSAKeyPair { result in
@@ -738,43 +815,34 @@ private extension CVVPINFunctionalityActivationService {
         self.init(
             getCode: { completion in
                 
-                _getCode {
-                    
-                    completion($0.map { .init($0) }.mapError { $0 })
-                }
+//                _getCode {
+//
+//                    completion(
+//                        $0
+//                            .map { .init($0) }
+//                            .mapError(GetCodeResponseError.init)
+//                    )
+//                }
             },
             formSessionKey: { completion in
                 
-                _formSessionKey {
-                    
-                    completion($0.map { .init($0) }.mapError { $0 })
-                }
+//                _formSessionKey { result in
+//
+//                    completion(
+//                        result
+//                            .map(FormSessionKeyService.Success.init)
+//                            .mapError(FormSessionKeyError.init))
+//                }
             },
             bindPublicKeyWithEventID: { otp, completion in
                 
-                _bindPublicKeyWithEventID(
-                    .init(otpValue: otp.otpValue)
-                ) {
-                    completion($0.mapError { $0 })
-                }
+//                _bindPublicKeyWithEventID(
+//                    .init(otpValue: otp.otpValue)
+//                ) {
+//                    completion($0.mapError(BindPublicKeyError.init))
+//                }
             }
         )
-    }
-}
-
-private extension CVVPINFunctionalityCheckingService {
-    
-    typealias _LoadValidPublicKeyResult = Swift.Result<(publicKey: SecKey, privateKey: SecKey), Swift.Error>
-    typealias _LoadValidPublicKeyCompletion = (_LoadValidPublicKeyResult) -> Void
-    typealias _LoadValidPublicKey = (@escaping _LoadValidPublicKeyCompletion) -> Void
-    
-    convenience init(
-        _loadValidPublicKey: @escaping _LoadValidPublicKey
-    ) {
-        self.init { completion in
-            
-            _loadValidPublicKey { completion($0.map { _ in () }) }
-        }
     }
 }
 
@@ -853,9 +921,7 @@ private extension GetProcessingSessionCodeService {
 
 private extension ShowCVVService {
     
-    typealias _CheckSessionResult = Swift.Result<AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Error>
-    typealias _CheckSessionCompletion = (_CheckSessionResult) -> Void
-    typealias _CheckSession = (@escaping _CheckSessionCompletion) -> Void
+    typealias _Authenticate = ShowCVVService.Authenticate
     
     typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
@@ -871,20 +937,20 @@ private extension ShowCVVService {
     typealias _Process = ((ForaBank.SessionID, Data), @escaping _ProcessCompletion) -> Void
     
     convenience init(
-        _checkSession: @escaping _CheckSession,
+        _authenticate: @escaping _Authenticate,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
         loadSessionKey: @escaping LoadSessionKey,
         _process: @escaping _Process
     ) {
         self.init(
-            checkSession: { completion in
+            authenticate: { completion in
                 
-                _checkSession { result in
+                _authenticate { result in
                     
                     completion(
                         result
-                            .map(\.sessionID.sessionIDValue)
-                            .map { .init(sessionIDValue: $0) }
+                        //                            .map(\.sessionID.sessionIDValue)
+                        //                            .map(ShowCVVService.SessionID.init)
                             .mapError { $0 }
                     )
                 }
@@ -1007,7 +1073,7 @@ private extension ShowCVVService {
                 )
                 completion(.success(.init(cvvValue: cvvValue)))
             } catch {
-                completion(.failure(.other(.makeJSONFailure)))
+                completion(.failure(.serviceError(.makeJSONFailure)))
             }
         }
     }
@@ -1087,6 +1153,66 @@ private extension FormSessionKeyService.APIError {
     }
 }
 
+private extension CVVPINFunctionalityActivationService.GetCodeResponseError {
+    
+    init(_ error: GetProcessingSessionCodeService.Error) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        }
+    }
+}
+
+private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
+    
+    init(_ error: FormSessionKeyService.Error) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .other:
+            self = .serviceFailure
+        }
+    }
+}
+
+private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
+    
+    init(_ error: BindPublicKeyWithEventIDService.Error) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .retry(statusCode, errorMessage, retryAttempts):
+            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .other:
+            self = .serviceFailure
+        }
+    }
+}
+
 private extension GetProcessingSessionCodeService.APIError {
     
     init(_ error: MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>) {
@@ -1107,7 +1233,7 @@ private extension ShowCVVService.APIError {
         
         switch error {
         case .createRequest, .performRequest:
-            self = .network
+            self = .connectivity
             
         case let .mapResponse(mapResponseError):
             self = mapResponseError
@@ -1164,7 +1290,7 @@ private extension ForaCrypto.Crypto {
                 with: algorithm,
                 using: privateKey
             )
-
+            
             guard let string = String(data: data, encoding: .utf8)
             else {
                 throw NSError(domain: "Data to string conversion error.", code: -1)
@@ -1257,10 +1383,10 @@ private extension Date {
     
     func nextYear() -> Date {
         
-        #if RELEASE
+#if RELEASE
         addingTimeInterval(15_778_463)
-        #else
+#else
         addingTimeInterval(600)
-        #endif
+#endif
     }
 }

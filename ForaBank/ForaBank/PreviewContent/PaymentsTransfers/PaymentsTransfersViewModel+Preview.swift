@@ -80,7 +80,7 @@ extension PaymentsTransfersViewModel {
                 
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction

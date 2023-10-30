@@ -11,37 +11,13 @@ import PinCodeUI
 
 // `CVVPINService` conforms to `CertificateClient` by complying with the protocols of which it is composed.
 
-extension CVVPINComposer: CheckCertificateClient {
+extension CVVPINComposer: ActivateCVVPINClient {
     
-    // TODO: move implementation to the module and hide fields of CVVPINComposer
-    func checkCertificate(
-        completion: @escaping CheckCertificateCompletion
-    ) {
-        infra.loadRSAKeyPair { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                completion(.failure(.certificate))
-                
-            case .success:
-                completion(.success(()))
-            }
-        }
-    }
-}
-
-extension CVVPINComposer: ActivateCertificateClient {
-    
-    func activateCertificate(
-        completion: @escaping ActivateCertificateCompletion
+    func activate(
+        completion: @escaping ActivateCompletion
     ) {
         fatalError()
     }
-}
-
-extension CVVPINComposer: ConfirmWithOtpClient {
     
     func confirmWith(
         otp: String,
@@ -61,16 +37,31 @@ extension CVVPINComposer: ShowCVVClient {
     }
 }
 
-extension CVVPINComposer: PinConfirmationCodeClient {
+extension CVVPINComposer: ChangePINClient {
     
-    func getPinConfirmCode(
-        completion: @escaping GetPinConfirmCodeCompletion
+    // TODO: move implementation to the module and hide fields of CVVPINComposer
+    func checkFunctionality(
+        completion: @escaping CheckFunctionalityCompletion
+    ) {
+        infra.loadRSAKeyPair { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case .failure:
+                completion(.failure(.activationFailure))
+                
+            case .success:
+                completion(.success(()))
+            }
+        }
+    }
+        
+    func getPINConfirmationCode(
+        completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         fatalError()
     }
-}
-
-extension CVVPINComposer: ChangePinClient {
     
     func changePin(
         cardId: Int,

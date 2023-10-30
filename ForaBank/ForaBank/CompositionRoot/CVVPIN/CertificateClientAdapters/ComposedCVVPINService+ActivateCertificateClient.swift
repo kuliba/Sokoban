@@ -1,5 +1,5 @@
 //
-//  ComposedCVVPINService+ActivateCertificateClient.swift
+//  ComposedCVVPINService+ActivateCVVPINClient.swift
 //  
 //
 //  Created by Igor Malyarov on 21.10.2023.
@@ -7,10 +7,10 @@
 
 import CVVPIN_Services
 
-extension ComposedCVVPINService: ActivateCertificateClient {
+extension ComposedCVVPINService: ActivateCVVPINClient {
     
-    func activateCertificate(
-        completion: @escaping ActivateCertificateCompletion
+    func activate(
+        completion: @escaping ActivateCompletion
     ) {
         activate { [weak self] result in
             
@@ -20,21 +20,60 @@ extension ComposedCVVPINService: ActivateCertificateClient {
                 result
                     .map(\.phoneValue)
                     .map { .init($0) }
-                    .mapError(CVVPinError.ActivationError.init)
+                    .mapError(ActivateCVVPINError.init)
             )
+        }
+    }
+    
+    func confirmWith(
+        otp: String,
+        completion: @escaping ConfirmationCompletion
+    ) {
+        confirmActivation(
+            .init(otpValue: otp)
+        ) { [weak self] in
+            
+            guard self != nil else { return }
+            
+            completion($0.mapError(ConfirmationCodeError.init))
         }
     }
 }
 
-private extension CVVPinError.ActivationError {
+private extension ActivateCVVPINError {
     
-    init(_ error: CVVPINFunctionalityActivationService.Error) {
+    init(_ error: CVVPINFunctionalityActivationService.ActivateError) {
         
         switch error {
-        case .bindKeyFailure, .formSessionKeyFailure, .getCodeFailure:
-            self = .network
+        case .invalid:
+            self = .serviceFailure
+            
+        case .network:
+            self = .serviceFailure
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .serviceFailure:
+            self = .serviceFailure
         }
     }
+}
+
+private extension ConfirmationCodeError {
     
-    static let network: Self = .init(message: "Техническая ошибка.")
+    init(_ error: CVVPINFunctionalityActivationService.ConfirmError) {
+        
+        switch error {
+            
+        case .invalid, .network, .serviceFailure:
+            self = .serviceFailure
+            
+        case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+            
+        case let .server(statusCode: statusCode, errorMessage: errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        }
+    }
 }

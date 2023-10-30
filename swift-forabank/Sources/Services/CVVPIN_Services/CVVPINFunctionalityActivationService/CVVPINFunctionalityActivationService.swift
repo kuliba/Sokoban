@@ -11,15 +11,15 @@ import Foundation
 ///
 public final class CVVPINFunctionalityActivationService {
     
-    public typealias GetCodeResult = Swift.Result<GetCodeResponse, Swift.Error>
+    public typealias GetCodeResult = Result<GetCodeResponse, GetCodeResponseError>
     public typealias GetCodeCompletion = (GetCodeResult) -> Void
     public typealias GetCode = (@escaping GetCodeCompletion) -> Void
     
-    public typealias FormSessionKeyResult = Swift.Result<FormSessionKeySuccess, Swift.Error>
+    public typealias FormSessionKeyResult = Result<FormSessionKeySuccess, FormSessionKeyError>
     public typealias FormSessionKeyCompletion = (FormSessionKeyResult) -> Void
     public typealias FormSessionKey = (@escaping FormSessionKeyCompletion) -> Void
     
-    public typealias BindPublicKeyWithEventIDResult = Swift.Result<Void, Swift.Error>
+    public typealias BindPublicKeyWithEventIDResult = Result<Void, BindPublicKeyError>
     public typealias BindPublicKeyWithEventIDCompletion = (BindPublicKeyWithEventIDResult) -> Void
     public typealias BindPublicKeyWithEventID = (OTP, @escaping BindPublicKeyWithEventIDCompletion) -> Void
     
@@ -38,50 +38,98 @@ public final class CVVPINFunctionalityActivationService {
     }
 }
 
+// MARK: - Activate
+
 public extension CVVPINFunctionalityActivationService {
     
-    typealias ActivationResult = Swift.Result<Phone, Error>
-    typealias ActivationCompletion = (ActivationResult) -> Void
+    typealias ActivateResult = Result<Phone, ActivateError>
+    typealias ActivateCompletion = (ActivateResult) -> Void
     
     func activate(
-        completion: @escaping ActivationCompletion
+        completion: @escaping ActivateCompletion
     ) {
         getCode { [weak self] result in
             
             guard let self else { return }
             
             switch result {
-            case .failure:
-                completion(.failure(.getCodeFailure))
+            case let .failure(error):
+                completion(.failure(.init(error)))
                 
             case let .success(response):
-                formSessionKey(response, completion)
+                _formSessionKey(response, completion)
             }
         }
     }
     
-    typealias ConfirmationResult = Swift.Result<Void, Error>
-    typealias ConfirmationCompletion = (ConfirmationResult) -> Void
+    enum ActivateError: Error {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+    }
+}
+
+// MARK: - Confirm
+
+public extension CVVPINFunctionalityActivationService {
+    
+    typealias ConfirmResult = Result<Void, ConfirmError>
+    typealias ConfirmCompletion = (ConfirmResult) -> Void
     
     func confirmActivation(
         withOTP otp: OTP,
-        completion: @escaping ConfirmationCompletion
+        completion: @escaping ConfirmCompletion
     ) {
         bindPublicKeyWithEventID(otp) { [weak self] result in
             
             guard self != nil else { return }
             
-            completion(result.mapError { _ in .bindKeyFailure })
+            completion(result.mapError(ConfirmError.init))
         }
     }
     
-    enum Error: Swift.Error {
+    enum ConfirmError: Error {
         
-        case bindKeyFailure
-        case formSessionKeyFailure
-        case getCodeFailure
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
     }
 }
+
+// MARK: - Errors
+
+public extension CVVPINFunctionalityActivationService {
+    
+    enum GetCodeResponseError: Error {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+    }
+    
+    enum FormSessionKeyError: Error {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+    }
+    
+    enum BindPublicKeyError: Error {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+    }
+}
+
+// MARK: - Types
 
 extension CVVPINFunctionalityActivationService {
     
@@ -123,7 +171,7 @@ extension CVVPINFunctionalityActivationService {
             }
         }
     }
-
+    
     public struct GetCodeResponse {
         
         let code: String
@@ -143,7 +191,7 @@ extension CVVPINFunctionalityActivationService {
         public let otpValue: String
         
         public init(otpValue: String) {
-         
+            
             self.otpValue = otpValue
         }
     }
@@ -153,7 +201,7 @@ extension CVVPINFunctionalityActivationService {
         public let phoneValue: String
         
         public init(phoneValue: String) {
-         
+            
             self.phoneValue = phoneValue
         }
     }
@@ -161,9 +209,9 @@ extension CVVPINFunctionalityActivationService {
 
 private extension CVVPINFunctionalityActivationService {
     
-    func formSessionKey(
+    func _formSessionKey(
         _ response: GetCodeResponse,
-        _ completion: @escaping ActivationCompletion
+        _ completion: @escaping ActivateCompletion
     ) {
         formSessionKey { [weak self] result in
             
@@ -172,8 +220,67 @@ private extension CVVPINFunctionalityActivationService {
             completion(
                 result
                     .map { _ in .init(phoneValue: response.phone) }
-                    .mapError { _ in .formSessionKeyFailure }
+                    .mapError(ActivateError.init)
             )
+        }
+    }
+}
+
+// MARK: - Error Mappers
+
+private extension CVVPINFunctionalityActivationService.ActivateError {
+    
+    init(_ error: CVVPINFunctionalityActivationService.GetCodeResponseError) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        }
+    }
+    
+    init(_ error: CVVPINFunctionalityActivationService.FormSessionKeyError) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .serviceFailure:
+            self = .serviceFailure
+        }
+    }
+}
+ 
+private extension CVVPINFunctionalityActivationService.ConfirmError {
+    
+    init(_ error: CVVPINFunctionalityActivationService.BindPublicKeyError) {
+        
+        switch error {
+        case let .invalid(statusCode, data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .retry(statusCode, errorMessage, retryAttempts):
+            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+            
+        case let .server(statusCode, errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .serviceFailure:
+            self = .serviceFailure
         }
     }
 }

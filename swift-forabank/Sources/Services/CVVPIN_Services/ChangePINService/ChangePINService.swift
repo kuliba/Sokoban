@@ -9,10 +9,10 @@ import Foundation
 
 public final class ChangePINService {
     
-    public typealias CheckSessionResult = Swift.Result<SessionID, Swift.Error>
-    public typealias CheckSessionCompletion = (CheckSessionResult) -> Void
-    public typealias CheckSession = (@escaping CheckSessionCompletion) -> Void
-    
+    public typealias AuthenticateResult = Swift.Result<SessionID, AuthenticateError>
+    public typealias AuthenticateCompletion = (AuthenticateResult) -> Void
+    public typealias Authenticate = (@escaping AuthenticateCompletion) -> Void
+
     public typealias PublicRSAKeyDecryptResult = Swift.Result<String, Swift.Error>
     public typealias PublicRSAKeyDecryptCompletion = (PublicRSAKeyDecryptResult) -> Void
     public typealias PublicRSAKeyDecrypt = (String, @escaping PublicRSAKeyDecryptCompletion) -> Void
@@ -29,20 +29,20 @@ public final class ChangePINService {
     public typealias ChangePINProcessCompletion = (ChangePINProcessResult) -> Void
     public typealias ChangePINProcess = ((SessionID, Data), @escaping ChangePINProcessCompletion) -> Void
     
-    private let checkSession: CheckSession
+    private let authenticate: Authenticate
     private let publicRSAKeyDecrypt: PublicRSAKeyDecrypt
     private let confirmProcess: ConfirmProcess
     private let makePINChangeJSON: MakePINChangeJSON
     private let changePINProcess: ChangePINProcess
     
     public init(
-        checkSession: @escaping CheckSession,
+        authenticate: @escaping Authenticate,
         publicRSAKeyDecrypt: @escaping PublicRSAKeyDecrypt,
         confirmProcess: @escaping ConfirmProcess,
         makePINChangeJSON: @escaping MakePINChangeJSON,
         changePINProcess: @escaping ChangePINProcess
     ) {
-        self.checkSession = checkSession
+        self.authenticate = authenticate
         self.publicRSAKeyDecrypt = publicRSAKeyDecrypt
         self.confirmProcess = confirmProcess
         self.makePINChangeJSON = makePINChangeJSON
@@ -52,14 +52,17 @@ public final class ChangePINService {
 
 public extension ChangePINService {
     
-    typealias PINConfirmResult = Swift.Result<ConfirmResponse, Error>
-    typealias PINConfirmCompletion = (PINConfirmResult) -> Void
+    typealias GetPINConfirmationCodeResult = Swift.Result<ConfirmResponse, Error>
+    typealias GetPINConfirmationCodeCompletion = (GetPINConfirmationCodeResult) -> Void
     
     func getPINConfirmationCode(
-        completion: @escaping PINConfirmCompletion
+        completion: @escaping GetPINConfirmationCodeCompletion
     ) {
-        checkSession(completion)
+        _authenticate(completion)
     }
+}
+
+public extension ChangePINService {
     
     typealias ChangePINResult = Swift.Result<Void, Error>
     typealias ChangePINCompletion = (ChangePINResult) -> Void
@@ -72,9 +75,14 @@ public extension ChangePINService {
     ) {
         makePINChangeJSON(cardID, pin, otp, completion)
     }
+}
+
+extension ChangePINService {
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         
+        case activationFailure
+        case authenticationFailure
         case invalid(statusCode: Int, data: Data)
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
@@ -89,23 +97,26 @@ public extension ChangePINService {
         }
     }
     
-    enum ConfirmAPIError: Swift.Error {
+    public enum AuthenticateError: Swift.Error {
+        
+        case activationFailure
+        case authenticationFailure
+    }
+    
+    public enum ConfirmAPIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
     }
     
-    enum ChangePINAPIError: Swift.Error {
+    public enum ChangePINAPIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
     }
-}
-
-extension ChangePINService {
     
     public struct ConfirmResponse {
         
@@ -180,17 +191,17 @@ extension ChangePINService {
 
 private extension ChangePINService {
     
-    func checkSession(
-        _ completion: @escaping PINConfirmCompletion
+    func _authenticate(
+        _ completion: @escaping GetPINConfirmationCodeCompletion
     ) {
-        checkSession { [weak self] result in
+        authenticate { [weak self] result in
             
             guard let self else { return }
             
             switch result {
-            case .failure:
-                completion(.failure(.other(.checkSessionFailure)))
-                
+            case let .failure(error):
+                completion(.failure(.init(error)))
+
             case let .success(sessionID):
                 confirmProcess(sessionID, completion)
             }
@@ -199,7 +210,7 @@ private extension ChangePINService {
     
     func confirmProcess(
         _ sessionID: SessionID,
-        _ completion: @escaping PINConfirmCompletion
+        _ completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         confirmProcess(sessionID) { [weak self] result in
             
@@ -217,7 +228,7 @@ private extension ChangePINService {
     
     func decrypt(
         _ encrypted: EncryptedConfirmResponse,
-        _ completion: @escaping PINConfirmCompletion
+        _ completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         publicRSAKeyDecrypt(encrypted.eventID) { [weak self] result in
             
@@ -236,7 +247,7 @@ private extension ChangePINService {
     func decrypt(
         _ eventID: OTPEventID,
         _ encrypted: EncryptedConfirmResponse,
-        _ completion: @escaping PINConfirmCompletion
+        _ completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         publicRSAKeyDecrypt(encrypted.phone) { [weak self] result in
             
@@ -288,6 +299,17 @@ private extension ChangePINService {
 }
 
 private extension ChangePINService.Error {
+    
+    init( _ error: ChangePINService.AuthenticateError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+            
+        case .authenticationFailure:
+            self = .authenticationFailure
+        }
+    }
     
     init(_ error: ChangePINService.ConfirmAPIError) {
         

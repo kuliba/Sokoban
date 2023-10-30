@@ -1,5 +1,5 @@
 //
-//  HappyCertificateClient.swift
+//  HappyCVVPINServicesClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 18.10.2023.
@@ -7,16 +7,16 @@
 
 import PinCodeUI
 
-final class HappyCertificateClient: CertificateClient {
+final class HappyCVVPINServicesClient: CVVPINServicesClient {
     
-    func checkCertificate(
-        completion: @escaping CheckCertificateCompletion
+    func checkFunctionality(
+        completion: @escaping CheckFunctionalityCompletion
     ) {
         completion(.success(()))
     }
     
-    func activateCertificate(
-        completion: @escaping ActivateCertificateCompletion
+    func activate(
+        completion: @escaping ActivateCompletion
     ) {
         completion(.success("+7...88"))
     }
@@ -35,8 +35,8 @@ final class HappyCertificateClient: CertificateClient {
         completion(.success("123"))
     }
     
-    func getPinConfirmCode(
-        completion: @escaping GetPinConfirmCodeCompletion
+    func getPINConfirmationCode(
+        completion: @escaping GetPINConfirmationCodeCompletion
     ) {
         completion(.success("+1..22"))
     }

@@ -365,7 +365,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        certificateClient: HappyCertificateClient(),
+        cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
     
@@ -375,7 +375,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        certificateClient: SadCertificateClient(),
+        cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
 }

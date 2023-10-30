@@ -326,7 +326,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
@@ -349,7 +349,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
@@ -373,7 +373,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction

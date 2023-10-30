@@ -50,7 +50,7 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
-    private let certificateClient: CertificateClient
+    private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
     private var bindings = Set<AnyCancellable>()
@@ -68,7 +68,7 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         certificateClient: CertificateClient,
+         cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
         self.navigationBar = navigationBar
@@ -80,9 +80,9 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
-        self.certificateClient = certificateClient
+        self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
-        self.cardAction = createCardAction(certificateClient, model)
+        self.cardAction = createCardAction(cvvPINServicesClient, model)
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -94,7 +94,7 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
-        certificateClient: CertificateClient,
+        cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
         dismissAction: @escaping () -> Void
@@ -112,7 +112,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, certificateClient: certificateClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -147,22 +147,6 @@ class ProductProfileViewModel: ObservableObject {
 extension ProductProfileViewModel {
     
     typealias CompletionErrorOtp = (Int, String)
-    
-    func confirmKeyBinding(
-        withOTP otp: String,
-        completion: @escaping (CompletionErrorOtp?) -> Void
-    ) {
-        certificateClient.confirmWith(otp: otp) { result in
-            
-            switch result {
-            case .success:
-                completion(nil)
-                
-            case let .failure(error):
-                completion((error.retryAttempts, error.errorMessage))
-            }
-        }
-    }
     
     func closeLinkAndResendRequest(
         cardId: CardDomain.CardId,
@@ -226,7 +210,7 @@ extension ProductProfileViewModel {
         withOTP otp: OtpDomain.Otp,
         completion: @escaping (ErrorDomain?) -> Void
     ) {
-        certificateClient.confirmWith(otp: otp.rawValue) { [weak self] result in
+        cvvPINServicesClient.confirmWith(otp: otp.rawValue) { [weak self] result in
             
             guard let self else { return }
             
@@ -244,7 +228,7 @@ extension ProductProfileViewModel {
     func pinConfirmation(
         completion: @escaping (PinCodeViewModel.PhoneNumberState) -> Void
     ) {
-        certificateClient.getPinConfirmCode { [weak self] result in
+        cvvPINServicesClient.getPINConfirmationCode { [weak self] result in
             
             guard self != nil else { return }
             
@@ -263,7 +247,7 @@ extension ProductProfileViewModel {
         info: ConfirmViewModel.ChangePinStruct,
         completion: @escaping (ErrorDomain?) -> Void
     ) {
-        certificateClient.changePin(
+        cvvPINServicesClient.changePin(
             cardId: info.cardId.rawValue,
             newPin: info.newPin.rawValue,
             otp: info.otp.rawValue
@@ -282,7 +266,7 @@ extension ProductProfileViewModel {
     }
     
     func createCardAction(
-        _ certificateClient: CertificateClient,
+        _ cvvPINServicesClient: CVVPINServicesClient,
         _ model: Model
     ) -> CardAction? {
         
@@ -1470,7 +1454,7 @@ private extension ProductProfileViewModel {
         
         .init(
             model,
-            certificateClient: certificateClient,
+            cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
             dismissAction: dismissAction
@@ -2000,10 +1984,10 @@ extension ProductProfileViewModel {
     
     private func checkCertificate(
         _ cardId: CardDomain.CardId,
-        certificate: CertificateClient,
+        certificate: CVVPINServicesClient,
         _ productCard: ProductCardData
     ) {
-        certificate.checkCertificate { [weak self] result in
+        certificate.checkFunctionality { [weak self] result in
             
             guard let self else { return }
             
@@ -2023,13 +2007,13 @@ extension ProductProfileViewModel {
             self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
             
         case .changePin:
-            checkCertificate(.init(productCard.id), certificate: self.certificateClient, productCard)
+            checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
         }
     }
     
     func handleCheckCertificateResult(
         _ cardId: CardDomain.CardId,
-        _ result: Result<Void, CVVPinError.CheckError>,
+        _ result: Result<Void, CheckCVVPINFunctionalityError>,
         displayNumber: PhoneDomain.Phone
     ) {
         switch result {
@@ -2065,11 +2049,11 @@ extension ProductProfileViewModel {
     }
     
     func activateCertificateAction(
-        certificateClient: CertificateClient,
+        cvvPINServicesClient: CVVPINServicesClient,
         cardId: CardDomain.CardId,
         actionType: ConfirmViewModel.CVVPinAction
     ) {
-        certificateClient.activateCertificate { [weak self] result in
+        cvvPINServicesClient.activate { [weak self] result in
             
             guard let self else { return }
             
@@ -2091,7 +2075,12 @@ extension ProductProfileViewModel {
             
             switch result {
             case let .failure(error):
-                self.makeAlert(error.message)
+                switch error {
+                case let .server(_, errorMessage):
+                    self.makeAlert(errorMessage)
+                case .serviceFailure:
+                    self.makeAlert("Техническая ошибка.")
+                }
                 
             case let .success(phone):
                 self.confirmOtp(
@@ -2115,7 +2104,7 @@ extension ProductProfileViewModel {
             self.showSpinner()
             
             self.activateCertificateAction(
-                certificateClient: self.certificateClient,
+                cvvPINServicesClient: self.cvvPINServicesClient,
                 cardId: cardId,
                 actionType: actionType
             )
@@ -2125,13 +2114,18 @@ extension ProductProfileViewModel {
     
     func resendOtp() {
         
-        self.certificateClient.activateCertificate { [weak self] result in
+        self.cvvPINServicesClient.activate { [weak self] result in
             
             guard let self else { return }
             
             Task { @MainActor in
                 if case let .failure(error) = result {
-                    self.makeAlert(error.message)
+                    switch error {
+                    case let .server(_, errorMessage):
+                        self.makeAlert(errorMessage)
+                    case .serviceFailure:
+                        self.makeAlert("Техническая ошибка.")
+                    }
                 }
             }
         }
@@ -2139,15 +2133,18 @@ extension ProductProfileViewModel {
     
     func handlePinError(
         _ cardId: CardDomain.CardId,
-        _ pinError: (CVVPinError.CheckError),
+        _ pinError: (CheckCVVPINFunctionalityError),
         _ displayNumber: PhoneDomain.Phone
     ) {
         switch pinError {
             
-        case .certificate:
+        case .activationFailure:
             showActivateCertificate(cardId: cardId, actionType: .changePin(displayNumber))
             
-        case .connectivity:
+        case let .server(_, errorMessage):
+            makeAlert(errorMessage)
+            
+        case .serviceFailure:
             makeAlert("Истеклo время\nожидания ответа")
         }
     }
@@ -2188,7 +2185,7 @@ extension ProductProfileViewModel {
         cardId: CardDomain.CardId,
         completion: @escaping ShowCVVCompletion
     ) {
-        certificateClient.showCVV(
+        cvvPINServicesClient.showCVV(
             cardId: cardId.rawValue
         ) { [weak self] result in
             
@@ -2206,32 +2203,21 @@ extension ProductProfileViewModel {
     }
     
     func handle(
-        error: CVVPinError.ShowCVVError,
+        error: ShowCVVError,
         forCardId cardId: CardDomain.CardId
     ) {
         switch error {
-        case let .check(checkError):
-            switch checkError {
-            case .certificate:
-                // show certificate Alert
-                self.showActivateCertificate(cardId: cardId, actionType: .showCvv)
-                
-            case .connectivity:
-                // show connectivity Alert
-                self.makeAlert("Истеклo время\nожидания ответа")
-            }
+        case .activationFailure:
+            // show activate Certificate
+            self.showActivateCertificate(cardId: cardId, actionType: .showCvv)
             
-        case let .activation(activationError):
+        case let .server(_, errorMessage):
             // show Alert with message
-            self.makeAlert(activationError.message)
+            self.makeAlert(errorMessage)
             
-        case let .otp(otpError):
-            // show Alert with message
-            let message = otpError.retryAttempts > 0
-            ? "Введен некорректный код. Попробуйте еще раз."
-            : "Возникла техническая ошибка."
-            
-            self.makeAlert(message)
+        case .serviceFailure:
+            // show Alert
+            self.makeAlert(.technicalError)
         }
     }
 }

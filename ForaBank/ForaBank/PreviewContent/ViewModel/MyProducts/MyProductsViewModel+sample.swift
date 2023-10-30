@@ -21,7 +21,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
@@ -44,7 +44,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                certificateClient: HappyCertificateClient(),
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction

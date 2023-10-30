@@ -15,7 +15,7 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
 
-        let certificateClient = Services.certificateClient(
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
             keyExchangeCrypto: .live
         )
@@ -24,7 +24,7 @@ enum RootViewModelFactory {
             
             ProductProfileViewModel(
                 model,
-                certificateClient: certificateClient,
+                cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
