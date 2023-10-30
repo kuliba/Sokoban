@@ -127,6 +127,25 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
+    func signNoHash(
+        _ data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try decoratee.signNoHash(
+                data,
+                withPrivateKey: privateKey
+            )
+            log("Data (\(data.count)) signing success (\(signed)).")
+            
+            return signed
+        } catch {
+            log("Data (\(data.count)) signing failure: \(error).")
+            throw error
+        }
+    }
+
     func signEncryptOTP(
         otp: String,
         privateKey: RSAPrivateKey

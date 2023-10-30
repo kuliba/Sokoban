@@ -54,11 +54,9 @@ extension LiveCVVPINJSONMaker {
         let concatData = Data(concat.utf8)
         let hash = crypto.hash(concatData)
         
-#warning("move signNoHash to type field")
-        let signature = try ForaCrypto.Crypto.signNoHash(
+        let signature = try crypto.signNoHash(
             hash,
-            withPrivateKey: rsaKeyPair.privateKey.key,
-            algorithm: .rsaSignatureDigestPKCS1v15Raw
+            withPrivateKey: rsaKeyPair.privateKey
         )
         
         // Поскольку clientPublicKeyRSA и открытый ECDH-ключ (PaS) это бинарные величины, то JSON запроса (requestJSON) содержит их закодированными в формате BASE64 в полях clientPublicKeyRSA и publicApplicationSessionKey:

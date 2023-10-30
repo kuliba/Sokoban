@@ -109,6 +109,18 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     struct DataToStringConversionError: Error {}
     
+    func signNoHash(
+        _ data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        try Crypto.signNoHash(
+            data,
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15Raw
+        )
+    }
+     
     func signEncryptOTP(
         otp: String,
         privateKey: RSAPrivateKey
