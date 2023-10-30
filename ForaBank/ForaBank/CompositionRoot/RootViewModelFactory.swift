@@ -21,7 +21,7 @@ enum RootViewModelFactory {
         )
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
-        let cvvPINServicesClient = Services.cryptoLoggingCVVPINServicesClient(
+        let cvvPINServicesClient = Services.loggingCVVPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,

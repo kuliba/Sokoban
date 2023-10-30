@@ -1,5 +1,5 @@
 //
-//  Services+cryptoLoggingCVVPINServicesClient.swift
+//  Services+loggingCVVPINServicesClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 29.10.2023.
@@ -9,7 +9,7 @@ import Foundation
 
 extension Services {
     
-    static func cryptoLoggingCVVPINServicesClient(
+    static func loggingCVVPINServicesClient(
         httpClient: HTTPClient,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
