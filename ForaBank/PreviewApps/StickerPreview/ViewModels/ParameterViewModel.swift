@@ -12,7 +12,7 @@ enum ParameterViewModel {
     case sticker(StickerViewModel)
     case tip(TipViewModel)
     case select(SelectViewModel)
-    case product(ProductViewModel)
+    case product(ProductStateViewModel)
     case amount(AmountViewModel)
     case input(InputViewModel)
 }
