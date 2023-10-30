@@ -8,122 +8,73 @@
 import ForaCrypto
 import Foundation
 
-extension LiveLoggingCVVPINCrypto {
+struct LiveExtraLoggingCVVPINCrypto {
     
-    static func live(
-        log: @escaping (String) -> Void
-    ) -> Self {
-        
-        self.init(
-            _generateP384KeyPair: _generateP384KeyPair,
-            _generateRSA4096BitKeyPair: _generateRSA4096BitKeyPair,
-            _publicKeyData: _publicKeyData(publicKey:),
-            _transportEncrypt: _transportEncrypt(_:),
-            _sharedSecret: _sharedSecret(string:privateKey:),
-            log: log
-        )
-    }
-    
-    private static func _generateP384KeyPair(
-    ) -> P384KeyAgreementDomain.KeyPair {
-        
-        ForaCrypto.Crypto.generateP384KeyPair()
-    }
-    
-    private static func _generateRSA4096BitKeyPair() throws -> RSAKeyPair {
-        
-        try ForaCrypto.Crypto.generateKeyPair(keyType: .rsa, keySize: .bits4096)
-    }
-    
-    private static func _publicKeyData(
-        publicKey: PublicKey
-    ) throws -> Data {
-        
-        let representation = publicKey.derRepresentation
-        let log: (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .crypto, message: $0) }
-        log("Public Key representation: \(representation)")
-        return representation
-    }
-    
-    private static func _transportEncrypt(
-        _ data: Data
-    ) throws -> Data {
-        
-        try ForaCrypto.Crypto.transportEncrypt(data, padding: .PKCS1)
-    }
-    
-    private static func _sharedSecret(
-        string: String,
-        privateKey: PrivateKey
-    ) throws -> Data {
-        
-        let serverPublicKey = try ForaCrypto.Crypto.transportDecryptP384PublicKey(from: string)
-        let sharedSecret = try ForaCrypto.Crypto.sharedSecret(
-            privateKey: privateKey,
-            publicKey: serverPublicKey
-        )
-        
-        return sharedSecret
-    }
-
-}
-
-struct LiveLoggingCVVPINCrypto {
-    
+    typealias KeyPair = P384KeyAgreementDomain.KeyPair
     typealias PublicKey = P384KeyAgreementDomain.PublicKey
     typealias PrivateKey = P384KeyAgreementDomain.PrivateKey
     typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
         
-    let _generateP384KeyPair: () -> P384KeyAgreementDomain.KeyPair
-    let _generateRSA4096BitKeyPair: () throws -> RSAKeyPair
-    let _publicKeyData: (PublicKey) throws -> Data
-    let _transportEncrypt: (Data) throws -> Data
-    let _sharedSecret: (String, PrivateKey) throws -> Data
+    private typealias Crypto = ForaCrypto.Crypto
     
     let log: (String) -> Void
 }
 
-extension LiveLoggingCVVPINCrypto {
+extension LiveExtraLoggingCVVPINCrypto {
     
-    func generateP384KeyPair() -> P384KeyAgreementDomain.KeyPair {
+    func generateP384KeyPair() -> KeyPair {
         
-        _generateP384KeyPair()
+        Crypto.generateP384KeyPair()
     }
 }
 
-extension LiveLoggingCVVPINCrypto {
+extension LiveExtraLoggingCVVPINCrypto {
     
     func publicKeyData(
         forPublicKey publicKey: PublicKey
     ) throws -> Data {
         
-        try _publicKeyData(publicKey)
+        publicKey.derRepresentation
     }
     
     func transportEncrypt(data: Data) throws -> Data {
         
-        try _transportEncrypt(data)
+        try Crypto.transportEncrypt(
+            data,
+            padding: .PKCS1
+        )
     }
 }
 
 /// Used if `AuthenticateWithPublicKeyService`
-extension LiveLoggingCVVPINCrypto {
+extension LiveExtraLoggingCVVPINCrypto {
     
     func makeSharedSecret(
         from string: String,
         using privateKey: P384KeyAgreementDomain.PrivateKey
     ) throws -> Data {
         
-        try _sharedSecret(string, privateKey)
+        let serverPublicKey = try Crypto.transportDecryptP384PublicKey(
+            from: string
+        )
+        let sharedSecret = try Crypto.sharedSecret(
+            privateKey: privateKey,
+            publicKey: serverPublicKey
+        )
+        
+        return sharedSecret
     }
 }
 
 /// `ChangePINSecretJSON`
-extension LiveLoggingCVVPINCrypto {
+extension LiveExtraLoggingCVVPINCrypto {
     
     func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
         
-        try _generateRSA4096BitKeyPair()
+        try Crypto.generateKeyPair(
+            keyType: .rsa,
+            keySize: .bits4096
+        )
     }
     
     func signEncryptOTP(
@@ -131,7 +82,7 @@ extension LiveLoggingCVVPINCrypto {
         privateKey: SecKey
     ) throws -> Data {
         
-        let clientSecretOTP = try ForaCrypto.Crypto.signNoHash(
+        let clientSecretOTP = try Crypto.signNoHash(
             .init(otp.utf8),
             withPrivateKey: privateKey,
             algorithm: .rsaSignatureDigestPKCS1v15Raw
@@ -149,9 +100,10 @@ extension LiveLoggingCVVPINCrypto {
     func transportKeyEncrypt(_ data: Data) throws -> Data {
         
         do {
-            let transportKey = try ForaCrypto.Crypto.transportKey()
+            let transportKey = try Crypto.transportKey()
+            log("Loaded transport public key: \(transportKey)")
             
-            let encrypted = try ForaCrypto.Crypto.encrypt(
+            let encrypted = try Crypto.encrypt(
                 data: data,
                 withPublicKey: transportKey,
                 algorithm: .rsaEncryptionRaw
@@ -160,7 +112,7 @@ extension LiveLoggingCVVPINCrypto {
             
             return encrypted
         } catch {
-            log("Transport public key encryption error: \(error.localizedDescription)")
+            log("Transport public key encryption error: \(error).")
             throw error
         }
     }
@@ -169,10 +121,7 @@ extension LiveLoggingCVVPINCrypto {
         publicKey: SecKey
     ) throws -> Data {
         
-        let x509Representation = try ForaCrypto.Crypto.x509Representation(of: publicKey)
-        log("x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".")
-        
-        return x509Representation
+        try Crypto.x509Representation(of: publicKey)
     }
     
     func aesEncrypt(
@@ -183,7 +132,7 @@ extension LiveLoggingCVVPINCrypto {
         do {
             let prefix = sessionKey.sessionKeyValue.prefix(32)
             
-            let aes256CBC = try ForaCrypto.AES256CBC(key: prefix)
+            let aes256CBC = try AES256CBC(key: prefix)
             log("Create AES256CBC with key prefix (\(prefix.count)) \"\(prefix.base64EncodedString())\"")
             
             do {
@@ -203,7 +152,7 @@ extension LiveLoggingCVVPINCrypto {
 }
 
 /// `ChangePINCrypto`
-extension LiveLoggingCVVPINCrypto {
+extension LiveExtraLoggingCVVPINCrypto {
     
 #warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
     func rsaDecrypt(
@@ -211,18 +160,13 @@ extension LiveLoggingCVVPINCrypto {
         withPrivateKey privateKey: SecKey
     ) throws -> String {
         
-        let data = try ForaCrypto.Crypto.decrypt(
+        let data = try Crypto.decrypt(
             string,
             with: .rsaSignatureDigestPKCS1v15Raw,
             using: privateKey
         )
-        
-        guard let string = String(data: data, encoding: .utf8)
-        else {
-            throw DataToStringConversionError()
-        }
-        
-        return string
+
+        return try String(data: data, encoding: .utf8).get(orThrow: DataToStringConversionError())
     }
     
     struct DataToStringConversionError: Error {}

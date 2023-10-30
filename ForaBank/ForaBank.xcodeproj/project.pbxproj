@@ -348,7 +348,7 @@
 		2A1E76B82AEE9B6400B33AF7 /* CVVPINCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76B72AEE9B6400B33AF7 /* CVVPINCrypto.swift */; };
 		2A1E76BA2AEE9D2400B33AF7 /* LoggingCVVPINJSONMakerDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76B92AEE9D2300B33AF7 /* LoggingCVVPINJSONMakerDecorator.swift */; };
 		2A1E76BC2AEE9D9600B33AF7 /* LoggingCVVPINCryptoDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76BB2AEE9D9600B33AF7 /* LoggingCVVPINCryptoDecorator.swift */; };
-		2A1E76BF2AEEA1CD00B33AF7 /* LiveLoggingCVVPINCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76BE2AEEA1CD00B33AF7 /* LiveLoggingCVVPINCrypto.swift */; };
+		2A1E76BF2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76BE2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift */; };
 		2A1E76C12AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76C02AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift */; };
 		2A1F083C2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F083B2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift */; };
 		2A1F083F2A7901FF00C5B11B /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F083E2A7901FF00C5B11B /* AuthenticatedHTTPClientDecoratorTests.swift */; };
@@ -488,6 +488,7 @@
 		2A73C2262A03A41600C68A32 /* getScenarioQRData_1_1_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2252A03A41600C68A32 /* getScenarioQRData_1_1_2.json */; };
 		2A73C2282A03A4C000C68A32 /* getScenarioQRData_1_2_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2272A03A4C000C68A32 /* getScenarioQRData_1_2_1.json */; };
 		2A73C22A2A03A57800C68A32 /* getScenarioQRData_1_2_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */; };
+		2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */; };
 		2A77B6462ADF213F0022600F /* CVVPINRemote+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */; };
 		2A77B6482ADFC2360022600F /* RemoteCVV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6472ADFC2360022600F /* RemoteCVV.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
@@ -2386,7 +2387,7 @@
 		2A1E76B72AEE9B6400B33AF7 /* CVVPINCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINCrypto.swift; sourceTree = "<group>"; };
 		2A1E76B92AEE9D2300B33AF7 /* LoggingCVVPINJSONMakerDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingCVVPINJSONMakerDecorator.swift; sourceTree = "<group>"; };
 		2A1E76BB2AEE9D9600B33AF7 /* LoggingCVVPINCryptoDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingCVVPINCryptoDecorator.swift; sourceTree = "<group>"; };
-		2A1E76BE2AEEA1CD00B33AF7 /* LiveLoggingCVVPINCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLoggingCVVPINCrypto.swift; sourceTree = "<group>"; };
+		2A1E76BE2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveExtraLoggingCVVPINCrypto.swift; sourceTree = "<group>"; };
 		2A1E76C02AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCVVPINJSONMaker.swift; sourceTree = "<group>"; };
 		2A1F083B2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecorator.swift; sourceTree = "<group>"; };
 		2A1F083E2A7901FF00C5B11B /* AuthenticatedHTTPClientDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecoratorTests.swift; sourceTree = "<group>"; };
@@ -2520,6 +2521,7 @@
 		2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_2_2.json; sourceTree = "<group>"; };
 		2A743B902A29FC9200945BB4 /* TextFieldComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldComponent.xctestplan; sourceTree = "<group>"; };
 		2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldModel.xctestplan; sourceTree = "<group>"; };
+		2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+isEmptyJSON.swift"; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
 		2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINRemote+live.swift"; sourceTree = "<group>"; };
 		2A77B6472ADFC2360022600F /* RemoteCVV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCVV.swift; sourceTree = "<group>"; };
@@ -5024,7 +5026,7 @@
 		2A1E76BD2AEEA1C200B33AF7 /* LiveImplementation */ = {
 			isa = PBXGroup;
 			children = (
-				2A1E76BE2AEEA1CD00B33AF7 /* LiveLoggingCVVPINCrypto.swift */,
+				2A1E76BE2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift */,
 				2A1E76C02AEEA75200B33AF7 /* LiveCVVPINJSONMaker.swift */,
 			);
 			path = LiveImplementation;
@@ -5149,6 +5151,7 @@
 				2AEF685B2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift */,
 				2AEF68572AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift */,
 				2AEF68592AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift */,
+				2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */,
 			);
 			path = ResponseMapper;
 			sourceTree = "<group>";
@@ -5549,14 +5552,14 @@
 			path = LEGACY_KEEP_UNITIL_USEFUL;
 			sourceTree = "<group>";
 		};
-		2A669EAF2AE50D0A009A2F12 /* CertificateClientAdapters */ = {
+		2A669EAF2AE50D0A009A2F12 /* CVVPINServicesClientAdapters */ = {
 			isa = PBXGroup;
 			children = (
 				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
 				2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */,
 			);
-			path = CertificateClientAdapters;
+			path = CVVPINServicesClientAdapters;
 			sourceTree = "<group>";
 		};
 		2A67A01C2A43311B003BE637 /* Mappers */ = {
@@ -5578,7 +5581,7 @@
 				2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */,
 				2A9E881E2AE9166500551DF7 /* Crypto */,
 				2A2ECBC02AE5264C00F3C946 /* ResponseMapper */,
-				2A669EAF2AE50D0A009A2F12 /* CertificateClientAdapters */,
+				2A669EAF2AE50D0A009A2F12 /* CVVPINServicesClientAdapters */,
 				2A77B64F2ADFCD450022600F /* Infra */,
 				2A669EAA2AE50349009A2F12 /* LEGACY_KEEP_UNITIL_USEFUL */,
 			);
@@ -11947,7 +11950,7 @@
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
 				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
 				774EECDC29A638B800CCE94A /* PaymentsSpoilerGroupView.swift in Sources */,
-				2A1E76BF2AEEA1CD00B33AF7 /* LiveLoggingCVVPINCrypto.swift in Sources */,
+				2A1E76BF2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift in Sources */,
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
@@ -12456,6 +12459,7 @@
 				5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */,
 				77A76A9627FC475600A271B3 /* PlacesDetailViewModel.swift in Sources */,
 				2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */,
+				2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */,
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
