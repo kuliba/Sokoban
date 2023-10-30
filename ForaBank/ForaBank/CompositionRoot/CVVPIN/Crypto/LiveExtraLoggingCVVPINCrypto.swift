@@ -121,26 +121,6 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
      
-    func signEncryptOTP(
-        otp: String,
-        privateKey: RSAPrivateKey
-    ) throws -> Data {
-        
-        let clientSecretOTP = try Crypto.signNoHash(
-            .init(otp.utf8),
-            withPrivateKey: privateKey.key,
-            algorithm: .rsaSignatureDigestPKCS1v15Raw
-        )
-        log("Create \"clientSecretOTP\" (signed OTP): \(clientSecretOTP)")
-        
-        let procClientSecretOTP = try transportEncryptNoPadding(
-            data: clientSecretOTP
-        )
-        log("Create \"procClientSecretOTP\" (encrypted \"clientSecretOTP\"): \(procClientSecretOTP)")
-        
-        return procClientSecretOTP
-    }
-    
     func x509Representation(
         publicKey: RSAPublicKey
     ) throws -> Data {

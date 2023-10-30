@@ -20,6 +20,7 @@ extension LiveCVVPINJSONMaker {
     
     typealias ECDHPublicKey = ECDHDomain.PublicKey
     typealias RSAKeyPair = RSADomain.KeyPair
+    typealias RSAPrivateKey = RSADomain.PrivateKey
 
     func makeRequestJSON(
         publicKey: ECDHPublicKey,
@@ -81,7 +82,6 @@ extension LiveCVVPINJSONMaker {
 }
 
 /// used in `bindPublicKeyWithEventId`
-/// based on`BindPublicKeySecretJSONMaker`
 extension LiveCVVPINJSONMaker {
     
     func makeSecretJSON(
@@ -99,7 +99,7 @@ extension LiveCVVPINJSONMaker {
         let (encryptedSignedOTP, publicKey, privateKey) = try retry {
             
             let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
-            let encryptedSignedOTP = try crypto.signEncryptOTP(
+            let encryptedSignedOTP = try signEncryptOTP(
                 otp: otp,
                 privateKey: privateKey
             )
@@ -123,6 +123,22 @@ extension LiveCVVPINJSONMaker {
         )
         
         return (data, (privateKey, publicKey))
+    }
+    
+    func signEncryptOTP(
+        otp: String,
+        privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        let clientSecretOTP = try crypto.signNoHash(
+            .init(otp.utf8),
+            withPrivateKey: privateKey
+        )
+        
+        let procClientSecretOTP = try crypto.transportEncryptNoPadding(
+            data: clientSecretOTP
+        )
+        return procClientSecretOTP
     }
 }
 

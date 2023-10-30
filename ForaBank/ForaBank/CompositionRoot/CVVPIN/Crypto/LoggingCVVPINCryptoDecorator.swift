@@ -146,25 +146,6 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
 
-    func signEncryptOTP(
-        otp: String,
-        privateKey: RSAPrivateKey
-    ) throws -> Data {
-        
-        do {
-            let signedEncryptedOTP = try decoratee.signEncryptOTP(
-                otp: otp,
-                privateKey: privateKey
-            )
-            log("Create \"signedEncryptedOTP\": \(signedEncryptedOTP)")
-            
-            return signedEncryptedOTP
-        } catch {
-            log("Sign encryted OPT failure: \(error).")
-            throw error
-        }
-    }
-    
     func x509Representation(
         publicKey: RSAPublicKey
     ) throws -> Data {

@@ -54,11 +54,6 @@ protocol CVVPINCrypto {
         withPrivateKey privateKey: RSAPrivateKey
     ) throws -> Data
     
-    func signEncryptOTP(
-        otp: String,
-        privateKey: RSAPrivateKey
-    ) throws -> Data
-    
     func x509Representation(
         publicKey: RSAPublicKey
     ) throws -> Data
