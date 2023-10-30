@@ -1,9 +1,11 @@
 //
 //  ComposedCVVPINService.swift
-//  
+//  ForaBank
 //
-//  Created by Igor Malyarov on 21.10.2023.
+//  Created by Igor Malyarov on 29.10.2023.
 //
+
+import CVVPIN_Services
 
 public final class ComposedCVVPINService {
     

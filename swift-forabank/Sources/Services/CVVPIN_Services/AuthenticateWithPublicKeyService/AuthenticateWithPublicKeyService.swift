@@ -20,28 +20,21 @@ public final class AuthenticateWithPublicKeyService {
     public typealias ProcessCompletion = (ProcessResult) -> Void
     public typealias Process = (Data, @escaping ProcessCompletion) -> Void
     
-    // fire and forget - cannot expect result since flow involves user interaction
-    public typealias ActivateCCVPIN = () -> Void
-    
     public typealias MakeSessionKeyResult = Swift.Result<Success.SessionKey, Swift.Error>
     public typealias MakeSessionKeyCompletion = (MakeSessionKeyResult) -> Void
     public typealias MakeSessionKey = (Response, @escaping MakeSessionKeyCompletion) -> Void
     
     private let prepareKeyExchange: PrepareKeyExchange
-    // processPublicKeyAuthenticationRequest
-    private let process: Process
-    private let activateCCVPIN: ActivateCCVPIN
+    private let process: Process // processPublicKeyAuthenticationRequest
     private let makeSessionKey: MakeSessionKey
     
     public init(
         prepareKeyExchange: @escaping PrepareKeyExchange,
         process: @escaping Process,
-        activateCCVPIN: @escaping ActivateCCVPIN,
         makeSessionKey: @escaping MakeSessionKey
     ) {
         self.prepareKeyExchange = prepareKeyExchange
         self.process = process
-        self.activateCCVPIN = activateCCVPIN
         self.makeSessionKey = makeSessionKey
     }
 }

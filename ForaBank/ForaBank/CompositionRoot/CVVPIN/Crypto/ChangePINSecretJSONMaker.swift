@@ -45,12 +45,15 @@ where SymmetricKey == SessionKey {
     }
     
     static var loggingLive: Self {
+        
+        let changePINSecretJSONMakerCrypto = LiveLoggingCVVPINCrypto.live(log: log)
+        
         return .init(
             crypto: .init(
                 aesEncrypt: { data, sessionKey in
                     
                     do {
-                        let encrypted = try BindPublicKeyCrypto.aesEncrypt(data: data .data, sessionKey: sessionKey)
+                        let encrypted = try changePINSecretJSONMakerCrypto.aesEncrypt(data: data .data, sessionKey: sessionKey)
                         log("AES Encrypted data (\(data.count))")
                         
                         return encrypted

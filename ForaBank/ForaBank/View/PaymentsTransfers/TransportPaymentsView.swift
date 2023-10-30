@@ -8,21 +8,18 @@
 import CvvPin
 import SwiftUI
 
-struct TransportPaymentsView<MosParkingView: View, ExtraView: View>: View {
+struct TransportPaymentsView<MosParkingView: View>: View {
     
     @ObservedObject private var viewModel: TransportPaymentsViewModel
     
     private let mosParkingView: () -> MosParkingView
-    private let extraView: () -> ExtraView
     
     init(
         viewModel: TransportPaymentsViewModel,
-        mosParkingView: @escaping () -> MosParkingView,
-        extraView: @escaping () -> ExtraView
+        mosParkingView: @escaping () -> MosParkingView
     ) {
         self.viewModel = viewModel
         self.mosParkingView = mosParkingView
-        self.extraView = extraView
     }
     
     var body: some View {
@@ -32,8 +29,6 @@ struct TransportPaymentsView<MosParkingView: View, ExtraView: View>: View {
             VStack(alignment: .leading, spacing: 0) {
                 
                 Transport.LatestPaymentsView(for: viewModel.latestPayments)
-                
-                extraView()
                 
                 Transport.OperatorsView(for: viewModel.viewOperators)
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -239,12 +234,6 @@ struct TransportPaymentsView_Previews: PreviewProvider {
             
             Text("MosParkingView")
             
-        } extraView: {
-            
-            Text("This is Extra View")
-                .padding()
-                .background(Color.blue.opacity(0.2))
-                .padding()
         }
     }
 }
@@ -254,7 +243,6 @@ struct TransportPaymentsView_Previews: PreviewProvider {
 private extension TransportPaymentsViewModel {
     
     static let preview: TransportPaymentsViewModel = .init(
-        cvvPinService: unimplemented(),
         operators: .preview,
         latestPayments: .sample,
         makePaymentsViewModel: {
@@ -312,176 +300,4 @@ private extension OperatorGroupData.OperatorData {
         region: nil,
         synonymList: []
     )
-}
-
-// MARK: - CvvPinFlowDemoView
-
-struct CvvPinFlowDemoView: View {
-    
-    @State private var flowState: FlowState?
-    
-    enum FlowState: Equatable {
-        
-        case error(String)
-        case loading
-        case flowStartedOK
-        case otpOK
-    }
-    
-    typealias StartCvvPinFlowCompletion = (Result<Void, Error>) -> Void
-    typealias StartCvvPinFlow = (@escaping StartCvvPinFlowCompletion) -> Void
-    
-    typealias SubmitOTPResult = Result<Void, Error>
-    typealias SubmitOTPCompletion = (SubmitOTPResult) -> Void
-    typealias SubmitOTP = (String, @escaping SubmitOTPCompletion) -> Void
-    
-    private let startCvvPinFlow: StartCvvPinFlow
-    private let submitOTP: SubmitOTP
-    
-    init(
-        startCvvPinFlow: @escaping StartCvvPinFlow,
-        submitOTP: @escaping SubmitOTP
-    ) {
-        self.startCvvPinFlow = startCvvPinFlow
-        self.submitOTP = submitOTP
-    }
-    
-    var body: some View {
-        
-        VStack {
-            
-            startCvvPinFlowButton()
-            
-            if case .flowStartedOK = flowState {
-                
-                OTPView(submitOTP: sendOTP)
-            }
-        }
-        .animation(.easeInOut, value: flowState)
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.blue.opacity(0.04))
-    }
-    
-    private func startCvvPinFlowButton() -> some View {
-        
-        Button(
-            action: startCvvPinFlowButtonAction,
-            label: startCvvPinFlowButtonLabel
-        )
-        .foregroundColor(.blue)
-        .disabled(isStartCvvPinFlowButtonDisabled())
-    }
-    
-    private func startCvvPinFlowButtonAction() {
-        
-        flowState = .loading
-        
-        startCvvPinFlow { result in
-            
-            switch result {
-            case let .failure(error):
-                self.flowState = .error(error.localizedDescription)
-                
-            case let .success(keyExchange):
-                dump(keyExchange)
-                self.flowState = .flowStartedOK
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func startCvvPinFlowButtonLabel() -> some View {
-        
-        switch flowState {
-        case let .error(error):
-            Text(error)
-                .foregroundColor(.red)
-                .font(.caption)
-            
-        case .loading:
-            ProgressView("Starting CVV-PIN FLow...")
-                .foregroundColor(.gray)
-                .font(.caption)
-            
-        case .none:
-            Text("Start CVV-PIN FLow")
-            
-        case .flowStartedOK:
-            Text("CVV-PIN FLow Started OK. Wait for OTP")
-                .foregroundColor(.green)
-            
-        case .otpOK:
-            Text("Key exchange confirmed")
-                .foregroundColor(.green)
-        }
-    }
-    
-    private func isStartCvvPinFlowButtonDisabled() -> Bool {
-        
-        switch flowState {
-        case .none, .error, .otpOK:
-            return false
-        case .loading, .flowStartedOK:
-            return true
-        }
-    }
-    
-    private func sendOTP(string: String) {
-        
-        flowState = .loading
-        
-        submitOTP(string) { result in
-            
-            switch result {
-            case let .failure(error):
-                flowState = .error(error.localizedDescription)
-                
-            case .success:
-                flowState = .otpOK
-            }
-        }
-    }
-}
-
-private struct OTPView: View {
-    
-    @State private var otpString = ""
-    
-    typealias SubmitOTP = (String) -> Void
-
-    let submitOTP: SubmitOTP
-    
-    var body: some View {
-        
-        HStack {
-            
-            TextField("OTP", text: $otpString)
-            
-            Button("Submit") {
-                
-                submitOTP(otpString)
-                otpString = ""
-            }
-            .disabled(otpString.isEmpty)
-            .accentColor(.blue)
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 22)
-                .stroke()
-                .foregroundColor(.gray.opacity(0.5))
-        )
-    }
-}
-
-struct CvvPinFlowDemoView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        CvvPinFlowDemoView(
-            startCvvPinFlow: { _ in },
-            submitOTP: { _,_  in }
-        )
-    }
 }

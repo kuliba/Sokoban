@@ -107,6 +107,7 @@ enum GetPINConfirmationCodeError: Error {
 
 enum ChangePINError: Error {
     
+    case activationFailure
     case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
     case server(statusCode: Int, errorMessage: String)
     case serviceFailure
