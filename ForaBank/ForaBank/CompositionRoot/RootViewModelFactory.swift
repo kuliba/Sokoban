@@ -16,7 +16,9 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let cvvPINCrypto = LiveLoggingCVVPINCrypto(agent: LoggerAgent.shared)
+        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
+            agent: LoggerAgent.shared
+        )
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
         let cvvPINServicesClient = Services.cryptoLoggingCVVPINServicesClient(
@@ -49,9 +51,7 @@ enum RootViewModelFactory {
         
         let chatViewModel = ChatViewModel()
         
-        let informerViewModel = InformerView.ViewModel(
-            model
-        )
+        let informerViewModel = InformerView.ViewModel(model)
         
         return .init(
             mainViewModel: mainViewModel,
@@ -63,16 +63,15 @@ enum RootViewModelFactory {
     }
 }
 
-extension LiveLoggingCVVPINCrypto: CVVPINCrypto {}
+extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
 
-private extension LiveLoggingCVVPINCrypto {
+private extension LiveExtraLoggingCVVPINCrypto {
     
     init(agent: LoggerAgentProtocol) {
         
-        self = LiveLoggingCVVPINCrypto.live(log: {
-            
-            agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line)
-        })
+        self.init(
+            log: { agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line) }
+        )
     }
 }

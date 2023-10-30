@@ -212,9 +212,8 @@ extension LiveCVVPINJSONMaker {
     ) throws -> Data {
         
         let (publicKey, privateKey) = rsaKeyPair
+        #warning("move to crypto")
         let hashSignVerify = ShowCVVCrypto.hashSignVerify(string:publicKey:privateKey:)
-#warning("replace with crypto!")
-        let aesEncrypt = LiveLoggingCVVPINCrypto.live(log: { _ in }).aesEncrypt(data:sessionKey:)
         
         let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
         let signature = try hashSignVerify(concatenation, publicKey, privateKey)
@@ -229,7 +228,10 @@ extension LiveCVVPINJSONMaker {
             "signature": signatureBase64
         ] as [String: String])
         
-        let encrypted = try aesEncrypt(json, sessionKey)
+        let encrypted = try crypto.aesEncrypt(
+            data: json,
+            sessionKey: sessionKey
+        )
         
         return encrypted
     }
