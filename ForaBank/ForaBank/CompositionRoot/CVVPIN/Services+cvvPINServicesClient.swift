@@ -236,12 +236,8 @@ extension Services {
         
         // MARK: Configure Change PIN Service
         
-        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
-        typealias AuthResult = Result<AuthSuccess, AuthError>
-        typealias AuthCompletion = (AuthResult) -> Void
-        typealias Authenticate = (@escaping AuthCompletion) -> Void
-        
-        let authenticate: Authenticate = { completion in
+        #warning("extract repeated")
+        let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
             
             rsaKeyPairLoader.load { result in
                 
@@ -250,32 +246,26 @@ extension Services {
                     completion(.failure(.activationFailure))
                     
                 case .success:
-                    
                     sessionIDLoader.load { result in
+                        
                         switch result {
                         case .failure:
                             cachingAuthWithPublicKeyService.authenticateWithPublicKey {
                                 
-                                completion($0.mapError { _ in .authenticationFailure })
+                                completion(
+                                    $0
+                                        .map(\.sessionID.sessionIDValue)
+                                        .map(ChangePINService.SessionID.init(sessionIDValue:))
+                                        .mapError { _ in .authenticationFailure })
                             }
+                            
                         case let .success(sessionID):
-#warning("есть сессия")
+                            completion(.success(
+                                .init(sessionIDValue: sessionID.value)
+                            ))
                         }
                     }
                 }
-            }
-        }
-
-        let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
-            
-            authenticate { result in
-                
-                completion(
-                    result
-                        .map(\.sessionID.sessionIDValue)
-                        .map(ChangePINService.SessionID.init(sessionIDValue:))
-                        .mapError(ChangePINService.AuthenticateError.init)
-                )
             }
         }
         
