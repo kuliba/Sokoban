@@ -9,7 +9,7 @@ import CVVPINServices
 import Foundation
 import KeyChainStore
 
-extension KeyChainStore: Store {
+extension KeyChainStore: CVVPINServices.Store {
     
     public typealias Local = Key
     

@@ -16,11 +16,14 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
+    typealias Log = (LoggerAgentCategory, String, StaticString, UInt) -> Void
+    
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
-        currentDate: @escaping () -> Date = Date.init
+        currentDate: @escaping () -> Date = Date.init,
+        log: @escaping Log
     ) -> CVVPINServicesClient {
         
         // MARK: Configure Infra: Persistent Stores
@@ -38,39 +41,37 @@ extension Services {
         
         // MARK: Configure Infra: Loaders
         
-        let otpEventIDLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: otpEventIDStore,
-                currentDate: currentDate
+        func loggingLoaderDecorator<T>(
+            store: any Store<T>
+        ) -> LoggingLoaderDecorator<T> {
+            
+            LoggingLoaderDecorator(
+                decoratee: GenericLoaderOf(
+                    store: store,
+                    currentDate: currentDate
+                ),
+                log: { log(.cache, $0, #file, #line) }
             )
+        }
+        
+        let otpEventIDLoader = loggingLoaderDecorator(
+            store: otpEventIDStore
         )
         
-        let rsaKeyPairLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: persistentRSAKeyPairStore,
-                currentDate: currentDate
-            )
+        let rsaKeyPairLoader = loggingLoaderDecorator(
+            store: persistentRSAKeyPairStore
         )
         
-        let sessionCodeLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionCodeStore,
-                currentDate: currentDate
-            )
+        let sessionCodeLoader = loggingLoaderDecorator(
+            store: sessionCodeStore
         )
         
-        let sessionKeyLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionKeyStore,
-                currentDate: currentDate
-            )
+        let sessionKeyLoader = loggingLoaderDecorator(
+            store: sessionKeyStore
         )
         
-        let sessionIDLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionIDStore,
-                currentDate: currentDate
-            )
+        let sessionIDLoader = loggingLoaderDecorator(
+            store: sessionIDStore
         )
         
         // MARK: Configure Remote Services
@@ -1192,19 +1193,19 @@ private extension CVVPINFunctionalityActivationService.GetCodeResponse {
 
 // MARK: - Loggers
 
-private extension LoggingLoaderDecorator {
-    
-    convenience init(
-        decoratee: any Loader<T>
-    ) {
-        self.init(
-            decoratee: decoratee,
-            log: {
-                LoggerAgent.shared.debug(category: .cache, message: $0)
-            }
-        )
-    }
-}
+//private extension LoggingLoaderDecorator {
+//
+//    convenience init(
+//        decoratee: any Loader<T>
+//    ) {
+//        self.init(
+//            decoratee: decoratee,
+//            log: {
+//                LoggerAgent.shared.debug(category: .cache, message: $0)
+//            }
+//        )
+//    }
+//}
 
 private extension LoggingRemoteServiceDecorator {
     

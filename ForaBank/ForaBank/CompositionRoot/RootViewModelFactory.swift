@@ -16,16 +16,17 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            agent: LoggerAgent.shared
-        )
+        let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
+        let cryptoLog = { log(.crypto, $0, #file, #line) }
+        
+        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(log: cryptoLog)
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
         let cvvPINServicesClient = Services.loggingCVVPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,
-            loggerAgent: LoggerAgent.shared
+            log: log
         )
         
         let productProfileViewModelFactory = {
@@ -66,63 +67,28 @@ enum RootViewModelFactory {
 extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
 
-private extension LiveExtraLoggingCVVPINCrypto {
-    
-    init(agent: LoggerAgentProtocol) {
-        
-        self.init(
-            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
-        )
-    }
-}
-
 private extension Services {
     
     static func loggingCVVPINServicesClient(
         httpClient: HTTPClient,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
-        loggerAgent: LoggerAgentProtocol,
-        currentDate: @escaping () -> Date = Date.init
+        currentDate: @escaping () -> Date = Date.init,
+        log: @escaping Log
     ) -> CVVPINServicesClient {
         
         cvvPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
-                agent: loggerAgent
+                log: { log(.crypto, $0, #file, #line) }
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
-                agent: loggerAgent
+                log: { log(.crypto, $0, #file, #line) }
             ),
-            currentDate: currentDate
-        )
-    }
-}
-
-private extension LoggingCVVPINJSONMakerDecorator {
-    
-    convenience init(
-        decoratee: CVVPINJSONMaker,
-        agent: LoggerAgentProtocol
-    ) {
-        self.init(
-            decoratee: decoratee,
-            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
-        )
-    }
-}
-
-private extension LoggingCVVPINCryptoDecorator {
-    
-    convenience init(
-        decoratee: CVVPINCrypto,
-        agent: LoggerAgentProtocol
-    ) {
-        self.init(
-            decoratee: decoratee,
-            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
+            currentDate: currentDate,
+            log: log
         )
     }
 }
