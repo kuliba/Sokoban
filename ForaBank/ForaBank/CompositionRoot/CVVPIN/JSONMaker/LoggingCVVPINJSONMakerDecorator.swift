@@ -56,7 +56,7 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 otp: otp,
                 sessionKey: sessionKey
             )
-            log("Make Secret JSON success: (data: \(output.data.count), and key pair).")
+            log("Make Secret JSON success (data: \(output.data.count)).")
             
             return output
         } catch {
@@ -119,7 +119,7 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 rsaKeyPair: rsaKeyPair,
                 sessionKey: sessionKey
             )
-            log("SecretJSON creation success: \(json)")
+            log("SecretJSON creation success (\(json.count)).")
             
             return json
         } catch {
