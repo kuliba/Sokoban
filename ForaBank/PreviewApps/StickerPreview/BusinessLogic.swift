@@ -15,7 +15,10 @@ final class BusinessLogic {
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
     typealias Completion = (OperationResult) -> Void
     typealias Load = (Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
-    typealias Transfer = (TransferEvent, @escaping Completion) -> Void
+    
+    typealias TransferResult = Result<TransferResponse, TransferError>
+    typealias TransferCompletion = (TransferResult) -> Void
+    typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     private let dictionaryService: RemoteService<Operation, Operation>
     private let transfer: Transfer
@@ -85,6 +88,7 @@ extension BusinessLogic {
                 switch result {
                 case let .success(state):
                     completion(.success(state))
+                    //map "TransferResponse" to newParameter
                     
                 case let .failure(error):
                     completion(.failure(error))
@@ -150,6 +154,19 @@ extension BusinessLogic {
 // MARK: - Types
 
 extension BusinessLogic {
+    
+    typealias TransferPayload = TransferEvent
+    
+    enum TransferResponse {
+        
+        case deliveryOffice(DeliveryOffice)
+    }
+    
+    struct DeliveryOffice {
+        
+    }
+    
+    enum TransferError: Error {}
     
     enum TransferEvent {
     
