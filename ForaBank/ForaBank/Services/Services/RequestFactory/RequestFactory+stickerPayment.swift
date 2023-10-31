@@ -45,4 +45,55 @@ extension RequestFactory {
     }
 }
 
+extension RequestFactory {
+
+    enum StickerOrderType: String {
+        
+        case stickerOrderForm
+        case stickerDeliveryOffice
+        case stickerOrderDeliveryCourier
+    }
+    
+    struct StickerPayment {
+        
+        let currencyAmount: String
+        let amount: String
+        let check: Bool
+        let payer: Payer
+        let productToOrderInfo: Order
+        
+        struct Payer {
+            
+            let cardId: String
+        }
+        
+        struct Order {
+            
+            let type: String
+            let deliverToOffice: Bool
+            let officeId: String
+        }
+    }
+}
+
+private extension RequestFactory.StickerPayment {
+    
+    var json: Data? {
+        
+        try? JSONSerialization.data(withJSONObject: [
+            "currencyAmount": currencyAmount,
+            "amount": amount,
+            "check": check,
+            "payer": [
+                
+                "cardId": payer.cardId
+            ],
+            "productToOrderInfo": [
+                
+                "type": productToOrderInfo.type,
+                "deliverToOffice": productToOrderInfo.deliverToOffice,
+                "officeId": productToOrderInfo.officeId
+            ]
+        ] as [String: Any])
+    }
 }
