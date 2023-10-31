@@ -45,6 +45,12 @@ protocol CVVPINCrypto {
     /// `ChangePINSecretJSON`
     func generateRSA4096BitKeyPair() throws -> RSAKeyPair
     
+    func hashSignVerify(
+        string: String,
+        publicKey: RSAPublicKey,
+        privateKey: RSAPrivateKey
+    ) throws -> Data
+    
     /// `ChangePINCrypto`
     func rsaDecrypt(
         _ string: String,

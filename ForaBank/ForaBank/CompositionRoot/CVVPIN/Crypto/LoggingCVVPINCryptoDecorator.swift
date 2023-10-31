@@ -124,6 +124,27 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
+    func hashSignVerify(
+        string: String,
+        publicKey: RSAPublicKey,
+        privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let data = try decoratee.hashSignVerify(
+                string: string,
+                publicKey: publicKey,
+                privateKey: privateKey
+            )
+            log("hashSignVerify success (\(data.count)).")
+            
+            return data
+        } catch {
+            log("hashSignVerify failure: \(error).")
+            throw error
+        }
+    }
+    
     func rsaDecrypt(
         _ string: String,
         withPrivateKey privateKey: RSAPrivateKey
