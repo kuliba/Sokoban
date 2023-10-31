@@ -292,7 +292,16 @@ extension Services {
                                     completion(.failure(error))
                                     
                                 case let .success(sessionKey):
-                                    completion(.success((otpEventID, sessionID, sessionKey)))
+                                    rsaKeyPairLoader.load { result in
+                                        
+                                        switch result {
+                                        case let .failure(error):
+                                            completion(.failure(error))
+                                            
+                                        case let .success(rsaKeyPair):
+                                            completion(.success((otpEventID, sessionID, sessionKey, rsaKeyPair.privateKey)))
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -669,7 +678,8 @@ private extension ChangePINService {
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
     
-    typealias LoadOTPSessionResult = Swift.Result<(OTPEventID, ForaBank.SessionID, SessionKey), Swift.Error>
+    typealias RSAPrivateKey = RSADomain.PrivateKey
+    typealias LoadOTPSessionResult = Swift.Result<(OTPEventID, ForaBank.SessionID, SessionKey, RSAPrivateKey), Swift.Error>
     typealias LoadOTPSessionCompletion = (LoadOTPSessionResult) -> Void
     typealias LoadOTPSession = (@escaping LoadOTPSessionCompletion) -> Void
     
@@ -683,7 +693,7 @@ private extension ChangePINService {
     
     typealias _RSADecrypt = (String, RSADomain.PrivateKey) throws -> String
     
-    typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID, SessionKey) throws -> Data
+    typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID, SessionKey, RSADomain.PrivateKey) throws -> Data
     
     convenience init(
         _authenticate: @escaping _Authenticate,
@@ -733,7 +743,7 @@ private extension ChangePINService {
                     case let .failure(error):
                         completion(.failure(error))
                         
-                    case let .success((otpEventID, sessionID, sessionKey)):
+                    case let .success((otpEventID, sessionID, sessionKey, rsaPrivateKey)):
                         let sessionID = ChangePINService.SessionID(
                             sessionIDValue: sessionID.value
                         )
@@ -746,7 +756,8 @@ private extension ChangePINService {
                                 .init(otpValue: otp.otpValue),
                                 .init(pinValue: pin.pinValue),
                                 otpEventID,
-                                sessionKey
+                                sessionKey,
+                                rsaPrivateKey
                             )
                             
                             return (sessionID, json)

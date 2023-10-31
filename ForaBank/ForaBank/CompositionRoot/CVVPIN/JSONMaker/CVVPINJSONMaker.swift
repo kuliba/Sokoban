@@ -14,6 +14,7 @@ protocol CVVPINJSONMaker {
     
     typealias ECDHPublicKey = ECDHDomain.PublicKey
     typealias RSAKeyPair = RSADomain.KeyPair
+    typealias RSAPrivateKey = RSADomain.PrivateKey
 
     /// Used if `AuthenticateWithPublicKeyService`
     func makeRequestJSON(
@@ -59,7 +60,8 @@ protocol CVVPINJSONMaker {
         otp: ChangePINService.OTP,
         pin: ChangePINService.PIN,
         otpEventID: ChangePINService.OTPEventID,
-        sessionKey: SessionKey
+        sessionKey: SessionKey,
+        rsaPrivateKey: RSAPrivateKey
     ) throws -> Data
     
     /// `ShowCVV`

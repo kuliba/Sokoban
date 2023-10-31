@@ -188,7 +188,8 @@ extension LiveCVVPINJSONMaker {
         otp: ChangePINService.OTP,
         pin: ChangePINService.PIN,
         otpEventID: ChangePINService.OTPEventID,
-        sessionKey: SessionKey
+        sessionKey: SessionKey,
+        rsaPrivateKey: RSAPrivateKey
     ) throws -> Data {
         
         let secretPIN = try crypto.processingEncrypt(
