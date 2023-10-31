@@ -258,7 +258,15 @@ extension String {
 
 extension String {
     
-   func addCodeRuIfNeeded() -> String {
+    func addCodeRuIfNeeded() -> String {
         return (self.count == 10) ? "7" + self : self
+    }
+    
+    func add8IfNeeded() -> String {
+        return (self.count == 10) ? "8" + self : self
+    }
+    
+    func replace7To8IfNeeded() -> String {
+        return (self.count == 11 && self.hasPrefix("7")) ? "8" + self.dropFirst() : self
     }
 }

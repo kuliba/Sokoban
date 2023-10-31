@@ -52,7 +52,7 @@ final class PhoneKitTransformerTests: XCTestCase {
         
         let transformed = transform(for: .abroad, .init("$%^3fghj"))
         
-        assertTextState(transformed, hasText: "+3", cursorAt: 2)
+        assertTextState(transformed, hasText: "+(3", cursorAt: 3)
     }
     
     func test_shouldReturnFormattedPartialPhoneNumber() {

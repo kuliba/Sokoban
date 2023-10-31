@@ -26,20 +26,8 @@ extension String {
     func applyPatternOnPhoneNumber() -> String {
         
         guard !self.onlyDigits().isEmpty else { return "" }
-        guard let regex = try? NSRegularExpression(
-            pattern: "[\\s-\\(\\)]",
-            options: .caseInsensitive
-        ) else { return "" }
         
-        let onlyDigits = self.onlyDigits()
-        let r = NSString(string: onlyDigits).range(of: onlyDigits)
-        var number = regex.stringByReplacingMatches(
-            in: onlyDigits,
-            options: .init(rawValue: 0),
-            range: r,
-            withTemplate: ""
-        )
-          
+        var number = self.onlyDigits()
         number = number.changeCodeIfNeeded()
 
         let end = number.index(number.startIndex, offsetBy: number.count)
