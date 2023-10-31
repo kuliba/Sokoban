@@ -1232,7 +1232,7 @@ private extension Date {
 #if RELEASE
         addingTimeInterval(15_778_463)
 #else
-        addingTimeInterval(60)
+        addingTimeInterval(600)
 #endif
     }
 }
