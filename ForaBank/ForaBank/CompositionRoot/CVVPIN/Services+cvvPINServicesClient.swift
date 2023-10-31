@@ -584,7 +584,7 @@ private extension CachingChangePINServiceDecorator {
             cache: { otpEventID, completion in
                 
                 // short time
-                let validUntil = currentDate() + 15
+                let validUntil = currentDate().addingShortTime()
                 
                 _cache(
                     otpEventID,
@@ -649,7 +649,7 @@ private extension CachingGetProcessingSessionCodeServiceDecorator {
             cache: { response, completion in
                 
                 // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-                let validUntil = currentDate() + 15
+                let validUntil = currentDate().addingShortTime()
                 
                 _cache(
                     .init(sessionCodeValue: response.code),
@@ -1221,6 +1221,11 @@ private extension CVVPINFunctionalityActivationService.GetCodeResponse {
 // MARK: - NextYear
 
 private extension Date {
+    
+    func addingShortTime() -> Self {
+        
+        addingTimeInterval(30)
+    }
     
     func nextYear() -> Date {
         
