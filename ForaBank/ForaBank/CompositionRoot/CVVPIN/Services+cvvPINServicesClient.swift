@@ -41,19 +41,6 @@ extension Services {
         
         // MARK: Configure Infra: Loaders
         
-        func loggingLoaderDecorator<T>(
-            store: any Store<T>
-        ) -> LoggingLoaderDecorator<T> {
-            
-            LoggingLoaderDecorator(
-                decoratee: GenericLoaderOf(
-                    store: store,
-                    currentDate: currentDate
-                ),
-                log: { log(.cache, $0, $1, $2) }
-            )
-        }
-        
         let otpEventIDLoader = loggingLoaderDecorator(
             store: otpEventIDStore
         )
@@ -189,6 +176,19 @@ extension Services {
         )
         
         // MARK: - Helpers
+        
+        func loggingLoaderDecorator<T>(
+            store: any Store<T>
+        ) -> LoggingLoaderDecorator<T> {
+            
+            LoggingLoaderDecorator(
+                decoratee: GenericLoaderOf(
+                    store: store,
+                    currentDate: currentDate
+                ),
+                log: { log(.cache, $0, $1, $2) }
+            )
+        }
         
         func makeBindPublicKeySecretJSON(
             otp: String,
