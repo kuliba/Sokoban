@@ -15,10 +15,8 @@ extension Operation.Parameter {
         
         struct Option: Hashable {
             
-            let number: String
             let paymentSystem: String
             let background: String
-            let value: String
             let title: String
             let nameProduct: String
             let balance: String

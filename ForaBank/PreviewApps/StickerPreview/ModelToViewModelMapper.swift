@@ -67,7 +67,10 @@ extension ModelToViewModelMapper {
                     state: parameterProduct.parameterState,
                     chevronTapped: {
                         
-                            action(.product(.chevronTapped(parameterProduct, .list)))
+                        action(.product(.chevronTapped(parameterProduct, .list)))
+                    }, selectOption: { option in
+                        
+                        action(.product(.selectProduct(option, parameterProduct)))
                     }
                 )
             )

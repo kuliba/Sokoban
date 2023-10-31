@@ -12,6 +12,7 @@ struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
+    let selectOption: (Operation.Parameter.Product.Option) -> Void
 }
 
 extension ProductStateViewModel {

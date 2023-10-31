@@ -34,7 +34,8 @@ struct ProductView: View {
                                 
                             optionProduct(
                                 product: product,
-                                header: product.header
+                                header: product.header,
+                                selectOption: viewModel.selectOption
                             )
                         }
                     }
@@ -46,7 +47,11 @@ struct ProductView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
-    private func optionProduct(product: ProductViewModel, header: ProductViewModel.HeaderViewModel) -> some View {
+    private func optionProduct(
+        product: ProductViewModel,
+        header: ProductViewModel.HeaderViewModel,
+        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+    ) -> some View {
     
         ZStack {
             
@@ -77,8 +82,15 @@ struct ProductView: View {
             .background(background())
         }
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
-        .onTapGesture {
-           
+        .onTapGesture{
+            selectOption(.init(
+                paymentSystem: "",
+                background: "",
+                title: product.header.title,
+                nameProduct: product.main.name,
+                balance: product.main.balance,
+                description: product.footer.description
+            ))
         }
     }
     
@@ -255,7 +267,8 @@ struct ProductView_Previews: PreviewProvider {
                     ),
                     footer: .init(description: "description")
                 )),
-                chevronTapped: {})
+                chevronTapped: {},
+                selectOption: { _ in })
         )
         .frame(height: 80)
         .padding(20)
