@@ -156,13 +156,7 @@ extension Services {
             _cache: otpEventIDLoader.save
         )
         
-        let checkActivation: ComposedCVVPINService.CheckActivation = { completion in
-            
-            rsaKeyPairLoader.load {
-                
-                completion($0.map { _ in () })
-            }
-        }
+        // MARK: - ComposedCVVPINService
         
         return ComposedCVVPINService(
             // TODO: add category `CVV-PIN`
@@ -212,6 +206,15 @@ extension Services {
                 } catch {
                     completion(.failure(error))
                 }
+            }
+        }
+        
+        func checkActivation(
+            completion: @escaping (Result<Void, Error>) -> Void
+        ) {
+            rsaKeyPairLoader.load {
+                
+                completion($0.map { _ in () })
             }
         }
         
