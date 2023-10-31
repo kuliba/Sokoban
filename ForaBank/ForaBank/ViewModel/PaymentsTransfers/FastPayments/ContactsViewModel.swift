@@ -398,8 +398,7 @@ extension Model {
         }()
         
         let searchFieldModel = SearchFactory.makeSearchFieldModel(
-            for: mode, 
-            type: type,
+            for: mode,
             scheduler: scheduler
         )
         let sections = model.sections(for: mode)

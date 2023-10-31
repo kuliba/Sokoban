@@ -150,20 +150,6 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
-    func test_shouldNotReplacePrefix2_fastPayments_contacts_typeAbroad() {
-       
-        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts), type: .abroad)
-        scheduler.advance()
-        
-        sut.setText(to: "2916")
-        scheduler.advance()
-
-        XCTAssertNoDiff(sut.text, "+291 6")
-        XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
-        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
-    }
-
     func test_shouldNotReplacePrefix2_fastPayments_contacts_typeOther() {
        
         let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts))
@@ -208,9 +194,9 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
-    func test_shouldNotReplacePrefix2_select_contacts_typeOther() {
+    func test_shouldNotReplacePrefix2_select_contacts() {
        
-        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts), type: .other)
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts))
         scheduler.advance()
         
         sut.setText(to: "2916")
@@ -222,25 +208,10 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
     
-    func test_shouldNotReplacePrefix2_select_contacts_abroad() {
-       
-        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.contacts), type: .abroad)
-        scheduler.advance()
-        
-        sut.setText(to: "2916")
-        scheduler.advance()
-
-        XCTAssertNoDiff(sut.text, "+291 6")
-        XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
-        XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
-    }
-
     // MARK: - Helpers
     
     private func makeSUT(
         _ mode: ContactsViewModel.Mode,
-        type: ContactsViewModel.PaymentsType = .other,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -252,7 +223,6 @@ final class SearchFactoryTests: XCTestCase {
         let scheduler = DispatchQueue.test
         let sut = SearchFactory.makeSearchFieldModel(
             for: mode, 
-            type: type,
             scheduler: scheduler.eraseToAnyScheduler()
         )
         

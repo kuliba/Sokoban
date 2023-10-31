@@ -16,27 +16,26 @@ extension SearchFactory {
     
     static func makeSearchBanksField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.banks), type: .other)
+        makeSearchFieldModel(for: .select(.banks))
     }
     
     static func makeSearchContactsField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.contacts), type: .other)
+        makeSearchFieldModel(for: .select(.contacts))
     }
     
     static func makeSearchCountriesField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.countries), type: .other)
+        makeSearchFieldModel(for: .select(.countries))
     }
     
     static func makeSearchFieldModel(
         for mode: ContactsViewModel.Mode,
-        type: ContactsViewModel.PaymentsType,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> RegularFieldViewModel {
         
         let cleanup: (String) -> String = {
-            switch type {
+            switch mode {
             case .abroad:
                 guard $0.hasPrefix("8"),
                       $0.count > 1
@@ -52,7 +51,7 @@ extension SearchFactory {
         }
         
         let substitutions = {
-            switch type {
+            switch mode {
             case .abroad:
                 return [CountryCodeReplace].russian
                     .map(\.substitution)
@@ -64,6 +63,14 @@ extension SearchFactory {
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
+            let type: ContactsViewModel.PaymentsType = {
+                switch mode {
+                case .abroad:
+                    return .abroad
+                default:
+                    return .other
+                }
+            }()
             let input = type == .abroad ? "+\($0)" : $0
             return PhoneNumberKitWrapper.formatPartial(for: type, input)
         }
