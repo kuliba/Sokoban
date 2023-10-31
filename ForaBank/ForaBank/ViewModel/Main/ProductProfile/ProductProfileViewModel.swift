@@ -2211,13 +2211,13 @@ extension ProductProfileViewModel {
             // show activate Certificate
             self.showActivateCertificate(cardId: cardId, actionType: .showCvv)
             
-        case let .server(_, errorMessage):
+        case let .server(code, _):
             // show Alert with message
-            self.makeAlert(errorMessage)
+            self.makeAlert("\(String.cvvNotReceived)\nКод ошибки \(code).")
             
         case .serviceFailure:
             // show Alert
-            self.makeAlert(.technicalError)
+            self.makeAlert("\(String.cvvNotReceived)\n\(String.tryLater).")
         }
     }
 }
