@@ -201,7 +201,7 @@ extension Services {
             }
         }
         
-        let loadSession: ShowCVVService._LoadSession = { completion in
+        let _loadRSAAndSessionKeys: ShowCVVService._LoadRSAAndSessionKeys = { completion in
             
             rsaKeyPairLoader.load { result in
                 
@@ -226,7 +226,7 @@ extension Services {
         
         let showCVVService = ShowCVVService(
             _authenticate: showCVVServiceAuthenticate,
-            _loadSession: loadSession,
+            _loadRSAAndSessionKeys: _loadRSAAndSessionKeys,
             _makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
             _process: showCVVRemoteService.process,
             _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
@@ -904,10 +904,10 @@ private extension ShowCVVService {
     
     typealias RSAKeyPair = RSADomain.KeyPair
     
-    typealias _LoadSessionSuccess = (rsaKeyPair: RSAKeyPair, SessionKey)
-    typealias _LoadSessionResult = Swift.Result<_LoadSessionSuccess, Swift.Error>
-    typealias _LoadSessionCompletion = (_LoadSessionResult) -> Void
-    typealias _LoadSession = (@escaping _LoadSessionCompletion) -> Void
+    typealias _LoadRSAAndSessionKeysSuccess = (rsaKeyPair: RSAKeyPair, SessionKey)
+    typealias _LoadRSAAndSessionKeysResult = Swift.Result<_LoadRSAAndSessionKeysSuccess, Swift.Error>
+    typealias _LoadRSAAndSessionKeysCompletion = (_LoadRSAAndSessionKeysResult) -> Void
+    typealias _LoadRSAAndSessionKeys = (@escaping _LoadRSAAndSessionKeysCompletion) -> Void
     
     typealias _ProcessResult = Swift.Result<EncryptedCVV, MappingRemoteServiceError<APIError>>
     typealias _ProcessCompletion = (_ProcessResult) -> Void
@@ -920,8 +920,7 @@ private extension ShowCVVService {
     
     convenience init(
         _authenticate: @escaping _Authenticate,
-        // TODO: Rename to smth like `loadRSAAndSessionKeys`
-        _loadSession: @escaping _LoadSession,
+        _loadRSAAndSessionKeys: @escaping _LoadRSAAndSessionKeys,
         _makeSecretJSON: @escaping _MakeSecretJSON,
         _process: @escaping _Process,
         _rsaDecrypt: @escaping _RSADecrypt
@@ -930,7 +929,7 @@ private extension ShowCVVService {
             authenticate: _authenticate,
             makeJSON: { cardID, sessionID, completion in
                 
-                _loadSession { result in
+                _loadRSAAndSessionKeys { result in
                     
                     completion(.init {
                         
@@ -955,7 +954,7 @@ private extension ShowCVVService {
             },
             decryptCVV: { encryptedCVV, completion in
 
-                _loadSession {
+                _loadRSAAndSessionKeys {
                     
                     do {
                         let rsaKeyPair = try $0.get().rsaKeyPair
