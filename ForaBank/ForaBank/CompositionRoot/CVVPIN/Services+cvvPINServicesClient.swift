@@ -50,7 +50,7 @@ extension Services {
                     store: store,
                     currentDate: currentDate
                 ),
-                log: { log(.cache, $0, #file, #line) }
+                log: { log(.cache, $0, $1, $2) }
             )
         }
         

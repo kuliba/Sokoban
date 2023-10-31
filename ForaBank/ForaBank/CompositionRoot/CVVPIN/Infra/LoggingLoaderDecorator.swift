@@ -14,10 +14,10 @@ final class LoggingLoaderDecorator<T> {
     
     init(
         decoratee: any Loader<T>,
-        log: @escaping (String) -> Void
+        log: @escaping (String, StaticString, UInt) -> Void
     ) {
         self.decoratee = decoratee
-        self.log = log
+        self.log = { log($0, #file, #line) }
     }
 }
 
