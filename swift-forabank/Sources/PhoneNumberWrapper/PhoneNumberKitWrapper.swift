@@ -25,8 +25,7 @@ public struct PhoneNumberWrapper {
     public func format(_ value: String) -> String {
         
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
-        guard phoneNumber.count > 10,
-              let phoneNumberParsed = try? phoneNumberKit.parse(
+        guard let phoneNumberParsed = try? phoneNumberKit.parse(
                 phoneNumber,
                 ignoreType: true
               ) else { return phoneNumber.applyPatternOnPhoneNumber() }
@@ -60,7 +59,7 @@ public struct PhoneNumberWrapper {
     }
     
     private func addCodeRuIfNeeded(_ input: String) -> String {
-        return (!input.hasPrefix("79") && input.count == .phoneNumberWithoutCodeLengthRU) ? "7"+input : input
+        return input.hasPrefix("89") ? "79" + input.dropFirst(2) : input
     }
 }
 

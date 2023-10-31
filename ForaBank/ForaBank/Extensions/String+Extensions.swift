@@ -255,3 +255,10 @@ extension String {
             .allSatisfy(wanted.contains)
     }
 }
+
+extension String {
+    
+   func addCodeRuIfNeeded() -> String {
+        return (self.count == 10) ? "7" + self : self
+    }
+}

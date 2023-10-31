@@ -231,7 +231,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            let phoneNumber = paymentData.phoneNumber
+            let phoneNumber = paymentData.phoneNumber.addCodeRuIfNeeded()
             
             self.avatar = model.avatar(for: phoneNumber) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
