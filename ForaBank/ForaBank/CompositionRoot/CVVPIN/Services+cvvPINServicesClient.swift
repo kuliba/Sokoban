@@ -374,43 +374,43 @@ extension Services {
             ).remoteService
         }
         
-        let authWithPublicKeyRemoteService = remoteService(
+        let authWithPublicKeyRemoteService: AuthWithPublicKeyRemoteService = remoteService(
             createRequest: RequestFactory.makeProcessPublicKeyAuthenticationRequest(data:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapProcessPublicKeyAuthenticationResponse
         )
         
-        let bindPublicKeyWithEventIDRemoteService = remoteService(
+        let bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService = remoteService(
             createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest(payload:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapBindPublicKeyWithEventIDResponse
         )
         
-        let changePINRemoteService = remoteService(
+        let changePINRemoteService: ChangePINRemoteService = remoteService(
             createRequest: RequestFactory.makeChangePINRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapChangePINResponse
         )
         
-        let confirmChangePINRemoteService = remoteService(
+        let confirmChangePINRemoteService: ConfirmChangePINRemoteService = remoteService(
             createRequest: RequestFactory.makeGetPINConfirmationCodeRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapConfirmChangePINResponse
         )
         
-        let formSessionKeyRemoteService = remoteService(
+        let formSessionKeyRemoteService: FormSessionKeyRemoteService = remoteService(
             createRequest: RequestFactory.makeSecretRequest(payload:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapFormSessionKeyResponse
         )
         
-        let getCodeRemoteService = remoteService(
+        let getCodeRemoteService: GetCodeRemoteService = remoteService(
             createRequest: RequestFactory.makeGetProcessingSessionCode,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapGetCodeResponse
         )
         
-        let showCVVRemoteService = remoteService(
+        let showCVVRemoteService: ShowCVVRemoteService = remoteService(
             createRequest: RequestFactory.makeShowCVVRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapShowCVVResponse
