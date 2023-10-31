@@ -171,40 +171,8 @@ extension Services {
         
         // MARK: Configure Show CVV Service
         
-        let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
-            
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case .success:
-                    sessionIDLoader.load { result in
-                        
-                        switch result {
-                        case .failure:
-                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                                
-                                completion(
-                                    $0
-                                        .map(\.sessionID.sessionIDValue)
-                                        .map(ShowCVVService.SessionID.init)
-                                        .mapError { _ in .authenticationFailure })
-                            }
-                            
-                        case let .success(sessionID):
-                            completion(.success(
-                                .init(sessionIDValue: sessionID.value)
-                            ))
-                        }
-                    }
-                }
-            }
-        }
-        
         let showCVVService = ShowCVVService(
-            _authenticate: showCVVServiceAuthenticate,
+            _authenticate: showCVVAuthenticate,
             _loadSession: loadShowCVVSession,
             _makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
             _process: showCVVRemoteService.process,
@@ -250,6 +218,48 @@ extension Services {
         // MARK: - Helpers
         
 #warning("extract repeated")
+        
+        func showCVVAuthenticate(
+            completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    showCVVAuthenticate(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func showCVVAuthenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ShowCVVService.SessionID.init)
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(
+                        .init(sessionIDValue: sessionID.value)
+                    ))
+                }
+            }
+        }
+        
+        
         func changePINAuthenticate(
             completion: @escaping ChangePINService.AuthenticateCompletion
         ) {
