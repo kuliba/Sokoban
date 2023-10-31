@@ -25,7 +25,7 @@ extension Services {
         
         // MARK: Configure Infra: Persistent Stores
         
-        typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+        typealias RSAKeyPair = RSADomain.KeyPair
         
         let persistentRSAKeyPairStore = KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa)
         
@@ -89,13 +89,13 @@ extension Services {
             currentDate: currentDate
         )
         
-        let keyPair = cvvPINCrypto.generateP384KeyPair()
+        let keyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
             _loadCode: sessionCodeLoader.load(completion:),
             _process: formSessionKeyRemoteService.process,
             _makeSecretRequestJSON: cvvPINJSONMaker.makeSecretRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.makeSharedSecret,
+            _makeSharedSecret: cvvPINCrypto.extractSharedSecret,
             keyPair: keyPair
         )
         
@@ -179,9 +179,17 @@ extension Services {
                     completion(.failure(.activationFailure))
                     
                 case .success:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                        
-                        completion($0.mapError { _ in .activationFailure })
+                    
+                    sessionIDLoader.load { result in
+                        switch result {
+                        case .failure:
+                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                                
+                                completion($0.mapError { _ in .authenticationFailure })
+                            }
+                        case let .success(sessionID):
+#warning("есть сессия")
+                        }
                     }
                 }
             }
@@ -189,14 +197,33 @@ extension Services {
         
         let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
             
-            authenticate { result in
+            rsaKeyPairLoader.load { result in
                 
-                completion(
-                    result
-                        .map(\.sessionID.sessionIDValue)
-                        .map(ShowCVVService.SessionID.init)
-                        .mapError(ShowCVVService.AuthenticateError.init)
-                )
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case .success:
+                    sessionIDLoader.load { result in
+                        
+                        switch result {
+                        case .failure:
+                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                                
+                                completion(
+                                    $0
+                                        .map(\.sessionID.sessionIDValue)
+                                        .map(ShowCVVService.SessionID.init)
+                                        .mapError { _ in .authenticationFailure })
+                            }
+                            
+                        case let .success(sessionID):
+                            completion(.success(
+                                .init(sessionIDValue: sessionID.value)
+                            ))
+                        }
+                    }
+                }
             }
         }
         
@@ -383,7 +410,7 @@ struct SessionKey {
 
 private extension AuthenticateWithPublicKeyService {
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -392,7 +419,7 @@ private extension AuthenticateWithPublicKeyService {
     typealias _ProcessCompletion = (_ProcessResult) -> Void
     typealias _Process = (Data, @escaping _ProcessCompletion) -> Void
     
-    typealias _MakeRequestJSON = (P384KeyAgreementDomain.PublicKey, RSAKeyPair) throws -> Data
+    typealias _MakeRequestJSON = (ECDHDomain.PublicKey, RSAKeyPair) throws -> Data
     
     typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) -> Swift.Result<Data, Swift.Error>
     
@@ -610,7 +637,7 @@ private extension ChangePINService {
     
     typealias _Authenticate = ChangePINService.Authenticate
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -627,7 +654,7 @@ private extension ChangePINService {
     typealias _ChangePINProcessCompletion = (_ChangePINProcessResult) -> Void
     typealias _ChangePINProcess = ((ForaBank.SessionID, Data),@escaping _ChangePINProcessCompletion) -> Void
     
-    typealias _RSADecrypt = (String, SecKey) throws -> String
+    typealias _RSADecrypt = (String, RSADomain.PrivateKey) throws -> String
     
     typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID) throws -> Data
     
@@ -732,32 +759,33 @@ private extension CVVPINFunctionalityActivationService {
         self.init(
             getCode: { completion in
                 
-//                _getCode {
-//
-//                    completion(
-//                        $0
-//                            .map { .init($0) }
-//                            .mapError(GetCodeResponseError.init)
-//                    )
-//                }
+                _getCode { result in
+                    
+                    completion(
+                        result
+                            .map(GetCodeResponse.init)
+                            .mapError(GetCodeResponseError.init)
+                    )
+                }
             },
             formSessionKey: { completion in
                 
-//                _formSessionKey { result in
-//
-//                    completion(
-//                        result
-//                            .map(FormSessionKeyService.Success.init)
-//                            .mapError(FormSessionKeyError.init))
-//                }
+                _formSessionKey { result in
+                    
+                    completion(
+                        result
+                            .map(FormSessionKeySuccess.init)
+                            .mapError(FormSessionKeyError.init)
+                    )
+                }
             },
             bindPublicKeyWithEventID: { otp, completion in
                 
-//                _bindPublicKeyWithEventID(
-//                    .init(otpValue: otp.otpValue)
-//                ) {
-//                    completion($0.mapError(BindPublicKeyError.init))
-//                }
+                _bindPublicKeyWithEventID(
+                    .init(otpValue: otp.otpValue)
+                ) {
+                    completion($0.mapError(BindPublicKeyError.init))
+                }
             }
         )
     }
@@ -850,7 +878,7 @@ private extension ShowCVVService {
     
     typealias _Authenticate = ShowCVVService.Authenticate
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
+    typealias RSAKeyPair = RSADomain.KeyPair
     typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
     typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
@@ -863,7 +891,7 @@ private extension ShowCVVService {
     typealias _ProcessCompletion = (_ProcessResult) -> Void
     typealias _Process = ((ForaBank.SessionID, Data), @escaping _ProcessCompletion) -> Void
     
-    typealias _MakeSecretJSON = (CardID, SessionID, (publicKey: SecKey, privateKey: SecKey), SessionKey) throws -> Data
+    typealias _MakeSecretJSON = (CardID, SessionID, RSAKeyPair, SessionKey) throws -> Data
     
     convenience init(
         _authenticate: @escaping _Authenticate,
@@ -905,9 +933,10 @@ private extension ShowCVVService {
                     
                     do {
                         let privateKey = try result.get().privateKey
+#warning("inject `decrypt`")
                         let cvvValue = try ShowCVVCrypto.decrypt(
                             string: encryptedCVV.encryptedCVVValue,
-                            withPrivateKey: privateKey
+                            withPrivateKey: privateKey.key
                         )
                         completion(.success(.init(cvvValue: cvvValue)))
                     } catch {
@@ -927,7 +956,7 @@ private extension CVVPINCrypto {
     ) -> Result<Data, Error> {
         
         .init {
-            try makeSharedSecret(
+            try extractSharedSecret(
                 from: string,
                 using: privateKey
             )
@@ -1093,7 +1122,7 @@ private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
             
         case let .retry(statusCode, errorMessage, retryAttempts):
             self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-
+            
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
@@ -1204,7 +1233,7 @@ private extension Date {
 #if RELEASE
         addingTimeInterval(15_778_463)
 #else
-        addingTimeInterval(600)
+        addingTimeInterval(60)
 #endif
     }
 }

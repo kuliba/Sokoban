@@ -12,11 +12,12 @@ import Foundation
 // TODO: make generic to decouple from ForaCrypto & CVVPIN_Services
 protocol CVVPINJSONMaker {
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
-    
+    typealias ECDHPublicKey = ECDHDomain.PublicKey
+    typealias RSAKeyPair = RSADomain.KeyPair
+
     /// Used if `AuthenticateWithPublicKeyService`
     func makeRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey,
+        publicKey: ECDHPublicKey,
         rsaKeyPair: RSAKeyPair
     ) throws -> Data
     
@@ -31,7 +32,7 @@ protocol CVVPINJSONMaker {
     
     /// Used in `formSessionKey`.
     func makeSecretRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey
+        publicKey: ECDHPublicKey
     ) throws -> Data
     
     /// `ChangePINCrypto`

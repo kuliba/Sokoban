@@ -18,10 +18,12 @@ struct LiveCVVPINJSONMaker {
 /// Used if `AuthenticateWithPublicKeyService`
 extension LiveCVVPINJSONMaker {
     
-    typealias RSAKeyPair = (publicKey: SecKey, privateKey: SecKey)
-    
+    typealias ECDHPublicKey = ECDHDomain.PublicKey
+    typealias RSAKeyPair = RSADomain.KeyPair
+    typealias RSAPrivateKey = RSADomain.PrivateKey
+
     func makeRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey,
+        publicKey: ECDHPublicKey,
         rsaKeyPair: RSAKeyPair
     ) throws -> Data {
         
@@ -41,7 +43,9 @@ extension LiveCVVPINJSONMaker {
         //      val signature = signer.sign()
         //      return Base64.encodeToString(signature, Base64.NO_WRAP)
         
-        let rsaPublicKeyData = try rsaKeyPair.publicKey.x509Representation()
+        let rsaPublicKeyData = try crypto.x509Representation(
+            publicKey: rsaKeyPair.publicKey
+        )
         let rsaPublicKeyBase64 = rsaPublicKeyData.base64EncodedString()
         
         let keyData = publicKey.derRepresentation
@@ -49,14 +53,11 @@ extension LiveCVVPINJSONMaker {
         
         let concat = rsaPublicKeyBase64 + publicApplicationSessionKeyBase64
         let concatData = Data(concat.utf8)
-        let hash = SHA256
-            .hash(data: concatData)
-            .withUnsafeBytes { Data($0) }
-#warning("move signNoHash to type field")
-        let signature = try ForaCrypto.Crypto.signNoHash(
+        let hash = crypto.sha256Hash(concatData)
+        
+        let signature = try crypto.signNoHash(
             hash,
-            withPrivateKey: rsaKeyPair.privateKey,
-            algorithm: .rsaSignatureDigestPKCS1v15Raw
+            withPrivateKey: rsaKeyPair.privateKey
         )
         
         // Поскольку clientPublicKeyRSA и открытый ECDH-ключ (PaS) это бинарные величины, то JSON запроса (requestJSON) содержит их закодированными в формате BASE64 в полях clientPublicKeyRSA и publicApplicationSessionKey:
@@ -81,7 +82,6 @@ extension LiveCVVPINJSONMaker {
 }
 
 /// used in `bindPublicKeyWithEventId`
-/// based on`BindPublicKeySecretJSONMaker`
 extension LiveCVVPINJSONMaker {
     
     func makeSecretJSON(
@@ -99,7 +99,7 @@ extension LiveCVVPINJSONMaker {
         let (encryptedSignedOTP, publicKey, privateKey) = try retry {
             
             let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
-            let encryptedSignedOTP = try crypto.signEncryptOTP(
+            let encryptedSignedOTP = try signEncryptOTP(
                 otp: otp,
                 privateKey: privateKey
             )
@@ -122,7 +122,23 @@ extension LiveCVVPINJSONMaker {
             sessionKey: sessionKey
         )
         
-        return (data, (publicKey, privateKey))
+        return (data, (privateKey, publicKey))
+    }
+    
+    func signEncryptOTP(
+        otp: String,
+        privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        let clientSecretOTP = try crypto.signNoHash(
+            .init(otp.utf8),
+            withPrivateKey: privateKey
+        )
+        
+        let procClientSecretOTP = try crypto.transportEncryptNoPadding(
+            data: clientSecretOTP
+        )
+        return procClientSecretOTP
     }
 }
 
@@ -144,7 +160,7 @@ private func retry<T>(
 extension LiveCVVPINJSONMaker {
     
     func makeSecretRequestJSON(
-        publicKey: P384KeyAgreementDomain.PublicKey
+        publicKey: ECDHPublicKey
     ) throws -> Data {
         
         // see Services+keyExchangeService.swift:20
@@ -152,7 +168,7 @@ extension LiveCVVPINJSONMaker {
         let data = try JSONSerialization.data(withJSONObject: [
             "publicApplicationSessionKey": keyData.base64EncodedString()
         ] as [String: String])
-        let encrypted = try crypto.transportEncrypt(data: data)
+        let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
         return encrypted
     }
@@ -186,16 +202,20 @@ extension LiveCVVPINJSONMaker {
         otpEventID: ChangePINService.OTPEventID
     ) throws -> Data {
         
-#warning("replace with own implementation")
-        
-        let maker = ChangePINSecretJSONMaker.loggingLive
-        let json = try maker.makePINChangeJSON(
-            sessionID: sessionID,
-            cardID: .init(value: cardID.cardIDValue),
-            otp: .init(value: otp.otpValue),
-            pin: .init(value: pin.pinValue),
-            eventID: otpEventID
+        let secretPIN = try crypto.processingEncrypt(
+            data: .init(pin.pinValue.utf8)
         )
+        let concat = sessionID.sessionIDValue + "\(cardID.cardIDValue)" + otp.otpValue + otpEventID.eventIDValue + secretPIN.base64EncodedString()
+        let signature = crypto.sha256Hash(.init(concat.utf8))
+        
+        let json = try JSONSerialization.data(withJSONObject: [
+            "sessionId": sessionID.sessionIDValue, // String(40)
+            "cardId":    cardID.cardIDValue, // int(11)
+            "otpCode":   otp.otpValue, // String(6)
+            "eventId":   otpEventID.eventIDValue, // String(40)
+            "secretPIN": secretPIN.base64EncodedString(), // String(1024)
+            "signature": signature.base64EncodedString() // String(1024)
+        ] as [String: Any])
         
         return json
     }
@@ -211,12 +231,15 @@ extension LiveCVVPINJSONMaker {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        let (publicKey, privateKey) = rsaKeyPair
         #warning("move to crypto")
         let hashSignVerify = ShowCVVCrypto.hashSignVerify(string:publicKey:privateKey:)
         
         let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
-        let signature = try hashSignVerify(concatenation, publicKey, privateKey)
+        let signature = try hashSignVerify(
+            concatenation,
+            rsaKeyPair.publicKey.key,
+            rsaKeyPair.privateKey.key
+        )
         let signatureBase64 = signature.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [

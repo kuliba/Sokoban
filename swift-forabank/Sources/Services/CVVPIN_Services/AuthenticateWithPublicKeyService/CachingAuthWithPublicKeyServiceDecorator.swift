@@ -70,7 +70,7 @@ private extension CachingAuthWithPublicKeyServiceDecorator {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.activationFailure)))
+                completion(.failure(.other(.makeSessionKeyFailure)))
                 
             case .success:
                 cacheSessionKey(success.sessionKey) { [weak self] result in
@@ -79,7 +79,7 @@ private extension CachingAuthWithPublicKeyServiceDecorator {
                     
                     completion(
                         .success(success)
-                        .mapError { _ in .other(.activationFailure) }
+                        .mapError { _ in .other(.makeSessionKeyFailure) }
                     )
                 }
             }
