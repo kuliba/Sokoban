@@ -71,7 +71,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
     init(agent: LoggerAgentProtocol) {
         
         self.init(
-            log: { agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line) }
+            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
         )
     }
 }
@@ -109,7 +109,7 @@ private extension LoggingCVVPINJSONMakerDecorator {
     ) {
         self.init(
             decoratee: decoratee,
-            log: { agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line) }
+            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
         )
     }
 }
@@ -122,7 +122,15 @@ private extension LoggingCVVPINCryptoDecorator {
     ) {
         self.init(
             decoratee: decoratee,
-            log: { agent.log(level: .debug, category: .crypto, message: $0, file: #file, line: #line) }
+            log: { agent.debug(category: .crypto, message: $0, file: #file, line: #line) }
         )
+    }
+}
+
+extension LoggerAgentProtocol {
+    
+    func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
+        
+        log(level: .debug, category: category, message: message, file: file, line: line)
     }
 }

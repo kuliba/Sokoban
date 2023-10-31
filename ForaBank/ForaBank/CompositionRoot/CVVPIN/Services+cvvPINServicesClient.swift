@@ -318,7 +318,7 @@ extension Services {
         }
         
         // TODO: add category `CVV-PIN`
-        let log = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
+        let log = { LoggerAgent.shared.debug(category: .network, message: $0) }
         
         return ComposedCVVPINService(
             log: log,
@@ -1200,7 +1200,7 @@ private extension LoggingLoaderDecorator {
         self.init(
             decoratee: decoratee,
             log: {
-                LoggerAgent.shared.log(level: .debug, category: .cache, message: $0)
+                LoggerAgent.shared.debug(category: .cache, message: $0)
             }
         )
     }
@@ -1218,7 +1218,7 @@ private extension LoggingRemoteServiceDecorator {
             performRequest: performRequest,
             mapResponse: mapResponse,
             log: {
-                LoggerAgent.shared.log(level: .debug, category: .network, message: $0)
+                LoggerAgent.shared.debug(category: .network, message: $0)
             }
         )
     }
