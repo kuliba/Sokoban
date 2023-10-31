@@ -24,8 +24,78 @@ final class LoggingCVVPINCryptoDecorator {
 
 extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     
+    // MARK: - Transport & Processing Key Domain
+
+    func transportEncryptWithPadding(data: Data) throws -> Data {
+        
+        do {
+            let encrypted = try decoratee.transportEncryptWithPadding(data: data)
+            log("Encrypted with transport key (\(encrypted.count)).")
+            
+            return encrypted
+        } catch {
+            log("Encrypted with transport failure: \(error).")
+            throw error
+        }
+    }
+    
+    func transportEncryptNoPadding(data: Data) throws -> Data {
+        
+        do {
+            let encrypted = try decoratee.transportEncryptNoPadding(data: data)
+            log("Encrypted with transport public key: \(encrypted)")
+            
+            return encrypted
+        } catch {
+            log("Transport public key encryption error: \(error).")
+            throw error
+        }
+    }
+    
+    func processingEncrypt(data: Data) throws -> Data {
+        
+        do {
+            let encrypted = try decoratee.processingEncrypt(data: data)
+            log("Encryption with processing key success (\(encrypted.count)).")
+            
+            return encrypted
+        } catch {
+            log("Encryption with processing key failure: \(error).")
+            throw error
+        }
+    }
+
+    // MARK: - ECDH Domain
+    
+    func generateECDHKeyPair() -> ECDHKeyPair {
+        
+        let keyPair = decoratee.generateECDHKeyPair()
+        log("Generated P384 Key Pair.")
+        
+        return keyPair
+    }
+    
+    func extractSharedSecret(
+        from string: String,
+        using privateKey: ECDHPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let sharedSecret = try decoratee.extractSharedSecret(
+                from: string,
+                using: privateKey
+            )
+            log("Shared Secret generation success (\(sharedSecret.count)).")
+            
+            return sharedSecret
+        } catch {
+            log("Shared Secret creation failure: \(error)")
+            throw error
+        }
+    }
+    
     func publicKeyData(
-        forPublicKey publicKey: PublicKey
+        forPublicKey publicKey: ECDHPublicKey
     ) throws -> Data {
         
         do {
@@ -39,45 +109,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
-    func transportEncrypt(data: Data) throws -> Data {
-        
-        do {
-            let encrypted = try decoratee.transportKeyEncrypt(data)
-            log("Encrypted with transport key (\(encrypted.count)).")
-            
-            return encrypted
-        } catch {
-            log("Encrypted with transport failure: \(error).")
-            throw error
-        }
-    }
-    
-    func generateP384KeyPair() -> P384KeyAgreementDomain.KeyPair {
-        
-        let keyPair = decoratee.generateP384KeyPair()
-        log("Generated P384 Key Pair.")
-        
-        return keyPair
-    }
-    
-    func makeSharedSecret(
-        from string: String,
-        using privateKey: P384KeyAgreementDomain.PrivateKey
-    ) throws -> Data {
-        
-        do {
-            let sharedSecret = try decoratee.makeSharedSecret(
-                from: string,
-                using: privateKey
-            )
-            log("Shared Secret generation success (\(sharedSecret.count)).")
-
-            return sharedSecret
-        } catch {
-            log("Shared Secret creation failure: \(error)")
-            throw error
-        }
-    }
+    // MARK: - RSA Domain
     
     func generateRSA4096BitKeyPair() throws -> RSAKeyPair {
         
@@ -92,39 +124,44 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
-    func signEncryptOTP(
-        otp: String,
-        privateKey: SecKey
+    func rsaDecrypt(
+        _ string: String,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> String {
+        
+        do {
+            let string = try decoratee.rsaDecrypt(string, withPrivateKey: privateKey)
+            log("String decryption success: \"\(string)\"")
+            
+            return string
+        } catch {
+            log("String decryption failure: \(error).")
+            throw error
+        }
+    }
+    
+    func signNoHash(
+        _ data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
     ) throws -> Data {
         
         do {
-            let signedEncryptedOTP = try decoratee.signEncryptOTP(
-                otp: otp,
-                privateKey: privateKey
+            let signed = try decoratee.signNoHash(
+                data,
+                withPrivateKey: privateKey
             )
-            log("Create \"signedEncryptedOTP\": \(signedEncryptedOTP)")
+            log("Data (\(data.count)) signing success (\(signed)).")
             
-            return signedEncryptedOTP
+            return signed
         } catch {
-            log("Sign encryted OPT failure: \(error).")
+            log("Data (\(data.count)) signing failure: \(error).")
             throw error
         }
     }
-    
-    func transportKeyEncrypt(_ data: Data) throws -> Data {
-        
-        do {
-            let encrypted = try decoratee.transportKeyEncrypt(data)
-            log("Encrypted with transport public key: \(encrypted)")
-            
-            return encrypted
-        } catch {
-            log("Transport public key encryption error: \(error).")
-            throw error
-        }
-    }
-    
-    func x509Representation(publicKey: SecKey) throws -> Data {
+
+    func x509Representation(
+        publicKey: RSAPublicKey
+    ) throws -> Data {
         
         do {
             let x509Representation = try decoratee.x509Representation(
@@ -138,6 +175,8 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
             throw error
         }
     }
+    
+    // MARK: - AES
     
     func aesEncrypt(
         data: Data,
@@ -158,19 +197,13 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
-    func rsaDecrypt(
-        _ string: String,
-        withPrivateKey privateKey: SecKey
-    ) throws -> String {
+    // MARK: - Hash
+    
+    func sha256Hash(_ data: Data) -> Data {
         
-        do {
-            let string = try decoratee.rsaDecrypt(string, withPrivateKey: privateKey)
-            log("String decryption success: \"\(string)\"")
-            
-            return string
-        } catch {
-            log("String decryption failure: \(error).")
-            throw error
-        }
+        let hash = decoratee.sha256Hash(data)
+        log("Created hash (\(hash.count)) for data (\(data.count)).")
+        
+        return hash
     }
 }

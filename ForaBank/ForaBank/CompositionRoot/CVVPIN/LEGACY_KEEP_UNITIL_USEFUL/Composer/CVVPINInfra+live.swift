@@ -6,6 +6,7 @@
 //
 
 import CVVPINServices
+import ForaCrypto
 import Foundation
 import KeyChainStore
 
@@ -40,5 +41,46 @@ where RSAPublicKey == SecKey,
             symmetricKeyStore: persistentSymmetricKeyStore,
             currentDate: currentDate
         )
+    }
+}
+
+extension KeyTagKeyChainStore
+where Key == CVVPINInfra<EventID, SecKey, SecKey, SessionID, ForaBank.SymmetricKey>.RSAKeyPairDomain.KeyPair {
+    
+    convenience init(keyTag: KeyTag) {
+        
+        self.init(
+            keyTag: keyTag,
+            data: { try $0.privateKey.rawRepresentation },
+            key: { data in
+                
+                let privateKey = try ForaCrypto.Crypto.createPrivateSecKey(from: data)
+                let publicKey = try ForaCrypto.Crypto.extractPublicKey(fromPrivateKey: privateKey)
+                
+                return (publicKey: publicKey, privateKey: privateKey)
+            }
+        )
+    }
+}
+
+private extension ForaCrypto.Crypto {
+    
+    static func createPrivateSecKey(
+        from data: Data
+    ) throws -> SecKey {
+        
+        try createSecKey(
+            from: data,
+            keyType: .rsa,
+            keyClass: .privateKey,
+            keySize: .bits4096
+        )
+    }
+    
+    static func extractPublicKey(
+        fromPrivateKey privateKey: SecKey
+    ) throws -> SecKey {
+        
+        try SecKeyCopyPublicKey(privateKey).get(orThrow: Error.extractPublicKeyFromPrivateKeyFailure)
     }
 }

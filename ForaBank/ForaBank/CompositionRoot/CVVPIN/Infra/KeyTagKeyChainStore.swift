@@ -31,19 +31,19 @@ where Key == SecKey {
 }
 
 extension KeyTagKeyChainStore
-where Key == (publicKey: SecKey, privateKey: SecKey) {
+where Key == RSADomain.KeyPair {
     
     convenience init(keyTag: KeyTag) {
         
         self.init(
             keyTag: keyTag,
-            data: { try $0.privateKey.rawRepresentation },
+            data: { try $0.privateKey.key.rawRepresentation },
             key: { data in
                 
                 let privateKey = try ForaCrypto.Crypto.createPrivateSecKey(from: data)
                 let publicKey = try ForaCrypto.Crypto.extractPublicKey(fromPrivateKey: privateKey)
                 
-                return (publicKey, privateKey)
+                return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
             }
         )
     }
