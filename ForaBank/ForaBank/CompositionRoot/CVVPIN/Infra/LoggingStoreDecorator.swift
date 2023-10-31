@@ -22,7 +22,7 @@ final class LoggingStoreDecorator<T> {
     }
 }
 
-extension LoggingStoreDecorator: Store {
+extension LoggingStoreDecorator: CVVPINServices.Store {
     
     typealias Local = T
     

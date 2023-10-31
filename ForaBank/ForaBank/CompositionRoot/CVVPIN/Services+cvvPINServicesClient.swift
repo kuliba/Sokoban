@@ -16,11 +16,14 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
+    typealias Log = (LoggerAgentCategory, String, StaticString, UInt) -> Void
+    
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
-        currentDate: @escaping () -> Date = Date.init
+        currentDate: @escaping () -> Date = Date.init,
+        log: @escaping Log
     ) -> CVVPINServicesClient {
         
         // MARK: Configure Infra: Persistent Stores
@@ -38,44 +41,45 @@ extension Services {
         
         // MARK: Configure Infra: Loaders
         
-        let otpEventIDLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: otpEventIDStore,
-                currentDate: currentDate
+        func loggingLoaderDecorator<T>(
+            store: any Store<T>
+        ) -> LoggingLoaderDecorator<T> {
+            
+            LoggingLoaderDecorator(
+                decoratee: GenericLoaderOf(
+                    store: store,
+                    currentDate: currentDate
+                ),
+                log: { log(.cache, $0, $1, $2) }
             )
+        }
+        
+        let otpEventIDLoader = loggingLoaderDecorator(
+            store: otpEventIDStore
         )
         
-        let rsaKeyPairLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: persistentRSAKeyPairStore,
-                currentDate: currentDate
-            )
+        let rsaKeyPairLoader = loggingLoaderDecorator(
+            store: persistentRSAKeyPairStore
         )
         
-        let sessionCodeLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionCodeStore,
-                currentDate: currentDate
-            )
+        let sessionCodeLoader = loggingLoaderDecorator(
+            store: sessionCodeStore
         )
         
-        let sessionKeyLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionKeyStore,
-                currentDate: currentDate
-            )
+        let sessionKeyLoader = loggingLoaderDecorator(
+            store: sessionKeyStore
         )
         
-        let sessionIDLoader = LoggingLoaderDecorator(
-            decoratee: GenericLoaderOf(
-                store: sessionIDStore,
-                currentDate: currentDate
-            )
+        let sessionIDLoader = loggingLoaderDecorator(
+            store: sessionIDStore
         )
         
         // MARK: Configure Remote Services
         
-        let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(httpClient: httpClient)
+        let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(
+            httpClient: httpClient,
+            log: { log(.network, $0, $1, $2) }
+        )
         
         // MARK: Configure CVV-PIN Services
         
@@ -317,11 +321,9 @@ extension Services {
             }
         }
         
-        // TODO: add category `CVV-PIN`
-        let log = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
-        
         return ComposedCVVPINService(
-            log: log,
+            // TODO: add category `CVV-PIN`
+            log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation,
@@ -338,59 +340,81 @@ extension Services {
     
     typealias MappingRemoteService<Input, Output, MapResponseError: Error> = RemoteService<Input, Output, Error, Error, MapResponseError>
     
+    typealias AuthWithPublicKeyRemoteService = MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>
+    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>
+    typealias ChangePINRemoteService = MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>
+    typealias ConfirmChangePINRemoteService = MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>
+    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
+    typealias GetCodeRemoteService = MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>
+    typealias ShowCVVRemoteService = MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
+    
     static func configureRemoteServices(
         httpClient: HTTPClient,
-        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .network, message: $0) }
+        log: @escaping (String, StaticString, UInt) -> Void
     ) -> (
-        authWithPublicKeyRemoteService: MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>,
-        bindPublicKeyWithEventIDRemoteService: MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>,
-        changePINRemoteService: MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>,
-        confirmChangePINRemoteService: MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>,
-        formSessionKeyRemoteService: MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>,
-        getCodeRemoteService: MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>,
-        showCVVRemoteService: MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
+        authWithPublicKeyRemoteService: AuthWithPublicKeyRemoteService,
+        bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
+        changePINRemoteService: ChangePINRemoteService,
+        confirmChangePINRemoteService: ConfirmChangePINRemoteService,
+        formSessionKeyRemoteService: FormSessionKeyRemoteService,
+        getCodeRemoteService: GetCodeRemoteService,
+        showCVVRemoteService: ShowCVVRemoteService
     ) {
-        let authWithPublicKeyRemoteService = LoggingRemoteServiceDecorator(
+        func remoteService<Input, Output, ResponseError: Error>(
+            createRequest: @escaping LoggingRemoteServiceDecorator<Input, Output, Error, ResponseError>.CreateRequest,
+            performRequest: @escaping LoggingRemoteServiceDecorator<Input, Output, Error, ResponseError>.Decoratee.PerformRequest,
+            mapResponse: @escaping LoggingRemoteServiceDecorator<Input, Output, Error, ResponseError>.Decoratee.MapResponse
+        ) -> MappingRemoteService<Input, Output, ResponseError> {
+            
+            LoggingRemoteServiceDecorator(
+                createRequest: createRequest,
+                performRequest: performRequest,
+                mapResponse: mapResponse,
+                log: log
+            ).remoteService
+        }
+        
+        let authWithPublicKeyRemoteService = remoteService(
             createRequest: RequestFactory.makeProcessPublicKeyAuthenticationRequest(data:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapProcessPublicKeyAuthenticationResponse
-        ).remoteService
+        )
         
-        let bindPublicKeyWithEventIDRemoteService = LoggingRemoteServiceDecorator(
+        let bindPublicKeyWithEventIDRemoteService = remoteService(
             createRequest: RequestFactory.makeBindPublicKeyWithEventIDRequest(payload:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapBindPublicKeyWithEventIDResponse
-        ).remoteService
+        )
         
-        let changePINRemoteService = LoggingRemoteServiceDecorator(
+        let changePINRemoteService = remoteService(
             createRequest: RequestFactory.makeChangePINRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapChangePINResponse
-        ).remoteService
+        )
         
-        let confirmChangePINRemoteService = LoggingRemoteServiceDecorator(
+        let confirmChangePINRemoteService = remoteService(
             createRequest: RequestFactory.makeGetPINConfirmationCodeRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapConfirmChangePINResponse
-        ).remoteService
+        )
         
-        let formSessionKeyRemoteService = LoggingRemoteServiceDecorator(
+        let formSessionKeyRemoteService = remoteService(
             createRequest: RequestFactory.makeSecretRequest(payload:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapFormSessionKeyResponse
-        ).remoteService
+        )
         
-        let getCodeRemoteService = LoggingRemoteServiceDecorator(
+        let getCodeRemoteService = remoteService(
             createRequest: RequestFactory.makeGetProcessingSessionCode,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapGetCodeResponse
-        ).remoteService
+        )
         
-        let showCVVRemoteService = LoggingRemoteServiceDecorator(
+        let showCVVRemoteService = remoteService(
             createRequest: RequestFactory.makeShowCVVRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapShowCVVResponse
-        ).remoteService
+        )
         
         return (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService)
     }
@@ -1190,41 +1214,7 @@ private extension CVVPINFunctionalityActivationService.GetCodeResponse {
     }
 }
 
-// MARK: - Loggers
-
-private extension LoggingLoaderDecorator {
-    
-    convenience init(
-        decoratee: any Loader<T>
-    ) {
-        self.init(
-            decoratee: decoratee,
-            log: {
-                LoggerAgent.shared.log(level: .debug, category: .cache, message: $0)
-            }
-        )
-    }
-}
-
-private extension LoggingRemoteServiceDecorator {
-    
-    convenience init(
-        createRequest: @escaping CreateRequest,
-        performRequest: @escaping Decoratee.PerformRequest,
-        mapResponse: @escaping Decoratee.MapResponse
-    ) {
-        self.init(
-            createRequest: createRequest,
-            performRequest: performRequest,
-            mapResponse: mapResponse,
-            log: {
-                LoggerAgent.shared.log(level: .debug, category: .network, message: $0)
-            }
-        )
-    }
-}
-
-// MARK: -
+// MARK: - NextYear
 
 private extension Date {
     

@@ -27,7 +27,7 @@ struct LiveExtraLoggingCVVPINCrypto {
 extension LiveExtraLoggingCVVPINCrypto {
     
     // MARK: - Transport & Processing Key Domain
-
+    
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
         try Crypto.encryptWithRSAKey(
@@ -54,7 +54,7 @@ extension LiveExtraLoggingCVVPINCrypto {
             algorithm: .rsaEncryptionRaw
         )
     }
-
+    
     // MARK: - ECDH Domain
     
     func generateECDHKeyPair() -> ECDHKeyPair {
@@ -99,6 +99,31 @@ extension LiveExtraLoggingCVVPINCrypto {
         return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
     }
     
+    func hashSignVerify(
+        string: String,
+        publicKey: RSAPublicKey,
+        privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        let signedData = try sign(
+            data: .init(string.utf8),
+            withPrivateKey: privateKey
+        )
+        
+        // verify (not used in output)
+        let signature = try createSignature(
+            forSignedData: signedData,
+            withPrivateKey: privateKey
+        )
+        try verify(
+            signedData: signedData,
+            signature: signature,
+            withPrivateKey: publicKey
+        )
+        
+        return signedData
+    }
+    
     /// `ChangePINCrypto`
 #warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
     func rsaDecrypt(
@@ -129,7 +154,7 @@ extension LiveExtraLoggingCVVPINCrypto {
             algorithm: .rsaSignatureDigestPKCS1v15Raw
         )
     }
-     
+    
     func x509Representation(
         publicKey: RSAPublicKey
     ) throws -> Data {
@@ -172,5 +197,83 @@ extension LiveExtraLoggingCVVPINCrypto {
         SHA256
             .hash(data: data)
             .withUnsafeBytes { Data($0) }
+    }
+}
+
+// MARK: - HashSignVerify
+
+private extension LiveExtraLoggingCVVPINCrypto {
+    
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try Crypto.signNoHash(
+                data,
+                withPrivateKey: privateKey.key,
+                algorithm: .rsaSignatureRaw
+            )
+            log("Data signing success (\(signed.count)).")
+            
+            return signed
+        } catch {
+            log("Data signing failure: \(error).")
+            throw error
+        }
+    }
+    
+    typealias SignedData = Data
+    
+    func createSignature(
+        forSignedData signedData: SignedData,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            return try Crypto.createSignature(
+                for: signedData,
+                usingPrivateKey: privateKey.key,
+                algorithm: .rsaSignatureRaw
+            )
+        } catch {
+            log("Signature creation failure: \(error).")
+            throw error
+        }
+    }
+    
+    typealias Signature = Data
+    
+    func verify(
+        signedData: SignedData,
+        signature: Signature,
+        withPrivateKey publicKey: RSAPublicKey
+    ) throws {
+        
+        do {
+            guard signature.count == 512
+            else {
+                throw VerifyError.signatureSizeNot512
+            }
+            
+            let result = try Crypto.verify(
+                signedData,
+                withPublicKey: publicKey.key,
+                signature: signature,
+                algorithm: .rsaSignatureRaw
+            )
+            
+            if !result { throw VerifyError.verificationFailure }
+        } catch {
+            log("Signature verification failure: \(error).")
+            throw error
+        }
+    }
+    
+    enum VerifyError: Error {
+        
+        case signatureSizeNot512
+        case verificationFailure
     }
 }

@@ -21,7 +21,7 @@ extension LiveCVVPINJSONMaker {
     typealias ECDHPublicKey = ECDHDomain.PublicKey
     typealias RSAKeyPair = RSADomain.KeyPair
     typealias RSAPrivateKey = RSADomain.PrivateKey
-
+    
     func makeRequestJSON(
         publicKey: ECDHPublicKey,
         rsaKeyPair: RSAKeyPair
@@ -231,14 +231,11 @@ extension LiveCVVPINJSONMaker {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        #warning("move to crypto")
-        let hashSignVerify = ShowCVVCrypto.hashSignVerify(string:publicKey:privateKey:)
-        
         let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
-        let signature = try hashSignVerify(
-            concatenation,
-            rsaKeyPair.publicKey.key,
-            rsaKeyPair.privateKey.key
+        let signature = try crypto.hashSignVerify(
+            string: concatenation,
+            publicKey: rsaKeyPair.publicKey,
+            privateKey: rsaKeyPair.privateKey
         )
         let signatureBase64 = signature.base64EncodedString()
         

@@ -119,18 +119,18 @@ extension ShowCVVCrypto {
                 with: .rsaEncryptionPKCS1,
                 using: privateKey
             )
-            log("Data decryption success (\(decrypted.count))")
+            log("Data decryption success (\(decrypted.count)).")
             
             guard let string = String(data: decrypted, encoding: .utf8)
             else {
                 throw NSError(domain: "Data to string conversion failure", code: -1)
             }
 
-            log("Decrypted string (\(string)")
+            log("Decrypted string: \"\(string)\".")
             
             return string
         } catch {
-            log("Description error: \(error)")
+            log("Description error: \(error).")
             throw error
         }
     }
