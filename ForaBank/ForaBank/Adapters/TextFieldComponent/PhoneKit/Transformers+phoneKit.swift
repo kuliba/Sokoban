@@ -23,12 +23,7 @@ extension Transformers {
                 
                 guard !$0.isEmpty else { return $0 }
                 
-                switch type {
-                case .abroad:
-                    return PhoneNumberKitWrapper.formatPartial(for: type, "+\($0)")
-                default:
-                    return PhoneNumberKitWrapper.formatPartial(for: type, $0)
-                }
+                return PhoneNumberKitWrapper.formatPartial(for: type, !$0.hasPrefix("+") ? "+\($0)" : $0)
             },
             limit: limit
         )
