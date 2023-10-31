@@ -7,6 +7,7 @@
 
 import CryptoKit
 import CVVPIN_Services
+#warning("remove `ForaCrypto`")
 import ForaCrypto
 import Foundation
 
@@ -192,18 +193,32 @@ extension LiveCVVPINJSONMaker {
         rsaPrivateKey: RSAPrivateKey
     ) throws -> Data {
         
-        let secretPIN = try crypto.processingEncrypt(
+        let sessionID = sessionID.sessionIDValue
+        let cardID = "\(cardID.cardIDValue)"
+        let otpCode = otp.otpValue
+        let otpEventID = otpEventID.eventIDValue
+        
+        #warning("should padding be used here?")
+        let secretPINData = try crypto.processingEncrypt(
             data: .init(pin.pinValue.utf8)
         )
-        let concat = sessionID.sessionIDValue + "\(cardID.cardIDValue)" + otp.otpValue + otpEventID.eventIDValue + secretPIN.base64EncodedString()
-        let signature = crypto.sha256Hash(.init(concat.utf8))
+        let secretPIN = secretPINData.base64EncodedString()
+        
+        let concat = sessionID + cardID + otpCode + otpEventID + secretPIN
+        let hash = crypto.sha256Hash(.init(concat.utf8))
+        #warning("REPLACE WITH `crypto`")
+        let signature = try ForaCrypto.Crypto.signNoHash(
+            hash,
+            withPrivateKey: rsaPrivateKey.key,
+            algorithm: .rsaSignatureMessagePKCS1v15SHA256
+        )
         
         let json = try JSONSerialization.data(withJSONObject: [
-            "sessionId": sessionID.sessionIDValue, // String(40)
-            "cardId":    cardID.cardIDValue, // int(11)
-            "otpCode":   otp.otpValue, // String(6)
-            "eventId":   otpEventID.eventIDValue, // String(40)
-            "secretPIN": secretPIN.base64EncodedString(), // String(1024)
+            "sessionId": sessionID, // String(40)
+            "cardId":    cardID, // int(11)
+            "otpCode":   otpCode, // String(6)
+            "eventId":   otpEventID, // String(40)
+            "secretPIN": secretPIN, // String(1024)
             "signature": signature.base64EncodedString() // String(1024)
         ] as [String: Any])
         
