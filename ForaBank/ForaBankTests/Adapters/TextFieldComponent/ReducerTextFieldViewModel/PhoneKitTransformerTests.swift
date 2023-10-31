@@ -22,7 +22,7 @@ final class PhoneKitTransformerTests: XCTestCase {
     
     /*func test_shouldReturnArmenianCode_on3() {
         
-        let transformed = transform(.init("3"))
+        let transformed = transform(for: .abroad, .init("3"))
         
         assertTextState(transformed, hasText: "+374", cursorAt: 4)
     }*/
@@ -48,12 +48,12 @@ final class PhoneKitTransformerTests: XCTestCase {
         assertTextState(transformed, hasText: "", cursorAt: 0)
     }
     
-    /*func test_shouldReturnPartiallyFormatted_on3WithNonDigits() {
+    func test_shouldReturnPartiallyFormatted_on3WithNonDigits() {
         
-        let transformed = transform(.init("$%^3fghj"))
+        let transformed = transform(for: .abroad, .init("$%^3fghj"))
         
-        assertTextState(transformed, hasText: "+(3", cursorAt: 3)
-    }*/
+        assertTextState(transformed, hasText: "+3", cursorAt: 2)
+    }
     
     func test_shouldReturnFormattedPartialPhoneNumber() {
         
