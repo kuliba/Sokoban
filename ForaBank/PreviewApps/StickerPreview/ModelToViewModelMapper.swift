@@ -52,7 +52,7 @@ extension ModelToViewModelMapper {
                     parameter: parameter,
                     chevronButtonTapped: {
                         
-                        action(.select(.chevronTapped(parameter)))
+//                        action(.select(.chevronTapped(parameter)))
                     },
                     select: { option in
                         
