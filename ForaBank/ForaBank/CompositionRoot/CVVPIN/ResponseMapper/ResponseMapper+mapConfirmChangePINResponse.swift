@@ -20,7 +20,7 @@ extension ResponseMapper {
             case 200:
                 let response = try JSONDecoder().decode(Response.self, from: data)
                 return .success(.init(
-                    eventID: response.eventID,
+                    eventID: response.eventId,
                     phone: response.phone
                 ))
                 
@@ -41,7 +41,7 @@ extension ResponseMapper {
     
     private struct Response: Decodable {
         
-        let eventID: String
+        let eventId: String
         let phone: String
     }
 }
