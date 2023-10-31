@@ -107,7 +107,16 @@ extension BusinessLogic {
                 )
                 return .success(.operation(newOperation))
                 
-            case .selectProduct:
+            case let .selectProduct(option, product):
+                
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: .select,
+                        selectedProduct: option,
+                        allProducts: product.allProducts))
+                )
+                
                 return .success(.operation(operation))
             }
         default:
