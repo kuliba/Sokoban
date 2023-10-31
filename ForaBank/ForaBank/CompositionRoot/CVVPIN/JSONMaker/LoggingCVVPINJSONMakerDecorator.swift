@@ -85,7 +85,8 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
         cardID: ChangePINService.CardID,
         otp: ChangePINService.OTP,
         pin: ChangePINService.PIN,
-        otpEventID: ChangePINService.OTPEventID
+        otpEventID: ChangePINService.OTPEventID,
+        sessionKey: SessionKey
     ) throws -> Data {
         
         do {
@@ -94,7 +95,8 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 cardID: cardID,
                 otp: otp,
                 pin: pin,
-                otpEventID: otpEventID
+                otpEventID: otpEventID,
+                sessionKey: sessionKey
             )
             log("Make Change PIN JSON success: \(json)")
             

@@ -199,7 +199,8 @@ extension LiveCVVPINJSONMaker {
         cardID: ChangePINService.CardID,
         otp: ChangePINService.OTP,
         pin: ChangePINService.PIN,
-        otpEventID: ChangePINService.OTPEventID
+        otpEventID: ChangePINService.OTPEventID,
+        sessionKey: SessionKey
     ) throws -> Data {
         
         let secretPIN = try crypto.processingEncrypt(
@@ -217,7 +218,12 @@ extension LiveCVVPINJSONMaker {
             "signature": signature.base64EncodedString() // String(1024)
         ] as [String: Any])
         
-        return json
+        let encrypted = try crypto.aesEncrypt(
+            data: json,
+            sessionKey: sessionKey
+        )
+        
+        return encrypted
     }
 }
 

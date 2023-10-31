@@ -58,7 +58,8 @@ protocol CVVPINJSONMaker {
         cardID: ChangePINService.CardID,
         otp: ChangePINService.OTP,
         pin: ChangePINService.PIN,
-        otpEventID: ChangePINService.OTPEventID
+        otpEventID: ChangePINService.OTPEventID,
+        sessionKey: SessionKey
     ) throws -> Data
     
     /// `ShowCVV`
