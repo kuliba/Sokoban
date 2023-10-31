@@ -14,7 +14,13 @@ struct Operation: Equatable {
     
     struct Parameter: Equatable {
         
-        let productId: ProductID
+        let selectedProduct: Product
+        let allProducts: [Product]
+        
+        struct Product: Equatable {
+            
+            let id: ProductID
+        }
     }
 }
 
@@ -57,14 +63,14 @@ final class BusinessLogic {
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     private let transfer: Transfer
-    private let productIDs: [ProductID]
+    private let products: [Operation.Parameter.Product]
     
     init(
         transfer: @escaping Transfer,
-        productIDs: [ProductID]
+        products: [Operation.Parameter.Product]
     ) {
         self.transfer = transfer
-        self.productIDs = productIDs
+        self.products = products
     }
     
     typealias MakePaymentResult = Result<TransferResponse, TransferError>
@@ -100,30 +106,22 @@ final class BusinessLogic {
     
     func selectProductID(
         operation: Operation,
-        productID: ProductID,
+        product: Operation.Parameter.Product,
         completion: @escaping SelectCompletion
     ) {
-        guard productIDs.contains(productID) else {
+        guard products.contains(product) else {
             completion(.failure(MissingID()))
             return
         }
         
-        let newOperation = Operation(parameter: .init(productId: productID))
+        let newOperation = Operation(parameter: .init(
+            selectedProduct: product,
+            allProducts: products
+        ))
         completion(.success(newOperation))
     }
     
     struct MissingID: Error {}
-    
-    typealias EventResult = Result<Response, Error>
-    typealias Completion = (EventResult) -> Void
-    
-//    func handle(
-//        event: Event,
-//        completion: @escaping MakePaymentCompletion
-//    ) {
-//
-//
-//    }
     
     struct Payload {}
     
@@ -139,6 +137,10 @@ final class BusinessLogic {
         
         case makePayment
         case otp
+    }
+    
+    enum MissingProductOption: Error {
+        case missingProductOption(ProductID)
     }
 }
 
@@ -223,7 +225,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     
     func test_selectProductID_shouldDeliverError_onMissingProductID() {
         
-        let missingID = ProductID(id: "missing")
+        let missingID = Operation.Parameter.Product(id: ProductID(id: "missing"))
         let operation = makeOperation()
         let (sut, _) = makeSUT()
         
@@ -232,12 +234,15 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     
     func test_selectProductID_shouldChangeParameterId_onExistingProductID() {
         
-        let existingID = ProductID(id: "existing")
+        let existingProduct = Operation.Parameter.Product(id: ProductID(id: "existing"))
         let operation = makeOperation()
-        let (sut, _) = makeSUT(productIDs: [existingID])
-        let newOperation = Operation(parameter: .init(productId: existingID))
+        let (sut, _) = makeSUT(products: [existingProduct])
+        let newOperation = Operation(parameter: .init(
+            selectedProduct: existingProduct,
+            allProducts: [existingProduct])
+        )
         
-        expect(sut, operation: operation, with: existingID, toDeliver: [.success(newOperation)]) {}
+        expect(sut, operation: operation, with: existingProduct, toDeliver: [.success(newOperation)]) {}
     }
     
     // MARK: - Helpers
@@ -248,7 +253,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     typealias Response = SUT.TransferResponse
     
     private func makeSUT(
-        productIDs: [ProductID] = [],
+        products: [Operation.Parameter.Product] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -258,7 +263,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         let transferSpy = TransferSpy()
         let sut = SUT(
             transfer: transferSpy.transfer,
-            productIDs: productIDs
+            products: products
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -297,10 +302,17 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     }
     
     private func makeOperation(
-        parameter: Operation.Parameter = .init(productId: .init(id: "123"))
+        parameter: Operation.Parameter = .init(selectedProduct: .init(id: .init(id: "123")), allProducts: .init())
     ) -> Operation {
         
         .init(parameter: parameter)
+    }
+    
+    private func makeProducts(
+        products: [Operation.Parameter.Product] = [.init(id: .init(id: "123"))]
+    ) -> [Operation.Parameter.Product] {
+        
+        products
     }
     
     private func makeRequestOtpEvent() -> TransferEvent {
@@ -321,7 +333,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
     private func expect(
         _ sut: SUT,
         operation: Operation,
-        with productID: ProductID,
+        with product: Operation.Parameter.Product,
         toDeliver expectedResults: [SUT.SelectResult],
         on action: @escaping () -> Void,
         file: StaticString = #file,
@@ -332,7 +344,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         sut.selectProductID(
             operation: operation,
-            productID: productID
+            product: product
         ) {
             receivedResults.append($0)
             exp.fulfill()
