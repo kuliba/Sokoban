@@ -321,11 +321,9 @@ extension Services {
             }
         }
         
-        // TODO: add category `CVV-PIN`
-        let log = { LoggerAgent.shared.debug(category: .network, message: $0) }
-        
         return ComposedCVVPINService(
-            log: log,
+            // TODO: add category `CVV-PIN`
+            log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation,
