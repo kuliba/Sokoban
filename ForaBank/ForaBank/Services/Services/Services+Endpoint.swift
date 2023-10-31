@@ -20,6 +20,7 @@ extension Services {
             case processingRegistration = "processing/registration"
             case dict = "dict"
             case binding = "rest/binding"
+            case transfer = "rest/transfer"
         }
         
         enum Version: String {
