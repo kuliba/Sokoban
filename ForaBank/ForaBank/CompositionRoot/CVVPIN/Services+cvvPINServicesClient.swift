@@ -259,7 +259,8 @@ extension Services {
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
             _loadSession: loadSession,
             _makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
-            _process: showCVVRemoteService.process
+            _process: showCVVRemoteService.process,
+            _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
         )
         
         let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
@@ -917,12 +918,16 @@ private extension ShowCVVService {
     
     typealias _MakeSecretJSON = (CardID, SessionID, RSAKeyPair, SessionKey) throws -> Data
     
+    typealias RSAPrivateKey = RSADomain.PrivateKey
+    typealias _RSADecrypt = (String, RSAPrivateKey) throws -> String
+    
     convenience init(
         _authenticate: @escaping _Authenticate,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
         _loadSession: @escaping _LoadSession,
         _makeSecretJSON: @escaping _MakeSecretJSON,
-        _process: @escaping _Process
+        _process: @escaping _Process,
+        _rsaDecrypt: @escaping _RSADecrypt
     ) {
         self.init(
             authenticate: _authenticate,
@@ -957,10 +962,9 @@ private extension ShowCVVService {
                     
                     do {
                         let privateKey = try result.get().privateKey
-#warning("inject `decrypt`")
-                        let cvvValue = try ShowCVVCrypto.decrypt(
-                            string: encryptedCVV.encryptedCVVValue,
-                            withPrivateKey: privateKey.key
+                        let cvvValue = try _rsaDecrypt(
+                            encryptedCVV.encryptedCVVValue,
+                            privateKey
                         )
                         completion(.success(.init(cvvValue: cvvValue)))
                     } catch {
