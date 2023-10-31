@@ -110,33 +110,6 @@ extension Services {
             currentDate: currentDate
         )
         
-        typealias MakeBindPublicKeySecretJSONResult = Result<Data, Error>
-        typealias MakeBindPublicKeySecretJSONCompletion = (MakeBindPublicKeySecretJSONResult) -> Void
-        typealias MakeBindPublicKeySecretJSON = (String, @escaping MakeBindPublicKeySecretJSONCompletion) -> Void
-        
-        let makeBindPublicKeySecretJSON: MakeBindPublicKeySecretJSON = { otp, completion in
-            
-            sessionKeyLoader.load { result in
-                
-                do {
-                    let sessionKey = try result.get()
-                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp,
-                        sessionKey: sessionKey
-                    )
-                    
-                    rsaKeyPairLoader.save(
-                        rsaKeyPair,
-                        validUntil: currentDate().nextYear()
-                    ) {
-                        completion($0.map { _ in data })
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }
-        
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
             _loadEventID: sessionIDLoader.load(completion:),
             _makeSecretJSON: makeBindPublicKeySecretJSON,
@@ -216,6 +189,31 @@ extension Services {
         )
         
         // MARK: - Helpers
+        
+        func makeBindPublicKeySecretJSON(
+            otp: String,
+            completion: @escaping (Result<Data, Error>) -> Void
+        ) {
+            sessionKeyLoader.load { result in
+                
+                do {
+                    let sessionKey = try result.get()
+                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
+                        otp: otp,
+                        sessionKey: sessionKey
+                    )
+                    
+                    rsaKeyPairLoader.save(
+                        rsaKeyPair,
+                        validUntil: currentDate().nextYear()
+                    ) {
+                        completion($0.map { _ in data })
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
         
 #warning("extract repeated")
         
@@ -837,7 +835,7 @@ private extension ChangePINService {
     }
     
     typealias RSAPrivateKey = RSADomain.PrivateKey
-
+    
     struct _Session {
         
         let otpEventID: OTPEventID
