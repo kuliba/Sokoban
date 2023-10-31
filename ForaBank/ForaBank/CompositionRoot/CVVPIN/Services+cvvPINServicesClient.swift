@@ -169,36 +169,6 @@ extension Services {
             currentDate: currentDate
         )
         
-        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
-        typealias AuthResult = Result<AuthSuccess, AuthError>
-        typealias AuthCompletion = (AuthResult) -> Void
-        typealias Authenticate = (@escaping AuthCompletion) -> Void
-        
-        let authenticate: Authenticate = { completion in
-            
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case .success:
-                    
-                    sessionIDLoader.load { result in
-                        switch result {
-                        case .failure:
-                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                                
-                                completion($0.mapError { _ in .authenticationFailure })
-                            }
-                        case let .success(sessionID):
-#warning("есть сессия")
-                        }
-                    }
-                }
-            }
-        }
-        
         let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
             
             rsaKeyPairLoader.load { result in
@@ -263,6 +233,36 @@ extension Services {
             _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
         )
         
+        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        typealias AuthResult = Result<AuthSuccess, AuthError>
+        typealias AuthCompletion = (AuthResult) -> Void
+        typealias Authenticate = (@escaping AuthCompletion) -> Void
+        
+        let authenticate: Authenticate = { completion in
+            
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case .success:
+                    
+                    sessionIDLoader.load { result in
+                        switch result {
+                        case .failure:
+                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                                
+                                completion($0.mapError { _ in .authenticationFailure })
+                            }
+                        case let .success(sessionID):
+#warning("есть сессия")
+                        }
+                    }
+                }
+            }
+        }
+
         let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
             
             authenticate { result in
@@ -924,6 +924,7 @@ private extension ShowCVVService {
     convenience init(
         _authenticate: @escaping _Authenticate,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
+        // TODO: Rename to smth like `loadRSAAndSessionKeys`
         _loadSession: @escaping _LoadSession,
         _makeSecretJSON: @escaping _MakeSecretJSON,
         _process: @escaping _Process,
@@ -957,7 +958,7 @@ private extension ShowCVVService {
                 }
             },
             decryptCVV: { encryptedCVV, completion in
-                
+                // TODO: reuse `_loadSession`
                 loadRSAKeyPair { result in
                     
                     do {
