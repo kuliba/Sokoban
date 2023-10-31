@@ -64,52 +64,6 @@ extension BusinessLogic {
         case let .select(selectEvent):
             
             switch selectEvent {
-            case let .chevronTapped(parameter):
-                
-                switch parameter.state {
-                case let .idle(idleViewModel):
-                    
-                    let updateSelect = parameter.updateSelect(
-                        parameter: parameter,
-                        idleViewModel: idleViewModel
-                    )
-                    
-                    return .success(.operation(
-                        operation.updateOperation(
-                            operation: operation,
-                            newParameter: .select(updateSelect)
-                        ))
-                    )
-                    
-                case let .selected(selectedViewModel):
-
-                    let parameter = parameter.updateState(
-                        iconName: selectedViewModel.iconName
-                    )
-                    
-                    return .success(.operation(
-                        operation.updateOperation(
-                            operation: operation,
-                            newParameter: .select(parameter)
-                        ))
-                    )
-                    
-                case .list(_):
-                    
-                    dictionaryService.process(operation) { result in
-                        
-                        switch result {
-                        case let .success(operation):
-                            completion(.success(.operation(operation)))
-                            
-                        case let .failure(error):
-                            completion(.failure(error))
-                        }
-                    }
-                    
-                    return .success(.operation(operation))
-                }
-                
             case let .selectOption(id, parameter):
                 
                 let operation = selectOption(
@@ -119,20 +73,7 @@ extension BusinessLogic {
                 )
             
                 return .success(.operation(operation))
-                
-            case let .filterOptions(text, parameter, filteredOptions):
-                
-                let newParameter = parameter.updateOptions(
-                    parameter: parameter,
-                    options: filteredOptions(text)
-                )
-                
-                let parameters = operation.parameters.replaceParameterOptions(
-                    newParameter: newParameter
-                )
-                
-                return .success(.operation(.init(parameters: parameters)))
-                
+
             case .openBranch:
                 return .success(.operation(operation))
             }
@@ -155,8 +96,6 @@ extension BusinessLogic {
         case let .product(productEvents):
             
             switch productEvents {
-            case .chevronTapped:
-                return .success(.operation(operation))
             case .selectProduct:
                 return .success(.operation(operation))
             }

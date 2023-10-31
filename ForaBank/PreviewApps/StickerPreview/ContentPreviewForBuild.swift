@@ -126,44 +126,6 @@ extension OperationStateViewModel {
     ) -> Operation? {
         
         switch event {
-        case let .chevronTapped(parameter):
-            switch parameter.state {
-            case let .idle(idleViewModel):
-                
-                let updateSelect = parameter.updateSelect(
-                    parameter: parameter,
-                    idleViewModel: idleViewModel
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(updateSelect)
-                )
-                
-            case let .selected(selectedViewModel):
-                
-                let parameter = parameter.updateState(
-                    iconName: selectedViewModel.iconName
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(parameter)
-                )
-                
-            case let .list(listViewModel):
-                
-                let parameter = parameter.updateState(
-                    iconName: listViewModel.iconName,
-                    title: listViewModel.title
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(parameter)
-                )
-            }
-            
         case let .selectOption(id, parameter):
             
             // TODO: repeated pattern - extract to settable subscript
@@ -181,21 +143,6 @@ extension OperationStateViewModel {
                 operation: operation,
                 newParameter: .select(updateParameter)
             )
-            
-        case let .filterOptions(_, parameter, options):
-            
-            return operation.updateOperation(
-                operation: operation,
-                newParameter: .select(.init(
-                    id: parameter.id,
-                    value: parameter.value,
-                    title: parameter.title,
-                    placeholder: parameter.placeholder,
-                    options: options,
-                    state: parameter.state
-                ))
-            )
-            
         case .openBranch:
             //TODO: send Branch View
             return nil
