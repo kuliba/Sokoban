@@ -85,9 +85,8 @@ extension PaymentsInputPhoneView {
             }
             
             self.actionButton = .init(action: {[weak self] in
-
-                let contactViewModel = model.makeContactsViewModel(
-                    forMode: .select(.contacts), forType: type)
+                
+                let contactViewModel = model.makeContactsViewModel(forMode: .select(.contacts))
                 self?.bind(contactsViewModel: contactViewModel)
                 self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Show(viewModel: contactViewModel))
             })

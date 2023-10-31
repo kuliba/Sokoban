@@ -141,9 +141,9 @@ extension PaymentsSelectBankView.ViewModel {
                     
                     switch selectAllOption.type {
                     case .banks:
-                        return model.makeContactsViewModel(forMode: .select(.banks), forType: .other)
+                        return model.makeContactsViewModel(forMode: .select(.banks))
                     case .banksFullInfo:
-                        return model.makeContactsViewModel(forMode: .select(.banksFullInfo), forType: .other)
+                        return model.makeContactsViewModel(forMode: .select(.banksFullInfo))
                     }
                     
                 }()

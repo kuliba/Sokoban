@@ -369,7 +369,6 @@ extension Model {
     /// Factory method to create `ContactsViewModel` using `model`.
     func makeContactsViewModel(
         forMode mode: ContactsViewModel.Mode,
-        forType type: ContactsViewModel.PaymentsType,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> ContactsViewModel {
         
@@ -388,6 +387,15 @@ extension Model {
             
             model?.countriesList.value.first(where: { $0.id == bank.bankCountry })
         }
+        
+        let type: ContactsViewModel.PaymentsType = {
+            switch mode {
+            case .abroad:
+                return .abroad
+            default:
+                return .other
+            }
+        }()
         
         let searchFieldModel = SearchFactory.makeSearchFieldModel(
             for: mode, 

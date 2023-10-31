@@ -220,7 +220,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts), forType: .other)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .fastPayment(contactsViewModel))
@@ -232,7 +232,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad, forType: .other)
+                let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .country(contactsViewModel))
