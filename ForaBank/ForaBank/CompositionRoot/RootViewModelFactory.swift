@@ -17,9 +17,11 @@ enum RootViewModelFactory {
         let httpClient = model.authenticatedHTTPClient()
         
         let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
-        let cryptoLog = { log(.crypto, $0, #file, #line) }
         
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(log: cryptoLog)
+        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
+            log: { log(.crypto, $0, #file, #line) }
+        )
+        
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
         let cvvPINServicesClient = Services.loggingCVVPINServicesClient(
