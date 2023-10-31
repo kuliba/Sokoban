@@ -340,17 +340,25 @@ extension Services {
     
     typealias MappingRemoteService<Input, Output, MapResponseError: Error> = RemoteService<Input, Output, Error, Error, MapResponseError>
     
+    typealias AuthWithPublicKeyRemoteService = MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>
+    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>
+    typealias ChangePINRemoteService = MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>
+    typealias ConfirmChangePINRemoteService = MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>
+    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
+    typealias GetCodeRemoteService = MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>
+    typealias ShowCVVRemoteService = MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
+    
     static func configureRemoteServices(
         httpClient: HTTPClient,
         log: @escaping (String, StaticString, UInt) -> Void
     ) -> (
-        authWithPublicKeyRemoteService: MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>,
-        bindPublicKeyWithEventIDRemoteService: MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>,
-        changePINRemoteService: MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>,
-        confirmChangePINRemoteService: MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>,
-        formSessionKeyRemoteService: MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>,
-        getCodeRemoteService: MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>,
-        showCVVRemoteService: MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
+        authWithPublicKeyRemoteService: AuthWithPublicKeyRemoteService,
+        bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
+        changePINRemoteService: ChangePINRemoteService,
+        confirmChangePINRemoteService: ConfirmChangePINRemoteService,
+        formSessionKeyRemoteService: FormSessionKeyRemoteService,
+        getCodeRemoteService: GetCodeRemoteService,
+        showCVVRemoteService: ShowCVVRemoteService
     ) {
         func remoteService<Input, Output, ResponseError: Error>(
             createRequest: @escaping LoggingRemoteServiceDecorator<Input, Output, Error, ResponseError>.CreateRequest,
