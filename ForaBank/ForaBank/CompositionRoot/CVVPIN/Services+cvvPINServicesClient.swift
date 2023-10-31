@@ -269,7 +269,7 @@ extension Services {
             }
         }
         
-        let loadOTPSession: ChangePINService.LoadOTPSession = { completion in
+        let loadOTPSession: ChangePINService._LoadOTPSession = { completion in
             
             otpEventIDLoader.load { result in
                 
@@ -299,7 +299,12 @@ extension Services {
                                             completion(.failure(error))
                                             
                                         case let .success(rsaKeyPair):
-                                            completion(.success((otpEventID, sessionID, sessionKey, rsaKeyPair.privateKey)))
+                                            completion(.success(.init(
+                                                otpEventID: otpEventID,
+                                                sessionID: sessionID,
+                                                sessionKey: sessionKey,
+                                                rsaPrivateKey: rsaKeyPair.privateKey)
+                                            ))
                                         }
                                     }
                                 }
@@ -313,7 +318,7 @@ extension Services {
         let changePINService = ChangePINService(
             _authenticate: changePINServiceAuthenticate,
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
-            loadOTPSession: loadOTPSession,
+            _loadOTPSession: loadOTPSession,
             _confirmProcess: confirmChangePINRemoteService.process,
             _changePINProcess: changePINRemoteService.process,
             _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
@@ -679,9 +684,9 @@ private extension ChangePINService {
     typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
     
     typealias RSAPrivateKey = RSADomain.PrivateKey
-    typealias LoadOTPSessionResult = Swift.Result<(OTPEventID, ForaBank.SessionID, SessionKey, RSAPrivateKey), Swift.Error>
-    typealias LoadOTPSessionCompletion = (LoadOTPSessionResult) -> Void
-    typealias LoadOTPSession = (@escaping LoadOTPSessionCompletion) -> Void
+    typealias _LoadOTPSessionResult = Swift.Result<_Session, Swift.Error>
+    typealias _LoadOTPSessionCompletion = (_LoadOTPSessionResult) -> Void
+    typealias _LoadOTPSession = (@escaping _LoadOTPSessionCompletion) -> Void
     
     typealias _ConfirmProcessResult = Swift.Result<EncryptedConfirmResponse, MappingRemoteServiceError<ConfirmAPIError>>
     typealias _ConfirmProcessCompletion = (_ConfirmProcessResult) -> Void
@@ -698,7 +703,7 @@ private extension ChangePINService {
     convenience init(
         _authenticate: @escaping _Authenticate,
         loadRSAKeyPair: @escaping LoadRSAKeyPair,
-        loadOTPSession: @escaping LoadOTPSession,
+        _loadOTPSession: @escaping _LoadOTPSession,
         _confirmProcess: @escaping _ConfirmProcess,
         _changePINProcess: @escaping _ChangePINProcess,
         _rsaDecrypt: @escaping _RSADecrypt,
@@ -737,15 +742,15 @@ private extension ChangePINService {
             },
             makePINChangeJSON: { cardID, pin, otp, completion in
                 
-                loadOTPSession { result in
+                _loadOTPSession { result in
                     
                     switch result {
                     case let .failure(error):
                         completion(.failure(error))
                         
-                    case let .success((otpEventID, sessionID, sessionKey, rsaPrivateKey)):
+                    case let .success(session):
                         let sessionID = ChangePINService.SessionID(
-                            sessionIDValue: sessionID.value
+                            sessionIDValue: session.sessionID.value
                         )
                         
                         completion(.init {
@@ -755,9 +760,9 @@ private extension ChangePINService {
                                 .init(cardIDValue: cardID.cardIDValue),
                                 .init(otpValue: otp.otpValue),
                                 .init(pinValue: pin.pinValue),
-                                otpEventID,
-                                sessionKey,
-                                rsaPrivateKey
+                                session.otpEventID,
+                                session.sessionKey,
+                                session.rsaPrivateKey
                             )
                             
                             return (sessionID, json)
@@ -775,6 +780,14 @@ private extension ChangePINService {
                 }
             }
         )
+    }
+    
+    struct _Session {
+        
+        let otpEventID: OTPEventID
+        let sessionID: ForaBank.SessionID
+        let sessionKey: SessionKey
+        let rsaPrivateKey: RSAPrivateKey
     }
 }
 
