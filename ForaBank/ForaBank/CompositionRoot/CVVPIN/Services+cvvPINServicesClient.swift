@@ -213,41 +213,8 @@ extension Services {
         
         // MARK: Configure Change PIN Service
         
-#warning("extract repeated")
-        let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
-            
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case .success:
-                    sessionIDLoader.load { result in
-                        
-                        switch result {
-                        case .failure:
-                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                                
-                                completion(
-                                    $0
-                                        .map(\.sessionID.sessionIDValue)
-                                        .map(ChangePINService.SessionID.init(sessionIDValue:))
-                                        .mapError { _ in .authenticationFailure })
-                            }
-                            
-                        case let .success(sessionID):
-                            completion(.success(
-                                .init(sessionIDValue: sessionID.value)
-                            ))
-                        }
-                    }
-                }
-            }
-        }
-        
         let changePINService = ChangePINService(
-            _authenticate: changePINServiceAuthenticate,
+            _authenticate: changePINAuthenticate,
             loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
             _loadChangePINSession: loadChangePINSession,
             _confirmProcess: confirmChangePINRemoteService.process,
@@ -281,6 +248,47 @@ extension Services {
         )
         
         // MARK: - Helpers
+        
+#warning("extract repeated")
+        func changePINAuthenticate(
+            completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    changePINAuthenticate(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func changePINAuthenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ChangePINService.SessionID.init(sessionIDValue:))
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(.init(
+                        sessionIDValue: sessionID.value
+                    )))
+                }
+            }
+        }
         
         func loadShowCVVSession(
             completion: @escaping ShowCVVService._LoadSessionCompletion
