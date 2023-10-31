@@ -169,6 +169,8 @@ extension Services {
             currentDate: currentDate
         )
         
+        // MARK: Configure Show CVV Service
+        
         let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
             
             rsaKeyPairLoader.load { result in
@@ -231,6 +233,8 @@ extension Services {
             _process: showCVVRemoteService.process,
             _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
         )
+        
+        // MARK: Configure Change PIN Service
         
         typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
         typealias AuthResult = Result<AuthSuccess, AuthError>
