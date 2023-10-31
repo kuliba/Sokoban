@@ -99,12 +99,16 @@ extension LiveCVVPINJSONMaker {
         let (encryptedSignedOTP, publicKey, privateKey) = try retry {
             
             let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
-            let encryptedSignedOTP = try signEncryptOTP(
-                otp: otp,
-                privateKey: privateKey
+            let clientSecretOTP = try crypto.signNoHash(
+                .init(otp.utf8),
+                withPrivateKey: privateKey
             )
             
-            return (encryptedSignedOTP, publicKey, privateKey)
+            let procClientSecretOTP = try crypto.transportEncryptNoPadding(
+                data: clientSecretOTP
+            )
+            
+            return (procClientSecretOTP, publicKey, privateKey)
         }
         
         let publicKeyX509Representation = try crypto.x509Representation(publicKey: publicKey)
@@ -123,22 +127,6 @@ extension LiveCVVPINJSONMaker {
         )
         
         return (data, (privateKey, publicKey))
-    }
-    
-    func signEncryptOTP(
-        otp: String,
-        privateKey: RSAPrivateKey
-    ) throws -> Data {
-        
-        let clientSecretOTP = try crypto.signNoHash(
-            .init(otp.utf8),
-            withPrivateKey: privateKey
-        )
-        
-        let procClientSecretOTP = try crypto.transportEncryptNoPadding(
-            data: clientSecretOTP
-        )
-        return procClientSecretOTP
     }
 }
 
