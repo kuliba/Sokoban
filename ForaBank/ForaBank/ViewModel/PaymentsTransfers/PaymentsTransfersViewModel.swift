@@ -50,13 +50,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
-    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -70,7 +68,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -84,7 +81,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -94,7 +90,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
         
         self.navButtonsRight = navButtonsRight
         
@@ -147,17 +142,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value
                     else {return }
                     
-                    // TODO: replace with factory
-                    link = .userAccount(.init(
-                        model: model,
-                        clientInfo: clientInfo,
-                        dismissAction: { [weak self] in
-                            
-                            self?.action.send(PaymentsTransfersViewModelAction
-                                .Close.Link())
-                        },
-                        onExit: onExit
-                    ))
+                    link = .userAccount(
+                        .init(model: model,
+                              clientInfo: clientInfo,
+                              dismissAction: {[weak self] in
+                                  self?.action.send(PaymentsTransfersViewModelAction
+                                    .Close.Link() )}))
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     

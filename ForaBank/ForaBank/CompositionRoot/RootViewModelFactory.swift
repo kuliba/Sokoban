@@ -45,7 +45,6 @@ enum RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
-                onExit: onExit,
                 product: $0,
                 rootView: $1,
                 dismissAction: $2
@@ -54,14 +53,12 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()
