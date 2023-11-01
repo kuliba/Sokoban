@@ -266,17 +266,15 @@ class UserAccountViewModel: ObservableObject {
                     
                 case _ as UserAccountViewModelAction.ExitAction:
                     alert = .exit {
+                        
                         self.model.auth.value = .unlockRequiredManual
                     }
                     
                 case _ as UserAccountViewModelAction.DeleteAction:
-                    
-                    alert = .init(
-                        title: "Удалить учетную запись?", message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
-                        primary: .init(type: .default, title: "ОК", action: {
-                            self.model.action.send(ModelAction.ClientInfo.Delete.Request())
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .delete {
+                        
+                        self.model.action.send(ModelAction.ClientInfo.Delete.Request())
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
