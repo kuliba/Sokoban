@@ -24,7 +24,7 @@ enum RootViewModelFactory {
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
-        #warning("fix lifespans before release")
+#warning("fix lifespans before release")
         let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
@@ -94,18 +94,18 @@ private extension TimeInterval {
     static var rsaKeyPairLifespan: Self {
         
 #if RELEASE
-        15
+        15_778_463
 #else
-        30
+        600
 #endif
     }
     
     static var ephemeralLifespan: Self {
         
 #if RELEASE
-        15_778_463
+        15
 #else
-        600
+        30
 #endif
     }
 }
