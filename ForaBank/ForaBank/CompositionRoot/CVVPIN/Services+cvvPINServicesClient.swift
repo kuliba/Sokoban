@@ -96,9 +96,9 @@ extension Services {
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
-            _loadEventID: sessionIDLoader.load(completion:),
-            _makeSecretJSON: makeBindPublicKeySecretJSON,
-            _process: bindPublicKeyWithEventIDRemoteService.process
+            loadEventID: loadEventID,
+            makeSecretJSON: makeSecretJSON,
+            process: bindPublicKeyWithEventIDProcess
         )
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
@@ -177,31 +177,6 @@ extension Services {
             )
         }
         
-        func makeBindPublicKeySecretJSON(
-            otp: String,
-            completion: @escaping (Result<Data, Error>) -> Void
-        ) {
-            sessionKeyLoader.load { result in
-                
-                do {
-                    let sessionKey = try result.get()
-                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp,
-                        sessionKey: sessionKey
-                    )
-                    
-                    rsaKeyPairLoader.save(
-                        rsaKeyPair,
-                        validUntil: currentDate().nextYear()
-                    ) {
-                        completion($0.map { _ in data })
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }
-        
         func checkActivation(
             completion: @escaping (Result<Void, Error>) -> Void
         ) {
@@ -250,6 +225,52 @@ extension Services {
                 .map(AuthenticateWithPublicKeyService.Success.SessionKey.init)
             )
 
+        }
+        
+        // MARK: - BindPublicKeyWithEventID Adapters
+        
+        func loadEventID(
+            completion: @escaping BindPublicKeyWithEventIDService.EventIDCompletion
+        ) {
+            sessionIDLoader.load {
+                
+                completion($0.map { .init(eventIDValue: $0.value) })
+            }
+        }
+        
+        func makeSecretJSON(
+            otp: BindPublicKeyWithEventIDService.OTP,
+            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                do {
+                    let sessionKey = try result.get()
+                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
+                        otp: otp.otpValue,
+                        sessionKey: sessionKey
+                    )
+                    
+                    rsaKeyPairLoader.save(
+                        rsaKeyPair,
+                        validUntil: currentDate().nextYear()
+                    ) {
+                        completion($0.map { _ in data })
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+        func bindPublicKeyWithEventIDProcess(
+            payload: BindPublicKeyWithEventIDService.Payload,
+            completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
+        ){
+            bindPublicKeyWithEventIDRemoteService.process(payload) {
+                
+                completion($0.mapError { .init($0) })
+            }
         }
         
         // MARK: - GetProcessingSessionCode Adapters
@@ -736,48 +757,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension BindPublicKeyWithEventIDService {
-    
-    typealias _LoadEventIDResult = Swift.Result<SessionID, Swift.Error>
-    typealias _LoadEventIDCompletion = (_LoadEventIDResult) -> Void
-    typealias _LoadEventID = (@escaping _LoadEventIDCompletion) -> Void
-    
-    typealias _MakeSecretJSONResult = Swift.Result<Data, Swift.Error>
-    typealias _MakeSecretJSONCompletion = (_MakeSecretJSONResult) -> Void
-    typealias _MakeSecretJSON = (String, @escaping _MakeSecretJSONCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Void, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Payload, @escaping _ProcessCompletion) -> Void
-    
-    convenience init(
-        _loadEventID: @escaping _LoadEventID,
-        _makeSecretJSON: @escaping _MakeSecretJSON,
-        _process: @escaping _Process
-    ) {
-        self.init(
-            loadEventID: { completion in
-                
-                _loadEventID {
-                    
-                    completion($0.map { .init(eventIDValue: $0.value) })
-                }
-            },
-            makeSecretJSON: { otp, completion in
-                
-                _makeSecretJSON(otp.otpValue, completion)
-            },
-            process: { input, completion in
-                
-                _process(input) {
-                    
-                    completion($0.mapError { .init($0) })
-                }
-            }
-        )
-    }
-}
 
 private extension CachingAuthWithPublicKeyServiceDecorator {
     
