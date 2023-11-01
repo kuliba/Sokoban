@@ -43,7 +43,6 @@ extension ResponseMapper {
                     statusCode: serverError.statusCode,
                     errorMessage: serverError.errorMessage
                 ))
-                
             }
             
         } catch {
@@ -65,9 +64,41 @@ extension ResponseMapper {
     
     enum StickerDictionary: Decodable {
         
-        case OrderForm(StickerOrderForm)
-        case DeliveryOffice(DeliveryOffice)
-        case DeliveryCourier(DeliveryCourier)
+        case orderForm(StickerOrderForm)
+        case deliveryOffice(DeliveryOffice)
+        case deliveryCourier(DeliveryCourier)
+        case noValid(String)
+        
+        init(from decoder: Decoder) throws {
+            
+            enum CodingKeys: CodingKey {
+                case type
+                case data
+            }
+            
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try? container.decode(StickerDictionary.self, forKey: .type)
+            
+            switch type {
+            case .orderForm:
+                let data = try container.decode(StickerOrderForm.self, forKey: .data)
+                self = .orderForm(data)
+                
+            case .deliveryCourier:
+                let data = try container.decode(DeliveryCourier.self, forKey: .data)
+                self = .deliveryCourier(data)
+                
+            case .deliveryOffice:
+                let data = try container.decode(DeliveryOffice.self, forKey: .data)
+                self = .deliveryOffice(data)
+                
+            case .none:
+                self = .noValid("couldn't decode data")
+                
+            case .some(.noValid(_)):
+                self = .noValid("couldn't decode data")
+            }
+        }
     }
     
     struct StickerOrderForm: Decodable {
