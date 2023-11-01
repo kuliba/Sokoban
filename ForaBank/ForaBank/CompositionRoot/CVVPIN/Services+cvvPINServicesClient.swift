@@ -132,11 +132,10 @@ extension Services {
         // MARK: Configure Show CVV Service
         
         let showCVVService = ShowCVVService(
-            _authenticate: showCVVAuthenticate,
-            _loadSession: loadShowCVVSession,
-            _makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
-            _process: showCVVRemoteService.process,
-            _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
+            authenticate: showCVVAuthenticate,
+            makeJSON: makeSecretJSON,
+            process: showCVVProcess,
+            decryptCVV: decryptCVV
         )
         
         // MARK: Configure Change PIN Service
@@ -301,8 +300,64 @@ extension Services {
             }
         }
         
+        // MARK: - ShowCVV Adapters
+        
+        func makeSecretJSON(
+            cardID: ShowCVVService.CardID,
+            sessionID: ShowCVVService.SessionID,
+            completion: @escaping ShowCVVService.MakeJSONCompletion
+        ) {
+            loadShowCVVSession { result in
+                
+                completion(.init {
+                    
+                    let session = try result.get()
+                    return try cvvPINJSONMaker.makeSecretJSON(
+                        with: cardID,
+                        and: sessionID,
+                        rsaKeyPair: session.rsaKeyPair,
+                        sessionKey: session.sessionKey
+                    )
+                })
+            }
+        }
+        
+        func showCVVProcess(
+            payload: ShowCVVService.Payload,
+            completion: @escaping ShowCVVService.ProcessCompletion
+        ) {
+            showCVVRemoteService.process((
+                .init(value: payload.sessionID.sessionIDValue),
+                payload.data
+            )) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func decryptCVV(
+            encryptedCVV: ShowCVVService.EncryptedCVV,
+            completion: @escaping ShowCVVService.DecryptCVVCompletion
+        ) {
+            loadShowCVVSession {
+                
+                do {
+                    let rsaKeyPair = try $0.get().rsaKeyPair
+                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
+                        encryptedCVV.encryptedCVVValue,
+                        withPrivateKey: rsaKeyPair.privateKey
+                    )
+                    completion(.success(.init(cvvValue: cvvValue)))
+                } catch {
+                    completion(.failure(.serviceError(.makeJSONFailure)))
+                }
+            }
+        }
+        
+        typealias LoadShowCVVSessionResult = Swift.Result<_Session, Swift.Error>
+        typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
+        
         func loadShowCVVSession(
-            completion: @escaping ShowCVVService._LoadSessionCompletion
+            completion: @escaping LoadShowCVVSessionCompletion
         ) {
             rsaKeyPairLoader.load { result in
                 
@@ -318,7 +373,7 @@ extension Services {
         
         func loadShowCVVSession(
             _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping ShowCVVService._LoadSessionCompletion
+            _ completion: @escaping LoadShowCVVSessionCompletion
         ) {
             sessionKeyLoader.load { result in
                 
@@ -334,6 +389,14 @@ extension Services {
                 }
             }
         }
+        
+        struct _Session {
+            
+            let rsaKeyPair: RSAKeyPair
+            let sessionKey: SessionKey
+        }
+        
+        // MARK: ChangePIN Adapters
         
         func loadChangePINSession(
             completion: @escaping ChangePINService._LoadChangePINSessionCompletion
@@ -982,85 +1045,6 @@ private extension GetProcessingSessionCodeService {
                 completion($0.mapError { .init($0) })
             }
         }
-    }
-}
-
-private extension ShowCVVService {
-    
-    typealias _Authenticate = ShowCVVService.Authenticate
-    
-    typealias RSAKeyPair = RSADomain.KeyPair
-    
-    typealias _LoadSessionResult = Swift.Result<_Session, Swift.Error>
-    typealias _LoadSessionCompletion = (_LoadSessionResult) -> Void
-    typealias _LoadSession = (@escaping _LoadSessionCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<EncryptedCVV, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = ((ForaBank.SessionID, Data), @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeSecretJSON = (CardID, SessionID, RSAKeyPair, SessionKey) throws -> Data
-    
-    typealias RSAPrivateKey = RSADomain.PrivateKey
-    typealias _RSADecrypt = (String, RSAPrivateKey) throws -> String
-    
-    convenience init(
-        _authenticate: @escaping _Authenticate,
-        _loadSession: @escaping _LoadSession,
-        _makeSecretJSON: @escaping _MakeSecretJSON,
-        _process: @escaping _Process,
-        _rsaDecrypt: @escaping _RSADecrypt
-    ) {
-        self.init(
-            authenticate: _authenticate,
-            makeJSON: { cardID, sessionID, completion in
-                
-                _loadSession { result in
-                    
-                    completion(.init {
-                        
-                        let session = try result.get()
-                        return try _makeSecretJSON(
-                            cardID,
-                            sessionID,
-                            session.rsaKeyPair,
-                            session.sessionKey
-                        )
-                    })
-                }
-            },
-            process: { payload, completion in
-                
-                _process((
-                    .init(value: payload.sessionID.sessionIDValue),
-                    payload.data
-                )) {
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            decryptCVV: { encryptedCVV, completion in
-                
-                _loadSession {
-                    
-                    do {
-                        let rsaKeyPair = try $0.get().rsaKeyPair
-                        let cvvValue = try _rsaDecrypt(
-                            encryptedCVV.encryptedCVVValue,
-                            rsaKeyPair.privateKey
-                        )
-                        completion(.success(.init(cvvValue: cvvValue)))
-                    } catch {
-                        completion(.failure(.serviceError(.makeJSONFailure)))
-                    }
-                }
-            }
-        )
-    }
-    
-    struct _Session {
-        
-        let rsaKeyPair: RSAKeyPair
-        let sessionKey: SessionKey
     }
 }
 
