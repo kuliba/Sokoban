@@ -14,3 +14,8 @@ extension RSADomain.PublicKey: CustomStringConvertible {
 
     var description: String { "RSAPublicKey" }
 }
+#warning("move to Logging")
+extension LoggingLoaderDecorator: CustomStringConvertible {
+    
+    var description: String { "LoaderDecorator<\(T.self)>" }
+}
