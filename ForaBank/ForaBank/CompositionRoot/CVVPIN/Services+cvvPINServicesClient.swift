@@ -95,7 +95,7 @@ extension Services {
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
-            loadEventID: loadEventID,
+            loadEventID: loadEventID(completion:),
             makeSecretJSON: makeSecretJSON,
             process: bindPublicKeyWithEventIDProcess
         )
@@ -113,14 +113,14 @@ extension Services {
         
         let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
             prepareKeyExchange: prepareKeyExchange(completion:),
-            process: authProcess(data:completion:),
+            process: process(data:completion:),
             makeSessionKey: makeSessionKey(response:completion:)
         )
 
         let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
             decoratee: authenticateWithPublicKeyService,
-            cacheSessionID: cacheSessionID,
-            cacheSessionKey: cacheSessionKey
+            cacheSessionID: cacheSessionID(payload:completion:),
+            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
         )
         
         // MARK: Configure Show CVV Service
@@ -201,7 +201,7 @@ extension Services {
             }
         }
         
-        func authProcess(
+        func process(
             data: Data,
             completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
         ) {
