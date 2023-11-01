@@ -58,7 +58,7 @@ enum TransferEvent {
 //TODO: rename PaymentStickerBusinessLogic
 final class BusinessLogic {
 
-    typealias TransferResult = Result<TransferResponse, Error>
+    typealias TransferResult = Result<TransferResponse, ApiTransferError>
     typealias TransferCompletion = (TransferResult) -> Void
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
@@ -131,6 +131,11 @@ final class BusinessLogic {
         
         case otp
         case payment
+    }
+    
+    enum ApiTransferError: Error {
+        
+        case errorMessage
     }
     
     enum TransferError: Error {

@@ -21,7 +21,8 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.getStickerPaymentRequest
         let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL,
-            parameters: parameters)
+            parameters: parameters
+        )
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
