@@ -48,10 +48,15 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     func processingEncrypt(data: Data) throws -> Data {
         
-        try Crypto.encrypt(
-            data: data,
-            withPublicKey: Crypto.processingKey(),
-            algorithm: .rsaEncryptionRaw
+//        try Crypto.encrypt(
+//            data: data,
+//            withPublicKey: Crypto.processingKey(),
+//            algorithm: .rsaEncryptionRaw
+//        )
+        try Crypto.encryptWithRSAKey(
+            data,
+            publicKey: Crypto.processingKey(),
+            padding: .PKCS1
         )
     }
     
@@ -178,7 +183,7 @@ extension LiveExtraLoggingCVVPINCrypto {
             
             do {
                 let encrypted = try aes256CBC.encrypt(data)
-                log("AES encrypted data (\(encrypted.count)) base64 (\(encrypted.base64EncodedString().count)): \"\(encrypted.base64EncodedString())\".")
+                log("AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
                 
                 return encrypted
             } catch {

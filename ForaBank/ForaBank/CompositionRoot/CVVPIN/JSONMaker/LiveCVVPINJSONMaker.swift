@@ -31,53 +31,30 @@ extension LiveCVVPINJSONMaker {
         rsaKeyPair: RSAKeyPair
     ) throws -> Data {
         
-        // signature это хеш рассчитанный по алгоритму SHA256 от конкатенированных строк clientPublicKeyRSA (CLIENT-PUBLIC-KEY) и publicApplicationSessionKey (PaS) зашифрованный с помощью CLIENT-SECRET-KEY
-        
-        // Пример для Kotlin:
-        //      val privateKeyBA = Base64.decode(
-        //          cryptoStorageRead(ctx, "RSAClientPrivateKey"),
-        //          Base64.NO_WRAP
-        //      )
-        //      val keySpec = PKCS8EncodedKeySpec(privateKeyBA)
-        //      val keyFactory = KeyFactory.getInstance("RSA")
-        //      val privateKey = keyFactory.generatePrivate(keySpec)
-        //      val signer = Signature.getInstance("SHA256withRSA")
-        //      signer.initSign(privateKey, SecureRandom())
-        //      signer.update(hashSHA256)
-        //      val signature = signer.sign()
-        //      return Base64.encodeToString(signature, Base64.NO_WRAP)
-        
         let rsaPublicKeyData = try crypto.x509Representation(
             publicKey: rsaKeyPair.publicKey
         )
-        let rsaPublicKeyBase64 = rsaPublicKeyData.base64EncodedString()
+        let clientPublicKeyRSA = rsaPublicKeyData.base64EncodedString()
         
-        let keyData = publicKey.derRepresentation
-        let publicApplicationSessionKeyBase64 = keyData.base64EncodedString()
+        let ecdhPublicKeyData = try crypto.publicKeyData(
+            forPublicKey: publicKey
+        )
+        let publicApplicationSessionKey = ecdhPublicKeyData.base64EncodedString()
         
-        let concat = rsaPublicKeyBase64 + publicApplicationSessionKeyBase64
+        let concat = clientPublicKeyRSA + publicApplicationSessionKey
         let concatData = Data(concat.utf8)
         let hash = crypto.sha256Hash(concatData)
         
-        let signature = try crypto.signNoHash(
+#warning("REPLACE WITH `crypto` - add to crypto if necessary")
+        let signature = try ForaCrypto.Crypto.signNoHash(
             hash,
-            withPrivateKey: rsaKeyPair.privateKey
+            withPrivateKey: rsaKeyPair.privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
         )
         
-        // Поскольку clientPublicKeyRSA и открытый ECDH-ключ (PaS) это бинарные величины, то JSON запроса (requestJSON) содержит их закодированными в формате BASE64 в полях clientPublicKeyRSA и publicApplicationSessionKey:
-        //   - clientPublicKeyRSA открытый RSA-ключ клиента переданный в Процессинг на этапе активации функционала CVV-PIN
-        //   - publicApplicationSessionKey сессионный открытый ключ приложения PaS
-        //   - signature цифровая подпись запроса
-        //
-        //     {
-        //         "clientPublicKeyRSA": "EFk57aH...f0wYHKxA==",                   // String(1024): BASE64 encoded CLIENT-PUBLIC-KEY
-        //         "publicApplicationSessionKey": "MFkwEwYHK...fFkhMr57aH/0xA==",  // String(1024): BASE64 encoded зашифрованный PaS
-        //         "signature": "YHK09fFkhM...f0wYHKxA=="                          // String(1024): BASE64-строка с цифровой подписью
-        //     }
-        
         let data = try JSONSerialization.data(withJSONObject: [
-            "clientPublicKeyRSA": rsaPublicKeyBase64,
-            "publicApplicationSessionKey": publicApplicationSessionKeyBase64,
+            "clientPublicKeyRSA": clientPublicKeyRSA,
+            "publicApplicationSessionKey": publicApplicationSessionKey,
             "signature": signature.base64EncodedString()
         ] as [String: String])
         
@@ -159,8 +136,10 @@ extension LiveCVVPINJSONMaker {
         
         // see Services+keyExchangeService.swift:20
         let publicKeyData = try crypto.publicKeyData(forPublicKey: publicKey)
+        let publicApplicationSessionKeyBase64 = publicKeyData.base64EncodedString()
+        
         let data = try JSONSerialization.data(withJSONObject: [
-            "publicApplicationSessionKey": publicKeyData.base64EncodedString()
+            "publicApplicationSessionKey": publicApplicationSessionKeyBase64
         ] as [String: String])
         let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
@@ -203,7 +182,7 @@ extension LiveCVVPINJSONMaker {
         let otpCode = otp.otpValue
         let otpEventID = otpEventID.eventIDValue
         
-        #warning("should padding be used here?")
+#warning("should padding be used here?")
         let secretPINData = try crypto.processingEncrypt(
             data: .init(pin.pinValue.utf8)
         )
@@ -211,11 +190,11 @@ extension LiveCVVPINJSONMaker {
         
         let concat = sessionID + cardID + otpCode + otpEventID + secretPIN
         let hash = crypto.sha256Hash(.init(concat.utf8))
-        #warning("REPLACE WITH `crypto`")
+#warning("REPLACE WITH `crypto` - add to crypto if necessary")
         let signature = try ForaCrypto.Crypto.signNoHash(
             hash,
             withPrivateKey: rsaPrivateKey.key,
-            algorithm: .rsaSignatureMessagePKCS1v15SHA256
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
         )
         
         let json = try JSONSerialization.data(withJSONObject: [
@@ -225,7 +204,7 @@ extension LiveCVVPINJSONMaker {
             "eventId":   otpEventID, // String(40)
             "secretPIN": secretPIN, // String(1024)
             "signature": signature.base64EncodedString() // String(1024)
-        ] as [String: Any])
+        ] as [String: String])
         
         let encrypted = try crypto.aesEncrypt(
             data: json,
@@ -246,21 +225,20 @@ extension LiveCVVPINJSONMaker {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        let concatenation = "\(cardID.cardIDValue)" + sessionID.sessionIDValue
-        let signature = try crypto.hashSignVerify(
-            string: concatenation,
+        let cardID = "\(cardID.cardIDValue)"
+        let sessionID = sessionID.sessionIDValue
+        
+        let signedHash = try crypto.hashSignVerify(
+            string: cardID + sessionID,
             publicKey: rsaKeyPair.publicKey,
             privateKey: rsaKeyPair.privateKey
         )
-        let signatureBase64 = signature.base64EncodedString()
+        let signature = signedHash.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [
-            // int(11)
-            "cardId": "\(cardID.cardIDValue)",
-            // String(40)
-            "sessionId": sessionID.sessionIDValue,
-            // String(1024): BASE64-строка с цифровой подписью
-            "signature": signatureBase64
+            "cardId":    cardID,
+            "sessionId": sessionID,
+            "signature": signature
         ] as [String: String])
         
         let encrypted = try crypto.aesEncrypt(
