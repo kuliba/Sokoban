@@ -100,25 +100,27 @@ extension LiveCVVPINJSONMaker {
         // Данная ошибка означает, что число, которое представляет собой зашифрованный ОТР-код, слишком большое (т.е. CLIENT-SECRET-OTP >= p * q) для RSA-ключа, которым выполняется шифрование.
         //
         // Поэтому нужно сгенерировать новую пару, которыми будет повторно зашифрован тот же самый ОТР-код, но с вероятностью близкой к 100% этой ошибки уже не возникнет, поскольку p и q будут другими.
-        let (encryptedSignedOTP, publicKey, privateKey) = try retry {
+        let (encryptedSignedOTP, rsaPrivateKey, rsaPublicKey) = try retry {
             
-            let (privateKey, publicKey) = try crypto.generateRSA4096BitKeyPair()
+            let (rsaPrivateKey, rsaPublicKey) = try crypto.generateRSA4096BitKeyPair()
             let clientSecretOTP = try crypto.signNoHash(
                 .init(otp.utf8),
-                withPrivateKey: privateKey
+                withPrivateKey: rsaPrivateKey
             )
             
             let procClientSecretOTP = try crypto.transportEncryptNoPadding(
                 data: clientSecretOTP
             )
             
-            return (procClientSecretOTP, publicKey, privateKey)
+            return (procClientSecretOTP, rsaPrivateKey, rsaPublicKey)
         }
         
-        let publicKeyX509Representation = try crypto.x509Representation(publicKey: publicKey)
+        let rsaPublicKeyData = try crypto.x509Representation(
+            publicKey: rsaPublicKey
+        )
         
         let procClientSecretOTP = encryptedSignedOTP.base64EncodedString()
-        let clientPublicKeyRSA = publicKeyX509Representation.base64EncodedString()
+        let clientPublicKeyRSA = rsaPublicKeyData.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [
             "procClientSecretOTP": procClientSecretOTP,
@@ -130,7 +132,7 @@ extension LiveCVVPINJSONMaker {
             sessionKey: sessionKey
         )
         
-        return (data, (privateKey, publicKey))
+        return (data, (rsaPrivateKey, rsaPublicKey))
     }
 }
 
@@ -156,9 +158,9 @@ extension LiveCVVPINJSONMaker {
     ) throws -> Data {
         
         // see Services+keyExchangeService.swift:20
-        let keyData = try crypto.publicKeyData(forPublicKey: publicKey)
+        let publicKeyData = try crypto.publicKeyData(forPublicKey: publicKey)
         let data = try JSONSerialization.data(withJSONObject: [
-            "publicApplicationSessionKey": keyData.base64EncodedString()
+            "publicApplicationSessionKey": publicKeyData.base64EncodedString()
         ] as [String: String])
         let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
