@@ -11,17 +11,20 @@ import GenericRemoteService
 extension Services {
 
     typealias GetStickerPayment = StickerPayment
-    typealias GetPaymentService = RemoteService<RequestFactory.StickerPayment, Parameter>
+    typealias GetPaymentService = RemoteService<RequestFactory.GetJsonAbroadType, StickerPayment>
 
     static func stickerPaymentRequest(
-        input: RequestFactory.StickerPayment,
+        input: RequestFactory.GetJsonAbroadType,
         httpClient: HTTPClient
     ) -> GetPaymentService {
         
         return .init(
-            createRequest: RequestFactory.stickerCreatePayment,
+            createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
-            mapResponse: { _,_ in .init() }
+            mapResponse: { data, httpURLResponse in
+                
+                .init()
+            }
         )
     }
 }
