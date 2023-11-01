@@ -215,14 +215,15 @@ extension Services {
             response: AuthenticateWithPublicKeyService.Response,
             completion: @escaping AuthenticateWithPublicKeyService.MakeSessionKeyCompletion
         ) {
-            completion(
-                cvvPINCrypto.makeSharedSecret(
+            completion(.init {
+                
+                let data = try cvvPINCrypto.extractSharedSecret(
                     from: response.publicServerSessionKey,
                     using: echdKeyPair.privateKey
                 )
-                .map(AuthenticateWithPublicKeyService.Success.SessionKey.init)
-            )
-
+                
+                return .init(sessionKeyValue: data)
+            })
         }
         
         func cacheSessionID(
@@ -886,24 +887,6 @@ struct SessionCode {
 struct SessionKey {
     
     let sessionKeyValue: Data
-}
-
-// MARK: - Adapters
-
-private extension CVVPINCrypto {
-    
-    func makeSharedSecret(
-        from string: String,
-        using privateKey: P384KeyAgreementDomain.PrivateKey
-    ) -> Result<Data, Error> {
-        
-        .init {
-            try extractSharedSecret(
-                from: string,
-                using: privateKey
-            )
-        }
-    }
 }
 
 // MARK: - Error Mappers
