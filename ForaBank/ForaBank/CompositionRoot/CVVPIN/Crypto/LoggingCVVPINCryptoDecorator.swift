@@ -30,11 +30,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptWithPadding(data: data)
-            log("Encrypted with transport key (\(encrypted.count)).")
+            log("Encrypt with padding using transport public key success (\(encrypted.count)).")
             
             return encrypted
         } catch {
-            log("Encrypted with transport failure: \(error).")
+            log("Encrypt with padding using transport public key failure: \(error).")
             throw error
         }
     }
@@ -43,11 +43,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptNoPadding(data: data)
-            log("Encrypted with transport public key: \(encrypted)")
+            log("Encrypt without padding using transport public key success (\(encrypted.count)).")
             
             return encrypted
         } catch {
-            log("Transport public key encryption error: \(error).")
+            log("Encrypt without padding using transport public key failure: \(error).")
             throw error
         }
     }
@@ -56,11 +56,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.processingEncrypt(data: data)
-            log("Encryption with processing key success (\(encrypted.count)).")
+            log("Encrypt using processing public key success (\(encrypted.count)).")
             
             return encrypted
         } catch {
-            log("Encryption with processing key failure: \(error).")
+            log("Encrypt using processing public key failure: \(error).")
             throw error
         }
     }
@@ -85,11 +85,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 from: string,
                 using: privateKey
             )
-            log("Shared Secret generation success (\(sharedSecret.count)).")
+            log("Shared Secret extraction success (\(sharedSecret.count)).")
             
             return sharedSecret
         } catch {
-            log("Shared Secret creation failure: \(error)")
+            log("Shared Secret extraction failure: \(error).")
             throw error
         }
     }
@@ -100,11 +100,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let keyData = try decoratee.publicKeyData(forPublicKey: publicKey)
-            log("PublicKey data created (\(keyData.count)).")
+            log("PublicKey data representation created (\(keyData.count)).")
             
             return keyData
         } catch {
-            log("PublicKey data creation failure \(error).")
+            log("PublicKey data representation creation failure \(error).")
             throw error
         }
     }
@@ -115,11 +115,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let rsaKeyPair = try decoratee.generateRSA4096BitKeyPair()
-            log("RSAKeyPair generation success \(rsaKeyPair)")
+            log("RSA Key Pair generation success \(rsaKeyPair).")
             
             return rsaKeyPair
         } catch {
-            log("RSAKeyPair generation failure: \(error).")
+            log("RSA Key Pair generation failure: \(error).")
             throw error
         }
     }
@@ -136,11 +136,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 publicKey: publicKey,
                 privateKey: privateKey
             )
-            log("hashSignVerify success (\(data.count)).")
+            log("hashSignVerify success for data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
             
             return data
         } catch {
-            log("hashSignVerify failure: \(error).")
+            log("hashSignVerify failure: \(error) for \"\(string)\".")
             throw error
         }
     }
@@ -171,11 +171,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data,
                 withPrivateKey: privateKey
             )
-            log("Data (\(data.count)) signing success (\(signed)).")
+            log("Signing success (\(signed)) for provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
             
             return signed
         } catch {
-            log("Data (\(data.count)) signing failure: \(error).")
+            log("Signing failure: \(error) for data \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
             throw error
         }
     }
@@ -209,7 +209,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 sessionKey: sessionKey
             )
-            log("AES encrypted data (\(encrypted.count)).")
+            log("AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
             
             return encrypted
         } catch {
@@ -223,7 +223,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func sha256Hash(_ data: Data) -> Data {
         
         let hash = decoratee.sha256Hash(data)
-        log("Created hash (\(hash.count)) for data (\(data.count)).")
+        log("Created hash (\(hash.count)) for data (\(data.count)): \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
         
         return hash
     }
