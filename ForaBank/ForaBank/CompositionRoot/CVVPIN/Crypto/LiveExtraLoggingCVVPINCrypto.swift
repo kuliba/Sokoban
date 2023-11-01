@@ -110,16 +110,17 @@ extension LiveExtraLoggingCVVPINCrypto {
             withPrivateKey: privateKey
         )
         
+        #warning("restore verify")
         // verify (not used in output)
-        let signature = try createSignature(
-            forSignedData: signedData,
-            withPrivateKey: privateKey
-        )
-        try verify(
-            signedData: signedData,
-            signature: signature,
-            withPrivateKey: publicKey
-        )
+//        let signature = try createSignature(
+//            forSignedData: signedData,
+//            withPrivateKey: privateKey
+//        )
+//        try verify(
+//            signedData: signedData,
+//            signature: signature,
+//            withPrivateKey: publicKey
+//        )
         
         return signedData
     }
@@ -213,7 +214,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
             let signed = try Crypto.signNoHash(
                 data,
                 withPrivateKey: privateKey.key,
-                algorithm: .rsaSignatureRaw
+                algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
             log("Data signing success (\(signed.count)).")
             
@@ -261,7 +262,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
                 signedData,
                 withPublicKey: publicKey.key,
                 signature: signature,
-                algorithm: .rsaSignatureRaw
+                algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
             
             if !result { throw VerifyError.verificationFailure }
