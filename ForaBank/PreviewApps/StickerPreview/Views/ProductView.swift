@@ -24,26 +24,32 @@ struct ProductView: View {
                 selectProductView(productViewModel)
                 
             case let .list(productViewModel, productList):
+                
                 selectProductView(productViewModel)
-                
-                HStack(spacing: 10) {
-                
-                    ScrollView {
-                     
-                        ForEach(productList, id: \.self) { product in
-                                
-                            optionProduct(
-                                product: product,
-                                header: product.header
-                            )
-                        }
-                    }
-                }
-                
+                optionsList(productList)
             }
         }
         .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
+    }
+    
+    private func optionsList(
+        _ productList: [ProductViewModel]
+    ) -> some View {
+    
+        HStack(spacing: 10) {
+        
+            ScrollView {
+             
+                ForEach(productList, id: \.self) { product in
+                        
+                    optionProduct(
+                        product: product,
+                        header: product.header
+                    )
+                }
+            }
+        }
     }
     
     private func optionProduct(product: ProductViewModel, header: ProductViewModel.HeaderViewModel) -> some View {
