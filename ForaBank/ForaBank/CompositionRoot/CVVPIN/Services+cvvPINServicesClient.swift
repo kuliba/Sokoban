@@ -220,10 +220,9 @@ extension Services {
                 
                 completion(.init {
                     
-                    let rsaKeyPair = try result.get()
-                    return try cvvPINJSONMaker.makeRequestJSON(
+                    try cvvPINJSONMaker.makeRequestJSON(
                         publicKey: echdKeyPair.publicKey,
-                        rsaKeyPair: rsaKeyPair
+                        rsaKeyPair: result.get()
                     )
                 })
             }
