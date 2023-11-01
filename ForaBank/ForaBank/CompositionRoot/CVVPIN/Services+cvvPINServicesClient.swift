@@ -79,14 +79,14 @@ extension Services {
             cache: cacheGetProcessingSessionCode
         )
         
-        let keyPair = cvvPINCrypto.generateECDHKeyPair()
+        let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
             _loadCode: sessionCodeLoader.load(completion:),
             _process: formSessionKeyRemoteService.process,
             _makeSecretRequestJSON: cvvPINJSONMaker.makeSecretRequestJSON,
             _makeSharedSecret: cvvPINCrypto.extractSharedSecret,
-            keyPair: keyPair
+            keyPair: echdKeyPair
         )
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
@@ -222,7 +222,7 @@ extension Services {
                     
                     let rsaKeyPair = try result.get()
                     return try cvvPINJSONMaker.makeRequestJSON(
-                        publicKey: keyPair.publicKey,
+                        publicKey: echdKeyPair.publicKey,
                         rsaKeyPair: rsaKeyPair
                     )
                 })
@@ -246,7 +246,7 @@ extension Services {
             completion(
                 cvvPINCrypto.makeSharedSecret(
                     from: response.publicServerSessionKey,
-                    using: keyPair.privateKey
+                    using: echdKeyPair.privateKey
                 )
                 .map(AuthenticateWithPublicKeyService.Success.SessionKey.init)
             )
