@@ -120,9 +120,8 @@ extension Services {
 
         let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
             decoratee: authenticateWithPublicKeyService,
-            _cacheSessionID: sessionIDLoader.save,
-            _cacheSessionKey: sessionKeyLoader.save,
-            currentDate: currentDate
+            cacheSessionID: cacheSessionID,
+            cacheSessionKey: cacheSessionKey
         )
         
         // MARK: Configure Show CVV Service
@@ -225,6 +224,28 @@ extension Services {
                 .map(AuthenticateWithPublicKeyService.Success.SessionKey.init)
             )
 
+        }
+        
+        func cacheSessionID(
+            payload: CachingAuthWithPublicKeyServiceDecorator.CacheSessionIDPayload,
+            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionIDLoader.save(
+                .init(value: payload.0.sessionIDValue),
+                validUntil: currentDate() + .init(payload.1),
+                completion: completion
+            )
+        }
+        
+        func cacheSessionKey(
+            sessionKey: AuthenticateWithPublicKeyService.Success.SessionKey,
+            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                validUntil: currentDate().nextYear(),
+                completion: completion
+            )
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
@@ -757,42 +778,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension CachingAuthWithPublicKeyServiceDecorator {
-    
-    typealias _CacheSessionIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionID = (SessionID, Date, @escaping _CacheSessionIDCompletion) -> Void
-    
-    typealias _CacheSessionKeyCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionKey = (SessionKey, Date, @escaping _CacheSessionKeyCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cacheSessionID: @escaping _CacheSessionID,
-        _cacheSessionKey: @escaping _CacheSessionKey,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cacheSessionID: { payload, completion in
-                
-                _cacheSessionID(
-                    .init(value: payload.0.sessionIDValue),
-                    currentDate() + .init(payload.1),
-                    completion
-                )
-            },
-            cacheSessionKey: { sessionKey, completion in
-                
-                _cacheSessionKey(
-                    .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                    currentDate().nextYear(),
-                    completion
-                )
-            }
-        )
-    }
-}
 
 private extension CachingChangePINServiceDecorator {
     
