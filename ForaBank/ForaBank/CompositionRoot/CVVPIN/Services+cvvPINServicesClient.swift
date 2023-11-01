@@ -135,7 +135,7 @@ extension Services {
         // MARK: Configure Change PIN Service
         
         let changePINService = ChangePINService(
-            authenticate: changePINAuthenticate,
+            authenticate: authenticate,
             publicRSAKeyDecrypt: publicRSAKeyDecrypt,
             confirmProcess: confirmProcess,
             makePINChangeJSON: makePINChangeJSON,
@@ -296,8 +296,7 @@ extension Services {
         
         // MARK: - ChangePIN Adapters
         
-#warning("extract repeated")
-        func changePINAuthenticate(
+        func authenticate(
             completion: @escaping ChangePINService.AuthenticateCompletion
         ) {
             rsaKeyPairLoader.load { result in
@@ -307,12 +306,12 @@ extension Services {
                     completion(.failure(.activationFailure))
                     
                 case let .success(rsaKeyPair):
-                    changePINAuthenticate(rsaKeyPair, completion)
+                    authenticate(rsaKeyPair, completion)
                 }
             }
         }
         
-        func changePINAuthenticate(
+        func authenticate(
             _ rsaKeyPair: RSAKeyPair,
             _ completion: @escaping ChangePINService.AuthenticateCompletion
         ) {
