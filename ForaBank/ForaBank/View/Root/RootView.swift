@@ -174,8 +174,7 @@ struct RootView_Previews: PreviewProvider {
                 paymentsViewModel: .sample,
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
-                .emptyMock,
-                onExit: {}
+                .emptyMock
             )
         )
     }

@@ -26,7 +26,6 @@ class RootViewModel: ObservableObject, Resetable {
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
     private let model: Model
-    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -35,8 +34,7 @@ class RootViewModel: ObservableObject, Resetable {
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
-        _ model: Model,
-        onExit: @escaping () -> Void
+        _ model: Model
     ) {
         self.selected = .main
         self.mainViewModel = mainViewModel
@@ -44,7 +42,6 @@ class RootViewModel: ObservableObject, Resetable {
         self.chatViewModel = chatViewModel
         self.informerViewModel = informerViewModel
         self.model = model
-        self.onExit = onExit
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -182,9 +179,8 @@ class RootViewModel: ObservableObject, Resetable {
                                 personAgreements: payload.conditions,
                                 rootActions: rootActions,
                                 tokenIntent: payload.tokenIntent
-                            )),
-                        onExit: onExit
-                    ))
+                            )))
+                    )
                 
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")

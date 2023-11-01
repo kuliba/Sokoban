@@ -366,7 +366,6 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
-        onExit: {},
         rootView: ""
     )
     
@@ -377,7 +376,6 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         cvvPINServicesClient: SadCVVPINServicesClient(),
-        onExit: {},
         rootView: ""
     )
 }

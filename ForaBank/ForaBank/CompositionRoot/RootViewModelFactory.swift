@@ -25,7 +25,7 @@ enum RootViewModelFactory {
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
         #warning("fix lifespans before release")
-        let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
@@ -45,7 +45,6 @@ enum RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
-                onExit: onExit,
                 product: $0,
                 rootView: $1,
                 dismissAction: $2
@@ -54,14 +53,12 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()
@@ -73,8 +70,7 @@ enum RootViewModelFactory {
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
-            model,
-            onExit: onExit
+            model
         )
     }
 }

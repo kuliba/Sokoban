@@ -38,37 +38,26 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
-    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     
-    init(
-        navigationBar: NavigationBarView.ViewModel,
-        avatar: AvatarViewModel,
-        sections: [AccountSectionViewModel],
-        exitButton: AccountCellFullButtonView.ViewModel,
-        deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
-        model: Model = .emptyMock,
-        onExit: @escaping () -> Void
-    ) {
+    init(navigationBar: NavigationBarView.ViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel, model: Model = .emptyMock) {
+        
         self.model = model
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
         self.exitButton = exitButton
         self.deleteAccountButton = deleteAccountButton
-        self.onExit = onExit
     }
     
     init(
         model: Model,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
-        action: Action? = nil,
-        onExit: @escaping () -> Void
+        action: Action? = nil
     ) {
         
         self.model = model
-        self.onExit = onExit
         sections = []
         navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -279,7 +268,6 @@ class UserAccountViewModel: ObservableObject {
                     alert = .exit {
                         
                         self.model.auth.value = .unlockRequiredManual
-                        self.onExit()
                     }
                     
                 case _ as UserAccountViewModelAction.DeleteAction:
