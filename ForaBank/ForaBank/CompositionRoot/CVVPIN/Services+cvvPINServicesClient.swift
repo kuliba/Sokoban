@@ -106,8 +106,8 @@ extension Services {
         )
         
         let activationService = CVVPINFunctionalityActivationService(
-            getCode: getCode,
-            formSessionKey: formSessionKey,
+            getCode: getCode(completion:),
+            formSessionKey: formSessionKey(completion:),
             bindPublicKeyWithEventID: bindPublicKeyWithEventID
         )
         
@@ -338,7 +338,7 @@ extension Services {
         
         typealias LoadChangePINSessionCompletion = (Result<ChangePINSession, Error>) -> Void
         
-        func loadChangePINSession(
+        func loadSession(
             completion: @escaping LoadChangePINSessionCompletion
         ) {
             otpEventIDLoader.load { result in
@@ -348,12 +348,12 @@ extension Services {
                     completion(.failure(error))
                     
                 case let .success(otpEventID):
-                    loadChangePINSession(otpEventID, completion)
+                    loadSession(otpEventID, completion)
                 }
             }
         }
         
-        func loadChangePINSession(
+        func loadSession(
             _ otpEventID: ChangePINService.OTPEventID,
             _ completion: @escaping LoadChangePINSessionCompletion
         ) {
@@ -364,12 +364,12 @@ extension Services {
                     completion(.failure(error))
                     
                 case let .success(sessionID):
-                    loadChangePINSession(otpEventID, sessionID, completion)
+                    loadSession(otpEventID, sessionID, completion)
                 }
             }
         }
         
-        func loadChangePINSession(
+        func loadSession(
             _ otpEventID: ChangePINService.OTPEventID,
             _ sessionID: SessionID,
             _ completion: @escaping LoadChangePINSessionCompletion
@@ -381,12 +381,12 @@ extension Services {
                     completion(.failure(error))
                     
                 case let .success(sessionKey):
-                    loadChangePINSession(otpEventID, sessionID, sessionKey, completion)
+                    loadSession(otpEventID, sessionID, sessionKey, completion)
                 }
             }
         }
         
-        func loadChangePINSession(
+        func loadSession(
             _ otpEventID: ChangePINService.OTPEventID,
             _ sessionID: SessionID,
             _ sessionKey: SessionKey,
@@ -461,7 +461,7 @@ extension Services {
             otp: ChangePINService.OTP,
             completion: @escaping ChangePINService.MakePINChangeJSONCompletion
         ) {
-            loadChangePINSession { result in
+            loadSession { result in
                 
                 switch result {
                 case let .failure(error):
