@@ -141,13 +141,11 @@ extension Services {
         // MARK: Configure Change PIN Service
         
         let changePINService = ChangePINService(
-            _authenticate: changePINAuthenticate,
-            loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
-            _loadChangePINSession: loadChangePINSession,
-            _confirmProcess: confirmChangePINRemoteService.process,
-            _changePINProcess: changePINRemoteService.process,
-            _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            _makePINChangeJSON: cvvPINJSONMaker.makePINChangeJSON
+            authenticate: changePINAuthenticate,
+            publicRSAKeyDecrypt: publicRSAKeyDecrypt,
+            confirmProcess: confirmProcess,
+            makePINChangeJSON: makePINChangeJSON,
+            changePINProcess: changePINProcess
         )
         
         let cachingChangePINService = CachingChangePINServiceDecorator(
@@ -217,7 +215,7 @@ extension Services {
             }
         }
         
-#warning("extract repeated")
+        // MARK: - ShowCVV Adapters
         
         func showCVVAuthenticate(
             completion: @escaping ShowCVVService.AuthenticateCompletion
@@ -258,49 +256,6 @@ extension Services {
                 }
             }
         }
-        
-        
-        func changePINAuthenticate(
-            completion: @escaping ChangePINService.AuthenticateCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case let .success(rsaKeyPair):
-                    changePINAuthenticate(rsaKeyPair, completion)
-                }
-            }
-        }
-        
-        func changePINAuthenticate(
-            _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping ChangePINService.AuthenticateCompletion
-        ) {
-            sessionIDLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                        
-                        completion(
-                            $0
-                                .map(\.sessionID.sessionIDValue)
-                                .map(ChangePINService.SessionID.init(sessionIDValue:))
-                                .mapError { _ in .authenticationFailure })
-                    }
-                    
-                case let .success(sessionID):
-                    completion(.success(.init(
-                        sessionIDValue: sessionID.value
-                    )))
-                }
-            }
-        }
-        
-        // MARK: - ShowCVV Adapters
         
         func makeSecretJSON(
             cardID: ShowCVVService.CardID,
@@ -353,7 +308,7 @@ extension Services {
             }
         }
         
-        typealias LoadShowCVVSessionResult = Swift.Result<_Session, Swift.Error>
+        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
         typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
         
         func loadShowCVVSession(
@@ -390,16 +345,59 @@ extension Services {
             }
         }
         
-        struct _Session {
+        struct ShowCVVSession {
             
             let rsaKeyPair: RSAKeyPair
             let sessionKey: SessionKey
         }
         
-        // MARK: ChangePIN Adapters
+        // MARK: - ChangePIN Adapters
+        
+#warning("extract repeated")
+        func changePINAuthenticate(
+            completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    changePINAuthenticate(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func changePINAuthenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ChangePINService.SessionID.init(sessionIDValue:))
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(.init(
+                        sessionIDValue: sessionID.value
+                    )))
+                }
+            }
+        }
+        
+        typealias LoadChangePINSessionCompletion = (Result<ChangePINSession, Error>) -> Void
         
         func loadChangePINSession(
-            completion: @escaping ChangePINService._LoadChangePINSessionCompletion
+            completion: @escaping LoadChangePINSessionCompletion
         ) {
             otpEventIDLoader.load { result in
                 
@@ -415,7 +413,7 @@ extension Services {
         
         func loadChangePINSession(
             _ otpEventID: ChangePINService.OTPEventID,
-            _ completion: @escaping ChangePINService._LoadChangePINSessionCompletion
+            _ completion: @escaping LoadChangePINSessionCompletion
         ) {
             sessionIDLoader.load { result in
                 
@@ -432,7 +430,7 @@ extension Services {
         func loadChangePINSession(
             _ otpEventID: ChangePINService.OTPEventID,
             _ sessionID: SessionID,
-            _ completion: @escaping ChangePINService._LoadChangePINSessionCompletion
+            _ completion: @escaping LoadChangePINSessionCompletion
         ) {
             sessionKeyLoader.load { result in
                 
@@ -450,7 +448,7 @@ extension Services {
             _ otpEventID: ChangePINService.OTPEventID,
             _ sessionID: SessionID,
             _ sessionKey: SessionKey,
-            _ completion: @escaping ChangePINService._LoadChangePINSessionCompletion
+            _ completion: @escaping LoadChangePINSessionCompletion
         ) {
             rsaKeyPairLoader.load { result in
                 
@@ -466,6 +464,99 @@ extension Services {
                         rsaPrivateKey: rsaKeyPair.privateKey
                     )))
                 }
+            }
+        }
+        
+        struct ChangePINSession {
+            
+            let otpEventID: ChangePINService.OTPEventID
+            let sessionID: ForaBank.SessionID
+            let sessionKey: SessionKey
+            let rsaPrivateKey: RSADomain.PrivateKey
+        }
+        
+        func publicRSAKeyDecrypt(
+            string: String,
+            completion: @escaping ChangePINService.PublicRSAKeyDecryptCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(keyPair):
+                    completion(.init {
+                        
+                        try cvvPINCrypto.rsaDecrypt(
+                            string,
+                            withPrivateKey: keyPair.privateKey
+                        )
+                    })
+                }
+            }
+        }
+        
+        func confirmProcess(
+            sessionID: ChangePINService.SessionID,
+            completion: @escaping ChangePINService.ConfirmProcessCompletion
+        ) {
+            confirmChangePINRemoteService.process(
+                .init(value: sessionID.sessionIDValue)
+            ) {
+                completion(
+                    $0
+                        .map { .init(eventID: $0.eventID, phone: $0.phone) }
+                        .mapError { .init($0) }
+                )
+            }
+        }
+        
+        func makePINChangeJSON(
+            cardID: ChangePINService.CardID,
+            pin: ChangePINService.PIN,
+            otp: ChangePINService.OTP,
+            completion: @escaping ChangePINService.MakePINChangeJSONCompletion
+        ) {
+            loadChangePINSession { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(session):
+                    let sessionID = ChangePINService.SessionID(
+                        sessionIDValue: session.sessionID.value
+                    )
+                    
+                    completion(.init {
+                        
+                        let json = try cvvPINJSONMaker.makePINChangeJSON(
+                            sessionID: sessionID,
+                            cardID: .init(cardIDValue: cardID.cardIDValue),
+                            otp: .init(otpValue: otp.otpValue),
+                            pin: .init(pinValue: pin.pinValue),
+                            otpEventID: session.otpEventID,
+                            sessionKey: session.sessionKey,
+                            rsaPrivateKey: session.rsaPrivateKey
+                        )
+                        
+                        return (sessionID, json)
+                    })
+                }
+            }
+        }
+        
+        func changePINProcess(
+            payload: (ChangePINService.SessionID, Data),
+            completion: @escaping ChangePINService.ChangePINProcessCompletion
+        ) {
+            changePINRemoteService.process((
+                .init(value: payload.0.sessionIDValue),
+                payload.1
+            )) {
+                completion($0.mapError { .init($0) })
             }
         }
     }
@@ -791,123 +882,6 @@ private extension CachingGetProcessingSessionCodeServiceDecorator {
                 )
             }
         )
-    }
-}
-
-private extension ChangePINService {
-    
-    typealias _Authenticate = ChangePINService.Authenticate
-    
-    typealias LoadRSAKeyPairResult = Swift.Result<RSADomain.KeyPair, Swift.Error>
-    typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
-    typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
-    
-    typealias _LoadChangePINSessionResult = Swift.Result<_Session, Swift.Error>
-    typealias _LoadChangePINSessionCompletion = (_LoadChangePINSessionResult) -> Void
-    typealias _LoadChangePINSession = (@escaping _LoadChangePINSessionCompletion) -> Void
-    
-    typealias _ConfirmProcessResult = Swift.Result<EncryptedConfirmResponse, MappingRemoteServiceError<ConfirmAPIError>>
-    typealias _ConfirmProcessCompletion = (_ConfirmProcessResult) -> Void
-    typealias _ConfirmProcess = (ForaBank.SessionID, @escaping _ConfirmProcessCompletion) -> Void
-    
-    typealias _ChangePINProcessResult = Swift.Result<Void, MappingRemoteServiceError<ChangePINAPIError>>
-    typealias _ChangePINProcessCompletion = (_ChangePINProcessResult) -> Void
-    typealias _ChangePINProcess = ((ForaBank.SessionID, Data),@escaping _ChangePINProcessCompletion) -> Void
-    
-    typealias _RSADecrypt = (String, RSADomain.PrivateKey) throws -> String
-    
-    typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID, SessionKey, RSADomain.PrivateKey) throws -> Data
-    
-    convenience init(
-        _authenticate: @escaping _Authenticate,
-        loadRSAKeyPair: @escaping LoadRSAKeyPair,
-        _loadChangePINSession: @escaping _LoadChangePINSession,
-        _confirmProcess: @escaping _ConfirmProcess,
-        _changePINProcess: @escaping _ChangePINProcess,
-        _rsaDecrypt: @escaping _RSADecrypt,
-        _makePINChangeJSON: @escaping _MakePINChangeJSON
-    ) {
-        self.init(
-            authenticate: _authenticate,
-            publicRSAKeyDecrypt: { string, completion in
-                
-                loadRSAKeyPair { result in
-                    
-                    switch result {
-                        
-                    case let .failure(error):
-                        completion(.failure(error))
-                        
-                    case let .success(keyPair):
-                        completion(.init {
-                            
-                            try _rsaDecrypt(string, keyPair.privateKey)
-                        })
-                    }
-                }
-            },
-            confirmProcess: { payload, completion in
-                
-                _confirmProcess(
-                    .init(value: payload.sessionIDValue)
-                ) {
-                    completion(
-                        $0
-                            .map { .init(eventID: $0.eventID, phone: $0.phone) }
-                            .mapError { .init($0) }
-                    )
-                }
-            },
-            makePINChangeJSON: { cardID, pin, otp, completion in
-                
-                _loadChangePINSession { result in
-                    
-                    switch result {
-                    case let .failure(error):
-                        completion(.failure(error))
-                        
-                    case let .success(session):
-                        let sessionID = ChangePINService.SessionID(
-                            sessionIDValue: session.sessionID.value
-                        )
-                        
-                        completion(.init {
-                            
-                            let json = try _makePINChangeJSON(
-                                sessionID,
-                                .init(cardIDValue: cardID.cardIDValue),
-                                .init(otpValue: otp.otpValue),
-                                .init(pinValue: pin.pinValue),
-                                session.otpEventID,
-                                session.sessionKey,
-                                session.rsaPrivateKey
-                            )
-                            
-                            return (sessionID, json)
-                        })
-                    }
-                }
-            },
-            changePINProcess: { payload, completion in
-                
-                _changePINProcess((
-                    .init(value: payload.0.sessionIDValue),
-                    payload.1
-                )) {
-                    completion($0.mapError { .init($0) })
-                }
-            }
-        )
-    }
-    
-    typealias RSAPrivateKey = RSADomain.PrivateKey
-    
-    struct _Session {
-        
-        let otpEventID: OTPEventID
-        let sessionID: ForaBank.SessionID
-        let sessionKey: SessionKey
-        let rsaPrivateKey: RSAPrivateKey
     }
 }
 
