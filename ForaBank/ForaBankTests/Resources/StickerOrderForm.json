@@ -31,12 +31,12 @@
                     "txtConditionList": [
                         {
                             "name": "При получении в офисе",
-                            "descriptoin": "",
+                            "description": "",
                             "value": 790.0
                         },
                         {
                             "name": "При доставке курьером",
-                            "descriptoin": "",
+                            "description": "",
                             "value": 1500.0
                         }
                     ]

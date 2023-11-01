@@ -22,7 +22,9 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
-            mapResponse: ResponseMapper.mapStickerDictionaryResponse
+            mapResponse: { _,_ in
+                    .deliveryCourier(.init(main: [], serial: ""))
+            }
         )
     }
 }

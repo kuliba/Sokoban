@@ -250,12 +250,6 @@ extension ResponseMapper {
                 let name: String
                 let description: String
                 let value: Double
-                
-                enum CodingKeys: String, CodingKey {
-                    
-                    case name, value
-                    case description = "descriptoin"
-                }
             }
         }
         
