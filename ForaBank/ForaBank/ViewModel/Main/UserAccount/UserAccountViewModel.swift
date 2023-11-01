@@ -265,12 +265,9 @@ class UserAccountViewModel: ObservableObject {
                     model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
                     
                 case _ as UserAccountViewModelAction.ExitAction:
-                    alert = .init(
-                        title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
-                        primary: .init(type: .default, title: "Выход", action: {
-                            self.model.auth.value = .unlockRequiredManual
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .exit {
+                        self.model.auth.value = .unlockRequiredManual
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteAction:
                     
