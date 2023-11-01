@@ -8,7 +8,22 @@
 import SwiftUI
 import Foundation
 
-struct ProductViewModel {
+struct ProductStateViewModel {
+    
+    var state: State
+    let chevronTapped: () -> Void
+}
+
+extension ProductStateViewModel {
+
+    enum State {
+         
+        case selected(ProductViewModel)
+        case list(ProductViewModel, [ProductViewModel])
+    }
+}
+
+struct ProductViewModel: Hashable {
     
     let header: HeaderViewModel
     let main: MainViewModel
@@ -17,21 +32,35 @@ struct ProductViewModel {
 
 extension ProductViewModel {
     
-    struct MainViewModel {
+    struct MainViewModel: Hashable {
     
-        let cardLogo: Image
-        let paymentSystem: Image?
+        let cardLogo: String
+        let paymentSystem: String?
         let name: String
         let balance: String
     }
     
-    struct HeaderViewModel {
+    struct HeaderViewModel: Hashable {
         
         let title: String
     }
     
-    struct FooterViewModel {
+    struct FooterViewModel: Hashable {
         
         let description: String
+    }
+    
+    static func mapper(_ product: Operation.Parameter.Product) -> ProductViewModel {
+        
+        .init(
+            header: .init(title: product.selectedProduct.title),
+            main: .init(
+                cardLogo: .init(""),
+                paymentSystem: nil,
+                name: product.selectedProduct.nameProduct,
+                balance: product.selectedProduct.balance
+            ),
+            footer: .init(description: product.selectedProduct.description)
+        )
     }
 }

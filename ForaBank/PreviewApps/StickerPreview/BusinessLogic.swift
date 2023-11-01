@@ -73,7 +73,7 @@ extension BusinessLogic {
                 )
             
                 return .success(.operation(operation))
-
+                
             case .openBranch:
                 return .success(.operation(operation))
             }
@@ -96,6 +96,17 @@ extension BusinessLogic {
         case let .product(productEvents):
             
             switch productEvents {
+            case let .chevronTapped(product, state):
+                let newOperation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: state,
+                        selectedProduct: product.selectedProduct,
+                        allProducts: product.allProducts
+                    ))
+                )
+                return .success(.operation(newOperation))
+                
             case .selectProduct:
                 return .success(.operation(operation))
             }
