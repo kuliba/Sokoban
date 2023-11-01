@@ -541,6 +541,29 @@ class UserAccountViewModel: ObservableObject {
     }
 }
 
+private extension Alert.ViewModel {
+    
+    static func exit(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Выход",
+            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
+            primary: .init(
+                type: .default,
+                title: "Выход",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
+    }
+}
+
 extension UserAccountViewModel {
     
     class AvatarViewModel: ObservableObject {
