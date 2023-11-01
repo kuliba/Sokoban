@@ -43,7 +43,7 @@ struct ProductView: View {
              
                 ForEach(productList, id: \.self) { product in
                         
-                    optionProduct(
+                    productOption(
                         product: product,
                         header: product.header
                     )
@@ -52,8 +52,11 @@ struct ProductView: View {
         }
     }
     
-    private func optionProduct(product: ProductViewModel, header: ProductViewModel.HeaderViewModel) -> some View {
-    
+    private func productOption(
+        product: ProductViewModel,
+        header: ProductViewModel.HeaderViewModel
+    ) -> some View {
+        
         ZStack {
             
             VStack(alignment: .leading, spacing: 0) {
@@ -84,7 +87,7 @@ struct ProductView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {
-           
+            
         }
     }
     
