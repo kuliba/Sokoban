@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import GenericRemoteService
+
+// 1. makeRequest(name space "StickerPaymentRequestFactory")
+    
+// 2. mapResponse() Data -> Result<DeliveryOffice, ApiError>
+
+// 3.
+
+extension RemoteService {
+    
+    
+}

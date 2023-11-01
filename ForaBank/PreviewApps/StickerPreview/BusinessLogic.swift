@@ -15,7 +15,10 @@ final class BusinessLogic {
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
     typealias Completion = (OperationResult) -> Void
     typealias Load = (Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
-    typealias Transfer = (TransferEvent, @escaping Completion) -> Void
+    
+    typealias TransferResult = Result<TransferResponse, TransferError>
+    typealias TransferCompletion = (TransferResult) -> Void
+    typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     private let dictionaryService: RemoteService<Operation, Operation>
     private let transfer: Transfer
@@ -83,8 +86,29 @@ extension BusinessLogic {
             transfer(.requestOTP) { result in
                 
                 switch result {
-                case let .success(state):
-                    completion(.success(state))
+                case let .success(transferResponse):
+                    
+                    switch transferResponse {
+                    case let .deliveryOffice(deliveryOffice):
+                        
+                        guard let deliveryOfficeParameter = deliveryOffice.main.first(where: { $0.type == .citySelector })
+                        else { return }
+                        
+                        let newParameter: Operation.Parameter = .select(.init(
+                            id: "deliveryOffice",
+                            value: "",
+                            title: deliveryOfficeParameter.data.title,
+                            placeholder: deliveryOfficeParameter.data.subtitle,
+                            options: [],
+                            state: .idle(.init(iconName: "", title: deliveryOfficeParameter.data.title))
+                        ))
+                        let newOperation = operation.updateOperation(
+                            operation: operation,
+                            newParameter: newParameter
+                        )
+                        
+                        completion(.success(.operation(newOperation)))
+                    }
                     
                 case let .failure(error):
                     completion(.failure(error))
@@ -150,6 +174,42 @@ extension BusinessLogic {
 // MARK: - Types
 
 extension BusinessLogic {
+    
+    typealias TransferPayload = TransferEvent
+    
+    enum TransferResponse {
+        
+        case deliveryOffice(DeliveryOffice)
+    }
+    
+    struct DeliveryOffice {
+        
+        let main: [Main]
+        
+        struct Main {
+            
+            let type: TypeSelector
+            let data: Data
+            
+            enum TypeSelector: String {
+            
+                case separatorStartOperation = "SeparatorStartOperation"
+                case citySelector = "CitySelector"
+                case separatorEndOperation = "SeparatorEndOperation"
+            }
+            
+            struct Data {
+                
+                let title: String
+                let subtitle: String
+                let isCityList: Bool
+                let md5hash: String
+                let color: String
+            }
+        }
+    }
+    
+    enum TransferError: Error {}
     
     enum TransferEvent {
     

@@ -329,7 +329,10 @@ private extension Target {
     )
     
     static let paymentSticker = target(
-        name: .paymentSticker
+        name: .paymentSticker,
+        dependencies: [
+            .genericRemoteService
+        ]
     )
     
     static let paymentStickerTests = testTarget(
