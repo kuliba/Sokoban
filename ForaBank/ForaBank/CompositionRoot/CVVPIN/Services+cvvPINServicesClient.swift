@@ -71,7 +71,7 @@ extension Services {
         // MARK: Configure CVV-PIN Services
         
         let getCodeService = GetProcessingSessionCodeService(
-            _process: getCodeRemoteService.process
+            process: process
         )
         
         let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
@@ -557,6 +557,15 @@ extension Services {
         
         // MARK: - GetProcessingSessionCode Adapters
         
+        func process(
+            completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
+        ) {
+            getCodeRemoteService.process {
+                
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
         func cacheGetProcessingSessionCode(
             response: GetProcessingSessionCodeService.Response,
             completion: @escaping (Result<Void, Error>) -> Void
@@ -880,25 +889,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension GetProcessingSessionCodeService {
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (@escaping _ProcessCompletion) -> Void
-    
-    convenience init(
-        _process: @escaping _Process
-    ) {
-        self.init { completion in
-            
-            _process {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
-    }
-}
 
 private extension CVVPINCrypto {
     
