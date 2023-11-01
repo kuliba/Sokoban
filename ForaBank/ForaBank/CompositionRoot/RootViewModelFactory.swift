@@ -24,10 +24,19 @@ enum RootViewModelFactory {
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
-        let cvvPINServicesClient = Services.loggingCVVPINServicesClient(
+        #warning("fix lifespans before release")
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
-            cvvPINCrypto: cvvPINCrypto,
-            cvvPINJSONMaker: cvvPINJSONMaker,
+            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
+                decoratee: cvvPINCrypto,
+                log: { log(.crypto, $0, #file, #line) }
+            ),
+            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
+                decoratee: cvvPINJSONMaker,
+                log: { log(.crypto, $0, #file, #line) }
+            ),
+            rsaKeyPairLifespan: .rsaKeyPairLifespan,
+            ephemeralLifespan: .ephemeralLifespan,
             log: log
         )
         
@@ -69,36 +78,33 @@ enum RootViewModelFactory {
 extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
 
-private extension Services {
-    
-    static func loggingCVVPINServicesClient(
-        httpClient: HTTPClient,
-        cvvPINCrypto: CVVPINCrypto,
-        cvvPINJSONMaker: CVVPINJSONMaker,
-        currentDate: @escaping () -> Date = Date.init,
-        log: @escaping Log
-    ) -> CVVPINServicesClient {
-        
-        cvvPINServicesClient(
-            httpClient: httpClient,
-            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
-                decoratee: cvvPINCrypto,
-                log: { log(.crypto, $0, #file, #line) }
-            ),
-            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
-                decoratee: cvvPINJSONMaker,
-                log: { log(.crypto, $0, #file, #line) }
-            ),
-            currentDate: currentDate,
-            log: log
-        )
-    }
-}
-
 extension LoggerAgentProtocol {
     
     func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
         
         log(level: .debug, category: category, message: message, file: file, line: line)
+    }
+}
+
+// MARK: - addingShortTime & nextYear
+
+private extension TimeInterval {
+    
+    static var rsaKeyPairLifespan: Self {
+        
+#if RELEASE
+        15
+#else
+        30
+#endif
+    }
+    
+    static var ephemeralLifespan: Self {
+        
+#if RELEASE
+        15_778_463
+#else
+        600
+#endif
     }
 }
