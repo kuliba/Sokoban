@@ -209,7 +209,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 sessionKey: sessionKey
             )
-            log("AES encrypted data (\(encrypted.count)) base64 (\(encrypted.base64EncodedString().count)): \"\(encrypted.base64EncodedString())\".")
+            log("AES encrypted data (\(encrypted.count)).")
             
             return encrypted
         } catch {
