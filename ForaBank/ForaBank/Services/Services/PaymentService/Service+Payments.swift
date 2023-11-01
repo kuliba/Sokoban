@@ -23,7 +23,7 @@ extension Services {
             performRequest: httpClient.performRequest,
             mapResponse: { data, httpURLResponse in
                 
-                .init()
+                    .init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))
             }
         )
     }
