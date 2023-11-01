@@ -9,14 +9,14 @@ import Foundation
 
 extension RequestFactory {
     
-    static func stickerPaymentStep(
+    static func getStickerDictionary(
         _ serial: (String),
-        type: StickerOrderType.RawValue
+        _ type: GetJsonAbroadType
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
             ("serial", serial),
-            ("type", type)
+            ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest
         let url = try! endpoint.url(
@@ -48,7 +48,7 @@ extension RequestFactory {
 
 extension RequestFactory {
 
-    enum StickerOrderType: String {
+    enum GetJsonAbroadType: String {
         
         case stickerOrderForm
         case stickerDeliveryOffice
