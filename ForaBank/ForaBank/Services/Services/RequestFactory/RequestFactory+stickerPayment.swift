@@ -10,12 +10,10 @@ import Foundation
 extension RequestFactory {
     
     static func getStickerDictionary(
-        _ serial: (String),
         _ type: GetJsonAbroadType
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("serial", serial),
             ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest
