@@ -21,10 +21,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
-            mapResponse: { data, httpURLResponse in
-                
-                    .init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))
-            }
+            mapResponse: ResponseMapper.mapStickerDictionaryResponse
         )
     }
 }
