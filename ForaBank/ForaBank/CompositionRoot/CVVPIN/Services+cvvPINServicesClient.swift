@@ -82,11 +82,10 @@ extension Services {
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
-            _loadCode: sessionCodeLoader.load(completion:),
-            _process: formSessionKeyRemoteService.process,
-            _makeSecretRequestJSON: cvvPINJSONMaker.makeSecretRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.extractSharedSecret,
-            keyPair: echdKeyPair
+            loadCode: loadCode,
+            makeSecretRequestJSON: makeSecretRequestJSON,
+            process: process,
+            makeSessionKey: makeSessionKey
         )
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
@@ -574,6 +573,56 @@ extension Services {
         
         // MARK: - FormSessionKey Adapters
         
+        func loadCode(
+            completion:@escaping FormSessionKeyService.CodeCompletion
+        ) {
+            sessionCodeLoader.load { result in
+                
+                completion(
+                    result
+                        .map(\.sessionCodeValue)
+                        .map(FormSessionKeyService.Code.init)
+                )
+            }
+        }
+        
+        func makeSecretRequestJSON(
+            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
+        ) {
+            completion(.init {
+                
+                try cvvPINJSONMaker.makeSecretRequestJSON(
+                    publicKey: echdKeyPair.publicKey
+                )
+            })
+        }
+        
+        func process(
+            payload: FormSessionKeyService.Payload,
+            completion: @escaping FormSessionKeyService.ProcessCompletion
+        ) {
+            formSessionKeyRemoteService.process(
+                .init(code: payload.code, data: payload.data)
+            ) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func makeSessionKey(
+            string: String,
+            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
+        ) {
+            completion(.init {
+                
+                try .init(
+                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
+                        from: string,
+                        using: echdKeyPair.privateKey
+                    )
+                )
+            })
+        }
+        
         func cacheSessionID(
             payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
             completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
@@ -831,70 +880,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension FormSessionKeyService {
-    
-    typealias _LoadCodeResult = Swift.Result<SessionCode, Swift.Error>
-    typealias _LoadCodeCompletion = (_LoadCodeResult) -> Void
-    typealias _LoadCode = (@escaping _LoadCodeCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Payload, @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeSecretRequestJSON = (P384KeyAgreementDomain.PublicKey) throws -> Data
-    
-    typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) throws -> Data
-    
-    convenience init(
-        _loadCode: @escaping _LoadCode,
-        _process: @escaping _Process,
-        _makeSecretRequestJSON: @escaping _MakeSecretRequestJSON,
-        _makeSharedSecret: @escaping _MakeSharedSecret,
-        keyPair: P384KeyAgreementDomain.KeyPair
-    ) {
-        self.init(
-            loadCode: { completion in
-                
-                _loadCode { result in
-                    
-                    completion(
-                        result
-                            .map(\.sessionCodeValue)
-                            .map(FormSessionKeyService.Code.init)
-                    )
-                }
-            },
-            makeSecretRequestJSON: { completion in
-                
-                completion(.init {
-                    
-                    try _makeSecretRequestJSON(keyPair.publicKey)
-                })
-            },
-            process: { payload, completion in
-                
-                _process(
-                    .init(code: payload.code, data: payload.data)
-                ) {
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            makeSessionKey: { string, completion in
-                
-                completion(.init {
-                    
-                    try .init(
-                        sessionKeyValue: _makeSharedSecret(
-                            string,
-                            keyPair.privateKey
-                        )
-                    )
-                })
-            }
-        )
-    }
-}
 
 private extension GetProcessingSessionCodeService {
     
