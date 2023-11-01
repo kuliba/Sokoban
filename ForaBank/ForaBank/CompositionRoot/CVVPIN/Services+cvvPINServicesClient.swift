@@ -26,7 +26,10 @@ extension Services {
         rsaKeyPairLifespan: TimeInterval,
         ephemeralLifespan: TimeInterval,
         log: @escaping Log
-    ) -> CVVPINServicesClient {
+    ) -> (
+        client: CVVPINServicesClient,
+        removeRSAKeyPair: () -> Void
+    ) {
         
         // MARK: Configure Infra: Persistent Stores
         
@@ -151,7 +154,7 @@ extension Services {
         
         // MARK: - ComposedCVVPINService
         
-        return ComposedCVVPINService(
+        let cvvPINServicesClient = ComposedCVVPINService(
             // TODO: add category `CVV-PIN`
             log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
@@ -161,8 +164,15 @@ extension Services {
             getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
             showCVV: showCVVService.showCVV(cardID:completion:)
         )
+                
+        return (cvvPINServicesClient, removeRSAKeyPair)
         
         // MARK: - Helpers
+        
+        func removeRSAKeyPair() {
+            
+            persistentRSAKeyPairStore.clear()
+        }
         
         func loggingLoaderDecorator<T>(
             store: any Store<T>
