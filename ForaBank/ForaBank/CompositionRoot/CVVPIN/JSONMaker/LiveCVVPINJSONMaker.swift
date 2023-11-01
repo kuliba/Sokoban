@@ -16,12 +16,15 @@ struct LiveCVVPINJSONMaker {
     let crypto: CVVPINCrypto
 }
 
-/// Used if `AuthenticateWithPublicKeyService`
 extension LiveCVVPINJSONMaker {
     
     typealias ECDHPublicKey = ECDHDomain.PublicKey
     typealias RSAKeyPair = RSADomain.KeyPair
     typealias RSAPrivateKey = RSADomain.PrivateKey
+}
+
+/// Used if `AuthenticateWithPublicKeyService`
+extension LiveCVVPINJSONMaker {
     
     func makeRequestJSON(
         publicKey: ECDHPublicKey,
