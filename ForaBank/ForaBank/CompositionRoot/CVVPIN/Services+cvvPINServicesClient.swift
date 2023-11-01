@@ -51,10 +51,7 @@ extension Services {
         )
         
         let rsaKeyPairLoader = loggingLoaderDecorator(
-            store: LoggingStoreDecorator(
-                decoratee: persistentRSAKeyPairStore,
-                log: { log(.cache, $0, $1, $2) }
-            )
+            store: persistentRSAKeyPairStore
         )
         
         let sessionCodeLoader = loggingLoaderDecorator(
