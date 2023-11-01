@@ -51,6 +51,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let cvvPINServicesClient: CVVPINServicesClient
+    private let onExit: () -> Void
     private var cardAction: CardAction?
     
     private var bindings = Set<AnyCancellable>()
@@ -69,6 +70,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          cvvPINServicesClient: CVVPINServicesClient,
+         onExit: @escaping () -> Void,
          rootView: String
     ) {
         self.navigationBar = navigationBar
@@ -81,6 +83,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.cvvPINServicesClient = cvvPINServicesClient
+        self.onExit = onExit
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         
@@ -95,11 +98,11 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         cvvPINServicesClient: CVVPINServicesClient,
+        onExit: @escaping () -> Void,
         product: ProductData,
         rootView: String,
         dismissAction: @escaping () -> Void
     ) {
-        
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
             productData: product,
@@ -112,7 +115,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, cvvPINServicesClient: cvvPINServicesClient, onExit: onExit, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -332,6 +335,7 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     productProfileViewModelFactory: productProfileViewModelFactory,
+                    onExit: onExit,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1455,6 +1459,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             cvvPINServicesClient: cvvPINServicesClient,
+            onExit: onExit,
             product: product,
             rootView: rootView,
             dismissAction: dismissAction
