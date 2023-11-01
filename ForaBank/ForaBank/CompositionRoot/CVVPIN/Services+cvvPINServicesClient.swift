@@ -91,9 +91,8 @@ extension Services {
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
             decoratee: formSessionKeyService,
-            _cacheSessionID: sessionIDLoader.save,
-            _cacheSessionKey: sessionKeyLoader.save,
-            currentDate: currentDate
+            cacheSessionID: cacheSessionID,
+            cacheSessionKey: cacheSessionKey
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
@@ -226,6 +225,30 @@ extension Services {
             sessionCodeLoader.save(
                 .init(sessionCodeValue: response.code),
                 validUntil: validUntil,
+                completion: completion
+            )
+        }
+        
+        // MARK: - FormSessionKey Adapters
+        
+        func cacheSessionID(
+            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionIDLoader.save(
+                .init(value: payload.0.eventIDValue),
+                validUntil: currentDate() + .init(payload.1),
+                completion: completion
+            )
+        }
+        
+        func cacheSessionKey(
+            sessionKey: FormSessionKeyService.SessionKey,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                validUntil: currentDate().nextYear(),
                 completion: completion
             )
         }
@@ -828,44 +851,6 @@ private extension CachingChangePINServiceDecorator {
                 _cache(
                     otpEventID,
                     validUntil,
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension CachingFormSessionKeyServiceDecorator {
-    
-#warning("same shape as in CachingAuthWithPublicKeyServiceDecorator extension")
-    
-    typealias _CacheSessionIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionID = (SessionID, Date, @escaping _CacheSessionIDCompletion) -> Void
-    
-    typealias _CacheSessionKeyCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionKey = (SessionKey, Date, @escaping _CacheSessionKeyCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cacheSessionID: @escaping _CacheSessionID,
-        _cacheSessionKey: @escaping _CacheSessionKey,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cacheSessionID: { payload, completion in
-                
-                _cacheSessionID(
-                    .init(value: payload.0.eventIDValue),
-                    currentDate() + .init(payload.1),
-                    completion
-                )
-            },
-            cacheSessionKey: { sessionKey, completion in
-                
-                _cacheSessionKey(
-                    .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                    currentDate().nextYear(),
                     completion
                 )
             }
