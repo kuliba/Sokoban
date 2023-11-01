@@ -71,33 +71,33 @@ extension Services {
         // MARK: Configure CVV-PIN Services
         
         let getCodeService = GetProcessingSessionCodeService(
-            process: process
+            process: process(completion:)
         )
         
         let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
             decoratee: getCodeService,
-            cache: cacheGetProcessingSessionCode
+            cache: cache(response:completion:)
         )
         
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
-            loadCode: loadCode,
-            makeSecretRequestJSON: makeSecretRequestJSON,
-            process: process,
-            makeSessionKey: makeSessionKey
+            loadCode: loadCode(completion:),
+            makeSecretRequestJSON: makeSecretRequestJSON(completion:),
+            process: process(payload:completion:),
+            makeSessionKey: makeSessionKey(string:completion:)
         )
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
             decoratee: formSessionKeyService,
             cacheSessionID: cacheSessionID,
-            cacheSessionKey: cacheSessionKey
+            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
             loadEventID: loadEventID(completion:),
-            makeSecretJSON: makeSecretJSON,
-            process: bindPublicKeyWithEventIDProcess
+            makeSecretJSON: makeSecretJSON(otp:completion:),
+            process: process(payload:completion:)
         )
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
@@ -126,9 +126,9 @@ extension Services {
         // MARK: Configure Show CVV Service
         
         let showCVVService = ShowCVVService(
-            authenticate: showCVVAuthenticate,
+            authenticate: authenticate,
             makeJSON: makeSecretJSON,
-            process: showCVVProcess,
+            process: process,
             decryptCVV: decryptCVV
         )
         
@@ -144,7 +144,7 @@ extension Services {
         
         let cachingChangePINService = CachingChangePINServiceDecorator(
             decoratee: changePINService,
-            cache: cacheOTPEventID
+            cache: cache(otpEventID:completion:)
         )
         
         // MARK: - ComposedCVVPINService
@@ -154,9 +154,9 @@ extension Services {
             log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
-            checkActivation: checkActivation,
-            confirmActivation: activationService.confirmActivation(withOTP:completion:),
-            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode(completion:),
+            checkActivation: checkActivation(completion:),
+            confirmActivation: activationService.confirmActivation,
+            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
             showCVV: showCVVService.showCVV(cardID:completion:)
         )
         
@@ -284,7 +284,7 @@ extension Services {
             }
         }
         
-        func bindPublicKeyWithEventIDProcess(
+        func process(
             payload: BindPublicKeyWithEventIDService.Payload,
             completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
         ){
@@ -502,7 +502,7 @@ extension Services {
             }
         }
         
-        func cacheOTPEventID(
+        func cache(
             otpEventID: ChangePINService.OTPEventID,
             completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
         ) {
@@ -566,7 +566,7 @@ extension Services {
             }
         }
         
-        func cacheGetProcessingSessionCode(
+        func cache(
             response: GetProcessingSessionCodeService.Response,
             completion: @escaping (Result<Void, Error>) -> Void
         ) {
@@ -656,7 +656,7 @@ extension Services {
         
         // MARK: - ShowCVV Adapters
         
-        func showCVVAuthenticate(
+        func authenticate(
             completion: @escaping ShowCVVService.AuthenticateCompletion
         ) {
             rsaKeyPairLoader.load { result in
@@ -666,12 +666,12 @@ extension Services {
                     completion(.failure(.activationFailure))
                     
                 case let .success(rsaKeyPair):
-                    showCVVAuthenticate(rsaKeyPair, completion)
+                    authenticate(rsaKeyPair, completion)
                 }
             }
         }
         
-        func showCVVAuthenticate(
+        func authenticate(
             _ rsaKeyPair: RSAKeyPair,
             _ completion: @escaping ShowCVVService.AuthenticateCompletion
         ) {
@@ -716,7 +716,7 @@ extension Services {
             }
         }
         
-        func showCVVProcess(
+        func process(
             payload: ShowCVVService.Payload,
             completion: @escaping ShowCVVService.ProcessCompletion
         ) {
