@@ -559,6 +559,26 @@ private extension Alert.ViewModel {
             )
         )
     }
+    
+    static func delete(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Удалить учетную запись?",
+            message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
+            primary: .init(
+                type: .default,
+                title: "ОК",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
+    }
 }
 
 extension UserAccountViewModel {
