@@ -113,13 +113,11 @@ extension Services {
         )
         
         let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
-            loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
-            _process: authWithPublicKeyRemoteService.process,
-            _makeRequestJSON: cvvPINJSONMaker.makeRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.makeSharedSecret,
-            keyPair: keyPair
+            prepareKeyExchange: prepareKeyExchange(completion:),
+            process: authProcess(data:completion:),
+            makeSessionKey: makeSessionKey(response:completion:)
         )
-        
+
         let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
             decoratee: authenticateWithPublicKeyService,
             _cacheSessionID: sessionIDLoader.save,
@@ -211,6 +209,48 @@ extension Services {
                 
                 completion($0.map { _ in () })
             }
+        }
+        
+        // MARK: - AuthenticateWithPublicKey Adapters
+        
+        func prepareKeyExchange(
+            completion: @escaping AuthenticateWithPublicKeyService.PrepareKeyExchangeCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                completion(.init {
+                    
+                    let rsaKeyPair = try result.get()
+                    return try cvvPINJSONMaker.makeRequestJSON(
+                        publicKey: keyPair.publicKey,
+                        rsaKeyPair: rsaKeyPair
+                    )
+                })
+            }
+        }
+        
+        func authProcess(
+            data: Data,
+            completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
+        ) {
+            authWithPublicKeyRemoteService.process(data) {
+                
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func makeSessionKey(
+            response: AuthenticateWithPublicKeyService.Response,
+            completion: @escaping AuthenticateWithPublicKeyService.MakeSessionKeyCompletion
+        ) {
+            completion(
+                cvvPINCrypto.makeSharedSecret(
+                    from: response.publicServerSessionKey,
+                    using: keyPair.privateKey
+                )
+                .map(AuthenticateWithPublicKeyService.Success.SessionKey.init)
+            )
+
         }
         
         // MARK: - GetProcessingSessionCode Adapters
@@ -697,61 +737,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension AuthenticateWithPublicKeyService {
-    
-    typealias RSAKeyPair = RSADomain.KeyPair
-    typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
-    typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
-    typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Data, @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeRequestJSON = (ECDHDomain.PublicKey, RSAKeyPair) throws -> Data
-    
-    typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) -> Swift.Result<Data, Swift.Error>
-    
-    convenience init(
-        loadRSAKeyPair: @escaping LoadRSAKeyPair,
-        _process: @escaping _Process,
-        _makeRequestJSON: @escaping _MakeRequestJSON,
-        _makeSharedSecret: @escaping _MakeSharedSecret,
-        keyPair: P384KeyAgreementDomain.KeyPair
-    ) {
-        self.init(
-            prepareKeyExchange: { completion in
-                
-                loadRSAKeyPair { result in
-                    
-                    completion(.init {
-                        
-                        let rsaKeyPair = try result.get()
-                        return try _makeRequestJSON(keyPair.publicKey, rsaKeyPair)
-                    })
-                }
-            },
-            process: { data, completion in
-                
-                _process(data) {
-                    
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            makeSessionKey: { response, completion in
-                
-                completion(
-                    _makeSharedSecret(
-                        response.publicServerSessionKey,
-                        keyPair.privateKey
-                    )
-                    .map(Success.SessionKey.init)
-                )
-            }
-        )
-    }
-}
 
 private extension BindPublicKeyWithEventIDService {
     
