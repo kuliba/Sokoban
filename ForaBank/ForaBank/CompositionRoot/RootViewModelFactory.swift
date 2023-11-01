@@ -86,7 +86,7 @@ extension LoggerAgentProtocol {
     }
 }
 
-// MARK: - addingShortTime & nextYear
+// MARK: - Lifespans
 
 private extension TimeInterval {
     
