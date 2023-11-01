@@ -261,7 +261,8 @@ struct ProductView_Previews: PreviewProvider {
                     ),
                     footer: .init(description: "description")
                 )),
-                chevronTapped: {})
+                chevronTapped: {},
+                selectOption: { _ in })
         )
         .frame(height: 80)
         .padding(20)

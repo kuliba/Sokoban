@@ -94,7 +94,16 @@ extension OperationStateViewModel {
                 newOperation = operation
                 
             case let .selectProduct(option, product):
-                break
+                
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: .select,
+                        selectedProduct: option,
+                        allProducts: []))
+                )
+                
+                newOperation = operation
             }
             
         case .continueButtonTapped:
@@ -347,8 +356,8 @@ extension Array where Element == Operation.Parameter {
         )),
         .product(.init(
             state: .select,
-            selectedProduct: .init(number: "3387", paymentSystem: "", background: "", value: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено"),
-            allProducts: [.init(number: "3387", paymentSystem: "", background: "", value: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
+            selectedProduct: .init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено"),
+            allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
         ),
         .select(.init(
             id: "transferType",
