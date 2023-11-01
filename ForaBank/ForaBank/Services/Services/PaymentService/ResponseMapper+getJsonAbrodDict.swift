@@ -19,8 +19,8 @@ extension ResponseMapper {
     ) -> StickerDictionaryResult {
         
         do {
+            
             switch httpURLResponse.statusCode {
-                
             case 200:
                 
                 if data.isEmpty {
@@ -72,31 +72,24 @@ extension ResponseMapper {
         init(from decoder: Decoder) throws {
             
             enum CodingKeys: CodingKey {
-                case type
+                
                 case data
             }
             
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let type = try? container.decode(StickerDictionary.self, forKey: .type)
             
-            switch type {
-            case .orderForm:
-                let data = try container.decode(StickerOrderForm.self, forKey: .data)
+            if let data = try? container.decode(StickerOrderForm.self, forKey: .data) {
                 self = .orderForm(data)
                 
-            case .deliveryCourier:
-                let data = try container.decode(DeliveryCourier.self, forKey: .data)
-                self = .deliveryCourier(data)
-                
-            case .deliveryOffice:
-                let data = try container.decode(DeliveryOffice.self, forKey: .data)
+            } else if let data = try? container.decode(DeliveryOffice.self, forKey: .data) {
                 self = .deliveryOffice(data)
                 
-            case .none:
-                self = .noValid("couldn't decode data")
+            } else if let data = try? container.decode(DeliveryCourier.self, forKey: .data) {
+                self = .deliveryCourier(data)
                 
-            case .some(.noValid(_)):
-                self = .noValid("couldn't decode data")
+            } else {
+                
+                self = .noValid("not valid data")
             }
         }
     }
@@ -121,7 +114,6 @@ extension ResponseMapper {
                 let isFixed: Bool
             }
         }
-        
     }
     
     struct DeliveryOffice: Decodable {
@@ -145,9 +137,9 @@ extension ResponseMapper {
     struct Main: Decodable {
         
         let type: ComponentType
-        let data: Data
+        let data: DataType
         
-        enum DataType {
+        enum DataType: Decodable {
             
             case hint(Hint)
             case banner(Banner)
@@ -156,6 +148,59 @@ extension ResponseMapper {
             case selector(Selector)
             case citySelector(CitySelector)
             case officeSelector(OfficeSelector)
+            case pageTitle(StickerOrderForm.Header.Data)
+            case noValid(String)
+            
+            init(from decoder: Decoder) throws {
+                
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let type = try? container.decode(ComponentType.self, forKey: .type)
+                
+                switch type {
+                case .citySelector:
+                    let data = try container.decode(CitySelector.self, forKey: .data)
+                    self = .citySelector(data)
+                    
+                case .endSeparator:
+                    let data = try container.decode(Separator.self, forKey: .data)
+                    self = .separator(data)
+                    
+                case .officeSelector:
+                    let data = try container.decode(OfficeSelector.self, forKey: .data)
+                    self = .officeSelector(data)
+                    
+                case .pageTitle:
+                    let data = try container.decode(StickerOrderForm.Header.Data.self, forKey: .data)
+                    self = .pageTitle(data)
+                    
+                case .productInfo:
+                    let data = try container.decode(Banner.self, forKey: .data)
+                    self = .banner(data)
+                    
+                case .productSelect:
+                    let data = try container.decode(Product.self, forKey: .data)
+                    self = .product(data)
+                    
+                case .selector:
+                    let data = try container.decode(Selector.self, forKey: .data)
+                    self = .selector(data)
+                    
+                case .separator:
+                    let data = try container.decode(Separator.self, forKey: .data)
+                    self = .separator(data)
+                    
+                case .separatorSubGroup:
+                    let data = try container.decode(Separator.self, forKey: .data)
+                    self = .separator(data)
+                    
+                case .textsWithIconHorizontal:
+                    let data = try container.decode(Hint.self, forKey: .data)
+                    self = .hint(data)
+                    
+                case .none:
+                    self = .noValid("could not decode data")
+                }
+            }
         }
         
         struct Selector: Decodable {
@@ -221,24 +266,26 @@ extension ResponseMapper {
             let contentCenterAndPull: Bool
         }
         
-        struct CitySelector {
+        struct CitySelector: Decodable {
             
             let title: String
             let subtitle: String
             let isCityList: Bool
             let md5hash: String
+            let list: [String?]
         }
         
-        struct OfficeSelector {
+        struct OfficeSelector: Decodable {
             
             let title: String
             let subtitle: String
             let isCityList: Bool
             let md5hash: String
+            let list: [String?]
         }
     }
     
-    enum ComponentType: String, Decodable {
+    enum ComponentType: String, Decodable, CodingKey {
         
         case pageTitle = "PAGE_TITLE"
         case textsWithIconHorizontal = "TEXTS_WITH_ICON_HORIZONTAL"
@@ -248,6 +295,8 @@ extension ResponseMapper {
         case selector = "VERTICAL_SELECTOR"
         case citySelector = "CITY_SELECTOR"
         case officeSelector = "OFFICE_SELECTOR"
+        case endSeparator = "SEPARATOR_END_OPERATOR"
+        case separatorSubGroup = "SEPARATOR_FIELD_SUB_GROUP"
     }
 }
 
