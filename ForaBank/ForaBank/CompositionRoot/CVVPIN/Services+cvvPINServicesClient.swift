@@ -76,8 +76,7 @@ extension Services {
         
         let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
             decoratee: getCodeService,
-            _cache: sessionCodeLoader.save,
-            currentDate: currentDate
+            cache: cacheGetProcessingSessionCode
         )
         
         let keyPair = cvvPINCrypto.generateECDHKeyPair()
@@ -213,6 +212,22 @@ extension Services {
                 
                 completion($0.map { _ in () })
             }
+        }
+        
+        // MARK: - GetProcessingSessionCode Adapters
+        
+        func cacheGetProcessingSessionCode(
+            response: GetProcessingSessionCodeService.Response,
+            completion: @escaping (Result<Void, Error>) -> Void
+        ) {
+            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
+            let validUntil = currentDate().addingShortTime()
+            
+            sessionCodeLoader.save(
+                .init(sessionCodeValue: response.code),
+                validUntil: validUntil,
+                completion: completion
+            )
         }
         
         // MARK: - ShowCVV Adapters
@@ -851,33 +866,6 @@ private extension CachingFormSessionKeyServiceDecorator {
                 _cacheSessionKey(
                     .init(sessionKeyValue: sessionKey.sessionKeyValue),
                     currentDate().nextYear(),
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension CachingGetProcessingSessionCodeServiceDecorator {
-    
-    typealias _CacheCompletion = (Result<Void, Error>) -> Void
-    typealias _Cache = (SessionCode, Date, @escaping _CacheCompletion) -> Void
-    
-    convenience init(
-        decoratee: GetProcessingSessionCodeService,
-        _cache: @escaping _Cache,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cache: { response, completion in
-                
-                // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-                let validUntil = currentDate().addingShortTime()
-                
-                _cache(
-                    .init(sessionCodeValue: response.code),
-                    validUntil,
                     completion
                 )
             }
