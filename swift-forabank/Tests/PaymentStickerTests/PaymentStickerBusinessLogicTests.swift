@@ -139,7 +139,9 @@ final class BusinessLogic {
         case otp
     }
     
-    struct ProductOptionsError: Error {}
+    enum MissingProductOption: Error {
+        case missingProductOption(ProductID)
+    }
 }
 
 final class PaymentStickerBusinessLogicTests: XCTestCase {

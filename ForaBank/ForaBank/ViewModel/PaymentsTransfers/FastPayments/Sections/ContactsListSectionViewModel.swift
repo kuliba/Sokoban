@@ -84,8 +84,9 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
 
         contacts
             .combineLatest(filter)
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .map(Self.reduce(items:filter:))
+            .receive(on: DispatchQueue.main)
             .assign(to: &$visible)
         
         model.clientInfo
@@ -127,14 +128,14 @@ class ContactsListSectionViewModel: ContactsSectionViewModel, ObservableObject {
 
 extension ContactsListSectionViewModel {
     
-    private static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
+    static func reduce(items: [ContactsItemViewModel], filter: String?) -> [ContactsItemViewModel] {
         
         guard !items.isEmpty else {
             
             return (0..<8).map { _ in ContactsPlaceholderItemView.ViewModel(style: .person) }
         }
         
-        guard let filter = filter, !filter.isEmpty else {
+        guard let filter = filter?.filterValue, !filter.isEmpty else {
             return items
         }
         
@@ -143,7 +144,7 @@ extension ContactsListSectionViewModel {
         return contacts.filter({ contact in
             
             if let fullName = contact.name,
-                fullName.localizedStandardContains(filter) || contact.phone.localizedCaseInsensitiveContains(filter) {
+               fullName.localizedStandardContains(filter) || contact.phone.filtered().localizedCaseInsensitiveContains(filter) {
                 
                 return true
                 

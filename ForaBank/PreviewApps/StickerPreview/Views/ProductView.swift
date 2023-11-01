@@ -24,73 +24,67 @@ struct ProductView: View {
                 selectProductView(productViewModel)
                 
             case let .list(productViewModel, productList):
+                
                 selectProductView(productViewModel)
-                
-                HStack(spacing: 10) {
-                
-                    ScrollView {
-                     
-                        ForEach(productList, id: \.self) { product in
-                                
-                            optionProduct(
-                                product: product,
-                                header: product.header,
-                                selectOption: viewModel.selectOption
-                            )
-                        }
-                    }
-                }
-                
+                optionsList(productList)
             }
         }
         .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
-    private func optionProduct(
-        product: ProductViewModel,
-        header: ProductViewModel.HeaderViewModel,
-        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+    private func optionsList(
+        _ productList: [ProductViewModel]
     ) -> some View {
     
-        ZStack {
-            
-            VStack(alignment: .leading, spacing: 0) {
-                
-                ProductView.HeaderView(
-                    viewModel: header,
-                    appearance: .default
-                )
-                .padding(.leading, 10)
-                .padding(.top, 4)
-                
-                Spacer()
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    
-                    Text(product.main.name)
-                        .font(.body)
-                        .foregroundColor(.black)
-                        .opacity(0.5)
-                    
-                    ProductView.FooterView(
-                        viewModel: product.footer,
-                        appearance: .default
+        HStack(spacing: 10) {
+        
+            ScrollView {
+             
+                ForEach(productList, id: \.self) { product in
+                        
+                    productOption(
+                        product: product,
+                        header: product.header
                     )
                 }
             }
-            .background(background())
         }
+    }
+    
+    private func productOption(
+        product: ProductViewModel,
+        header: ProductViewModel.HeaderViewModel
+    ) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            ProductView.HeaderView(
+                viewModel: header,
+                appearance: .default
+            )
+            .padding(.leading, 10)
+            .padding(.top, 4)
+            
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 10) {
+                
+                Text(product.main.name)
+                    .font(.body)
+                    .foregroundColor(.black)
+                    .opacity(0.5)
+                
+                ProductView.FooterView(
+                    viewModel: product.footer,
+                    appearance: .default
+                )
+            }
+        }
+        .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
-        .onTapGesture{
-            selectOption(.init(
-                paymentSystem: "",
-                background: "",
-                title: product.header.title,
-                nameProduct: product.main.name,
-                balance: product.main.balance,
-                description: product.footer.description
-            ))
+        .onTapGesture {
+            
         }
     }
     

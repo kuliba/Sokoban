@@ -237,3 +237,21 @@ extension String {
             options: .regularExpression) != nil
     }
 }
+
+extension String {
+    var filterValue: String {
+        
+        if self.notContainsLetters {
+            return self.filtered()
+        }
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+extension String {
+    var notContainsLetters: Bool {
+        let wanted = CharacterSet(charactersIn: "0123456789- +")
+        return unicodeScalars
+            .allSatisfy(wanted.contains)
+    }
+}
