@@ -7,28 +7,56 @@
 
 import Foundation
 import GenericRemoteService
-import PaymentsComponents
 
 extension Services {
 
-    typealias GetStickerPayment = String
-    typealias GetPaymentService = RemoteService<GetStickerPayment, [PaymentsComponents.Operation.Parameter]>
-    typealias Parameter = PaymentsComponents.Operation.Parameter
+    typealias GetStickerPayment = StickerPayment
+    typealias GetPaymentService = RemoteService<RequestFactory.StickerPayment, Parameter>
 
-    static func getPaymentService(
+    static func stickerPaymentRequest(
+        input: RequestFactory.StickerPayment,
         httpClient: HTTPClient
     ) -> GetPaymentService {
-
-        let map: (Data, HTTPURLResponse) throws -> [Parameter] = { data, response in
-
-            let result = StickerPaymentMapper.map(data, response)
-            return try result.get().main.map(\.parameter)
-        }
-
+        
         return .init(
-            createRequest: RequestFactory.stickerPaymentRequest,
+            createRequest: RequestFactory.stickerCreatePayment,
             performRequest: httpClient.performRequest,
-            mapResponse: map
+            mapResponse: { _,_ in .init() }
         )
+    }
+}
+
+struct ApiError {}
+
+struct Parameter {
+    
+}
+
+struct StickerPayment {
+    
+    let currencyAmount: String
+    let amount: String
+    let check: Bool
+    let payer: Payer
+    let productToOrderInfo: Order
+    
+    struct Payer {
+        
+        let cardId: String
+    }
+    
+    struct Order {
+        
+        let type: String
+        let deliverToOffice: Bool
+        let officeId: String
+    }
+}
+
+struct StickerPaymentMapper {
+    
+    func map() -> [Parameter] {
+        
+        [.init()]
     }
 }

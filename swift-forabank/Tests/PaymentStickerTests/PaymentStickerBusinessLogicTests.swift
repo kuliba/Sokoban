@@ -162,7 +162,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         expect(sut, with: makePaymentEvent(), toDeliver: [.failure(.makePayment)]) {
             
-            spy.complete(with: anyError())
+            spy.complete(with: .errorMessage)
         }
     }
     
@@ -185,7 +185,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         sut?.handleTransferEvent(makePaymentEvent()) { receivedResult.append($0) }
         sut = nil
-        spy.complete(with: anyError())
+        spy.complete(with: .errorMessage)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssert(receivedResult.isEmpty)
@@ -197,7 +197,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         expect(sut, with: makeRequestOtpEvent(), toDeliver: [.failure(.otp)]) {
             
-            spy.complete(with: anyError())
+            spy.complete(with: .errorMessage)
         }
     }
     
@@ -220,7 +220,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         
         sut?.handleTransferEvent(makeRequestOtpEvent()) { receivedResult.append($0) }
         sut = nil
-        spy.complete(with: anyError())
+        spy.complete(with: .errorMessage)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssert(receivedResult.isEmpty)
@@ -290,7 +290,7 @@ final class PaymentStickerBusinessLogicTests: XCTestCase {
         }
         
         func complete(
-            with error: Error,
+            with error: BusinessLogic.ApiTransferError,
             at index: Int = 0
         ) {
             messages[index].completion(.failure(error))
