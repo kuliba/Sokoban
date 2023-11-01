@@ -107,9 +107,9 @@ extension Services {
         )
         
         let activationService = CVVPINFunctionalityActivationService(
-            _getCode: cachingGetCodeService.getCode,
-            _formSessionKey: cachingFormSessionKeyService.formSessionKey,
-            _bindPublicKeyWithEventID: rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind
+            getCode: getCode,
+            formSessionKey: formSessionKey,
+            bindPublicKeyWithEventID: bindPublicKeyWithEventID
         )
         
         let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
@@ -517,6 +517,45 @@ extension Services {
             )
         }
         
+        // MARK: - CVVPINFunctionalityActivation Adapters
+        
+        func getCode(
+            completion: @escaping CVVPINFunctionalityActivationService.GetCodeCompletion
+        ) {
+            cachingGetCodeService.getCode { result in
+                
+                completion(
+                    result
+                        .map(CVVPINFunctionalityActivationService.GetCodeResponse.init)
+                        .mapError(CVVPINFunctionalityActivationService.GetCodeResponseError.init)
+                )
+            }
+        }
+        
+        func formSessionKey(
+            completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
+        ) {
+            cachingFormSessionKeyService.formSessionKey { result in
+                
+                completion(
+                    result
+                        .map(CVVPINFunctionalityActivationService.FormSessionKeySuccess.init)
+                        .mapError(CVVPINFunctionalityActivationService.FormSessionKeyError.init)
+                )
+            }
+        }
+        
+        func bindPublicKeyWithEventID(
+            otp: CVVPINFunctionalityActivationService.OTP,
+            completion: @escaping CVVPINFunctionalityActivationService.BindPublicKeyWithEventIDCompletion
+        ) {
+            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind(
+                otp: .init(otpValue: otp.otpValue)
+            ) {
+                completion($0.mapError(CVVPINFunctionalityActivationService.BindPublicKeyError.init))
+            }
+        }
+        
         // MARK: - GetProcessingSessionCode Adapters
         
         func cacheGetProcessingSessionCode(
@@ -792,60 +831,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension CVVPINFunctionalityActivationService {
-    
-    typealias _GetCodeResult = Swift.Result<GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error>
-    typealias _GetCodeCompletion = (_GetCodeResult) -> Void
-    typealias _GetCode = (@escaping _GetCodeCompletion) -> Void
-    
-    typealias _FormSessionKeyResult = Swift.Result<FormSessionKeyService.Success, FormSessionKeyService.Error>
-    typealias _FormSessionKeyCompletion = (_FormSessionKeyResult) -> Void
-    typealias _FormSessionKey = (@escaping _FormSessionKeyCompletion) -> Void
-    
-    typealias _BindResult = Swift.Result<Void, BindPublicKeyWithEventIDService.Error>
-    typealias _BindCompletion = (_BindResult) -> Void
-    typealias _Bind = (BindPublicKeyWithEventIDService.OTP, @escaping _BindCompletion) -> Void
-    
-    convenience init(
-        _getCode: @escaping _GetCode,
-        _formSessionKey: @escaping _FormSessionKey,
-        _bindPublicKeyWithEventID: @escaping _Bind
-    ) {
-        self.init(
-            getCode: { completion in
-                
-                _getCode { result in
-                    
-                    completion(
-                        result
-                            .map(GetCodeResponse.init)
-                            .mapError(GetCodeResponseError.init)
-                    )
-                }
-            },
-            formSessionKey: { completion in
-                
-                _formSessionKey { result in
-                    
-                    completion(
-                        result
-                            .map(FormSessionKeySuccess.init)
-                            .mapError(FormSessionKeyError.init)
-                    )
-                }
-            },
-            bindPublicKeyWithEventID: { otp, completion in
-                
-                _bindPublicKeyWithEventID(
-                    .init(otpValue: otp.otpValue)
-                ) {
-                    completion($0.mapError(BindPublicKeyError.init))
-                }
-            }
-        )
-    }
-}
 
 private extension FormSessionKeyService {
     
