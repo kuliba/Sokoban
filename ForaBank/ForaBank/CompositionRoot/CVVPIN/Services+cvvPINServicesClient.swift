@@ -294,182 +294,6 @@ extension Services {
             }
         }
         
-        // MARK: - GetProcessingSessionCode Adapters
-        
-        func cacheGetProcessingSessionCode(
-            response: GetProcessingSessionCodeService.Response,
-            completion: @escaping (Result<Void, Error>) -> Void
-        ) {
-            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-            let validUntil = currentDate().addingShortTime()
-            
-            sessionCodeLoader.save(
-                .init(sessionCodeValue: response.code),
-                validUntil: validUntil,
-                completion: completion
-            )
-        }
-        
-        // MARK: - FormSessionKey Adapters
-        
-        func cacheSessionID(
-            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
-        ) {
-            sessionIDLoader.save(
-                .init(value: payload.0.eventIDValue),
-                validUntil: currentDate() + .init(payload.1),
-                completion: completion
-            )
-        }
-        
-        func cacheSessionKey(
-            sessionKey: FormSessionKeyService.SessionKey,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
-        ) {
-            sessionKeyLoader.save(
-                .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().nextYear(),
-                completion: completion
-            )
-        }
-        
-        // MARK: - ShowCVV Adapters
-        
-        func showCVVAuthenticate(
-            completion: @escaping ShowCVVService.AuthenticateCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case let .success(rsaKeyPair):
-                    showCVVAuthenticate(rsaKeyPair, completion)
-                }
-            }
-        }
-        
-        func showCVVAuthenticate(
-            _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping ShowCVVService.AuthenticateCompletion
-        ) {
-            sessionIDLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                        
-                        completion(
-                            $0
-                                .map(\.sessionID.sessionIDValue)
-                                .map(ShowCVVService.SessionID.init)
-                                .mapError { _ in .authenticationFailure })
-                    }
-                    
-                case let .success(sessionID):
-                    completion(.success(
-                        .init(sessionIDValue: sessionID.value)
-                    ))
-                }
-            }
-        }
-        
-        func makeSecretJSON(
-            cardID: ShowCVVService.CardID,
-            sessionID: ShowCVVService.SessionID,
-            completion: @escaping ShowCVVService.MakeJSONCompletion
-        ) {
-            loadShowCVVSession { result in
-                
-                completion(.init {
-                    
-                    let session = try result.get()
-                    return try cvvPINJSONMaker.makeSecretJSON(
-                        with: cardID,
-                        and: sessionID,
-                        rsaKeyPair: session.rsaKeyPair,
-                        sessionKey: session.sessionKey
-                    )
-                })
-            }
-        }
-        
-        func showCVVProcess(
-            payload: ShowCVVService.Payload,
-            completion: @escaping ShowCVVService.ProcessCompletion
-        ) {
-            showCVVRemoteService.process((
-                .init(value: payload.sessionID.sessionIDValue),
-                payload.data
-            )) {
-                completion($0.mapError { .init($0) })
-            }
-        }
-        
-        func decryptCVV(
-            encryptedCVV: ShowCVVService.EncryptedCVV,
-            completion: @escaping ShowCVVService.DecryptCVVCompletion
-        ) {
-            loadShowCVVSession {
-                
-                do {
-                    let rsaKeyPair = try $0.get().rsaKeyPair
-                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
-                        encryptedCVV.encryptedCVVValue,
-                        withPrivateKey: rsaKeyPair.privateKey
-                    )
-                    completion(.success(.init(cvvValue: cvvValue)))
-                } catch {
-                    completion(.failure(.serviceError(.makeJSONFailure)))
-                }
-            }
-        }
-        
-        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
-        typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
-        
-        func loadShowCVVSession(
-            completion: @escaping LoadShowCVVSessionCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let.success(rsaKeyPair):
-                    loadShowCVVSession(rsaKeyPair, completion)
-                }
-            }
-        }
-        
-        func loadShowCVVSession(
-            _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping LoadShowCVVSessionCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(sessionKey):
-                    completion(.success(.init(
-                        rsaKeyPair: rsaKeyPair,
-                        sessionKey: sessionKey
-                    )))
-                }
-            }
-        }
-        
-        struct ShowCVVSession {
-            
-            let rsaKeyPair: RSAKeyPair
-            let sessionKey: SessionKey
-        }
-        
         // MARK: - ChangePIN Adapters
         
 #warning("extract repeated")
@@ -677,6 +501,182 @@ extension Services {
             )) {
                 completion($0.mapError { .init($0) })
             }
+        }
+
+        // MARK: - GetProcessingSessionCode Adapters
+        
+        func cacheGetProcessingSessionCode(
+            response: GetProcessingSessionCodeService.Response,
+            completion: @escaping (Result<Void, Error>) -> Void
+        ) {
+            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
+            let validUntil = currentDate().addingShortTime()
+            
+            sessionCodeLoader.save(
+                .init(sessionCodeValue: response.code),
+                validUntil: validUntil,
+                completion: completion
+            )
+        }
+        
+        // MARK: - FormSessionKey Adapters
+        
+        func cacheSessionID(
+            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionIDLoader.save(
+                .init(value: payload.0.eventIDValue),
+                validUntil: currentDate() + .init(payload.1),
+                completion: completion
+            )
+        }
+        
+        func cacheSessionKey(
+            sessionKey: FormSessionKeyService.SessionKey,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                validUntil: currentDate().nextYear(),
+                completion: completion
+            )
+        }
+        
+        // MARK: - ShowCVV Adapters
+        
+        func showCVVAuthenticate(
+            completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    showCVVAuthenticate(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func showCVVAuthenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ShowCVVService.SessionID.init)
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(
+                        .init(sessionIDValue: sessionID.value)
+                    ))
+                }
+            }
+        }
+        
+        func makeSecretJSON(
+            cardID: ShowCVVService.CardID,
+            sessionID: ShowCVVService.SessionID,
+            completion: @escaping ShowCVVService.MakeJSONCompletion
+        ) {
+            loadShowCVVSession { result in
+                
+                completion(.init {
+                    
+                    let session = try result.get()
+                    return try cvvPINJSONMaker.makeSecretJSON(
+                        with: cardID,
+                        and: sessionID,
+                        rsaKeyPair: session.rsaKeyPair,
+                        sessionKey: session.sessionKey
+                    )
+                })
+            }
+        }
+        
+        func showCVVProcess(
+            payload: ShowCVVService.Payload,
+            completion: @escaping ShowCVVService.ProcessCompletion
+        ) {
+            showCVVRemoteService.process((
+                .init(value: payload.sessionID.sessionIDValue),
+                payload.data
+            )) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func decryptCVV(
+            encryptedCVV: ShowCVVService.EncryptedCVV,
+            completion: @escaping ShowCVVService.DecryptCVVCompletion
+        ) {
+            loadShowCVVSession {
+                
+                do {
+                    let rsaKeyPair = try $0.get().rsaKeyPair
+                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
+                        encryptedCVV.encryptedCVVValue,
+                        withPrivateKey: rsaKeyPair.privateKey
+                    )
+                    completion(.success(.init(cvvValue: cvvValue)))
+                } catch {
+                    completion(.failure(.serviceError(.makeJSONFailure)))
+                }
+            }
+        }
+        
+        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
+        typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
+        
+        func loadShowCVVSession(
+            completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let.success(rsaKeyPair):
+                    loadShowCVVSession(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func loadShowCVVSession(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    completion(.success(.init(
+                        rsaKeyPair: rsaKeyPair,
+                        sessionKey: sessionKey
+                    )))
+                }
+            }
+        }
+        
+        struct ShowCVVSession {
+            
+            let rsaKeyPair: RSAKeyPair
+            let sessionKey: SessionKey
         }
     }
 }
