@@ -57,34 +57,31 @@ struct ProductView: View {
         header: ProductViewModel.HeaderViewModel
     ) -> some View {
         
-        ZStack {
+        VStack(alignment: .leading, spacing: 0) {
             
-            VStack(alignment: .leading, spacing: 0) {
+            ProductView.HeaderView(
+                viewModel: header,
+                appearance: .default
+            )
+            .padding(.leading, 10)
+            .padding(.top, 4)
+            
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 10) {
                 
-                ProductView.HeaderView(
-                    viewModel: header,
+                Text(product.main.name)
+                    .font(.body)
+                    .foregroundColor(.black)
+                    .opacity(0.5)
+                
+                ProductView.FooterView(
+                    viewModel: product.footer,
                     appearance: .default
                 )
-                .padding(.leading, 10)
-                .padding(.top, 4)
-                
-                Spacer()
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    
-                    Text(product.main.name)
-                        .font(.body)
-                        .foregroundColor(.black)
-                        .opacity(0.5)
-                    
-                    ProductView.FooterView(
-                        viewModel: product.footer,
-                        appearance: .default
-                    )
-                }
             }
-            .background(background())
         }
+        .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {
             
