@@ -145,7 +145,7 @@ extension Services {
         
         let cachingChangePINService = CachingChangePINServiceDecorator(
             decoratee: changePINService,
-            _cache: otpEventIDLoader.save
+            cache: cacheOTPEventID
         )
         
         // MARK: - ComposedCVVPINService
@@ -502,7 +502,21 @@ extension Services {
                 completion($0.mapError { .init($0) })
             }
         }
-
+        
+        func cacheOTPEventID(
+            otpEventID: ChangePINService.OTPEventID,
+            completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
+        ) {
+            // short time
+            let validUntil = currentDate().addingShortTime()
+            
+            otpEventIDLoader.save(
+                otpEventID,
+                validUntil: validUntil,
+                completion: completion
+            )
+        }
+        
         // MARK: - GetProcessingSessionCode Adapters
         
         func cacheGetProcessingSessionCode(
@@ -778,33 +792,6 @@ struct SessionKey {
 }
 
 // MARK: - Adapters
-
-private extension CachingChangePINServiceDecorator {
-    
-    typealias _CacheOTPEventIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheOTPEventID = (Service.OTPEventID, Date, @escaping _CacheOTPEventIDCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cache: @escaping _CacheOTPEventID,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cache: { otpEventID, completion in
-                
-                // short time
-                let validUntil = currentDate().addingShortTime()
-                
-                _cache(
-                    otpEventID,
-                    validUntil,
-                    completion
-                )
-            }
-        )
-    }
-}
 
 private extension CVVPINFunctionalityActivationService {
     
