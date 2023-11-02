@@ -475,6 +475,7 @@
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
 		2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */; };
 		2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7302AF3E03400688401 /* LoaderSpy.swift */; };
+		2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2499,6 +2500,7 @@
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
 		2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6DC7302AF3E03400688401 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderSpy.swift; sourceTree = "<group>"; };
+		2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingStoreDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -5592,6 +5594,7 @@
 				2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */,
 				2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */,
 				2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */,
+				2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */,
 				2A6DC72B2AF3CA0400688401 /* Helpers */,
 			);
 			path = Logging;
@@ -12660,6 +12663,7 @@
 				2A5A19E329A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift in Sources */,
 				2A01BAFB29A8E52B0021833F /* ActiveSessionAgentStubTests.swift in Sources */,
 				2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */,
+				2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */,
 				2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */,
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
