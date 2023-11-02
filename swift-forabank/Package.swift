@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .loadableModel,
         .loadableResourceComponent,
+        .paymentSticker,
         .phoneNumberWrapper,
         .sharedAPIInfra,
         .textFieldModel,
@@ -50,6 +51,8 @@ let package = Package(
         .loadableModelTests,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
+        .paymentSticker,
+        .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
         .sharedAPIInfra,
@@ -117,6 +120,13 @@ private extension Product {
         ]
     )
     
+    static let paymentSticker = library(
+        name: .paymentSticker,
+        targets: [
+            .paymentSticker,
+        ]
+    )
+        
     static let phoneNumberWrapper = library(
         name: .phoneNumberWrapper,
         targets: [
@@ -318,10 +328,26 @@ private extension Target {
         ]
     )
     
+    static let paymentSticker = target(
+        name: .paymentSticker,
+        dependencies: [
+            .genericRemoteService
+        ]
+    )
+    
+    static let paymentStickerTests = testTarget(
+        name: .paymentStickerTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .paymentSticker
+        ]
+    )
+        
     static let phoneNumberWrapper = target(
         name: .phoneNumberWrapper,
         dependencies: [
-            .customDump,
             .phoneNumberKit
         ]
     )
@@ -330,6 +356,7 @@ private extension Target {
         name: .phoneNumberWrapperTests,
         dependencies: [
             // external packages
+            .customDump,
             // internal modules
             .phoneNumberWrapper,
         ]
@@ -652,6 +679,10 @@ private extension Target.Dependency {
         name: .loadableResourceComponent
     )
     
+    static let paymentSticker = byName(
+        name: .paymentSticker
+    )
+
     static let phoneNumberWrapper = byName(
         name: .phoneNumberWrapper
     )
@@ -746,6 +777,9 @@ private extension String {
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let paymentSticker = "PaymentSticker"
+    static let paymentStickerTests = "PaymentStickerTests"
     
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
@@ -855,11 +889,11 @@ private extension Package.Dependency {
     )
     static let shimmer = Package.Dependency.package(
         url: .swift_shimmer_path,
-        from: .init(1, 0, 0)
+        exact: .init(1, 0, 1)
     )
     static let phoneNumberKit = Package.Dependency.package(
         url: .phoneNumberKit_path,
-        from: .init(3, 5, 8)
+        exact: .init(3, 5, 8)
     )
 }
 
@@ -934,6 +968,4 @@ private extension String {
     
     static let phoneNumberKit = "PhoneNumberKit"
     static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
-
-    
 }

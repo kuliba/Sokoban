@@ -29,18 +29,13 @@ enum Event {
     
     enum ProductEvent {
         
-        case chevronTapped(ParameterProduct)
+        case chevronTapped(ParameterProduct, ParameterProduct.State)
         case selectProduct(ProductOption, ParameterProduct)
     }
     
     enum SelectEvent {
         
-        case chevronTapped(ParameterSelect)
-        case filterOptions(String, ParameterSelect, (String) -> [ParameterSelect.Option])
         case selectOption(SelectOptionID, ParameterSelect)
         case openBranch
     }
 }
-
-// (разбить на методы) (синхронизация инпута) (реализовать makeTransfer, makeOTP)
-// 2.

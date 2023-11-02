@@ -80,7 +80,31 @@ extension OperationStateViewModel {
             newOperation = Self.reduce(operation, with: selectEvents)
             
         case let .product(productEvents):
-            break
+            
+            switch productEvents {
+            case let .chevronTapped(product, state):
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: state,
+                        selectedProduct: product.selectedProduct,
+                        allProducts: product.allProducts
+                    ))
+                )
+                newOperation = operation
+                
+            case let .selectProduct(option, product):
+                
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: .select,
+                        selectedProduct: option,
+                        allProducts: []))
+                )
+                
+                newOperation = operation
+            }
             
         case .continueButtonTapped:
             newOperation = Self.reduceWithContinueButtonTapped(operation)
@@ -126,44 +150,6 @@ extension OperationStateViewModel {
     ) -> Operation? {
         
         switch event {
-        case let .chevronTapped(parameter):
-            switch parameter.state {
-            case let .idle(idleViewModel):
-                
-                let updateSelect = parameter.updateSelect(
-                    parameter: parameter,
-                    idleViewModel: idleViewModel
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(updateSelect)
-                )
-                
-            case let .selected(selectedViewModel):
-                
-                let parameter = parameter.updateState(
-                    iconName: selectedViewModel.iconName
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(parameter)
-                )
-                
-            case let .list(listViewModel):
-                
-                let parameter = parameter.updateState(
-                    iconName: listViewModel.iconName,
-                    title: listViewModel.title
-                )
-                
-                return operation.updateOperation(
-                    operation: operation,
-                    newParameter: .select(parameter)
-                )
-            }
-            
         case let .selectOption(id, parameter):
             
             // TODO: repeated pattern - extract to settable subscript
@@ -181,21 +167,7 @@ extension OperationStateViewModel {
                 operation: operation,
                 newParameter: .select(updateParameter)
             )
-            
-        case let .filterOptions(_, parameter, options):
-            
-            return operation.updateOperation(
-                operation: operation,
-                newParameter: .select(.init(
-                    id: parameter.id,
-                    value: parameter.value,
-                    title: parameter.title,
-                    placeholder: parameter.placeholder,
-                    options: options,
-                    state: parameter.state
-                ))
-            )
-            
+
         case .openBranch:
             //TODO: send Branch View
             return nil
@@ -383,13 +355,10 @@ extension Array where Element == Operation.Parameter {
             ]
         )),
         .product(.init(
-            value: "",
-            title: "Счет списания",
-            nameProduct: "Gold",
-            balance: "654 367 ₽",
-            description: "・3387・Все включено",
-            options: []
-        )),
+            state: .select,
+            selectedProduct: .init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено"),
+            allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
+        ),
         .select(.init(
             id: "transferType",
             value: "",

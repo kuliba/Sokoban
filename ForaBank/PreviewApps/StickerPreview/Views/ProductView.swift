@@ -13,40 +13,122 @@ import SwiftUI
 struct ProductView: View {
     
     let appearance: Appearance
-    let viewModel: ProductViewModel
+    let viewModel: ProductStateViewModel
     
     var body: some View {
         
+        VStack {
+            
+            switch viewModel.state {
+            case let .selected(productViewModel):
+                selectProductView(productViewModel)
+                
+            case let .list(productViewModel, productList):
+                
+                selectProductView(productViewModel)
+                optionsList(productList)
+            }
+        }
+        .background(background())
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
+    }
+    
+    private func optionsList(
+        _ productList: [ProductViewModel]
+    ) -> some View {
+    
+        HStack(spacing: 10) {
+        
+            ScrollView {
+             
+                ForEach(productList, id: \.self) { product in
+                        
+                    productOption(
+                        product: product,
+                        header: product.header
+                    )
+                }
+            }
+        }
+    }
+    
+    private func productOption(
+        product: ProductViewModel,
+        header: ProductViewModel.HeaderViewModel
+    ) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            ProductView.HeaderView(
+                viewModel: header,
+                appearance: .default
+            )
+            .padding(.leading, 10)
+            .padding(.top, 4)
+            
+            Spacer()
+            
+            VStack(alignment: .leading, spacing: 10) {
+                
+                Text(product.main.name)
+                    .font(.body)
+                    .foregroundColor(.black)
+                    .opacity(0.5)
+                
+                ProductView.FooterView(
+                    viewModel: product.footer,
+                    appearance: .default
+                )
+            }
+        }
+        .background(background())
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
+        .onTapGesture {
+            
+        }
+    }
+    
+    private func selectProductView(
+        _ productViewModel: ProductViewModel
+    ) -> some View {
+        
         HStack(spacing: 12) {
             
-            viewModel.main.cardLogo
+            Image(productViewModel.main.cardLogo)
                 .resizable()
                 .frame(width: 32, height: 22, alignment: .center)
             
             VStack(alignment: .leading, spacing: 0) {
                 
                 ProductView.HeaderView(
-                    viewModel: viewModel.header,
+                    viewModel: productViewModel.header,
                     appearance: appearance
                 )
                 
                 Spacer()
                 
-                mainView()
+                mainView(
+                    productViewModel,
+                    chevronTapped: viewModel.chevronTapped
+                )
             }
         }
         .padding(.init(top: 13, leading: 12, bottom: 13, trailing: 16))
-        .background(background())
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
-    private func mainView() -> some View {
+    private func mainView(
+        _ viewModel: ProductViewModel,
+        chevronTapped: @escaping () -> Void
+    ) -> some View {
         
         VStack(alignment: .leading, spacing: 4) {
             
             HStack(alignment: .center, spacing: 8) {
                 
-                viewModel.main.paymentSystem
+                if let imageName = viewModel.main.paymentSystem {
+                    
+                    Image(imageName)
+                }
                 
                 Text(viewModel.main.name)
                     .font(appearance.textFont)
@@ -59,6 +141,10 @@ struct ProductView: View {
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
                     .opacity(0.5)
+                
+                Image(systemName: "chevron.down")
+                    .onTapGesture(perform: chevronTapped)
+                
             }
             
             ProductView.FooterView(
@@ -162,15 +248,23 @@ struct ProductView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ProductView(appearance: .default, viewModel: .init(
-            header: .init(title: "Счет списания"),
-            main: .init(
-                cardLogo: .init(""),
-                paymentSystem: nil,
-                name: "Gold",
-                balance: "625 193 Р"
-            ),
-            footer: .init(description: "description")
-        ))
+        ProductView(
+            appearance: .default,
+            viewModel: .init(
+                state: .selected(.init(
+                    header: .init(title: "Счет списания"),
+                    main: .init(
+                        cardLogo: .init(""),
+                        paymentSystem: nil,
+                        name: "Gold",
+                        balance: "625 193 Р"
+                    ),
+                    footer: .init(description: "description")
+                )),
+                chevronTapped: {},
+                selectOption: { _ in })
+        )
+        .frame(height: 80)
+        .padding(20)
     }
 }

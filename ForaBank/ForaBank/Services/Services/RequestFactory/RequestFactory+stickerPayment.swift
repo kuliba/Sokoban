@@ -9,22 +9,90 @@ import Foundation
 
 extension RequestFactory {
     
-    static func stickerPaymentRequest(
-        _ serial: (String)
+    static func getStickerDictionary(
+        _ type: GetJsonAbroadType
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("serial", serial),
-            ("type", "abroadSticker")
+            ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest
         let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL,
-            parameters: parameters)
+            parameters: parameters
+        )
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
         return request
+    }
+    
+    static func stickerCreatePayment(
+        _ input: StickerPayment
+    ) throws -> URLRequest {
+
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.createStickerPayment
+        let url = try! endpoint.url(withBase: base)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = input.json
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return request
+    }
+}
+
+extension RequestFactory {
+
+    enum GetJsonAbroadType: String {
+        
+        case stickerOrderForm
+        case stickerDeliveryOffice
+        case stickerOrderDeliveryCourier
+    }
+    
+    struct StickerPayment {
+        
+        let currencyAmount: String
+        let amount: String
+        let check: Bool
+        let payer: Payer
+        let productToOrderInfo: Order
+        
+        struct Payer {
+            
+            let cardId: String
+        }
+        
+        struct Order {
+            
+            let type: String
+            let deliverToOffice: Bool
+            let officeId: String
+        }
+    }
+}
+
+private extension RequestFactory.StickerPayment {
+    
+    var json: Data? {
+        
+        try? JSONSerialization.data(withJSONObject: [
+            "currencyAmount": currencyAmount,
+            "amount": amount,
+            "check": check,
+            "payer": [
+                
+                "cardId": payer.cardId
+            ],
+            "productToOrderInfo": [
+                
+                "type": productToOrderInfo.type,
+                "deliverToOffice": productToOrderInfo.deliverToOffice,
+                "officeId": productToOrderInfo.officeId
+            ]
+        ] as [String: Any])
     }
 }

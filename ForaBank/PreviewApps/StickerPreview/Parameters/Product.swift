@@ -9,20 +9,37 @@ extension Operation.Parameter {
     
     struct Product: Hashable {
         
-        let value: String
-        let title: String
-        let nameProduct: String
-        let balance: String
-        let description: String
-        let options: [Option]
+        let state: State
+        let selectedProduct: Option
+        let allProducts: [Option]
         
         struct Option: Hashable {
             
-            let name: String
-            let balance: String
-            let number: String
             let paymentSystem: String
             let background: String
+            let title: String
+            let nameProduct: String
+            let balance: String
+            let description: String
+        }
+        
+        enum State {
+            
+            case select
+            case list
+        }
+    }
+}
+
+extension Operation.Parameter.Product {
+    
+    var parameterState: ProductStateViewModel.State {
+        
+        switch self.state {
+        case .select:
+            return .selected(.mapper(self))
+        case .list:
+            return .list(.mapper(self),[ProductViewModel(header: .init(title: "123"), main: .init(cardLogo: .init(""), paymentSystem: nil, name: "123", balance: "123"), footer: .init(description: "1234"))])
         }
     }
 }
