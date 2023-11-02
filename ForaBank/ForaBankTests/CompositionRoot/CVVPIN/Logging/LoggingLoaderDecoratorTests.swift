@@ -29,7 +29,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load failure: \(loadFailureMessage)."
+            .init(.error, "LoaderDecorator<Item>: load failure: \(loadFailureMessage).")
         ])
     }
     
@@ -44,7 +44,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load success: \(item)."
+            .init(.info, "LoaderDecorator<Item>: load success: \(item).")
         ])
     }
     
@@ -60,7 +60,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save failure: \(saveFailureMessage)."
+            .init(.error, "LoaderDecorator<Item>: save failure: \(saveFailureMessage).")
         ])
     }
     
@@ -74,7 +74,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success."
+            .init(.info, "LoaderDecorator<Item>: save success.")
         ])
     }
     
@@ -171,11 +171,25 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     
     private final class LogSpy {
         
-        private(set) var messages = [String]()
+        private(set) var messages = [Message]()
         
-        func log(_ message: String) {
+        func log(_ level: LoggerAgentLevel, _ message: String) {
             
-            self.messages.append(message)
+            self.messages.append(.init(level, message))
+        }
+        
+        struct Message: Equatable {
+            
+            let level: LoggerAgentLevel
+            let message: String
+            
+            init(
+                _ level: LoggerAgentLevel,
+                _ message: String
+            ) {
+                self.level = level
+                self.message = message
+            }
         }
     }
     
@@ -208,11 +222,11 @@ private extension LoggingLoaderDecorator {
     
     convenience init(
         decoratee: any Loader<T>,
-        log: @escaping (String) -> Void
+        log: @escaping (LoggerAgentLevel, String) -> Void
     ) {
         self.init(
             decoratee: decoratee,
-            log: { message,_,_ in log(message) }
+            log: { level, message,_,_ in log(level, message) }
         )
     }
 }

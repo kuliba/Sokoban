@@ -184,7 +184,7 @@ extension Services {
                     store: store,
                     currentDate: currentDate
                 ),
-                log: { log(.error, .cache, $0, $1, $2) }
+                log: { log($0, .cache, $1, $2, $3) }
             )
         }
         
