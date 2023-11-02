@@ -27,7 +27,9 @@ extension LoggingLoaderDecorator: Loader {
     func load(
         completion: @escaping LoadCompletion
     ) {
-        decoratee.load { [log] result in
+        decoratee.load { [weak self] result in
+            
+            guard let self else { return }
             
             switch result {
             case let .failure(error):
@@ -49,8 +51,10 @@ extension LoggingLoaderDecorator: Loader {
         decoratee.save(
             model,
             validUntil: validUntil
-        ) { [log] result in
-        
+        ) { [weak self] result in
+            
+            guard let self else { return }
+            
             switch result {
             case let .failure(error):
                 log("\(String(describing: self)): save failure: \(error).")
