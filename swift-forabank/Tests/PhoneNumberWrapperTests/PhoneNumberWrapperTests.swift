@@ -119,7 +119,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         let result = format(.ru(.startsWith8(.lessThen10Digits)))
         
-        XCTAssertNoDiff(result, "+1 796-300-0000")
+        XCTAssertNoDiff(result, "+7 963 000-00-0")
     }
     
     func test_format_ru_NumberMoreThan10Digits() {
