@@ -57,6 +57,12 @@ protocol CVVPINCrypto {
         withPrivateKey privateKey: RSAPrivateKey
     ) throws -> String
     
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data
+    
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey

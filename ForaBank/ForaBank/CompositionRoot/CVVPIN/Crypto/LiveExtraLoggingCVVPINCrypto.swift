@@ -144,6 +144,19 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     struct DataToStringConversionError: Error {}
     
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        try Crypto.signNoHash(
+            data,
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+    }
+    
     /// Signs the message digest directly without any additional padding.
     func signNoHash(
         _ data: Data,
@@ -191,29 +204,6 @@ extension LiveExtraLoggingCVVPINCrypto {
 // MARK: - HashSignVerify
 
 private extension LiveExtraLoggingCVVPINCrypto {
-    
-    #warning("add to `CVVPINCrypto` protocol")
-    /// Follows the `PKCS#1 v1.5` standard and adds padding.
-    func sha256Sign(
-        data: Data,
-        withPrivateKey privateKey: RSAPrivateKey
-    ) throws -> Data {
-        
-        do {
-            let signed = try Crypto.signNoHash(
-                data,
-                withPrivateKey: privateKey.key,
-                algorithm: .rsaSignatureDigestPKCS1v15SHA256
-            )
-            #warning("remove logging after adding method to protocol")
-            log("SHA256 sign success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
-            
-            return signed
-        } catch {
-            log("SHA256 sign failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
-            throw error
-        }
-    }
     
     typealias SignedData = Data
     

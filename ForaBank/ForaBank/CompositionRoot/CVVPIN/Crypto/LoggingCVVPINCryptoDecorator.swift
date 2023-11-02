@@ -161,6 +161,26 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try decoratee.sha256Sign(
+                data: data,
+                withPrivateKey: privateKey
+            )
+            log("SHA256 sign success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
+            
+            return signed
+        } catch {
+            log("SHA256 sign failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
+            throw error
+        }
+    }
+    
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey
