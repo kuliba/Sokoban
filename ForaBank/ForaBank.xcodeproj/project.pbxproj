@@ -473,6 +473,8 @@
 		2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */; };
 		2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */; };
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
+		2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */; };
+		2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7302AF3E03400688401 /* LoaderSpy.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2495,6 +2497,8 @@
 		2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapper.swift; sourceTree = "<group>"; };
 		2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithStoreTests.swift; sourceTree = "<group>"; };
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
+		2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorTests.swift; sourceTree = "<group>"; };
+		2A6DC7302AF3E03400688401 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderSpy.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -5526,6 +5530,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */,
+				2A6DC7302AF3E03400688401 /* LoaderSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -5584,8 +5589,9 @@
 		2A7688D62AF3A74200045293 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */,
+				2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */,
 				2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */,
+				2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */,
 				2A6DC72B2AF3CA0400688401 /* Helpers */,
 			);
 			path = Logging;
@@ -12564,6 +12570,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				0CAB7B532A45DE99001B8C93 /* Model+PaymentTemplates.swift in Sources */,
@@ -12798,6 +12805,7 @@
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */,
 				2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */,
+				2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */,
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
 				2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */,
 				2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */,

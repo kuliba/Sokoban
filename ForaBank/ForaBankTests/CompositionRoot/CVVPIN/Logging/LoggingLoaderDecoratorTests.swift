@@ -12,63 +12,102 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     
     func test_init_shouldNotMessageLogger() {
         
-        let (_, spy) = makeSUT()
+        let (_, spy, _) = makeSUT()
         
         XCTAssert(spy.messages.isEmpty)
     }
     
-    func test_init_shouldLogLoadEmptyCache() {
+    func test_init_shouldLogLoadFailure() {
         
-        let (sut, spy) = makeSUT()
+        let loadFailureMessage = "Retrieval Failure"
+        let loadFailure = anyError(loadFailureMessage)
+        let (sut, spy, loader) = makeSUT()
         
-        load(sut)
+        load(sut, on: {
+            
+            loader.completeLoad(with: .failure(loadFailure))
+        })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load failure: emptyCache."
+            "LoaderDecorator<Item>: load failure: \(loadFailureMessage)."
         ])
     }
     
-    func test_init_shouldLogSave() {
+    func test_init_shouldLogLoadSuccess() {
         
-        let (sut, spy) = makeSUT()
+        let item = Item(value: "abc123")
+        let (sut, spy, loader) = makeSUT()
         
-        save(sut, anyItem(), validUntil: .init())
+        load(sut, on: {
+            
+            loader.completeLoad(with: .success(item))
+        })
+        
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: load success: \(item)."
+        ])
+    }
+    
+    func test_init_shouldLogSaveFailure() {
+        
+        let saveFailureMessage = "Insertion Failure"
+        let saveFailure = anyError(saveFailureMessage)
+        let (sut, spy, loader) = makeSUT()
+        
+        save(sut, anyItem(), validUntil: .init(), on: {
+            
+            loader.completeSave(with: .failure(saveFailure))
+        })
+        
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: save failure: \(saveFailureMessage)."
+        ])
+    }
+    
+    func test_init_shouldLogSaveSuccess() {
+        
+        let (sut, spy, loader) = makeSUT()
+        
+        save(sut, anyItem(), validUntil: .init(), on: {
+            
+            loader.completeSave(with: .success(()))
+        })
         
         XCTAssertNoDiff(spy.messages, [
             "LoaderDecorator<Item>: save success."
         ])
     }
     
-    func test_init_shouldLogInvalidLoadOnExpired() {
+    func test_load_shouldNotLogOnInstanceDeallocation() {
         
-        let item = anyItem()
-        let expired = Date()
-        let currentDate = { expired.addingTimeInterval(1) }
-        let (sut, spy) = makeSUT(currentDate: currentDate)
+        let spy = LogSpy()
+        let loader = LoaderSpy<Item>()
+        var sut: SUT? = SUT(
+            decoratee: loader,
+            log: spy.log
+        )
         
-        save(sut, item, validUntil: expired)
-        load(sut)
+        sut?.load { _ in }
+        sut = nil
+        loader.completeLoad(with: .success(anyItem()))
         
-        XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success.",
-            "LoaderDecorator<Item>: load failure: invalidCache(validatedAt: \(currentDate()), validUntil: \(expired))."
-        ])
+        XCTAssert(spy.messages.isEmpty)
     }
     
-    func test_init_shouldLogLoadOnValid() {
+    func test_save_shouldNotLogOnInstanceDeallocation() {
         
-        let item = anyItem()
-        let validUntil = Date()
-        let currentDate = { validUntil }
-        let (sut, spy) = makeSUT(currentDate: currentDate)
+        let spy = LogSpy()
+        let loader = LoaderSpy<Item>()
+        var sut: SUT? = SUT(
+            decoratee: loader,
+            log: spy.log
+        )
         
-        save(sut, item, validUntil: validUntil)
-        load(sut)
+        sut?.save(anyItem(), validUntil: .init()) { _ in }
+        sut = nil
+        loader.completeSave(with: .success(()))
         
-        XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success.",
-            "LoaderDecorator<Item>: load success: Item(value: \"\(item.value)\")."
-        ])
+        XCTAssert(spy.messages.isEmpty)
     }
     
     // MARK: - Helperts
@@ -76,19 +115,15 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     private typealias SUT = LoggingLoaderDecorator<Item>
     
     private func makeSUT(
-        currentDate: @escaping () -> Date = Date.init,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: LogSpy
+        spy: LogSpy,
+        loader: LoaderSpy<Item>
     ) {
         let spy = LogSpy()
-        let store = InMemoryStore<Item>()
-        let loader = GenericLoaderOf<Item>(
-            store: store,
-            currentDate: currentDate
-        )
+        let loader = LoaderSpy<Item>()
         let sut = SUT(
             decoratee: loader,
             log: spy.log
@@ -96,22 +131,31 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
-        trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, spy, loader)
     }
     
-    private func load(_ sut: SUT) {
+    private func load(
+        _ sut: SUT,
+        on action: @escaping () -> Void
+    ) {
         
         let exp = expectation(description: "wait for completion")
         
         sut.load { _ in exp.fulfill() }
         
+        action()
+        
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func save(_ sut: SUT, _ item: Item, validUntil: Date) {
+    private func save(
+        _ sut: SUT,
+        _ item: Item,
+        validUntil: Date,
+        on action: @escaping () -> Void
+    ) {
         
         let exp = expectation(description: "wait for completion")
         
@@ -119,6 +163,8 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
             
             exp.fulfill()
         }
+        
+        action()
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -143,6 +189,18 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     struct Item {
         
         let value: String
+    }
+    
+    private func anyError(_ message: String = "any error") -> Error {
+        
+        AnyError(message: message)
+    }
+    
+    private struct AnyError: Error, CustomStringConvertible {
+        
+        let message: String
+        
+        var description: String { message }
     }
 }
 
