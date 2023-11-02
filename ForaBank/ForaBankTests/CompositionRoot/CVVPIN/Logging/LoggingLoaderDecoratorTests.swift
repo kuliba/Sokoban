@@ -17,6 +17,20 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         XCTAssert(spy.messages.isEmpty)
     }
     
+    func test_init_shouldLogLoadEmptyCache() {
+        
+        let (sut, spy) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.load { _ in exp.fulfill() }
+        
+        wait(for: [exp])
+        
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: load failure: emptyCache."
+        ])
+    }
+    
     // MARK: - Helperts
     
     private typealias SUT = LoggingLoaderDecorator<Item>
