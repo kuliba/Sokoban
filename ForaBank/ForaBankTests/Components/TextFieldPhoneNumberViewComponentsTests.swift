@@ -240,7 +240,7 @@ final class TextFieldPhoneNumberViewComponentsTests: XCTestCase {
         // when
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-        XCTAssertEqual(updated, "+(3")
+        XCTAssertEqual(updated, "+3")
     }
     
     func test_updateMasked_shouldNotLimitResult_onNilLimit() throws {
