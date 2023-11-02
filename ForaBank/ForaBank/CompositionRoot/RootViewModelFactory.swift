@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
-import ForaCrypto
 import Foundation
 
 enum RootViewModelFactory {
