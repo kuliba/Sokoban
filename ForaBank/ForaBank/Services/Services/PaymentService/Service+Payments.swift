@@ -10,29 +10,23 @@ import GenericRemoteService
 
 extension Services {
 
-    typealias GetStickerPayment = StickerPayment
-    typealias GetPaymentService = RemoteService<RequestFactory.GetJsonAbroadType, StickerPayment>
+    typealias StickerDictionary = ResponseMapper.StickerDictionary
+    typealias GetJsonAbroadType = RequestFactory.GetJsonAbroadType
+    typealias GetStickerDictionary = RemoteService<GetJsonAbroadType, StickerDictionary>
 
-    static func stickerPaymentRequest(
+    static func stickerDictRequest(
         input: RequestFactory.GetJsonAbroadType,
         httpClient: HTTPClient
-    ) -> GetPaymentService {
+    ) -> GetStickerDictionary {
         
         return .init(
             createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
-            mapResponse: { data, httpURLResponse in
-                
-                    .init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))
+            mapResponse: { _,_ in
+                    .deliveryCourier(.init(main: [], serial: ""))
             }
         )
     }
-}
-
-struct ApiError {}
-
-struct Parameter {
-    
 }
 
 struct StickerPayment {
@@ -53,13 +47,5 @@ struct StickerPayment {
         let type: String
         let deliverToOffice: Bool
         let officeId: String
-    }
-}
-
-struct StickerPaymentMapper {
-    
-    func map() -> [Parameter] {
-        
-        [.init()]
     }
 }

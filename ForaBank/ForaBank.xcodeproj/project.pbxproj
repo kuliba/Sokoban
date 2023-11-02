@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1610,6 +1610,10 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */; };
+		C19738DC2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */; };
+		C19738DE2AF2A52C00101B1B /* StickerOrderForm.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */; };
+		C19738E22AF2B07F00101B1B /* StickerOrderDeliveryCourier.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */; };
+		C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
 		C1A4D37E2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A4D37D2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift */; };
 		C1A4D3802A67CDFC001DD9E4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A4D37F2A67CDFC001DD9E4 /* ContentView.swift */; };
@@ -3604,6 +3608,10 @@
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
 		C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSourceReducerTemplatesTests.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbrodDict.swift"; sourceTree = "<group>"; };
+		C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerResponseMapperTests.swift; sourceTree = "<group>"; };
+		C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderForm.json; sourceTree = "<group>"; };
+		C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderDeliveryCourier.json; sourceTree = "<group>"; };
+		C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerDeliveryOffice.json; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A4D37D2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageSubscriptionUIPreviewApp.swift; sourceTree = "<group>"; };
@@ -5035,6 +5043,7 @@
 		2A1F084F2A7904DC00C5B11B /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C19738DA2AF2A2EE00101B1B /* PaymentSticker */,
 				834E3F6D2AC2CF4200E49C2B /* GetScenarioQRData */,
 				2A4593CE2A7CF908008593A3 /* Services+Endpoint */,
 				2A5190372A7E11C90014B0B7 /* RequestFactory */,
@@ -8199,6 +8208,9 @@
 				0CAB7B502A45DB35001B8C93 /* PaymentTemplatesListWithSVG.json */,
 				C14303F42A84616D00FAD5AA /* GetC2BSubscriptionGeneric.json */,
 				C14303F62A84653000FAD5AA /* UpdateC2BSubscriptionGeneric.json */,
+				C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */,
+				C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */,
+				C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -8777,6 +8789,14 @@
 				C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */,
 			);
 			path = TemplateButton;
+			sourceTree = "<group>";
+		};
+		C19738DA2AF2A2EE00101B1B /* PaymentSticker */ = {
+			isa = PBXGroup;
+			children = (
+				C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */,
+			);
+			path = PaymentSticker;
 			sourceTree = "<group>";
 		};
 		C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */ = {
@@ -11036,6 +11056,7 @@
 				77517F9F27A94B46005CFB77 /* AntiFraudResponseGeneric.json in Resources */,
 				682092D927B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json in Resources */,
 				77517FB127A94CF3005CFB77 /* CreateTransferResponseGeneric.json in Resources */,
+				C19738E22AF2B07F00101B1B /* StickerOrderDeliveryCourier.json in Resources */,
 				77517FA727A94C11005CFB77 /* CreateContactAddresslessTransferResponseGeneric.json in Resources */,
 				68AD33F727985C8B00647665 /* IsLoginResponseGeneric.json in Resources */,
 				C1097D982948BA66002459F6 /* SuggestCompanyResponseGeneric.json in Resources */,
@@ -11106,6 +11127,7 @@
 				2AF5E29429BB4691004D69F3 /* createAnywayTransfer_iFora_4286_response.json in Resources */,
 				687F9B1327FED3E0007A38A5 /* GetPersonsCreditResponseGeneric.json in Resources */,
 				682092B627AC0720003DCAFD /* SuggestCompanyGenericMin.json in Resources */,
+				C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
 				682092C927B1C583003DCAFD /* GetBanksResponseGenericServer.json in Resources */,
 				2A73C21C2A029FA300C68A32 /* createC2BPaymentAcc_5_2_tweaked.json in Resources */,
@@ -11167,6 +11189,7 @@
 				77F5CE1928060DF100611B66 /* GetAtmCityListResponseGeneric.json in Resources */,
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				2A73C2282A03A4C000C68A32 /* getScenarioQRData_1_2_1.json in Resources */,
+				C19738DE2AF2A52C00101B1B /* StickerOrderForm.json in Resources */,
 				68DF16D228084B38005D8D3E /* GetProductDynamicParamsGenericTest.json in Resources */,
 				77D03870298848C800FBE5AB /* ConfirmC2BSubscriptionGeneric.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
@@ -12644,6 +12667,7 @@
 				77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */,
+				C19738DC2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift in Sources */,
 				77FC5E2429423DCC006784F4 /* PaymentsValidationRulesSystemTests.swift in Sources */,
 				2A50321D2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,

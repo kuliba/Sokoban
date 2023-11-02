@@ -1,0 +1,31 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "main": [
+            {
+                "type": "SEPARATOR_START_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            },
+            {
+                "type": "CITY_SELECTOR",
+                "data": {
+                    "title": "Выберите город",
+                    "subTitle": "Поиск по городам",
+                    "isCityList": true,
+                    "md5hash": "59cab489ad1a9b209d23da59182467d1",
+                    "list": []
+                }
+            },
+            {
+                "type": "SEPARATOR_END_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            }
+        ],
+        "serial": "2c40ceed25158964529f8500a49e096d"
+    }
+}
