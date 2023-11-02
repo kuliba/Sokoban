@@ -21,12 +21,14 @@ struct LiveExtraLoggingCVVPINCrypto {
     
     private typealias Crypto = ForaCrypto.Crypto
     
-    let log: (String) -> Void
+    typealias Log = (String, StaticString, UInt) -> Void
+    
+    let log: Log
 }
 
 extension LiveExtraLoggingCVVPINCrypto {
     
-    // MARK: - Transport & Processing Key Domain
+    // MARK: - Transport & Processing Public Key Domain
     
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
@@ -46,12 +48,12 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
     
-    func processingEncrypt(data: Data) throws -> Data {
+    func processingEncryptWithPadding(data: Data) throws -> Data {
         
-        try Crypto.encrypt(
-            data: data,
-            withPublicKey: Crypto.processingKey(),
-            algorithm: .rsaEncryptionRaw
+        try Crypto.encryptWithRSAKey(
+            data,
+            publicKey: Crypto.processingKey(),
+            padding: .PKCS1
         )
     }
     
@@ -96,7 +98,8 @@ extension LiveExtraLoggingCVVPINCrypto {
             keySize: .bits4096
         )
         
-        return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
+        return (privateKey: .init(key: privateKey),
+                publicKey: .init(key: publicKey))
     }
     
     func hashSignVerify(
@@ -105,27 +108,28 @@ extension LiveExtraLoggingCVVPINCrypto {
         privateKey: RSAPrivateKey
     ) throws -> Data {
         
-        let signedData = try sign(
+        let signedData = try sha256Sign(
             data: .init(string.utf8),
             withPrivateKey: privateKey
         )
         
+#warning("restore verify")
         // verify (not used in output)
-        let signature = try createSignature(
-            forSignedData: signedData,
-            withPrivateKey: privateKey
-        )
-        try verify(
-            signedData: signedData,
-            signature: signature,
-            withPrivateKey: publicKey
-        )
+//        let signature = try createSignature(
+//            forSignedData: signedData,
+//            withPrivateKey: privateKey
+//        )
+//        try verify(
+//            signedData: signedData,
+//            signature: signature,
+//            withPrivateKey: publicKey
+//        )
         
         return signedData
     }
     
     /// `ChangePINCrypto`
-#warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
+    /// - Note: на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится `открытым` ключом переданным ранее -- поэтому метод расшифровывает, используя `приватный` ключ.
     func rsaDecrypt(
         _ string: String,
         withPrivateKey privateKey: RSAPrivateKey
@@ -134,7 +138,6 @@ extension LiveExtraLoggingCVVPINCrypto {
         let data = try Crypto.decrypt(
             string,
             with: .rsaEncryptionPKCS1,
-            // with: .rsaSignatureDigestPKCS1v15Raw,
             using: privateKey.key
         )
         
@@ -143,6 +146,34 @@ extension LiveExtraLoggingCVVPINCrypto {
     
     struct DataToStringConversionError: Error {}
     
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        try Crypto.signNoHash(
+            data,
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+    }
+    
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        try Crypto.sign(
+            data,
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+    }
+
+    /// Signs the message digest directly without any additional padding.
+    /// Used in `clientSecretOTP`
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey
@@ -169,25 +200,11 @@ extension LiveExtraLoggingCVVPINCrypto {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        do {
-            let prefix = sessionKey.sessionKeyValue.prefix(32)
-            
-            let aes256CBC = try AES256CBC(key: prefix)
-            log("Create AES256CBC with key prefix (\(prefix.count)) \"\(prefix.base64EncodedString())\"")
-            
-            do {
-                let encrypted = try aes256CBC.encrypt(data)
-                log("AES encrypted data (\(encrypted.count)) base64 (\(encrypted.base64EncodedString().count)): \"\(encrypted.base64EncodedString())\".")
-                
-                return encrypted
-            } catch {
-                log("AES Encryption Failure: \(error).")
-                throw error
-            }
-        } catch {
-            log("AES Encryption Failure: \(error).")
-            throw error
-        }
+        let prefix32 = sessionKey.sessionKeyValue.prefix(32)
+        let aes256CBC = try AES256CBC(key: prefix32)
+        let encrypted = try aes256CBC.encrypt(data)
+        
+        return encrypted
     }
     
     // MARK: - Hash
@@ -204,26 +221,6 @@ extension LiveExtraLoggingCVVPINCrypto {
 
 private extension LiveExtraLoggingCVVPINCrypto {
     
-    func sign(
-        data: Data,
-        withPrivateKey privateKey: RSAPrivateKey
-    ) throws -> Data {
-        
-        do {
-            let signed = try Crypto.signNoHash(
-                data,
-                withPrivateKey: privateKey.key,
-                algorithm: .rsaSignatureRaw
-            )
-            log("Data signing success (\(signed.count)).")
-            
-            return signed
-        } catch {
-            log("Data signing failure: \(error).")
-            throw error
-        }
-    }
-    
     typealias SignedData = Data
     
     func createSignature(
@@ -238,7 +235,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
                 algorithm: .rsaSignatureRaw
             )
         } catch {
-            log("Signature creation failure: \(error).")
+            log("Signature creation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -261,12 +258,12 @@ private extension LiveExtraLoggingCVVPINCrypto {
                 signedData,
                 withPublicKey: publicKey.key,
                 signature: signature,
-                algorithm: .rsaSignatureRaw
+                algorithm: .rsaSignatureDigestPKCS1v15SHA256
             )
             
             if !result { throw VerifyError.verificationFailure }
         } catch {
-            log("Signature verification failure: \(error).")
+            log("Signature verification failure: \(error).", #file, #line)
             throw error
         }
     }

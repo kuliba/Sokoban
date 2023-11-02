@@ -137,8 +137,6 @@ class RootViewModel: ObservableObject, Resetable {
     
     fileprivate func resetRootView() {
         
-        onExit()
-        
         LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.DismissAll")
         action.send(RootViewModelAction.DismissAll())
         
@@ -184,8 +182,9 @@ class RootViewModel: ObservableObject, Resetable {
                                 personAgreements: payload.conditions,
                                 rootActions: rootActions,
                                 tokenIntent: payload.tokenIntent
-                            )))
-                    )
+                            )),
+                        onExit: onExit
+                    ))
                 
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")

@@ -172,6 +172,7 @@ extension Services {
         func removeRSAKeyPair() {
             
             persistentRSAKeyPairStore.clear()
+            log(.cache, "RSA Key Store clear initiated.", #file, #line)
         }
         
         func loggingLoaderDecorator<T>(

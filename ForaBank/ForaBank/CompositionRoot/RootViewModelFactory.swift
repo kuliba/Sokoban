@@ -19,21 +19,21 @@ enum RootViewModelFactory {
         let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            log: { log(.crypto, $0, #file, #line) }
+            log: { log(.crypto, $0, $1, $2) }
         )
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
-        #warning("fix lifespans before release")
+#warning("fix lifespans before release")
         let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
-                log: { log(.crypto, $0, #file, #line) }
+                log: { log(.crypto, $0, $1, $2) }
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
-                log: { log(.crypto, $0, #file, #line) }
+                log: { log(.crypto, $0, $1, $2) }
             ),
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan,
@@ -45,6 +45,7 @@ enum RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
+                onExit: onExit,
                 product: $0,
                 rootView: $1,
                 dismissAction: $2
@@ -53,12 +54,14 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: productProfileViewModelFactory
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
         )
         
         let chatViewModel = ChatViewModel()
@@ -94,18 +97,18 @@ private extension TimeInterval {
     static var rsaKeyPairLifespan: Self {
         
 #if RELEASE
-        15
+        15_778_463
 #else
-        30
+        600
 #endif
     }
     
     static var ephemeralLifespan: Self {
         
 #if RELEASE
-        15_778_463
+        15
 #else
-        600
+        30
 #endif
     }
 }
