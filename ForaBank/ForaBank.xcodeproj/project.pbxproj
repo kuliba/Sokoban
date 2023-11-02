@@ -490,7 +490,6 @@
 		2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */; };
 		2A7688D12AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */; };
 		2A7688D32AF3914C00045293 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D22AF3914C00045293 /* Store.swift */; };
-		2A77B6462ADF213F0022600F /* CVVPINRemote+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */; };
 		2A77B6482ADFC2360022600F /* RemoteCVV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6472ADFC2360022600F /* RemoteCVV.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
 		2A77B64C2ADFC3D70022600F /* EventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B64B2ADFC3D70022600F /* EventID.swift */; };
@@ -2519,7 +2518,6 @@
 		2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingLoaderDecorator+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A7688D22AF3914C00045293 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
-		2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINRemote+live.swift"; sourceTree = "<group>"; };
 		2A77B6472ADFC2360022600F /* RemoteCVV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCVV.swift; sourceTree = "<group>"; };
 		2A77B6492ADFC3C50022600F /* SymmetricKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKey.swift; sourceTree = "<group>"; };
 		2A77B64B2ADFC3D70022600F /* EventID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventID.swift; sourceTree = "<group>"; };
@@ -5525,7 +5523,6 @@
 		2A669EAA2AE50349009A2F12 /* LEGACY_KEEP_UNITIL_USEFUL */ = {
 			isa = PBXGroup;
 			children = (
-				2A77B6502ADFCD6F0022600F /* Composer */,
 				2A77B64E2ADFCD040022600F /* CVVPINTypes */,
 			);
 			path = LEGACY_KEEP_UNITIL_USEFUL;
@@ -5614,14 +5611,6 @@
 				2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */,
 			);
 			path = Infra;
-			sourceTree = "<group>";
-		};
-		2A77B6502ADFCD6F0022600F /* Composer */ = {
-			isa = PBXGroup;
-			children = (
-				2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */,
-			);
-			path = Composer;
 			sourceTree = "<group>";
 		};
 		2A77B65D2AE004DC0022600F /* CertificateClientStubs */ = {
@@ -11690,7 +11679,6 @@
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */,
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
-				2A77B6462ADF213F0022600F /* CVVPINRemote+live.swift in Sources */,
 				0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */,
 				EDDFE3B82756E6F900F57C71 /* DetailInformationCollectionViewCell.swift in Sources */,
 				C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */,
