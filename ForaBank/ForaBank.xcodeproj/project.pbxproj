@@ -476,6 +476,7 @@
 		2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */; };
 		2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7302AF3E03400688401 /* LoaderSpy.swift */; };
 		2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */; };
+		2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2501,6 +2502,7 @@
 		2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6DC7302AF3E03400688401 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderSpy.swift; sourceTree = "<group>"; };
 		2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingStoreDecoratorTests.swift; sourceTree = "<group>"; };
+		2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+StoreTests.swift"; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -5537,6 +5539,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		2A6DC7342AF3F24000688401 /* Infra */ = {
+			isa = PBXGroup;
+			children = (
+				2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */,
+			);
+			path = Infra;
+			sourceTree = "<group>";
+		};
 		2A754A7A2AEFE60F002FED0A /* JSONMaker */ = {
 			isa = PBXGroup;
 			children = (
@@ -5584,6 +5594,7 @@
 			isa = PBXGroup;
 			children = (
 				2A7688D62AF3A74200045293 /* Logging */,
+				2A6DC7342AF3F24000688401 /* Infra */,
 			);
 			path = CVVPIN;
 			sourceTree = "<group>";
@@ -12822,6 +12833,7 @@
 				7757DB552A711E6300745EFF /* KeychainAgentSpy.swift in Sources */,
 				77F6A86C2A2E05DC003BDE07 /* PaymentsParameterRepresentableArrayTests.swift in Sources */,
 				77DD55CA29F1456000756451 /* TransferDataTests.swift in Sources */,
+				2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */,
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,
