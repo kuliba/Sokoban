@@ -115,7 +115,7 @@ extension LiveExtraLoggingCVVPINCrypto {
             withPrivateKey: privateKey
         )
         
-        #warning("restore verify")
+#warning("restore verify")
         // verify (not used in output)
 //        let signature = try createSignature(
 //            forSignedData: signedData,
@@ -131,7 +131,7 @@ extension LiveExtraLoggingCVVPINCrypto {
     }
     
     /// `ChangePINCrypto`
-#warning("на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится открытым ключом переданным ранее -- ВАЖНО: ПОТЕНЦИАЛЬНА ОШИБКА - ПРОБУЮ РАСШИФРОВАТЬ ПРИВАТНЫМ КЛЮЧОМ")
+    /// - Note: на bpmn схеме указано `Расшифровываем EVENT-ID открытым RSA-ключом клиента` и `Расшифровываем phone открытым RSA-ключом клиента`, но на стороне бэка шифрование производится `открытым` ключом переданным ранее -- поэтому метод расшифровывает, используя `приватный` ключ.
     func rsaDecrypt(
         _ string: String,
         withPrivateKey privateKey: RSAPrivateKey
@@ -140,7 +140,6 @@ extension LiveExtraLoggingCVVPINCrypto {
         let data = try Crypto.decrypt(
             string,
             with: .rsaEncryptionPKCS1,
-            // with: .rsaSignatureDigestPKCS1v15Raw,
             using: privateKey.key
         )
         
