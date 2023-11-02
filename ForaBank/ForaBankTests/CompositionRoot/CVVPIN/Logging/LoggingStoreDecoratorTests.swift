@@ -31,8 +31,9 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Retrieval success: \(item),"))
-        XCTAssert(message.contains(" valid until \(validUntil)."))
+        XCTAssertNoDiff(message.level, .info)
+        XCTAssert(message.message.contains("Successfully retrieved \(item) valid until \(validUntil)."))
+        XCTAssert(message.message.contains(" valid until \(validUntil)."))
     }
     
     func test_retrieve_shouldLogOnFailure() throws {
@@ -48,7 +49,8 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Retrieval failure"))
+        XCTAssertNoDiff(message.level, .error)
+        XCTAssert(message.message.contains("Retrieval failure"))
     }
     
     func test_retrieve_shouldNotLogOnInstanceDeallocation() throws {
@@ -78,7 +80,8 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to insert \(item) validUntil \(validUntil). Insertion result: "))
+        XCTAssertNoDiff(message.level, .info)
+        XCTAssert(message.message.contains("Successfully inserted \(item) validUntil \(validUntil)."))
     }
     
     func test_insert_shouldLogOnFailure() throws {
@@ -96,7 +99,8 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to insert \(item) validUntil \(validUntil). Insertion result: "))
+        XCTAssertNoDiff(message.level, .error)
+        XCTAssert(message.message.contains("Failed to insert \(item) validUntil \(validUntil): "))
     }
     
     func test_insert_shouldNotLogOnInstanceDeallocation() throws {
@@ -124,7 +128,8 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to delete cache. Deletion result"))
+        XCTAssertNoDiff(message.level, .info)
+        XCTAssert(message.message.contains("Cache deletion success"))
     }
     
     func test_deleteCache_shouldLogOnFailure() throws {
@@ -140,7 +145,8 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.messages.count, 1)
         
         let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to delete cache. Deletion result"))
+        XCTAssertNoDiff(message.level, .error)
+        XCTAssert(message.message.contains("Cache deletion failure: "))
     }
     
     func test_deleteCache_shouldNotLogOnInstanceDeallocation() throws {
@@ -172,9 +178,9 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         let store = StoreSpy<Item>()
         let sut = SUT(decoratee: store, log: spy.log)
         
-        //        trackForMemoryLeaks(sut, file: file, line: line)
-        //        trackForMemoryLeaks(spy, file: file, line: line)
-        //        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, spy, store)
     }
@@ -225,11 +231,25 @@ final class LoggingStoreDecoratorTests: XCTestCase {
     
     private final class LogSpy {
         
-        private(set) var messages = [String]()
+        private(set) var messages = [Message]()
         
-        func log(_ message: String) {
+        func log(_ level: LoggerAgentLevel, _ message: String) {
             
-            self.messages.append(message)
+            self.messages.append(.init(level, message))
+        }
+        
+        struct Message: Equatable {
+            
+            let level: LoggerAgentLevel
+            let message: String
+            
+            init(
+                _ level: LoggerAgentLevel,
+                _ message: String
+            ) {
+                self.level = level
+                self.message = message
+            }
         }
     }
     
@@ -262,11 +282,11 @@ private extension LoggingStoreDecorator {
     
     convenience init(
         decoratee: any Store<T>,
-        log: @escaping (String) -> Void
+        log: @escaping (LoggerAgentLevel, String) -> Void
     ) {
         self.init(
             decoratee: decoratee,
-            log: { message,_,_ in log(message) }
+            log: { level, message,_,_ in log(level, message) }
         )
     }
 }

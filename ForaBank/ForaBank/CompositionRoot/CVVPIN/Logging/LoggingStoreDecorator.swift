@@ -10,12 +10,14 @@ import Foundation
 
 final class LoggingStoreDecorator<T> {
     
+    typealias Log = (LoggerAgentLevel, String, StaticString, UInt) -> Void
+    
     let decoratee: any Store<T>
-    let log: (String, StaticString, UInt) -> Void
+    let log: Log
     
     init(
         decoratee: any Store<T>,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping Log
     ) {
         self.decoratee = decoratee
         self.log = log
@@ -35,10 +37,10 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
             
             switch result {
             case let .failure(error):
-                log("Store \(String(describing: self)): Retrieval failure: \(error).", #file, #line)
+                log(.error, "Store \(String(describing: self)): Retrieval failure: \(error).", #file, #line)
                 
             case let .success((model, validUntil)):
-                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).", #file, #line)
+                log(.info, "Store \(String(describing: self)): Successfully retrieved \(model) valid until \(validUntil).", #file, #line)
             }
             completion(result)
         }
@@ -53,7 +55,13 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
             
             guard let self else { return }
             
-            log("Store \(String(describing: self)): Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).", #file, #line)
+            switch result {
+            case let .failure(error):
+                log(.error, "Store \(String(describing: self)): Failed to insert \(local) validUntil \(validUntil): \(error).", #file, #line)
+                
+            case .success:
+                log(.info, "Store \(String(describing: self)): Successfully inserted \(local) validUntil \(validUntil).", #file, #line)
+            }
             completion(result)
         }
     }
@@ -65,7 +73,12 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
             
             guard let self else { return }
             
-            log("Store \(String(describing: self)): Asked to delete cache. Deletion result: \(result).", #file, #line)
+            switch result {
+            case let .failure(error):
+                log(.error, "Store \(String(describing: self)): Cache deletion failure: \(error).", #file, #line)
+            case .success:
+                log(.info, "Store \(String(describing: self)): Cache deletion success.", #file, #line)
+            }
             completion(result)
         }
     }
