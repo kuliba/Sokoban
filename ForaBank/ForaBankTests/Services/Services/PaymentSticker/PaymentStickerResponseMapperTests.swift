@@ -26,7 +26,7 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
-            .init(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+            anyHTTPURLResponse()
         )
         
         XCTAssertEqual(
@@ -61,7 +61,7 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
-            .init(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+            anyHTTPURLResponse()
         )
         
         XCTAssertEqual(
@@ -89,7 +89,7 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
-            .init(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+            anyHTTPURLResponse()
         )
         
         XCTAssertEqual(
@@ -112,5 +112,17 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
                 .init(type: .endSeparator, data: .separator(.init(color: "#F6F6F7")))],
                                            serial: "1628aa7e604f917f1ed4fe214187c81a"
             ))))
+    }
+}
+
+//MARK: Helpers
+
+extension PaymentStickerResponseMapperTests {
+    
+    func successHttpResponse(
+        statusCode: Int = 200
+    ) -> HTTPURLResponse {
+        
+        .init(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
     }
 }
