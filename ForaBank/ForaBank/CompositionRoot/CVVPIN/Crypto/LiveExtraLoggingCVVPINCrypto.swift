@@ -175,25 +175,11 @@ extension LiveExtraLoggingCVVPINCrypto {
         sessionKey: SessionKey
     ) throws -> Data {
         
-        do {
-            let prefix = sessionKey.sessionKeyValue.prefix(32)
-            
-            let aes256CBC = try AES256CBC(key: prefix)
-            log("Create AES256CBC with key prefix (\(prefix.count)) \"\(prefix.base64EncodedString())\"")
-            
-            do {
-                let encrypted = try aes256CBC.encrypt(data)
-                log("AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
-                
-                return encrypted
-            } catch {
-                log("AES Encryption Failure: \(error).")
-                throw error
-            }
-        } catch {
-            log("AES Encryption Failure: \(error).")
-            throw error
-        }
+        let prefix32 = sessionKey.sessionKeyValue.prefix(32)
+        let aes256CBC = try AES256CBC(key: prefix32)
+        let encrypted = try aes256CBC.encrypt(data)
+        
+        return encrypted
     }
     
     // MARK: - Hash
