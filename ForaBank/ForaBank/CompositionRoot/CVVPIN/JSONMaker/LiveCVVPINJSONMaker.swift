@@ -7,8 +7,6 @@
 
 import CryptoKit
 import CVVPIN_Services
-#warning("remove `ForaCrypto`")
-import ForaCrypto
 import Foundation
 
 struct LiveCVVPINJSONMaker {
@@ -42,20 +40,16 @@ extension LiveCVVPINJSONMaker {
         let publicApplicationSessionKey = ecdhPublicKeyData.base64EncodedString()
         
         let concat = clientPublicKeyRSA + publicApplicationSessionKey
-        let concatData = Data(concat.utf8)
-        let hash = crypto.sha256Hash(concatData)
-        
-#warning("REPLACE WITH `crypto` - add to crypto if necessary")
-        let signature = try ForaCrypto.Crypto.signNoHash(
-            hash,
-            withPrivateKey: rsaKeyPair.privateKey.key,
-            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        let signed = try crypto.sign(
+            data: .init(concat.utf8),
+            withPrivateKey: rsaKeyPair.privateKey
         )
+        let signature = signed.base64EncodedString()
         
         let data = try JSONSerialization.data(withJSONObject: [
             "clientPublicKeyRSA": clientPublicKeyRSA,
             "publicApplicationSessionKey": publicApplicationSessionKey,
-            "signature": signature.base64EncodedString()
+            "signature": signature
         ] as [String: String])
         
         return data
@@ -182,20 +176,17 @@ extension LiveCVVPINJSONMaker {
         let otpCode = otp.otpValue
         let otpEventID = otpEventID.eventIDValue
         
-#warning("should padding be used here?")
         let secretPINData = try crypto.processingEncryptWithPadding(
             data: .init(pin.pinValue.utf8)
         )
         let secretPIN = secretPINData.base64EncodedString()
         
         let concat = sessionID + cardID + otpCode + otpEventID + secretPIN
-        let hash = crypto.sha256Hash(.init(concat.utf8))
-#warning("REPLACE WITH `crypto` - add to crypto if necessary")
-        let signature = try ForaCrypto.Crypto.signNoHash(
-            hash,
-            withPrivateKey: rsaPrivateKey.key,
-            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        let signed = try crypto.sign(
+            data: .init(concat.utf8),
+            withPrivateKey: rsaPrivateKey
         )
+        let signature = signed.base64EncodedString()
         
         let json = try JSONSerialization.data(withJSONObject: [
             "sessionId": sessionID, // String(40)
@@ -203,7 +194,7 @@ extension LiveCVVPINJSONMaker {
             "otpCode":   otpCode, // String(6)
             "eventId":   otpEventID, // String(40)
             "secretPIN": secretPIN, // String(1024)
-            "signature": signature.base64EncodedString() // String(1024)
+            "signature": signature // String(1024)
         ] as [String: String])
         
         let encrypted = try crypto.aesEncrypt(

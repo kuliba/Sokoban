@@ -63,6 +63,12 @@ protocol CVVPINCrypto {
         withPrivateKey privateKey: RSAPrivateKey
     ) throws -> Data
     
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data
+    
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey

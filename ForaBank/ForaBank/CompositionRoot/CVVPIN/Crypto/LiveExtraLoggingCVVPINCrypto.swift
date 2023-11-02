@@ -157,6 +157,20 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
     
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        try Crypto.sign(
+            data,
+            withPrivateKey: privateKey.key,
+            algorithm: .rsaSignatureDigestPKCS1v15SHA256
+        )
+    }
+
+    #warning("remove if unused")
     /// Signs the message digest directly without any additional padding.
     func signNoHash(
         _ data: Data,

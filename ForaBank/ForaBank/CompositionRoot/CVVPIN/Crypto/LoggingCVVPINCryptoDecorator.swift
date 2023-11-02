@@ -161,6 +161,26 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try decoratee.sign(
+                data: data,
+                withPrivateKey: privateKey
+            )
+            log("Sign with SHA256 digest success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
+            
+            return signed
+        } catch {
+            log("Sign with SHA256 digest failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".")
+            throw error
+        }
+    }
+    
     /// Follows the `PKCS#1 v1.5` standard and adds padding.
     func sha256Sign(
         data: Data,
