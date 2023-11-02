@@ -41,19 +41,6 @@ extension Services {
         
         // MARK: Configure Infra: Loaders
         
-        func loggingLoaderDecorator<T>(
-            store: any Store<T>
-        ) -> LoggingLoaderDecorator<T> {
-            
-            LoggingLoaderDecorator(
-                decoratee: GenericLoaderOf(
-                    store: store,
-                    currentDate: currentDate
-                ),
-                log: { log(.cache, $0, $1, $2) }
-            )
-        }
-        
         let otpEventIDLoader = loggingLoaderDecorator(
             store: otpEventIDStore
         )
@@ -84,44 +71,204 @@ extension Services {
         // MARK: Configure CVV-PIN Services
         
         let getCodeService = GetProcessingSessionCodeService(
-            _process: getCodeRemoteService.process
+            process: process(completion:)
         )
         
         let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
             decoratee: getCodeService,
-            _cache: sessionCodeLoader.save,
-            currentDate: currentDate
+            cache: cache(response:completion:)
         )
         
-        let keyPair = cvvPINCrypto.generateECDHKeyPair()
+        let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         let formSessionKeyService = FormSessionKeyService(
-            _loadCode: sessionCodeLoader.load(completion:),
-            _process: formSessionKeyRemoteService.process,
-            _makeSecretRequestJSON: cvvPINJSONMaker.makeSecretRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.extractSharedSecret,
-            keyPair: keyPair
+            loadCode: loadCode(completion:),
+            makeSecretRequestJSON: makeSecretRequestJSON(completion:),
+            process: process(payload:completion:),
+            makeSessionKey: makeSessionKey(string:completion:)
         )
         
         let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
             decoratee: formSessionKeyService,
-            _cacheSessionID: sessionIDLoader.save,
-            _cacheSessionKey: sessionKeyLoader.save,
-            currentDate: currentDate
+            cacheSessionID: cacheSessionID,
+            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
         )
         
-        typealias MakeBindPublicKeySecretJSONResult = Result<Data, Error>
-        typealias MakeBindPublicKeySecretJSONCompletion = (MakeBindPublicKeySecretJSONResult) -> Void
-        typealias MakeBindPublicKeySecretJSON = (String, @escaping MakeBindPublicKeySecretJSONCompletion) -> Void
+        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
+            loadEventID: loadEventID(completion:),
+            makeSecretJSON: makeSecretJSON(otp:completion:),
+            process: process(payload:completion:)
+        )
         
-        let makeBindPublicKeySecretJSON: MakeBindPublicKeySecretJSON = { otp, completion in
+        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
+            decoratee: bindPublicKeyWithEventIDService,
+            clearCache: persistentRSAKeyPairStore.clear
+        )
+        
+        let activationService = CVVPINFunctionalityActivationService(
+            getCode: getCode(completion:),
+            formSessionKey: formSessionKey(completion:),
+            bindPublicKeyWithEventID: bindPublicKeyWithEventID
+        )
+        
+        let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
+            prepareKeyExchange: prepareKeyExchange(completion:),
+            process: process(data:completion:),
+            makeSessionKey: makeSessionKey(response:completion:)
+        )
+
+        let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
+            decoratee: authenticateWithPublicKeyService,
+            cacheSessionID: cacheSessionID(payload:completion:),
+            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
+        )
+        
+        // MARK: Configure Show CVV Service
+        
+        let showCVVService = ShowCVVService(
+            authenticate: authenticate,
+            makeJSON: makeSecretJSON,
+            process: process,
+            decryptCVV: decryptCVV
+        )
+        
+        // MARK: Configure Change PIN Service
+        
+        let changePINService = ChangePINService(
+            authenticate: authenticate,
+            publicRSAKeyDecrypt: publicRSAKeyDecrypt,
+            confirmProcess: confirmProcess,
+            makePINChangeJSON: makePINChangeJSON,
+            changePINProcess: changePINProcess
+        )
+        
+        let cachingChangePINService = CachingChangePINServiceDecorator(
+            decoratee: changePINService,
+            cache: cache(otpEventID:completion:)
+        )
+        
+        // MARK: - ComposedCVVPINService
+        
+        return ComposedCVVPINService(
+            // TODO: add category `CVV-PIN`
+            log: { log(.network, $0, $1, $2) },
+            activate: activationService.activate(completion:),
+            changePIN: changePINService.changePIN(for:to:otp:completion:),
+            checkActivation: checkActivation(completion:),
+            confirmActivation: activationService.confirmActivation,
+            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
+            showCVV: showCVVService.showCVV(cardID:completion:)
+        )
+        
+        // MARK: - Helpers
+        
+        func loggingLoaderDecorator<T>(
+            store: any Store<T>
+        ) -> LoggingLoaderDecorator<T> {
             
+            LoggingLoaderDecorator(
+                decoratee: GenericLoaderOf(
+                    store: store,
+                    currentDate: currentDate
+                ),
+                log: { log(.cache, $0, $1, $2) }
+            )
+        }
+        
+        func checkActivation(
+            completion: @escaping (Result<Void, Error>) -> Void
+        ) {
+            rsaKeyPairLoader.load {
+                
+                completion($0.map { _ in () })
+            }
+        }
+        
+        // MARK: - AuthenticateWithPublicKey Adapters
+        
+        func prepareKeyExchange(
+            completion: @escaping AuthenticateWithPublicKeyService.PrepareKeyExchangeCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                completion(.init {
+                    
+                    try cvvPINJSONMaker.makeRequestJSON(
+                        publicKey: echdKeyPair.publicKey,
+                        rsaKeyPair: result.get()
+                    )
+                })
+            }
+        }
+        
+        func process(
+            data: Data,
+            completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
+        ) {
+            authWithPublicKeyRemoteService.process(data) {
+                
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func makeSessionKey(
+            response: AuthenticateWithPublicKeyService.Response,
+            completion: @escaping AuthenticateWithPublicKeyService.MakeSessionKeyCompletion
+        ) {
+            completion(.init {
+                
+                let data = try cvvPINCrypto.extractSharedSecret(
+                    from: response.publicServerSessionKey,
+                    using: echdKeyPair.privateKey
+                )
+                
+                return .init(sessionKeyValue: data)
+            })
+        }
+        
+        func cacheSessionID(
+            payload: CachingAuthWithPublicKeyServiceDecorator.CacheSessionIDPayload,
+            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionIDLoader.save(
+                .init(value: payload.0.sessionIDValue),
+                validUntil: currentDate() + .init(payload.1),
+                completion: completion
+            )
+        }
+        
+        func cacheSessionKey(
+            sessionKey: AuthenticateWithPublicKeyService.Success.SessionKey,
+            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                validUntil: currentDate().nextYear(),
+                completion: completion
+            )
+        }
+        
+        // MARK: - BindPublicKeyWithEventID Adapters
+        
+        func loadEventID(
+            completion: @escaping BindPublicKeyWithEventIDService.EventIDCompletion
+        ) {
+            sessionIDLoader.load {
+                
+                completion($0.map { .init(eventIDValue: $0.value) })
+            }
+        }
+        
+        func makeSecretJSON(
+            otp: BindPublicKeyWithEventIDService.OTP,
+            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
+        ) {
             sessionKeyLoader.load { result in
                 
                 do {
                     let sessionKey = try result.get()
                     let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp,
+                        otp: otp.otpValue,
                         sessionKey: sessionKey
                     )
                     
@@ -137,140 +284,63 @@ extension Services {
             }
         }
         
-        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
-            _loadEventID: sessionIDLoader.load(completion:),
-            _makeSecretJSON: makeBindPublicKeySecretJSON,
-            _process: bindPublicKeyWithEventIDRemoteService.process
-        )
+        func process(
+            payload: BindPublicKeyWithEventIDService.Payload,
+            completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
+        ){
+            bindPublicKeyWithEventIDRemoteService.process(payload) {
+                
+                completion($0.mapError { .init($0) })
+            }
+        }
         
-        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
-            decoratee: bindPublicKeyWithEventIDService,
-            clearCache: persistentRSAKeyPairStore.clear
-        )
+        // MARK: - ChangePIN Adapters
         
-        let activationService = CVVPINFunctionalityActivationService(
-            _getCode: cachingGetCodeService.getCode,
-            _formSessionKey: cachingFormSessionKeyService.formSessionKey,
-            _bindPublicKeyWithEventID: rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind
-        )
-        
-        let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
-            loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
-            _process: authWithPublicKeyRemoteService.process,
-            _makeRequestJSON: cvvPINJSONMaker.makeRequestJSON,
-            _makeSharedSecret: cvvPINCrypto.makeSharedSecret,
-            keyPair: keyPair
-        )
-        
-        let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
-            decoratee: authenticateWithPublicKeyService,
-            _cacheSessionID: sessionIDLoader.save,
-            _cacheSessionKey: sessionKeyLoader.save,
-            currentDate: currentDate
-        )
-        
-        // MARK: Configure Show CVV Service
-        
-        let showCVVServiceAuthenticate: ShowCVVService.Authenticate = { completion in
-            
+        func authenticate(
+            completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
             rsaKeyPairLoader.load { result in
                 
                 switch result {
                 case .failure:
                     completion(.failure(.activationFailure))
                     
-                case .success:
-                    sessionIDLoader.load { result in
-                        
-                        switch result {
-                        case .failure:
-                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                                
-                                completion(
-                                    $0
-                                        .map(\.sessionID.sessionIDValue)
-                                        .map(ShowCVVService.SessionID.init)
-                                        .mapError { _ in .authenticationFailure })
-                            }
-                            
-                        case let .success(sessionID):
-                            completion(.success(
-                                .init(sessionIDValue: sessionID.value)
-                            ))
-                        }
-                    }
+                case let .success(rsaKeyPair):
+                    authenticate(rsaKeyPair, completion)
                 }
             }
         }
         
-        let _loadRSAAndSessionKeys: ShowCVVService._LoadRSAAndSessionKeys = { completion in
-            
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let.success(rsaKeyPair):
-                    sessionKeyLoader.load { result in
-                        
-                        switch result {
-                        case let .failure(error):
-                            completion(.failure(error))
-                            
-                        case let .success(sessionKey):
-                            completion(.success((rsaKeyPair, sessionKey)))
-                        }
-                    }
-                }
-            }
-        }
-        
-        let showCVVService = ShowCVVService(
-            _authenticate: showCVVServiceAuthenticate,
-            _loadRSAAndSessionKeys: _loadRSAAndSessionKeys,
-            _makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
-            _process: showCVVRemoteService.process,
-            _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:)
-        )
-        
-        // MARK: Configure Change PIN Service
-        
-        #warning("extract repeated")
-        let changePINServiceAuthenticate: ChangePINService.Authenticate = { completion in
-            
-            rsaKeyPairLoader.load { result in
+        func authenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ChangePINService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
                 
                 switch result {
                 case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case .success:
-                    sessionIDLoader.load { result in
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
                         
-                        switch result {
-                        case .failure:
-                            cachingAuthWithPublicKeyService.authenticateWithPublicKey {
-                                
-                                completion(
-                                    $0
-                                        .map(\.sessionID.sessionIDValue)
-                                        .map(ChangePINService.SessionID.init(sessionIDValue:))
-                                        .mapError { _ in .authenticationFailure })
-                            }
-                            
-                        case let .success(sessionID):
-                            completion(.success(
-                                .init(sessionIDValue: sessionID.value)
-                            ))
-                        }
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ChangePINService.SessionID.init(sessionIDValue:))
+                                .mapError { _ in .authenticationFailure })
                     }
+                    
+                case let .success(sessionID):
+                    completion(.success(.init(
+                        sessionIDValue: sessionID.value
+                    )))
                 }
             }
         }
         
-        let loadOTPSession: ChangePINService.LoadOTPSession = { completion in
-            
+        typealias LoadChangePINSessionCompletion = (Result<ChangePINSession, Error>) -> Void
+        
+        func loadSession(
+            completion: @escaping LoadChangePINSessionCompletion
+        ) {
             otpEventIDLoader.load { result in
                 
                 switch result {
@@ -278,71 +348,447 @@ extension Services {
                     completion(.failure(error))
                     
                 case let .success(otpEventID):
-                    sessionIDLoader.load { result in
-                        
-                        switch result {
-                        case let .failure(error):
-                            completion(.failure(error))
-                            
-                        case let .success(sessionID):
-                            sessionKeyLoader.load { result in
-                                
-                                switch result {
-                                case let .failure(error):
-                                    completion(.failure(error))
-                                    
-                                case let .success(sessionKey):
-                                    rsaKeyPairLoader.load { result in
-                                        
-                                        switch result {
-                                        case let .failure(error):
-                                            completion(.failure(error))
-                                            
-                                        case let .success(rsaKeyPair):
-                                            completion(.success((otpEventID, sessionID, sessionKey, rsaKeyPair.privateKey)))
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    loadSession(otpEventID, completion)
                 }
             }
         }
         
-        let changePINService = ChangePINService(
-            _authenticate: changePINServiceAuthenticate,
-            loadRSAKeyPair: rsaKeyPairLoader.load(completion:),
-            loadOTPSession: loadOTPSession,
-            _confirmProcess: confirmChangePINRemoteService.process,
-            _changePINProcess: changePINRemoteService.process,
-            _rsaDecrypt: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            _makePINChangeJSON: cvvPINJSONMaker.makePINChangeJSON
-        )
-        
-        let cachingChangePINService = CachingChangePINServiceDecorator(
-            decoratee: changePINService,
-            _cache: otpEventIDLoader.save
-        )
-        
-        let checkActivation: ComposedCVVPINService.CheckActivation = { completion in
-            
-            rsaKeyPairLoader.load {
+        func loadSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ completion: @escaping LoadChangePINSessionCompletion
+        ) {
+            sessionIDLoader.load { result in
                 
-                completion($0.map { _ in () })
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionID):
+                    loadSession(otpEventID, sessionID, completion)
+                }
             }
         }
         
-        return ComposedCVVPINService(
-            // TODO: add category `CVV-PIN`
-            log: { log(.network, $0, $1, $2) },
-            activate: activationService.activate(completion:),
-            changePIN: changePINService.changePIN(for:to:otp:completion:),
-            checkActivation: checkActivation,
-            confirmActivation: activationService.confirmActivation(withOTP:completion:),
-            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode(completion:),
-            showCVV: showCVVService.showCVV(cardID:completion:)
-        )
+        func loadSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ completion: @escaping LoadChangePINSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    loadSession(otpEventID, sessionID, sessionKey, completion)
+                }
+            }
+        }
+        
+        func loadSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ sessionKey: SessionKey,
+            _ completion: @escaping LoadChangePINSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(rsaKeyPair):
+                    completion(.success(.init(
+                        otpEventID: otpEventID,
+                        sessionID: sessionID,
+                        sessionKey: sessionKey,
+                        rsaPrivateKey: rsaKeyPair.privateKey
+                    )))
+                }
+            }
+        }
+        
+        struct ChangePINSession {
+            
+            let otpEventID: ChangePINService.OTPEventID
+            let sessionID: ForaBank.SessionID
+            let sessionKey: SessionKey
+            let rsaPrivateKey: RSADomain.PrivateKey
+        }
+        
+        func publicRSAKeyDecrypt(
+            string: String,
+            completion: @escaping ChangePINService.PublicRSAKeyDecryptCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(keyPair):
+                    completion(.init {
+                        
+                        try cvvPINCrypto.rsaDecrypt(
+                            string,
+                            withPrivateKey: keyPair.privateKey
+                        )
+                    })
+                }
+            }
+        }
+        
+        func confirmProcess(
+            sessionID: ChangePINService.SessionID,
+            completion: @escaping ChangePINService.ConfirmProcessCompletion
+        ) {
+            confirmChangePINRemoteService.process(
+                .init(value: sessionID.sessionIDValue)
+            ) {
+                completion(
+                    $0
+                        .map { .init(eventID: $0.eventID, phone: $0.phone) }
+                        .mapError { .init($0) }
+                )
+            }
+        }
+        
+        func makePINChangeJSON(
+            cardID: ChangePINService.CardID,
+            pin: ChangePINService.PIN,
+            otp: ChangePINService.OTP,
+            completion: @escaping ChangePINService.MakePINChangeJSONCompletion
+        ) {
+            loadSession { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(session):
+                    let sessionID = ChangePINService.SessionID(
+                        sessionIDValue: session.sessionID.value
+                    )
+                    
+                    completion(.init {
+                        
+                        let json = try cvvPINJSONMaker.makePINChangeJSON(
+                            sessionID: sessionID,
+                            cardID: .init(cardIDValue: cardID.cardIDValue),
+                            otp: .init(otpValue: otp.otpValue),
+                            pin: .init(pinValue: pin.pinValue),
+                            otpEventID: session.otpEventID,
+                            sessionKey: session.sessionKey,
+                            rsaPrivateKey: session.rsaPrivateKey
+                        )
+                        
+                        return (sessionID, json)
+                    })
+                }
+            }
+        }
+        
+        func changePINProcess(
+            payload: (ChangePINService.SessionID, Data),
+            completion: @escaping ChangePINService.ChangePINProcessCompletion
+        ) {
+            changePINRemoteService.process((
+                .init(value: payload.0.sessionIDValue),
+                payload.1
+            )) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func cache(
+            otpEventID: ChangePINService.OTPEventID,
+            completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
+        ) {
+            // short time
+            let validUntil = currentDate().addingShortTime()
+            
+            otpEventIDLoader.save(
+                otpEventID,
+                validUntil: validUntil,
+                completion: completion
+            )
+        }
+        
+        // MARK: - CVVPINFunctionalityActivation Adapters
+        
+        func getCode(
+            completion: @escaping CVVPINFunctionalityActivationService.GetCodeCompletion
+        ) {
+            cachingGetCodeService.getCode { result in
+                
+                completion(
+                    result
+                        .map(CVVPINFunctionalityActivationService.GetCodeResponse.init)
+                        .mapError(CVVPINFunctionalityActivationService.GetCodeResponseError.init)
+                )
+            }
+        }
+        
+        func formSessionKey(
+            completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
+        ) {
+            cachingFormSessionKeyService.formSessionKey { result in
+                
+                completion(
+                    result
+                        .map(CVVPINFunctionalityActivationService.FormSessionKeySuccess.init)
+                        .mapError(CVVPINFunctionalityActivationService.FormSessionKeyError.init)
+                )
+            }
+        }
+        
+        func bindPublicKeyWithEventID(
+            otp: CVVPINFunctionalityActivationService.OTP,
+            completion: @escaping CVVPINFunctionalityActivationService.BindPublicKeyWithEventIDCompletion
+        ) {
+            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind(
+                otp: .init(otpValue: otp.otpValue)
+            ) {
+                completion($0.mapError(CVVPINFunctionalityActivationService.BindPublicKeyError.init))
+            }
+        }
+        
+        // MARK: - GetProcessingSessionCode Adapters
+        
+        func process(
+            completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
+        ) {
+            getCodeRemoteService.process {
+                
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func cache(
+            response: GetProcessingSessionCodeService.Response,
+            completion: @escaping (Result<Void, Error>) -> Void
+        ) {
+            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
+            let validUntil = currentDate().addingShortTime()
+            
+            sessionCodeLoader.save(
+                .init(sessionCodeValue: response.code),
+                validUntil: validUntil,
+                completion: completion
+            )
+        }
+        
+        // MARK: - FormSessionKey Adapters
+        
+        func loadCode(
+            completion:@escaping FormSessionKeyService.CodeCompletion
+        ) {
+            sessionCodeLoader.load { result in
+                
+                completion(
+                    result
+                        .map(\.sessionCodeValue)
+                        .map(FormSessionKeyService.Code.init)
+                )
+            }
+        }
+        
+        func makeSecretRequestJSON(
+            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
+        ) {
+            completion(.init {
+                
+                try cvvPINJSONMaker.makeSecretRequestJSON(
+                    publicKey: echdKeyPair.publicKey
+                )
+            })
+        }
+        
+        func process(
+            payload: FormSessionKeyService.Payload,
+            completion: @escaping FormSessionKeyService.ProcessCompletion
+        ) {
+            formSessionKeyRemoteService.process(
+                .init(code: payload.code, data: payload.data)
+            ) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func makeSessionKey(
+            string: String,
+            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
+        ) {
+            completion(.init {
+                
+                try .init(
+                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
+                        from: string,
+                        using: echdKeyPair.privateKey
+                    )
+                )
+            })
+        }
+        
+        func cacheSessionID(
+            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionIDLoader.save(
+                .init(value: payload.0.eventIDValue),
+                validUntil: currentDate() + .init(payload.1),
+                completion: completion
+            )
+        }
+        
+        func cacheSessionKey(
+            sessionKey: FormSessionKeyService.SessionKey,
+            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: sessionKey.sessionKeyValue),
+                validUntil: currentDate().nextYear(),
+                completion: completion
+            )
+        }
+        
+        // MARK: - ShowCVV Adapters
+        
+        func authenticate(
+            completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    authenticate(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func authenticate(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping ShowCVVService.AuthenticateCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(ShowCVVService.SessionID.init)
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(
+                        .init(sessionIDValue: sessionID.value)
+                    ))
+                }
+            }
+        }
+        
+        func makeSecretJSON(
+            cardID: ShowCVVService.CardID,
+            sessionID: ShowCVVService.SessionID,
+            completion: @escaping ShowCVVService.MakeJSONCompletion
+        ) {
+            loadShowCVVSession { result in
+                
+                completion(.init {
+                    
+                    let session = try result.get()
+                    return try cvvPINJSONMaker.makeSecretJSON(
+                        with: cardID,
+                        and: sessionID,
+                        rsaKeyPair: session.rsaKeyPair,
+                        sessionKey: session.sessionKey
+                    )
+                })
+            }
+        }
+        
+        func process(
+            payload: ShowCVVService.Payload,
+            completion: @escaping ShowCVVService.ProcessCompletion
+        ) {
+            showCVVRemoteService.process((
+                .init(value: payload.sessionID.sessionIDValue),
+                payload.data
+            )) {
+                completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func decryptCVV(
+            encryptedCVV: ShowCVVService.EncryptedCVV,
+            completion: @escaping ShowCVVService.DecryptCVVCompletion
+        ) {
+            loadShowCVVSession {
+                
+                do {
+                    let rsaKeyPair = try $0.get().rsaKeyPair
+                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
+                        encryptedCVV.encryptedCVVValue,
+                        withPrivateKey: rsaKeyPair.privateKey
+                    )
+                    completion(.success(.init(cvvValue: cvvValue)))
+                } catch {
+                    completion(.failure(.serviceError(.makeJSONFailure)))
+                }
+            }
+        }
+        
+        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
+        typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
+        
+        func loadShowCVVSession(
+            completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let.success(rsaKeyPair):
+                    loadShowCVVSession(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func loadShowCVVSession(
+            _ rsaKeyPair: RSAKeyPair,
+            _ completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    completion(.success(.init(
+                        rsaKeyPair: rsaKeyPair,
+                        sessionKey: sessionKey
+                    )))
+                }
+            }
+        }
+        
+        struct ShowCVVSession {
+            
+            let rsaKeyPair: RSAKeyPair
+            let sessionKey: SessionKey
+        }
     }
 }
 
@@ -440,569 +886,6 @@ struct SessionCode {
 struct SessionKey {
     
     let sessionKeyValue: Data
-}
-
-// MARK: - Adapters
-
-private extension AuthenticateWithPublicKeyService {
-    
-    typealias RSAKeyPair = RSADomain.KeyPair
-    typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
-    typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
-    typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Data, @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeRequestJSON = (ECDHDomain.PublicKey, RSAKeyPair) throws -> Data
-    
-    typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) -> Swift.Result<Data, Swift.Error>
-    
-    convenience init(
-        loadRSAKeyPair: @escaping LoadRSAKeyPair,
-        _process: @escaping _Process,
-        _makeRequestJSON: @escaping _MakeRequestJSON,
-        _makeSharedSecret: @escaping _MakeSharedSecret,
-        keyPair: P384KeyAgreementDomain.KeyPair
-    ) {
-        self.init(
-            prepareKeyExchange: { completion in
-                
-                loadRSAKeyPair { result in
-                    
-                    completion(.init {
-                        
-                        let rsaKeyPair = try result.get()
-                        return try _makeRequestJSON(keyPair.publicKey, rsaKeyPair)
-                    })
-                }
-            },
-            process: { data, completion in
-                
-                _process(data) {
-                    
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            makeSessionKey: { response, completion in
-                
-                completion(
-                    _makeSharedSecret(
-                        response.publicServerSessionKey,
-                        keyPair.privateKey
-                    )
-                    .map(Success.SessionKey.init)
-                )
-            }
-        )
-    }
-}
-
-private extension BindPublicKeyWithEventIDService {
-    
-    typealias _LoadEventIDResult = Swift.Result<SessionID, Swift.Error>
-    typealias _LoadEventIDCompletion = (_LoadEventIDResult) -> Void
-    typealias _LoadEventID = (@escaping _LoadEventIDCompletion) -> Void
-    
-    typealias _MakeSecretJSONResult = Swift.Result<Data, Swift.Error>
-    typealias _MakeSecretJSONCompletion = (_MakeSecretJSONResult) -> Void
-    typealias _MakeSecretJSON = (String, @escaping _MakeSecretJSONCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Void, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Payload, @escaping _ProcessCompletion) -> Void
-    
-    convenience init(
-        _loadEventID: @escaping _LoadEventID,
-        _makeSecretJSON: @escaping _MakeSecretJSON,
-        _process: @escaping _Process
-    ) {
-        self.init(
-            loadEventID: { completion in
-                
-                _loadEventID {
-                    
-                    completion($0.map { .init(eventIDValue: $0.value) })
-                }
-            },
-            makeSecretJSON: { otp, completion in
-                
-                _makeSecretJSON(otp.otpValue, completion)
-            },
-            process: { input, completion in
-                
-                _process(input) {
-                    
-                    completion($0.mapError { .init($0) })
-                }
-            }
-        )
-    }
-}
-
-private extension CachingAuthWithPublicKeyServiceDecorator {
-    
-    typealias _CacheSessionIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionID = (SessionID, Date, @escaping _CacheSessionIDCompletion) -> Void
-    
-    typealias _CacheSessionKeyCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionKey = (SessionKey, Date, @escaping _CacheSessionKeyCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cacheSessionID: @escaping _CacheSessionID,
-        _cacheSessionKey: @escaping _CacheSessionKey,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cacheSessionID: { payload, completion in
-                
-                _cacheSessionID(
-                    .init(value: payload.0.sessionIDValue),
-                    currentDate() + .init(payload.1),
-                    completion
-                )
-            },
-            cacheSessionKey: { sessionKey, completion in
-                
-                _cacheSessionKey(
-                    .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                    currentDate().nextYear(),
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension CachingChangePINServiceDecorator {
-    
-    typealias _CacheOTPEventIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheOTPEventID = (Service.OTPEventID, Date, @escaping _CacheOTPEventIDCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cache: @escaping _CacheOTPEventID,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cache: { otpEventID, completion in
-                
-                // short time
-                let validUntil = currentDate().addingShortTime()
-                
-                _cache(
-                    otpEventID,
-                    validUntil,
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension CachingFormSessionKeyServiceDecorator {
-    
-#warning("same shape as in CachingAuthWithPublicKeyServiceDecorator extension")
-    
-    typealias _CacheSessionIDCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionID = (SessionID, Date, @escaping _CacheSessionIDCompletion) -> Void
-    
-    typealias _CacheSessionKeyCompletion = (Result<Void, Error>) -> Void
-    typealias _CacheSessionKey = (SessionKey, Date, @escaping _CacheSessionKeyCompletion) -> Void
-    
-    convenience init(
-        decoratee: Service,
-        _cacheSessionID: @escaping _CacheSessionID,
-        _cacheSessionKey: @escaping _CacheSessionKey,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cacheSessionID: { payload, completion in
-                
-                _cacheSessionID(
-                    .init(value: payload.0.eventIDValue),
-                    currentDate() + .init(payload.1),
-                    completion
-                )
-            },
-            cacheSessionKey: { sessionKey, completion in
-                
-                _cacheSessionKey(
-                    .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                    currentDate().nextYear(),
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension CachingGetProcessingSessionCodeServiceDecorator {
-    
-    typealias _CacheCompletion = (Result<Void, Error>) -> Void
-    typealias _Cache = (SessionCode, Date, @escaping _CacheCompletion) -> Void
-    
-    convenience init(
-        decoratee: GetProcessingSessionCodeService,
-        _cache: @escaping _Cache,
-        currentDate: @escaping () -> Date = Date.init
-    ) {
-        self.init(
-            decoratee: decoratee,
-            cache: { response, completion in
-                
-                // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-                let validUntil = currentDate().addingShortTime()
-                
-                _cache(
-                    .init(sessionCodeValue: response.code),
-                    validUntil,
-                    completion
-                )
-            }
-        )
-    }
-}
-
-private extension ChangePINService {
-    
-    typealias _Authenticate = ChangePINService.Authenticate
-    
-    typealias RSAKeyPair = RSADomain.KeyPair
-    typealias LoadRSAKeyPairResult = Swift.Result<RSAKeyPair, Swift.Error>
-    typealias LoadRSAKeyPairCompletion = (LoadRSAKeyPairResult) -> Void
-    typealias LoadRSAKeyPair = (@escaping LoadRSAKeyPairCompletion) -> Void
-    
-    typealias RSAPrivateKey = RSADomain.PrivateKey
-    typealias LoadOTPSessionResult = Swift.Result<(OTPEventID, ForaBank.SessionID, SessionKey, RSAPrivateKey), Swift.Error>
-    typealias LoadOTPSessionCompletion = (LoadOTPSessionResult) -> Void
-    typealias LoadOTPSession = (@escaping LoadOTPSessionCompletion) -> Void
-    
-    typealias _ConfirmProcessResult = Swift.Result<EncryptedConfirmResponse, MappingRemoteServiceError<ConfirmAPIError>>
-    typealias _ConfirmProcessCompletion = (_ConfirmProcessResult) -> Void
-    typealias _ConfirmProcess = (ForaBank.SessionID, @escaping _ConfirmProcessCompletion) -> Void
-    
-    typealias _ChangePINProcessResult = Swift.Result<Void, MappingRemoteServiceError<ChangePINAPIError>>
-    typealias _ChangePINProcessCompletion = (_ChangePINProcessResult) -> Void
-    typealias _ChangePINProcess = ((ForaBank.SessionID, Data),@escaping _ChangePINProcessCompletion) -> Void
-    
-    typealias _RSADecrypt = (String, RSADomain.PrivateKey) throws -> String
-    
-    typealias _MakePINChangeJSON = (SessionID, CardID, OTP, PIN, OTPEventID, SessionKey, RSADomain.PrivateKey) throws -> Data
-    
-    convenience init(
-        _authenticate: @escaping _Authenticate,
-        loadRSAKeyPair: @escaping LoadRSAKeyPair,
-        loadOTPSession: @escaping LoadOTPSession,
-        _confirmProcess: @escaping _ConfirmProcess,
-        _changePINProcess: @escaping _ChangePINProcess,
-        _rsaDecrypt: @escaping _RSADecrypt,
-        _makePINChangeJSON: @escaping _MakePINChangeJSON
-    ) {
-        self.init(
-            authenticate: _authenticate,
-            publicRSAKeyDecrypt: { string, completion in
-                
-                loadRSAKeyPair { result in
-                    
-                    switch result {
-                        
-                    case let .failure(error):
-                        completion(.failure(error))
-                        
-                    case let .success(keyPair):
-                        completion(.init {
-                            
-                            try _rsaDecrypt(string, keyPair.privateKey)
-                        })
-                    }
-                }
-            },
-            confirmProcess: { payload, completion in
-                
-                _confirmProcess(
-                    .init(value: payload.sessionIDValue)
-                ) {
-                    completion(
-                        $0
-                            .map { .init(eventID: $0.eventID, phone: $0.phone) }
-                            .mapError { .init($0) }
-                    )
-                }
-            },
-            makePINChangeJSON: { cardID, pin, otp, completion in
-                
-                loadOTPSession { result in
-                    
-                    switch result {
-                    case let .failure(error):
-                        completion(.failure(error))
-                        
-                    case let .success((otpEventID, sessionID, sessionKey, rsaPrivateKey)):
-                        let sessionID = ChangePINService.SessionID(
-                            sessionIDValue: sessionID.value
-                        )
-                        
-                        completion(.init {
-                            
-                            let json = try _makePINChangeJSON(
-                                sessionID,
-                                .init(cardIDValue: cardID.cardIDValue),
-                                .init(otpValue: otp.otpValue),
-                                .init(pinValue: pin.pinValue),
-                                otpEventID,
-                                sessionKey,
-                                rsaPrivateKey
-                            )
-                            
-                            return (sessionID, json)
-                        })
-                    }
-                }
-            },
-            changePINProcess: { payload, completion in
-                
-                _changePINProcess((
-                    .init(value: payload.0.sessionIDValue),
-                    payload.1
-                )) {
-                    completion($0.mapError { .init($0) })
-                }
-            }
-        )
-    }
-}
-
-private extension CVVPINFunctionalityActivationService {
-    
-    typealias _GetCodeResult = Swift.Result<GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error>
-    typealias _GetCodeCompletion = (_GetCodeResult) -> Void
-    typealias _GetCode = (@escaping _GetCodeCompletion) -> Void
-    
-    typealias _FormSessionKeyResult = Swift.Result<FormSessionKeyService.Success, FormSessionKeyService.Error>
-    typealias _FormSessionKeyCompletion = (_FormSessionKeyResult) -> Void
-    typealias _FormSessionKey = (@escaping _FormSessionKeyCompletion) -> Void
-    
-    typealias _BindResult = Swift.Result<Void, BindPublicKeyWithEventIDService.Error>
-    typealias _BindCompletion = (_BindResult) -> Void
-    typealias _Bind = (BindPublicKeyWithEventIDService.OTP, @escaping _BindCompletion) -> Void
-    
-    convenience init(
-        _getCode: @escaping _GetCode,
-        _formSessionKey: @escaping _FormSessionKey,
-        _bindPublicKeyWithEventID: @escaping _Bind
-    ) {
-        self.init(
-            getCode: { completion in
-                
-                _getCode { result in
-                    
-                    completion(
-                        result
-                            .map(GetCodeResponse.init)
-                            .mapError(GetCodeResponseError.init)
-                    )
-                }
-            },
-            formSessionKey: { completion in
-                
-                _formSessionKey { result in
-                    
-                    completion(
-                        result
-                            .map(FormSessionKeySuccess.init)
-                            .mapError(FormSessionKeyError.init)
-                    )
-                }
-            },
-            bindPublicKeyWithEventID: { otp, completion in
-                
-                _bindPublicKeyWithEventID(
-                    .init(otpValue: otp.otpValue)
-                ) {
-                    completion($0.mapError(BindPublicKeyError.init))
-                }
-            }
-        )
-    }
-}
-
-private extension FormSessionKeyService {
-    
-    typealias _LoadCodeResult = Swift.Result<SessionCode, Swift.Error>
-    typealias _LoadCodeCompletion = (_LoadCodeResult) -> Void
-    typealias _LoadCode = (@escaping _LoadCodeCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (Payload, @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeSecretRequestJSON = (P384KeyAgreementDomain.PublicKey) throws -> Data
-    
-    typealias _MakeSharedSecret = (String, P384KeyAgreementDomain.PrivateKey) throws -> Data
-    
-    convenience init(
-        _loadCode: @escaping _LoadCode,
-        _process: @escaping _Process,
-        _makeSecretRequestJSON: @escaping _MakeSecretRequestJSON,
-        _makeSharedSecret: @escaping _MakeSharedSecret,
-        keyPair: P384KeyAgreementDomain.KeyPair
-    ) {
-        self.init(
-            loadCode: { completion in
-                
-                _loadCode { result in
-                    
-                    completion(
-                        result
-                            .map(\.sessionCodeValue)
-                            .map(FormSessionKeyService.Code.init)
-                    )
-                }
-            },
-            makeSecretRequestJSON: { completion in
-                
-                completion(.init {
-                    
-                    try _makeSecretRequestJSON(keyPair.publicKey)
-                })
-            },
-            process: { payload, completion in
-                
-                _process(
-                    .init(code: payload.code, data: payload.data)
-                ) {
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            makeSessionKey: { string, completion in
-                
-                completion(.init {
-                    
-                    try .init(
-                        sessionKeyValue: _makeSharedSecret(
-                            string,
-                            keyPair.privateKey
-                        )
-                    )
-                })
-            }
-        )
-    }
-}
-
-private extension GetProcessingSessionCodeService {
-    
-    typealias _ProcessResult = Swift.Result<Response, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = (@escaping _ProcessCompletion) -> Void
-    
-    convenience init(
-        _process: @escaping _Process
-    ) {
-        self.init { completion in
-            
-            _process {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
-    }
-}
-
-private extension ShowCVVService {
-    
-    typealias _Authenticate = ShowCVVService.Authenticate
-    
-    typealias RSAKeyPair = RSADomain.KeyPair
-    
-    typealias _LoadRSAAndSessionKeysSuccess = (rsaKeyPair: RSAKeyPair, SessionKey)
-    typealias _LoadRSAAndSessionKeysResult = Swift.Result<_LoadRSAAndSessionKeysSuccess, Swift.Error>
-    typealias _LoadRSAAndSessionKeysCompletion = (_LoadRSAAndSessionKeysResult) -> Void
-    typealias _LoadRSAAndSessionKeys = (@escaping _LoadRSAAndSessionKeysCompletion) -> Void
-    
-    typealias _ProcessResult = Swift.Result<EncryptedCVV, MappingRemoteServiceError<APIError>>
-    typealias _ProcessCompletion = (_ProcessResult) -> Void
-    typealias _Process = ((ForaBank.SessionID, Data), @escaping _ProcessCompletion) -> Void
-    
-    typealias _MakeSecretJSON = (CardID, SessionID, RSAKeyPair, SessionKey) throws -> Data
-    
-    typealias RSAPrivateKey = RSADomain.PrivateKey
-    typealias _RSADecrypt = (String, RSAPrivateKey) throws -> String
-    
-    convenience init(
-        _authenticate: @escaping _Authenticate,
-        _loadRSAAndSessionKeys: @escaping _LoadRSAAndSessionKeys,
-        _makeSecretJSON: @escaping _MakeSecretJSON,
-        _process: @escaping _Process,
-        _rsaDecrypt: @escaping _RSADecrypt
-    ) {
-        self.init(
-            authenticate: _authenticate,
-            makeJSON: { cardID, sessionID, completion in
-                
-                _loadRSAAndSessionKeys { result in
-                    
-                    completion(.init {
-                        
-                        let (rsaKeyPair, sessionKey) = try result.get()
-                        return try _makeSecretJSON(
-                            cardID,
-                            sessionID,
-                            rsaKeyPair,
-                            sessionKey
-                        )
-                    })
-                }
-            },
-            process: { payload, completion in
-                
-                _process((
-                    .init(value: payload.sessionID.sessionIDValue),
-                    payload.data
-                )) {
-                    completion($0.mapError { .init($0) })
-                }
-            },
-            decryptCVV: { encryptedCVV, completion in
-
-                _loadRSAAndSessionKeys {
-                    
-                    do {
-                        let rsaKeyPair = try $0.get().rsaKeyPair
-                        let cvvValue = try _rsaDecrypt(
-                            encryptedCVV.encryptedCVVValue,
-                            rsaKeyPair.privateKey
-                        )
-                        completion(.success(.init(cvvValue: cvvValue)))
-                    } catch {
-                        completion(.failure(.serviceError(.makeJSONFailure)))
-                    }
-                }
-            }
-        )
-    }
-}
-
-private extension CVVPINCrypto {
-    
-    func makeSharedSecret(
-        from string: String,
-        using privateKey: P384KeyAgreementDomain.PrivateKey
-    ) -> Result<Data, Error> {
-        
-        .init {
-            try extractSharedSecret(
-                from: string,
-                using: privateKey
-            )
-        }
-    }
 }
 
 // MARK: - Error Mappers
