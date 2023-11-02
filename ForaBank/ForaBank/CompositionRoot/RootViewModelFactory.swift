@@ -33,8 +33,7 @@ enum RootViewModelFactory {
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
-                debugLog: { log(.debug, .crypto, $0, $1, $2) },
-                logError: { log(.error, .crypto, $0, $1, $2) }
+                log: { log($0, .crypto, $1, $2, $3) }
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
