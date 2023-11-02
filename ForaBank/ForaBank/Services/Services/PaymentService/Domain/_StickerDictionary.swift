@@ -14,7 +14,6 @@ extension ResponseMapper {
         case orderForm(StickerOrderForm)
         case deliveryOffice(DeliveryOffice)
         case deliveryCourier(DeliveryCourier)
-        case noValid(String)
         
         init(from decoder: Decoder) throws {
             
@@ -31,12 +30,10 @@ extension ResponseMapper {
             } else if let data = try? container.decode(DeliveryOffice.self, forKey: .data) {
                 self = .deliveryOffice(data)
                 
-            } else if let data = try? container.decode(DeliveryCourier.self, forKey: .data) {
+            } else {
+                let data = try container.decode(DeliveryCourier.self, forKey: .data)
                 self = .deliveryCourier(data)
                 
-            } else {
-                
-                self = .noValid("not valid data")
             }
         }
     }
