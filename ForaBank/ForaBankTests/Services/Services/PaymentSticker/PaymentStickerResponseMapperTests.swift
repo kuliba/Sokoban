@@ -99,5 +99,3 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
             ))))
     }
 }
-
-private extension ResponseMapper.Main {}
