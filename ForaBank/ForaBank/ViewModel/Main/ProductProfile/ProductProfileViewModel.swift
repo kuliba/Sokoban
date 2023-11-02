@@ -138,7 +138,7 @@ class ProductProfileViewModel: ObservableObject {
         self.history = historyViewModel
         self.historyPool[product.id] = historyViewModel
         
-        bind(product: productViewModel)
+        bind(product: self.product)
         bind(history: historyViewModel)
         bind(detail: detail)
         bind(buttons: buttons)
@@ -804,9 +804,9 @@ private extension ProductProfileViewModel {
                     .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
                 
             })
-            .sink(receiveValue: { [weak self] in
+            .sink(receiveValue: { [weak product] in
                 
-                self?.action.send($0)
+                product?.action.send($0)
                 
             }).store(in: &bindings)
         
