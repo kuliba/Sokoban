@@ -477,6 +477,7 @@
 		2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7302AF3E03400688401 /* LoaderSpy.swift */; };
 		2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */; };
 		2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */; };
+		2A6DC7382AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */; };
 		2A6EE0632AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */; };
 		2A6F18DB2A29C5DD007E7243 /* RegularFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */; };
 		2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */ = {isa = PBXBuildFile; productRef = 2A727A252A9381A700235EFF /* TransferPublicKey */; };
@@ -2503,6 +2504,7 @@
 		2A6DC7302AF3E03400688401 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderSpy.swift; sourceTree = "<group>"; };
 		2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingStoreDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6DC7352AF3F25700688401 /* KeyChainStore+StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+StoreTests.swift"; sourceTree = "<group>"; };
+		2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingRemoteServiceDecoratorTests.swift; sourceTree = "<group>"; };
 		2A6EE0622AF2C92B00219290 /* RSADomain+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RSADomain+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		2A6F18DA2A29C5DD007E7243 /* RegularFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularFieldViewModel.swift; sourceTree = "<group>"; };
 		2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransferPublicKey.xctestplan; sourceTree = "<group>"; };
@@ -5605,6 +5607,7 @@
 				2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */,
 				2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */,
 				2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */,
+				2A6DC7372AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift */,
 				2A6DC7322AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift */,
 				2A6DC72B2AF3CA0400688401 /* Helpers */,
 			);
@@ -12773,6 +12776,7 @@
 				77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */,
 				2A8A28422A4089D3000D3807 /* OperatorData+test.swift in Sources */,
 				2A3599B22ADA8ECC00820369 /* PublicSecKeyChainStoreTests.swift in Sources */,
+				2A6DC7382AF4051800688401 /* LoggingRemoteServiceDecoratorTests.swift in Sources */,
 				7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */,
 				77BF27B7284785B8009624BB /* DateExtensionsTests.swift in Sources */,
 				2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */,
