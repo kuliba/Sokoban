@@ -66,11 +66,11 @@ extension LiveCVVPINJSONMaker {
         data: Data,
         keyPair: RSAKeyPair
     ) {
-        // В момент шифрования может возникнуть exception DATA_TOO_LARGE_FOR_MODULUS
-        //
-        // Данная ошибка означает, что число, которое представляет собой зашифрованный ОТР-код, слишком большое (т.е. CLIENT-SECRET-OTP >= p * q) для RSA-ключа, которым выполняется шифрование.
-        //
-        // Поэтому нужно сгенерировать новую пару, которыми будет повторно зашифрован тот же самый ОТР-код, но с вероятностью близкой к 100% этой ошибки уже не возникнет, поскольку p и q будут другими.
+        /// В момент шифрования может возникнуть exception DATA_TOO_LARGE_FOR_MODULUS
+        ///
+        /// Данная ошибка означает, что число, которое представляет собой зашифрованный ОТР-код, слишком большое (т.е. CLIENT-SECRET-OTP >= p * q) для RSA-ключа, которым выполняется шифрование.
+        ///
+        /// Поэтому нужно сгенерировать новую пару, которыми будет повторно зашифрован тот же самый ОТР-код, но с вероятностью близкой к 100% этой ошибки уже не возникнет, поскольку p и q будут другими.
         let (encryptedSignedOTP, rsaPrivateKey, rsaPublicKey) = try retry {
             
             let (rsaPrivateKey, rsaPublicKey) = try crypto.generateRSA4096BitKeyPair()
@@ -128,7 +128,6 @@ extension LiveCVVPINJSONMaker {
         publicKey: ECDHPublicKey
     ) throws -> Data {
         
-        // see Services+keyExchangeService.swift:20
         let publicKeyData = try crypto.publicKeyData(forPublicKey: publicKey)
         let publicApplicationSessionKeyBase64 = publicKeyData.base64EncodedString()
         

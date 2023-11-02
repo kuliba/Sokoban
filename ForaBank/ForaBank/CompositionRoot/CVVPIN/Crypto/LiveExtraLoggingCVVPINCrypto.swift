@@ -170,8 +170,8 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
 
-    #warning("remove if unused")
     /// Signs the message digest directly without any additional padding.
+    /// Used in `clientSecretOTP`
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey
