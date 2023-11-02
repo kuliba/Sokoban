@@ -1614,7 +1614,8 @@
 		C19738DE2AF2A52C00101B1B /* StickerOrderForm.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */; };
 		C19738E22AF2B07F00101B1B /* StickerOrderDeliveryCourier.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */; };
 		C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */; };
-		C19738E72AF3970100101B1B /* StickerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E62AF3970100101B1B /* StickerDictionary.swift */; };
+		C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E62AF3970100101B1B /* _StickerDictionary.swift */; };
+		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
 		C1A4D37E2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A4D37D2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift */; };
 		C1A4D3802A67CDFC001DD9E4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A4D37F2A67CDFC001DD9E4 /* ContentView.swift */; };
@@ -3613,7 +3614,8 @@
 		C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderForm.json; sourceTree = "<group>"; };
 		C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderDeliveryCourier.json; sourceTree = "<group>"; };
 		C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerDeliveryOffice.json; sourceTree = "<group>"; };
-		C19738E62AF3970100101B1B /* StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionary.swift; sourceTree = "<group>"; };
+		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
+		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A4D37D2A67CDFC001DD9E4 /* ManageSubscriptionUIPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageSubscriptionUIPreviewApp.swift; sourceTree = "<group>"; };
@@ -8804,7 +8806,8 @@
 		C19738E52AF396D000101B1B /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				C19738E62AF3970100101B1B /* StickerDictionary.swift */,
+				C19738E62AF3970100101B1B /* _StickerDictionary.swift */,
+				C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -11577,7 +11580,7 @@
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				77138CE729C0C12C005EDE8F /* PaymentsSuccessTextViewComponent.swift in Sources */,
 				2A5190342A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift in Sources */,
-				C19738E72AF3970100101B1B /* StickerDictionary.swift in Sources */,
+				C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */,
 				6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */,
 				77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */,
 				EDDC5915288EDBC400C08D06 /* DefaultBankView.swift in Sources */,
@@ -12552,6 +12555,7 @@
 				68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */,
 				0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */,
 				68821588283C029000B27D54 /* InfoProductViewModel.swift in Sources */,
+				C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */,
 				83E82B732A20E5F000783A76 /* PaymentsValidationRulesSystemRule.swift in Sources */,
 				EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */,
 				68AB32C928BF9014004DC481 /* PersonAgreement.swift in Sources */,
