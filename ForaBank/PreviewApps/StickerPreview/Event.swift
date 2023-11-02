@@ -29,6 +29,7 @@ enum Event {
     
     enum ProductEvent {
         
+        case chevronTapped(ParameterProduct, ParameterProduct.State)
         case selectProduct(ProductOption, ParameterProduct)
     }
     

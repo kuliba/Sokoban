@@ -80,7 +80,31 @@ extension OperationStateViewModel {
             newOperation = Self.reduce(operation, with: selectEvents)
             
         case let .product(productEvents):
-            break
+            
+            switch productEvents {
+            case let .chevronTapped(product, state):
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: state,
+                        selectedProduct: product.selectedProduct,
+                        allProducts: product.allProducts
+                    ))
+                )
+                newOperation = operation
+                
+            case let .selectProduct(option, product):
+                
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .product(.init(
+                        state: .select,
+                        selectedProduct: option,
+                        allProducts: []))
+                )
+                
+                newOperation = operation
+            }
             
         case .continueButtonTapped:
             newOperation = Self.reduceWithContinueButtonTapped(operation)
@@ -143,6 +167,7 @@ extension OperationStateViewModel {
                 operation: operation,
                 newParameter: .select(updateParameter)
             )
+
         case .openBranch:
             //TODO: send Branch View
             return nil
@@ -330,13 +355,10 @@ extension Array where Element == Operation.Parameter {
             ]
         )),
         .product(.init(
-            value: "",
-            title: "Счет списания",
-            nameProduct: "Gold",
-            balance: "654 367 ₽",
-            description: "・3387・Все включено",
-            options: []
-        )),
+            state: .select,
+            selectedProduct: .init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено"),
+            allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
+        ),
         .select(.init(
             id: "transferType",
             value: "",
