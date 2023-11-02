@@ -7,15 +7,15 @@
 
 import CVVPINServices
 import Foundation
-#warning("remove if unused")
+
 final class LoggingStoreDecorator<T> {
-    
+
     let decoratee: any Store<T>
-    let log: (String) -> Void
-    
+    let log: (String, StaticString, UInt) -> Void
+
     init(
         decoratee: any Store<T>,
-        log: @escaping (String) -> Void = { LoggerAgent.shared.log(level: .debug, category: .cache, message: $0) }
+        log: @escaping (String, StaticString, UInt) -> Void
     ) {
         self.decoratee = decoratee
         self.log = log
@@ -33,10 +33,10 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
             
             switch result {
             case let .failure(error):
-                log("Store \(String(describing: self)): Retrieval failure: \(error).")
+                log("Store \(String(describing: self)): Retrieval failure: \(error).", #file, #line)
                 
             case let .success((model, validUntil)):
-                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).")                
+                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).", #file, #line)                
             }
             completion(result)
         }
@@ -49,7 +49,7 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
     ) {
         decoratee.insert(local, validUntil: validUntil) { [log] result in
             
-            log("Store \(String(describing: self)): Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).")
+            log("Store \(String(describing: self)): Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).", #file, #line)
             completion(result)
         }
     }
@@ -59,7 +59,7 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
     ) {
         decoratee.deleteCache { [log] result in
             
-            log("Store \(String(describing: self)): Asked to delete cache. Deletion result: \(result).")
+            log("Store \(String(describing: self)): Asked to delete cache. Deletion result: \(result).", #file, #line)
             completion(result)
         }
     }

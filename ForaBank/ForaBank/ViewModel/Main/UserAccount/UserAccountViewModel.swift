@@ -38,26 +38,37 @@ class UserAccountViewModel: ObservableObject {
     }
     
     private let model: Model
+    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationBarView.ViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel, model: Model = .emptyMock) {
-        
+    init(
+        navigationBar: NavigationBarView.ViewModel,
+        avatar: AvatarViewModel,
+        sections: [AccountSectionViewModel],
+        exitButton: AccountCellFullButtonView.ViewModel,
+        deleteAccountButton: AccountCellFullButtonWithInfoView.ViewModel,
+        model: Model = .emptyMock,
+        onExit: @escaping () -> Void
+    ) {
         self.model = model
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
         self.exitButton = exitButton
         self.deleteAccountButton = deleteAccountButton
+        self.onExit = onExit
     }
     
     init(
         model: Model,
         clientInfo: ClientInfoData,
         dismissAction: @escaping () -> Void,
-        action: Action? = nil
+        action: Action? = nil,
+        onExit: @escaping () -> Void
     ) {
         
         self.model = model
+        self.onExit = onExit
         sections = []
         navigationBar = .init(title: "Профиль", leftItems: [
             NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)
@@ -265,21 +276,17 @@ class UserAccountViewModel: ObservableObject {
                     model.action.send(ModelAction.ClientPhoto.Save(image: photoData))
                     
                 case _ as UserAccountViewModelAction.ExitAction:
-                    alert = .init(
-                        title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
-                        primary: .init(type: .default, title: "Выход", action: {
-                            self.model.auth.value = .unlockRequiredManual
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .exit {
+                        
+                        self.model.auth.value = .unlockRequiredManual
+                        self.onExit()
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteAction:
-                    
-                    alert = .init(
-                        title: "Удалить учетную запись?", message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
-                        primary: .init(type: .default, title: "ОК", action: {
-                            self.model.action.send(ModelAction.ClientInfo.Delete.Request())
-                        }),
-                        secondary: .init(type: .cancel, title: "Отмена", action: { }))
+                    alert = .delete {
+                        
+                        self.model.action.send(ModelAction.ClientInfo.Delete.Request())
+                    }
                     
                 case _ as UserAccountViewModelAction.DeleteInfoAction:
                     
@@ -538,6 +545,49 @@ class UserAccountViewModel: ObservableObject {
         }
         
         return products
+    }
+}
+
+private extension Alert.ViewModel {
+    
+    static func exit(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Выход",
+            message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию",
+            primary: .init(
+                type: .default,
+                title: "Выход",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
+    }
+    
+    static func delete(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Удалить учетную запись?",
+            message: "Вы действительно хотите удалить свои данные из Фора-Онлайн?\n\nДля входа в приложение потребуется новая регистрация данных",
+            primary: .init(
+                type: .default,
+                title: "ОК",
+                action: action
+            ),
+            secondary: .init(
+                type: .cancel,
+                title: "Отмена",
+                action: {}
+            )
+        )
     }
 }
 

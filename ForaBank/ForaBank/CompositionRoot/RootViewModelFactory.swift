@@ -19,15 +19,24 @@ enum RootViewModelFactory {
         let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            log: { log(.crypto, $0, #file, #line) }
+            log: { log(.crypto, $0, $1, $2) }
         )
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
-        let cvvPINServicesClient = Services.loggingCVVPINServicesClient(
+#warning("fix lifespans before release")
+        let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
             httpClient: httpClient,
-            cvvPINCrypto: cvvPINCrypto,
-            cvvPINJSONMaker: cvvPINJSONMaker,
+            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
+                decoratee: cvvPINCrypto,
+                log: { log(.crypto, $0, $1, $2) }
+            ),
+            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
+                decoratee: cvvPINJSONMaker,
+                log: { log(.crypto, $0, $1, $2) }
+            ),
+            rsaKeyPairLifespan: .rsaKeyPairLifespan,
+            ephemeralLifespan: .ephemeralLifespan,
             log: log
         )
         
@@ -36,6 +45,7 @@ enum RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
+                onExit: onExit,
                 product: $0,
                 rootView: $1,
                 dismissAction: $2
@@ -44,12 +54,14 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: productProfileViewModelFactory
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
         )
         
         let chatViewModel = ChatViewModel()
@@ -61,7 +73,8 @@ enum RootViewModelFactory {
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
-            model
+            model,
+            onExit: onExit
         )
     }
 }
@@ -69,36 +82,33 @@ enum RootViewModelFactory {
 extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
 
-private extension Services {
-    
-    static func loggingCVVPINServicesClient(
-        httpClient: HTTPClient,
-        cvvPINCrypto: CVVPINCrypto,
-        cvvPINJSONMaker: CVVPINJSONMaker,
-        currentDate: @escaping () -> Date = Date.init,
-        log: @escaping Log
-    ) -> CVVPINServicesClient {
-        
-        cvvPINServicesClient(
-            httpClient: httpClient,
-            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
-                decoratee: cvvPINCrypto,
-                log: { log(.crypto, $0, #file, #line) }
-            ),
-            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
-                decoratee: cvvPINJSONMaker,
-                log: { log(.crypto, $0, #file, #line) }
-            ),
-            currentDate: currentDate,
-            log: log
-        )
-    }
-}
-
 extension LoggerAgentProtocol {
     
     func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
         
         log(level: .debug, category: category, message: message, file: file, line: line)
+    }
+}
+
+// MARK: - Lifespans
+
+private extension TimeInterval {
+    
+    static var rsaKeyPairLifespan: Self {
+        
+#if RELEASE
+        15_778_463
+#else
+        600
+#endif
+    }
+    
+    static var ephemeralLifespan: Self {
+        
+#if RELEASE
+        15
+#else
+        30
+#endif
     }
 }
