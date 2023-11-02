@@ -26,7 +26,7 @@ struct LiveExtraLoggingCVVPINCrypto {
 
 extension LiveExtraLoggingCVVPINCrypto {
     
-    // MARK: - Transport & Processing Key Domain
+    // MARK: - Transport & Processing Public Key Domain
     
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
