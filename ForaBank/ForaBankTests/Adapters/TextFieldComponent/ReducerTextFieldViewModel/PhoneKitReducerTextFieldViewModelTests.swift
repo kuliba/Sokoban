@@ -120,7 +120,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
             .editing(.init("",     cursorAt: 0)),
             .editing(.init("+374", cursorAt: 4)),
             .editing(.init("+37",  cursorAt: 3)),
-            .editing(.init("+(3",  cursorAt: 3)),
+            .editing(.init("+3",  cursorAt: 2)),
             .editing(.init("",     cursorAt: 0)),
         ])
     }
@@ -170,7 +170,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
             .editing(.init("+379-9", cursorAt: 6)),
             .editing(.init("+379",   cursorAt: 4)),
             .editing(.init("+37",    cursorAt: 3)),
-            .editing(.init("+(3",    cursorAt: 3)),
+            .editing(.init("+3",    cursorAt: 2)),
             .editing(.init("",       cursorAt: 0)),
         ])
     }

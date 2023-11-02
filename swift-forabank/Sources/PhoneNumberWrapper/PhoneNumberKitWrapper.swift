@@ -25,10 +25,17 @@ public struct PhoneNumberWrapper {
     public func format(_ value: String) -> String {
         
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
-        guard let phoneNumberParsed = try? phoneNumberKit.parse(
-                phoneNumber,
-                ignoreType: true
-              ) else { return phoneNumber.applyPatternOnPhoneNumber() }
+        
+        guard let phoneNumberParsed = try? phoneNumber.hasPrefix("79") ?
+                phoneNumberKit.parse(
+                    String(phoneNumber.dropFirst()),
+                    withRegion: "RU",
+                    ignoreType: true) :
+                phoneNumberKit.parse(
+                    phoneNumber,
+                    ignoreType: true
+                )
+        else { return phoneNumber.applyPatternOnPhoneNumber() }
         
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
