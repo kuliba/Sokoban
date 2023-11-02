@@ -24,10 +24,72 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         
         sut.load { _ in exp.fulfill() }
         
-        wait(for: [exp])
+        wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
             "LoaderDecorator<Item>: load failure: emptyCache."
+        ])
+    }
+    
+    func test_init_shouldLogSave() {
+        
+        let (sut, spy) = makeSUT()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.save(anyItem(), validUntil: .init()) { _ in exp.fulfill() }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: save success."
+        ])
+    }
+    
+    func test_init_shouldLogInvalidLoadOnExpired() {
+
+        let item = anyItem()
+        let expired = Date()
+        let currentDate = { expired.addingTimeInterval(1) }
+        let (sut, spy) = makeSUT(currentDate: currentDate)
+        let saveExp = expectation(description: "wait for save completion")
+        let loadExp = expectation(description: "wait for load completion")
+
+        sut.save(item, validUntil: expired) { _ in
+
+            sut.load { _ in loadExp.fulfill() }
+            saveExp.fulfill()
+        }
+
+        wait(for: [saveExp], timeout: 1.0)
+        wait(for: [loadExp], timeout: 1.0)
+
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: save success.",
+            "LoaderDecorator<Item>: load failure: invalidCache(validatedAt: \(currentDate()), validUntil: \(expired))."
+        ])
+    }
+    
+    func test_init_shouldLogLoadOnValid() {
+
+        let item = anyItem()
+        let validUntil = Date()
+        let currentDate = { validUntil }
+        let (sut, spy) = makeSUT(currentDate: currentDate)
+        let saveExp = expectation(description: "wait for save completion")
+        let loadExp = expectation(description: "wait for load completion")
+
+        sut.save(item, validUntil: validUntil) { _ in
+
+            sut.load { _ in loadExp.fulfill() }
+            saveExp.fulfill()
+        }
+
+        wait(for: [saveExp], timeout: 1.0)
+        wait(for: [loadExp], timeout: 1.0)
+
+        XCTAssertNoDiff(spy.messages, [
+            "LoaderDecorator<Item>: save success.",
+            "LoaderDecorator<Item>: load success: Item(value: \"\(item.value)\")."
         ])
     }
     
@@ -36,6 +98,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     private typealias SUT = LoggingLoaderDecorator<Item>
     
     private func makeSUT(
+        currentDate: @escaping () -> Date = Date.init,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -44,7 +107,10 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
     ) {
         let spy = LogSpy()
         let store = InMemoryStore<Item>()
-        let loader = GenericLoaderOf<Item>(store: store)
+        let loader = GenericLoaderOf<Item>(
+            store: store,
+            currentDate: currentDate
+        )
         let sut = SUT(
             decoratee: loader,
             log: spy.log
