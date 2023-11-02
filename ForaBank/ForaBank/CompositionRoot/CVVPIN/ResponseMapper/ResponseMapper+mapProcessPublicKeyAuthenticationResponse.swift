@@ -20,7 +20,7 @@ extension ResponseMapper {
             case 200:
                 let response = try JSONDecoder().decode(Response.self, from: data)
                 return .success(.init(
-                    sessionID: response.sessionID,
+                    sessionID: response.sessionId,
                     publicServerSessionKey: response.publicServerSessionKey,
                     sessionTTL: response.sessionTTL
                 ))
@@ -42,7 +42,7 @@ extension ResponseMapper {
     private struct Response: Decodable {
         
         let publicServerSessionKey: String
-        let sessionID: String
+        let sessionId: String
         let sessionTTL: Int
     }
 }

@@ -31,7 +31,7 @@ public extension Crypto {
         try key.externalRepresentation()
     }
     
-    // MARK: - Sing & Verify
+    // MARK: - Sign & Verify
     
     static func sign(
         _ data: Data,
