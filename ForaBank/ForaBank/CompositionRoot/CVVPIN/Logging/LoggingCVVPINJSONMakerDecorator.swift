@@ -11,20 +11,17 @@ import Foundation
 
 final class LoggingCVVPINJSONMakerDecorator {
     
-    typealias Log = (String, StaticString, UInt) -> Void
-    
+    typealias Log = (LoggerAgentLevel, String, StaticString, UInt) -> Void
+
     private let decoratee: CVVPINJSONMaker
-    private let debugLog: Log
-    private let logError: Log
+    private let log: Log
 
     init(
         decoratee: CVVPINJSONMaker,
-        debugLog: @escaping Log,
-        logError: @escaping Log
+        log: @escaping Log
     ) {
         self.decoratee = decoratee
-        self.debugLog = debugLog
-        self.logError = logError
+        self.log = log
     }
 }
 
@@ -40,11 +37,11 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 publicKey: publicKey,
                 rsaKeyPair: rsaKeyPair
             )
-            debugLog("Make JSON success: \"\(String(data: json, encoding: .utf8) ?? "n/a")\"", #file, #line)
+            log(.debug, "Make JSON success: \"\(String(data: json, encoding: .utf8) ?? "n/a")\"", #file, #line)
             
             return json
         } catch {
-            logError("Make JSON failure: \(error.localizedDescription)", #file, #line)
+            log(.error, "Make JSON failure: \(error.localizedDescription)", #file, #line)
             throw error
         }
     }
@@ -61,11 +58,11 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 otp: otp,
                 sessionKey: sessionKey
             )
-            debugLog("Make Secret JSON success (data: \(output.data.count)).", #file, #line)
+            log(.debug, "Make Secret JSON success (data: \(output.data.count)).", #file, #line)
             
             return output
         } catch {
-            logError("Make Secret JSON failure: \(error).", #file, #line)
+            log(.error, "Make Secret JSON failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -76,11 +73,11 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
         
         do {
             let json = try decoratee.makeSecretRequestJSON(publicKey: publicKey)
-            debugLog("Secret Request JSON creation success: \(json)", #file, #line)
+            log(.debug, "Secret Request JSON creation success: \(json)", #file, #line)
             
             return json
         } catch {
-            logError("Secret Request JSON creation failure: \(error)", #file, #line)
+            log(.error, "Secret Request JSON creation failure: \(error)", #file, #line)
             throw error
         }
     }
@@ -105,11 +102,11 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 sessionKey: sessionKey,
                 rsaPrivateKey: rsaPrivateKey
             )
-            debugLog("Make Change PIN JSON success: \(json)", #file, #line)
+            log(.debug, "Make Change PIN JSON success: \(json)", #file, #line)
             
             return json
         } catch {
-            logError("Make Change PIN JSON failure: \(error).", #file, #line)
+            log(.error, "Make Change PIN JSON failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -128,11 +125,11 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
                 rsaKeyPair: rsaKeyPair,
                 sessionKey: sessionKey
             )
-            debugLog("SecretJSON creation success (\(json.count)).", #file, #line)
+            log(.debug, "SecretJSON creation success (\(json.count)).", #file, #line)
             
             return json
         } catch {
-            logError("SecretJSON creation failure: \(error).", #file, #line)
+            log(.error, "SecretJSON creation failure: \(error).", #file, #line)
             throw error
         }
     }
