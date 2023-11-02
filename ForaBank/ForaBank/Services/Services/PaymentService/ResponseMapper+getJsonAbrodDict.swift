@@ -22,19 +22,9 @@ extension ResponseMapper {
             
             switch httpURLResponse.statusCode {
             case 200:
-                
-                if data.isEmpty {
                     
-                    return .failure(.invalidData(
-                        statusCode: httpURLResponse.statusCode,
-                        data: data
-                    ))
-                    
-                } else {
-                    
-                    let stickerDictionary = try JSONDecoder().decode(_StickerDictionary.self, from: data)
-                    return .success(stickerMapper(stickerDecodable: stickerDictionary))
-                }
+                let stickerDictionary = try JSONDecoder().decode(_StickerDictionary.self, from: data)
+                return .success(stickerMapper(stickerDecodable: stickerDictionary))
                 
             default:
                 

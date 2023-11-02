@@ -21,8 +21,8 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
-            mapResponse: { _,_ in
-                    .deliveryCourier(.init(main: [], serial: ""))
+            mapResponse: {
+                try ResponseMapper.mapStickerDictionaryResponse($0, $1).get()
             }
         )
     }
