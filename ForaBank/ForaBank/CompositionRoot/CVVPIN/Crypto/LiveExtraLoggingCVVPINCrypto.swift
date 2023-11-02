@@ -46,13 +46,8 @@ extension LiveExtraLoggingCVVPINCrypto {
         )
     }
     
-    func processingEncrypt(data: Data) throws -> Data {
+    func processingEncryptWithPadding(data: Data) throws -> Data {
         
-//        try Crypto.encrypt(
-//            data: data,
-//            withPublicKey: Crypto.processingKey(),
-//            algorithm: .rsaEncryptionRaw
-//        )
         try Crypto.encryptWithRSAKey(
             data,
             publicKey: Crypto.processingKey(),

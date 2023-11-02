@@ -183,7 +183,7 @@ extension LiveCVVPINJSONMaker {
         let otpEventID = otpEventID.eventIDValue
         
 #warning("should padding be used here?")
-        let secretPINData = try crypto.processingEncrypt(
+        let secretPINData = try crypto.processingEncryptWithPadding(
             data: .init(pin.pinValue.utf8)
         )
         let secretPIN = secretPINData.base64EncodedString()

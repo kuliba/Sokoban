@@ -23,7 +23,7 @@ protocol CVVPINCrypto {
     
     func transportEncryptNoPadding(data: Data) throws -> Data
     
-    func processingEncrypt(data: Data) throws -> Data
+    func processingEncryptWithPadding(data: Data) throws -> Data
     
     // MARK: - ECDH Domain
     

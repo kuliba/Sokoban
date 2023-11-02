@@ -52,10 +52,10 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         }
     }
     
-    func processingEncrypt(data: Data) throws -> Data {
+    func processingEncryptWithPadding(data: Data) throws -> Data {
         
         do {
-            let encrypted = try decoratee.processingEncrypt(data: data)
+            let encrypted = try decoratee.processingEncryptWithPadding(data: data)
             log("Encrypt using processing public key success (\(encrypted.count)).")
             
             return encrypted
