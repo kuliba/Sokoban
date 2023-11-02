@@ -9,24 +9,15 @@ import XCTest
 @testable import ForaBank
 
 final class PaymentStickerResponseMapperTests: XCTestCase {
-    
-    typealias StickerDictionary = ResponseMapper.StickerDictionary
-    typealias StickerDictionaryError = ResponseMapper.StickerDictionaryError
-    typealias StickerDictionaryResult = Result<StickerDictionary, StickerDictionaryError>
-    
-    let bundle = Bundle(for: PaymentStickerResponseMapperTests.self)
-    
-    func test_validResponse_shouldReturnStickerDictionary() {
         
-        guard let url = bundle.url(forResource: "StickerOrderForm", withExtension: "json"),
-              let json = try? Data(contentsOf: url) else {
-            XCTFail("testResponseMapperStickerDictionary_Decoding : Missing file: StickerOrderForm.json")
-            return
-        }
+    func test_validResponse_shouldReturnStickerDictionary() throws {
+        
+        let json = try getJSON(from: "StickerOrderForm")
+        let responseOK = anyHTTPURLResponse()
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
-            anyHTTPURLResponse()
+            responseOK
         )
         
         XCTAssertEqual(
@@ -51,13 +42,10 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
             ))))
     }
     
-    func test_validResponse_shouldReturnStickerOrderDeliveryCourier() {
+    func test_validResponse_shouldReturnStickerOrderDeliveryCourier() throws {
         
-        guard let url = bundle.url(forResource: "StickerOrderDeliveryCourier", withExtension: "json"),
-              let json = try? Data(contentsOf: url) else {
-            XCTFail("testResponseMapperStickerOrderDeliveryCourier_Decoding : Missing file: StickerOrderDeliveryCourier.json")
-            return
-        }
+        let json = try getJSON(from: "StickerOrderDeliveryCourier")
+        let responseOK = anyHTTPURLResponse()
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
@@ -79,13 +67,10 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
             ))))
     }
     
-    func test_validResponse_shouldReturnStickerOrderDeliveryOffice() {
+    func test_validResponse_shouldReturnStickerOrderDeliveryOffice() throws {
         
-        guard let url = bundle.url(forResource: "StickerDeliveryOffice", withExtension: "json"),
-              let json = try? Data(contentsOf: url) else {
-            XCTFail("testResponseMapperStickerOrderDeliveryOffice_Decoding : Missing file: StickerDeliveryOffice.json")
-            return
-        }
+        let json = try getJSON(from: "StickerDeliveryOffice")
+        let responseOK = anyHTTPURLResponse()
         
         let map = ResponseMapper.mapStickerDictionaryResponse(
             json,
@@ -115,14 +100,4 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
     }
 }
 
-//MARK: Helpers
-
-extension PaymentStickerResponseMapperTests {
-    
-    func successHttpResponse(
-        statusCode: Int = 200
-    ) -> HTTPURLResponse {
-        
-        .init(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
-    }
-}
+private extension ResponseMapper.Main {}
