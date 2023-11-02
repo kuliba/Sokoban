@@ -5508,14 +5508,6 @@
 			path = SupportingTypes;
 			sourceTree = "<group>";
 		};
-		2A669EAA2AE50349009A2F12 /* LEGACY_KEEP_UNITIL_USEFUL */ = {
-			isa = PBXGroup;
-			children = (
-				2A77B64E2ADFCD040022600F /* CVVPINTypes */,
-			);
-			path = LEGACY_KEEP_UNITIL_USEFUL;
-			sourceTree = "<group>";
-		};
 		2A67A01C2A43311B003BE637 /* Mappers */ = {
 			isa = PBXGroup;
 			children = (
@@ -5569,17 +5561,8 @@
 				2A7688CF2AF38FDE00045293 /* Logging */,
 				2A2ECBC02AE5264C00F3C946 /* ResponseMapper */,
 				2A77B64F2ADFCD450022600F /* Infra */,
-				2A669EAA2AE50349009A2F12 /* LEGACY_KEEP_UNITIL_USEFUL */,
 			);
 			path = CVVPIN;
-			sourceTree = "<group>";
-		};
-		2A77B64E2ADFCD040022600F /* CVVPINTypes */ = {
-			isa = PBXGroup;
-			children = (
-				2A77B6492ADFC3C50022600F /* SymmetricKey.swift */,
-			);
-			path = CVVPINTypes;
 			sourceTree = "<group>";
 		};
 		2A77B64F2ADFCD450022600F /* Infra */ = {
@@ -5591,6 +5574,7 @@
 				2A7688D22AF3914C00045293 /* Store.swift */,
 				2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */,
 				2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */,
+				2A77B6492ADFC3C50022600F /* SymmetricKey.swift */,
 			);
 			path = Infra;
 			sourceTree = "<group>";
