@@ -490,6 +490,7 @@
 		2A73C22A2A03A57800C68A32 /* getScenarioQRData_1_2_2.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A73C2292A03A57800C68A32 /* getScenarioQRData_1_2_2.json */; };
 		2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */; };
 		2A7688D12AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */; };
+		2A7688D32AF3914C00045293 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7688D22AF3914C00045293 /* Store.swift */; };
 		2A77B6462ADF213F0022600F /* CVVPINRemote+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */; };
 		2A77B6482ADFC2360022600F /* RemoteCVV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6472ADFC2360022600F /* RemoteCVV.swift */; };
 		2A77B64A2ADFC3C50022600F /* SymmetricKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6492ADFC3C50022600F /* SymmetricKey.swift */; };
@@ -2521,6 +2522,7 @@
 		2A743B932A29FDD100945BB4 /* TextFieldModel.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextFieldModel.xctestplan; sourceTree = "<group>"; };
 		2A754A782AEFE24C002FED0A /* Data+isEmptyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+isEmptyJSON.swift"; sourceTree = "<group>"; };
 		2A7688D02AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingLoaderDecorator+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		2A7688D22AF3914C00045293 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		2A77671829E93E060096013A /* swift-forabank */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-forabank"; path = "../swift-forabank"; sourceTree = "<group>"; };
 		2A77B6452ADF213F0022600F /* CVVPINRemote+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINRemote+live.swift"; sourceTree = "<group>"; };
 		2A77B6472ADFC2360022600F /* RemoteCVV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCVV.swift; sourceTree = "<group>"; };
@@ -5615,10 +5617,11 @@
 			isa = PBXGroup;
 			children = (
 				2A2ECBBA2AE51D6F00F3C946 /* GenericLoaderOf.swift */,
-				2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */,
-				2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */,
 				2A2ECBC52AE5362300F3C946 /* InMemoryStore.swift */,
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
+				2A7688D22AF3914C00045293 /* Store.swift */,
+				2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */,
+				2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */,
 			);
 			path = Infra;
 			sourceTree = "<group>";
@@ -12056,6 +12059,7 @@
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
+				2A7688D32AF3914C00045293 /* Store.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
 				68FE3988286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift in Sources */,
 				6833E0CC273920CE004C070F /* CodeVerificationCoordinator.swift in Sources */,
