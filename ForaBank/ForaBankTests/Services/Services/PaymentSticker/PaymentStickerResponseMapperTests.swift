@@ -15,13 +15,13 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         let json = try getJSON(from: "StickerOrderForm")
         let responseOK = anyHTTPURLResponse()
         
-        let map = ResponseMapper.mapStickerDictionaryResponse(
+        let result = ResponseMapper.mapStickerDictionaryResponse(
             json,
             responseOK
         )
         
         XCTAssertEqual(
-            map,
+            result,
             .success(.orderForm(.init(
                 header: [.init(type: .pageTitle, data: .init(
                     title: "Оформление заявки",
@@ -47,13 +47,13 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         let json = try getJSON(from: "StickerOrderDeliveryCourier")
         let responseOK = anyHTTPURLResponse()
         
-        let map = ResponseMapper.mapStickerDictionaryResponse(
+        let result = ResponseMapper.mapStickerDictionaryResponse(
             json,
             anyHTTPURLResponse()
         )
         
         XCTAssertEqual(
-            map,
+            result,
             .success(.deliveryOffice(.init(main: [
                 .init(type: .separator, data: .separator(.init(color: "#F6F6F7"))),
                 .init(type: .citySelector, data: .citySelector(
@@ -72,13 +72,13 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         let json = try getJSON(from: "StickerDeliveryOffice")
         let responseOK = anyHTTPURLResponse()
         
-        let map = ResponseMapper.mapStickerDictionaryResponse(
+        let result = ResponseMapper.mapStickerDictionaryResponse(
             json,
             anyHTTPURLResponse()
         )
         
         XCTAssertEqual(
-            map,
+            result,
             .success(.deliveryOffice(.init(main: [
                 .init(type: .separator, data: .separator(.init(color: "#F6F6F7"))),
                 .init(type: .citySelector, data: .citySelector(
