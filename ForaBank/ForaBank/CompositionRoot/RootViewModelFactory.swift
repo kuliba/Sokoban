@@ -43,7 +43,7 @@ enum RootViewModelFactory {
             ),
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan,
-            log: { log(.debug, $0, $1, $2, $3) }
+            log: { log($0, $1, $2, $3, $4) }
         )
         
         let productProfileViewModelFactory = {

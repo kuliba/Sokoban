@@ -16,7 +16,7 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
-    typealias Log = (LoggerAgentCategory, String, StaticString, UInt) -> Void
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
@@ -70,7 +70,7 @@ extension Services {
         
         let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(
             httpClient: httpClient,
-            log: { log(.network, $0, $1, $2) }
+            log: { log(.info, .network, $0, $1, $2) }
         )
         
         // MARK: Configure CVV-PIN Services
@@ -155,14 +155,14 @@ extension Services {
         // MARK: - ComposedCVVPINService
         
         let cvvPINServicesClient = ComposedCVVPINService(
-            // TODO: add category `CVV-PIN`
-            log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
             getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
-            showCVV: showCVVService.showCVV(cardID:completion:)
+            showCVV: showCVVService.showCVV(cardID:completion:),
+            // TODO: add category `CVV-PIN`
+            log: log
         )
                 
         return (cvvPINServicesClient, removeRSAKeyPair)
@@ -172,7 +172,7 @@ extension Services {
         func removeRSAKeyPair() {
             
             persistentRSAKeyPairStore.clear()
-            log(.cache, "RSA Key Store clear initiated.", #file, #line)
+            log(.info, .cache, "RSA Key Store clear initiated.", #file, #line)
         }
         
         func loggingLoaderDecorator<T>(
@@ -184,7 +184,7 @@ extension Services {
                     store: store,
                     currentDate: currentDate
                 ),
-                log: { log(.cache, $0, $1, $2) }
+                log: { log(.error, .cache, $0, $1, $2) }
             )
         }
         
