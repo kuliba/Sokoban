@@ -18,12 +18,12 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
+        let log = LoggerAgent.shared.log
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
             _transportKey: Crypto.transportKey,
             _processingKey: Crypto.processingKey,
-            log: { log(.crypto, $0, $1, $2) }
+            log: { log(.error, .crypto, $0, $1, $2) }
         )
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
@@ -33,15 +33,15 @@ enum RootViewModelFactory {
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
-                log: { log(.crypto, $0, $1, $2) }
+                log: { log(.debug, .crypto, $0, $1, $2) }
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
-                log: { log(.crypto, $0, $1, $2) }
+                log: { log(.debug, .crypto, $0, $1, $2) }
             ),
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan,
-            log: log
+            log: { log(.debug, $0, $1, $2, $3) }
         )
         
         let productProfileViewModelFactory = {
@@ -85,14 +85,6 @@ enum RootViewModelFactory {
 
 extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
-
-extension LoggerAgentProtocol {
-    
-    func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
-        
-        log(level: .debug, category: category, message: message, file: file, line: line)
-    }
-}
 
 // MARK: - Adapters
 
