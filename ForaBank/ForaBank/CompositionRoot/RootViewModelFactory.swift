@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
+import ForaCrypto
 import Foundation
 
 enum RootViewModelFactory {
+    
+    typealias Crypto = ForaCrypto.Crypto
     
     static func make(
         with model: Model
@@ -18,6 +21,8 @@ enum RootViewModelFactory {
         let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
+            _transportKey: Crypto.transportKey,
+            _processingKey: Crypto.processingKey,
             log: { log(.crypto, $0, $1, $2) }
         )
         
@@ -86,6 +91,43 @@ extension LoggerAgentProtocol {
     func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
         
         log(level: .debug, category: category, message: message, file: file, line: line)
+    }
+}
+
+// MARK: - Adapters
+
+private extension LiveExtraLoggingCVVPINCrypto{
+    
+    init(
+        _transportKey: @escaping () throws -> SecKey,
+        _processingKey: @escaping () throws -> SecKey,
+        log: @escaping Log
+    ) {
+        self.init(
+            transportKey: {
+                
+                do {
+                    return try LiveExtraLoggingCVVPINCrypto.TransportKey(
+                        key: _transportKey()
+                    )
+                } catch {
+                    log("Transport Key loading failure: \(error).", #file, #line)
+                    throw error
+                }
+            },
+            processingKey: {
+                
+                do {
+                    return try LiveExtraLoggingCVVPINCrypto.ProcessingKey(
+                        key: _processingKey()
+                    )
+                } catch {
+                    log("Processing Key loading failure: \(error).", #file, #line)
+                    throw error
+                }
+            },
+            log: log
+        )
     }
 }
 

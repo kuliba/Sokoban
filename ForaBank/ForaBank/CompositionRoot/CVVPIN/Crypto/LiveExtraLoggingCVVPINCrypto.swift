@@ -23,7 +23,22 @@ struct LiveExtraLoggingCVVPINCrypto {
     
     typealias Log = (String, StaticString, UInt) -> Void
     
+    let transportKey: () throws -> TransportKey
+    let processingKey: () throws -> ProcessingKey
     let log: Log
+}
+    
+extension LiveExtraLoggingCVVPINCrypto {
+
+    struct TransportKey {
+        
+        let key: SecKey
+    }
+
+    struct ProcessingKey {
+        
+        let key: SecKey
+    }
 }
 
 extension LiveExtraLoggingCVVPINCrypto {
@@ -34,7 +49,7 @@ extension LiveExtraLoggingCVVPINCrypto {
         
         try Crypto.encryptWithRSAKey(
             data,
-            publicKey: Crypto.transportKey(),
+            publicKey: transportKey().key,
             padding: .PKCS1
         )
     }
@@ -43,7 +58,7 @@ extension LiveExtraLoggingCVVPINCrypto {
         
         try Crypto.encrypt(
             data: data,
-            withPublicKey: Crypto.transportKey(),
+            withPublicKey: transportKey().key,
             algorithm: .rsaEncryptionRaw
         )
     }
@@ -52,7 +67,7 @@ extension LiveExtraLoggingCVVPINCrypto {
         
         try Crypto.encryptWithRSAKey(
             data,
-            publicKey: Crypto.processingKey(),
+            publicKey: processingKey().key,
             padding: .PKCS1
         )
     }
