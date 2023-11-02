@@ -46,7 +46,9 @@ where SymmetricKey == SessionKey {
     
     static var loggingLive: Self {
         
-        let changePINSecretJSONMakerCrypto = LiveExtraLoggingCVVPINCrypto(log: log)
+        let changePINSecretJSONMakerCrypto = LiveExtraLoggingCVVPINCrypto(
+            log: { message,_,_ in log(message) }
+        )
         
         return .init(
             crypto: .init(

@@ -19,7 +19,7 @@ enum RootViewModelFactory {
         let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            log: { log(.crypto, $0, #file, #line) }
+            log: { log(.crypto, $0, $1, $2) }
         )
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)

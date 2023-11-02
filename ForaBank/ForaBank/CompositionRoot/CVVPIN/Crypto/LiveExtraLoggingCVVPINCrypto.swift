@@ -21,7 +21,9 @@ struct LiveExtraLoggingCVVPINCrypto {
     
     private typealias Crypto = ForaCrypto.Crypto
     
-    let log: (String) -> Void
+    typealias Log = (String, StaticString, UInt) -> Void
+    
+    let log: Log
 }
 
 extension LiveExtraLoggingCVVPINCrypto {
@@ -233,7 +235,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
                 algorithm: .rsaSignatureRaw
             )
         } catch {
-            log("Signature creation failure: \(error).")
+            log("Signature creation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -261,7 +263,7 @@ private extension LiveExtraLoggingCVVPINCrypto {
             
             if !result { throw VerifyError.verificationFailure }
         } catch {
-            log("Signature verification failure: \(error).")
+            log("Signature verification failure: \(error).", #file, #line)
             throw error
         }
     }
