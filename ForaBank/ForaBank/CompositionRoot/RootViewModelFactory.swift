@@ -38,7 +38,8 @@ enum RootViewModelFactory {
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
-                log: { log(.debug, .crypto, $0, $1, $2) }
+                debugLog: { log(.debug, .crypto, $0, $1, $2) },
+                logError: { log(.error, .crypto, $0, $1, $2) }
             ),
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan,
