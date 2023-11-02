@@ -28,12 +28,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeRetrieval(with: (item, validUntil))
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .info)
-        XCTAssert(message.message.contains("Successfully retrieved \(item) valid until \(validUntil)."))
-        XCTAssert(message.message.contains(" valid until \(validUntil)."))
+        try assertIsOne(in: spy.messages, .info, contains: "Successfully retrieved \(item) valid until \(validUntil).")
     }
     
     func test_retrieve_shouldLogOnFailure() throws {
@@ -46,11 +41,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeRetrieval(with: retrievalError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .error)
-        XCTAssert(message.message.contains("Retrieval failure"))
+        try assertIsOne(in: spy.messages, .error, contains: "Retrieval failure")
     }
     
     func test_retrieve_shouldNotLogOnInstanceDeallocation() throws {
@@ -77,11 +68,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertionSuccessfully()
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .info)
-        XCTAssert(message.message.contains("Successfully inserted \(item) validUntil \(validUntil)."))
+        try assertIsOne(in: spy.messages, .info, contains: "Successfully inserted \(item) validUntil \(validUntil).")
     }
     
     func test_insert_shouldLogOnFailure() throws {
@@ -96,11 +83,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertion(with: insertionError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .error)
-        XCTAssert(message.message.contains("Failed to insert \(item) validUntil \(validUntil): "))
+        try assertIsOne(in: spy.messages, .error, contains: "Failed to insert \(item) validUntil \(validUntil): ")
     }
     
     func test_insert_shouldNotLogOnInstanceDeallocation() throws {
@@ -125,11 +108,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeDeletionSuccessfully()
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .info)
-        XCTAssert(message.message.contains("Cache deletion success"))
+        try assertIsOne(in: spy.messages, .info, contains: "Cache deletion success")
     }
     
     func test_deleteCache_shouldLogOnFailure() throws {
@@ -142,11 +121,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeDeletion(with: deleteCacheError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssertNoDiff(message.level, .error)
-        XCTAssert(message.message.contains("Cache deletion failure: "))
+        try assertIsOne(in: spy.messages, .error, contains: "Cache deletion failure: ")
     }
     
     func test_deleteCache_shouldNotLogOnInstanceDeallocation() throws {
@@ -227,6 +202,20 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func assertIsOne(
+        in messages: [LogSpy.Message],
+        _ level: LoggerAgentLevel,
+        contains text: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        XCTAssertNoDiff(messages.count, 1, "Expected one message, but got \(messages.count)", file: file, line: line)
+        
+        let message = try XCTUnwrap(messages.first)
+        XCTAssertNoDiff(message.level, level, file: file, line: line)
+        XCTAssert(message.message.contains(text))
     }
     
     private final class LogSpy {
