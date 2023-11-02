@@ -46,20 +46,45 @@ class MainViewModel: ObservableObject, Resetable {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model),
-                         MainSectionFastOperationView.ViewModel(),
-                         MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyMetallView.ViewModel(model),
-                         MainSectionOpenProductView.ViewModel(model),
-                         MainSectionAtmView.ViewModel.initial]
+        self.sections = Self.getSections(model)
         
         self.model = model
-        self.factory = ModelAuthLoginViewModelFactory.init(model: model, rootActions: .emptyMock)
+        self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
+        
+        self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
         
         navButtonsRight = createNavButtonsRight()
         bind()
         update(sections, with: model.settingsMainSections)
         bind(sections)
+    }
+    
+    private static func getSections(
+        _ model: Model,
+        stickerViewModel: ProductCarouselView.StickerViewModel? = nil
+    ) -> [MainSectionViewModel] {
+        
+        return [
+            MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: stickerViewModel
+            ),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
+    }
+    
+    private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
+        
+        return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
+            self.handleLandingAction(.sticker)
+        } hide: {
+            model.settingsAgent.saveShowStickerSetting(shouldShow: false)
+            self.sections = MainViewModel.getSections(model)
+        }
     }
     
     func reset() {
@@ -81,6 +106,18 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func bind() {
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
+                   products.productCarouselViewModel.stickerViewModel == nil {
+                    
+                    self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
+                }
+            }
+            .store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)

@@ -346,16 +346,34 @@ extension MainViewModel {
                    MainSectionOpenProductView.ViewModel.sample],
         factory: ModelAuthLoginViewModelFactory(model: .emptyMock, rootActions: .emptyMock))
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample],
-                                              factory: ModelAuthLoginViewModelFactory(model: .emptyMock, rootActions: .emptyMock))
+    static let sampleProducts = MainViewModel(
+        navButtonsRight: [.init(
+            icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})
+        ], sections: [
+            MainSectionProductsView.ViewModel(
+                .productsMock,
+                stickerViewModel: .init(
+                    title: "", subTitle: "", backgroundImage: Image.ic24Tv, onTap: {}, onHide: {})
+            ),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample],
+        factory: ModelAuthLoginViewModelFactory(model: .emptyMock, rootActions: .emptyMock)
+    )
     
     static let sampleOldCurrency = MainViewModel(
-                                    navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                                                      .init(icon: .ic24Bell, action: {})],
-                                    sections: [MainSectionProductsView.ViewModel(.productsMock),
-                                               MainSectionFastOperationView.ViewModel.sample,
-                                               MainSectionPromoView.ViewModel.sample,
-                                               MainSectionCurrencyView.ViewModel.sample,
-                                               MainSectionOpenProductView.ViewModel.sample],
-                                    factory: ModelAuthLoginViewModelFactory(model: .emptyMock, rootActions: .emptyMock))
+        navButtonsRight: [.init(icon: .ic24Search, action: {}),
+                          .init(icon: .ic24Bell, action: {})],
+        sections: [
+            MainSectionProductsView.ViewModel(
+                .productsMock,
+                stickerViewModel: .init(
+                    title: "", subTitle: "", backgroundImage: Image.ic24Tv, onTap: {}, onHide: {})
+            ),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample],
+        factory: ModelAuthLoginViewModelFactory(model: .emptyMock, rootActions: .emptyMock))
 }

@@ -49,8 +49,18 @@ struct CardBannerAction: Codable, Equatable {
 
 extension StickerBannersMyProductList {
     
-    func mapper(backgroundImage: Image) -> ProductCarouselView.StickerViewModel {
+    func mapper(
+        backgroundImage: Image,
+        onTap: @escaping () -> Void,
+        onHide: @escaping () -> Void
+    ) -> ProductCarouselView.StickerViewModel {
         
-        .init(title: title, subTitle: subtitle, backgroundImage: backgroundImage)
+        .init(
+            title: title,
+            subTitle: subtitle,
+            backgroundImage: backgroundImage,
+            onTap: onTap,
+            onHide: onHide
+        )
     }
 }

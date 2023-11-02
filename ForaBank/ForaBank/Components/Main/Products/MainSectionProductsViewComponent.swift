@@ -53,16 +53,20 @@ extension MainSectionProductsView {
         
         convenience init(
             settings: MainProductsGroupSettings = .base,
-            _ model: Model
+            _ model: Model,
+            stickerViewModel: ProductCarouselView.StickerViewModel?
         ) {
+            let carouselViewModel = ProductCarouselView.ViewModel(
+                mode: .main,
+                style: .regular,
+                model: model,
+                stickerViewModel: stickerViewModel
+            )
+            
             self.init(
                 isContentEmpty: false,
                 settings: settings,
-                productCarouselViewModel: .init(
-                    mode: .main,
-                    style: .regular,
-                    model: model
-                ),
+                productCarouselViewModel: carouselViewModel,
                 model: model,
                 isCollapsed: false
             )
@@ -102,8 +106,9 @@ extension MainSectionProductsView {
             productCarouselViewModel.action
                 .compactMap { $0 as? CarouselStickerDidTapped }
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] _ in
-                    self.action.send(MainSectionViewModelAction.Products.StickerDidTapped())
+                .sink { [weak self] _ in
+                    
+                    self?.action.send(MainSectionViewModelAction.Products.StickerDidTapped())
                 }
                 .store(in: &bindings)
             
