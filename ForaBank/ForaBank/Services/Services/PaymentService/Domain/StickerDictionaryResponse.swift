@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum StickerDictionaryResponse {
+enum StickerDictionaryResponse: Equatable {
     
     case orderForm(StickerOrderForm)
     case deliveryOffice(DeliveryOffice)
@@ -62,6 +62,41 @@ extension StickerDictionaryResponse {
         case separator = "SEPARATOR_START_OPERATOR"
         case endSeparator = "SEPARATOR_END_OPERATOR"
         case separatorSubGroup = "SEPARATOR_FIELD_SUB_GROUP"
+        
+        init(componentType: ResponseMapper._StickerDictionary.ComponentType) {
+            
+            switch componentType {
+            case .citySelector:
+                self = .citySelector
+                
+            case .endSeparator:
+                self = .endSeparator
+                
+            case .officeSelector:
+                self = .officeSelector
+                
+            case .pageTitle:
+                self = .pageTitle
+                
+            case .productInfo:
+                self = .productInfo
+                
+            case .productSelect:
+                self = .productSelect
+                
+            case .selector:
+                self = .selector
+                
+            case .separator:
+                self = .separator
+                
+            case .separatorSubGroup:
+                self = .separatorSubGroup
+                
+            case .textsWithIconHorizontal:
+                self = .textsWithIconHorizontal
+            }
+        }
     }
     
     enum DataType: Equatable {
