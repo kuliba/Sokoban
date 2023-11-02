@@ -19,7 +19,7 @@ final class UserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.clearAttempts, [])
     }
     
-    func test_init_shouldSetSetting() {
+    func test_init_storred_nil() {
         
         let (_, _, spy) = makeSUT()
         
