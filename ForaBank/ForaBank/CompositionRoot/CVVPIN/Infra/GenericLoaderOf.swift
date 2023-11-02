@@ -7,6 +7,5 @@
 
 import CVVPINServices
 
-#warning("move `GenericLoader` and `GenericLoaderOf` to `Infra` module")
+#warning("move `GenericLoader` to `Infra` module")
 typealias GenericLoaderOf<Model> = CVVPINServices.GenericLoaderOf<Model>
-typealias Store<T> = CVVPINServices.Store<T>

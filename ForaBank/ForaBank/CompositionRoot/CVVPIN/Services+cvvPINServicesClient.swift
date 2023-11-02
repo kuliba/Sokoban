@@ -23,8 +23,13 @@ extension Services {
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
+        rsaKeyPairLifespan: TimeInterval,
+        ephemeralLifespan: TimeInterval,
         log: @escaping Log
-    ) -> CVVPINServicesClient {
+    ) -> (
+        client: CVVPINServicesClient,
+        removeRSAKeyPair: () -> Void
+    ) {
         
         // MARK: Configure Infra: Persistent Stores
         
@@ -149,7 +154,7 @@ extension Services {
         
         // MARK: - ComposedCVVPINService
         
-        return ComposedCVVPINService(
+        let cvvPINServicesClient = ComposedCVVPINService(
             // TODO: add category `CVV-PIN`
             log: { log(.network, $0, $1, $2) },
             activate: activationService.activate(completion:),
@@ -159,8 +164,16 @@ extension Services {
             getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
             showCVV: showCVVService.showCVV(cardID:completion:)
         )
+                
+        return (cvvPINServicesClient, removeRSAKeyPair)
         
         // MARK: - Helpers
+        
+        func removeRSAKeyPair() {
+            
+            persistentRSAKeyPairStore.clear()
+            log(.cache, "RSA Key Store clear initiated.", #file, #line)
+        }
         
         func loggingLoaderDecorator<T>(
             store: any Store<T>
@@ -243,7 +256,7 @@ extension Services {
         ) {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().nextYear(),
+                validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan),
                 completion: completion
             )
         }
@@ -274,7 +287,7 @@ extension Services {
                     
                     rsaKeyPairLoader.save(
                         rsaKeyPair,
-                        validUntil: currentDate().nextYear()
+                        validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan)
                     ) {
                         completion($0.map { _ in data })
                     }
@@ -507,7 +520,7 @@ extension Services {
             completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
         ) {
             // short time
-            let validUntil = currentDate().addingShortTime()
+            let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
             
             otpEventIDLoader.save(
                 otpEventID,
@@ -571,7 +584,7 @@ extension Services {
             completion: @escaping (Result<Void, Error>) -> Void
         ) {
             // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-            let validUntil = currentDate().addingShortTime()
+            let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
             
             sessionCodeLoader.save(
                 .init(sessionCodeValue: response.code),
@@ -643,13 +656,14 @@ extension Services {
             )
         }
         
+        #warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
         func cacheSessionKey(
             sessionKey: FormSessionKeyService.SessionKey,
             completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
         ) {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().nextYear(),
+                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
                 completion: completion
             )
         }
@@ -1111,24 +1125,5 @@ private extension CVVPINFunctionalityActivationService.GetCodeResponse {
     init(_ response: GetProcessingSessionCodeService.Response) {
         
         self.init(code: response.code, phone: response.phone)
-    }
-}
-
-// MARK: - NextYear
-
-private extension Date {
-    
-    func addingShortTime() -> Self {
-        
-        addingTimeInterval(30)
-    }
-    
-    func nextYear() -> Date {
-        
-#if RELEASE
-        addingTimeInterval(15_778_463)
-#else
-        addingTimeInterval(600)
-#endif
     }
 }

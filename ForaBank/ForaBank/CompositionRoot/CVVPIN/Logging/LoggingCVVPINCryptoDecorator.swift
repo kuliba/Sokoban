@@ -10,12 +10,14 @@ import Foundation
 
 final class LoggingCVVPINCryptoDecorator {
     
+    typealias Log = (String, StaticString, UInt) -> Void
+    
     private let decoratee: CVVPINCrypto
-    private let log: (String) -> Void
+    private let log: Log
     
     init(
         decoratee: CVVPINCrypto,
-        log: @escaping (String) -> Void
+        log: @escaping Log
     ) {
         self.decoratee = decoratee
         self.log = log
@@ -24,17 +26,17 @@ final class LoggingCVVPINCryptoDecorator {
 
 extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     
-    // MARK: - Transport & Processing Key Domain
+    // MARK: - Transport & Processing Public Key Domain
 
     func transportEncryptWithPadding(data: Data) throws -> Data {
         
         do {
             let encrypted = try decoratee.transportEncryptWithPadding(data: data)
-            log("Encrypted with transport key (\(encrypted.count)).")
+            log("Encrypt with padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Encrypted with transport failure: \(error).")
+            log("Encrypt with padding using transport public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -43,24 +45,24 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptNoPadding(data: data)
-            log("Encrypted with transport public key: \(encrypted)")
+            log("Encrypt without padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Transport public key encryption error: \(error).")
+            log("Encrypt without padding using transport public key failure: \(error).", #file, #line)
             throw error
         }
     }
     
-    func processingEncrypt(data: Data) throws -> Data {
+    func processingEncryptWithPadding(data: Data) throws -> Data {
         
         do {
-            let encrypted = try decoratee.processingEncrypt(data: data)
-            log("Encryption with processing key success (\(encrypted.count)).")
+            let encrypted = try decoratee.processingEncryptWithPadding(data: data)
+            log("Encrypt using processing public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Encryption with processing key failure: \(error).")
+            log("Encrypt using processing public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -70,7 +72,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func generateECDHKeyPair() -> ECDHKeyPair {
         
         let keyPair = decoratee.generateECDHKeyPair()
-        log("Generated P384 Key Pair.")
+        log("Generated P384 Key Pair.", #file, #line)
         
         return keyPair
     }
@@ -85,11 +87,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 from: string,
                 using: privateKey
             )
-            log("Shared Secret generation success (\(sharedSecret.count)).")
+            log("Shared Secret extraction success (\(sharedSecret.count)).", #file, #line)
             
             return sharedSecret
         } catch {
-            log("Shared Secret creation failure: \(error)")
+            log("Shared Secret extraction failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -100,11 +102,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let keyData = try decoratee.publicKeyData(forPublicKey: publicKey)
-            log("PublicKey data created (\(keyData.count)).")
+            log("PublicKey data representation created (\(keyData.count)).", #file, #line)
             
             return keyData
         } catch {
-            log("PublicKey data creation failure \(error).")
+            log("PublicKey data representation creation failure \(error).", #file, #line)
             throw error
         }
     }
@@ -115,11 +117,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let rsaKeyPair = try decoratee.generateRSA4096BitKeyPair()
-            log("RSAKeyPair generation success \(rsaKeyPair)")
+            log("RSA Key Pair generation success \(rsaKeyPair).", #file, #line)
             
             return rsaKeyPair
         } catch {
-            log("RSAKeyPair generation failure: \(error).")
+            log("RSA Key Pair generation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -136,11 +138,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 publicKey: publicKey,
                 privateKey: privateKey
             )
-            log("hashSignVerify success (\(data.count)).")
+            log("hashSignVerify success for data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return data
         } catch {
-            log("hashSignVerify failure: \(error).")
+            log("hashSignVerify failure: \(error) for \"\(string)\".", #file, #line)
             throw error
         }
     }
@@ -152,15 +154,57 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let string = try decoratee.rsaDecrypt(string, withPrivateKey: privateKey)
-            log("String decryption success: \"\(string)\"")
+            log("String decryption success: \"\(string)\"", #file, #line)
             
             return string
         } catch {
-            log("String decryption failure: \(error).")
+            log("String decryption failure: \(error).", #file, #line)
             throw error
         }
     }
     
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try decoratee.sign(
+                data: data,
+                withPrivateKey: privateKey
+            )
+            log("Sign with SHA256 digest success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            
+            return signed
+        } catch {
+            log("Sign with SHA256 digest failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            throw error
+        }
+    }
+    
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data {
+        
+        do {
+            let signed = try decoratee.sha256Sign(
+                data: data,
+                withPrivateKey: privateKey
+            )
+            log("SHA256 sign success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            
+            return signed
+        } catch {
+            log("SHA256 sign failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            throw error
+        }
+    }
+    
+    /// Signs the message digest directly without any additional padding.
+    /// Used in `clientSecretOTP`
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey
@@ -171,11 +215,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data,
                 withPrivateKey: privateKey
             )
-            log("Data (\(data.count)) signing success (\(signed)).")
+            log("Signing success (\(signed)) for provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return signed
         } catch {
-            log("Data (\(data.count)) signing failure: \(error).")
+            log("Signing failure: \(error) for data \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             throw error
         }
     }
@@ -188,11 +232,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
             let x509Representation = try decoratee.x509Representation(
                 publicKey: publicKey
             )
-            log("x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".")
+            log("x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".", #file, #line)
             
             return x509Representation
         } catch {
-            log("x509Representation failure: \(error).")
+            log("x509Representation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -209,11 +253,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 sessionKey: sessionKey
             )
-            log("AES encrypted data (\(encrypted.count)) base64 (\(encrypted.base64EncodedString().count)): \"\(encrypted.base64EncodedString())\".")
+            log("AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return encrypted
         } catch {
-            log("AES Encryption Failure: \(error).")
+            log("AES Encryption Failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -223,7 +267,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func sha256Hash(_ data: Data) -> Data {
         
         let hash = decoratee.sha256Hash(data)
-        log("Created hash (\(hash.count)) for data (\(data.count)).")
+        log("Created hash (\(hash.count)) for data (\(data.count)): \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
         
         return hash
     }

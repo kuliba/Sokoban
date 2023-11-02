@@ -17,13 +17,13 @@ protocol CVVPINCrypto {
     typealias RSAPrivateKey = RSADomain.PrivateKey
     typealias RSAKeyPair = RSADomain.KeyPair
     
-    // MARK: - Transport & Processing Key Domain
+    // MARK: - Transport & Processing Public Key Domain
     
     func transportEncryptWithPadding(data: Data) throws -> Data
     
     func transportEncryptNoPadding(data: Data) throws -> Data
     
-    func processingEncrypt(data: Data) throws -> Data
+    func processingEncryptWithPadding(data: Data) throws -> Data
     
     // MARK: - ECDH Domain
     
@@ -57,6 +57,20 @@ protocol CVVPINCrypto {
         withPrivateKey privateKey: RSAPrivateKey
     ) throws -> String
     
+    /// Follows the `PKCS#1 v1.5` standard and adds padding.
+    func sha256Sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data
+    
+    /// Signs the message digest directly without any additional padding. Digest is created using SHA256.
+    func sign(
+        data: Data,
+        withPrivateKey privateKey: RSAPrivateKey
+    ) throws -> Data
+    
+    /// Signs the message digest directly without any additional padding.
+    /// Used in `clientSecretOTP`
     func signNoHash(
         _ data: Data,
         withPrivateKey privateKey: RSAPrivateKey

@@ -31,23 +31,27 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
+    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
         navButtonsRight: [NavigationBarButtonViewModel],
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        onExit: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.onExit = onExit
     }
     
     init(
         _ model: Model,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
+        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        onExit: @escaping () -> Void
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -60,6 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.onExit = onExit
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -113,7 +118,16 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
+                    // TODO: replace with injected factory
+                    link = .userAccount(.init(
+                        model: model,
+                        clientInfo: clientInfo,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(MainViewModelAction.Close.Link())
+                        },
+                        onExit: self.onExit
+                    ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})

@@ -551,6 +551,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         return .init(
             model,
             cvvPINServicesClient: cvvPINServicesClient,
+            onExit: {},
             product: product,
             rootView: rootView,
             dismissAction: {}
@@ -581,6 +582,7 @@ final class ProductProfileViewModelTests: XCTestCase {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
+                onExit: {},
                 product: product,
                 rootView: "",
                 dismissAction: {}
