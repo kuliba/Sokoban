@@ -161,6 +161,49 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
+    func test_changePIN_shouldDeliverFailureOnFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let (sut, _, _, _, _, changePINSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            changePINSpy.complete(with: anyFailure(statusCode, errorMessage))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverSuccessOnSuccess() {
+        
+        let eventID = UUID().uuidString
+        let phone = "+7..8765"
+        let (sut, _, _, _, _, changePINSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.success(())], on: {
+            
+            changePINSpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_changePIN_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        let changePINSpy: ChangePINSpy
+        var sut: SUT?
+        (sut, _, _, _, _, changePINSpy) = makeSUT()
+        var results = [ChangePINClient.ChangePINResult]()
+        
+        sut?.changePin(
+            cardId: 98765432101,
+            newPin: "5678",
+            otp: "987654"
+        ) { results.append($0) }
+        sut = nil
+        changePINSpy.complete(with: anySuccess())
+        
+        XCTAssert(results.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -317,6 +360,36 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.getPINConfirmationCode {
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectChangePIN(
+        _ sut: SUT,
+        toDeliver expectedResults: [ChangePINClient.ChangePINResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [ChangePINClient.ChangePINResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.changePin(
+            cardId: 98765432101,
+            newPin: anyPIN().pinValue,
+            otp: .init(UUID().uuidString.prefix(6))
+        ) {
             receivedResults.append($0)
             exp.fulfill()
         }
@@ -606,6 +679,57 @@ private extension ChangePINClient.GetPINConfirmationCodeResult {
                 
             case .serviceFailure:
                 self = .serviceFailure
+            }
+        }
+    }
+}
+
+private extension Array where Element == ChangePINClient.ChangePINResult {
+    
+    func mapToEquatable() -> [ChangePINClient.ChangePINResult.EquatableChangePINResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension ChangePINClient.ChangePINResult {
+    
+    func mapToEquatable() -> EquatableChangePINResult {
+        
+        self
+            .map { (_: Void) in ChangePINEquatableVoid() }
+            .mapError(_ChangePINError.init)
+    }
+    
+    struct ChangePINEquatableVoid: Equatable {}
+
+    typealias EquatableChangePINResult = Result<ChangePINEquatableVoid, _ChangePINError>
+    
+    enum _ChangePINError: Error & Equatable {
+        
+        case activationFailure
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+        case weakPIN(statusCode: Int, errorMessage: String)
+
+        init(_ error: ForaBank.ChangePINError) {
+            
+            switch error {
+            case .activationFailure:
+                self = .activationFailure
+                
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
+                
+            case let .weakPIN(statusCode: statusCode, errorMessage: errorMessage):
+                self = .weakPIN(statusCode: statusCode, errorMessage: errorMessage)
             }
         }
     }
