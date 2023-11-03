@@ -18,13 +18,51 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     // MARK: - ActivateCVVPINClient
     
-    func test_activate_shouldDeliverFailureOnFailure() {
+    func test_activate_shouldDeliverServiceFailureOnInvalid() {
         
+        let statusCode = 201
+        let data = anyData()
         let (sut, activateSpy, _, _, _, _, _) = makeSUT()
         
-        expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            activateSpy.complete(with: anyFailure(500, "Activation Failure"))
+            activateSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: data)))
+        })
+    }
+    
+    func test_activate_shouldDeliverServiceFailureOnNetwork() {
+        
+        let statusCode = 201
+        let data = anyData()
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            activateSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_activate_shouldDeliverServerFailureOnServer() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            activateSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_activate_shouldDeliverServiceFailureOnServiceFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            activateSpy.complete(with: .failure(.serviceFailure))
         })
     }
     
@@ -510,14 +548,6 @@ private func anySuccess(
     .success(.init(phoneValue: phoneValue))
 }
 
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ActivateResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
 private func anySuccess() -> ChangePINResult {
     
     .success(())
@@ -817,7 +847,7 @@ private extension ShowCVVClient.ShowCVVResult {
             .map(\.rawValue)
             .mapError(_ShowCVVError.init)
     }
-        
+    
     typealias EquatableShowCVVResult = Result<String, _ShowCVVError>
     
     enum _ShowCVVError: Error & Equatable {
@@ -825,7 +855,7 @@ private extension ShowCVVClient.ShowCVVResult {
         case activationFailure
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
-
+        
         init(_ error: ForaBank.ShowCVVError) {
             
             switch error {
