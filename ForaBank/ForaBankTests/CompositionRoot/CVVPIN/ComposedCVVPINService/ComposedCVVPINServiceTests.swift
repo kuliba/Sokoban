@@ -185,6 +185,39 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
+    func test_shouldLogInfoOnShowCVVSuccess() {
+        
+        let cvvValue = "367"
+        let (sut, spy) = makeSUT(
+            showCVVResult: anySuccess(cvvValue)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.showCVV(anyCardID()) { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Show CVV success: \(cvvValue).")
+        ])
+    }
+    
+    func test_shouldLogErrorOnShowCVVFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Show CVV Failure"
+        let (sut, spy) = makeSUT(
+            showCVVResult: anyFailure(statusCode, errorMessage)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.showCVV(anyCardID()) { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Show CVV Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -195,6 +228,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         checkActivationResult: Result<Void, Error> = .success(()),
         confirmActivationResult: ConfirmResult = .success(()),
         getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
+        showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -209,7 +243,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
             checkActivation: { $0(checkActivationResult) },
             confirmActivation: { _, completion  in completion(confirmActivationResult) },
             getPINConfirmationCode: { $0(getPINConfirmationCodeResult) },
-            showCVV: { _,_  in },
+            showCVV: { _, completion in completion(showCVVResult) },
             log: { level, category, text,_,_ in
                 
                 spy.log(level, category, text)
@@ -319,6 +353,22 @@ private func anyFailure(
     _ statusCode: Int,
     _ errorMessage: String = UUID().uuidString
 ) -> GetPINConfirmationCodeResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+
+private func anySuccess(
+    _ cvvValue: String = .init(UUID().uuidString.prefix(3))
+) -> ShowCVVService.Result {
+    
+    .success(.init(cvvValue: cvvValue))
+}
+
+private func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ShowCVVService.Result {
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
