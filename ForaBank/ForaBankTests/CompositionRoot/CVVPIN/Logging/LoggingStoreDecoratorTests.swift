@@ -28,7 +28,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeRetrieval(with: (item, validUntil))
         })
         
-        try assertIsOne(in: spy.messages, .info, contains: "Successfully retrieved \(item) valid until \(validUntil).")
+        try assertIsOne(in: spy.messages, .info, contains: "Retrieval success: \(item) valid until \(validUntil).")
     }
     
     func test_retrieve_shouldLogOnFailure() throws {
@@ -68,7 +68,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertionSuccessfully()
         })
         
-        try assertIsOne(in: spy.messages, .info, contains: "Successfully inserted \(item) validUntil \(validUntil).")
+        try assertIsOne(in: spy.messages, .info, contains: "Insertion success: \(item) validUntil \(validUntil).")
     }
     
     func test_insert_shouldLogOnFailure() throws {
@@ -83,7 +83,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertion(with: insertionError)
         })
         
-        try assertIsOne(in: spy.messages, .error, contains: "Failed to insert \(item) validUntil \(validUntil): ")
+        try assertIsOne(in: spy.messages, .error, contains: "Insertion failure: \(item) validUntil \(validUntil): ")
     }
     
     func test_insert_shouldNotLogOnInstanceDeallocation() throws {
