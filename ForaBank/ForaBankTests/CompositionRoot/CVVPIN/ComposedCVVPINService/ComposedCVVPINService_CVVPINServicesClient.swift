@@ -575,13 +575,13 @@ private extension ActivateCVVPINClient.ConfirmationResult {
     func mapToEquatable() -> EquatableConfirmationResult {
         
         self
-            .map { _ in EquatableVoid() }
+            .map { (_: Void) in ConfirmationEquatableVoid() }
             .mapError(ConfirmationCodeError.init)
     }
     
-    struct EquatableVoid: Equatable {}
+    struct ConfirmationEquatableVoid: Equatable {}
     
-    typealias EquatableConfirmationResult = Result<EquatableVoid, ConfirmationCodeError>
+    typealias EquatableConfirmationResult = Result<ConfirmationEquatableVoid, ConfirmationCodeError>
     
     enum ConfirmationCodeError: Error & Equatable {
         
@@ -618,7 +618,7 @@ private extension ChangePINClient.CheckFunctionalityResult {
     func mapToEquatable() -> EquatableCheckResult {
         
         self
-            .map { _ in CheckEquatableVoid() }
+            .map { (_: Void) in CheckEquatableVoid() }
             .mapError(_CheckCVVPINFunctionalityError.init)
     }
     
@@ -705,7 +705,7 @@ private extension ChangePINClient.ChangePINResult {
     }
     
     struct ChangePINEquatableVoid: Equatable {}
-
+    
     typealias EquatableChangePINResult = Result<ChangePINEquatableVoid, _ChangePINError>
     
     enum _ChangePINError: Error & Equatable {
@@ -715,7 +715,7 @@ private extension ChangePINClient.ChangePINResult {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         case weakPIN(statusCode: Int, errorMessage: String)
-
+        
         init(_ error: ForaBank.ChangePINError) {
             
             switch error {
