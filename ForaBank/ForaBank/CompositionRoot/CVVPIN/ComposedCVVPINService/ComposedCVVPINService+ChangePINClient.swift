@@ -54,29 +54,6 @@ extension ComposedCVVPINService: ChangePINClient {
 
 private extension GetPINConfirmationCodeError {
     
-    init(_ error: CVVPINFunctionalityActivationService.ConfirmError) {
-        
-        switch error {
-        case .invalid:
-            self = .serviceFailure
-            
-        case .network:
-            self = .serviceFailure
-            
-        case .retry:
-            self = .serviceFailure
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceFailure:
-            self = .serviceFailure
-        }
-    }
-}
-
-private extension GetPINConfirmationCodeError {
-    
     init(_ error: ChangePINService.Error) {
         
         switch error {
