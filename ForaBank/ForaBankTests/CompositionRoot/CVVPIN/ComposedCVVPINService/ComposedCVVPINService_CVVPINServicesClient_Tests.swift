@@ -328,7 +328,63 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_changePIN_shouldDeliverFailureOnFailure() {
+    func test_changePIN_shouldDeliverServiceFailureOnActivationFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnAuthenticationFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnNetwork() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverRetryFailureOnRetry() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let retryAttempts = 5
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        ], on: {
+            changePINSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServerFailureOnServer() {
         
         let statusCode = 500
         let errorMessage = "Error!"
@@ -337,7 +393,37 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         expectChangePIN(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            changePINSpy.complete(with: anyFailure(statusCode, errorMessage))
+            changePINSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnCheckSessionFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.other(.checkSessionFailure)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnDecryptionFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.other(.decryptionFailure)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnMakeJSONFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.other(.makeJSONFailure)))
         })
     }
     
@@ -680,14 +766,6 @@ private func anySuccess(
 private func anySuccess() -> ChangePINResult {
     
     .success(())
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ChangePINResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
 private extension ComposedCVVPINService {
