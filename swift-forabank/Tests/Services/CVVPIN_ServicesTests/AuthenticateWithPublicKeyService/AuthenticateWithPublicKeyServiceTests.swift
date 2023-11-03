@@ -26,8 +26,47 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         expect(sut, toDeliver: [
             .failure(.serviceError(.prepareKeyExchangeFailure))
         ], on: {
-            
             prepareKeyExchangeSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_init_shouldDeliverErrorOnProcessInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, prepareKeyExchangeSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.invalid(statusCode: statusCode, data: invalidData))
+        ], on: {
+            prepareKeyExchangeSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_init_shouldDeliverErrorOnProcessNetworkFailure() {
+        
+        let (sut, prepareKeyExchangeSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            prepareKeyExchangeSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_init_shouldDeliverErrorOnProcessServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Process Failure"
+        let (sut, prepareKeyExchangeSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            
+            prepareKeyExchangeSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
         })
     }
     
