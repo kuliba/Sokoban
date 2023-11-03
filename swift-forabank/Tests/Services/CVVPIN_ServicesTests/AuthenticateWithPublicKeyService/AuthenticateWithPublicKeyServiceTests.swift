@@ -70,6 +70,54 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
+    func test_init_shouldNotDeliverPrepareKeyExchangeResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
+        (sut, prepareKeyExchangeSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.authenticateWithPublicKey { receivedResults.append($0) }
+        sut = nil
+        prepareKeyExchangeSpy.complete(with: .success(anyData()))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_init_shouldNotDeliverProcessResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
+        let processSpy: ProcessSpy
+        (sut, prepareKeyExchangeSpy, processSpy, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.authenticateWithPublicKey { receivedResults.append($0) }
+        prepareKeyExchangeSpy.complete(with: anySuccess())
+        sut = nil
+        processSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_init_shouldNotDeliverMakeSessionKeySpyResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
+        let processSpy: ProcessSpy
+        let makeSessionKeySpy: MakeSessionKeySpy
+        (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.authenticateWithPublicKey { receivedResults.append($0) }
+        prepareKeyExchangeSpy.complete(with: .success(anyData()))
+        processSpy.complete(with: anySuccess())
+        sut = nil
+        makeSessionKeySpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AuthenticateWithPublicKeyService
@@ -273,4 +321,37 @@ private extension AuthenticateWithPublicKeyService.Result {
             case prepareKeyExchangeFailure
         }
     }
+}
+
+private func anySuccess(
+    bitCount: Int = 256
+) -> AuthenticateWithPublicKeyService.PrepareKeyExchangeResult {
+    
+    .success(anyData(bitCount: bitCount))
+}
+
+private func anySuccess(
+) -> AuthenticateWithPublicKeyService.ProcessResult {
+    
+    .success(anyResponse())
+}
+
+private func anyResponse(
+    sessionID: String = UUID().uuidString,
+    publicServerSessionKey: String = UUID().uuidString,
+    sessionTTL: Int = 60
+) -> AuthenticateWithPublicKeyService.Response {
+    
+    .init(
+        sessionID: sessionID,
+        publicServerSessionKey: publicServerSessionKey,
+        sessionTTL: sessionTTL
+    )
+}
+
+private func anySuccess(
+    bitCount: Int = 256
+) -> AuthenticateWithPublicKeyService.MakeSessionKeyResult {
+    
+    .success(.init(sessionKeyValue: anyData(bitCount: bitCount)))
 }
