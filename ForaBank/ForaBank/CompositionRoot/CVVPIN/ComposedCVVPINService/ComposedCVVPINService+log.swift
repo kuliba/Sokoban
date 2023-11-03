@@ -39,7 +39,7 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log(.error, .crypto, "Change PIN Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Change PIN Failure: \(error).", #file, #line)
                     case .success:
                         log(.info, .crypto, "Change PIN success.", #file, #line)
                     }

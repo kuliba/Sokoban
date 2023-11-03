@@ -10,6 +10,7 @@ import CVVPIN_Services
 import XCTest
 
 fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
 
 final class ComposedCVVPINServiceTests: XCTestCase {
     
@@ -53,12 +54,45 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
+    func test_shouldLogInfoOnChangePINSuccess() {
+        
+        let (sut, spy) = makeSUT(
+            changePINResult: anySuccess()
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.changePIN { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Change PIN success.")
+        ])
+    }
+    
+    func test_shouldLogErrorOnChangePINFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Change PIN Failure"
+        let (sut, spy) = makeSUT(
+            changePINResult: anyFailure(statusCode, errorMessage)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.changePIN { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Change PIN Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
     
     private func makeSUT(
         activateResult: ActivateResult = anySuccess(),
+        changePINResult: ChangePINResult = anySuccess(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -69,7 +103,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         let spy = LogSpy()
         let sut = SUT(
             activate: { $0(activateResult) },
-            changePIN: { _,_,_,_  in },
+            changePIN: { _,_,_,completion  in completion(changePINResult) },
             checkActivation: { _ in },
             confirmActivation: { _,_  in },
             getPINConfirmationCode: { _ in },
@@ -130,4 +164,26 @@ private func anyFailure(
 ) -> ActivateResult {
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+private func anySuccess() -> ChangePINResult {
+    
+    .success(())
+}
+
+private func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ChangePINResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+private extension ComposedCVVPINService {
+    
+    func changePIN(
+        completion: @escaping ChangePINService.ChangePINCompletion
+    ) {
+        changePIN(anyCardID(), anyPIN(), anyOTP(), completion)
+    }
 }
