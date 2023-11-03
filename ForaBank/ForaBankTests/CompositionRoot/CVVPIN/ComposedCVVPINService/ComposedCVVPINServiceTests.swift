@@ -11,6 +11,7 @@ import XCTest
 
 fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
 fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
+fileprivate typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
 
 final class ComposedCVVPINServiceTests: XCTestCase {
     
@@ -117,6 +118,38 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
+    func test_shouldLogInfoOnConfirmActivationSuccess() {
+        
+        let (sut, spy) = makeSUT(
+            confirmActivationResult: .success(())
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.confirmActivation { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Confirm Activation success.")
+        ])
+    }
+    
+    func test_shouldLogErrorOnConfirmActivationFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Change PIN Failure"
+        let (sut, spy) = makeSUT(
+            confirmActivationResult: anyFailure(statusCode, errorMessage)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.confirmActivation { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Confirm Activation Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -125,6 +158,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         activateResult: ActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
+        confirmActivationResult: ConfirmResult = .success(()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -137,7 +171,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
             activate: { $0(activateResult) },
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: { $0(checkActivationResult) },
-            confirmActivation: { _,_  in },
+            confirmActivation: { _, completion  in completion(confirmActivationResult) },
             getPINConfirmationCode: { _ in },
             showCVV: { _,_  in },
             log: { level, category, text,_,_ in
@@ -218,4 +252,18 @@ private extension ComposedCVVPINService {
     ) {
         changePIN(anyCardID(), anyPIN(), anyOTP(), completion)
     }
+    
+    func confirmActivation(
+        completion: @escaping CVVPINFunctionalityActivationService.ConfirmCompletion
+    ) {
+        confirmActivation(anyOTP(), completion)
+    }
+}
+
+private func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ConfirmResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }

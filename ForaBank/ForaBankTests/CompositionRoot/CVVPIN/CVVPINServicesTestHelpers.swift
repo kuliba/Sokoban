@@ -8,13 +8,6 @@
 import CVVPIN_Services
 import Foundation
 
-func anySessionID(
-    sessionIDValue: String = UUID().uuidString
-) -> ChangePINService.SessionID {
-    
-    .init(sessionIDValue: sessionIDValue)
-}
-
 func anyCardID(
     cardIDValue: Int = 98765431012
 ) -> ChangePINService.CardID {
@@ -22,9 +15,23 @@ func anyCardID(
     .init(cardIDValue: cardIDValue)
 }
 
+func anyCardID(
+    cardIDValue: Int = 98765431012
+) -> ShowCVVService.CardID {
+    
+    .init(cardIDValue: cardIDValue)
+}
+
 func anyOTP(
     otpValue: String = .init(UUID().uuidString.prefix(6))
 ) -> ChangePINService.OTP {
+    
+    .init(otpValue: otpValue)
+}
+
+func anyOTP(
+    otpValue: String = .init(UUID().uuidString.prefix(6))
+) -> CVVPINFunctionalityActivationService.OTP {
     
     .init(otpValue: otpValue)
 }
@@ -45,14 +52,14 @@ func anyOTPEventID(
 
 func anySessionID(
     sessionIDValue: String = UUID().uuidString
-) -> ShowCVVService.SessionID {
+) -> ChangePINService.SessionID {
     
     .init(sessionIDValue: sessionIDValue)
 }
 
-func anyCardID(
-    cardIDValue: Int = 98765431012
-) -> ShowCVVService.CardID {
+func anySessionID(
+    sessionIDValue: String = UUID().uuidString
+) -> ShowCVVService.SessionID {
     
-    .init(cardIDValue: cardIDValue)
+    .init(sessionIDValue: sessionIDValue)
 }
