@@ -33,14 +33,19 @@ class RootViewModel: ObservableObject, Resetable {
     private var auithBinding: AnyCancellable?
     
     init(
-        _ model: Model,
-        infoDictionary: [String : Any]? = Bundle.main.infoDictionary
+        mainViewModel: MainViewModel,
+        paymentsViewModel: PaymentsTransfersViewModel,
+        chatViewModel: ChatViewModel,
+        informerViewModel: InformerView.ViewModel,
+        infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
+        _ model: Model
     ) {
+        
         self.selected = .main
-        self.mainViewModel = MainViewModel(model)
-        self.paymentsViewModel = .init(model: model)
-        self.chatViewModel = .init()
-        self.informerViewModel = .init(model)
+        self.mainViewModel = mainViewModel
+        self.paymentsViewModel = paymentsViewModel
+        self.chatViewModel = chatViewModel
+        self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
         
@@ -78,7 +83,7 @@ class RootViewModel: ObservableObject, Resetable {
                     }
                     
                     resetRootView()
-                                                            
+                    
                     let loginViewModel = ComposedLoginViewModel(
                         authLoginViewModel: .init(
                             model,
@@ -515,7 +520,7 @@ final class ModelAuthLoginViewModelFactory {
             dismissAction: dismissAction
         )
     }
-        
+    
     func makeOrderProductViewModel(
         productData: CatalogProductData
     ) -> OrderProductView.ViewModel {
@@ -641,5 +646,4 @@ enum RootViewModelAction {
         let conditions: [PersonAgreement]
     }
 }
-
 

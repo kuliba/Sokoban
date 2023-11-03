@@ -13,7 +13,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var bindings = Set<AnyCancellable>()
     
-    let rootViewModel = RootViewModel(AppDelegate.shared.model)
+    private lazy var model: Model = AppDelegate.shared.model
+    private lazy var rootViewModel = RootViewModelFactory.make(
+        with: model
+    )
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

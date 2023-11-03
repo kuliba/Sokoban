@@ -7,54 +7,122 @@
 
 extension Operation.Parameter {
     
-    struct Select: Hashable, Identifiable {
+    public struct Select: Hashable, Identifiable {
         
-        let id: String
+        public let id: String
         let value: String
         let title: String
         let placeholder: String
         let options: [Option]
         let state: State
         
-        struct Option: Hashable {
+        public init(
+            id: String,
+            value: String,
+            title: String,
+            placeholder: String,
+            options: [Operation.Parameter.Select.Option],
+            state: Operation.Parameter.Select.State
+        ) {
+            self.id = id
+            self.value = value
+            self.title = title
+            self.placeholder = placeholder
+            self.options = options
+            self.state = state
+        }
+        
+        public struct Option: Hashable {
             
             let id: String
             let name: String
             let iconName: String
+            
+            public init(
+                id: String,
+                name: String,
+                iconName: String
+            ) {
+                self.id = id
+                self.name = name
+                self.iconName = iconName
+            }
         }
         
-        enum State: Hashable {
+        public enum State: Hashable {
             
             case idle(IdleViewModel)
             case selected(SelectedOptionViewModel)
             case list(OptionsListViewModel)
             
-            struct IdleViewModel: Hashable {
+            public struct IdleViewModel: Hashable {
                 
                 let iconName: String
                 let title: String
+                
+                public init(
+                    iconName: String,
+                    title: String
+                ) {
+                    self.iconName = iconName
+                    self.title = title
+                }
             }
             
-            struct SelectedOptionViewModel: Hashable {
+            public struct SelectedOptionViewModel: Hashable {
                 
                 let title: String
                 let placeholder: String
                 let name: String
                 let iconName: String
+                
+                public init(
+                    title: String,
+                    placeholder: String,
+                    name: String,
+                    iconName: String
+                ) {
+                    self.title = title
+                    self.placeholder = placeholder
+                    self.name = name
+                    self.iconName = iconName
+                }
             }
             
-            struct OptionsListViewModel: Hashable {
+            public struct OptionsListViewModel: Hashable {
                 
                 let iconName: String
                 let title: String
                 let placeholder: String
                 let options: [OptionViewModel]
                 
-                struct OptionViewModel: Hashable, Identifiable {
+                public init(
+                    iconName: String,
+                    title: String,
+                    placeholder: String,
+                    options: [Operation.Parameter.Select.State.OptionsListViewModel.OptionViewModel]
+                ) {
+                    self.iconName = iconName
+                    self.title = title
+                    self.placeholder = placeholder
+                    self.options = options
+                }
+                
+                public struct OptionViewModel: Hashable, Identifiable {
                     
-                    let id: String
+                    public let id: String
                     let iconName: String
                     let name: String
+                    
+                    public init(
+                        id: String,
+                        iconName: String,
+                        name: String
+                    ) {
+                        self.id = id
+                        self.iconName = iconName
+                        self.name = name
+                    }
                 }
             }
         }

@@ -7,8 +7,8 @@
 
 import Foundation
 import SwiftUI
-import TextFieldComponent
-import TextFieldModel
+//import TextFieldComponent
+//import TextFieldModel
 
 struct SelectView: View {
     
@@ -234,24 +234,24 @@ extension SelectView {
 
 struct ParameterSelectView_Previews: PreviewProvider {
     
-    private static func textField() -> TextFieldView {
-        
-        let textFieldConfig: TextFieldView.TextFieldConfig = .init(
-            font: .systemFont(ofSize: 19, weight: .regular),
-            textColor: .orange,
-            tintColor: .black,
-            backgroundColor: .clear,
-            placeholderColor: .gray
-        )
-        
-        return .init(
-            state: .constant(.placeholder("Выберите значение")),
-            keyboardType: .default,
-            toolbar: nil,
-            send: { _ in },
-            textFieldConfig: textFieldConfig
-        )
-    }
+//    private static func textField() -> TextFieldView {
+//
+//        let textFieldConfig: TextFieldView.TextFieldConfig = .init(
+//            font: .systemFont(ofSize: 19, weight: .regular),
+//            textColor: .orange,
+//            tintColor: .black,
+//            backgroundColor: .clear,
+//            placeholderColor: .gray
+//        )
+//
+//        return .init(
+//            state: .constant(.placeholder("Выберите значение")),
+//            keyboardType: .default,
+//            toolbar: nil,
+//            send: { _ in },
+//            textFieldConfig: textFieldConfig
+//        )
+//    }
     
     static var previews: some View {
         

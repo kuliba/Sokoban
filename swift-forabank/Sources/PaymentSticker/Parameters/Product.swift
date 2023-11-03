@@ -5,15 +5,25 @@
 //  Created by Igor Malyarov on 19.10.2023.
 //
 
-extension Operation.Parameter {
+public extension Operation.Parameter {
     
     struct Product: Hashable {
         
-        let state: State
-        let selectedProduct: Option
-        let allProducts: [Option]
+        public let state: State
+        public let selectedProduct: Option
+        public let allProducts: [Option]
         
-        struct Option: Hashable {
+        public init(
+            state: Operation.Parameter.Product.State,
+            selectedProduct: Operation.Parameter.Product.Option,
+            allProducts: [Operation.Parameter.Product.Option]
+        ) {
+            self.state = state
+            self.selectedProduct = selectedProduct
+            self.allProducts = allProducts
+        }
+        
+        public struct Option: Hashable {
             
             let paymentSystem: String
             let background: String
@@ -23,7 +33,7 @@ extension Operation.Parameter {
             let description: String
         }
         
-        enum State {
+        public enum State {
             
             case select
             case list

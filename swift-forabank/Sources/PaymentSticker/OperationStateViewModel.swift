@@ -8,14 +8,14 @@
 import Foundation
 import Combine
 
-final class OperationStateViewModel: ObservableObject {
+final public class OperationStateViewModel: ObservableObject {
     
-    @Published private(set) var state: State
+    @Published public var state: State
     
     private let blackBoxGet: BlackBoxAPI.AsyncGet
 //    let businessLogic: (State, Event) -> AnyPublisher<Result<State, Error>, Never>
     
-    init(
+    public init(
         state: State = .operation(.init(parameters: [])),
         blackBoxGet: @escaping BlackBoxAPI.AsyncGet
     ) {
@@ -23,17 +23,17 @@ final class OperationStateViewModel: ObservableObject {
         self.blackBoxGet = blackBoxGet
     }
     
-    var scrollParameters: [Operation.Parameter] {
+    public var scrollParameters: [Operation.Parameter] {
         
         operation?.parameters.filter({ $0.id != .amount }) ?? []
     }
     
-    var amountParameter: Operation.Parameter? {
+    public var amountParameter: Operation.Parameter? {
         
         operation?.parameters.first(where: { $0.id == .amount })
     }
     
-    func event(_ event: Event) {
+    public func event(_ event: Event) {
         
         guard let operation else {
             return
@@ -78,20 +78,20 @@ final class OperationStateViewModel: ObservableObject {
 extension OperationStateViewModel {
     
     //TODO: extract from operation state view model
-    enum State {
+    public enum State {
         
         case operation(Operation)
         case result(OperationResult)
     }
     
-    struct OperationResult {
+    public struct OperationResult {
         
-        let result: Result
-        let title: String
-        let description: String
-        let amount: String
+        public let result: Result
+        public let title: String
+        public let description: String
+        public let amount: String
         
-        enum Result {
+        public enum Result {
             
             case success
             case waiting
@@ -113,9 +113,9 @@ extension OperationStateViewModel {
 }
 
 /// A namespace.
-enum BlackBoxAPI {}
+public enum BlackBoxAPI {}
 
-extension BlackBoxAPI {
+public extension BlackBoxAPI {
     
     typealias Request = (Operation, Event)
     typealias Success = OperationStateViewModel.State

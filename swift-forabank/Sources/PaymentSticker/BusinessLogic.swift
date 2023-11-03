@@ -9,16 +9,16 @@ import Foundation
 import Combine
 import GenericRemoteService
 
-final class BusinessLogic {
+public final class BusinessLogic {
     
     typealias Option = Operation.Parameter.Select.Option
-    typealias OperationResult = Result<OperationStateViewModel.State, Error>
+    public typealias OperationResult = Result<OperationStateViewModel.State, Error>
     typealias Completion = (OperationResult) -> Void
     typealias Load = (Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     
-    typealias TransferResult = Result<TransferResponse, TransferError>
-    typealias TransferCompletion = (TransferResult) -> Void
-    typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
+    public typealias TransferResult = Result<TransferResponse, TransferError>
+    public typealias TransferCompletion = (TransferResult) -> Void
+    public typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     private let dictionaryService: RemoteService<Operation, Operation>
     private let transfer: Transfer
@@ -36,7 +36,7 @@ final class BusinessLogic {
     }
 }
 
-extension BusinessLogic {
+public extension BusinessLogic {
     
     func operationResult(
         operation: Operation,
@@ -162,7 +162,10 @@ extension BusinessLogic {
             option: option
         )
         
-        let updateParameter = parameter.updateState(with: option)
+        let updateParameter = parameter.updateValue(
+            parameter: parameter,
+            option: option
+        )
         
         return operation.updateOperation(
             operation: operation,
@@ -177,28 +180,28 @@ extension BusinessLogic {
     
     typealias TransferPayload = TransferEvent
     
-    enum TransferResponse {
+    public enum TransferResponse {
         
         case deliveryOffice(DeliveryOffice)
     }
     
-    struct DeliveryOffice {
+    public struct DeliveryOffice {
         
         let main: [Main]
         
-        struct Main {
+        public struct Main {
             
             let type: TypeSelector
             let data: Data
             
-            enum TypeSelector: String {
+            public enum TypeSelector: String {
             
                 case separatorStartOperation = "SeparatorStartOperation"
                 case citySelector = "CitySelector"
                 case separatorEndOperation = "SeparatorEndOperation"
             }
             
-            struct Data {
+            public struct Data {
                 
                 let title: String
                 let subtitle: String
@@ -209,9 +212,9 @@ extension BusinessLogic {
         }
     }
     
-    enum TransferError: Error {}
+    public enum TransferError: Error {}
     
-    enum TransferEvent {
+    public enum TransferEvent {
     
         case operation(Operation)
         case requestOTP
