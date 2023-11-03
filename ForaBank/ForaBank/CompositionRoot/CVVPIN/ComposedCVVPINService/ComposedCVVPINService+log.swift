@@ -7,14 +7,16 @@
 
 extension ComposedCVVPINService {
     
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+
     convenience init(
-        log: @escaping (String, StaticString, UInt) -> Void,
         activate: @escaping Activate,
         changePIN: @escaping ChangePIN,
         checkActivation: @escaping CheckActivation,
         confirmActivation: @escaping ConfirmActivation,
         getPINConfirmationCode: @escaping GetPINConfirmationCode,
-        showCVV: @escaping ShowCVV
+        showCVV: @escaping ShowCVV,
+        log: @escaping Log
     ) {
         self.init(
             activate: { completion in
@@ -23,9 +25,9 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log("Activation Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Activation Failure: \(error)", #file, #line)
                     case let .success(phone):
-                        log("Activation success: \(phone)", #file, #line)
+                        log(.info, .crypto, "Activation success: \(phone)", #file, #line)
                     }
                     
                     completion(result)
@@ -37,9 +39,9 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log("Change PIN Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Change PIN Failure: \(error)", #file, #line)
                     case .success:
-                        log("Change PIN success.", #file, #line)
+                        log(.info, .crypto, "Change PIN success.", #file, #line)
                     }
                     
                     completion(result)
@@ -52,9 +54,9 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log("Confirm Activation Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Confirm Activation Failure: \(error)", #file, #line)
                     case .success:
-                        log("Confirm Activation success.", #file, #line)
+                        log(.info, .crypto, "Confirm Activation success.", #file, #line)
                     }
                     
                     completion(result)
@@ -66,9 +68,9 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log("Get PIN Confirmation Code Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Get PIN Confirmation Code Failure: \(error)", #file, #line)
                     case let .success(response):
-                        log("Get PIN Confirmation Code success: \(response)", #file, #line)
+                        log(.info, .crypto, "Get PIN Confirmation Code success: \(response)", #file, #line)
                     }
                     
                     completion(result)
@@ -80,9 +82,9 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log("Show CVV Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Show CVV Failure: \(error)", #file, #line)
                     case let .success(cvv):
-                        log("Show CVV success: \(cvv).", #file, #line)
+                        log(.info, .crypto, "Show CVV success: \(cvv).", #file, #line)
                     }
                     
                     completion(result)

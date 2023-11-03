@@ -134,6 +134,7 @@ extension LiveCVVPINJSONMaker {
         let data = try JSONSerialization.data(withJSONObject: [
             "publicApplicationSessionKey": publicApplicationSessionKeyBase64
         ] as [String: String])
+        
         let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
         return encrypted
@@ -205,10 +206,9 @@ extension LiveCVVPINJSONMaker {
     }
 }
 
-/// `ShowCVV`
 extension LiveCVVPINJSONMaker {
     
-    func makeSecretJSON(
+    func makeShowCVVSecretJSON(
         with cardID: ShowCVVService.CardID,
         and sessionID: ShowCVVService.SessionID,
         rsaKeyPair: RSAKeyPair,

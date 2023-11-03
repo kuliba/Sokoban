@@ -28,11 +28,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeRetrieval(with: (item, validUntil))
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Retrieval success: \(item),"))
-        XCTAssert(message.contains(" valid until \(validUntil)."))
+        try assertIsOne(in: spy.messages, .info, contains: "Successfully retrieved \(item) valid until \(validUntil).")
     }
     
     func test_retrieve_shouldLogOnFailure() throws {
@@ -45,10 +41,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeRetrieval(with: retrievalError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Retrieval failure"))
+        try assertIsOne(in: spy.messages, .error, contains: "Retrieval failure")
     }
     
     func test_retrieve_shouldNotLogOnInstanceDeallocation() throws {
@@ -75,10 +68,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertionSuccessfully()
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to insert \(item) validUntil \(validUntil). Insertion result: "))
+        try assertIsOne(in: spy.messages, .info, contains: "Successfully inserted \(item) validUntil \(validUntil).")
     }
     
     func test_insert_shouldLogOnFailure() throws {
@@ -93,10 +83,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeInsertion(with: insertionError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to insert \(item) validUntil \(validUntil). Insertion result: "))
+        try assertIsOne(in: spy.messages, .error, contains: "Failed to insert \(item) validUntil \(validUntil): ")
     }
     
     func test_insert_shouldNotLogOnInstanceDeallocation() throws {
@@ -121,10 +108,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeDeletionSuccessfully()
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to delete cache. Deletion result"))
+        try assertIsOne(in: spy.messages, .info, contains: "Cache deletion success")
     }
     
     func test_deleteCache_shouldLogOnFailure() throws {
@@ -137,10 +121,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
             store.completeDeletion(with: deleteCacheError)
         })
         
-        XCTAssertNoDiff(spy.messages.count, 1)
-        
-        let message = try XCTUnwrap(spy.messages.first)
-        XCTAssert(message.contains("Asked to delete cache. Deletion result"))
+        try assertIsOne(in: spy.messages, .error, contains: "Cache deletion failure: ")
     }
     
     func test_deleteCache_shouldNotLogOnInstanceDeallocation() throws {
@@ -172,9 +153,9 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         let store = StoreSpy<Item>()
         let sut = SUT(decoratee: store, log: spy.log)
         
-        //        trackForMemoryLeaks(sut, file: file, line: line)
-        //        trackForMemoryLeaks(spy, file: file, line: line)
-        //        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, spy, store)
     }
@@ -223,13 +204,41 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    private func assertIsOne(
+        in messages: [LogSpy.Message],
+        _ level: LoggerAgentLevel,
+        contains text: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        XCTAssertNoDiff(messages.count, 1, "Expected one message, but got \(messages.count)", file: file, line: line)
+        
+        let message = try XCTUnwrap(messages.first)
+        XCTAssertNoDiff(message.level, level, file: file, line: line)
+        XCTAssert(message.message.contains(text))
+    }
+    
     private final class LogSpy {
         
-        private(set) var messages = [String]()
+        private(set) var messages = [Message]()
         
-        func log(_ message: String) {
+        func log(_ level: LoggerAgentLevel, _ message: String) {
             
-            self.messages.append(message)
+            self.messages.append(.init(level, message))
+        }
+        
+        struct Message: Equatable {
+            
+            let level: LoggerAgentLevel
+            let message: String
+            
+            init(
+                _ level: LoggerAgentLevel,
+                _ message: String
+            ) {
+                self.level = level
+                self.message = message
+            }
         }
     }
     
@@ -262,11 +271,11 @@ private extension LoggingStoreDecorator {
     
     convenience init(
         decoratee: any Store<T>,
-        log: @escaping (String) -> Void
+        log: @escaping (LoggerAgentLevel, String) -> Void
     ) {
         self.init(
             decoratee: decoratee,
-            log: { message,_,_ in log(message) }
+            log: { level, message,_,_ in log(level, message) }
         )
     }
 }

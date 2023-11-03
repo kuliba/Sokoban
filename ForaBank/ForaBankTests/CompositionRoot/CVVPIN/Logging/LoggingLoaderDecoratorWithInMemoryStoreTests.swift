@@ -154,7 +154,7 @@ private extension LoggingLoaderDecorator {
     ) {
         self.init(
             decoratee: decoratee,
-            log: { message,_,_ in log(message) }
+            log: { _, message,_,_ in log(message) }
         )
     }
 }

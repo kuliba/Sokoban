@@ -10,16 +10,20 @@ import Foundation
 
 enum RootViewModelFactory {
     
+    typealias Crypto = ForaCrypto.Crypto
+    
     static func make(
         with model: Model
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let log = { LoggerAgent.shared.debug(category: $0, message: $1, file: $2, line: $3) }
+        let log = LoggerAgent.shared.log
         
         let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            log: { log(.crypto, $0, $1, $2) }
+            _transportKey: Crypto.transportKey,
+            _processingKey: Crypto.processingKey,
+            log: { log(.error, .crypto, $0, $1, $2) }
         )
         
         let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
@@ -29,15 +33,15 @@ enum RootViewModelFactory {
             httpClient: httpClient,
             cvvPINCrypto: LoggingCVVPINCryptoDecorator(
                 decoratee: cvvPINCrypto,
-                log: { log(.crypto, $0, $1, $2) }
+                log: { log($0, .crypto, $1, $2, $3) }
             ),
             cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
                 decoratee: cvvPINJSONMaker,
-                log: { log(.crypto, $0, $1, $2) }
+                log: { log($0, .crypto, $1, $2, $3) }
             ),
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan,
-            log: log
+            log: { log($0, $1, $2, $3, $4) }
         )
         
         let productProfileViewModelFactory = {
@@ -82,11 +86,40 @@ enum RootViewModelFactory {
 extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
 extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
 
-extension LoggerAgentProtocol {
+// MARK: - Adapters
+
+private extension LiveExtraLoggingCVVPINCrypto{
     
-    func debug(category: LoggerAgentCategory, message: String, file: StaticString = #file, line: UInt = #line) {
-        
-        log(level: .debug, category: category, message: message, file: file, line: line)
+    init(
+        _transportKey: @escaping () throws -> SecKey,
+        _processingKey: @escaping () throws -> SecKey,
+        log: @escaping Log
+    ) {
+        self.init(
+            transportKey: {
+                
+                do {
+                    return try LiveExtraLoggingCVVPINCrypto.TransportKey(
+                        key: _transportKey()
+                    )
+                } catch {
+                    log("Transport Key loading failure: \(error).", #file, #line)
+                    throw error
+                }
+            },
+            processingKey: {
+                
+                do {
+                    return try LiveExtraLoggingCVVPINCrypto.ProcessingKey(
+                        key: _processingKey()
+                    )
+                } catch {
+                    log("Processing Key loading failure: \(error).", #file, #line)
+                    throw error
+                }
+            },
+            log: log
+        )
     }
 }
 

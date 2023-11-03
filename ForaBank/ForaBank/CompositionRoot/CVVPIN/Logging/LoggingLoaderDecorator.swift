@@ -9,15 +9,17 @@ import Foundation
 
 final class LoggingLoaderDecorator<T> {
     
+    typealias Log = (LoggerAgentLevel, String, StaticString, UInt) -> Void
+    
     private let decoratee: any Loader<T>
-    private let log: (String) -> Void
+    private let log: Log
     
     init(
         decoratee: any Loader<T>,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping Log
     ) {
         self.decoratee = decoratee
-        self.log = { log($0, #file, #line) }
+        self.log = log
     }
 }
 
@@ -33,10 +35,10 @@ extension LoggingLoaderDecorator: Loader {
             
             switch result {
             case let .failure(error):
-                log("\(String(describing: self)): load failure: \(error).")
+                log(.error, "\(String(describing: self)): load failure: \(error).", #file, #line)
                 
             case let .success(model):
-                log("\(String(describing: self)): load success: \(model).")
+                log(.info, "\(String(describing: self)): load success: \(model).", #file, #line)
             }
             
             completion(result)
@@ -57,10 +59,10 @@ extension LoggingLoaderDecorator: Loader {
             
             switch result {
             case let .failure(error):
-                log("\(String(describing: self)): save failure: \(error).")
+                log(.error, "\(String(describing: self)): save failure: \(error).", #file, #line)
                 
             case .success:
-                log("\(String(describing: self)): save success.")
+                log(.info, "\(String(describing: self)): save success.", #file, #line)
             }
             
             completion(result)

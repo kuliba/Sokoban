@@ -10,8 +10,8 @@ import Foundation
 
 final class LoggingCVVPINCryptoDecorator {
     
-    typealias Log = (String, StaticString, UInt) -> Void
-    
+    typealias Log = (LoggerAgentLevel, String, StaticString, UInt) -> Void
+
     private let decoratee: CVVPINCrypto
     private let log: Log
     
@@ -32,11 +32,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptWithPadding(data: data)
-            log("Encrypt with padding using transport public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt with padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Encrypt with padding using transport public key failure: \(error).", #file, #line)
+            log(.error, "Encrypt with padding using transport public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -45,11 +45,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptNoPadding(data: data)
-            log("Encrypt without padding using transport public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt without padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Encrypt without padding using transport public key failure: \(error).", #file, #line)
+            log(.error, "Encrypt without padding using transport public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -58,11 +58,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.processingEncryptWithPadding(data: data)
-            log("Encrypt using processing public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt using processing public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log("Encrypt using processing public key failure: \(error).", #file, #line)
+            log(.error, "Encrypt using processing public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -72,7 +72,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func generateECDHKeyPair() -> ECDHKeyPair {
         
         let keyPair = decoratee.generateECDHKeyPair()
-        log("Generated P384 Key Pair.", #file, #line)
+        log(.debug, "Generated P384 Key Pair.", #file, #line)
         
         return keyPair
     }
@@ -87,11 +87,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 from: string,
                 using: privateKey
             )
-            log("Shared Secret extraction success (\(sharedSecret.count)).", #file, #line)
+            log(.debug, "Shared Secret extraction success (\(sharedSecret.count)).", #file, #line)
             
             return sharedSecret
         } catch {
-            log("Shared Secret extraction failure: \(error).", #file, #line)
+            log(.error, "Shared Secret extraction failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -102,11 +102,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let keyData = try decoratee.publicKeyData(forPublicKey: publicKey)
-            log("PublicKey data representation created (\(keyData.count)).", #file, #line)
+            log(.debug, "PublicKey data representation created (\(keyData.count)).", #file, #line)
             
             return keyData
         } catch {
-            log("PublicKey data representation creation failure \(error).", #file, #line)
+            log(.error, "PublicKey data representation creation failure \(error).", #file, #line)
             throw error
         }
     }
@@ -117,11 +117,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let rsaKeyPair = try decoratee.generateRSA4096BitKeyPair()
-            log("RSA Key Pair generation success \(rsaKeyPair).", #file, #line)
+            log(.debug, "RSA Key Pair generation success \(rsaKeyPair).", #file, #line)
             
             return rsaKeyPair
         } catch {
-            log("RSA Key Pair generation failure: \(error).", #file, #line)
+            log(.error, "RSA Key Pair generation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -138,11 +138,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 publicKey: publicKey,
                 privateKey: privateKey
             )
-            log("hashSignVerify success for data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "hashSignVerify success for data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return data
         } catch {
-            log("hashSignVerify failure: \(error) for \"\(string)\".", #file, #line)
+            log(.error, "hashSignVerify failure: \(error) for \"\(string)\".", #file, #line)
             throw error
         }
     }
@@ -154,11 +154,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let string = try decoratee.rsaDecrypt(string, withPrivateKey: privateKey)
-            log("String decryption success: \"\(string)\"", #file, #line)
+            log(.debug, "String decryption success: \"\(string)\"", #file, #line)
             
             return string
         } catch {
-            log("String decryption failure: \(error).", #file, #line)
+            log(.error, "String decryption failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -174,11 +174,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 withPrivateKey: privateKey
             )
-            log("Sign with SHA256 digest success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "Sign with SHA256 digest success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return signed
         } catch {
-            log("Sign with SHA256 digest failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.error, "Sign with SHA256 digest failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             throw error
         }
     }
@@ -194,11 +194,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 withPrivateKey: privateKey
             )
-            log("SHA256 sign success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "SHA256 sign success (\(signed.count)), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return signed
         } catch {
-            log("SHA256 sign failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.error, "SHA256 sign failure: \(error), provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             throw error
         }
     }
@@ -215,11 +215,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data,
                 withPrivateKey: privateKey
             )
-            log("Signing success (\(signed)) for provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "Signing success (\(signed)) for provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return signed
         } catch {
-            log("Signing failure: \(error) for data \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.error, "Signing failure: \(error) for data \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             throw error
         }
     }
@@ -232,11 +232,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
             let x509Representation = try decoratee.x509Representation(
                 publicKey: publicKey
             )
-            log("x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".", #file, #line)
+            log(.debug, "x509Representation of \(publicKey) is \"\(x509Representation.base64EncodedString())\".", #file, #line)
             
             return x509Representation
         } catch {
-            log("x509Representation failure: \(error).", #file, #line)
+            log(.error, "x509Representation failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -253,11 +253,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 data: data,
                 sessionKey: sessionKey
             )
-            log("AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "AES encrypted (\(encrypted.count)) provided data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
             
             return encrypted
         } catch {
-            log("AES Encryption Failure: \(error).", #file, #line)
+            log(.error, "AES Encryption Failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -267,7 +267,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
     func sha256Hash(_ data: Data) -> Data {
         
         let hash = decoratee.sha256Hash(data)
-        log("Created hash (\(hash.count)) for data (\(data.count)): \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+        log(.debug, "Created hash (\(hash.count)) for data (\(data.count)): \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
         
         return hash
     }
