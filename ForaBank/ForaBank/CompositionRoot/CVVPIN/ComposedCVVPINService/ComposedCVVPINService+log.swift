@@ -47,7 +47,21 @@ extension ComposedCVVPINService {
                     completion(result)
                 }
             },
-            checkActivation: checkActivation,
+            checkActivation: { completion in
+                
+                checkActivation { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log(.error, .crypto, "Check Activation failure: \(error).", #file, #line)
+                        
+                    case .success:
+                        log(.info, .crypto, "Check Activation success.", #file, #line)
+                    }
+                    
+                    completion(result)
+                }
+            },
             confirmActivation: { otp, completion in
                 
                 confirmActivation(otp) { result in

@@ -86,6 +86,37 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
+    func test_shouldLogInfoOnCheckActivationSuccess() {
+        
+        let (sut, spy) = makeSUT(
+            checkActivationResult: .success(())
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.checkActivation { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Check Activation success.")
+        ])
+    }
+    
+    func test_shouldLogErrorOnCheckActivationFailure() {
+        
+        let errorMessage = "Failure in Activation Checking"
+        let (sut, spy) = makeSUT(
+            checkActivationResult: .failure(anyError(errorMessage))
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.checkActivation { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Check Activation failure: Error Domain=\(errorMessage) Code=0 \"(null)\".")
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -93,6 +124,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
     private func makeSUT(
         activateResult: ActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
+        checkActivationResult: Result<Void, Error> = .success(()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -103,8 +135,8 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         let spy = LogSpy()
         let sut = SUT(
             activate: { $0(activateResult) },
-            changePIN: { _,_,_,completion  in completion(changePINResult) },
-            checkActivation: { _ in },
+            changePIN: { _,_,_, completion  in completion(changePINResult) },
+            checkActivation: { $0(checkActivationResult) },
             confirmActivation: { _,_  in },
             getPINConfirmationCode: { _ in },
             showCVV: { _,_  in },
