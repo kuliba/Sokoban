@@ -425,7 +425,7 @@
 		2A49221C2ABC6ABA00880784 /* Services+bindKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */; };
 		2A4A19EC2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */; };
 		2A4A19EE2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19ED2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift */; };
-		2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient.swift */; };
+		2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4E8DFF29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */; };
 		2A50321D2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */; };
@@ -2460,7 +2460,7 @@
 		2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+bindKeyService.swift"; sourceTree = "<group>"; };
 		2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceTests.swift; sourceTree = "<group>"; };
 		2A4A19ED2AF4E49500F66EDF /* CVVPINServicesTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesTestHelpers.swift; sourceTree = "<group>"; };
-		2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINService_CVVPINServicesClient.swift; sourceTree = "<group>"; };
+		2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINService_CVVPINServicesClient_Tests.swift; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAmountViewViewModelTests.swift; sourceTree = "<group>"; };
@@ -5416,7 +5416,7 @@
 		2A4A19EA2AF4D99000F66EDF /* ComposedCVVPINService */ = {
 			isa = PBXGroup;
 			children = (
-				2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient.swift */,
+				2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */,
 			);
 			path = ComposedCVVPINService;
 			sourceTree = "<group>";
@@ -12676,7 +12676,7 @@
 				2A3599A92ADA7F5000820369 /* KeyChainStoreTests.swift in Sources */,
 				2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
-				2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient.swift in Sources */,
+				2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */,
 				C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */,
 				77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */,
 				C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */,
