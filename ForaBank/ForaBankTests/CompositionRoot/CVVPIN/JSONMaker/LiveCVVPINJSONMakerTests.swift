@@ -6,6 +6,7 @@
 //
 
 import CryptoKit
+import class CVVPIN_Services.ChangePINService
 @testable import ForaBank
 import ForaCrypto
 import XCTest
@@ -62,6 +63,30 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         )
         
         try XCTAssertNoThrow(decrypted.decode(as: SecretRequestJSON.self))
+    }
+    
+    func test_makePINChangeJSON_shouldMakeJSONWithCorrectStructure() throws {
+        
+        let (sut, crypto) = makeSUT()
+        let sessionKey = anySessionKey()
+        let rsaKeyPair = try crypto.generateRSA4096BitKeyPair()
+        
+        let encrypted = try sut.makePINChangeJSON(
+            sessionID: anySessionID(),
+            cardID: anyCardID(),
+            otp: anyOTP(),
+            pin: anyPIN(),
+            otpEventID: anyOTPEventID(),
+            sessionKey: sessionKey,
+            rsaPrivateKey: rsaKeyPair.privateKey
+        )
+        
+        let decrypted = try aesDecrypt(
+            data: encrypted,
+            sessionKey: sessionKey
+        )
+        
+        try XCTAssertNoThrow(decrypted.decode(as: PINChangeJSON.self))
     }
     
     // MARK: - Helpers
@@ -210,7 +235,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             else {
                 throw Base64EncodingError()
             }
-
+            
             self.sessionId = sessionId
             self.cardId = cardId
             self.otpCode = otpCode
@@ -218,6 +243,41 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             self.secretPIN = secretPIN
             self.signature = signature
         }
+    }
+    
+    func anySessionID(
+        sessionIDValue: String = UUID().uuidString
+    ) -> ChangePINService.SessionID {
+        
+        .init(sessionIDValue: sessionIDValue)
+    }
+    
+    func anyCardID(
+        cardIDValue: Int = 98765431012
+    ) -> ChangePINService.CardID {
+        
+        .init(cardIDValue: cardIDValue)
+    }
+    
+    func anyOTP(
+        otpValue: String = .init(UUID().uuidString.prefix(6))
+    ) -> ChangePINService.OTP {
+        
+        .init(otpValue: otpValue)
+    }
+    
+    func anyPIN(
+        pinValue: String = .init(UUID().uuidString.prefix(4))
+    ) -> ChangePINService.PIN {
+        
+        .init(pinValue: pinValue)
+    }
+    
+    func anyOTPEventID(
+        eventIDValue: String = UUID().uuidString
+    ) -> ChangePINService.OTPEventID {
+        
+        .init(eventIDValue: eventIDValue)
     }
 }
 
