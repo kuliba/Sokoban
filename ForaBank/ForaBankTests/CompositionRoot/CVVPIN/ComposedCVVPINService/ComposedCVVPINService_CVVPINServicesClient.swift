@@ -202,6 +202,45 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
+    // MARK: - ShowCVVClient
+    
+    func test_showCVV_shouldDeliverFailureOnFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            showCVVSpy.complete(with: anyFailure(statusCode, errorMessage))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.success(.init("369"))], on: {
+            
+            showCVVSpy.complete(with: .success(.init(cvvValue: "369")))
+        })
+    }
+    
+    func test_showCVV_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        let showCVVSpy: ShowCVVSpy
+        var sut: SUT?
+        (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        var results = [ShowCVVClient.ShowCVVResult]()
+        
+        sut?.showCVV(cardId: 98765432101) { results.append($0) }
+        sut = nil
+        showCVVSpy.complete(with: anySuccess())
+        
+        XCTAssert(results.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -391,6 +430,32 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
             newPin: anyPIN().pinValue,
             otp: .init(UUID().uuidString.prefix(6))
         ) {
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectShowCVV(
+        _ sut: SUT,
+        toDeliver expectedResults: [ShowCVVClient.ShowCVVResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [ShowCVVClient.ShowCVVResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.showCVV(cardId: 98765432101) {
             receivedResults.append($0)
             exp.fulfill()
         }
@@ -733,6 +798,14 @@ private extension ChangePINClient.ChangePINResult {
                 self = .weakPIN(statusCode: statusCode, errorMessage: errorMessage)
             }
         }
+    }
+}
+
+private extension Array where Element == ShowCVVClient.ShowCVVResult {
+    
+    func mapToEquatable() -> [ShowCVVClient.ShowCVVResult.EquatableShowCVVResult] {
+        
+        map { $0.mapToEquatable() }
     }
 }
 
