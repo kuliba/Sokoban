@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-struct ModelToViewModelMapper {
+public struct ModelToViewModelMapper {
     
     let action: (Event) -> Void
 }
 
-extension ModelToViewModelMapper {
+public extension ModelToViewModelMapper {
     
     func map(_ parameter: Operation.Parameter) -> ParameterViewModel {
         

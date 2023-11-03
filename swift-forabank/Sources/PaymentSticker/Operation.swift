@@ -7,13 +7,18 @@
 
 import Foundation
 
-struct Operation {
+public struct Operation {
     
-    /// - Note: it would be much better to use something like [IdentifiedArray](https://github.com/pointfreeco/swift-identified-collections#introducing-identified-collections) to simplify access to array elements via ID.
     var parameters: [Parameter]
+    
+    public init(
+        parameters: [Operation.Parameter]
+    ) {
+        self.parameters = parameters
+    }
 }
 
-extension Operation {
+public extension Operation {
     
     enum Parameter: Hashable {
         
@@ -68,7 +73,7 @@ extension [Operation.Parameter] {
     }
 }
 
-extension Operation {
+public extension Operation {
     
     func updateOperation(
         operation: Operation,
@@ -84,7 +89,7 @@ extension Operation {
     }
 }
 
-extension Operation.Parameter.Select {
+public extension Operation.Parameter.Select {
     
     typealias ParameterSelect = Operation.Parameter.Select
     typealias SelectOption = Operation.Parameter.Select.Option

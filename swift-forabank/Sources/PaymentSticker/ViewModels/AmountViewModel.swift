@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AmountViewModel {
+public struct AmountViewModel {
     
     typealias Parameter = Operation.Parameter.Amount
     

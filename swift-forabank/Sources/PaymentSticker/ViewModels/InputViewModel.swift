@@ -7,9 +7,15 @@
 
 import Foundation
 
-struct InputViewModel {
+public struct InputViewModel {
     
-    typealias Parameter = Operation.Parameter.Input
+    public typealias Parameter = Operation.Parameter.Input
 
-    let parameter: Parameter
+    public let parameter: Parameter
+    
+    public init(
+        parameter: InputViewModel.Parameter
+    ) {
+        self.parameter = parameter
+    }
 }

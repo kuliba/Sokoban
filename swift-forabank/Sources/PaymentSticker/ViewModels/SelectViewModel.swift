@@ -9,14 +9,24 @@ import Foundation
 import SwiftUI
 
 
-struct SelectViewModel {
+public struct SelectViewModel {
     
-    typealias Parameter = Operation.Parameter.Select
-    typealias OptionID = Parameter.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias Parameter = Operation.Parameter.Select
+    public typealias OptionID = Parameter.State.OptionsListViewModel.OptionViewModel.ID
     
     let parameter: Parameter
     let chevronButtonTapped: () -> Void
     let select: (OptionID) -> Void
+    
+    public init(
+        parameter: SelectViewModel.Parameter,
+        chevronButtonTapped: @escaping () -> Void,
+        select: @escaping (SelectViewModel.OptionID) -> Void
+    ) {
+        self.parameter = parameter
+        self.chevronButtonTapped = chevronButtonTapped
+        self.select = select
+    }
 }
 
 extension SelectViewModel {

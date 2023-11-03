@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum Event {
+public enum Event {
     
-    typealias ParameterProduct = Operation.Parameter.Product
-    typealias ProductOption = ParameterProduct.Option
-    typealias ParameterSelect = Operation.Parameter.Select
-    typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
-    typealias ParameterInput = Operation.Parameter.Input
+    public typealias ParameterProduct = Operation.Parameter.Product
+    public typealias ProductOption = ParameterProduct.Option
+    public typealias ParameterSelect = Operation.Parameter.Select
+    public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias ParameterInput = Operation.Parameter.Input
 
     
     case product(ProductEvent)
@@ -21,19 +21,19 @@ enum Event {
     case continueButtonTapped
     case input(InputEvent)
     
-    enum InputEvent {
+    public enum InputEvent {
         
         case valueUpdate(ParameterInput)
         case getOtpCode
     }
     
-    enum ProductEvent {
+    public enum ProductEvent {
         
         case chevronTapped(ParameterProduct, ParameterProduct.State)
         case selectProduct(ProductOption, ParameterProduct)
     }
     
-    enum SelectEvent {
+    public enum SelectEvent {
         
         case selectOption(SelectOptionID, ParameterSelect)
         case openBranch

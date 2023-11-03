@@ -148,7 +148,7 @@ struct OperationProcessView: View {
 
 extension Operation.Parameter: Identifiable {
     
-    var id: ParameterType {
+    public var id: ParameterType {
         
         switch self {
         case .tip: return .tip
@@ -170,7 +170,7 @@ extension Operation.Parameter: Identifiable {
         }
     }
     
-    enum ParameterType: String {
+    public enum ParameterType: String {
         
         case tip
         case sticker
@@ -185,7 +185,7 @@ extension Operation.Parameter: Identifiable {
 
 extension ModelToViewModelMapper {
     
-    init(_ model: OperationStateViewModel) {
+    public init(_ model: OperationStateViewModel) {
         
         self.action = model.event(_:)
     }

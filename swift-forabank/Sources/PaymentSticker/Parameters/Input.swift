@@ -6,9 +6,8 @@
 //
 
 import Foundation
-//import TextFieldComponent
 
-extension Operation.Parameter {
+public extension Operation.Parameter {
     
     struct Input: Hashable {
         

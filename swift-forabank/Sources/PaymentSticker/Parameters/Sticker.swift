@@ -7,16 +7,34 @@
 
 extension Operation.Parameter {
     
-    struct Sticker: Hashable {
+    public struct Sticker: Hashable {
         
         let title: String
         let description: String
         let options: [Option]
         
-        struct Option: Hashable {
+        public init(
+            title: String,
+            description: String,
+            options: [Operation.Parameter.Sticker.Option]
+        ) {
+            self.title = title
+            self.description = description
+            self.options = options
+        }
+        
+        public struct Option: Hashable {
             
             let title: String
             let description: String
+            
+            public init(
+                title: String,
+                description: String
+            ) {
+                self.title = title
+                self.description = description
+            }
         }
     }
 }
