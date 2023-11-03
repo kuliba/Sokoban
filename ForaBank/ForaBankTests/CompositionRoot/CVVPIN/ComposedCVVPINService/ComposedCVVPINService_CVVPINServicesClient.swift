@@ -18,16 +18,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     // MARK: - ActivateCVVPINClient
     
-    func test_activate_shouldDeliverSuccessOnSuccess() {
-        
-        let (sut, activateSpy, _, _, _, _) = makeSUT()
-        
-        expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
-            
-            activateSpy.complete(with: anySuccess("+7..3245"))
-        })
-    }
-    
     func test_activate_shouldDeliverFailureOnFailure() {
         
         let (sut, activateSpy, _, _, _, _) = makeSUT()
@@ -35,6 +25,16 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
             
             activateSpy.complete(with: anyFailure(500, "Activation Failure"))
+        })
+    }
+    
+    func test_activate_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, activateSpy, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
+            
+            activateSpy.complete(with: anySuccess("+7..3245"))
         })
     }
     
@@ -52,16 +52,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_confirmWith_shouldDeliverSuccessOnSuccess() {
-        
-        let (sut, _, confirmSpy, _, _, _) = makeSUT()
-        
-        expectConfirm(sut, toDeliver: [.success(())], on: {
-            
-            confirmSpy.complete(with: .success(()))
-        })
-    }
-    
     func test_confirmWith_shouldDeliverFailureOnFailure() {
         
         let (sut, _, confirmSpy, _, _, _) = makeSUT()
@@ -69,6 +59,16 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         expectConfirm(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Confirmation Failure"))], on: {
             
             confirmSpy.complete(with: anyFailure(500, "Confirmation Failure"))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, _, confirmSpy, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.success(())], on: {
+            
+            confirmSpy.complete(with: .success(()))
         })
     }
     
@@ -88,16 +88,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     // MARK: - ChangePINClient
     
-    func test_checkFunctionality_shouldDeliverSuccessOnSuccess() {
-        
-        let (sut, _, _, checkSpy, _, _) = makeSUT()
-        
-        expectCheckFunctionality(sut, toDeliver: [.success(())], on: {
-            
-            checkSpy.complete(with: .success(()))
-        })
-    }
-    
     func test_checkFunctionality_shouldDeliverFailureOnFailure() {
         
         let (sut, _, _, checkSpy, _, _) = makeSUT()
@@ -105,6 +95,16 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         expectCheckFunctionality(sut, toDeliver: [.failure(.activationFailure)], on: {
             
             checkSpy.complete(with: .failure(anyError("Check Failure")))
+        })
+    }
+    
+    func test_checkFunctionality_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, _, _, checkSpy, _, _) = makeSUT()
+        
+        expectCheckFunctionality(sut, toDeliver: [.success(())], on: {
+            
+            checkSpy.complete(with: .success(()))
         })
     }
     
@@ -122,18 +122,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_getPINConfirmationCode_shouldDeliverSuccessOnSuccess() {
-        
-        let eventID = UUID().uuidString
-        let phone = "+7..8765"
-        let (sut, _, _, _, getPINConfirmationCodeSpy, _) = makeSUT()
-        
-        expectGetPINConfirmationCode(sut, toDeliver: [.success(phone)], on: {
-            
-            getPINConfirmationCodeSpy.complete(with: anySuccess(eventID, phone))
-        })
-    }
-    
     func test_getPINConfirmationCode_shouldDeliverFailureOnFailure() {
         
         let statusCode = 500
@@ -144,6 +132,18 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
             getPINConfirmationCodeSpy.complete(with: anyFailure(statusCode, errorMessage))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverSuccessOnSuccess() {
+        
+        let eventID = UUID().uuidString
+        let phone = "+7..8765"
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.success(phone)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: anySuccess(eventID, phone))
         })
     }
     
