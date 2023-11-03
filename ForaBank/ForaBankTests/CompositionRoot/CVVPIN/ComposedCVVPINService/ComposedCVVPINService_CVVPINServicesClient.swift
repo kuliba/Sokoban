@@ -16,6 +16,8 @@ fileprivate typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConf
 
 final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
+    // MARK: - ActivateCVVPINClient
+    
     func test_activate_shouldDeliverSuccessOnSuccess() {
         
         let (sut, activateSpy) = makeSUT()
@@ -25,6 +27,31 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
             activateSpy.complete(with: anySuccess("+7..3245"))
         })
     }
+
+    func test_activate_shouldDeliverFailureOnFailure() {
+        
+        let (sut, activateSpy) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
+            
+            activateSpy.complete(with: anyFailure(500, "Activation Failure"))
+        })
+    }
+
+    func test_activate_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        let activateSpy: ActivateSpy
+        var sut: SUT?
+        (sut, activateSpy) = makeSUT()
+        var results = [ActivateCVVPINClient.ActivateResult]()
+        
+        sut?.activate(completion: { results.append($0) })
+        sut = nil
+        activateSpy.complete(with: anySuccess())
+        
+        XCTAssert(results.isEmpty)
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
