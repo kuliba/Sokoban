@@ -214,7 +214,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Show CVV success: \(cvvValue).")
+            .init(.info, .crypto, "Show CVV success.")
         ])
     }
     

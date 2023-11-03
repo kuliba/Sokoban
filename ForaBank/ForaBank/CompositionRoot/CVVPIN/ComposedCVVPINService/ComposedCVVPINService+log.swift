@@ -102,8 +102,8 @@ extension ComposedCVVPINService {
                     case let .failure(error):
                         log(.error, .crypto, "Show CVV Failure: \(error).", #file, #line)
                         
-                    case let .success(cvv):
-                        log(.info, .crypto, "Show CVV success: \(cvv.cvvValue).", #file, #line)
+                    case .success:
+                        log(.info, .crypto, "Show CVV success.", #file, #line)
                     }
                     
                     completion(result)
