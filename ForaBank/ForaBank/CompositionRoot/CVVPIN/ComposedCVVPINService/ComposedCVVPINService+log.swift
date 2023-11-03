@@ -85,10 +85,10 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log(.error, .crypto, "Get PIN Confirmation Code Failure: \(error)", #file, #line)
+                        log(.error, .crypto, "Get PIN Confirmation Code Failure: \(error).", #file, #line)
                         
                     case let .success(response):
-                        log(.info, .crypto, "Get PIN Confirmation Code success: \(response)", #file, #line)
+                        log(.info, .crypto, "Get PIN Confirmation Code success: \(response.otpEventID.eventIDValue), \(response.phone).", #file, #line)
                     }
                     
                     completion(result)

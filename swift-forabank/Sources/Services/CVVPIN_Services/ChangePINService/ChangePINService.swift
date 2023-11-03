@@ -122,6 +122,14 @@ extension ChangePINService {
         
         public let otpEventID: OTPEventID
         public let phone: String
+        
+        public init(
+            otpEventID: OTPEventID,
+            phone: String
+        ) {
+            self.otpEventID = otpEventID
+            self.phone = phone
+        }
     }
     
     public struct EncryptedConfirmResponse {

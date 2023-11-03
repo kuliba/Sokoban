@@ -12,6 +12,7 @@ import XCTest
 fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
 fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
 fileprivate typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
+fileprivate typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConfirmationCodeResult
 
 final class ComposedCVVPINServiceTests: XCTestCase {
     
@@ -150,6 +151,40 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
+    func test_shouldLogInfoOnGetPINConfirmationCodeSuccess() {
+        
+        let eventIDValue = "efg678"
+        let phone = "+7..5367"
+        let (sut, spy) = makeSUT(
+            getPINConfirmationCodeResult: anySuccess(eventIDValue, phone)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.getPINConfirmationCode { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Get PIN Confirmation Code success: \(eventIDValue), \(phone).")
+        ])
+    }
+    
+    func test_shouldLogErrorOnGetPINConfirmationCodeFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "PIN Confirmation Code Failure"
+        let (sut, spy) = makeSUT(
+            getPINConfirmationCodeResult: anyFailure(statusCode, errorMessage)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.getPINConfirmationCode { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Get PIN Confirmation Code Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -159,6 +194,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
         confirmActivationResult: ConfirmResult = .success(()),
+        getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -172,7 +208,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: { $0(checkActivationResult) },
             confirmActivation: { _, completion  in completion(confirmActivationResult) },
-            getPINConfirmationCode: { _ in },
+            getPINConfirmationCode: { $0(getPINConfirmationCodeResult) },
             showCVV: { _,_  in },
             log: { level, category, text,_,_ in
                 
@@ -267,3 +303,23 @@ private func anyFailure(
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
+
+private func anySuccess(
+    _ eventIDValue: String = UUID().uuidString,
+    _ phoneValue: String = UUID().uuidString
+) -> GetPINConfirmationCodeResult {
+    
+    .success(.init(
+        otpEventID: .init(eventIDValue: eventIDValue),
+        phone: phoneValue
+    ))
+}
+
+private func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> GetPINConfirmationCodeResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
