@@ -65,7 +65,7 @@ protocol CVVPINJSONMaker {
     ) throws -> Data
     
     /// `ShowCVV`
-    func makeSecretJSON(
+    func makeShowCVVSecretJSON(
         with cardID: ShowCVVService.CardID,
         and sessionID: ShowCVVService.SessionID,
         rsaKeyPair: RSAKeyPair,

@@ -206,10 +206,9 @@ extension LiveCVVPINJSONMaker {
     }
 }
 
-/// `ShowCVV`
 extension LiveCVVPINJSONMaker {
     
-    func makeSecretJSON(
+    func makeShowCVVSecretJSON(
         with cardID: ShowCVVService.CardID,
         and sessionID: ShowCVVService.SessionID,
         rsaKeyPair: RSAKeyPair,

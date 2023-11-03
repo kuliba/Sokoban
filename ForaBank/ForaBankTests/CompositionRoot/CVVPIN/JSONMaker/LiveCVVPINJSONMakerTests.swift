@@ -96,7 +96,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         let sessionKey = anySessionKey()
         let rsaKeyPair = try crypto.generateRSA4096BitKeyPair()
         
-        let encrypted = try sut.makeSecretJSON(
+        let encrypted = try sut.makeShowCVVSecretJSON(
             with: anyCardID(),
             and: anySessionID(),
             rsaKeyPair: rsaKeyPair,

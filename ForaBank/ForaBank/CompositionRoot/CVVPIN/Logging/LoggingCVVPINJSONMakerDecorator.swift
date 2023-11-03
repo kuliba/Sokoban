@@ -111,7 +111,7 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
         }
     }
     
-    func makeSecretJSON(
+    func makeShowCVVSecretJSON(
         with cardID: ShowCVVService.CardID,
         and sessionID: ShowCVVService.SessionID,
         rsaKeyPair: RSAKeyPair,
@@ -119,7 +119,7 @@ extension LoggingCVVPINJSONMakerDecorator: CVVPINJSONMaker {
     ) throws -> Data {
         
         do {
-            let json = try decoratee.makeSecretJSON(
+            let json = try decoratee.makeShowCVVSecretJSON(
                 with: cardID,
                 and: sessionID,
                 rsaKeyPair: rsaKeyPair,

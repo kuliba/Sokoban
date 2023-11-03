@@ -720,7 +720,7 @@ extension Services {
                 completion(.init {
                     
                     let session = try result.get()
-                    return try cvvPINJSONMaker.makeSecretJSON(
+                    return try cvvPINJSONMaker.makeShowCVVSecretJSON(
                         with: cardID,
                         and: sessionID,
                         rsaKeyPair: session.rsaKeyPair,
