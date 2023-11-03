@@ -1,0 +1,133 @@
+//
+//  ComposedCVVPINServiceTests.swift
+//  ForaBankTests
+//
+//  Created by Igor Malyarov on 03.11.2023.
+//
+
+import CVVPIN_Services
+@testable import ForaBank
+import XCTest
+
+fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+
+final class ComposedCVVPINServiceTests: XCTestCase {
+    
+    func test_init_shouldNotMessageLogger() {
+        
+        let (_, spy) = makeSUT()
+        
+        XCTAssert(spy.messages.isEmpty)
+    }
+    
+    func test_shouldLogInfoOnActivateSuccess() {
+        
+        let phone = "+01234567"
+        let (sut, spy) = makeSUT(
+            activateResult: anySuccess(phone)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.activate { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Activation success: Phone(phoneValue: \"\(phone)\").")
+        ])
+    }
+    
+    func test_shouldLogErrorOnActivateFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let (sut, spy) = makeSUT(
+            activateResult: anyFailure(statusCode, errorMessage)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.activate { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.error, .crypto, "Activation Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = ComposedCVVPINService
+    
+    private func makeSUT(
+        activateResult: ActivateResult = anySuccess(),
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        spy: LogSpy
+    ) {
+        
+        let spy = LogSpy()
+        let sut = SUT(
+            activate: { $0(activateResult) },
+            changePIN: { _,_,_,_  in },
+            checkActivation: { _ in },
+            confirmActivation: { _,_  in },
+            getPINConfirmationCode: { _ in },
+            showCVV: { _,_  in },
+            log: { level, category, text,_,_ in
+                
+                spy.log(level, category, text)
+            }
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        
+        return (sut, spy)
+    }
+    
+    private final class LogSpy {
+        
+        private(set) var messages = [Message]()
+        
+        func log(
+            _ level: LoggerAgentLevel,
+            _ category: LoggerAgentCategory,
+            _ text: String
+        ) {
+            messages.append(.init(level, category, text))
+        }
+        
+        struct Message: Equatable {
+            
+            let evel: LoggerAgentLevel
+            let category: LoggerAgentCategory
+            let text: String
+            
+            init(
+                _ level: LoggerAgentLevel,
+                _ category: LoggerAgentCategory,
+                _ text: String
+            ) {
+                self.evel = level
+                self.category = category
+                self.text = text
+            }
+        }
+    }
+}
+
+private func anySuccess(
+    _ phoneValue: String = UUID().uuidString
+) -> ActivateResult {
+    
+    .success(.init(phoneValue: phoneValue))
+}
+
+private func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ActivateResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}

@@ -423,6 +423,7 @@
 		2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */; };
 		2A49221A2ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */; };
 		2A49221C2ABC6ABA00880784 /* Services+bindKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */; };
+		2A4A19EC2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */; };
 		2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */; };
 		2A4E8DFF29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */; };
 		2A50321D2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */; };
@@ -2455,6 +2456,7 @@
 		2A4593D62A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+EndpointBindPublicKeyWithEventIDTests.swift"; sourceTree = "<group>"; };
 		2A4922192ABC3C7700880784 /* LoggingDecoratedRequestCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratedRequestCreator.swift; sourceTree = "<group>"; };
 		2A49221B2ABC6ABA00880784 /* Services+bindKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+bindKeyService.swift"; sourceTree = "<group>"; };
+		2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceTests.swift; sourceTree = "<group>"; };
 		2A4D25DC2A4DA19800965024 /* RelaxRegExpRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaxRegExpRuleTests.swift; sourceTree = "<group>"; };
 		2A4E8DFE29F97D6C006ADF1B /* PaymentsInputPhoneViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputPhoneViewComponentTests.swift; sourceTree = "<group>"; };
 		2A50321C2A8CCB2200F9D173 /* PaymentsAmountViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAmountViewViewModelTests.swift; sourceTree = "<group>"; };
@@ -5407,6 +5409,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		2A4A19EA2AF4D99000F66EDF /* ComposedCVVPINService */ = {
+			isa = PBXGroup;
+			children = (
+				2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */,
+			);
+			path = ComposedCVVPINService;
+			sourceTree = "<group>";
+		};
 		2A4B62F129E6AE1200788F56 /* PaymentsCodeViewComponentTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -5597,6 +5607,7 @@
 		2A7688D52AF3A73600045293 /* CVVPIN */ = {
 			isa = PBXGroup;
 			children = (
+				2A4A19EA2AF4D99000F66EDF /* ComposedCVVPINService */,
 				2A80B5672AF418EA0009504C /* JSONMaker */,
 				2A7688D62AF3A74200045293 /* Logging */,
 				2A6DC7342AF3F24000688401 /* Infra */,
@@ -12744,6 +12755,7 @@
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
 				2A4593D52A7CFA74008593A3 /* URL+StaticString.swift in Sources */,
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
+				2A4A19EC2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */,
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
