@@ -32,8 +32,6 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     func test_activate_shouldDeliverServiceFailureOnNetwork() {
         
-        let statusCode = 201
-        let data = anyData()
         let (sut, activateSpy, _, _, _, _, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
@@ -56,8 +54,6 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     func test_activate_shouldDeliverServiceFailureOnServiceFailure() {
         
-        let statusCode = 500
-        let errorMessage = "Activation Failure"
         let (sut, activateSpy, _, _, _, _, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
@@ -90,13 +86,60 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_confirmWith_shouldDeliverFailureOnFailure() {
+    func test_confirmWith_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let data = anyData()
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            confirmSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: data)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServiceFailureOnNetwork() {
         
         let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
         
-        expectConfirm(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Confirmation Failure"))], on: {
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            confirmSpy.complete(with: anyFailure(500, "Confirmation Failure"))
+            confirmSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverRetryFailureOnRetry() {
+        
+        let statusCode = 500
+        let errorMessage = "Confirmation Failure"
+        let retryAttempts = 5
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))], on: {
+            
+            confirmSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServerFailureOnServer() {
+        
+        let statusCode = 500
+        let errorMessage = "Confirmation Failure"
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            confirmSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServiceFailureOnServiceFailure() {
+        
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            confirmSpy.complete(with: .failure(.serviceFailure))
         })
     }
     
@@ -574,14 +617,6 @@ private extension ComposedCVVPINService {
     ) {
         confirmActivation(anyOTP(), completion)
     }
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ConfirmResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
 private func anySuccess(
