@@ -168,7 +168,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     }
     
     // MARK: - ChangePINClient
-    #warning("should it be generic error? `ComposedCVVPINService.swift:14`")
+#warning("should it be generic error? `ComposedCVVPINService.swift:14`")
     func test_checkFunctionality_shouldDeliverFailureOnFailure() {
         
         let (sut, _, _, checkSpy, _, _, _) = makeSUT()
@@ -277,7 +277,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
         
         expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
-            
+            #warning("rename case to `serviceError`")
             getPINConfirmationCodeSpy.complete(with: .failure(.other(.checkSessionFailure)))
         })
     }
@@ -457,6 +457,48 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     // MARK: - ShowCVVClient
     
+    func test_showCVV_shouldDeliverActivationFailureOnActivationFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.activationFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnAuthenticationFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnConnectivity() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.connectivity))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
     func test_showCVV_shouldDeliverFailureOnFailure() {
         
         let statusCode = 500
@@ -466,7 +508,27 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         expectShowCVV(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            showCVVSpy.complete(with: anyFailure(statusCode, errorMessage))
+            showCVVSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnDecryptionFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnMakeJSONFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
@@ -799,14 +861,6 @@ private func anySuccess(
 ) -> ShowCVVService.Result {
     
     .success(.init(cvvValue: cvvValue))
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ShowCVVService.Result {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
 private extension Array where Element == ActivateCVVPINClient.ActivateResult {
