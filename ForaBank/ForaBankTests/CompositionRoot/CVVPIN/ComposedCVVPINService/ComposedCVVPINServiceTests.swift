@@ -36,7 +36,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Activation Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Activation failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
@@ -69,7 +69,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Change PIN Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Change PIN failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
@@ -132,7 +132,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Confirm Activation Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Confirm Activation failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
@@ -164,7 +164,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Get PIN Confirmation Code Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Get PIN Confirmation Code failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
@@ -198,7 +198,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Show CVV Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Show CVV failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
