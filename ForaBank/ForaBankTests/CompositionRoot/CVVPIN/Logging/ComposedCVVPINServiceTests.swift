@@ -357,7 +357,6 @@ private func anyFailure(
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
-
 private func anySuccess(
     _ cvvValue: String = .init(UUID().uuidString.prefix(3))
 ) -> ShowCVVService.Result {
