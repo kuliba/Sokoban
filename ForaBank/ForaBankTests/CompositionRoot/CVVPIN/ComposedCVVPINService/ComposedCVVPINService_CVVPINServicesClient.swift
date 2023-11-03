@@ -20,7 +20,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_activate_shouldDeliverSuccessOnSuccess() {
         
-        let (sut, activateSpy, _, _) = makeSUT()
+        let (sut, activateSpy, _, _, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
             
@@ -30,7 +30,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_activate_shouldDeliverFailureOnFailure() {
         
-        let (sut, activateSpy, _, _) = makeSUT()
+        let (sut, activateSpy, _, _, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
             
@@ -42,7 +42,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         
         let activateSpy: ActivateSpy
         var sut: SUT?
-        (sut, activateSpy, _, _) = makeSUT()
+        (sut, activateSpy, _, _, _) = makeSUT()
         var results = [ActivateCVVPINClient.ActivateResult]()
         
         sut?.activate(completion: { results.append($0) })
@@ -54,7 +54,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_confirmWith_shouldDeliverSuccessOnSuccess() {
         
-        let (sut, _, confirmSpy, _) = makeSUT()
+        let (sut, _, confirmSpy, _, _) = makeSUT()
         
         expectConfirm(sut, toDeliver: [.success(())], on: {
             
@@ -64,7 +64,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_confirmWith_shouldDeliverFailureOnFailure() {
         
-        let (sut, _, confirmSpy, _) = makeSUT()
+        let (sut, _, confirmSpy, _, _) = makeSUT()
         
         expectConfirm(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Confirmation Failure"))], on: {
             
@@ -76,7 +76,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         
         let confirmSpy: ConfirmSpy
         var sut: SUT?
-        (sut, _, confirmSpy, _) = makeSUT()
+        (sut, _, confirmSpy, _, _) = makeSUT()
         var results = [ActivateCVVPINClient.ConfirmationResult]()
         
         sut?.confirmWith(otp: "123456", completion: { results.append($0) })
@@ -90,7 +90,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_checkFunctionality_shouldDeliverSuccessOnSuccess() {
         
-        let (sut, _, _, checkSpy) = makeSUT()
+        let (sut, _, _, checkSpy, _) = makeSUT()
         
         expectCheckFunctionality(sut, toDeliver: [.success(())], on: {
             
@@ -101,7 +101,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     func test_checkFunctionality_shouldDeliverFailureOnFailure() {
         
         let checkFailureMessage = "Check Failure"
-        let (sut, _, _, checkSpy) = makeSUT()
+        let (sut, _, _, checkSpy, _) = makeSUT()
         
         expectCheckFunctionality(sut, toDeliver: [.failure(.activationFailure)], on: {
             
@@ -113,7 +113,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         
         let checkSpy: CheckSpy
         var sut: SUT?
-        (sut, _, _, checkSpy) = makeSUT()
+        (sut, _, _, checkSpy, _) = makeSUT()
         var results = [ChangePINClient.CheckFunctionalityResult]()
         
         sut?.checkFunctionality(completion: { results.append($0) })
@@ -131,10 +131,10 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     private typealias ActivateSpy = Spy<CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
     private typealias ConfirmSpy = Spy<Void, CVVPINFunctionalityActivationService.ConfirmError>
     private typealias CheckSpy = Spy<Void, Error>
+    private typealias GetPINConfirmCodeSpy = Spy<ChangePINService.ConfirmResponse, ChangePINService.Error>
     
     private func makeSUT(
         changePINResult: ChangePINResult = anySuccess(),
-        getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
         line: UInt = #line
@@ -142,18 +142,20 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         sut: SUT,
         activateSpy: ActivateSpy,
         confirmSpy: ConfirmSpy,
-        checkSpy: CheckSpy
+        checkSpy: CheckSpy,
+        getPINConfirmCodeSpy: GetPINConfirmCodeSpy
     ) {
         
         let activateSpy = ActivateSpy()
         let confirmSpy = ConfirmSpy()
         let checkSpy = CheckSpy()
+        let getPINConfirmCodeSpy = GetPINConfirmCodeSpy()
         let sut = SUT(
             activate: activateSpy.perform(_:),
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: checkSpy.perform(_:),
             confirmActivation: { _, completion  in confirmSpy.perform(completion) },
-            getPINConfirmationCode: { $0(getPINConfirmationCodeResult) },
+            getPINConfirmationCode: getPINConfirmCodeSpy.perform(_:),
             showCVV: { _, completion in completion(showCVVResult) }
         )
         
@@ -161,8 +163,9 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         trackForMemoryLeaks(activateSpy, file: file, line: line)
         trackForMemoryLeaks(confirmSpy, file: file, line: line)
         trackForMemoryLeaks(checkSpy, file: file, line: line)
+        trackForMemoryLeaks(getPINConfirmCodeSpy, file: file, line: line)
         
-        return (sut, activateSpy, confirmSpy, checkSpy)
+        return (sut, activateSpy, confirmSpy, checkSpy, getPINConfirmCodeSpy)
     }
     
     final class Spy<Success, Failure: Error> {
