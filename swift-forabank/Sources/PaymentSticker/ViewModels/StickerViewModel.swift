@@ -8,15 +8,23 @@
 import Foundation
 import SwiftUI
 
-struct StickerViewModel {
+public struct StickerViewModel {
     
     let header: HeaderViewModel
     let options: [OptionViewModel]
+    
+    public init(
+        header: HeaderViewModel,
+        options: [OptionViewModel]
+    ) {
+        self.header = header
+        self.options = options
+    }
 }
 
 extension StickerViewModel {
     
-    struct HeaderViewModel {
+    public struct HeaderViewModel {
         
         let title: String
         let detailTitle: String
@@ -24,10 +32,10 @@ extension StickerViewModel {
     
     // MARK: - Option
     
-    struct OptionViewModel: Identifiable {
+    public struct OptionViewModel: Identifiable {
 
         public var id: String { title }
-        let title: String
+        public let title: String
         let icon: Image
         let description: String
         let iconColor: Color

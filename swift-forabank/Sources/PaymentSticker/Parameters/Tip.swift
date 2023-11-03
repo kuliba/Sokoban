@@ -7,8 +7,14 @@
 
 extension Operation.Parameter {
     
-    struct Tip: Hashable {
+    public struct Tip: Hashable {
         
         let title: String
+        
+        public init(
+            title: String
+        ) {
+            self.title = title
+        }
     }
 }

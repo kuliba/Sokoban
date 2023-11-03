@@ -1,0 +1,47 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "main": [
+            {
+                "type": "SEPARATOR_START_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            },
+            {
+                "type": "CITY_SELECTOR",
+                "data": {
+                    "title": "Выберите город",
+                    "subTitle": "Поиск по городам",
+                    "isCityList": true,
+                    "md5hash": "59cab489ad1a9b209d23da59182467d1",
+                    "list": []
+                }
+            },
+            {
+                "type": "SEPARATOR_FIELD_SUB_GROUP",
+                "data": {}
+            },
+            {
+                "type": "OFFICE_SELECTOR",
+                "data": {
+                    "title": "Выберите отделение",
+                    "subTitle": "Поиск по городам",
+                    "md5hash": "c9a79500ff29bab6251e474112e7da47",
+                    "action": {
+                        "actionType": "goToMain"
+                    },
+                    "list": []
+                }
+            },
+            {
+                "type": "SEPARATOR_END_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            }
+        ],
+        "serial": "1628aa7e604f917f1ed4fe214187c81a"
+    }
+}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ParameterViewModel {
+public enum ParameterViewModel {
     
     case sticker(StickerViewModel)
     case tip(TipViewModel)

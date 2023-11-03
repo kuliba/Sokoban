@@ -142,7 +142,7 @@ struct ParameterStickerViewConfig {
 
 extension Operation.Parameter.Sticker: Identifiable {
     
-    var id: Self { self }
+    public var id: Self { self }
 }
 
 extension ParameterStickerViewConfig {

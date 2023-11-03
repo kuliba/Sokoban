@@ -8,23 +8,33 @@
 import SwiftUI
 import Foundation
 
-struct ProductStateViewModel {
+public struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
     let selectOption: (Operation.Parameter.Product.Option) -> Void
+    
+    public init(
+        state: ProductStateViewModel.State,
+        chevronTapped: @escaping () -> Void,
+        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+    ) {
+        self.state = state
+        self.chevronTapped = chevronTapped
+        self.selectOption = selectOption
+    }
 }
 
 extension ProductStateViewModel {
 
-    enum State {
+    public enum State {
          
         case selected(ProductViewModel)
         case list(ProductViewModel, [ProductViewModel])
     }
 }
 
-struct ProductViewModel: Hashable {
+public struct ProductViewModel: Hashable {
     
     let header: HeaderViewModel
     let main: MainViewModel
@@ -33,7 +43,7 @@ struct ProductViewModel: Hashable {
 
 extension ProductViewModel {
     
-    struct MainViewModel: Hashable {
+    public struct MainViewModel: Hashable {
     
         let cardLogo: String
         let paymentSystem: String?
@@ -41,12 +51,12 @@ extension ProductViewModel {
         let balance: String
     }
     
-    struct HeaderViewModel: Hashable {
+    public struct HeaderViewModel: Hashable {
         
         let title: String
     }
     
-    struct FooterViewModel: Hashable {
+    public struct FooterViewModel: Hashable {
         
         let description: String
     }
