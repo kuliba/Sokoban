@@ -168,7 +168,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     }
     
     // MARK: - ChangePINClient
-#warning("should it be generic error? `ComposedCVVPINService.swift:14`")
+    
     func test_checkFunctionality_shouldDeliverFailureOnFailure() {
         
         let (sut, _, _, checkSpy, _, _, _) = makeSUT()
