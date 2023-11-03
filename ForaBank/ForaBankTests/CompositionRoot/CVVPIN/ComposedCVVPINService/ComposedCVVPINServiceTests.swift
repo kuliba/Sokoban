@@ -23,22 +23,6 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         XCTAssert(spy.messages.isEmpty)
     }
     
-    func test_shouldLogInfoOnActivateSuccess() {
-        
-        let phone = "+01234567"
-        let (sut, spy) = makeSUT(
-            activateResult: anySuccess(phone)
-        )
-        let exp = expectation(description: "wait for expectation")
-        
-        sut.activate { _ in exp.fulfill() }
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Activation success: Phone(phoneValue: \"\(phone)\").")
-        ])
-    }
-    
     func test_shouldLogErrorOnActivateFailure() {
         
         let statusCode = 500
@@ -56,18 +40,19 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
-    func test_shouldLogInfoOnChangePINSuccess() {
+    func test_shouldLogInfoOnActivateSuccess() {
         
+        let phone = "+01234567"
         let (sut, spy) = makeSUT(
-            changePINResult: anySuccess()
+            activateResult: anySuccess(phone)
         )
         let exp = expectation(description: "wait for expectation")
         
-        sut.changePIN { _ in exp.fulfill() }
+        sut.activate { _ in exp.fulfill() }
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Change PIN success.")
+            .init(.info, .crypto, "Activation success: Phone(phoneValue: \"\(phone)\").")
         ])
     }
     
@@ -88,18 +73,18 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
-    func test_shouldLogInfoOnCheckActivationSuccess() {
+    func test_shouldLogInfoOnChangePINSuccess() {
         
         let (sut, spy) = makeSUT(
-            checkActivationResult: .success(())
+            changePINResult: anySuccess()
         )
         let exp = expectation(description: "wait for expectation")
         
-        sut.checkActivation { _ in exp.fulfill() }
+        sut.changePIN { _ in exp.fulfill() }
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Check Activation success.")
+            .init(.info, .crypto, "Change PIN success.")
         ])
     }
     
@@ -119,18 +104,18 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
-    func test_shouldLogInfoOnConfirmActivationSuccess() {
+    func test_shouldLogInfoOnCheckActivationSuccess() {
         
         let (sut, spy) = makeSUT(
-            confirmActivationResult: .success(())
+            checkActivationResult: .success(())
         )
         let exp = expectation(description: "wait for expectation")
         
-        sut.confirmActivation { _ in exp.fulfill() }
+        sut.checkActivation { _ in exp.fulfill() }
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Confirm Activation success.")
+            .init(.info, .crypto, "Check Activation success.")
         ])
     }
     
@@ -151,20 +136,18 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
-    func test_shouldLogInfoOnGetPINConfirmationCodeSuccess() {
+    func test_shouldLogInfoOnConfirmActivationSuccess() {
         
-        let eventIDValue = "efg678"
-        let phone = "+7..5367"
         let (sut, spy) = makeSUT(
-            getPINConfirmationCodeResult: anySuccess(eventIDValue, phone)
+            confirmActivationResult: .success(())
         )
         let exp = expectation(description: "wait for expectation")
         
-        sut.getPINConfirmationCode { _ in exp.fulfill() }
+        sut.confirmActivation { _ in exp.fulfill() }
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Get PIN Confirmation Code success: \(eventIDValue), \(phone).")
+            .init(.info, .crypto, "Confirm Activation success.")
         ])
     }
     
@@ -185,19 +168,20 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         ])
     }
     
-    func test_shouldLogInfoOnShowCVVSuccess() {
+    func test_shouldLogInfoOnGetPINConfirmationCodeSuccess() {
         
-        let cvvValue = "367"
+        let eventIDValue = "efg678"
+        let phone = "+7..5367"
         let (sut, spy) = makeSUT(
-            showCVVResult: anySuccess(cvvValue)
+            getPINConfirmationCodeResult: anySuccess(eventIDValue, phone)
         )
         let exp = expectation(description: "wait for expectation")
         
-        sut.showCVV(anyCardID()) { _ in exp.fulfill() }
+        sut.getPINConfirmationCode { _ in exp.fulfill() }
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Show CVV success: \(cvvValue).")
+            .init(.info, .crypto, "Get PIN Confirmation Code success: \(eventIDValue), \(phone).")
         ])
     }
     
@@ -215,6 +199,22 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         
         XCTAssertNoDiff(spy.messages, [
             .init(.error, .crypto, "Show CVV Failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+        ])
+    }
+    
+    func test_shouldLogInfoOnShowCVVSuccess() {
+        
+        let cvvValue = "367"
+        let (sut, spy) = makeSUT(
+            showCVVResult: anySuccess(cvvValue)
+        )
+        let exp = expectation(description: "wait for expectation")
+        
+        sut.showCVV(anyCardID()) { _ in exp.fulfill() }
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(spy.messages, [
+            .init(.info, .crypto, "Show CVV success: \(cvvValue).")
         ])
     }
     
@@ -372,4 +372,3 @@ private func anyFailure(
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
-
