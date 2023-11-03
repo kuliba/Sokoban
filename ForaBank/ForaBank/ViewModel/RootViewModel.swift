@@ -48,7 +48,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
-
+        
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
                 
