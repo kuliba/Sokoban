@@ -30,7 +30,6 @@ let package = Package(
         .keyChainStore,
         // services
         .cvvPIN_Services,
-        .cvvPIN_ServicesTests,
         .cvvPINServices,
         .genericRemoteService,
         .getProcessingSessionCodeService,
