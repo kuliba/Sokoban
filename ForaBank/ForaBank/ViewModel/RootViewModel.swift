@@ -18,8 +18,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     @Published var selected: TabType
     @Published var alert: Alert.ViewModel?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published private(set) var link: Link?
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
