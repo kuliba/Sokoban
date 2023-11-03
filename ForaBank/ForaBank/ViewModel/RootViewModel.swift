@@ -37,6 +37,7 @@ class RootViewModel: ObservableObject, Resetable {
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
+        infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model
     ) {
         
@@ -46,7 +47,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.chatViewModel = .init()
         self.informerViewModel = .init(model)
         self.model = model
-        self.infoDictionary = Bundle.main.infoDictionary
+        self.infoDictionary = infoDictionary
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
