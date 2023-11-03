@@ -20,29 +20,29 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_activate_shouldDeliverSuccessOnSuccess() {
         
-        let (sut, activateSpy) = makeSUT()
+        let (sut, activateSpy, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
             
             activateSpy.complete(with: anySuccess("+7..3245"))
         })
     }
-
+    
     func test_activate_shouldDeliverFailureOnFailure() {
         
-        let (sut, activateSpy) = makeSUT()
+        let (sut, activateSpy, _) = makeSUT()
         
         expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
             
             activateSpy.complete(with: anyFailure(500, "Activation Failure"))
         })
     }
-
+    
     func test_activate_shouldNotDeliverResultOnInstanceDeallocation() {
         
         let activateSpy: ActivateSpy
         var sut: SUT?
-        (sut, activateSpy) = makeSUT()
+        (sut, activateSpy, _) = makeSUT()
         var results = [ActivateCVVPINClient.ActivateResult]()
         
         sut?.activate(completion: { results.append($0) })
@@ -51,11 +51,46 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         
         XCTAssert(results.isEmpty)
     }
-
+    
+    func test_confirmWith_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, _, confirmSpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.success(())], on: {
+            
+            confirmSpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverFailureOnFailure() {
+        
+        let (sut, _, confirmSpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Confirmation Failure"))], on: {
+            
+            confirmSpy.complete(with: anyFailure(500, "Confirmation Failure"))
+        })
+    }
+    
+    func test_confirmWith_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        let confirmSpy: ConfirmSpy
+        var sut: SUT?
+        (sut, _, confirmSpy) = makeSUT()
+        var results = [ActivateCVVPINClient.ConfirmationResult]()
+        
+        sut?.confirmWith(otp: "123456", completion: { results.append($0) })
+        sut = nil
+        confirmSpy.complete(with: .success(()))
+        
+        XCTAssert(results.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
     private typealias ActivateSpy = Spy<CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
+    private typealias ConfirmSpy = Spy<Void, CVVPINFunctionalityActivationService.ConfirmError>
     
     private func makeSUT(
         changePINResult: ChangePINResult = anySuccess(),
@@ -67,15 +102,17 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        activateSpy: ActivateSpy
+        activateSpy: ActivateSpy,
+        confirmSpy: ConfirmSpy
     ) {
         
         let activateSpy = ActivateSpy()
+        let confirmSpy = ConfirmSpy()
         let sut = SUT(
             activate: activateSpy.perform(_:),
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: { $0(checkActivationResult) },
-            confirmActivation: { _, completion  in completion(confirmActivationResult) },
+            confirmActivation: { _, completion  in confirmSpy.perform(completion) },
             getPINConfirmationCode: { $0(getPINConfirmationCodeResult) },
             showCVV: { _, completion in completion(showCVVResult) }
         )
@@ -83,7 +120,7 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(activateSpy, file: file, line: line)
         
-        return (sut, activateSpy)
+        return (sut, activateSpy, confirmSpy)
     }
     
     final class Spy<Success, Failure: Error> {
@@ -118,6 +155,32 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.activate {
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectConfirm(
+        _ sut: SUT,
+        toDeliver expectedResults: [ActivateCVVPINClient.ConfirmationResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [ActivateCVVPINClient.ConfirmationResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.confirmWith(otp: "987654") {
             receivedResults.append($0)
             exp.fulfill()
         }
@@ -252,7 +315,7 @@ private func anyFailure(
 
 private extension Array where Element == ActivateCVVPINClient.ActivateResult {
     
-    func mapToEquatable() -> [ActivateCVVPINClient.ActivateResult.EquatableResult] {
+    func mapToEquatable() -> [ActivateCVVPINClient.ActivateResult.EquatableActivateResult] {
         
         map { $0.mapToEquatable() }
     }
@@ -260,14 +323,14 @@ private extension Array where Element == ActivateCVVPINClient.ActivateResult {
 
 private extension ActivateCVVPINClient.ActivateResult {
     
-    func mapToEquatable() -> EquatableResult {
+    func mapToEquatable() -> EquatableActivateResult {
         
         self
             .map(\.rawValue)
             .mapError(ActivateCVVPINError.init)
     }
     
-    typealias EquatableResult = Result<String, ActivateCVVPINError>
+    typealias EquatableActivateResult = Result<String, ActivateCVVPINError>
     
     enum ActivateCVVPINError: Error & Equatable {
         
@@ -277,6 +340,48 @@ private extension ActivateCVVPINClient.ActivateResult {
         init(_ error: ForaBank.ActivateCVVPINError) {
             
             switch error {
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
+            }
+        }
+    }
+}
+
+private extension Array where Element == ActivateCVVPINClient.ConfirmationResult {
+
+    func mapToEquatable() -> [ActivateCVVPINClient.ConfirmationResult.EquatableConfirmationResult] {
+
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension ActivateCVVPINClient.ConfirmationResult {
+    
+    func mapToEquatable() -> EquatableConfirmationResult {
+        
+        self
+            .map { _ in EquatableVoid() }
+            .mapError(ConfirmationCodeError.init)
+    }
+    
+    struct EquatableVoid: Equatable {}
+    
+    typealias EquatableConfirmationResult = Result<EquatableVoid, ConfirmationCodeError>
+    
+    enum ConfirmationCodeError: Error & Equatable {
+        
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+        
+        init(_ error: ForaBank.ConfirmationCodeError) {
+            
+            switch error {
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
                 
             case let .server(statusCode: statusCode, errorMessage: errorMessage):
                 self = .server(statusCode: statusCode, errorMessage: errorMessage)
