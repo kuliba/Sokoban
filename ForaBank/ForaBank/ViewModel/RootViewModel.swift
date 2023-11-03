@@ -33,9 +33,14 @@ class RootViewModel: ObservableObject, Resetable {
     private var auithBinding: AnyCancellable?
     
     init(
-        _ model: Model,
-        infoDictionary: [String : Any]? = Bundle.main.infoDictionary
+        mainViewModel: MainViewModel,
+        paymentsViewModel: PaymentsTransfersViewModel,
+        chatViewModel: ChatViewModel,
+        informerViewModel: InformerView.ViewModel,
+        infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
+        _ model: Model
     ) {
+        
         self.selected = .main
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)

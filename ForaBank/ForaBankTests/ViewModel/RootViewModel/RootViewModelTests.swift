@@ -205,9 +205,14 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            model,
-            infoDictionary: infoDictionary ?? Bundle.main.infoDictionary
+            mainViewModel: .init(model),
+            paymentsViewModel: .init(model: model),
+            chatViewModel: .init(),
+            informerViewModel: .init(model),
+            infoDictionary: infoDictionary,
+            model
         )
+        
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
 
