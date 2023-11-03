@@ -11,9 +11,7 @@ import PhoneNumberKit
 extension PhoneNumberKit {
     
     var allCountryCodes: [UInt64] {
-        return allCountries().compactMap {
-            return countryCode(for: $0)
-        }
+        allCountries().compactMap(countryCode(for:))
     }
     
     func codeBy(_ number: String) -> String? {
@@ -21,7 +19,7 @@ extension PhoneNumberKit {
         for countryCode in allCountryCodes {
             // Check if number starts with country code
             if number =~ "^\\+?\(countryCode).*" {
-                return self.mainCountry(forCode: countryCode)
+                return mainCountry(forCode: countryCode)
             }
         }
         return nil
@@ -33,25 +31,25 @@ func =~ (input: String, pattern: String) -> Bool {
     return Regex(pattern)?.test(input) ?? false
 }
 
-class Regex {
+final class Regex {
     
     let internalExpression: NSRegularExpression
     let pattern: String
     
     init?(_ pattern: String) {
-        self.pattern = pattern
         if let internalExpression = try? NSRegularExpression(
             pattern: pattern,
             options: .caseInsensitive
         ) {
             self.internalExpression = internalExpression
+            self.pattern = pattern
         } else {
             return nil
         }
     }
     
     func test(_ input: String) -> Bool {
-        let matches = self.internalExpression.matches(
+        let matches = internalExpression.matches(
             in: input,
             options: .anchored,
             range: NSRange(location: 0, length: input.count)
