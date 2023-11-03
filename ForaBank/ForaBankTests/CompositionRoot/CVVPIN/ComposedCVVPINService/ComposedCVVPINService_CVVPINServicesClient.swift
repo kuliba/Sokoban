@@ -176,8 +176,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_changePIN_shouldDeliverSuccessOnSuccess() {
         
-        let eventID = UUID().uuidString
-        let phone = "+7..8765"
         let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
         
         expectChangePIN(sut, toDeliver: [.success(())], on: {
@@ -733,6 +731,39 @@ private extension ChangePINClient.ChangePINResult {
                 
             case let .weakPIN(statusCode: statusCode, errorMessage: errorMessage):
                 self = .weakPIN(statusCode: statusCode, errorMessage: errorMessage)
+            }
+        }
+    }
+}
+
+private extension ShowCVVClient.ShowCVVResult {
+    
+    func mapToEquatable() -> EquatableShowCVVResult {
+        
+        self
+            .map(\.rawValue)
+            .mapError(_ShowCVVError.init)
+    }
+        
+    typealias EquatableShowCVVResult = Result<String, _ShowCVVError>
+    
+    enum _ShowCVVError: Error & Equatable {
+        
+        case activationFailure
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+
+        init(_ error: ForaBank.ShowCVVError) {
+            
+            switch error {
+            case .activationFailure:
+                self = .activationFailure
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
             }
         }
     }
