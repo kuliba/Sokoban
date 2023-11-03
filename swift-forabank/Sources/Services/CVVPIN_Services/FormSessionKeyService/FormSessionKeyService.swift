@@ -62,9 +62,9 @@ public extension FormSessionKeyService {
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
+        public enum ServiceError {
             
             case missingCode
             case makeJSONFailure
@@ -164,7 +164,7 @@ private extension FormSessionKeyService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.missingCode)))
+                completion(.failure(.serviceError(.missingCode)))
                 
             case let .success(code):
                 makeSecretRequestJSON(code, completion)
@@ -182,7 +182,7 @@ private extension FormSessionKeyService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.makeJSONFailure)))
+                completion(.failure(.serviceError(.makeJSONFailure)))
                 
             case let .success(json):
                 process(code, json, completion)
@@ -230,7 +230,7 @@ private extension FormSessionKeyService {
                             sessionTTL: response.sessionTTL
                         )
                     }
-                    .mapError { _ in .other(.makeSessionKeyFailure) }
+                    .mapError { _ in .serviceError(.makeSessionKeyFailure) }
             )
         }
     }

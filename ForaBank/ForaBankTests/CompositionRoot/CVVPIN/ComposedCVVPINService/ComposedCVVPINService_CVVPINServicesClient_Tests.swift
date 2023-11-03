@@ -18,13 +18,47 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     // MARK: - ActivateCVVPINClient
     
-    func test_activate_shouldDeliverFailureOnFailure() {
+    func test_activate_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 201
+        let invalidData = anyData()
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            activateSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_activate_shouldDeliverServiceFailureOnNetwork() {
         
         let (sut, activateSpy, _, _, _, _, _) = makeSUT()
         
-        expectActivate(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Activation Failure"))], on: {
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            activateSpy.complete(with: anyFailure(500, "Activation Failure"))
+            activateSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_activate_shouldDeliverServerFailureOnServer() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            activateSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_activate_shouldDeliverServiceFailureOnServiceFailure() {
+        
+        let (sut, activateSpy, _, _, _, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            activateSpy.complete(with: .failure(.serviceFailure))
         })
     }
     
@@ -52,13 +86,60 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_confirmWith_shouldDeliverFailureOnFailure() {
+    func test_confirmWith_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            confirmSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServiceFailureOnNetwork() {
         
         let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
         
-        expectConfirm(sut, toDeliver: [.failure(.server(statusCode: 500, errorMessage: "Confirmation Failure"))], on: {
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            confirmSpy.complete(with: anyFailure(500, "Confirmation Failure"))
+            confirmSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverRetryFailureOnRetry() {
+        
+        let statusCode = 500
+        let errorMessage = "Confirmation Failure"
+        let retryAttempts = 5
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))], on: {
+            
+            confirmSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServerFailureOnServer() {
+        
+        let statusCode = 500
+        let errorMessage = "Confirmation Failure"
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            confirmSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServiceFailureOnServiceFailure() {
+        
+        let (sut, _, confirmSpy, _, _, _, _) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            confirmSpy.complete(with: .failure(.serviceFailure))
         })
     }
     
@@ -122,7 +203,63 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_getPINConfirmationCode_shouldDeliverFailureOnFailure() {
+    func test_getPINConfirmationCode_shouldDeliverActivationFailureOnActivationFailure() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.activationFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverActivationFailureOnActivationAuthenticationFailure() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceFailureOnNetwork() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServerFailureOnRetry() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let retryAttempts = 5
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            getPINConfirmationCodeSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServerFailureOnServer() {
         
         let statusCode = 500
         let errorMessage = "Error!"
@@ -131,7 +268,37 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         expectGetPINConfirmationCode(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            getPINConfirmationCodeSpy.complete(with: anyFailure(statusCode, errorMessage))
+            getPINConfirmationCodeSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceFailureOnCheckSessionFailure() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.checkSessionFailure)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceFailureOnDecryptionFailure() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceFailureOnMakeJSONFailureFailure() {
+        
+        let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
@@ -161,7 +328,63 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
-    func test_changePIN_shouldDeliverFailureOnFailure() {
+    func test_changePIN_shouldDeliverServiceFailureOnActivationFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnAuthenticationFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnNetwork() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverRetryFailureOnRetry() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let retryAttempts = 5
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        ], on: {
+            changePINSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServerFailureOnServer() {
         
         let statusCode = 500
         let errorMessage = "Error!"
@@ -170,7 +393,37 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         expectChangePIN(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            changePINSpy.complete(with: anyFailure(statusCode, errorMessage))
+            changePINSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnCheckSessionFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.serviceError(.checkSessionFailure)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnDecryptionFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverServiceFailureOnMakeJSONFailure() {
+        
+        let (sut, _, _, _, _, changePINSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            changePINSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
@@ -204,6 +457,48 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     // MARK: - ShowCVVClient
     
+    func test_showCVV_shouldDeliverActivationFailureOnActivationFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.activationFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnAuthenticationFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnConnectivity() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.connectivity))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnInvalid() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
     func test_showCVV_shouldDeliverFailureOnFailure() {
         
         let statusCode = 500
@@ -213,7 +508,27 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         expectShowCVV(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            showCVVSpy.complete(with: anyFailure(statusCode, errorMessage))
+            showCVVSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnDecryptionFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverServiceFailureOnMakeJSONFailure() {
+        
+        let (sut, _, _, _, _, _, showCVVSpy) = makeSUT()
+        
+        expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            showCVVSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
@@ -510,25 +825,9 @@ private func anySuccess(
     .success(.init(phoneValue: phoneValue))
 }
 
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ActivateResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
 private func anySuccess() -> ChangePINResult {
     
     .success(())
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ChangePINResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
 private extension ComposedCVVPINService {
@@ -546,14 +845,6 @@ private extension ComposedCVVPINService {
     }
 }
 
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ConfirmResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
 private func anySuccess(
     _ eventIDValue: String = UUID().uuidString,
     _ phoneValue: String = UUID().uuidString
@@ -565,27 +856,11 @@ private func anySuccess(
     ))
 }
 
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> GetPINConfirmationCodeResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
 private func anySuccess(
     _ cvvValue: String = .init(UUID().uuidString.prefix(3))
 ) -> ShowCVVService.Result {
     
     .success(.init(cvvValue: cvvValue))
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ShowCVVService.Result {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
 private extension Array where Element == ActivateCVVPINClient.ActivateResult {
@@ -817,7 +1092,7 @@ private extension ShowCVVClient.ShowCVVResult {
             .map(\.rawValue)
             .mapError(_ShowCVVError.init)
     }
-        
+    
     typealias EquatableShowCVVResult = Result<String, _ShowCVVError>
     
     enum _ShowCVVError: Error & Equatable {
@@ -825,7 +1100,7 @@ private extension ShowCVVClient.ShowCVVResult {
         case activationFailure
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
-
+        
         init(_ error: ForaBank.ShowCVVError) {
             
             switch error {

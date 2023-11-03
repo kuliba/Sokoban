@@ -55,9 +55,9 @@ public extension AuthenticateWithPublicKeyService {
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
+        public enum ServiceError {
             
             case activationFailure
             case makeSessionKeyFailure
@@ -129,7 +129,7 @@ private extension AuthenticateWithPublicKeyService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.prepareKeyExchangeFailure)))
+                completion(.failure(.serviceError(.prepareKeyExchangeFailure)))
                 
             case let .success(data):
                 process(data, completion)
@@ -172,7 +172,7 @@ private extension AuthenticateWithPublicKeyService {
                             sessionTTL: .init(response.sessionTTL)
                         )
                     }
-                    .mapError { _ in .other(.makeSessionKeyFailure)}
+                    .mapError { _ in .serviceError(.makeSessionKeyFailure)}
             )
         }
     }

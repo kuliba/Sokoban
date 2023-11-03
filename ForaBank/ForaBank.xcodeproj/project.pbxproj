@@ -326,7 +326,7 @@
 		2A01BAFF29A8F3AA0021833F /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAFE29A8F3AA0021833F /* String+Extension.swift */; };
 		2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BB0229A8F5930021833F /* ServerAgentStubHelpersTests.swift */; };
 		2A01F93C2AE50F340064F15B /* ComposedCVVPINService+ShowCVVClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */; };
-		2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */; };
+		2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */; };
 		2A01F9402AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */; };
 		2A01F9422AE512170064F15B /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */; };
 		2A0702792A19F89B009B704A /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0702782A19F89B009B704A /* TextFieldComponent */; };
@@ -2356,7 +2356,7 @@
 		2A01BAFE29A8F3AA0021833F /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		2A01BB0229A8F5930021833F /* ServerAgentStubHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentStubHelpersTests.swift; sourceTree = "<group>"; };
 		2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ShowCVVClient.swift"; sourceTree = "<group>"; };
-		2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ActivateCertificateClient.swift"; sourceTree = "<group>"; };
+		2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ActivateCVVPINClient.swift"; sourceTree = "<group>"; };
 		2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ChangePINClient.swift"; sourceTree = "<group>"; };
 		2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+getJSON.swift"; sourceTree = "<group>"; };
@@ -5578,7 +5578,7 @@
 			isa = PBXGroup;
 			children = (
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
-				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */,
+				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
 				2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */,
 			);
@@ -12110,7 +12110,7 @@
 				833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */,
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
 				68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */,
-				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift in Sources */,
+				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				834731DF2A13746B002590A3 /* NoCompanyInListView.swift in Sources */,

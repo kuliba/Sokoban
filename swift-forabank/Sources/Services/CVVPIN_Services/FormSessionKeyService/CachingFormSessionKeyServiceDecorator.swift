@@ -70,16 +70,18 @@ private extension CachingFormSessionKeyServiceDecorator {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.makeSessionKeyFailure)))
+                #warning("error mapping to non-related case")
+                completion(.failure(.serviceError(.makeSessionKeyFailure)))
                 
             case .success:
                 cacheSessionKey(success.sessionKey) { [weak self] result in
                     
                     guard self != nil else { return }
                     
+                    #warning("error mapping to non-related case")
                     completion(
                         .success(success)
-                        .mapError { _ in .other(.makeSessionKeyFailure) }
+                        .mapError { _ in .serviceError(.makeSessionKeyFailure) }
                     )
                 }
             }

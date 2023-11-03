@@ -1041,7 +1041,7 @@ private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .other:
+        case .serviceError:
             self = .serviceFailure
         }
     }
@@ -1064,7 +1064,7 @@ private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .other:
+        case .serviceError:
             self = .serviceFailure
         }
     }
