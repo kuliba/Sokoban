@@ -23,9 +23,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             rsaKeyPair: rsaKeyPair
         )
         
-        XCTAssertNoThrow(
-            try JSONDecoder().decode(RequestJSON.self, from: json)
-        )
+        try XCTAssertNoThrow(json.decode(as: RequestJSON.self))
     }
     
     func test_makeSecretJSON_shouldMakeJSONWithCorrectStructure() throws {
@@ -43,7 +41,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             sessionKey: sessionKey
         )
         
-        try XCTAssertNoThrow(JSONDecoder().decode(SecretJSON.self, from: decrypted))
+        try XCTAssertNoThrow(decrypted.decode(as: SecretJSON.self))
     }
     
     func test_makeSecretRequestJSON_shouldMakeJSONWithCorrectStructure() throws {
@@ -63,8 +61,7 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             algorithm: .rsaEncryptionPKCS1
         )
         
-        try XCTAssertNoThrow(JSONDecoder().decode(SecretRequestJSON.self, from: decrypted))
-
+        try XCTAssertNoThrow(decrypted.decode(as: SecretRequestJSON.self))
     }
     
     // MARK: - Helpers
@@ -187,5 +184,47 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             
             self.publicApplicationSessionKey = publicApplicationSessionKey
         }
+    }
+    
+    private struct PINChangeJSON: Decodable {
+        
+        let sessionId: String
+        let cardId: String
+        let otpCode: String
+        let eventId: String
+        let secretPIN: Data
+        let signature: Data
+        
+        init(
+            sessionId: String,
+            cardId: String,
+            otpCode: String,
+            eventId: String,
+            secretPIN: Data,
+            signature: Data
+        ) throws {
+            
+            guard
+                let secretPIN = Data(base64Encoded: secretPIN),
+                let signature = Data(base64Encoded: signature)
+            else {
+                throw Base64EncodingError()
+            }
+
+            self.sessionId = sessionId
+            self.cardId = cardId
+            self.otpCode = otpCode
+            self.eventId = eventId
+            self.secretPIN = secretPIN
+            self.signature = signature
+        }
+    }
+}
+
+private extension Data {
+    
+    func decode<T: Decodable>(as type: T.Type) throws -> T {
+        
+        try JSONDecoder().decode(type.self, from: self)
     }
 }
