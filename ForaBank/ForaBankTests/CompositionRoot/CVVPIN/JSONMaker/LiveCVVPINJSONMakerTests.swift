@@ -7,6 +7,7 @@
 
 import CryptoKit
 import class CVVPIN_Services.ChangePINService
+import class CVVPIN_Services.ShowCVVService
 @testable import ForaBank
 import ForaCrypto
 import XCTest
@@ -87,6 +88,27 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         )
         
         try XCTAssertNoThrow(decrypted.decode(as: PINChangeJSON.self))
+    }
+    
+    func test_makeShowCVVSecretJSON_shouldMakeJSONWithCorrectStructure() throws {
+        
+        let (sut, crypto) = makeSUT()
+        let sessionKey = anySessionKey()
+        let rsaKeyPair = try crypto.generateRSA4096BitKeyPair()
+        
+        let encrypted = try sut.makeSecretJSON(
+            with: anyCardID(),
+            and: anySessionID(),
+            rsaKeyPair: rsaKeyPair,
+            sessionKey: sessionKey
+        )
+        
+        let decrypted = try aesDecrypt(
+            data: encrypted,
+            sessionKey: sessionKey
+        )
+        
+        try XCTAssertNoThrow(decrypted.decode(as: ShowCVVSecretJSON.self))
     }
     
     // MARK: - Helpers
@@ -245,6 +267,30 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         }
     }
     
+    private struct ShowCVVSecretJSON: Decodable {
+        
+        let cardId: String
+        let sessionId: String
+        let signature: Data
+        
+        init(
+            cardId: String,
+            sessionId: String,
+            signature: String
+        ) throws {
+            
+            guard
+                let signature = Data(base64Encoded: signature)
+            else {
+                throw Base64EncodingError()
+            }
+            
+            self.cardId = cardId
+            self.sessionId = sessionId
+            self.signature = signature
+        }
+    }
+
     func anySessionID(
         sessionIDValue: String = UUID().uuidString
     ) -> ChangePINService.SessionID {
@@ -279,6 +325,21 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         
         .init(eventIDValue: eventIDValue)
     }
+    
+    func anySessionID(
+        sessionIDValue: String = UUID().uuidString
+    ) -> ShowCVVService.SessionID {
+        
+        .init(sessionIDValue: sessionIDValue)
+    }
+    
+    func anyCardID(
+        cardIDValue: Int = 98765431012
+    ) -> ShowCVVService.CardID {
+        
+        .init(cardIDValue: cardIDValue)
+    }
+    
 }
 
 private extension Data {
