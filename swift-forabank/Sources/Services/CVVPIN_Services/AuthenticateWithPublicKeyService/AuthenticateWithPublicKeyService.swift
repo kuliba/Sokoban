@@ -58,7 +58,7 @@ public extension AuthenticateWithPublicKeyService {
         case serviceError(ServiceError)
         
         public enum ServiceError {
-            
+            #warning("check unused cases")
             case activationFailure
             case makeSessionKeyFailure
             case missingRSAPublicKey
@@ -99,9 +99,24 @@ extension AuthenticateWithPublicKeyService {
         public let sessionKey: SessionKey
         public let sessionTTL: SessionTTL
         
+        public init(
+            sessionID: SessionID,
+            sessionKey: SessionKey,
+            sessionTTL: SessionTTL
+        ) {
+            self.sessionID = sessionID
+            self.sessionKey = sessionKey
+            self.sessionTTL = sessionTTL
+        }
+        
         public struct SessionID {
             
             public let sessionIDValue: String
+            
+            public init(sessionIDValue: String) {
+             
+                self.sessionIDValue = sessionIDValue
+            }
         }
         
         public typealias SessionTTL = Int

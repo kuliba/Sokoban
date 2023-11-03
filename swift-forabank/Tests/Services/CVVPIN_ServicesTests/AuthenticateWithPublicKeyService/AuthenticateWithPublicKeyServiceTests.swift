@@ -64,9 +64,47 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         expect(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         ], on: {
-            
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             processSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_init_shouldDeliverErrorOnMakeSessionKeyFailure() {
+        
+        let (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.serviceError(.makeSessionKeyFailure))
+        ], on: {
+            prepareKeyExchangeSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: anySuccess())
+            makeSessionKeySpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_init_shouldDeliverSuccessOnSuccess() {
+        
+        let sessionID: String = UUID().uuidString
+        let publicServerSessionKey: String = UUID().uuidString
+        let sessionTTL = 5
+        let keyData = anyData()
+        let processResult: SUT.ProcessResult = .success(makeResponse(
+            sessionID: sessionID,
+            publicServerSessionKey: publicServerSessionKey,
+            sessionTTL: sessionTTL
+        ))
+        let (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .success(makeSuccess(
+                sessionIDValue: sessionID,
+                sessionKeyValue: keyData,
+                sessionTTL: sessionTTL
+            ))
+        ], on: {
+            prepareKeyExchangeSpy.complete(with: anySuccess())
+            processSpy.complete(with: processResult)
+            makeSessionKeySpy.complete(with: .success(.init(sessionKeyValue: keyData)))
         })
     }
     
@@ -333,13 +371,24 @@ private func anySuccess(
 private func anySuccess(
 ) -> AuthenticateWithPublicKeyService.ProcessResult {
     
-    .success(anyResponse())
+    .success(makeResponse(
+        sessionID: UUID().uuidString,
+        publicServerSessionKey: UUID().uuidString,
+        sessionTTL: 60
+    ))
 }
 
-private func anyResponse(
-    sessionID: String = UUID().uuidString,
-    publicServerSessionKey: String = UUID().uuidString,
-    sessionTTL: Int = 60
+private func anySuccess(
+    bitCount: Int = 256
+) -> AuthenticateWithPublicKeyService.MakeSessionKeyResult {
+    
+    .success(.init(sessionKeyValue: anyData(bitCount: bitCount)))
+}
+
+private func makeResponse(
+    sessionID: String,
+    publicServerSessionKey: String,
+    sessionTTL: Int
 ) -> AuthenticateWithPublicKeyService.Response {
     
     .init(
@@ -349,9 +398,15 @@ private func anyResponse(
     )
 }
 
-private func anySuccess(
-    bitCount: Int = 256
-) -> AuthenticateWithPublicKeyService.MakeSessionKeyResult {
+private func makeSuccess(
+    sessionIDValue: String,
+    sessionKeyValue: Data,
+    sessionTTL: AuthenticateWithPublicKeyService.Success.SessionTTL
+) -> AuthenticateWithPublicKeyService.Success {
     
-    .success(.init(sessionKeyValue: anyData(bitCount: bitCount)))
+    .init(
+        sessionID: .init(sessionIDValue: sessionIDValue),
+        sessionKey: .init(sessionKeyValue: sessionKeyValue),
+        sessionTTL: sessionTTL
+    )
 }
