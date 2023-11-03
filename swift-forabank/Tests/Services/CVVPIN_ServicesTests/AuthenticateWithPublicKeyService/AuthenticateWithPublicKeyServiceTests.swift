@@ -19,6 +19,18 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         XCTAssertEqual(makeSessionKeySpy.callCount, 0)
     }
     
+    func test_init_shouldDeliverErrorOnPrepareKeyExchangeFailure() {
+        
+        let (sut, prepareKeyExchangeSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.serviceError(.prepareKeyExchangeFailure))
+        ], on: {
+            
+            prepareKeyExchangeSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AuthenticateWithPublicKeyService
@@ -49,6 +61,64 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         trackForMemoryLeaks(makeSessionKeySpy, file: file, line:  line)
         
         return (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.Result],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.Result]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.authenticateWithPublicKey {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func assert<T: Equatable, E: Error & Equatable>(
+        _ receivedResults: [Result<T, E>],
+        equals expectedResults: [Result<T, E>],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(receivedResults.count, expectedResults.count, "\n Expected \(expectedResults.count) values, but got \(receivedResults.count)", file: file, line: line)
+        
+        zip(receivedResults, expectedResults)
+            .enumerated()
+            .forEach { index, element in
+                
+                switch element {
+                case let (
+                    .failure(receivedError),
+                    .failure(expectedError)
+                ):
+                    XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
+                    
+                case let (
+                    .success(received),
+                    .success(expected)
+                ):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+                    
+                default:
+                    XCTFail("\nExpected \(element.1) at index \(index), but got \(element.0)", file: file, line: line)
+                }
+            }
     }
     
     private final class PrepareKeyExchangeSpy {
@@ -114,6 +184,85 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
             at index: Int = 0
         ) {
             messages[index].completion(result)
+        }
+    }
+}
+
+private extension Array where Element == AuthenticateWithPublicKeyService.Result {
+    
+    func mapToEquatable() -> [AuthenticateWithPublicKeyService.Result._EquatableResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension AuthenticateWithPublicKeyService.Result {
+    
+    func mapToEquatable() -> _EquatableResult {
+        
+        self
+            .map(_Success.init)
+            .mapError(_Error.init(error:))
+    }
+    
+    typealias _EquatableResult = Result<_Success, _Error>
+    
+    struct _Success: Equatable {
+        
+        public let sessionID: String
+        public let sessionKey: Data
+        public let sessionTTL: Int
+        
+        init(success: AuthenticateWithPublicKeyService.Success) {
+            
+            self.sessionID = success.sessionID.sessionIDValue
+            self.sessionKey = success.sessionKey.sessionKeyValue
+            self.sessionTTL = success.sessionTTL
+        }
+    }
+    
+    enum _Error: Swift.Error & Equatable {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+        case serviceError(ServiceError)
+        
+        init(error: AuthenticateWithPublicKeyService.Error) {
+            
+            switch error {
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+                
+            case .network:
+                self = .network
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case let .serviceError(serviceError):
+                switch serviceError {
+                case .activationFailure:
+                    self = .serviceError(.activationFailure)
+                    
+                case .makeSessionKeyFailure:
+                    self = .serviceError(.makeSessionKeyFailure)
+                    
+                case .missingRSAPublicKey:
+                    self = .serviceError(.missingRSAPublicKey)
+                    
+                case .prepareKeyExchangeFailure:
+                    self = .serviceError(.prepareKeyExchangeFailure)
+                }
+            }
+        }
+        
+        public enum ServiceError {
+            
+            case activationFailure
+            case makeSessionKeyFailure
+            case missingRSAPublicKey
+            case prepareKeyExchangeFailure
         }
     }
 }
