@@ -59,7 +59,7 @@ extension LiveCVVPINJSONMaker {
 /// used in `bindPublicKeyWithEventId`
 extension LiveCVVPINJSONMaker {
     
-    #warning("need a better name - returns encrypted json + keys")
+#warning("need a better name - returns encrypted json + keys")
     func makeSecretJSON(
         otp: String,
         sessionKey: SessionKey
@@ -125,6 +125,7 @@ private func retry<T>(
 /// `formSessionKey`
 extension LiveCVVPINJSONMaker {
     
+#warning("need a better name - returns encrypted json")
     func makeSecretRequestJSON(
         publicKey: ECDHPublicKey
     ) throws -> Data {
@@ -135,6 +136,7 @@ extension LiveCVVPINJSONMaker {
         let data = try JSONSerialization.data(withJSONObject: [
             "publicApplicationSessionKey": publicApplicationSessionKeyBase64
         ] as [String: String])
+        
         let encrypted = try crypto.transportEncryptWithPadding(data: data)
         
         return encrypted

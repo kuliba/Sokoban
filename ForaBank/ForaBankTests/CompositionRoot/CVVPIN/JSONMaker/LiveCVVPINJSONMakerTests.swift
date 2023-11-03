@@ -46,6 +46,27 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         try XCTAssertNoThrow(JSONDecoder().decode(SecretJSON.self, from: decrypted))
     }
     
+    func test_makeSecretRequestJSON_shouldMakeJSONWithCorrectStructure() throws {
+        
+        let crypto = makeSUT().crypto
+        let transportKeyPair = try crypto.generateRSA4096BitKeyPair()
+        let (sut, _) = makeSUT(transportKey: { .init(key: transportKeyPair.publicKey.key) })
+        let publicKey = crypto.generateECDHKeyPair().publicKey
+        
+        let encrypted = try sut.makeSecretRequestJSON(
+            publicKey: publicKey
+        )
+        
+        let decrypted = try ForaCrypto.Crypto.rsaDecrypt(
+            data: encrypted,
+            withPrivateKey: transportKeyPair.privateKey.key,
+            algorithm: .rsaEncryptionPKCS1
+        )
+        
+        try XCTAssertNoThrow(JSONDecoder().decode(SecretRequestJSON.self, from: decrypted))
+
+    }
+    
     // MARK: - Helpers
     
     typealias TransportKey = LiveExtraLoggingCVVPINCrypto.TransportKey
@@ -147,6 +168,24 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
             
             self.clientPublicKeyRSA = clientPublicKeyRSA
             self.procClientSecretOTP = procClientSecretOTP
+        }
+    }
+    
+    private struct SecretRequestJSON: Decodable {
+        
+        let publicApplicationSessionKey: Data
+        
+        init(
+            publicApplicationSessionKey: String
+        ) throws {
+            
+            guard
+                let publicApplicationSessionKey = Data(base64Encoded: publicApplicationSessionKey)
+            else {
+                throw Base64EncodingError()
+            }
+            
+            self.publicApplicationSessionKey = publicApplicationSessionKey
         }
     }
 }
