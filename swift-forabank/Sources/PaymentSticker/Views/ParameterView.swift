@@ -7,11 +7,17 @@
 
 import SwiftUI
 
-struct ParameterView: View {
+public struct ParameterView: View {
     
     let viewModel: ParameterViewModel
     
-    var body: some View {
+    public init(
+        viewModel: ParameterViewModel
+    ) {
+        self.viewModel = viewModel
+    }
+    
+    public var body: some View {
         
         switch viewModel {
         case let .tip(tipViewModel):

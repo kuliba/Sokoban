@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import PaymentSticker
 
 struct OperationView: View {
     
@@ -92,7 +91,7 @@ struct OperationResultView<ButtonsView: View>: View {
 
 struct OperationProcessView: View {
     
-    @ObservedObject public var model: OperationStateViewModel
+    @ObservedObject var model: OperationStateViewModel
     
     var body: some View {
         
@@ -137,13 +136,58 @@ struct OperationProcessView: View {
     
     @ViewBuilder
     private func parameterView(
-        parameter: PaymentSticker.Operation.Parameter
+        parameter: Operation.Parameter
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
         let viewModel = mapper.map(parameter)
         
         ParameterView(viewModel: viewModel)
+    }
+}
+
+extension Operation.Parameter: Identifiable {
+    
+    public var id: ParameterType {
+        
+        switch self {
+        case .tip: return .tip
+        case .sticker: return .sticker
+        case let .select(select):
+            
+            switch select.id {
+            case "city":
+                return .city
+            case "transferType":
+                return .transferType
+            
+            default:
+                return .branches
+            }
+        case .product: return .product
+        case .amount: return .amount
+        case .input: return .input
+        }
+    }
+    
+    public enum ParameterType: String {
+        
+        case tip
+        case sticker
+        case city
+        case transferType
+        case branches
+        case product
+        case amount
+        case input
+    }
+}
+
+extension ModelToViewModelMapper {
+    
+    public init(_ model: OperationStateViewModel) {
+        
+        self.action = model.event(_:)
     }
 }
 

@@ -232,7 +232,6 @@ final class RootViewModelTests: XCTestCase {
 
 private extension RootViewModel {
     
-    
     func showUserProfile(
         timeout: TimeInterval = 0.05
     ) {

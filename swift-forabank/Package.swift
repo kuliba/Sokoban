@@ -332,6 +332,7 @@ private extension Target {
         name: .paymentSticker,
         dependencies: [
             .genericRemoteService
+                
         ]
     )
     
