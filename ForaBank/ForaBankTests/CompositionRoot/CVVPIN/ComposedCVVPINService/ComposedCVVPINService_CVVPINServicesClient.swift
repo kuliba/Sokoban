@@ -18,18 +18,19 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_activate_shouldDeliverSuccessOnSuccess() {
         
-        let sut = makeSUT(activateResult: anySuccess("+7..3245"))
+        let (sut, activateSpy) = makeSUT()
         
         expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
             
+            activateSpy.complete(with: anySuccess("+7..3245"))
         })
     }
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
+    private typealias ActivateSpy = Spy<CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
     
     private func makeSUT(
-        activateResult: ActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
         confirmActivationResult: ConfirmResult = .success(()),
@@ -37,10 +38,14 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
+    ) -> (
+        sut: SUT,
+        activateSpy: ActivateSpy
+    ) {
         
+        let activateSpy = ActivateSpy()
         let sut = SUT(
-            activate: { $0(activateResult) },
+            activate: activateSpy.perform(_:),
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: { $0(checkActivationResult) },
             confirmActivation: { _, completion  in completion(confirmActivationResult) },
@@ -49,8 +54,30 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(activateSpy, file: file, line: line)
         
-        return sut
+        return (sut, activateSpy)
+    }
+    
+    final class Spy<Success, Failure: Error> {
+        
+        typealias Result = Swift.Result<Success, Failure>
+        typealias Completion = (Result) -> Void
+        
+        private(set) var completions = [Completion]()
+        
+        func perform(
+            _ completion: @escaping Completion
+        ) {
+            completions.append(completion)
+        }
+        
+        func complete(
+            with result: Result,
+            at index: Int = 0
+        ) {
+            completions[index](result)
+        }
     }
     
     private func expectActivate(
