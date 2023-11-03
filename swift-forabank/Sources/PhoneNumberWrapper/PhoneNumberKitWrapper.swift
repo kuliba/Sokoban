@@ -29,7 +29,13 @@ public struct PhoneNumberWrapper {
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
         let regionCode = phoneNumberKit.codeBy(phoneNumber)
         let codeLength = countryCodeLength(by: regionCode)
+        let mask: String = {
+            return regionCode.map {
+                return phoneNumberKit.getFormattedExampleNumber(forCountry: $0)?.getMaskedNumber() ?? .defaultMask
+            }
+        }() ?? .defaultMask
         
+
         guard let phoneNumberParsed = try? codeLength > 0 ?
                 phoneNumberKit.parse(
                     String(phoneNumber.dropFirst(codeLength)),
@@ -39,35 +45,10 @@ public struct PhoneNumberWrapper {
                         phoneNumber,
                         ignoreType: true)
                 
-        else { return phoneNumber.applyPatternOnPhoneNumber() }
+        else { return phoneNumber.applyPatternOnPhoneNumber(mask: mask) }
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
-    
-    private func formatWithRegion(
-        _ phoneNumber: String
-    ) -> String {
-        
-        guard let region = regionByPhone(phoneNumber), let phoneNumbersCustomDefaultRegion = try? phoneNumberKit.parse(
-            phoneNumber,
-            withRegion: region,
-            ignoreType: true
-        ) else { return phoneNumber.applyPatternOnPhoneNumber() }
-        return phoneNumberKit.format(
-            phoneNumbersCustomDefaultRegion,
-            toType: .international)
-    }
-    
-    private func regionByPhone(_ input: String) -> String? {
-        
-        if (input.hasPrefix(.nationalDigitalCodeRu) &&
-            input.count == .phoneNumberWithCodeLengthRU) ||
-            input.count == .phoneNumberWithoutCodeLengthRU {
-            return .countryCodeRu
-        }
-        
-        return nil
-    }
-    
+            
     private func addCodeRuIfNeeded(_ input: String) -> String {
         return input.hasPrefix("89") ? "79" + input.dropFirst(2) : input
     }
@@ -86,6 +67,7 @@ private extension Int {
 private extension String {
     static let countryCodeRu: Self = "RU"
     static let nationalDigitalCodeRu: Self = "8"
+    static let defaultMask: Self = "+X XXX XXX-XX-XX"
 }
 
 extension UInt64 {

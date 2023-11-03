@@ -23,13 +23,13 @@ extension String {
 
 extension String {
     
-    func applyPatternOnPhoneNumber() -> String {
+    func applyPatternOnPhoneNumber(mask: String) -> String {
         
         guard !self.onlyDigits().isEmpty else { return "" }
         
         var number = self.onlyDigits()
         number = number.changeCodeIfNeeded()
-        return formatter(mask: "+X XXX XXX-XX-XX")
+        return formatter(mask: mask)
     }
     
     func formatter (mask:String) -> String {
@@ -54,6 +54,16 @@ extension String {
 
         return substring.isEmpty ? result : result + substring
     }
+    
+    func getMaskedNumber() -> String {
+        return self.replacingOccurrences(
+            of: "[0-9]",
+            with: "X",
+            options: .regularExpression,
+            range: nil
+        )
+    }
+
 }
 
 extension String {

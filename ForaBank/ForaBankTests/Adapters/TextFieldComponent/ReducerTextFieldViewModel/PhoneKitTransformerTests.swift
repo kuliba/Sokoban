@@ -59,14 +59,14 @@ final class PhoneKitTransformerTests: XCTestCase {
         
         let transformed = transform(.init("123456789"))
         
-        assertTextState(transformed, hasText: "+1 234 567-89", cursorAt: 13)
+        assertTextState(transformed, hasText: "+1 234-567-89", cursorAt: 13)
     }
     
     func test_shouldReturnFormattedPartialPhoneNumber_() {
         
         let transformed = transform(.init("12a3456--789"))
         
-        assertTextState(transformed, hasText: "+1 234 567-89", cursorAt: 13)
+        assertTextState(transformed, hasText: "+1 234-567-89", cursorAt: 13)
     }
     
     func test_shouldReturnFormattedPhoneNumber() {

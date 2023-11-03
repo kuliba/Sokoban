@@ -101,7 +101,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",     cursorAt: 0)),
-            .editing(.init("+3 74", cursorAt: 5)),
+            .editing(.init("+374", cursorAt: 4)),
         ])
     }
     
@@ -138,7 +138,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",     cursorAt: 0)),
-            .editing(.init("+3 74", cursorAt: 5)),
+            .editing(.init("+374", cursorAt: 4)),
             .editing(.init("+3 7",  cursorAt: 4)),
             .editing(.init("+3",  cursorAt: 2)),
             .editing(.init("",     cursorAt: 0)),
@@ -193,7 +193,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",       cursorAt: 0)),
-            .editing(.init("+3 74",   cursorAt: 5)),
+            .editing(.init("+374",   cursorAt: 4)),
             .editing(.init("+3 7",    cursorAt: 4)),
             .noFocus("+3 7"),
             .editing(.init("+3 7",    cursorAt: 4)),
