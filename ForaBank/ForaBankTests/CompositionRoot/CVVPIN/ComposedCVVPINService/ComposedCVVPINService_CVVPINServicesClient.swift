@@ -122,13 +122,52 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         XCTAssert(results.isEmpty)
     }
     
+    func test_getPINConfirmationCode_shouldDeliverSuccessOnSuccess() {
+        
+        let eventID = UUID().uuidString
+        let phone = "+7..8765"
+        let (sut, _, _, _, getPINConfirmationCodeSpy) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [.success(phone)], on: {
+            
+            getPINConfirmationCodeSpy.complete(with: anySuccess(eventID, phone))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverFailureOnFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Error!"
+        let (sut, _, _, _, getPINConfirmationCodeSpy) = makeSUT()
+        
+        expectGetPINConfirmationCode(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            getPINConfirmationCodeSpy.complete(with: anyFailure(statusCode, errorMessage))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldNotDeliverResultOnInstanceDeallocation() {
+        
+        let getPINConfirmationCodeSpy: GetPINConfirmationCodeSpy
+        var sut: SUT?
+        (sut, _, _, _, getPINConfirmationCodeSpy) = makeSUT()
+        var results = [ChangePINClient.GetPINConfirmationCodeResult]()
+        
+        sut?.getPINConfirmationCode(completion: { results.append($0) })
+        sut = nil
+        getPINConfirmationCodeSpy.complete(with: anySuccess())
+        
+        XCTAssert(results.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
     private typealias ActivateSpy = Spy<CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
     private typealias ConfirmSpy = Spy<Void, CVVPINFunctionalityActivationService.ConfirmError>
     private typealias CheckSpy = Spy<Void, Error>
-    private typealias GetPINConfirmCodeSpy = Spy<ChangePINService.ConfirmResponse, ChangePINService.Error>
+    private typealias GetPINConfirmationCodeSpy = Spy<ChangePINService.ConfirmResponse, ChangePINService.Error>
     
     private func makeSUT(
         changePINResult: ChangePINResult = anySuccess(),
@@ -140,19 +179,19 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         activateSpy: ActivateSpy,
         confirmSpy: ConfirmSpy,
         checkSpy: CheckSpy,
-        getPINConfirmCodeSpy: GetPINConfirmCodeSpy
+        getPINConfirmationCodeSpy: GetPINConfirmationCodeSpy
     ) {
         
         let activateSpy = ActivateSpy()
         let confirmSpy = ConfirmSpy()
         let checkSpy = CheckSpy()
-        let getPINConfirmCodeSpy = GetPINConfirmCodeSpy()
+        let getPINConfirmationCodeSpy = GetPINConfirmationCodeSpy()
         let sut = SUT(
             activate: activateSpy.perform(_:),
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: checkSpy.perform(_:),
             confirmActivation: { _, completion  in confirmSpy.perform(completion) },
-            getPINConfirmationCode: getPINConfirmCodeSpy.perform(_:),
+            getPINConfirmationCode: getPINConfirmationCodeSpy.perform(_:),
             showCVV: { _, completion in completion(showCVVResult) }
         )
         
@@ -160,9 +199,9 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         trackForMemoryLeaks(activateSpy, file: file, line: line)
         trackForMemoryLeaks(confirmSpy, file: file, line: line)
         trackForMemoryLeaks(checkSpy, file: file, line: line)
-        trackForMemoryLeaks(getPINConfirmCodeSpy, file: file, line: line)
+        trackForMemoryLeaks(getPINConfirmationCodeSpy, file: file, line: line)
         
-        return (sut, activateSpy, confirmSpy, checkSpy, getPINConfirmCodeSpy)
+        return (sut, activateSpy, confirmSpy, checkSpy, getPINConfirmationCodeSpy)
     }
     
     final class Spy<Success, Failure: Error> {
@@ -249,6 +288,32 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.checkFunctionality {
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectGetPINConfirmationCode(
+        _ sut: SUT,
+        toDeliver expectedResults: [ChangePINClient.GetPINConfirmationCodeResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [ChangePINClient.GetPINConfirmationCodeResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getPINConfirmationCode {
             receivedResults.append($0)
             exp.fulfill()
         }
@@ -481,7 +546,7 @@ private extension ChangePINClient.CheckFunctionalityResult {
     typealias EquatableCheckResult = Result<CheckEquatableVoid, _CheckCVVPINFunctionalityError>
     
     struct CheckEquatableVoid: Equatable {}
-
+    
     enum _CheckCVVPINFunctionalityError: Error & Equatable {
         
         case activationFailure
@@ -489,6 +554,45 @@ private extension ChangePINClient.CheckFunctionalityResult {
         case serviceFailure
         
         init(_ error: ForaBank.CheckCVVPINFunctionalityError) {
+            
+            switch error {
+            case .activationFailure:
+                self = .activationFailure
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
+            }
+        }
+    }
+}
+
+private extension Array where Element == ChangePINClient.GetPINConfirmationCodeResult {
+    
+    func mapToEquatable() -> [ChangePINClient.GetPINConfirmationCodeResult.EquatableGetPINConfirmationCodeResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension ChangePINClient.GetPINConfirmationCodeResult {
+    
+    func mapToEquatable() -> EquatableGetPINConfirmationCodeResult {
+        
+        mapError(_GetPINConfirmationCodeError.init)
+    }
+    
+    typealias EquatableGetPINConfirmationCodeResult = Result<String, _GetPINConfirmationCodeError>
+    
+    enum _GetPINConfirmationCodeError: Error & Equatable {
+        
+        case activationFailure
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+        
+        init(_ error: ForaBank.GetPINConfirmationCodeError) {
             
             switch error {
             case .activationFailure:
