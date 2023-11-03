@@ -9,10 +9,10 @@ import CVVPINServices
 import Foundation
 
 final class LoggingStoreDecorator<T> {
-
+    
     let decoratee: any Store<T>
     let log: (String, StaticString, UInt) -> Void
-
+    
     init(
         decoratee: any Store<T>,
         log: @escaping (String, StaticString, UInt) -> Void
@@ -29,14 +29,16 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
     func retrieve(
         completion: @escaping RetrievalCompletion
     ) {
-        decoratee.retrieve { [log] result in
+        decoratee.retrieve { [weak self] result in
+            
+            guard let self else { return }
             
             switch result {
             case let .failure(error):
                 log("Store \(String(describing: self)): Retrieval failure: \(error).", #file, #line)
                 
             case let .success((model, validUntil)):
-                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).", #file, #line)                
+                log("Store \(String(describing: self)): Retrieval success: \(model), valid until \(validUntil).", #file, #line)
             }
             completion(result)
         }
@@ -47,7 +49,9 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
         validUntil: Date,
         completion: @escaping InsertionCompletion
     ) {
-        decoratee.insert(local, validUntil: validUntil) { [log] result in
+        decoratee.insert(local, validUntil: validUntil) { [weak self] result in
+            
+            guard let self else { return }
             
             log("Store \(String(describing: self)): Asked to insert \(local) validUntil \(validUntil). Insertion result: \(result).", #file, #line)
             completion(result)
@@ -57,7 +61,9 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
     func deleteCache(
         completion: @escaping DeletionCompletion
     ) {
-        decoratee.deleteCache { [log] result in
+        decoratee.deleteCache { [weak self] result in
+            
+            guard let self else { return }
             
             log("Store \(String(describing: self)): Asked to delete cache. Deletion result: \(result).", #file, #line)
             completion(result)
