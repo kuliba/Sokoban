@@ -63,7 +63,7 @@ private extension GetPINConfirmationCodeError {
         case .authenticationFailure:
             self = .serviceFailure
             
-        case .invalid, .network, .other:
+        case .invalid, .network, .serviceError:
             self = .serviceFailure
             
         case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: _):
@@ -98,7 +98,7 @@ private extension ChangePINError {
         case let .server(statusCode: statusCode, errorMessage: errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .other:
+        case .serviceError:
             self = .serviceFailure
         }
     }

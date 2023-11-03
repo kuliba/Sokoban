@@ -277,8 +277,8 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
         
         expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
-            #warning("rename case to `serviceError`")
-            getPINConfirmationCodeSpy.complete(with: .failure(.other(.checkSessionFailure)))
+            
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.checkSessionFailure)))
         })
     }
     
@@ -288,7 +288,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            getPINConfirmationCodeSpy.complete(with: .failure(.other(.decryptionFailure)))
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
         })
     }
     
@@ -298,7 +298,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectGetPINConfirmationCode(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            getPINConfirmationCodeSpy.complete(with: .failure(.other(.makeJSONFailure)))
+            getPINConfirmationCodeSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
@@ -403,7 +403,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            changePINSpy.complete(with: .failure(.other(.checkSessionFailure)))
+            changePINSpy.complete(with: .failure(.serviceError(.checkSessionFailure)))
         })
     }
     
@@ -413,7 +413,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            changePINSpy.complete(with: .failure(.other(.decryptionFailure)))
+            changePINSpy.complete(with: .failure(.serviceError(.decryptionFailure)))
         })
     }
     
@@ -423,7 +423,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectChangePIN(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            changePINSpy.complete(with: .failure(.other(.makeJSONFailure)))
+            changePINSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
         })
     }
     
