@@ -59,6 +59,7 @@ extension LiveCVVPINJSONMaker {
 /// used in `bindPublicKeyWithEventId`
 extension LiveCVVPINJSONMaker {
     
+    #warning("need a better name - returns encrypted json + keys")
     func makeSecretJSON(
         otp: String,
         sessionKey: SessionKey

@@ -28,6 +28,24 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         )
     }
     
+    func test_makeSecretJSON_shouldMakeJSONWithCorrectStructure() throws {
+        
+        let (sut, _) = makeSUT()
+        let sessionKey = anySessionKey()
+        
+        let (encrypted, _) = try sut.makeSecretJSON(
+            otp: "987654",
+            sessionKey: sessionKey
+        )
+        
+        let decrypted = try aesDecrypt(
+            data: encrypted,
+            sessionKey: sessionKey
+        )
+        
+        try XCTAssertNoThrow(JSONDecoder().decode(SecretJSON.self, from: decrypted))
+    }
+    
     // MARK: - Helpers
     
     typealias TransportKey = LiveExtraLoggingCVVPINCrypto.TransportKey
@@ -92,4 +110,43 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
     }
     
     private struct Base64EncodingError: Error {}
+    
+    private func anySessionKey() -> SessionKey {
+        
+        .init(sessionKeyValue: anyData(bitCount: 256))
+    }
+    
+    func aesDecrypt(
+        data: Data,
+        sessionKey: SessionKey
+    ) throws -> Data {
+        
+        let prefix32 = sessionKey.sessionKeyValue.prefix(32)
+        let aes256CBC = try AES256CBC(key: prefix32)
+        let encrypted = try aes256CBC.decrypt(data)
+        
+        return encrypted
+    }
+    
+    private struct SecretJSON: Decodable {
+        
+        let procClientSecretOTP: Data
+        let clientPublicKeyRSA: Data
+        
+        init(
+            procClientSecretOTP: String,
+            clientPublicKeyRSA: String
+        ) throws {
+            
+            guard
+                let clientPublicKeyRSA = Data(base64Encoded: clientPublicKeyRSA),
+                let procClientSecretOTP = Data(base64Encoded: procClientSecretOTP)
+            else {
+                throw Base64EncodingError()
+            }
+            
+            self.clientPublicKeyRSA = clientPublicKeyRSA
+            self.procClientSecretOTP = procClientSecretOTP
+        }
+    }
 }
