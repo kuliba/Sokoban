@@ -27,7 +27,7 @@ where PerformRequestError: Error,
             createRequest: { [log] input in
                 
                 let request = try createRequest(input)
-                log("RemoteService: Created \(request.httpMethod ?? "n/a") request \(request) for input \(input)", #file, #line)
+                log("RemoteService: Created \(request.httpMethod ?? "n/a") request \(request) for input \"\(input)\".", #file, #line)
                 if let body = request.httpBody {
                     log("RemoteService: request body: \(String(data: body, encoding: .utf8) ?? "nil")", #file, #line)
                 }
