@@ -5414,7 +5414,6 @@
 		2A4A19EA2AF4D99000F66EDF /* ComposedCVVPINService */ = {
 			isa = PBXGroup;
 			children = (
-				2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */,
 			);
 			path = ComposedCVVPINService;
 			sourceTree = "<group>";
@@ -5576,7 +5575,6 @@
 			isa = PBXGroup;
 			children = (
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
-				2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */,
 				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCertificateClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
 				2A01F9362AE50F330064F15B /* ComposedCVVPINService+ShowCVVClient.swift */,
@@ -5587,6 +5585,7 @@
 		2A7688CF2AF38FDE00045293 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
+				2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */,
 				2AF9ACDD2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift */,
 				2AF9ACD72AE646FB00AAB1DB /* LoggingStoreDecorator.swift */,
 				2AF9ACD52AE5BFFE00AAB1DB /* LoggingRemoteServiceDecorator.swift */,
@@ -5621,6 +5620,7 @@
 		2A7688D62AF3A74200045293 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
+				2A4A19EB2AF4D9AD00F66EDF /* ComposedCVVPINServiceTests.swift */,
 				2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */,
 				2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */,
 				2A7688D92AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift */,
