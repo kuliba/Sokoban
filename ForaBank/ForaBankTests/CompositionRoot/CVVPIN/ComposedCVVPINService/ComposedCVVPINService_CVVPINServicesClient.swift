@@ -134,8 +134,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     private func makeSUT(
         changePINResult: ChangePINResult = anySuccess(),
-        checkActivationResult: Result<Void, Error> = .success(()),
-        confirmActivationResult: ConfirmResult = .success(()),
         getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
