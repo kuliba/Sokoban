@@ -1146,7 +1146,9 @@ extension ProductView.ViewModel {
         let cardId = CardDomain.CardId.init(self.id)
         showCvv?(cardId) {
             if let cvv = $0 {
-                self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+                Task { @MainActor in
+                    self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+                }
             }
         }
     }

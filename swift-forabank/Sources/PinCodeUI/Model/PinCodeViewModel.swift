@@ -125,7 +125,10 @@ public class PinCodeViewModel: ObservableObject {
         if state.currentStyle == .correct {
 
             getPinConform { result in
-                self.phoneNumberState = result
+                Task { @MainActor in
+                    
+                    self.phoneNumberState = result
+                }
             }
         }
     }
