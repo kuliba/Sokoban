@@ -100,7 +100,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
     
     func test_checkFunctionality_shouldDeliverFailureOnFailure() {
         
-        let checkFailureMessage = "Check Failure"
         let (sut, _, _, checkSpy, _) = makeSUT()
         
         expectCheckFunctionality(sut, toDeliver: [.failure(.activationFailure)], on: {
@@ -122,8 +121,6 @@ final class ComposedCVVPINService_CVVPINServicesClient: XCTestCase {
         
         XCTAssert(results.isEmpty)
     }
-    
-    
     
     // MARK: - Helpers
     
