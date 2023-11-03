@@ -43,6 +43,11 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
             makeSessionKey: makeSessionKeySpy.make
         )
         
+        trackForMemoryLeaks(sut, file: file, line:  line)
+        trackForMemoryLeaks(prepareKeyExchangeSpy, file: file, line:  line)
+        trackForMemoryLeaks(processSpy, file: file, line:  line)
+        trackForMemoryLeaks(makeSessionKeySpy, file: file, line:  line)
+        
         return (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy)
     }
     
