@@ -12,7 +12,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, authenticateSpy, decryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy) = makeSUT()
+        let (_, authenticateSpy, confirmProcessSpy, decryptSpy, makePINChangeJSONSpy, changePINProcessSpy) = makeSUT()
         
         XCTAssertNoDiff(authenticateSpy.callCount, 0)
         XCTAssertNoDiff(decryptSpy.callCount, 0)
@@ -45,7 +45,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let statusCode = 500
         let invalidData = anyData()
-        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
         expect(sut, toDeliver: [
             .failure(.invalid(statusCode: statusCode, data: invalidData))
@@ -57,7 +57,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_getPINConfirmationCode_shouldDeliverErrorOnConfirmProcessNetworkFailure() {
         
-        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
         expect(sut, toDeliver: [.failure(.network)], on: {
             
@@ -70,7 +70,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let statusCode = 500
         let errorMessage = "Confirmation Error"
-        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
         expect(sut, toDeliver: [
             .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
@@ -82,7 +82,7 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_getPINConfirmationCode_shouldDeliverErrorOnDecryptFailure() {
         
-        let (sut, authenticateSpy, decryptSpy, confirmProcessSpy, _, _) = makeSUT()
+        let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
         
         expect(sut, toDeliver: [
             .failure(.serviceError(.decryptionFailure))
@@ -103,14 +103,14 @@ final class ChangePINServiceTests: XCTestCase {
     ) -> (
         sut: SUT,
         authenticateSpy: AuthenticateSpy,
-        decryptSpy: PublicRSAKeyDecryptSpy,
         confirmProcessSpy: ConfirmProcessSpy,
+        decryptSpy: PublicRSAKeyDecryptSpy,
         makePINChangeJSONSpy: MakePINChangeJSONSpy,
         changePINProcessSpy: ChangePINProcessSpy
     ) {
         let authenticateSpy = AuthenticateSpy()
-        let decryptSpy = PublicRSAKeyDecryptSpy()
         let confirmProcessSpy = ConfirmProcessSpy()
+        let decryptSpy = PublicRSAKeyDecryptSpy()
         let makePINChangeJSONSpy = MakePINChangeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
@@ -128,7 +128,7 @@ final class ChangePINServiceTests: XCTestCase {
         trackForMemoryLeaks(makePINChangeJSONSpy, file: file, line: line)
         trackForMemoryLeaks(changePINProcessSpy, file: file, line: line)
         
-        return (sut, authenticateSpy, decryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy)
+        return (sut, authenticateSpy, confirmProcessSpy, decryptSpy, makePINChangeJSONSpy, changePINProcessSpy)
     }
     
     private func expect(
