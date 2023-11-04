@@ -299,13 +299,16 @@ private extension BindPublicKeyWithEventIDService.Result {
     func mapToEquatable() -> EquatableResult {
         
         self
-            .map { (_: Void) in EquatableVoid() }
+            .map(EquatableVoid.init)
             .mapError(EquatableError.init)
     }
     
     typealias EquatableResult = Result<EquatableVoid, EquatableError>
     
-    struct EquatableVoid: Equatable {}
+    struct EquatableVoid: Equatable {
+        
+        init(_ void: Void) {}
+    }
     
     enum EquatableError: Error & Equatable {
         
