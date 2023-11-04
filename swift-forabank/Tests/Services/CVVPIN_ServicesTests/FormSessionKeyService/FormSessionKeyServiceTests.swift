@@ -20,6 +20,16 @@ final class FormSessionKeyServiceTests: XCTestCase {
         XCTAssertNoDiff(makeSessionKeySpy.callCount, 0)
     }
     
+    func test_formSessionKey_shouldDeliverErrorOnLoadCodeError() {
+        
+        let (sut, loadCodeSpy, _, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.serviceError(.missingCode))], on: {
+            
+            loadCodeSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FormSessionKeyService
@@ -55,6 +65,61 @@ final class FormSessionKeyServiceTests: XCTestCase {
         return (sut, loadCodeSpy, makeJSONSpy, processSpy, makeSessionKeySpy)
     }
     
+    private func expect(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.Result],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.Result]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.formSessionKey {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectConfirm(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.Result],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.Result]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.formSessionKey {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+
     private final class LoadCodeSpy {
         
         private(set) var completions = [SUT.CodeCompletion]()
@@ -138,6 +203,81 @@ final class FormSessionKeyServiceTests: XCTestCase {
             at index: Int = 0
         ) {
             messages[index].completion(result)
+        }
+    }
+}
+
+private extension Array where Element == FormSessionKeyService.Result {
+    
+    func mapToEquatable() -> [FormSessionKeyService.Result.Result] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension FormSessionKeyService.Result {
+    
+    func mapToEquatable() -> Result {
+        
+        self
+            .map(EquatableSuccess.init)
+            .mapError(EquatableError.init)
+    }
+    
+    typealias Result = Swift.Result<EquatableSuccess, EquatableError>
+    
+    struct EquatableSuccess: Equatable {
+        
+        let sessionKey: Data
+        let eventID: String
+        let sessionTTL: Int
+
+        init(success: FormSessionKeyService.Success) {
+            
+            self.sessionKey = success.sessionKey.sessionKeyValue
+            self.eventID = success.eventID.eventIDValue
+            self.sessionTTL = success.sessionTTL
+        }
+    }
+    
+    enum EquatableError: Error & Equatable {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+        case serviceError(ServiceError)
+
+        init(error: FormSessionKeyService.Error) {
+            
+            switch error {
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+                
+            case .network:
+                self = .network
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case let .serviceError(serviceError):
+                switch serviceError {
+                case .missingCode:
+                    self = .serviceError(.missingCode)
+                    
+                case .makeJSONFailure:
+                    self = .serviceError(.makeJSONFailure)
+                    
+                case .makeSessionKeyFailure:
+                    self = .serviceError(.makeSessionKeyFailure)
+                }
+            }
+        }
+        
+        enum ServiceError {
+            
+            case missingCode
+            case makeJSONFailure
+            case makeSessionKeyFailure
         }
     }
 }
