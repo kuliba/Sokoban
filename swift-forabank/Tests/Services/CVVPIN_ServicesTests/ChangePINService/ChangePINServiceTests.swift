@@ -41,6 +41,45 @@ final class ChangePINServiceTests: XCTestCase {
         })
     }
     
+    func test_getPINConfirmationCode_shouldDeliverErrorOnConfirmProcessInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.invalid(statusCode: statusCode, data: invalidData))
+        ], on: {
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverErrorOnConfirmProcessNetworkFailure() {
+        
+        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverErrorOnConfirmProcessServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Confirmation Error"
+        let (sut, authenticateSpy, _, confirmProcessSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
@@ -304,4 +343,11 @@ private extension ChangePINService.GetPINConfirmationCodeResult {
             case makeJSONFailure
         }
     }
+}
+
+private func anySuccess(
+    sessionIDValue: String = UUID().uuidString
+) -> ChangePINService.AuthenticateResult {
+    
+    .success(.init(sessionIDValue: sessionIDValue))
 }
