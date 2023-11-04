@@ -367,7 +367,7 @@ final class FormSessionKeyServiceTests: XCTestCase {
 
 private extension Array where Element == FormSessionKeyService.Result {
     
-    func mapToEquatable() -> [FormSessionKeyService.Result.Result] {
+    func mapToEquatable() -> [FormSessionKeyService.Result.EquatableResult] {
         
         map { $0.mapToEquatable() }
     }
@@ -375,14 +375,14 @@ private extension Array where Element == FormSessionKeyService.Result {
 
 private extension FormSessionKeyService.Result {
     
-    func mapToEquatable() -> Result {
+    func mapToEquatable() -> EquatableResult {
         
         self
             .map(EquatableSuccess.init)
             .mapError(EquatableError.init)
     }
     
-    typealias Result = Swift.Result<EquatableSuccess, EquatableError>
+    typealias EquatableResult = Swift.Result<EquatableSuccess, EquatableError>
     
     struct EquatableSuccess: Equatable {
         
