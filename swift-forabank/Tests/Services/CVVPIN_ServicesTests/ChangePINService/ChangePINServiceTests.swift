@@ -21,6 +21,26 @@ final class ChangePINServiceTests: XCTestCase {
         XCTAssertNoDiff(changePINProcessSpy.callCount, 0)
     }
     
+    func test_getPINConfirmationCode_shouldDeliverErrorOnAuthenticateActivationFailure() {
+        
+        let (sut, authenticateSpy, _, _, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.activationFailure)], on: {
+            
+            authenticateSpy.complete(with: .failure(.activationFailure))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverErrorOnAuthenticateAuthenticationFailure() {
+        
+        let (sut, authenticateSpy, _, _, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.authenticationFailure)], on: {
+            
+            authenticateSpy.complete(with: .failure(.authenticationFailure))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
@@ -59,8 +79,35 @@ final class ChangePINServiceTests: XCTestCase {
         return (sut, authenticateSpy, publicRSAKeyDecryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy)
     }
     
+    private func expect(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.GetPINConfirmationCodeResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getPINConfirmationCode {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
     private final class AuthenticateSpy {
-                
+        
         private(set) var completions = [SUT.AuthenticateCompletion]()
         
         var callCount: Int { completions.count }
@@ -170,6 +217,91 @@ final class ChangePINServiceTests: XCTestCase {
             at index: Int = 0
         ) {
             messages[index].completion(result)
+        }
+    }
+}
+
+private extension Array where Element == ChangePINService.GetPINConfirmationCodeResult {
+    
+    func mapToEquatable() -> [ChangePINService.GetPINConfirmationCodeResult.EquatableGetPINConfirmationCodeResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension ChangePINService.GetPINConfirmationCodeResult {
+    
+    func mapToEquatable() -> EquatableGetPINConfirmationCodeResult {
+        
+        self
+            .map { EquatableConfirmResponse(response: $0) }
+            .mapError(EquatableError.init)
+    }
+    
+    typealias EquatableGetPINConfirmationCodeResult = Swift.Result<EquatableConfirmResponse, EquatableError>
+    
+    struct EquatableConfirmResponse: Equatable {
+        
+        let otpEventID: String
+        let phone: String
+        
+        init(response: ChangePINService.ConfirmResponse) {
+            
+            self.otpEventID = response.otpEventID.eventIDValue
+            self.phone = response.phone
+        }
+    }
+    
+    enum EquatableError: Error & Equatable {
+        
+        case activationFailure
+        case authenticationFailure
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceError(ServiceError)
+        
+        init(error: ChangePINService.Error) {
+            
+            switch error {
+            case .activationFailure:
+                self = .activationFailure
+                
+            case .authenticationFailure:
+                self = .authenticationFailure
+                
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+            
+            case .network:
+                self = .network
+                
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case let .serviceError(serviceError):
+                switch serviceError {
+                case .checkSessionFailure:
+                    self = .serviceError(.checkSessionFailure)
+                    
+                case .decryptionFailure:
+                    self = .serviceError(.decryptionFailure)
+                    
+                case .makeJSONFailure:
+                    self = .serviceError(.makeJSONFailure)
+                }
+            }
+        }
+        
+        enum ServiceError {
+            
+            case checkSessionFailure
+            case decryptionFailure
+            case makeJSONFailure
         }
     }
 }
