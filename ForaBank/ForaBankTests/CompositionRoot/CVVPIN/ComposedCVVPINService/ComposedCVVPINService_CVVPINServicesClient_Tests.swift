@@ -483,7 +483,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectShowCVV(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            showCVVSpy.complete(with: .failure(.connectivity))
+            showCVVSpy.complete(with: .failure(.network))
         })
     }
     

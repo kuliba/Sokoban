@@ -69,7 +69,7 @@ final class ShowCVVServiceTests: XCTestCase {
         
         let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.connectivity)], on: {
+        expect(sut, toDeliver: [.failure(.network)], on: {
             
             authenticateSpy.complete(with: anySuccess())
             makeJSONSpy.complete(with: anySuccess())
@@ -394,7 +394,7 @@ private extension ShowCVVService.Result {
             case let .invalid(statusCode: statusCode, data: data):
                 self = .invalid(statusCode: statusCode, data: data)
                 
-            case .connectivity:
+            case .network:
                 self = .connectivity
                 
             case let .server(statusCode: statusCode, errorMessage: errorMessage):
