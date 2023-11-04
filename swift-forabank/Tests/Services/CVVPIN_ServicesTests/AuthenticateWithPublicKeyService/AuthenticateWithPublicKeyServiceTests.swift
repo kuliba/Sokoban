@@ -284,7 +284,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
 
 private extension Array where Element == AuthenticateWithPublicKeyService.Result {
     
-    func mapToEquatable() -> [AuthenticateWithPublicKeyService.Result._EquatableResult] {
+    func mapToEquatable() -> [AuthenticateWithPublicKeyService.Result.EquatableResult] {
         
         map { $0.mapToEquatable() }
     }
@@ -292,16 +292,16 @@ private extension Array where Element == AuthenticateWithPublicKeyService.Result
 
 private extension AuthenticateWithPublicKeyService.Result {
     
-    func mapToEquatable() -> _EquatableResult {
+    func mapToEquatable() -> EquatableResult {
         
         self
-            .map(_Success.init)
-            .mapError(_Error.init(error:))
+            .map(EquatableSuccess.init)
+            .mapError(EquatableError.init(error:))
     }
     
-    typealias _EquatableResult = Result<_Success, _Error>
+    typealias EquatableResult = Result<EquatableSuccess, EquatableError>
     
-    struct _Success: Equatable {
+    struct EquatableSuccess: Equatable {
         
         public let sessionID: String
         public let sessionKey: Data
@@ -315,7 +315,7 @@ private extension AuthenticateWithPublicKeyService.Result {
         }
     }
     
-    enum _Error: Swift.Error & Equatable {
+    enum EquatableError: Swift.Error & Equatable {
         
         case invalid(statusCode: Int, data: Data)
         case network
