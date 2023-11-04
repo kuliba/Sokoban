@@ -40,6 +40,105 @@ final class ShowCVVServiceTests: XCTestCase {
         })
     }
     
+    func test_showCVV_shouldDeliverErrorOnMakeJSONFailure() {
+        
+        let (sut, authenticateSpy, makeJSONSpy, _, _) = makeSUT()
+
+        expect(sut, toDeliver: [.failure(.serviceError(.makeJSONFailure))], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverErrorOnProcessInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
+
+        expect(sut, toDeliver: [.failure(.invalid(statusCode: statusCode, data: invalidData))], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: anySuccess())
+            processSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverErrorOnProcessConnectivityFailure() {
+        
+        let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
+
+        expect(sut, toDeliver: [.failure(.connectivity)], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: anySuccess())
+            processSpy.complete(with: .failure(.connectivity))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverErrorOnProcessServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Process Failure"
+        let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
+
+        expect(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: anySuccess())
+            processSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_showCVV_shouldNotDeliverAuthenticateResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        (sut, authenticateSpy, _, _, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+
+        sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
+        sut = nil
+        authenticateSpy.complete(with: .failure(.activationFailure))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_showCVV_shouldNotDeliverMakeJSONResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let makeJSONSpy: MakeJSONSpy
+        (sut, authenticateSpy, makeJSONSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+
+        sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        sut = nil
+        makeJSONSpy.complete(with: .failure(anyError()))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_showCVV_shouldNotDeliverProcessResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let makeJSONSpy: MakeJSONSpy
+        let processSpy: ProcessSpy
+        (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+
+        sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        makeJSONSpy.complete(with: anySuccess())
+        sut = nil
+        processSpy.complete(with: .failure(.connectivity))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ShowCVVService
@@ -271,4 +370,18 @@ private extension ShowCVVService.Result {
             case makeJSONFailure
         }
     }
+}
+
+private func anySuccess(
+    sessionIDValue: String = UUID().uuidString
+) -> ShowCVVService.AuthenticateResult {
+    
+    .success(.init(sessionIDValue: sessionIDValue))
+}
+
+private func anySuccess(
+    data: Data = anyData()
+) -> ShowCVVService.MakeJSONResult {
+    
+    .success(data)
 }
