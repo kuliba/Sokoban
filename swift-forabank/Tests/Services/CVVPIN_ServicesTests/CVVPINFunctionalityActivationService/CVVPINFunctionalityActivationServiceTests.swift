@@ -125,7 +125,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         let getCodeSpy: GetCodeSpy
         (sut, getCodeSpy, _, _) = makeSUT()
         var receivedResults = [SUT.ActivateResult]()
-
+        
         sut?.activate { receivedResults.append($0) }
         sut = nil
         getCodeSpy.complete(with: anySuccess())
@@ -140,11 +140,97 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         let formSessionKeySpy: FormSessionKeySpy
         (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
         var receivedResults = [SUT.ActivateResult]()
-
+        
         sut?.activate { receivedResults.append($0) }
         getCodeSpy.complete(with: anySuccess())
         sut = nil
         formSessionKeySpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    // MARK: - confirmActivation
+    
+    func test_activate_shouldDeliverErrorOnBindKeyInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [
+            .failure(.invalid(statusCode: statusCode, data: invalidData))
+        ], on: {
+            bindKeySpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnBindKeyNetworkFailure() {
+        
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.network)], on: {
+            
+            bindKeySpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnBindKeyRetryFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Forn Session Key Error"
+        let retryAttempts = 4
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [
+            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        ], on: {
+            bindKeySpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnBindKeyServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Forn Session Key Error"
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            bindKeySpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnBindKeyServiceFailure() {
+        
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            bindKeySpy.complete(with: .failure(.serviceFailure))
+        })
+    }
+    
+    func test_activate_shouldDeliverVoidOnSuccess() {
+        
+        let (sut, _, _, bindKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.success(())], on: {
+            
+            bindKeySpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_activate_shouldNotDeliverBindKeyResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let bindKeySpy: BindKeySpy
+        (sut, _, _, bindKeySpy) = makeSUT()
+        var receivedResults = [SUT.ConfirmResult]()
+        
+        sut?.confirmActivation(withOTP: anyOTP()) { receivedResults.append($0) }
+        sut = nil
+        bindKeySpy.complete(with: .success(()))
         
         XCTAssert(receivedResults.isEmpty)
     }
@@ -190,6 +276,33 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.activate {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectConfirm(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.ConfirmResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.ConfirmResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.confirmActivation(withOTP: anyOTP()) {
             
             receivedResults.append($0)
             exp.fulfill()
@@ -332,6 +445,67 @@ private extension CVVPINFunctionalityActivationService.ActivateResult {
     }
 }
 
+private extension Array where Element == CVVPINFunctionalityActivationService.ConfirmResult {
+    
+    func mapToEquatable() -> [CVVPINFunctionalityActivationService.ConfirmResult.EquatableConfirmResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension CVVPINFunctionalityActivationService.ConfirmResult {
+    
+    func mapToEquatable() -> EquatableConfirmResult {
+        
+        self
+            .map(EquatableVoid.init)
+            .mapError(EquatableConfirmError.init)
+    }
+    
+    typealias EquatableConfirmResult = Swift.Result<EquatableVoid, EquatableConfirmError>
+    
+    struct EquatableVoid: Equatable {
+        
+        init(_ void: Void) {}
+    }
+    
+    enum EquatableConfirmError: Error & Equatable {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+        
+        init(error: CVVPINFunctionalityActivationService.ConfirmError) {
+            
+            switch error {
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+                
+            case .network:
+                self = .network
+                
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
+            }
+        }
+        
+        enum ServiceError {
+            
+            case checkSessionFailure
+            case decryptionFailure
+            case makeJSONFailure
+        }
+    }
+}
+
 private func anySuccess(
     code: String = UUID().uuidString,
     phone: String = UUID().uuidString
@@ -353,4 +527,11 @@ private func anySuccess(
             sessionTTL: sessionTTL
         )
     )
+}
+
+private func anyOTP(
+    otpValue: String = .init(UUID().uuidString.prefix(6))
+) -> CVVPINFunctionalityActivationService.OTP {
+    
+    .init(otpValue: otpValue)
 }
