@@ -121,6 +121,74 @@ final class FormSessionKeyServiceTests: XCTestCase {
         })
     }
     
+    func test_formSessionKey_shouldNotDeliverLoadCodeResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let loadCodeSpy: LoadCodeSpy
+        (sut, loadCodeSpy, _, _, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.formSessionKey { receivedResults.append($0) }
+        sut = nil
+        loadCodeSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_formSessionKey_shouldNotDeliverMakeJSONResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let loadCodeSpy: LoadCodeSpy
+        let makeJSONSpy: MakeJSONSpy
+        (sut, loadCodeSpy, makeJSONSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.formSessionKey { receivedResults.append($0) }
+        loadCodeSpy.complete(with: anySuccess())
+        sut = nil
+        makeJSONSpy.complete(with: .success(anyData()))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_formSessionKey_shouldNotDeliverProcessResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let loadCodeSpy: LoadCodeSpy
+        let makeJSONSpy: MakeJSONSpy
+        let processSpy: ProcessSpy
+        (sut, loadCodeSpy, makeJSONSpy, processSpy, _) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.formSessionKey { receivedResults.append($0) }
+        loadCodeSpy.complete(with: anySuccess())
+        makeJSONSpy.complete(with: .success(anyData()))
+        sut = nil
+        processSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_formSessionKey_shouldNotDeliverMaskeSessionResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let loadCodeSpy: LoadCodeSpy
+        let makeJSONSpy: MakeJSONSpy
+        let processSpy: ProcessSpy
+        let makeSessionKeySpy: MakeSessionKeySpy
+        (sut, loadCodeSpy, makeJSONSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.formSessionKey { receivedResults.append($0) }
+        loadCodeSpy.complete(with: anySuccess())
+        makeJSONSpy.complete(with: .success(anyData()))
+        processSpy.complete(with: anySuccess())
+        sut = nil
+        makeSessionKeySpy.complete(with: .success(.init(sessionKeyValue: anyData())))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FormSessionKeyService
@@ -209,7 +277,6 @@ final class FormSessionKeyServiceTests: XCTestCase {
             file: file, line: line
         )
     }
-    
     
     private final class LoadCodeSpy {
         
