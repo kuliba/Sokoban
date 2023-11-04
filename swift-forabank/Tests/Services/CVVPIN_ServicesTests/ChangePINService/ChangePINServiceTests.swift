@@ -80,6 +80,19 @@ final class ChangePINServiceTests: XCTestCase {
         })
     }
     
+    func test_getPINConfirmationCode_shouldDeliverErrorOnDecryptFailure() {
+        
+        let (sut, authenticateSpy, publicRSAKeyDecryptSpy, confirmProcessSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.serviceError(.decryptionFailure))
+        ], on: {
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: anySuccess())
+            publicRSAKeyDecryptSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
@@ -350,4 +363,12 @@ private func anySuccess(
 ) -> ChangePINService.AuthenticateResult {
     
     .success(.init(sessionIDValue: sessionIDValue))
+}
+
+private func anySuccess(
+    eventID: String = UUID().uuidString,
+    phone: String = UUID().uuidString
+) -> ChangePINService.ConfirmProcessResult {
+    
+    .success(.init(eventID: eventID, phone: phone))
 }
