@@ -20,13 +20,104 @@ final class FormSessionKeyServiceTests: XCTestCase {
         XCTAssertNoDiff(makeSessionKeySpy.callCount, 0)
     }
     
-    func test_formSessionKey_shouldDeliverErrorOnLoadCodeError() {
+    func test_formSessionKey_shouldDeliverErrorOnLoadCodeFailure() {
         
         let (sut, loadCodeSpy, _, _, _) = makeSUT()
         
         expect(sut, toDeliver: [.failure(.serviceError(.missingCode))], on: {
             
             loadCodeSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverErrorOnMakeJSONFailure() {
+        
+        let (sut, loadCodeSpy, makeJSONSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.serviceError(.makeJSONFailure))], on: {
+            
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverErrorOnProcessInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, loadCodeSpy, makeJSONSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.invalid(statusCode: statusCode, data: invalidData))
+        ], on: {
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverErrorOnProcessNetworkFailure() {
+        
+        let (sut, loadCodeSpy, makeJSONSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverErrorOnProcessServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Process Error"
+        let (sut, loadCodeSpy, makeJSONSpy, processSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverErrorOnMakeSessionKeyFailure() {
+        
+        let (sut, loadCodeSpy, makeJSONSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.serviceError(.makeSessionKeyFailure))
+        ], on: {
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: anySuccess())
+            makeSessionKeySpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_formSessionKey_shouldDeliverSuccessOnSuccess() {
+        
+        let sessionKeyValue = anyData()
+        let eventIDValue = UUID().uuidString
+        let sessionTTL = 62
+        let (sut, loadCodeSpy, makeJSONSpy, processSpy, makeSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .success(.init(
+                sessionKey: .init(sessionKeyValue: sessionKeyValue),
+                eventID: .init(eventIDValue: eventIDValue),
+                sessionTTL: sessionTTL
+            ))
+        ], on: {
+            loadCodeSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: .success(anyData()))
+            processSpy.complete(with: anySuccess(
+                eventID: eventIDValue,
+                sessionTTL: sessionTTL
+            ))
+            makeSessionKeySpy.complete(with: .success(.init(sessionKeyValue: sessionKeyValue)))
         })
     }
     
@@ -119,7 +210,7 @@ final class FormSessionKeyServiceTests: XCTestCase {
         )
     }
     
-
+    
     private final class LoadCodeSpy {
         
         private(set) var completions = [SUT.CodeCompletion]()
@@ -231,7 +322,7 @@ private extension FormSessionKeyService.Result {
         let sessionKey: Data
         let eventID: String
         let sessionTTL: Int
-
+        
         init(success: FormSessionKeyService.Success) {
             
             self.sessionKey = success.sessionKey.sessionKeyValue
@@ -246,7 +337,7 @@ private extension FormSessionKeyService.Result {
         case network
         case server(statusCode: Int, errorMessage: String)
         case serviceError(ServiceError)
-
+        
         init(error: FormSessionKeyService.Error) {
             
             switch error {
@@ -280,4 +371,26 @@ private extension FormSessionKeyService.Result {
             case makeSessionKeyFailure
         }
     }
+}
+
+private func anySuccess(
+    codeValue: String = UUID().uuidString
+) -> FormSessionKeyService.CodeResult {
+    
+    .success(.init(codeValue: codeValue))
+}
+
+private func anySuccess(
+    publicServerSessionKey: String = UUID().uuidString,
+    eventID: String = UUID().uuidString,
+    sessionTTL: Int = 31
+) -> FormSessionKeyService.ProcessResult {
+    
+    .success(
+        .init(
+            publicServerSessionKey: publicServerSessionKey,
+            eventID: eventID,
+            sessionTTL: sessionTTL
+        )
+    )
 }

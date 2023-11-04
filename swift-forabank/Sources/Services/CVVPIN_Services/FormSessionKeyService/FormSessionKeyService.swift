@@ -88,6 +88,16 @@ extension FormSessionKeyService {
         public let eventID: EventID
         public let sessionTTL: SessionTTL
         
+        public init(
+            sessionKey: SessionKey,
+            eventID: EventID,
+            sessionTTL: SessionTTL
+        ) {
+            self.sessionKey = sessionKey
+            self.eventID = eventID
+            self.sessionTTL = sessionTTL
+        }
+        
         public typealias SessionTTL = Int
 
         public struct EventID {
