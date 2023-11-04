@@ -189,8 +189,118 @@ final class ChangePINServiceTests: XCTestCase {
         decryptSpy.complete(with: .success(UUID().uuidString))
         sut = nil
         decryptSpy.complete(with: .failure(anyError()), at: 1)
-
+        
         XCTAssert(receivedResults.isEmpty)
+    }
+    
+    // MARK: - changePIN
+    
+    func test_changePIN_shouldDeliverErrorONMakeJSONFailure() {
+        
+        let (sut, _, _, _, makeJSONSpy, _) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.serviceError(.makeJSONFailure))
+        ], on: {
+            makeJSONSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverErrorONChangeProcessInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.invalid(statusCode: statusCode, data: invalidData))
+        ], on: {
+            makeJSONSpy.complete(with: anySuccess())
+            changePINProcessSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverErrorONChangeProcessNetworkFailure() {
+        
+        let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.failure(.network)], on: {
+            
+            makeJSONSpy.complete(with: anySuccess())
+            changePINProcessSpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverErrorONChangeProcessRetryFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Process Failure"
+        let retryAttempts = 5
+        let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        ], on: {
+            makeJSONSpy.complete(with: anySuccess())
+            changePINProcessSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverErrorONChangeProcessServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Process Failure"
+        let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [
+            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        ], on: {
+            makeJSONSpy.complete(with: anySuccess())
+            changePINProcessSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_changePIN_shouldDeliverVoidOnSuccess() {
+        
+        let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        
+        expectChangePIN(sut, toDeliver: [.success(())], on: {
+            
+            makeJSONSpy.complete(with: anySuccess())
+            changePINProcessSpy.complete(with: anySuccess())
+        })
+    }
+    
+    func test_changePIN_shouldNotDeliverMakeJSONResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let makeJSONSpy: MakeJSONSpy
+        (sut, _, _, _, makeJSONSpy, _) = makeSUT()
+        var receivedResults = [SUT.ChangePINResult]()
+        
+        sut?.changePIN(for: anyCardID(), to: anyPIN(), otp: anyOTP()) {
+            
+            receivedResults.append($0)
+        }
+        sut = nil
+        makeJSONSpy.complete(with: anySuccess())
+    }
+    
+    func test_changePIN_shouldNotDeliverChangePINProcessResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let makeJSONSpy: MakeJSONSpy
+        let changePINProcessSpy: ChangePINProcessSpy
+        (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
+        var receivedResults = [SUT.ChangePINResult]()
+        
+        sut?.changePIN(for: anyCardID(), to: anyPIN(), otp: anyOTP()) {
+            
+            receivedResults.append($0)
+        }
+        makeJSONSpy.complete(with: anySuccess())
+        sut = nil
+        changePINProcessSpy.complete(with: .success(()))
     }
     
     // MARK: - Helpers
@@ -242,6 +352,33 @@ final class ChangePINServiceTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.getPINConfirmationCode {
+            
+            receivedResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        assert(
+            receivedResults.mapToEquatable(),
+            equals: expectedResults.mapToEquatable(),
+            file: file, line: line
+        )
+    }
+    
+    private func expectChangePIN(
+        _ sut: SUT,
+        toDeliver expectedResults: [SUT.ChangePINResult],
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var receivedResults = [SUT.ChangePINResult]()
+        let exp = expectation(description: "wait for completion")
+        
+        sut.changePIN(for: anyCardID(), to: anyPIN(), otp: anyOTP()) {
             
             receivedResults.append($0)
             exp.fulfill()
@@ -386,7 +523,7 @@ private extension ChangePINService.GetPINConfirmationCodeResult {
     func mapToEquatable() -> EquatableGetPINConfirmationCodeResult {
         
         self
-            .map { EquatableConfirmResponse(response: $0) }
+            .map(EquatableConfirmResponse.init)
             .mapError(EquatableError.init)
     }
     
@@ -425,7 +562,7 @@ private extension ChangePINService.GetPINConfirmationCodeResult {
                 
             case let .invalid(statusCode: statusCode, data: data):
                 self = .invalid(statusCode: statusCode, data: data)
-            
+                
             case .network:
                 self = .network
                 
@@ -471,4 +608,122 @@ private func anySuccess(
 ) -> ChangePINService.ConfirmProcessResult {
     
     .success(.init(eventID: eventID, phone: phone))
+}
+
+private func anySuccess(
+    eventID: String = UUID().uuidString,
+    phone: String = UUID().uuidString
+) -> ChangePINService.MakePINChangeJSONResult {
+    
+    .success((anySessionID(), anyData()))
+}
+
+func anySessionID(
+    sessionIDValue: String = UUID().uuidString
+) -> ChangePINService.SessionID {
+    
+    .init(sessionIDValue: sessionIDValue)
+}
+
+private func anySuccess(
+) -> ChangePINService.ChangePINProcessResult {
+    
+    .success(())
+}
+
+private extension Array where Element == ChangePINService.ChangePINResult {
+    
+    func mapToEquatable() -> [ChangePINService.ChangePINResult.EquatableChangePINSResult] {
+        
+        map { $0.mapToEquatable() }
+    }
+}
+
+private extension ChangePINService.ChangePINResult {
+    
+    func mapToEquatable() -> EquatableChangePINSResult {
+        
+        self
+            .map(EquatableVoid.init)
+            .mapError(EquatableChangePINError.init)
+    }
+    
+    typealias EquatableChangePINSResult = Swift.Result<EquatableVoid, EquatableChangePINError>
+    
+    struct EquatableVoid: Equatable {
+        
+        init(_ void: Void) {}
+    }
+    
+    enum EquatableChangePINError: Error & Equatable {
+        
+        case activationFailure
+        case authenticationFailure
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case server(statusCode: Int, errorMessage: String)
+        case serviceError(ServiceError)
+        
+        init(error: ChangePINService.Error) {
+            
+            switch error {
+            case .activationFailure:
+                self = .activationFailure
+                
+            case .authenticationFailure:
+                self = .authenticationFailure
+                
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+                
+            case .network:
+                self = .network
+                
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case let .serviceError(serviceError):
+                switch serviceError {
+                case .checkSessionFailure:
+                    self = .serviceError(.checkSessionFailure)
+                    
+                case .decryptionFailure:
+                    self = .serviceError(.decryptionFailure)
+                    
+                case .makeJSONFailure:
+                    self = .serviceError(.makeJSONFailure)
+                }
+            }
+        }
+        
+        enum ServiceError {
+            
+            case checkSessionFailure
+            case decryptionFailure
+            case makeJSONFailure
+        }
+    }
+}
+
+private func anyCardID() -> ChangePINService.CardID {
+    
+    .init(cardIDValue: 12345678909)
+}
+
+private func anyPIN(
+    pinValue: String = .init(UUID().uuidString.prefix(4))
+) -> ChangePINService.PIN {
+    
+    .init(pinValue: pinValue)
+}
+
+private func anyOTP(
+    otpValue: String = .init(UUID().uuidString.prefix(6))
+) -> ChangePINService.OTP {
+    
+    .init(otpValue: otpValue)
 }
