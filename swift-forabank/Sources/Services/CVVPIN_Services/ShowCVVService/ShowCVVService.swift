@@ -63,6 +63,7 @@ extension ShowCVVService {
         case activationFailure
         case authenticationFailure
         case invalid(statusCode: Int, data: Data)
+        #warning("rename `connectivity` to `network` for consistency")
         case connectivity
         case server(statusCode: Int, errorMessage: String)
         case serviceError(ServiceError)
