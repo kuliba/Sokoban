@@ -19,7 +19,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         XCTAssertEqual(makeSessionKeySpy.callCount, 0)
     }
     
-    func test_init_shouldDeliverErrorOnPrepareKeyExchangeFailure() {
+    func test_authenticateWithPublicKey_shouldDeliverErrorOnPrepareKeyExchangeFailure() {
         
         let (sut, prepareKeyExchangeSpy, _, _) = makeSUT()
         
@@ -30,7 +30,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldDeliverErrorOnProcessInvalidFailure() {
+    func test_authenticateWithPublicKey_shouldDeliverErrorOnProcessInvalidFailure() {
         
         let statusCode = 500
         let invalidData = anyData()
@@ -44,7 +44,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldDeliverErrorOnProcessNetworkFailure() {
+    func test_authenticateWithPublicKey_shouldDeliverErrorOnProcessNetworkFailure() {
         
         let (sut, prepareKeyExchangeSpy, processSpy, _) = makeSUT()
         
@@ -55,7 +55,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldDeliverErrorOnProcessServerFailure() {
+    func test_authenticateWithPublicKey_shouldDeliverErrorOnProcessServerFailure() {
         
         let statusCode = 500
         let errorMessage = "Process Failure"
@@ -69,7 +69,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldDeliverErrorOnMakeSessionKeyFailure() {
+    func test_authenticateWithPublicKey_shouldDeliverErrorOnMakeSessionKeyFailure() {
         
         let (sut, prepareKeyExchangeSpy, processSpy, makeSessionKeySpy) = makeSUT()
         
@@ -82,7 +82,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldDeliverSuccessOnSuccess() {
+    func test_authenticateWithPublicKey_shouldDeliverSuccessOnSuccess() {
         
         let sessionID: String = UUID().uuidString
         let publicServerSessionKey: String = UUID().uuidString
@@ -108,7 +108,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         })
     }
     
-    func test_init_shouldNotDeliverPrepareKeyExchangeResultOnInstanceDeallocation() {
+    func test_authenticateWithPublicKey_shouldNotDeliverPrepareKeyExchangeResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
@@ -122,7 +122,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         XCTAssert(receivedResults.isEmpty)
     }
     
-    func test_init_shouldNotDeliverProcessResultOnInstanceDeallocation() {
+    func test_authenticateWithPublicKey_shouldNotDeliverProcessResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
@@ -138,7 +138,7 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         XCTAssert(receivedResults.isEmpty)
     }
     
-    func test_init_shouldNotDeliverMakeSessionKeySpyResultOnInstanceDeallocation() {
+    func test_authenticateWithPublicKey_shouldNotDeliverMakeSessionKeySpyResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let prepareKeyExchangeSpy: PrepareKeyExchangeSpy
@@ -175,9 +175,9 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         let makeSessionKeySpy = MakeSessionKeySpy()
         
         let sut = SUT(
-            prepareKeyExchange: prepareKeyExchangeSpy.prepare,
-            process: processSpy.process,
-            makeSessionKey: makeSessionKeySpy.make
+            prepareKeyExchange: prepareKeyExchangeSpy.prepare(completion:),
+            process: processSpy.process(_:completion:),
+            makeSessionKey: makeSessionKeySpy.make(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line:  line)
