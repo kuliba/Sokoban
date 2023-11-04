@@ -82,7 +82,7 @@ final class ChangePINServiceTests: XCTestCase {
         })
     }
     
-    func test_getPINConfirmationCode_shouldDeliverErrorOnDecryptFailure() {
+    func test_getPINConfirmationCode_shouldDeliverErrorOnEventIDDecryptFailure() {
         
         let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
         
@@ -92,6 +92,21 @@ final class ChangePINServiceTests: XCTestCase {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverErrorOnPhoneDecryptFailure() {
+        
+        let otpEventID = UUID().uuidString
+        let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .failure(.serviceError(.decryptionFailure))
+        ], on: {
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: anySuccess())
+            decryptSpy.complete(with: .success(otpEventID))
+            decryptSpy.complete(with: .failure(anyError()), at: 1)
         })
     }
     
@@ -109,6 +124,73 @@ final class ChangePINServiceTests: XCTestCase {
             decryptSpy.complete(with: .success(otpEventID))
             decryptSpy.complete(with: .success(phone), at: 1)
         })
+    }
+    
+    func test_getPINConfirmationCode_shouldNotDeliverAuthenticateResultOnInstanceDeaalocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        (sut, authenticateSpy, _, _, _, _) = makeSUT()
+        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
+        
+        sut?.getPINConfirmationCode { receivedResults.append($0) }
+        sut = nil
+        authenticateSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_getPINConfirmationCode_shouldNotDeliverConfirmProcessResultOnInstanceDeaalocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let confirmProcessSpy: ConfirmProcessSpy
+        (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
+        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
+        
+        sut?.getPINConfirmationCode { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        sut = nil
+        confirmProcessSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_getPINConfirmationCode_shouldNotDeliverEventIDDecryptionResultOnInstanceDeaalocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let confirmProcessSpy: ConfirmProcessSpy
+        let decryptSpy: DecryptSpy
+        (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
+        
+        sut?.getPINConfirmationCode { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        confirmProcessSpy.complete(with: anySuccess())
+        sut = nil
+        decryptSpy.complete(with: .failure(anyError()))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_getPINConfirmationCode_shouldNotDeliverPhoneDecryptionResultOnInstanceDeaalocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let confirmProcessSpy: ConfirmProcessSpy
+        let decryptSpy: DecryptSpy
+        (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
+        
+        sut?.getPINConfirmationCode { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        confirmProcessSpy.complete(with: anySuccess())
+        decryptSpy.complete(with: .success(UUID().uuidString))
+        sut = nil
+        decryptSpy.complete(with: .failure(anyError()), at: 1)
+
+        XCTAssert(receivedResults.isEmpty)
     }
     
     // MARK: - Helpers
