@@ -12,10 +12,10 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, authenticateSpy, publicRSAKeyDecryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy) = makeSUT()
+        let (_, authenticateSpy, decryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy) = makeSUT()
         
         XCTAssertNoDiff(authenticateSpy.callCount, 0)
-        XCTAssertNoDiff(publicRSAKeyDecryptSpy.callCount, 0)
+        XCTAssertNoDiff(decryptSpy.callCount, 0)
         XCTAssertNoDiff(confirmProcessSpy.callCount, 0)
         XCTAssertNoDiff(makePINChangeJSONSpy.callCount, 0)
         XCTAssertNoDiff(changePINProcessSpy.callCount, 0)
@@ -82,14 +82,14 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_getPINConfirmationCode_shouldDeliverErrorOnDecryptFailure() {
         
-        let (sut, authenticateSpy, publicRSAKeyDecryptSpy, confirmProcessSpy, _, _) = makeSUT()
+        let (sut, authenticateSpy, decryptSpy, confirmProcessSpy, _, _) = makeSUT()
         
         expect(sut, toDeliver: [
             .failure(.serviceError(.decryptionFailure))
         ], on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
-            publicRSAKeyDecryptSpy.complete(with: .failure(anyError()))
+            decryptSpy.complete(with: .failure(anyError()))
         })
     }
     
@@ -103,19 +103,19 @@ final class ChangePINServiceTests: XCTestCase {
     ) -> (
         sut: SUT,
         authenticateSpy: AuthenticateSpy,
-        publicRSAKeyDecryptSpy: PublicRSAKeyDecryptSpy,
+        decryptSpy: PublicRSAKeyDecryptSpy,
         confirmProcessSpy: ConfirmProcessSpy,
         makePINChangeJSONSpy: MakePINChangeJSONSpy,
         changePINProcessSpy: ChangePINProcessSpy
     ) {
         let authenticateSpy = AuthenticateSpy()
-        let publicRSAKeyDecryptSpy = PublicRSAKeyDecryptSpy()
+        let decryptSpy = PublicRSAKeyDecryptSpy()
         let confirmProcessSpy = ConfirmProcessSpy()
         let makePINChangeJSONSpy = MakePINChangeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
             authenticate: authenticateSpy.authenticate(completion:),
-            publicRSAKeyDecrypt: publicRSAKeyDecryptSpy.decrypt(_:completion:),
+            publicRSAKeyDecrypt: decryptSpy.decrypt(_:completion:),
             confirmProcess: confirmProcessSpy.process(_:completion:),
             makePINChangeJSON: makePINChangeJSONSpy.make(cardID:pin:otp:completion:),
             changePINProcess: changePINProcessSpy.process(_:completion:)
@@ -123,12 +123,12 @@ final class ChangePINServiceTests: XCTestCase {
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(authenticateSpy, file: file, line: line)
-        trackForMemoryLeaks(publicRSAKeyDecryptSpy, file: file, line: line)
+        trackForMemoryLeaks(decryptSpy, file: file, line: line)
         trackForMemoryLeaks(confirmProcessSpy, file: file, line: line)
         trackForMemoryLeaks(makePINChangeJSONSpy, file: file, line: line)
         trackForMemoryLeaks(changePINProcessSpy, file: file, line: line)
         
-        return (sut, authenticateSpy, publicRSAKeyDecryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy)
+        return (sut, authenticateSpy, decryptSpy, confirmProcessSpy, makePINChangeJSONSpy, changePINProcessSpy)
     }
     
     private func expect(
