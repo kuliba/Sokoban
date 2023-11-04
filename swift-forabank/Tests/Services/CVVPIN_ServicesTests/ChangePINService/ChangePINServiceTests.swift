@@ -104,13 +104,13 @@ final class ChangePINServiceTests: XCTestCase {
         sut: SUT,
         authenticateSpy: AuthenticateSpy,
         confirmProcessSpy: ConfirmProcessSpy,
-        decryptSpy: PublicRSAKeyDecryptSpy,
+        decryptSpy: DecryptSpy,
         makePINChangeJSONSpy: MakePINChangeJSONSpy,
         changePINProcessSpy: ChangePINProcessSpy
     ) {
         let authenticateSpy = AuthenticateSpy()
         let confirmProcessSpy = ConfirmProcessSpy()
-        let decryptSpy = PublicRSAKeyDecryptSpy()
+        let decryptSpy = DecryptSpy()
         let makePINChangeJSONSpy = MakePINChangeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
@@ -178,7 +178,7 @@ final class ChangePINServiceTests: XCTestCase {
         }
     }
     
-    private final class PublicRSAKeyDecryptSpy {
+    private final class DecryptSpy {
         
         typealias Message = (payload: String, completion: SUT.PublicRSAKeyDecryptCompletion)
         
