@@ -119,6 +119,36 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
+    func test_activate_shouldNotDeliverGetCodeResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let getCodeSpy: GetCodeSpy
+        (sut, getCodeSpy, _, _) = makeSUT()
+        var receivedResults = [SUT.ActivateResult]()
+
+        sut?.activate { receivedResults.append($0) }
+        sut = nil
+        getCodeSpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_activate_shouldNotDeliverFormSessionKeyResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let getCodeSpy: GetCodeSpy
+        let formSessionKeySpy: FormSessionKeySpy
+        (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        var receivedResults = [SUT.ActivateResult]()
+
+        sut?.activate { receivedResults.append($0) }
+        getCodeSpy.complete(with: anySuccess())
+        sut = nil
+        formSessionKeySpy.complete(with: anySuccess())
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = CVVPINFunctionalityActivationService
