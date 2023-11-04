@@ -435,13 +435,6 @@ private extension CVVPINFunctionalityActivationService.ActivateResult {
                 self = .serviceFailure
             }
         }
-        
-        enum ServiceError {
-            
-            case checkSessionFailure
-            case decryptionFailure
-            case makeJSONFailure
-        }
     }
 }
 
