@@ -23,7 +23,7 @@ final class ShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnAuthenticateActivationFailure() {
         
         let (sut, authenticateSpy, _, _, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.activationFailure)], on: {
             
             authenticateSpy.complete(with: .failure(.activationFailure))
@@ -33,7 +33,7 @@ final class ShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnAuthenticateAuthenticationFailure() {
         
         let (sut, authenticateSpy, _, _, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.authenticationFailure)], on: {
             
             authenticateSpy.complete(with: .failure(.authenticationFailure))
@@ -43,7 +43,7 @@ final class ShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnMakeJSONFailure() {
         
         let (sut, authenticateSpy, makeJSONSpy, _, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.serviceError(.makeJSONFailure))], on: {
             
             authenticateSpy.complete(with: anySuccess())
@@ -56,7 +56,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let statusCode = 500
         let invalidData = anyData()
         let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.invalid(statusCode: statusCode, data: invalidData))], on: {
             
             authenticateSpy.complete(with: anySuccess())
@@ -68,7 +68,7 @@ final class ShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnProcessConnectivityFailure() {
         
         let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.connectivity)], on: {
             
             authenticateSpy.complete(with: anySuccess())
@@ -82,12 +82,39 @@ final class ShowCVVServiceTests: XCTestCase {
         let statusCode = 500
         let errorMessage = "Process Failure"
         let (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
-
+        
         expect(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
             
             authenticateSpy.complete(with: anySuccess())
             makeJSONSpy.complete(with: anySuccess())
             processSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverErrorOnDecryptCVVFailure() {
+        
+        let (sut, authenticateSpy, makeJSONSpy, processSpy, decryptCVVSpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.serviceError(.decryptionFailure))], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: anySuccess())
+            processSpy.complete(with: anySuccess())
+            decryptCVVSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_showCVV_shouldDeliverSuccessOnSuccess() {
+        
+        let cvvValue = "468"
+        let (sut, authenticateSpy, makeJSONSpy, processSpy, decryptCVVSpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.success(.init(cvvValue: cvvValue))], on: {
+            
+            authenticateSpy.complete(with: anySuccess())
+            makeJSONSpy.complete(with: anySuccess())
+            processSpy.complete(with: anySuccess())
+            decryptCVVSpy.complete(with: .success(.init(cvvValue: cvvValue)))
         })
     }
     
@@ -97,7 +124,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let authenticateSpy: AuthenticateSpy
         (sut, authenticateSpy, _, _, _) = makeSUT()
         var receivedResults = [SUT.Result]()
-
+        
         sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
         sut = nil
         authenticateSpy.complete(with: .failure(.activationFailure))
@@ -112,7 +139,7 @@ final class ShowCVVServiceTests: XCTestCase {
         let makeJSONSpy: MakeJSONSpy
         (sut, authenticateSpy, makeJSONSpy, _, _) = makeSUT()
         var receivedResults = [SUT.Result]()
-
+        
         sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
         authenticateSpy.complete(with: anySuccess())
         sut = nil
@@ -129,12 +156,32 @@ final class ShowCVVServiceTests: XCTestCase {
         let processSpy: ProcessSpy
         (sut, authenticateSpy, makeJSONSpy, processSpy, _) = makeSUT()
         var receivedResults = [SUT.Result]()
-
+        
         sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
         authenticateSpy.complete(with: anySuccess())
         makeJSONSpy.complete(with: anySuccess())
         sut = nil
         processSpy.complete(with: .failure(.connectivity))
+        
+        XCTAssert(receivedResults.isEmpty)
+    }
+    
+    func test_showCVV_shouldNotDeliverDecryptCVVResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let authenticateSpy: AuthenticateSpy
+        let makeJSONSpy: MakeJSONSpy
+        let processSpy: ProcessSpy
+        let decryptCVVSpy: DecryptCVVSpy
+        (sut, authenticateSpy, makeJSONSpy, processSpy, decryptCVVSpy) = makeSUT()
+        var receivedResults = [SUT.Result]()
+        
+        sut?.showCVV(cardID: anyCardID()) { receivedResults.append($0) }
+        authenticateSpy.complete(with: anySuccess())
+        makeJSONSpy.complete(with: anySuccess())
+        processSpy.complete(with: anySuccess())
+        sut = nil
+        decryptCVVSpy.complete(with: .failure(anyError()))
         
         XCTAssert(receivedResults.isEmpty)
     }
@@ -200,9 +247,9 @@ final class ShowCVVServiceTests: XCTestCase {
             file: file, line: line
         )
     }
-
+    
     private final class AuthenticateSpy {
-                
+        
         private(set) var completions = [SUT.AuthenticateCompletion]()
         
         var callCount: Int { completions.count }
@@ -349,7 +396,7 @@ private extension ShowCVVService.Result {
                 
             case .connectivity:
                 self = .connectivity
-                                
+                
             case let .server(statusCode: statusCode, errorMessage: errorMessage):
                 self = .server(statusCode: statusCode, errorMessage: errorMessage)
                 
@@ -384,4 +431,11 @@ private func anySuccess(
 ) -> ShowCVVService.MakeJSONResult {
     
     .success(data)
+}
+
+private func anySuccess(
+    encryptedCVVValue: String = UUID().uuidString
+) -> ShowCVVService.ProcessResult {
+    
+    .success(.init(encryptedCVVValue: encryptedCVVValue))
 }

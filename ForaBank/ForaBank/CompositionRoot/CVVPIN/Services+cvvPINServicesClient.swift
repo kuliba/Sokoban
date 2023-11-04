@@ -756,7 +756,7 @@ extension Services {
                     )
                     completion(.success(.init(cvvValue: cvvValue)))
                 } catch {
-                    completion(.failure(.serviceError(.makeJSONFailure)))
+                    completion(.failure(error))
                 }
             }
         }

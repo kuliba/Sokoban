@@ -21,7 +21,7 @@ public final class ShowCVVService {
     public typealias ProcessCompletion = (ProcessResult) -> Void
     public typealias Process = (Payload, @escaping ProcessCompletion) -> Void
     
-    public typealias DecryptCVVResult = Swift.Result<CVV, Error>
+    public typealias DecryptCVVResult = Swift.Result<CVV, Swift.Error>
     public typealias DecryptCVVCompletion = (DecryptCVVResult) -> Void
     public typealias DecryptCVV = (EncryptedCVV, @escaping DecryptCVVCompletion) -> Void
     
