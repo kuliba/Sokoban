@@ -12,12 +12,12 @@ final class ChangePINServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, authenticateSpy, confirmProcessSpy, decryptSpy, makePINChangeJSONSpy, changePINProcessSpy) = makeSUT()
+        let (_, authenticateSpy, confirmProcessSpy, decryptSpy, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
         XCTAssertNoDiff(authenticateSpy.callCount, 0)
         XCTAssertNoDiff(decryptSpy.callCount, 0)
         XCTAssertNoDiff(confirmProcessSpy.callCount, 0)
-        XCTAssertNoDiff(makePINChangeJSONSpy.callCount, 0)
+        XCTAssertNoDiff(makeJSONSpy.callCount, 0)
         XCTAssertNoDiff(changePINProcessSpy.callCount, 0)
     }
     
@@ -105,19 +105,19 @@ final class ChangePINServiceTests: XCTestCase {
         authenticateSpy: AuthenticateSpy,
         confirmProcessSpy: ConfirmProcessSpy,
         decryptSpy: DecryptSpy,
-        makePINChangeJSONSpy: MakePINChangeJSONSpy,
+        makeJSONSpy: MakeJSONSpy,
         changePINProcessSpy: ChangePINProcessSpy
     ) {
         let authenticateSpy = AuthenticateSpy()
         let confirmProcessSpy = ConfirmProcessSpy()
         let decryptSpy = DecryptSpy()
-        let makePINChangeJSONSpy = MakePINChangeJSONSpy()
+        let makeJSONSpy = MakeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
             authenticate: authenticateSpy.authenticate(completion:),
             publicRSAKeyDecrypt: decryptSpy.decrypt(_:completion:),
             confirmProcess: confirmProcessSpy.process(_:completion:),
-            makePINChangeJSON: makePINChangeJSONSpy.make(cardID:pin:otp:completion:),
+            makePINChangeJSON: makeJSONSpy.make(cardID:pin:otp:completion:),
             changePINProcess: changePINProcessSpy.process(_:completion:)
         )
         
@@ -125,10 +125,10 @@ final class ChangePINServiceTests: XCTestCase {
         trackForMemoryLeaks(authenticateSpy, file: file, line: line)
         trackForMemoryLeaks(decryptSpy, file: file, line: line)
         trackForMemoryLeaks(confirmProcessSpy, file: file, line: line)
-        trackForMemoryLeaks(makePINChangeJSONSpy, file: file, line: line)
+        trackForMemoryLeaks(makeJSONSpy, file: file, line: line)
         trackForMemoryLeaks(changePINProcessSpy, file: file, line: line)
         
-        return (sut, authenticateSpy, confirmProcessSpy, decryptSpy, makePINChangeJSONSpy, changePINProcessSpy)
+        return (sut, authenticateSpy, confirmProcessSpy, decryptSpy, makeJSONSpy, changePINProcessSpy)
     }
     
     private func expect(
@@ -224,7 +224,7 @@ final class ChangePINServiceTests: XCTestCase {
         }
     }
     
-    private final class MakePINChangeJSONSpy {
+    private final class MakeJSONSpy {
         
         typealias Message = (payload: (SUT.CardID, SUT.PIN, SUT.OTP), completion: SUT.MakePINChangeJSONCompletion)
         
