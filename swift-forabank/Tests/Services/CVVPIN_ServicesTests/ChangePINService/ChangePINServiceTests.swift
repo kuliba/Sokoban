@@ -21,6 +21,8 @@ final class ChangePINServiceTests: XCTestCase {
         XCTAssertNoDiff(changePINProcessSpy.callCount, 0)
     }
     
+    // MARK: - getPINConfirmationCode
+    
     func test_getPINConfirmationCode_shouldDeliverErrorOnAuthenticateActivationFailure() {
         
         let (sut, authenticateSpy, _, _, _, _) = makeSUT()
@@ -90,6 +92,22 @@ final class ChangePINServiceTests: XCTestCase {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverResponseOnSuccess() {
+        
+        let otpEventID = UUID().uuidString
+        let phone = "+7..4589"
+        let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
+        
+        expect(sut, toDeliver: [
+            .success(.init(otpEventID: .init(eventIDValue: otpEventID), phone: phone))
+        ], on: {
+            authenticateSpy.complete(with: anySuccess())
+            confirmProcessSpy.complete(with: anySuccess())
+            decryptSpy.complete(with: .success(otpEventID))
+            decryptSpy.complete(with: .success(phone), at: 1)
         })
     }
     
