@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
@@ -24,20 +25,30 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var bottomSheet: BottomSheet?
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
+    let businessLogic: BusinessLogic?
     
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
+    init(
+        navButtonsRight: [NavigationBarButtonViewModel],
+        sections: [MainSectionViewModel],
+        businessLogic: BusinessLogic,
+        model: Model = .emptyMock
+    ) {
         
         self.navButtonsRight = navButtonsRight
         self.sections = sections
+        self.businessLogic = businessLogic
         self.model = model
     }
     
-    init(_ model: Model) {
+    init(
+        _ model: Model,
+        businessLogic: BusinessLogic
+    ) {
         
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
@@ -48,6 +59,7 @@ class MainViewModel: ObservableObject, Resetable {
                          MainSectionAtmView.ViewModel.initial]
         
         self.model = model
+        self.businessLogic = businessLogic
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -390,7 +402,11 @@ class MainViewModel: ObservableObject, Resetable {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+//                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+                        if let businessLogic {
+                            
+                            self.link = .paymentSticker(.init(businessLogic: businessLogic))
+                        }
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)
@@ -923,6 +939,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
+        case paymentSticker(OperationStateViewModel)
 
     }
     

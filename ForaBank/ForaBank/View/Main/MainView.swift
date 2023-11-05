@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ScrollViewProxy
+import PaymentSticker
 
 struct MainView: View {
     
@@ -168,6 +169,9 @@ struct MainView: View {
             PaymentsServicesOperatorsView(viewModel: viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
+            
+        case let .paymentSticker(viewModel):
+            OperationView(model: viewModel)
         }
     }
     
@@ -335,9 +339,11 @@ extension MainViewModel {
                    MainSectionFastOperationView.ViewModel.sample,
                    MainSectionPromoView.ViewModel.sample,
                    MainSectionCurrencyMetallView.ViewModel.sample,
-                   MainSectionOpenProductView.ViewModel.sample])
+                   MainSectionOpenProductView.ViewModel.sample],
+        operationViewModel: .preview)
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample],
+                                              operationViewModel: .preview)
     
     static let sampleOldCurrency = MainViewModel(
                                     navButtonsRight: [.init(icon: .ic24Search, action: {}),
@@ -346,5 +352,6 @@ extension MainViewModel {
                                                MainSectionFastOperationView.ViewModel.sample,
                                                MainSectionPromoView.ViewModel.sample,
                                                MainSectionCurrencyView.ViewModel.sample,
-                                               MainSectionOpenProductView.ViewModel.sample])
+                                               MainSectionOpenProductView.ViewModel.sample],
+                                    operationViewModel: .preview)
 }
