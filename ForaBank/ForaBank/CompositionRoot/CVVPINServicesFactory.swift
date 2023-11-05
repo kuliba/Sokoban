@@ -14,7 +14,8 @@ extension CVVPINServicesFactory {
     
     static func makeClient(
         httpClient: HTTPClient,
-        logger: LoggerAgentProtocol
+        logger: LoggerAgentProtocol,
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>
     ) -> CVVPINServicesClient {
         
         let cryptoLog = { logger.log(level: $0, category: .crypto, message: $1, file: $2, line: $3) }
@@ -37,16 +38,15 @@ extension CVVPINServicesFactory {
             log: cryptoLog
         )
         
-        let (cvvPINServicesClient, _) = Services.cvvPINServicesClient(
+        return Services.cvvPINServicesClient(
             httpClient: httpClient,
             logger: logger,
+            rsaKeyPairStore: rsaKeyPairStore,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
             ephemeralLifespan: .ephemeralLifespan
         )
-        
-        return cvvPINServicesClient
     }
 }
 

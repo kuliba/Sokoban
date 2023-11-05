@@ -18,33 +18,26 @@ extension Services {
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
         rsaKeyPairLifespan: TimeInterval,
         ephemeralLifespan: TimeInterval
-    ) -> (
-        client: CVVPINServicesClient,
-        removeRSAKeyPair: () -> Void
-    ) {
+    ) -> CVVPINServicesClient {
         
         let cacheLog = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         let networkLog = { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
         
-        // MARK: Configure Infra: Persistent Stores & Loaders
-        
         typealias RSAKeyPair = RSADomain.KeyPair
-        
-        let persistentRSAKeyPairStore = LoggingStoreDecorator(
-            decoratee: KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa),
-            log: cacheLog
-        )
+
+        // MARK: Configure Infra: Stores & Loaders
         
         let rsaKeyPairLoader = loggingLoaderDecorator(
-            store: persistentRSAKeyPairStore
+            store: rsaKeyPairStore
         )
         
-        // MARK: Configure Infra: Ephemeral Stores & Loaders
+        // MARK: Ephemeral Stores & Loaders
         
         #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
@@ -109,7 +102,7 @@ extension Services {
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            clearCache: persistentRSAKeyPairStore.deleteCacheIgnoringResult
+            clearCache: rsaKeyPairStore.deleteCacheIgnoringResult
         )
         
         let activationService = CVVPINFunctionalityActivationService(
@@ -167,14 +160,9 @@ extension Services {
             log: logger.log
         )
                 
-        return (cvvPINServicesClient, removeRSAKeyPair)
+        return cvvPINServicesClient
         
         // MARK: - Helpers
-        
-        func removeRSAKeyPair() {
-            
-            persistentRSAKeyPairStore.deleteCacheIgnoringResult()
-        }
         
         func loggingLoaderDecorator<T>(
             store: any Store<T>

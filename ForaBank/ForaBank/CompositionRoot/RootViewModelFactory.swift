@@ -27,7 +27,8 @@ enum RootViewModelFactory {
         
         let cvvPINServicesClient = CVVPINServicesFactory.makeClient(
             httpClient: httpClient,
-            logger: logger
+            logger: logger,
+            rsaKeyPairStore: rsaKeyPairStore
         )
         
         let productProfileViewModelFactory = {
