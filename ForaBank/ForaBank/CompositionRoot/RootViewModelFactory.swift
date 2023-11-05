@@ -13,13 +13,12 @@ enum RootViewModelFactory {
     typealias Crypto = ForaCrypto.Crypto
     
     static func make(
-        with model: Model
+        with model: Model,
+        logger: LoggerAgentProtocol
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
-        
-        let logger = LoggerAgent.shared
-
+    
         let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
             logger: logger
         )

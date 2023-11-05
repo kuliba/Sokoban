@@ -15,7 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private lazy var model: Model = AppDelegate.shared.model
     private lazy var rootViewModel = RootViewModelFactory.make(
-        with: model
+        with: model,
+        logger: LoggerAgent.shared
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
