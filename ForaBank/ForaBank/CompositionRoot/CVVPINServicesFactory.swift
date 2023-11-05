@@ -23,7 +23,7 @@ extension CVVPINServicesFactory {
         let crypto = LiveExtraLoggingCVVPINCrypto(
             _transportKey: ForaCrypto.Crypto.transportKey,
             _processingKey: ForaCrypto.Crypto.processingKey,
-            log: { cryptoLog(.error, $0, $1, $2) }
+            errorLog: { cryptoLog(.error, $0, $1, $2) }
         )
         let cvvPINCrypto = LoggingCVVPINCryptoDecorator(
             decoratee: crypto,
@@ -32,7 +32,6 @@ extension CVVPINServicesFactory {
         
 #warning("fix lifespans before release")
         let jsonMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
-        
         let cvvPINJSONMaker = LoggingCVVPINJSONMakerDecorator(
             decoratee: jsonMaker,
             log: cryptoLog
@@ -60,7 +59,7 @@ private extension LiveExtraLoggingCVVPINCrypto{
     init(
         _transportKey: @escaping () throws -> SecKey,
         _processingKey: @escaping () throws -> SecKey,
-        log: @escaping Log
+        errorLog: @escaping Log
     ) {
         self.init(
             transportKey: {
@@ -70,7 +69,7 @@ private extension LiveExtraLoggingCVVPINCrypto{
                         key: _transportKey()
                     )
                 } catch {
-                    log("Transport Key loading failure: \(error).", #file, #line)
+                    errorLog("Transport Key loading failure: \(error).", #file, #line)
                     throw error
                 }
             },
@@ -81,11 +80,11 @@ private extension LiveExtraLoggingCVVPINCrypto{
                         key: _processingKey()
                     )
                 } catch {
-                    log("Processing Key loading failure: \(error).", #file, #line)
+                    errorLog("Processing Key loading failure: \(error).", #file, #line)
                     throw error
                 }
             },
-            log: log
+            log: errorLog
         )
     }
 }

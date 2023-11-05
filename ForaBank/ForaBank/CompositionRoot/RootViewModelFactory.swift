@@ -17,6 +17,7 @@ enum RootViewModelFactory {
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
+        
         let logger = LoggerAgent.shared
 
         let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
