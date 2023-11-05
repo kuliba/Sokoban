@@ -374,7 +374,7 @@
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
-		2A2AB2F82AF77E0E004023CD /* CVVPINServicesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */; };
+		2A2AB2F82AF77E0E004023CD /* Services+makeCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+makeCVVPINServicesClient.swift */; };
 		2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E32F629A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift */; };
 		2A2E32F929A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E32F829A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift */; };
 		2A2E32FB29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E32FA29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift */; };
@@ -2413,7 +2413,7 @@
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
-		2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesFactory.swift; sourceTree = "<group>"; };
+		2A2AB2F72AF77E0E004023CD /* Services+makeCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A2E32F629A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsMobileConnectionTests.swift"; sourceTree = "<group>"; };
 		2A2E32F829A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsMobileConnection.swift"; sourceTree = "<group>"; };
 		2A2E32FA29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferMobileConnection.swift"; sourceTree = "<group>"; };
@@ -5642,6 +5642,7 @@
 		2A77B64D2ADFCCB80022600F /* CVVPIN */ = {
 			isa = PBXGroup;
 			children = (
+				2A2AB2F72AF77E0E004023CD /* Services+makeCVVPINServicesClient.swift */,
 				2A01F9412AE512170064F15B /* Services+cvvPINServicesClient.swift */,
 				2A754A7B2AEFE620002FED0A /* ComposedCVVPINService */,
 				2A9E881E2AE9166500551DF7 /* Crypto */,
@@ -5991,7 +5992,6 @@
 			isa = PBXGroup;
 			children = (
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
-				2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */,
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 			);
 			path = CompositionRoot;
@@ -12498,7 +12498,7 @@
 				2A649E0D2A1CE2F900B7EA8B /* TextFieldComponentTextFieldConfig+Extension.swift in Sources */,
 				2A754A792AEFE24C002FED0A /* Data+isEmptyJSON.swift in Sources */,
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
-				2A2AB2F82AF77E0E004023CD /* CVVPINServicesFactory.swift in Sources */,
+				2A2AB2F82AF77E0E004023CD /* Services+makeCVVPINServicesClient.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
 				0CA1CDE52840726F00021671 /* ContactsAgentProtocol.swift in Sources */,

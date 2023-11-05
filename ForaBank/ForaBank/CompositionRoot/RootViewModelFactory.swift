@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
-import ForaCrypto
 import Foundation
 
 enum RootViewModelFactory {}
@@ -83,7 +82,7 @@ private extension RootViewModelFactory {
         
         let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
         
-        let cvvPINServicesClient = CVVPINServicesFactory.makeCVVPINServicesClient(
+        let cvvPINServicesClient = Services.makeCVVPINServicesClient(
             httpClient: httpClient,
             logger: logger,
             rsaKeyPairStore: rsaKeyPairStore

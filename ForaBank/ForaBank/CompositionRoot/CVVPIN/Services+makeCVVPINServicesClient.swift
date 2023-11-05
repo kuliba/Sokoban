@@ -1,5 +1,5 @@
 //
-//  CVVPINServicesFactory.swift
+//  Services+makeCVVPINServicesClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 05.11.2023.
@@ -8,9 +8,7 @@
 import ForaCrypto
 import Foundation
 
-enum CVVPINServicesFactory {}
-
-extension CVVPINServicesFactory {
+extension Services {
     
     static func makeCVVPINServicesClient(
         httpClient: HTTPClient,
