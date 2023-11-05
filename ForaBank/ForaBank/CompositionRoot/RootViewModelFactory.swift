@@ -17,31 +17,17 @@ enum RootViewModelFactory {
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
-        
-        let log = LoggerAgent.shared.log
-        
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            _transportKey: Crypto.transportKey,
-            _processingKey: Crypto.processingKey,
-            log: { log(.error, .crypto, $0, $1, $2) }
+        let logger = LoggerAgent.shared
+
+        let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
+            logger: logger
         )
         
-        let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
+        let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
         
-#warning("fix lifespans before release")
-        let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
+        let cvvPINServicesClient = CVVPINServicesFactory.makeClient(
             httpClient: httpClient,
-            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
-                decoratee: cvvPINCrypto,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
-            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
-                decoratee: cvvPINJSONMaker,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
-            rsaKeyPairLifespan: .rsaKeyPairLifespan,
-            ephemeralLifespan: .ephemeralLifespan,
-            log: { log($0, $1, $2, $3, $4) }
+            logger: logger
         )
         
         let productProfileViewModelFactory = {
@@ -80,68 +66,5 @@ enum RootViewModelFactory {
             model,
             onExit: onExit
         )
-    }
-}
-
-extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
-extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
-
-// MARK: - Adapters
-
-private extension LiveExtraLoggingCVVPINCrypto{
-    
-    init(
-        _transportKey: @escaping () throws -> SecKey,
-        _processingKey: @escaping () throws -> SecKey,
-        log: @escaping Log
-    ) {
-        self.init(
-            transportKey: {
-                
-                do {
-                    return try LiveExtraLoggingCVVPINCrypto.TransportKey(
-                        key: _transportKey()
-                    )
-                } catch {
-                    log("Transport Key loading failure: \(error).", #file, #line)
-                    throw error
-                }
-            },
-            processingKey: {
-                
-                do {
-                    return try LiveExtraLoggingCVVPINCrypto.ProcessingKey(
-                        key: _processingKey()
-                    )
-                } catch {
-                    log("Processing Key loading failure: \(error).", #file, #line)
-                    throw error
-                }
-            },
-            log: log
-        )
-    }
-}
-
-// MARK: - Lifespans
-
-private extension TimeInterval {
-    
-    static var rsaKeyPairLifespan: Self {
-        
-#if RELEASE
-        15_778_463
-#else
-        600
-#endif
-    }
-    
-    static var ephemeralLifespan: Self {
-        
-#if RELEASE
-        15
-#else
-        30
-#endif
     }
 }

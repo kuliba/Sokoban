@@ -6,7 +6,6 @@
 //
 
 import CVVPIN_Services
-import ForaCrypto
 import Foundation
 import GenericRemoteService
 
@@ -31,27 +30,29 @@ extension Services {
         removeRSAKeyPair: () -> Void
     ) {
         
-        // MARK: Configure Infra: Persistent Stores
+        // MARK: Configure Infra: Persistent Stores & Loaders
         
         typealias RSAKeyPair = RSADomain.KeyPair
         
-        let persistentRSAKeyPairStore = KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa)
+        let persistentRSAKeyPairStore = LoggingStoreDecorator(
+            decoratee: KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa),
+            log: { log($0, .cache, $1, $2, $3) }
+        )
         
-        // MARK: Configure Infra: Ephemeral Stores
+        let rsaKeyPairLoader = loggingLoaderDecorator(
+            store: persistentRSAKeyPairStore
+        )
         
+        // MARK: Configure Infra: Ephemeral Stores & Loaders
+        
+        #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
         let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
         let sessionIDStore = InMemoryStore<SessionID>()
         
-        // MARK: Configure Infra: Loaders
-        
         let otpEventIDLoader = loggingLoaderDecorator(
             store: otpEventIDStore
-        )
-        
-        let rsaKeyPairLoader = loggingLoaderDecorator(
-            store: persistentRSAKeyPairStore
         )
         
         let sessionCodeLoader = loggingLoaderDecorator(
@@ -107,7 +108,7 @@ extension Services {
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            clearCache: persistentRSAKeyPairStore.clear
+            clearCache: persistentRSAKeyPairStore.deleteCacheIgnoringResult
         )
         
         let activationService = CVVPINFunctionalityActivationService(
@@ -171,8 +172,7 @@ extension Services {
         
         func removeRSAKeyPair() {
             
-            persistentRSAKeyPairStore.clear()
-            log(.info, .cache, "RSA Key Store clear initiated.", #file, #line)
+            persistentRSAKeyPairStore.deleteCacheIgnoringResult()
         }
         
         func loggingLoaderDecorator<T>(
