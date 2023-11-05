@@ -17,6 +17,23 @@ class MainSectionViewModel: Identifiable {
     var type: MainSectionType { fatalError("Implement in subclass")}
 }
 
+extension MainSectionViewModel {
+    
+    static func makeMainSection(
+        _ model: Model
+    ) -> [MainSectionViewModel] {
+        
+        return [
+            MainSectionProductsView.ViewModel(model),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
+    }
+}
+
 class MainSectionCollapsableViewModel: MainSectionViewModel {
     
     var title: String { type.name }
