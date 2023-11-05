@@ -28,7 +28,8 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            makeOperationStateViewModel: { (productId: ProductData.ID) in
+            sections: MainSectionViewModel.makeMainSection(model),
+            makeOperationStateViewModel: {
                 
                 OperationStateViewModel(
                     businessLogic: .init(

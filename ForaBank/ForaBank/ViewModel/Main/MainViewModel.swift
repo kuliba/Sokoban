@@ -41,7 +41,8 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         
         self.model = model
-        self.sections = MainSectionViewModel.makeMainSection(model)
+        self.navButtonsRight = []
+        self.sections = sections
         self.makeOperationStateViewModel = makeOperationStateViewModel
         self.navButtonsRight = createNavButtonsRight()
         
