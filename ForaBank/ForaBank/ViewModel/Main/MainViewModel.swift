@@ -12,7 +12,7 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias MakeOperationStateViewModel = (ProductData.ID) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = () -> OperationStateViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -35,35 +35,16 @@ class MainViewModel: ObservableObject, Resetable {
     private var bindings = Set<AnyCancellable>()
     
     init(
-        navButtonsRight: [NavigationBarButtonViewModel],
-        sections: [MainSectionViewModel],
-        makeOperationStateViewModel: @escaping MakeOperationStateViewModel,
-        model: Model = .emptyMock
-    ) {
-        
-        self.navButtonsRight = navButtonsRight
-        self.sections = sections
-        self.makeOperationStateViewModel = makeOperationStateViewModel
-        self.model = model
-    }
-    
-    init(
         _ model: Model,
+        sections: [MainSectionViewModel],
         makeOperationStateViewModel: @escaping MakeOperationStateViewModel
     ) {
         
-        self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model),
-                         MainSectionFastOperationView.ViewModel(),
-                         MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyMetallView.ViewModel(model),
-                         MainSectionOpenProductView.ViewModel(model),
-                         MainSectionAtmView.ViewModel.initial]
-        
         self.model = model
+        self.sections = MainSectionViewModel.makeMainSection(model)
         self.makeOperationStateViewModel = makeOperationStateViewModel
+        self.navButtonsRight = createNavButtonsRight()
         
-        navButtonsRight = createNavButtonsRight()
         bind()
         update(sections, with: model.settingsMainSections)
         bind(sections)
@@ -405,7 +386,7 @@ class MainViewModel: ObservableObject, Resetable {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                        self.link = .paymentSticker(makeOperationStateViewModel(payload.productId))
+                        self.link = .paymentSticker(makeOperationStateViewModel())
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)
