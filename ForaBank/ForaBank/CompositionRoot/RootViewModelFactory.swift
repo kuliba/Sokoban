@@ -8,40 +8,42 @@
 import ForaCrypto
 import Foundation
 
-enum RootViewModelFactory {
-    
-    typealias Crypto = ForaCrypto.Crypto
+enum RootViewModelFactory {}
+
+extension RootViewModelFactory {
     
     static func make(
-        with model: Model,
+        model: Model,
         logger: LoggerAgentProtocol
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
-    
-        let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
-            logger: logger
-        )
         
-        let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
-        
-        let cvvPINServicesClient = CVVPINServicesFactory.makeClient(
+        let (productProfileViewModelFactory, onExit) = make(
             httpClient: httpClient,
             logger: logger,
-            rsaKeyPairStore: rsaKeyPairStore
+            model: model
         )
         
-        let productProfileViewModelFactory = {
-            
-            ProductProfileViewModel(
-                model,
-                cvvPINServicesClient: cvvPINServicesClient,
-                onExit: onExit,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
+        return make(
+            model: model,
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
+        )
+    }
+}
+
+// TODO: needs better naming
+private extension RootViewModelFactory {
+    
+    typealias MakeProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias OnExit = () -> Void
+    
+    static func make(
+        model: Model,
+        productProfileViewModelFactory: @escaping MakeProductProfileViewModelFactory,
+        onExit: @escaping OnExit
+    ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
@@ -67,5 +69,38 @@ enum RootViewModelFactory {
             model,
             onExit: onExit
         )
+    }
+    
+    static func make(
+        httpClient: HTTPClient,
+        logger: LoggerAgentProtocol,
+        model: Model
+    ) -> (MakeProductProfileViewModelFactory, OnExit) {
+        
+        let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
+            logger: logger
+        )
+        
+        let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
+        
+        let cvvPINServicesClient = CVVPINServicesFactory.makeClient(
+            httpClient: httpClient,
+            logger: logger,
+            rsaKeyPairStore: rsaKeyPairStore
+        )
+        
+        let productProfileViewModelFactory = {
+            
+            ProductProfileViewModel(
+                model,
+                cvvPINServicesClient: cvvPINServicesClient,
+                onExit: onExit,
+                product: $0,
+                rootView: $1,
+                dismissAction: $2
+            )
+        }
+        
+        return (productProfileViewModelFactory, onExit)
     }
 }
