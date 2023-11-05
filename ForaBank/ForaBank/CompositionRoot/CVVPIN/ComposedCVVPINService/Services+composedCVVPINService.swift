@@ -15,10 +15,12 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
         
+    typealias RSAKeyPair = RSADomain.KeyPair
+    
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
+        rsaKeyPairStore: any Store<RSAKeyPair>,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
@@ -29,8 +31,6 @@ extension Services {
         let cacheLog = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         let networkLog = { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
         
-        typealias RSAKeyPair = RSADomain.KeyPair
-
         // MARK: Configure Infra: Stores & Loaders
         
         let rsaKeyPairLoader = loggingLoaderDecorator(
