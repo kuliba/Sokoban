@@ -12,7 +12,7 @@ enum CVVPINServicesFactory {}
 
 extension CVVPINServicesFactory {
     
-    static func makeClient(
+    static func makeCVVPINServicesClient(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         rsaKeyPairStore: any Store<RSADomain.KeyPair>
