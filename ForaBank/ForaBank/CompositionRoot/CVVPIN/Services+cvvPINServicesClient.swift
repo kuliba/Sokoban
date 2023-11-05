@@ -14,21 +14,22 @@ extension GenericLoaderOf: Loader {}
 // MARK: - CVVPINServicesClient
 
 extension Services {
-    
-    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
-    
+        
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
+        logger: LoggerAgentProtocol,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
         rsaKeyPairLifespan: TimeInterval,
-        ephemeralLifespan: TimeInterval,
-        log: @escaping Log
+        ephemeralLifespan: TimeInterval
     ) -> (
         client: CVVPINServicesClient,
         removeRSAKeyPair: () -> Void
     ) {
+        
+        let cacheLog = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        let networkLog = { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
         
         // MARK: Configure Infra: Persistent Stores & Loaders
         
@@ -36,7 +37,7 @@ extension Services {
         
         let persistentRSAKeyPairStore = LoggingStoreDecorator(
             decoratee: KeyTagKeyChainStore<RSAKeyPair>(keyTag: .rsa),
-            log: { log($0, .cache, $1, $2, $3) }
+            log: cacheLog
         )
         
         let rsaKeyPairLoader = loggingLoaderDecorator(
@@ -71,7 +72,7 @@ extension Services {
         
         let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(
             httpClient: httpClient,
-            log: { log(.info, .network, $0, $1, $2) }
+            log: { networkLog(.info, $0, $1, $2) }
         )
         
         // MARK: Configure CVV-PIN Services
@@ -163,7 +164,7 @@ extension Services {
             getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
-            log: log
+            log: logger.log
         )
                 
         return (cvvPINServicesClient, removeRSAKeyPair)
@@ -184,7 +185,7 @@ extension Services {
                     store: store,
                     currentDate: currentDate
                 ),
-                log: { log($0, .cache, $1, $2, $3) }
+                log: cacheLog
             )
         }
         

@@ -17,34 +17,35 @@ extension CVVPINServicesFactory {
         logger: LoggerAgentProtocol
     ) -> CVVPINServicesClient {
         
-        let log = logger.log(level:category:message:file:line:)
+        let cryptoLog = { logger.log(level: $0, category: .crypto, message: $1, file: $2, line: $3) }
         
-        typealias Crypto = ForaCrypto.Crypto
-
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            _transportKey: Crypto.transportKey,
-            _processingKey: Crypto.processingKey,
-            log: { log(.error, .crypto, $0, $1, $2) }
+        let crypto = LiveExtraLoggingCVVPINCrypto(
+            _transportKey: ForaCrypto.Crypto.transportKey,
+            _processingKey: ForaCrypto.Crypto.processingKey,
+            log: { cryptoLog(.error, $0, $1, $2) }
+        )
+        let cvvPINCrypto = LoggingCVVPINCryptoDecorator(
+            decoratee: crypto,
+            log: cryptoLog
         )
         
 #warning("fix lifespans before release")
-       let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
+        let jsonMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
+        
+        let cvvPINJSONMaker = LoggingCVVPINJSONMakerDecorator(
+            decoratee: jsonMaker,
+            log: cryptoLog
+        )
         
         let (cvvPINServicesClient, _) = Services.cvvPINServicesClient(
             httpClient: httpClient,
-            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
-                decoratee: cvvPINCrypto,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
-            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
-                decoratee: cvvPINJSONMaker,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
+            logger: logger,
+            cvvPINCrypto: cvvPINCrypto,
+            cvvPINJSONMaker: cvvPINJSONMaker,
             rsaKeyPairLifespan: .rsaKeyPairLifespan,
-            ephemeralLifespan: .ephemeralLifespan,
-            log: log
+            ephemeralLifespan: .ephemeralLifespan
         )
-
+        
         return cvvPINServicesClient
     }
 }
