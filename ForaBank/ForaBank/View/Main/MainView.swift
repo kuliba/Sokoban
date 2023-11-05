@@ -333,25 +333,38 @@ struct MainView_Previews: PreviewProvider {
 extension MainViewModel {
     
     static let sample = MainViewModel(
-        navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                          .init(icon: .ic24Bell, action: {})],
-        sections: [MainSectionProductsView.ViewModel.sample,
-                   MainSectionFastOperationView.ViewModel.sample,
-                   MainSectionPromoView.ViewModel.sample,
-                   MainSectionCurrencyMetallView.ViewModel.sample,
-                   MainSectionOpenProductView.ViewModel.sample],
-        operationViewModel: .preview)
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { .preview }
+    )
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample],
-                                              operationViewModel: .preview)
+    static let sampleProducts = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { .preview }
+    )
     
     static let sampleOldCurrency = MainViewModel(
-                                    navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                                                      .init(icon: .ic24Bell, action: {})],
-                                    sections: [MainSectionProductsView.ViewModel(.productsMock),
-                                               MainSectionFastOperationView.ViewModel.sample,
-                                               MainSectionPromoView.ViewModel.sample,
-                                               MainSectionCurrencyView.ViewModel.sample,
-                                               MainSectionOpenProductView.ViewModel.sample],
-                                    operationViewModel: .preview)
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { .preview }
+    )
 }
