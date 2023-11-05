@@ -374,7 +374,6 @@
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
-		2A2AB2F62AF77DE7004023CD /* CryptoStorageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F52AF77DE7004023CD /* CryptoStorageFactory.swift */; };
 		2A2AB2F82AF77E0E004023CD /* CVVPINServicesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */; };
 		2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E32F629A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift */; };
 		2A2E32F929A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E32F829A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift */; };
@@ -2414,7 +2413,6 @@
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
-		2A2AB2F52AF77DE7004023CD /* CryptoStorageFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoStorageFactory.swift; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesFactory.swift; sourceTree = "<group>"; };
 		2A2E32F629A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsMobileConnectionTests.swift"; sourceTree = "<group>"; };
 		2A2E32F829A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsMobileConnection.swift"; sourceTree = "<group>"; };
@@ -5993,7 +5991,6 @@
 			isa = PBXGroup;
 			children = (
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
-				2A2AB2F52AF77DE7004023CD /* CryptoStorageFactory.swift */,
 				2A2AB2F72AF77E0E004023CD /* CVVPINServicesFactory.swift */,
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 			);
@@ -11309,7 +11306,6 @@
 				2A1F083C2A7901D300C5B11B /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				5066506D2857C1950039A745 /* OpenAccountProductData.swift in Sources */,
 				774706B0277DD59700B524F1 /* AntifraudViewModel.swift in Sources */,
-				2A2AB2F62AF77DE7004023CD /* CryptoStorageFactory.swift in Sources */,
 				50783E4F28DF44BD005205F7 /* ProductSelectorViewComponent.swift in Sources */,
 				681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */,
 				509E265D292E3F7A00362642 /* ButtonAuthViewComponent.swift in Sources */,

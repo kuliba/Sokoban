@@ -77,7 +77,7 @@ private extension RootViewModelFactory {
         model: Model
     ) -> (MakeProductProfileViewModelFactory, OnExit) {
         
-        let rsaKeyPairStore = CryptoStorageFactory.makeLoggingStore(
+        let rsaKeyPairStore = makeLoggingStore(
             logger: logger
         )
         
@@ -102,5 +102,20 @@ private extension RootViewModelFactory {
         }
         
         return (productProfileViewModelFactory, onExit)
+    }
+    
+    static func makeLoggingStore(
+        logger: LoggerAgentProtocol
+    ) -> any Store<RSADomain.KeyPair> {
+        
+        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        
+        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
+        let rsaKeyPairStore = LoggingStoreDecorator(
+            decoratee: store,
+            log: log
+        )
+        
+        return rsaKeyPairStore
     }
 }
