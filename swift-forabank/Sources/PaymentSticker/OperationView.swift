@@ -8,11 +8,17 @@
 import Foundation
 import SwiftUI
 
-struct OperationView: View {
+public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
     
-    var body: some View {
+    public init(
+        model: OperationStateViewModel
+    ) {
+        self.model = model
+    }
+    
+    public var body: some View {
 
         switch model.state {
         case .operation:
