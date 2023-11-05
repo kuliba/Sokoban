@@ -23,16 +23,12 @@ public final class BusinessLogic {
     private let dictionaryService: RemoteService<Operation, Operation>
     private let transfer: Transfer
     
-    private let reduce: Reducer.Reduce
-    
     public init(
         dictionaryService: RemoteService<Operation, Operation>,
-        transfer: @escaping Transfer,
-        reduce: @escaping Reducer.Reduce
+        transfer: @escaping Transfer
     ) {
         self.dictionaryService = dictionaryService
         self.transfer = transfer
-        self.reduce = reduce
     }
 }
 
@@ -224,23 +220,5 @@ extension BusinessLogic {
         
         case local(OperationResult)
         case remote(OperationResult)
-    }
-    
-    public enum Action {
-        
-        case loadLocal(Result<OperationResult, Error>)
-        case loadRemote(Swift.Result<OperationResult, Error>)
-    }
-    
-    public struct Reducer {
-        
-        public typealias Reduce = (Operation, Event) -> State
-        
-        public let reduce: Reduce
-        
-        public init(reduce: @escaping Reduce) {
-            
-            self.reduce = reduce
-        }
     }
 }

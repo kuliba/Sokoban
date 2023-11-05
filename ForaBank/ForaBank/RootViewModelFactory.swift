@@ -16,7 +16,17 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let mainViewModel = MainViewModel(model)
+        let mainViewModel = MainViewModel(
+            model,
+            businessLogic: .init(
+                dictionaryService: Services.stickerDictRequest(
+                    input: .stickerDeliveryOffice,
+                    httpClient: httpClient
+                ),
+                transfer: { event, completion in
+                    
+                }
+            ))
 
         let paymentsViewModel = PaymentsTransfersViewModel(model: model)
         
