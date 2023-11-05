@@ -257,7 +257,7 @@ extension Services {
         ) {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan),
+                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
                 completion: completion
             )
         }
