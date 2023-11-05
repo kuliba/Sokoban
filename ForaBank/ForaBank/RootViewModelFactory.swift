@@ -7,6 +7,16 @@
 
 import Foundation
 import GenericRemoteService
+import PaymentSticker
+
+func unimplemented<T>(
+    _ message: String = "",
+    file: StaticString = #file,
+    line: UInt = #line
+) -> T {
+    
+    fatalError("Unimplemented: \(message)", file: file, line: line)
+}
 
 enum RootViewModelFactory {
     
@@ -18,16 +28,22 @@ enum RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            businessLogic: .init(
-                dictionaryService: Services.stickerDictRequest(
-                    input: .stickerDeliveryOffice,
-                    httpClient: httpClient
-                ),
-                transfer: { event, completion in
-                    
-                }
-            ))
-
+            makeOperationStateViewModel: { (productId: ProductData.ID) in
+                
+                OperationStateViewModel(
+                    businessLogic: .init(
+                        dictionaryService: unimplemented(),//Services.stickerDictRequest(
+//                            input: .stickerDeliveryOffice,
+//                            httpClient: httpClient
+//                        ),
+                        transfer: { event, completion in
+                           
+                        }
+                    )
+                )
+            }
+        )
+        
         let paymentsViewModel = PaymentsTransfersViewModel(model: model)
         
         let chatViewModel = ChatViewModel()

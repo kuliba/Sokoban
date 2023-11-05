@@ -12,6 +12,8 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
+    typealias MakeOperationStateViewModel = (ProductData.ID) -> OperationStateViewModel
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
@@ -25,7 +27,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var bottomSheet: BottomSheet?
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
-    let businessLogic: BusinessLogic?
+    let makeOperationStateViewModel: MakeOperationStateViewModel
     
     var rootActions: RootViewModel.RootActions?
     
@@ -35,19 +37,19 @@ class MainViewModel: ObservableObject, Resetable {
     init(
         navButtonsRight: [NavigationBarButtonViewModel],
         sections: [MainSectionViewModel],
-        businessLogic: BusinessLogic,
+        makeOperationStateViewModel: @escaping MakeOperationStateViewModel,
         model: Model = .emptyMock
     ) {
         
         self.navButtonsRight = navButtonsRight
         self.sections = sections
-        self.businessLogic = businessLogic
+        self.makeOperationStateViewModel = makeOperationStateViewModel
         self.model = model
     }
     
     init(
         _ model: Model,
-        businessLogic: BusinessLogic
+        makeOperationStateViewModel: @escaping MakeOperationStateViewModel
     ) {
         
         self.navButtonsRight = []
@@ -59,7 +61,7 @@ class MainViewModel: ObservableObject, Resetable {
                          MainSectionAtmView.ViewModel.initial]
         
         self.model = model
-        self.businessLogic = businessLogic
+        self.makeOperationStateViewModel = makeOperationStateViewModel
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -403,10 +405,7 @@ class MainViewModel: ObservableObject, Resetable {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                        if let businessLogic {
-                            
-                            self.link = .paymentSticker(.init(businessLogic: businessLogic))
-                        }
+                        self.link = .paymentSticker(makeOperationStateViewModel(payload.productId))
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)
