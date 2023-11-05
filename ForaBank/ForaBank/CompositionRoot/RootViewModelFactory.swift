@@ -82,7 +82,7 @@ private extension RootViewModelFactory {
         
         let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
         
-        let cvvPINServicesClient = Services.makeCVVPINServicesClient(
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
             logger: logger,
             rsaKeyPairStore: rsaKeyPairStore
