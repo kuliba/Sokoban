@@ -13,7 +13,6 @@ final public class OperationStateViewModel: ObservableObject {
     @Published public var state: State
     
     private let blackBoxGet: BlackBoxAPI.AsyncGet
-//    let businessLogic: (State, Event) -> AnyPublisher<Result<State, Error>, Never>
     
     public init(
         state: State = .operation(.init(parameters: [])),
@@ -122,4 +121,21 @@ public extension BlackBoxAPI {
     typealias Result = Swift.Result<Success, Error>
     typealias Completion = (Result) -> Void
     typealias AsyncGet = (Request, @escaping Completion) -> Void
+}
+
+public extension OperationStateViewModel {
+    
+    convenience init(
+        businessLogic: BusinessLogic
+    ) {
+        self.init(blackBoxGet: { request, completion in
+            
+            let (operation, event) = request
+            businessLogic.operationResult(
+                operation: operation,
+                event: event,
+                completion: completion
+            )
+        })
+    }
 }
