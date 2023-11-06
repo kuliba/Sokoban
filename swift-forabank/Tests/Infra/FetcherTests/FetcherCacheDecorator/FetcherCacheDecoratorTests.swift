@@ -8,37 +8,6 @@
 import Fetcher
 import XCTest
 
-final class FetcherCacheDecorator<Payload, Success, Failure: Error>: Fetcher {
-    
-    typealias Decoratee = Fetcher<Payload, Success, Failure>
-    typealias Cache = (Success) -> Void
-    
-    private let decoratee: any Decoratee
-    private let cache: Cache
-    
-    init(
-        decoratee: any Decoratee,
-        cache: @escaping Cache
-    ) {
-        self.decoratee = decoratee
-        self.cache = cache
-    }
-    
-    func fetch(
-        _ payload: Payload,
-        completion: @escaping FetchCompletion
-    ) {
-        decoratee.fetch(payload) { [weak self] result in
-            
-            completion(result.map { success in
-                
-                self?.cache(success)
-                return success
-            })
-        }
-    }
-}
-
 final class FetcherCacheDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
