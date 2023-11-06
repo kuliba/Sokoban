@@ -191,6 +191,13 @@
         "identifier" : "FetcherTests",
         "name" : "FetcherTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
     }
   ],
   "version" : 1
