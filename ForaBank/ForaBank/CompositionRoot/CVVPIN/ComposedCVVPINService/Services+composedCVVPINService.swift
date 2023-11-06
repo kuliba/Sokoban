@@ -426,7 +426,7 @@ extension Services {
         }
         
         func process(
-            payload: FormSessionKeyService.Payload,
+            payload: FormSessionKeyService.ProcessPayload,
             completion: @escaping FormSessionKeyService.ProcessCompletion
         ) {
             formSessionKeyRemoteService.process(
@@ -486,7 +486,7 @@ extension Services {
     typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>
     typealias ChangePINRemoteService = MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>
     typealias ConfirmChangePINRemoteService = MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>
-    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
+    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
     typealias GetCodeRemoteService = MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>
     typealias ShowCVVRemoteService = MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
     
