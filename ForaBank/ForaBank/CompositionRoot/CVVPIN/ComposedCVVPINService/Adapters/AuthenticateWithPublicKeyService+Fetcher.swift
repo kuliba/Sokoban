@@ -9,6 +9,7 @@ import CVVPIN_Services
 import Fetcher
 
 extension AuthenticateWithPublicKeyService: Fetcher {
+    
     public typealias Payload = Void
     public typealias Failure = AuthenticateWithPublicKeyService.Error
     
