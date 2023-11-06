@@ -27,6 +27,7 @@ let package = Package(
         .uiKitHelpers,
         .userModel,
         // infra
+        .fetcher,
         .keyChainStore,
         // services
         .cvvPIN_Services,
@@ -82,6 +83,8 @@ let package = Package(
         .userModel,
         .userModelTests,
         // infra
+        .fetcher,
+        .fetcherTests,
         .keyChainStore,
         .keyChainStoreTests,
         // services
@@ -252,6 +255,13 @@ private extension Product {
     )
     
     // MARK: - Infra
+    
+    static let fetcher = library(
+        name: .fetcher,
+        targets: [
+            .fetcher
+        ]
+    )
     
     static let keyChainStore = library(
         name: .keyChainStore,
@@ -605,6 +615,21 @@ private extension Target {
     
     // MARK: - Infra
     
+    static let fetcher = target(
+        name: .fetcher,
+        path: "Sources/Infra/\(String.fetcher)"
+    )
+    static let fetcherTests = testTarget(
+        name: .fetcherTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .fetcher,
+        ],
+        path: "Tests/Infra/\(String.fetcherTests)"
+    )
+    
     static let keyChainStore = target(
         name: .keyChainStore,
         path: "Sources/Infra/\(String.keyChainStore)"
@@ -793,6 +818,10 @@ private extension Target.Dependency {
     
     // MARK: - Infra
     
+    static let fetcher = byName(
+        name: .fetcher
+    )
+    
     static let keyChainStore = byName(
         name: .keyChainStore
     )
@@ -894,6 +923,9 @@ private extension String {
     
     // MARK: - Infra
     
+    static let fetcher = "Fetcher"
+    static let fetcherTests = "FetcherTests"
+
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
 
