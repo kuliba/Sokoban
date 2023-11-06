@@ -5600,7 +5600,7 @@
 			isa = PBXGroup;
 			children = (
 				2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */,
-				2ABD78312AF90CC7001B5860 /* Adapters */,
+				2ABD78312AF90CC7001B5860 /* FetcherAdapters */,
 				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
 				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
@@ -5910,7 +5910,7 @@
 			path = PaymentsOperation;
 			sourceTree = "<group>";
 		};
-		2ABD78312AF90CC7001B5860 /* Adapters */ = {
+		2ABD78312AF90CC7001B5860 /* FetcherAdapters */ = {
 			isa = PBXGroup;
 			children = (
 				2ABD782F2AF90CC1001B5860 /* AuthenticateWithPublicKeyService+Fetcher.swift */,
@@ -5919,7 +5919,7 @@
 				2ABD78322AF91781001B5860 /* FormSessionKeyService+Fetcher.swift */,
 				2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */,
 			);
-			path = Adapters;
+			path = FetcherAdapters;
 			sourceTree = "<group>";
 		};
 		2AC396A82A3CAEFB00A26938 /* Transport */ = {
