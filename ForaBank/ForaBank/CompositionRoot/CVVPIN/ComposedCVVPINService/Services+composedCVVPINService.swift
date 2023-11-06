@@ -6,6 +6,7 @@
 //
 
 import CVVPIN_Services
+import Fetcher
 import Foundation
 import GenericRemoteService
 
@@ -116,11 +117,20 @@ extension Services {
             process: process(data:completion:),
             makeSessionKey: makeSessionKey(response:completion:)
         )
+        
+        #warning("move ta adapter section")
+        func cache(
+            success: AuthenticateWithPublicKeyService.Success
+        ) {
+            let payload = (success.sessionID, success.sessionTTL)
+            
+            cacheSessionID(payload: payload) { _ in }
+            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
+        }
 
-        let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
+        let cachingAuthWithPublicKeyService = FetcherCacheDecorator(
             decoratee: authenticateWithPublicKeyService,
-            cacheSessionID: cacheSessionID(payload:completion:),
-            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
+            cache: cache(success:)
         )
                 
         // MARK: Configure Change PIN Service
@@ -130,7 +140,7 @@ extension Services {
             sessionIDLoader: sessionIDLoader,
             otpEventIDLoader: otpEventIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            cachingAuthWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: cachingAuthWithPublicKeyService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             changePINRemoteService: changePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
@@ -149,7 +159,7 @@ extension Services {
             rsaKeyPairLoader: rsaKeyPairLoader,
             sessionIDLoader: sessionIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            cachingAuthWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: cachingAuthWithPublicKeyService,
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker

@@ -9,12 +9,11 @@ import CVVPIN_Services
 
 extension Services {
 
-    #warning("replace CachingAuthWithPublicKeyServiceDecorator with protocol")
     static func makeShowCVVService(
         rsaKeyPairLoader: any Loader<RSAKeyPair>,
         sessionIDLoader: any Loader<SessionID>,
         sessionKeyLoader: any Loader<SessionKey>,
-        cachingAuthWithPublicKeyService: CachingAuthWithPublicKeyServiceDecorator,
+        authWithPublicKeyService: any AuthWithPublicKeyFetcher,
         showCVVRemoteService: ShowCVVRemoteService,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker
@@ -54,7 +53,7 @@ extension Services {
                 
                 switch result {
                 case .failure:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                    authWithPublicKeyService.fetch {
                         
                         completion(
                             $0
