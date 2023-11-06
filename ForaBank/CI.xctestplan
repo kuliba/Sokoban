@@ -187,13 +187,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "FetcherTests",
-        "name" : "FetcherTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "FetcherTests",
         "name" : "FetcherTests"
