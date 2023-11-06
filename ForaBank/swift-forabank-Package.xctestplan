@@ -180,6 +180,13 @@
         "identifier" : "CVVPIN_ServicesTests",
         "name" : "CVVPIN_ServicesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
     }
   ],
   "version" : 1
