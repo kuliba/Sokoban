@@ -90,10 +90,9 @@ extension Services {
             makeSessionKey: makeSessionKey(string:completion:)
         )
         
-        let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
+        let cachingFormSessionKeyService = FetcherCacheDecorator(
             decoratee: formSessionKeyService,
-            cacheSessionID: cacheSessionID,
-            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
+            cache: cache(success:)
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
@@ -243,8 +242,8 @@ extension Services {
             success: AuthSuccess
         ) {
             let payload = (success.sessionID, success.sessionTTL)
-            
             cacheSessionID(payload: payload) { _ in }
+            
             cacheSessionKey(sessionKey: success.sessionKey) { _ in }
         }
         
@@ -353,7 +352,7 @@ extension Services {
         func formSessionKey(
             completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
         ) {
-            cachingFormSessionKeyService.formSessionKey { result in
+            cachingFormSessionKeyService.fetch(()) { result in
                 
                 completion(
                     result
@@ -451,9 +450,22 @@ extension Services {
             })
         }
         
+        typealias FormSessionKeySuccess = FormSessionKeyService.Success
+
+        func cache(success: FormSessionKeySuccess) {
+        
+            let payload = (success.eventID, success.sessionTTL)
+            cacheSessionID(payload: payload) { _ in }
+            
+            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
+        }
+        
+        typealias FormSessionKeyCacheSessionIDPayload = (FormSessionKeySuccess.EventID, FormSessionKeySuccess.SessionTTL)
+        typealias FormSessionKeyCacheCompletion = (Result<Void, Error>) -> Void
+        
         func cacheSessionID(
-            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+            payload: FormSessionKeyCacheSessionIDPayload,
+            completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionIDLoader.save(
                 .init(value: payload.0.eventIDValue),
@@ -465,7 +477,7 @@ extension Services {
 #warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
         func cacheSessionKey(
             sessionKey: FormSessionKeyService.SessionKey,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+            completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: sessionKey.sessionKeyValue),
