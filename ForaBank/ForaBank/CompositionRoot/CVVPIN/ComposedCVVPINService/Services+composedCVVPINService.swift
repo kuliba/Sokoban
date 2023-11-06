@@ -138,9 +138,9 @@ extension Services {
             ephemeralLifespan: ephemeralLifespan
         )
         
-        let cachingChangePINService = CachingChangePINServiceDecorator(
+        let cachingChangePINService = FetcherCacheDecorator(
             decoratee: changePINService,
-            cache: cache(otpEventID:completion:)
+            cache: cache(response:)
         )
         
         // MARK: Configure Show CVV Service
@@ -162,7 +162,7 @@ extension Services {
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
-            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
+            getPINConfirmationCode: cachingChangePINService.fetch(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
@@ -320,17 +320,15 @@ extension Services {
         
         // MARK: - ChangePIN Adapters
         
-        func cache(
-            otpEventID: ChangePINService.OTPEventID,
-            completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
-        ) {
+        func cache(response: ChangePINService.ConfirmResponse) {
+            
             // short time
             let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
             
             otpEventIDLoader.save(
-                otpEventID,
+                response.otpEventID,
                 validUntil: validUntil,
-                completion: completion
+                completion: { _ in }
             )
         }
         
