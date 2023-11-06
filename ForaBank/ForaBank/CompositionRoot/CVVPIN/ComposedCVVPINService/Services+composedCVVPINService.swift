@@ -15,8 +15,9 @@ extension GenericLoaderOf: Loader {}
 // MARK: - CVVPINServicesClient
 
 extension Services {
-        
+    
     typealias RSAKeyPair = RSADomain.KeyPair
+    typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
     
     static func composedCVVPINService(
         httpClient: HTTPClient,
@@ -40,7 +41,7 @@ extension Services {
         
         // MARK: Ephemeral Stores & Loaders
         
-        #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
+#warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
         let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
@@ -118,21 +119,11 @@ extension Services {
             makeSessionKey: makeSessionKey(response:completion:)
         )
         
-        #warning("move ta adapter section")
-        func cache(
-            success: AuthenticateWithPublicKeyService.Success
-        ) {
-            let payload = (success.sessionID, success.sessionTTL)
-            
-            cacheSessionID(payload: payload) { _ in }
-            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
-        }
-
         let cachingAuthWithPublicKeyService = FetcherCacheDecorator(
             decoratee: authenticateWithPublicKeyService,
             cache: cache(success:)
         )
-                
+        
         // MARK: Configure Change PIN Service
         
         let changePINService = makeChangePINService(
@@ -152,7 +143,7 @@ extension Services {
             decoratee: changePINService,
             cache: cache(otpEventID:completion:)
         )
-
+        
         // MARK: Configure Show CVV Service
         
         let showCVVService = makeShowCVVService(
@@ -177,7 +168,7 @@ extension Services {
             // TODO: add category `CVV-PIN`
             log: logger.log
         )
-                
+        
         return cvvPINServicesClient
         
         // MARK: - Helpers
@@ -244,6 +235,15 @@ extension Services {
                 
                 return .init(sessionKeyValue: data)
             })
+        }
+        
+        func cache(
+            success: AuthenticateWithPublicKeyService.Success
+        ) {
+            let payload = (success.sessionID, success.sessionTTL)
+            
+            cacheSessionID(payload: payload) { _ in }
+            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
         }
         
         func cacheSessionID(
@@ -315,7 +315,7 @@ extension Services {
         }
         
         // MARK: - ChangePIN Adapters
-
+        
         func cache(
             otpEventID: ChangePINService.OTPEventID,
             completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
@@ -329,7 +329,7 @@ extension Services {
                 completion: completion
             )
         }
-
+        
         // MARK: - CVVPINFunctionalityActivation Adapters
         
         func getCode(
@@ -457,7 +457,7 @@ extension Services {
             )
         }
         
-        #warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
+#warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
         func cacheSessionKey(
             sessionKey: FormSessionKeyService.SessionKey,
             completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion

@@ -11,8 +11,6 @@ import Foundation
 
 extension Services {
     
-    typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
-
     static func makeChangePINService(
         rsaKeyPairLoader: any Loader<RSAKeyPair>,
         sessionIDLoader: any Loader<SessionID>,
@@ -34,7 +32,7 @@ extension Services {
             makePINChangeJSON: makePINChangeJSON,
             changePINProcess: changePINProcess
         )
-
+        
         return changePINService
         
         // MARK: - ChangePIN Adapters
