@@ -237,8 +237,10 @@ extension Services {
             })
         }
         
+       typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        
         func cache(
-            success: AuthenticateWithPublicKeyService.Success
+            success: AuthSuccess
         ) {
             let payload = (success.sessionID, success.sessionTTL)
             
@@ -246,9 +248,12 @@ extension Services {
             cacheSessionKey(sessionKey: success.sessionKey) { _ in }
         }
         
+        typealias CacheSessionIDPayload = (AuthSuccess.SessionID, AuthSuccess.SessionTTL)
+        typealias CacheCompletion = (Result<Void, Error>) -> Void
+        
         func cacheSessionID(
-            payload: CachingAuthWithPublicKeyServiceDecorator.CacheSessionIDPayload,
-            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+            payload: CacheSessionIDPayload,
+            completion: @escaping CacheCompletion
         ) {
             sessionIDLoader.save(
                 .init(value: payload.0.sessionIDValue),
@@ -258,8 +263,8 @@ extension Services {
         }
         
         func cacheSessionKey(
-            sessionKey: AuthenticateWithPublicKeyService.Success.SessionKey,
-            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+            sessionKey: AuthSuccess.SessionKey,
+            completion: @escaping CacheCompletion
         ) {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: sessionKey.sessionKeyValue),
