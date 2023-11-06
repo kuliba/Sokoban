@@ -309,7 +309,7 @@ extension Services {
         }
         
         func process(
-            payload: BindPublicKeyWithEventIDService.Payload,
+            payload: BindPublicKeyWithEventIDService.ProcessPayload,
             completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
         ){
             bindPublicKeyWithEventIDRemoteService.process(payload) {
@@ -492,7 +492,7 @@ extension Services {
     typealias MappingRemoteService<Input, Output, MapResponseError: Error> = RemoteService<Input, Output, Error, Error, MapResponseError>
     
     typealias AuthWithPublicKeyRemoteService = MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>
-    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>
+    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.ProcessPayload, Void, BindPublicKeyWithEventIDService.APIError>
     typealias ChangePINRemoteService = MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>
     typealias ConfirmChangePINRemoteService = MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>
     typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, FormSessionKeyService.APIError>

@@ -257,14 +257,14 @@ final class BindPublicKeyWithEventIDServiceTests: XCTestCase {
     
     private final class ProcessSpy {
         
-        typealias Message = (payload: SUT.Payload, completion: SUT.ProcessCompletion)
+        typealias Message = (payload: SUT.ProcessPayload, completion: SUT.ProcessCompletion)
         
         private(set) var messages = [Message]()
         
         var callCount: Int { messages.count }
         
         func process(
-            _ payload: SUT.Payload,
+            _ payload: SUT.ProcessPayload,
             completion: @escaping SUT.ProcessCompletion
         ) {
             messages.append((payload, completion))

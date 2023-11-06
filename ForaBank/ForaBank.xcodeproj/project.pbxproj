@@ -564,6 +564,7 @@
 		2ABD78332AF91781001B5860 /* FormSessionKeyService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78322AF91781001B5860 /* FormSessionKeyService+Fetcher.swift */; };
 		2ABD78352AF924A6001B5860 /* ChangePINService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */; };
 		2ABD78372AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */; };
+		2ABD78392AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */; };
 		2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */ = {isa = PBXBuildFile; productRef = 2AC3282F2ADEF41D00443A84 /* CVVPINServices */; };
 		2AC396A72A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */; };
 		2AC396AA2A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */; };
@@ -2604,6 +2605,7 @@
 		2ABD78322AF91781001B5860 /* FormSessionKeyService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormSessionKeyService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetProcessingSessionCodeService+Fetcher.swift"; sourceTree = "<group>"; };
+		2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+Fetcher.swift"; sourceTree = "<group>"; };
 		2AC3282E2ADEF2C500443A84 /* CVVPINServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CVVPINServices.xctestplan; sourceTree = "<group>"; };
 		2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationSourceAvtodorCase.swift; sourceTree = "<group>"; };
 		2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodor.swift"; sourceTree = "<group>"; };
@@ -5912,6 +5914,7 @@
 			isa = PBXGroup;
 			children = (
 				2ABD782F2AF90CC1001B5860 /* AuthenticateWithPublicKeyService+Fetcher.swift */,
+				2ABD78382AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift */,
 				2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */,
 				2ABD78322AF91781001B5860 /* FormSessionKeyService+Fetcher.swift */,
 				2ABD78362AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift */,
@@ -11329,6 +11332,7 @@
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				5036B0F928E20C830052FACE /* PaymentsMeToMeView.swift in Sources */,
 				2A1F08472A7903DB00C5B11B /* Model+signRequest.swift in Sources */,
+				2ABD78392AF92984001B5860 /* BindPublicKeyWithEventIDService+Fetcher.swift in Sources */,
 				2A1D7F5D2A0FF00C0066BC02 /* SearchFactory.swift in Sources */,
 				68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
