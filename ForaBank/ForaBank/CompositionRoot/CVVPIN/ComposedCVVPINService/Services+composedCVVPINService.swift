@@ -76,9 +76,9 @@ extension Services {
             process: process(completion:)
         )
         
-        let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
+        let cachingGetCodeService = FetcherCacheDecorator(
             decoratee: getCodeService,
-            cache: cache(response:completion:)
+            cache: cache(response:)
         )
         
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
@@ -337,7 +337,7 @@ extension Services {
         func getCode(
             completion: @escaping CVVPINFunctionalityActivationService.GetCodeCompletion
         ) {
-            cachingGetCodeService.getCode { result in
+            cachingGetCodeService.fetch { result in
                 
                 completion(
                     result
@@ -350,7 +350,7 @@ extension Services {
         func formSessionKey(
             completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
         ) {
-            cachingFormSessionKeyService.fetch(()) { result in
+            cachingFormSessionKeyService.fetch { result in
                 
                 completion(
                     result
@@ -383,8 +383,7 @@ extension Services {
         }
         
         func cache(
-            response: GetProcessingSessionCodeService.Response,
-            completion: @escaping (Result<Void, Error>) -> Void
+            response: GetProcessingSessionCodeService.Response
         ) {
             // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
             let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
@@ -392,7 +391,7 @@ extension Services {
             sessionCodeLoader.save(
                 .init(sessionCodeValue: response.code),
                 validUntil: validUntil,
-                completion: completion
+                completion: { _ in }
             )
         }
         
