@@ -180,20 +180,6 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CVVPIN_ServicesTests",
-        "name" : "CVVPIN_ServicesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CVVPIN_ServicesTests",
-        "name" : "CVVPIN_ServicesTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CVVPIN_ServicesTests",
         "name" : "CVVPIN_ServicesTests"
