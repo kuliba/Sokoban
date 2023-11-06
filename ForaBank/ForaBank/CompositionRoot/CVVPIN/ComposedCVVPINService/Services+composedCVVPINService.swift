@@ -101,9 +101,9 @@ extension Services {
             process: process(payload:completion:)
         )
         
-        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
+        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherCacheDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            clearCache: rsaKeyPairStore.deleteCacheIgnoringResult
+            cache: rsaKeyPairStore.deleteCacheIgnoringResult
         )
         
         let activationService = CVVPINFunctionalityActivationService(
@@ -364,8 +364,8 @@ extension Services {
             otp: CVVPINFunctionalityActivationService.OTP,
             completion: @escaping CVVPINFunctionalityActivationService.BindPublicKeyWithEventIDCompletion
         ) {
-            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind(
-                otp: .init(otpValue: otp.otpValue)
+            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.fetch(
+                .init(otpValue: otp.otpValue)
             ) {
                 completion($0.mapError(CVVPINFunctionalityActivationService.BindPublicKeyError.init))
             }
