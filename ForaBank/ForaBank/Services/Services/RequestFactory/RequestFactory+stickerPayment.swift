@@ -14,6 +14,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
+            ("serial", "1"),
             ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest

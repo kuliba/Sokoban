@@ -114,7 +114,7 @@ extension Services.Endpoint {
     static let getStickerPaymentRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
-        serviceName: .getStickerPayment
+        serviceName: .getJsonAbroad
     )
     
     static let createStickerPayment: Self = .init(
