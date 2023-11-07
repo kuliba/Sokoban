@@ -12,6 +12,7 @@ import PaymentSticker
 
 final class BusinessLogic {
     
+    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
     typealias Option = PaymentSticker.Operation.Parameter.Select.Option
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
     typealias Completion = (OperationResult) -> Void
@@ -23,13 +24,16 @@ final class BusinessLogic {
     
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transfer: Transfer
+    let products: [Product]
     
     init(
         dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
-        transfer: @escaping Transfer
+        transfer: @escaping Transfer,
+        products: [Product]
     ) {
         self.dictionaryService = dictionaryService
         self.transfer = transfer
+        self.products = products
     }
 }
 
@@ -41,6 +45,8 @@ extension OperationStateViewModel {
         self.init(blackBoxGet: { request, completion in
             
             let (operation, event) = request
+            print(request.0)
+            print(request.1)
             businessLogic.operationResult(
                 operation: operation,
                 event: event,
@@ -97,37 +103,136 @@ extension BusinessLogic {
             
         case .continueButtonTapped:
             
-            transfer(.requestOTP) { result in
+            dictionaryService.process(.stickerOrderForm) { result in
                 
                 switch result {
-                case let .success(transferResponse):
-                    
-                    switch transferResponse {
+                case let .success(dictionaryResponse):
+                    switch dictionaryResponse {
+                    case let .orderForm(orderForm):
+                        
+                        let parameters = orderForm.main.map { main in
+                        
+                            switch main.data {
+                            case let .citySelector(citySelector):
+                                return Operation.Parameter.select(.init(
+                                    id: "city",
+                                    value: "",
+                                    title: citySelector.title,
+                                    placeholder: citySelector.subtitle,
+                                    options: [],
+                                    state: .idle(.init(iconName: "", title: citySelector.title)))
+                                )
+                                
+                            case let .banner(banner):
+                                return Operation.Parameter.sticker(.init(
+                                    title: banner.title,
+                                    description: banner.subtitle,
+                                    options: banner.txtConditionList.map({
+                                        
+                                        Operation.Parameter.Sticker.Option.init(title: $0.name, description: $0.description)
+                                    })
+                                ))
+                                
+                            case let .hint(hint):
+                                return Operation.Parameter.tip(.init(title: hint.title))
+                                
+                            case let .officeSelector(officeSelector):
+                                return Operation.Parameter.select(.init(
+                                    id: "officeSelector",
+                                    value: "",
+                                    title: officeSelector.title,
+                                    placeholder: officeSelector.subtitle,
+                                    options: [],
+                                    state: .idle(.init(iconName: "", title: officeSelector.title)))
+                                )
+                                
+                            case .product:
+                                if let product = self.products.first {
+                                    
+                                    return Operation.Parameter.product(.init(
+                                        state: .select,
+                                        selectedProduct: product,
+                                        allProducts: self.products
+                                    ))
+                                } else {
+                                    
+                                    //TODO: fix this
+                                    return Operation.Parameter.tip(.init(title: ""))
+                                }
+                            
+                            case let .selector(selector):
+                                return Operation.Parameter.select(.init(
+                                    id: "officeSelector",
+                                    value: "",
+                                    title: selector.title,
+                                    placeholder: selector.subtitle,
+                                    options: selector.list.map({ Operation.Parameter.Select.Option(
+                                        id: $0.type.rawValue,
+                                        name: $0.title,
+                                        iconName: "")
+                                    }),
+                                    state: .idle(.init(iconName: "", title: selector.title)))
+                                )
+                                
+                            case .separator:
+                                return Operation.Parameter.tip(.init(title: "123"))
+
+                            case .separatorGroup:
+                                return Operation.Parameter.tip(.init(title: "123"))
+
+                            case .pageTitle:
+                                return Operation.Parameter.tip(.init(title: "123"))
+
+                            case .noValid:
+                                return Operation.Parameter.tip(.init(title: "123"))
+                            }
+                        }
+                        
+                        completion(.success(.operation(.init(parameters: parameters))))
+
+                    case let .deliveryCourier(deliveryCourier):
+                        completion(.success(.operation(.init(parameters: []))))
+
                     case let .deliveryOffice(deliveryOffice):
-                        
-                        guard let deliveryOfficeParameter = deliveryOffice.main.first(where: { $0.type == .citySelector })
-                        else { return }
-                        
-                        let newParameter: PaymentSticker.Operation.Parameter = .select(.init(
-                            id: "deliveryOffice",
-                            value: "",
-                            title: deliveryOfficeParameter.data.title,
-                            placeholder: deliveryOfficeParameter.data.subtitle,
-                            options: [],
-                            state: .idle(.init(iconName: "", title: deliveryOfficeParameter.data.title))
-                        ))
-                        let newOperation = operation.updateOperation(
-                            operation: operation,
-                            newParameter: newParameter
-                        )
-                        
-                        completion(.success(.operation(newOperation)))
+                        completion(.success(.operation(.init(parameters: []))))
                     }
                     
                 case let .failure(error):
-                    completion(.failure(error))
+                   return
                 }
             }
+            
+//            transfer(.requestOTP) { result in
+//
+//                switch result {
+//                case let .success(transferResponse):
+//
+//                    switch transferResponse {
+//                    case let .deliveryOffice(deliveryOffice):
+//
+//                        guard let deliveryOfficeParameter = deliveryOffice.main.first(where: { $0.type == .citySelector })
+//                        else { return }
+//
+//                        let newParameter: PaymentSticker.Operation.Parameter = .select(.init(
+//                            id: "deliveryOffice",
+//                            value: "",
+//                            title: deliveryOfficeParameter.data.title,
+//                            placeholder: deliveryOfficeParameter.data.subtitle,
+//                            options: [],
+//                            state: .idle(.init(iconName: "", title: deliveryOfficeParameter.data.title))
+//                        ))
+//                        let newOperation = operation.updateOperation(
+//                            operation: operation,
+//                            newParameter: newParameter
+//                        )
+//
+//                        completion(.success(.operation(newOperation)))
+//                    }
+//
+//                case let .failure(error):
+//                    completion(.failure(error))
+//                }
+//            }
             
             return .success(.operation(operation))
             
