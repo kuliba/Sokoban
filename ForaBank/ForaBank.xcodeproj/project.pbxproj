@@ -376,6 +376,7 @@
 		2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */; };
 		2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */; };
 		2A235F7D2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */; };
+		2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
@@ -2428,6 +2429,7 @@
 		2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormSessionKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetProcessingSessionCodeService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
@@ -5131,6 +5133,7 @@
 				2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */,
 				2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */,
 				2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */,
+				2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */,
 			);
 			path = FetcherAdapters;
 			sourceTree = "<group>";
@@ -12802,6 +12805,7 @@
 				2A51903B2A7E12CB0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequestTests.swift in Sources */,
 				2AECD58D29FC519800FC0E81 /* SearchBarComponentTests.swift in Sources */,
 				77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */,
+				2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */,
 				2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */,
 				774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */,
 				2A58FAB62AD722BE00BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequestTests.swift in Sources */,
