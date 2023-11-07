@@ -64,11 +64,11 @@ func anySessionID(
     .init(sessionIDValue: sessionIDValue)
 }
 
-typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+typealias CVVPINActivateResult = CVVPINFunctionalityActivationService.ActivateResult
 
 func anySuccess(
     _ phoneValue: String = UUID().uuidString
-) -> ActivateResult {
+) -> CVVPINActivateResult {
     
     .success(.init(phoneValue: phoneValue))
 }
@@ -76,7 +76,7 @@ func anySuccess(
 func anyFailure(
     _ statusCode: Int,
     _ errorMessage: String = UUID().uuidString
-) -> ActivateResult {
+) -> CVVPINActivateResult {
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
@@ -96,12 +96,12 @@ func anyFailure(
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
-typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
+typealias CVVPINConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
 
 func anyFailure(
     _ statusCode: Int,
     _ errorMessage: String = UUID().uuidString
-) -> ConfirmResult {
+) -> CVVPINConfirmResult {
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }

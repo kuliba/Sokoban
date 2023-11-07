@@ -218,10 +218,10 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
     private typealias SUT = ComposedCVVPINService
     
     private func makeSUT(
-        activateResult: ActivateResult = anySuccess(),
+        activateResult: CVVPINActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
-        confirmActivationResult: ConfirmResult = .success(()),
+        confirmActivationResult: CVVPINConfirmResult = .success(()),
         getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
