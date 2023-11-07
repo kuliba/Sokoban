@@ -29,7 +29,10 @@ enum RootViewModelFactory {
         let operationStateViewModelFactory = {
             
             OperationStateViewModel(businessLogic: .init(
-                dictionaryService: Services.stickerDictRequest,
+                dictionaryService: Services.stickerDictRequest(
+                    input: .stickerDeliveryOffice,
+                    httpClient: httpClient
+                ),
                 transfer: { event, completion in
                     
                 }

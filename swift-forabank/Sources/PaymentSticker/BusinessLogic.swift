@@ -20,11 +20,11 @@ public final class BusinessLogic {
     public typealias TransferCompletion = (TransferResult) -> Void
     public typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
-    private let dictionaryService: RemoteService<Operation, Operation>
+    private let dictionaryService: RemoteService<String, Operation>
     private let transfer: Transfer
     
     public init(
-        dictionaryService: RemoteService<Operation, Operation>,
+        dictionaryService: RemoteService<String, Operation>,
         transfer: @escaping Transfer
     ) {
         self.dictionaryService = dictionaryService
