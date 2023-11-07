@@ -45,8 +45,6 @@ final class BindPublicKeyWithEventIDService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnProcessNetworkFailure() {
         
-        let statusCode = 500
-        let invalidData = anyData()
         let sut = makeSUT(
             processResult: .failure(.network)
         )
@@ -90,11 +88,11 @@ final class BindPublicKeyWithEventIDService_FetcherTests: XCTestCase {
         let sut = SUT(
             loadEventID: { completion in
                 
-                completion(.init { try loadEventIDResult.get() })
+                completion(loadEventIDResult)
             },
             makeSecretJSON: { _, completion in
                 
-                completion(.init { try makeSecretJSONResult.get() })
+                completion(makeSecretJSONResult)
             },
             process: { _, completion in
                 

@@ -99,7 +99,7 @@ final class AuthenticateWithPublicKeyService_FetcherTests: XCTestCase {
         let sut = SUT(
             prepareKeyExchange: { completion in
                 
-                completion(.init { try prepareKeyExchangeResult.get() })
+                completion(prepareKeyExchangeResult)
             },
             process: { _, completion in
                 
@@ -107,7 +107,7 @@ final class AuthenticateWithPublicKeyService_FetcherTests: XCTestCase {
             },
             makeSessionKey: { _, completion in
                 
-                completion(.init { try makeSessionKeyResult.get() })
+                completion(makeSessionKeyResult)
             }
         )
         
