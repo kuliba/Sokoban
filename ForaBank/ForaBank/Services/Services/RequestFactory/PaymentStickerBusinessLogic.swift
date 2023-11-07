@@ -21,11 +21,11 @@ final class BusinessLogic {
     typealias TransferCompletion = (TransferResult) -> Void
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
-    let dictionaryService: RemoteService<String, StickerDictionaryResponse>
+    let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transfer: Transfer
     
     init(
-        dictionaryService: RemoteService<String, StickerDictionaryResponse>,
+        dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
         transfer: @escaping Transfer
     ) {
         self.dictionaryService = dictionaryService

@@ -11,7 +11,8 @@ import PaymentSticker
 
 extension Services {
 
-    typealias GetStickerDictionary = RemoteService<String, StickerDictionaryResponse>
+    typealias GetJsonAbroadType = RequestFactory.GetJsonAbroadType
+    typealias GetStickerDictionary = RemoteService<GetJsonAbroadType, StickerDictionaryResponse>
 
     static func stickerDictRequest(
         input: RequestFactory.GetJsonAbroadType,

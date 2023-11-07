@@ -30,7 +30,7 @@ enum RootViewModelFactory {
             
             OperationStateViewModel(businessLogic: .init(
                 dictionaryService: Services.stickerDictRequest(
-                    input: .stickerDeliveryOffice,
+                    input: .stickerOrderForm,
                     httpClient: httpClient
                 ),
                 transfer: { event, completion in

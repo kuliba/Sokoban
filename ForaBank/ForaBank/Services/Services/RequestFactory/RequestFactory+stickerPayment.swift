@@ -10,11 +10,11 @@ import Foundation
 extension RequestFactory {
     
     static func getStickerDictionary(
-        _ type: String
+        _ type: GetJsonAbroadType
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("type", type)
+            ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest
         let url = try! endpoint.url(
