@@ -24,6 +24,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var buttons: [ButtonAuthView.ViewModel]
     
     private let model: Model
+    private let onRegister: () -> Void
     private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     
@@ -59,24 +60,28 @@ class AuthLoginViewModel: ObservableObject {
         header: HeaderViewModel = HeaderViewModel(),
         buttons: [ButtonAuthView.ViewModel],
         rootActions: RootViewModel.RootActions,
-        model: Model = .emptyMock
+        model: Model = .emptyMock,
+        onRegister: @escaping () -> Void
     ) {
         self.header = header
         self.buttons = buttons
         self.rootActions = rootActions
         self.model = model
+        self.onRegister = onRegister
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
     }
     
     convenience init(
         _ model: Model,
-        rootActions: RootViewModel.RootActions
+        rootActions: RootViewModel.RootActions,
+        onRegister: @escaping () -> Void
     ) {
         self.init(
             buttons: [],
             rootActions: rootActions,
-            model: model
+            model: model,
+            onRegister: onRegister
         )
         bind()
     }
@@ -243,6 +248,7 @@ class AuthLoginViewModel: ObservableObject {
                     card.nextButton = CardViewModel.NextButtonViewModel(
                         action: { [weak self] in
                             
+                            self?.onRegister()
                             self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))}
                     )
                     
