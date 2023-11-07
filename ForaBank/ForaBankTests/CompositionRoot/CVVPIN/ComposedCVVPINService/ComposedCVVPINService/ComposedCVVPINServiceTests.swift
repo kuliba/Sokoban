@@ -144,6 +144,104 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         expectCheckFunctionality(sut, toDeliver: .success(()))
     }
     
+    // MARK: - getPINConfirmationCode
+    
+    func test_getPINConfirmationCode_shouldDeliveractivationErrorOnActivationFailureFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.activationFailure)
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.activationFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnAuthenticationFailureFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.authenticationFailure)
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnInvalidFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.invalid(statusCode: 500, data: anyData()))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnNetworkFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.network)
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverRetryErrorOnRetryFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let retryAttempts = 4
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServerErrorOnServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnCheckSessionFailureFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.serviceError(.checkSessionFailure))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnDecryptionFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.serviceError(.decryptionFailure))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverServiceErrorOnMakeJSONFailure() {
+        
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .failure(.serviceError(.makeJSONFailure))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_getPINConfirmationCode_shouldDeliverVoidOnSuccess() {
+        
+        let phone = "+7..9876"
+        let sut = makeSUT(
+            getPINConfirmationCodeResult: .success(.init(otpEventID: anyOTPEventID(), phone: phone))
+        )
+        
+        expectGetPINConfirmationCode(sut, toDeliver: .success(phone))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -258,6 +356,37 @@ final class ComposedCVVPINServiceTests: XCTestCase {
                 
             case (.success(()), .success(())):
                 break
+                
+            default:
+                XCTFail("Expected \(expectedResult), but got \(receivedResult).", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        })
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expectGetPINConfirmationCode(
+        _ sut: SUT,
+        toDeliver expectedResult: ChangePINClient.GetPINConfirmationCodeResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.getPINConfirmationCode(completion: { receivedResult in
+            
+            switch (expectedResult, receivedResult) {
+                
+            case let (
+                .failure(expected as NSError),
+                .failure(received as NSError)
+            ):
+                XCTAssertNoDiff(expected, received, file: file, line: line)
+                
+            case let (.success(expected), .success(received)):
+                XCTAssertNoDiff(expected, received, file: file, line: line)
                 
             default:
                 XCTFail("Expected \(expectedResult), but got \(receivedResult).", file: file, line: line)
