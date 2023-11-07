@@ -124,6 +124,26 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         expectConfirmWith(sut, toDeliver: .success(()))
     }
     
+    // MARK: - checkFunctionality
+    
+    func test_checkFunctionality_shouldDeliverActivationErrorOnCheckActivationFailure() {
+        
+        let sut = makeSUT(
+            checkActivationResult: .failure(anyNSError())
+        )
+        
+        expectCheckFunctionality(sut, toDeliver: .failure(.activationFailure))
+    }
+    
+    func test_expectCheckFunctionality_shouldDeliverVoidOnActivateSuccess() {
+        
+        let sut = makeSUT(
+            checkActivationResult: .success(())
+        )
+        
+        expectCheckFunctionality(sut, toDeliver: .success(()))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -196,6 +216,37 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         let exp = expectation(description: "wait for completion")
         
         sut.confirmWith(otp: UUID().uuidString, completion: { receivedResult in
+            
+            switch (expectedResult, receivedResult) {
+                
+            case let (
+                .failure(expected as NSError),
+                .failure(received as NSError)
+            ):
+                XCTAssertNoDiff(expected, received, file: file, line: line)
+                
+            case (.success(()), .success(())):
+                break
+                
+            default:
+                XCTFail("Expected \(expectedResult), but got \(receivedResult).", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        })
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expectCheckFunctionality(
+        _ sut: SUT,
+        toDeliver expectedResult: ChangePINClient.CheckFunctionalityResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.checkFunctionality(completion: { receivedResult in
             
             switch (expectedResult, receivedResult) {
                 
