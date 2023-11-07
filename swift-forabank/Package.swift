@@ -86,6 +86,7 @@ let package = Package(
         .keyChainStoreTests,
         // services
         .cvvPIN_Services,
+        .cvvPIN_ServicesTests,
         .cvvPINServices,
         .cvvPINServicesTests,
         .genericRemoteService,
@@ -625,6 +626,16 @@ private extension Target {
         name: .cvvPIN_Services,
         path: "Sources/Services/\(String.cvvPIN_Services)"
     )
+    static let cvvPIN_ServicesTests = testTarget(
+        name: .cvvPIN_ServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cvvPIN_Services,
+        ],
+        path: "Tests/Services/\(String.cvvPIN_ServicesTests)"
+    )
     static let cvvPINServices = target(
         name: .cvvPINServices,
         path: "Sources/Services/\(String.cvvPINServices)"
@@ -889,6 +900,7 @@ private extension String {
     // MARK: - Services
     
     static let cvvPIN_Services = "CVVPIN_Services"
+    static let cvvPIN_ServicesTests = "CVVPIN_ServicesTests"
     
     static let cvvPINServices = "CVVPINServices"
     static let cvvPINServicesTests = "CVVPINServicesTests"

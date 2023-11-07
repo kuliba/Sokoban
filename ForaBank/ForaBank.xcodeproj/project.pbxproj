@@ -2452,6 +2452,7 @@
 		2A3F1B242A49895100D8FE55 /* MosParkingPickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerData.swift; sourceTree = "<group>"; };
 		2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPickerDataMapper.swift; sourceTree = "<group>"; };
 		2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
+		2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CVVPIN_Services.xctestplan; sourceTree = "<group>"; };
 		2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+keyExchangeService.swift"; sourceTree = "<group>"; };
 		2A4593C82A7CCAC6008593A3 /* Services+transferPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+transferPublicKeyService.swift"; sourceTree = "<group>"; };
 		2A4593D42A7CFA74008593A3 /* URL+StaticString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+StaticString.swift"; sourceTree = "<group>"; };
@@ -9703,6 +9704,7 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
+				2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */,
 				2AC3282E2ADEF2C500443A84 /* CVVPINServices.xctestplan */,
 				2A3599A52ADA69F900820369 /* KeyChainStore.xctestplan */,
 				2AC410E62A986BBF00D0AC00 /* CryptoSwaddler.xctestplan */,
