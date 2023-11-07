@@ -160,7 +160,7 @@ final class BindPublicKeyWithEventIDService_FetcherTests: XCTestCase {
                     }
                     
                 default:
-                    XCTFail("Expected \(expectedResult), but got \(receivedResult)", file: file, line: line)
+                    XCTFail("Expected \(expected), but got \(received)", file: file, line: line)
                 }
                 
             case (.success(()), .success(())):
