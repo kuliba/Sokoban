@@ -341,7 +341,7 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { .preview }
+        makeOperationStateViewModel: { _ in .preview }
     )
     
     static let sampleProducts = MainViewModel(
@@ -353,7 +353,7 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { .preview }
+        makeOperationStateViewModel: { _ in .preview }
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -365,6 +365,6 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { .preview }
+        makeOperationStateViewModel: { _ in .preview }
     )
 }
