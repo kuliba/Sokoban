@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class AuthLoginViewModel: ObservableObject {
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     let header: HeaderViewModel
     
@@ -55,7 +55,7 @@ class AuthLoginViewModel: ObservableObject {
     private lazy var cardButton: ButtonAuthView.ViewModel = .init(.card) { [weak self] in
         self?.action.send(AuthLoginViewModelAction.Show.Products())
     }
-
+    
     init(
         header: HeaderViewModel = HeaderViewModel(),
         buttons: [ButtonAuthView.ViewModel],
@@ -91,14 +91,14 @@ class AuthLoginViewModel: ObservableObject {
         model.clientInform
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientInformData in
-        
+                
                 guard !self.model.clientInformStatus.isShowNotAuthorized,
                       let message = clientInformData.data?.notAuthorized
                 else { return }
                 self.model.clientInformStatus.isShowNotAuthorized = true
                 self.action.send(AuthLoginViewModelAction.Show.AlertClientInform(message: message))
-        
-        }.store(in: &bindings)
+                
+            }.store(in: &bindings)
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -121,7 +121,7 @@ class AuthLoginViewModel: ObservableObject {
                         
                         LoggerAgent.shared.log(level: .debug, category: .ui, message: "presented confirm view")
                         link = .confirm(confirmViewModel)
-     
+                        
                     case .failure(message: let message):
                         LoggerAgent.shared.log(category: .ui, message: "ModelAction.Auth.CheckClient.Response: failure message \(message)")
                         
@@ -129,7 +129,7 @@ class AuthLoginViewModel: ObservableObject {
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
                         
                     }
-    
+                    
                 default:
                     break
                 }
@@ -233,13 +233,14 @@ class AuthLoginViewModel: ObservableObject {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
-                
+            }
+            .store(in: &bindings)
+        
         card.$state
             .combineLatest(model.sessionState, model.fcmToken)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] cardState, sessionState, fcmToken in
+                
                 switch (cardState, sessionState, fcmToken) {
                 case (.ready(let cardNumber), .active, .some):
                     LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
@@ -255,8 +256,9 @@ class AuthLoginViewModel: ObservableObject {
                 default:
                     card.nextButton = nil
                 }
-            }.store(in: &bindings)
-
+            }
+            .store(in: &bindings)
+        
         model.catalogProducts
             .combineLatest(model.transferAbroad)
             .receive(on: DispatchQueue.main)
@@ -275,13 +277,13 @@ class AuthLoginViewModel: ObservableObject {
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "catalog products button presented")
                     buttons.append(self.cardButton)
                 }
-
+                
                 withAnimation {
                     
                     self.buttons = buttons
                 }
-  
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ viewModel: AuthTransfersViewModel) {
@@ -295,7 +297,7 @@ class AuthLoginViewModel: ObservableObject {
                 case _ as TransfersSectionAction.Direction.Detail.Order.Tap:
                     
                     self.action.send(AuthLoginViewModelAction.Close.Link())
-    
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         self.action.send(AuthLoginViewModelAction.Show.Products())
                     }
@@ -306,8 +308,8 @@ class AuthLoginViewModel: ObservableObject {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     deinit {
