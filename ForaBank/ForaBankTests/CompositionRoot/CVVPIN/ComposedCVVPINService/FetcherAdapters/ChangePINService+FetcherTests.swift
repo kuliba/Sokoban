@@ -16,7 +16,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnActivationFailure() {
         
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             authenticateResult: .failure(.activationFailure)
         )
         
@@ -25,7 +25,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnAuthenticateFailure() {
         
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             authenticateResult: .failure(.authenticationFailure)
         )
         
@@ -36,7 +36,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
         
         let statusCode = 500
         let invalidData = anyData()
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             confirmProcessResult: .failure(.invalid(statusCode: statusCode, data: invalidData))
         )
         
@@ -47,7 +47,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
         
         let statusCode = 500
         let invalidData = anyData()
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             confirmProcessResult: .failure(.network)
         )
         
@@ -58,20 +58,45 @@ final class ChangePINService_FetcherTests: XCTestCase {
         
         let statusCode = 500
         let errorMessage = "Confirm Failure"
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             confirmProcessResult: .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
         )
         
         expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
     }
     
-    func test_fetch_shouldDeliverErrorOnDecryptFailure() {
+    func test_fetch_shouldDeliverErrorOnDecryptEventIDFailure() {
         
-        let sut = makeSUT(
-            publicRSAKeyDecryptResult: .failure(anyError())
-        )
+        let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)))
+        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+            
+            spy.complete(with: .failure(anyError()))
+        })
+    }
+    
+    func test_fetch_shouldDeliverErrorOnDecryptPhoneFailure() {
+        
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+            
+            spy.complete(with: .success(UUID().uuidString))
+            spy.complete(with: .failure(anyError()), at: 1)
+        })
+    }
+    
+    func test_fetch_shouldDeliver_OnSuccess() {
+        
+        let eventIDValue = UUID().uuidString
+        let phone = "+7..9876"
+        let (sut, spy) = makeSUT()
+        
+        expect(sut, toDeliver: .success(.init(otpEventID: .init(eventIDValue: eventIDValue), phone: phone)), on: {
+            
+            spy.complete(with: .success(eventIDValue))
+            spy.complete(with: .success(phone), at: 1)
+        })
     }
     
     // MARK: - Helpers
@@ -79,22 +104,21 @@ final class ChangePINService_FetcherTests: XCTestCase {
     private func makeSUT(
         authenticateResult: SUT.AuthenticateResult = anySuccess(),
         confirmProcessResult: SUT.ConfirmProcessResult = anySuccess(),
-        publicRSAKeyDecryptResult: SUT.PublicRSAKeyDecryptResult = anySuccess(),
         makePINChangeJSONResult: SUT.MakePINChangeJSONResult = anySuccess(),
         changePINProcessResult: SUT.ChangePINProcessResult = .success(()),
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
+    ) -> (
+        sut: SUT,
+        spy: DecryptSpy
+    ) {
+        let spy = DecryptSpy()
         let sut = SUT(
             authenticate: { completion in
                 
                 completion(authenticateResult)
             },
-            publicRSAKeyDecrypt: { _, completion in
-                
-                completion(publicRSAKeyDecryptResult)
-            },
+            publicRSAKeyDecrypt: spy.decrypt,
             confirmProcess: { _, completion in
                 
                 completion(confirmProcessResult)
@@ -110,13 +134,15 @@ final class ChangePINService_FetcherTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return sut
+        return (sut, spy)
     }
     
     private func expect(
         _ sut: SUT,
         toDeliver expectedResult: SUT.FetchResult,
+        on action: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -187,7 +213,28 @@ final class ChangePINService_FetcherTests: XCTestCase {
             exp.fulfill()
         }
         
+        action()
+        
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private final class DecryptSpy {
+        
+        private var completions = [SUT.PublicRSAKeyDecryptCompletion]()
+        
+        func decrypt(
+            _ string: String,
+            completion: @escaping SUT.PublicRSAKeyDecryptCompletion
+        ) {
+            completions.append(completion)
+        }
+        
+        func complete(
+            with result: SUT.PublicRSAKeyDecryptResult,
+            at index: Int = 0
+        ) {
+            completions[index](result)
+        }
     }
 }
 
