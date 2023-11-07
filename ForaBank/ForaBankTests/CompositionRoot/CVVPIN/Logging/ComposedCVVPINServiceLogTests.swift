@@ -1,5 +1,5 @@
 //
-//  ComposedCVVPINServiceTests.swift
+//  ComposedCVVPINServiceLogTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 03.11.2023.
@@ -14,7 +14,7 @@ fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
 fileprivate typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
 fileprivate typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConfirmationCodeResult
 
-final class ComposedCVVPINServiceTests: XCTestCase {
+final class ComposedCVVPINServiceLogTests: XCTestCase {
     
     func test_init_shouldNotMessageLogger() {
         
