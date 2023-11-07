@@ -5440,8 +5440,8 @@
 		2A4A19EA2AF4D99000F66EDF /* ComposedCVVPINService */ = {
 			isa = PBXGroup;
 			children = (
+				2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */,
 				2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */,
-				2A6AD3492AFA0C6C005B48B3 /* ComposedCVVPINService */,
 			);
 			path = ComposedCVVPINService;
 			sourceTree = "<group>";
@@ -5571,14 +5571,6 @@
 				2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */,
 			);
 			path = Mappers;
-			sourceTree = "<group>";
-		};
-		2A6AD3492AFA0C6C005B48B3 /* ComposedCVVPINService */ = {
-			isa = PBXGroup;
-			children = (
-				2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */,
-			);
-			path = ComposedCVVPINService;
 			sourceTree = "<group>";
 		};
 		2A6DC72B2AF3CA0400688401 /* Helpers */ = {
