@@ -6,11 +6,13 @@
 //
 
 import PhoneNumberKit
+import Foundation
 
 public struct PhoneNumberWrapper {
     
     private let phoneNumberKit: PhoneNumberKit
-    
+    private let defaultRegionCode = PhoneNumberKit.defaultRegionCode()
+
     public func isValidPhoneNumber(_ input: String) -> Bool {
         
         phoneNumberKit.isValidPhoneNumber(input)
@@ -25,11 +27,19 @@ public struct PhoneNumberWrapper {
     public func format(_ value: String) -> String {
         
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
-        guard let phoneNumberParsed = try? phoneNumberKit.parse(
-                phoneNumber,
-                ignoreType: true
-              ) else { return phoneNumber.applyPatternOnPhoneNumber() }
+        let regionCode = phoneNumberKit.codeBy(phoneNumber)
+        let codeLength = countryCodeLength(by: regionCode)
         
+        guard let phoneNumberParsed = try? codeLength > 0 ?
+                phoneNumberKit.parse(
+                    String(phoneNumber.dropFirst(codeLength)),
+                    withRegion: regionCode ?? defaultRegionCode,
+                    ignoreType: true) :
+                    phoneNumberKit.parse(
+                        phoneNumber,
+                        ignoreType: true)
+                
+        else { return phoneNumber.applyPatternOnPhoneNumber() }
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
     
@@ -61,6 +71,11 @@ public struct PhoneNumberWrapper {
     private func addCodeRuIfNeeded(_ input: String) -> String {
         return input.hasPrefix("89") ? "79" + input.dropFirst(2) : input
     }
+    
+    func countryCodeLength(by code: String?) -> Int {
+        guard let code else { return 0 }
+        return phoneNumberKit.countryCode(for: code)?.countDigits ?? 0
+     }
 }
 
 private extension Int {
@@ -71,4 +86,10 @@ private extension Int {
 private extension String {
     static let countryCodeRu: Self = "RU"
     static let nationalDigitalCodeRu: Self = "8"
+}
+
+extension UInt64 {
+    var countDigits: Int {
+        return String(describing: self).count
+    }
 }

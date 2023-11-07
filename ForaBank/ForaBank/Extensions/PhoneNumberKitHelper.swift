@@ -29,7 +29,7 @@ struct PhoneNumberKitFormater: PhoneNumberFormaterProtocol {
     
     func partialFormatter(_ phoneNumber: String) -> String {
         
-        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit)
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "RU")
         let phoneFormatted = partialFormatter.formatPartial(phoneNumber)
         
         return phoneFormatted
