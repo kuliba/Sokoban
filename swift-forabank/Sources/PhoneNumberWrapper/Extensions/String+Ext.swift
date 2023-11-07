@@ -33,6 +33,7 @@ extension String {
     }
     
     func formatter (mask:String) -> String {
+        
         let number = self.replacingOccurrences(
             of: "[^0-9]",
             with: "",
@@ -42,11 +43,11 @@ extension String {
         var result = ""
         var index = number.startIndex
         for character in mask where index < number.endIndex {
-            if character == "X"{
-                result.append (number[index])
+            if character == "X" {
+                result.append(number[index])
                 index = number.index(after: index)
-            }else{
-                result.append (character)
+            } else {
+                result.append(character)
             }
         }
         let remainderRange = index..<number.endIndex
