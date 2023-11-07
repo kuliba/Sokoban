@@ -7,6 +7,7 @@
 
 import Foundation
 import GenericRemoteService
+import PaymentSticker
 
 extension Services {
 
@@ -22,6 +23,7 @@ extension Services {
             createRequest: RequestFactory.getStickerDictionary,
             performRequest: httpClient.performRequest,
             mapResponse: {
+                
                 try ResponseMapper.mapStickerDictionaryResponse($0, $1).get()
             }
         )

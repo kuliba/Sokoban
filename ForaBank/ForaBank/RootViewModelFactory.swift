@@ -26,23 +26,20 @@ enum RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
+        let operationStateViewModelFactory = {
+            
+            OperationStateViewModel(businessLogic: .init(
+                dictionaryService: Services.stickerDictRequest,
+                transfer: { event, completion in
+                    
+                }
+            ))
+        }
+        
         let mainViewModel = MainViewModel(
             model,
             sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: {
-                
-                OperationStateViewModel(
-                    businessLogic: .init(
-                        dictionaryService: unimplemented(),//Services.stickerDictRequest(
-//                            input: .stickerDeliveryOffice,
-//                            httpClient: httpClient
-//                        ),
-                        transfer: { event, completion in
-                           
-                        }
-                    )
-                )
-            }
+            makeOperationStateViewModel: operationStateViewModelFactory
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(model: model)

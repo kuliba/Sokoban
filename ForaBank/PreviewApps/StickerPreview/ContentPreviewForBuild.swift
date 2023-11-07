@@ -12,8 +12,7 @@ extension BusinessLogic {
     
     static let preview: BusinessLogic = .init(
         dictionaryService: { fatalError() }(),
-        transfer: { fatalError() }(),
-        reduce: { fatalError() }()
+        transfer: { fatalError() }()
     )
 }
 
