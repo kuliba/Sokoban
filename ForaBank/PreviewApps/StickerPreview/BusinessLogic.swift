@@ -8,23 +8,24 @@
 import Foundation
 import Combine
 import GenericRemoteService
+import PaymentSticker
 
 public final class BusinessLogic {
     
-    typealias Option = Operation.Parameter.Select.Option
+    typealias Option = PaymentSticker.Operation.Parameter.Select.Option
     public typealias OperationResult = Result<OperationStateViewModel.State, Error>
     typealias Completion = (OperationResult) -> Void
-    typealias Load = (Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
+    typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     
     public typealias TransferResult = Result<TransferResponse, TransferError>
     public typealias TransferCompletion = (TransferResult) -> Void
     public typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
-    private let dictionaryService: RemoteService<String, Operation>
+    private let dictionaryService: RemoteService<String, PaymentSticker.Operation>
     private let transfer: Transfer
     
     public init(
-        dictionaryService: RemoteService<String, Operation>,
+        dictionaryService: RemoteService<String, PaymentSticker.Operation>,
         transfer: @escaping Transfer
     ) {
         self.dictionaryService = dictionaryService
@@ -35,7 +36,7 @@ public final class BusinessLogic {
 public extension BusinessLogic {
     
     func operationResult(
-        operation: Operation,
+        operation: PaymentSticker.Operation,
         event: Event,
         completion: @escaping (OperationResult) -> Void
     ) {
@@ -54,7 +55,7 @@ extension BusinessLogic {
     
     //TODO: rename process
     func reduce(
-        operation: Operation,
+        operation: PaymentSticker.Operation,
         event: Event,
         completion: @escaping (OperationResult) -> Void
     ) -> OperationResult {
@@ -90,7 +91,7 @@ extension BusinessLogic {
                         guard let deliveryOfficeParameter = deliveryOffice.main.first(where: { $0.type == .citySelector })
                         else { return }
                         
-                        let newParameter: Operation.Parameter = .select(.init(
+                        let newParameter: PaymentSticker.Operation.Parameter = .select(.init(
                             id: "deliveryOffice",
                             value: "",
                             title: deliveryOfficeParameter.data.title,
@@ -146,9 +147,9 @@ extension BusinessLogic {
     
     func selectOption(
         id: String,
-        operation: Operation,
-        parameter: Operation.Parameter.Select
-    ) -> Operation {
+        operation: PaymentSticker.Operation,
+        parameter: PaymentSticker.Operation.Parameter.Select
+    ) -> PaymentSticker.Operation {
         
         guard let option = parameter.options.first(where: { $0.id == id })
         else { return operation }
@@ -212,7 +213,7 @@ extension BusinessLogic {
     
     public enum TransferEvent {
     
-        case operation(Operation)
+        case operation(PaymentSticker.Operation)
         case requestOTP
     }
     

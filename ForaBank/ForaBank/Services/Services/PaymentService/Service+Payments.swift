@@ -11,7 +11,7 @@ import PaymentSticker
 
 extension Services {
 
-    typealias GetStickerDictionary = RemoteService<String, PaymentSticker.Operation>
+    typealias GetStickerDictionary = RemoteService<String, StickerDictionaryResponse>
 
     static func stickerDictRequest(
         input: RequestFactory.GetJsonAbroadType,
@@ -23,18 +23,7 @@ extension Services {
             performRequest: httpClient.performRequest,
             mapResponse: {
                 
-                let dictionaryResponse = try ResponseMapper.mapStickerDictionaryResponse($0, $1).get()
-                
-                switch dictionaryResponse {
-                case .orderForm(let stickerOrderForm):
-                    return PaymentSticker.Operation(parameters: [])
-                    
-                case .deliveryOffice(let deliveryOffice):
-                    return PaymentSticker.Operation(parameters: [])
-                    
-                case .deliveryCourier(let deliveryCourier):
-                    return PaymentSticker.Operation(parameters: [])
-                }
+                return try ResponseMapper.mapStickerDictionaryResponse($0, $1).get()
             }
         )
     }
@@ -59,4 +48,4 @@ struct StickerPayment {
         let deliverToOffice: Bool
         let officeId: String
     }
-}
+}   

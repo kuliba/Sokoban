@@ -122,20 +122,3 @@ public extension BlackBoxAPI {
     typealias Completion = (Result) -> Void
     typealias AsyncGet = (Request, @escaping Completion) -> Void
 }
-
-public extension OperationStateViewModel {
-    
-    convenience init(
-        businessLogic: BusinessLogic
-    ) {
-        self.init(blackBoxGet: { request, completion in
-            
-            let (operation, event) = request
-            businessLogic.operationResult(
-                operation: operation,
-                event: event,
-                completion: completion
-            )
-        })
-    }
-}

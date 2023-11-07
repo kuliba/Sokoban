@@ -13,7 +13,7 @@ extension Operation.Parameter {
         let value: String
         let title: String
         let placeholder: String
-        let options: [Option]
+        public let options: [Option]
         let state: State
         
         public init(
@@ -34,7 +34,7 @@ extension Operation.Parameter {
         
         public struct Option: Hashable {
             
-            let id: String
+            public let id: String
             let name: String
             let iconName: String
             
