@@ -9,17 +9,21 @@ public final class FetcherCacheDecorator<Payload, Success, Failure>
 where Failure: Error {
     
     public typealias Decoratee = Fetcher<Payload, Success, Failure>
-    public typealias Cache = (Success) -> Void
+    public typealias HandleSuccess = (Success) -> Void
+    public typealias HandleFailure = (Failure) -> Void
     
     private let decoratee: any Decoratee
-    private let cache: Cache
+    private let handleSuccess: HandleSuccess
+    private let handleFailure: HandleFailure
     
     public init(
         decoratee: any Decoratee,
-        cache: @escaping Cache
+        handleSuccess: @escaping HandleSuccess,
+        handleFailure: @escaping HandleFailure
     ) {
         self.decoratee = decoratee
-        self.cache = cache
+        self.handleSuccess = handleSuccess
+        self.handleFailure = handleFailure
     }
 }
 
@@ -31,11 +35,29 @@ extension FetcherCacheDecorator: Fetcher {
     ) {
         decoratee.fetch(payload) { [weak self] result in
             
-            completion(result.map { success in
-                
-                self?.cache(success)
-                return success
-            })
+            completion(
+                result
+                    .map { success in
+                        
+                        self?.handleSuccess(success)
+                        return success
+                    }
+            )
         }
     }
 }
+
+public extension FetcherCacheDecorator {
+    
+    convenience init(
+        decoratee: any Decoratee,
+        cache: @escaping HandleSuccess
+    ) {
+        self.init(
+            decoratee: decoratee,
+            handleSuccess: cache,
+            handleFailure: { _ in }
+        )
+    }
+}
+
