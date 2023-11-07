@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 06.11.2023.
 //
 
+#warning("rename to `FetcherDecorator`")
 public final class FetcherCacheDecorator<Payload, Success, Failure>
 where Failure: Error {
     
