@@ -45,8 +45,6 @@ extension OperationStateViewModel {
         self.init(blackBoxGet: { request, completion in
             
             let (operation, event) = request
-            print(request.0)
-            print(request.1)
             businessLogic.operationResult(
                 operation: operation,
                 event: event,
@@ -132,10 +130,7 @@ extension BusinessLogic {
                                         Operation.Parameter.Sticker.Option.init(title: $0.name, description: $0.description)
                                     })
                                 ))
-                                
-                            case let .hint(hint):
-                                return Operation.Parameter.tip(.init(title: hint.title))
-                                
+                                  
                             case let .officeSelector(officeSelector):
                                 return Operation.Parameter.select(.init(
                                     id: "officeSelector",
@@ -156,8 +151,7 @@ extension BusinessLogic {
                                     ))
                                 } else {
                                     
-                                    //TODO: fix this
-                                    return Operation.Parameter.tip(.init(title: ""))
+                                    return nil
                                 }
                             
                             case let .selector(selector):
@@ -173,20 +167,23 @@ extension BusinessLogic {
                                     }),
                                     state: .idle(.init(iconName: "", title: selector.title)))
                                 )
-                                
+                            
+                            case let .hint(hint):
+                                return Operation.Parameter.tip(.init(title: hint.title))
+                              
                             case .separator:
-                                return Operation.Parameter.tip(.init(title: "123"))
+                                return nil
 
                             case .separatorGroup:
-                                return Operation.Parameter.tip(.init(title: "123"))
+                                return nil
 
                             case .pageTitle:
-                                return Operation.Parameter.tip(.init(title: "123"))
+                                return nil
 
                             case .noValid:
-                                return Operation.Parameter.tip(.init(title: "123"))
+                                return nil
                             }
-                        }
+                        }.compactMap{ $0 }
                         
                         completion(.success(.operation(.init(parameters: parameters))))
 
