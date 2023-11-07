@@ -339,6 +339,83 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         expectChangePin(sut, toDeliver: .success(()))
     }
     
+    // MARK: - showCVV
+    
+    func test_showCVV_shouldDeliverActivationErrorOnActivationFailureFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.activationFailure)
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.activationFailure))
+    }
+    
+    func test_showCVV_shouldDeliverServiceErrorOnAuthenticationFailureFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.authenticationFailure)
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_showCVV_shouldDeliverServiceErrorOnInvalidFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.invalid(statusCode: 500, data: anyData()))
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_showCVV_shouldDeliverServiceErrorOnNetworkFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.network)
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_showCVV_shouldDeliverServerErrorOnServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let sut = makeSUT(
+            showCVVResult: .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+    }
+    
+    func test_showCVV_shouldDeliverServiceErrorOnDecryptionFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.serviceError(.decryptionFailure))
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_showCVV_shouldDeliverServiceErrorOnMakeJSONFailure() {
+        
+        let sut = makeSUT(
+            showCVVResult: .failure(.serviceError(.makeJSONFailure))
+        )
+        
+        expectShowCVV(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_showCVV_shouldDeliverVoidOnActivateSuccess() {
+        
+        let cvv = "951"
+        let sut = makeSUT(
+            showCVVResult: .success(.init(cvvValue: cvv))
+        )
+        
+        expectShowCVV(sut, toDeliver: .success(.init(cvv)))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
@@ -526,6 +603,37 @@ final class ComposedCVVPINServiceTests: XCTestCase {
                 
                 exp.fulfill()
             })
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expectShowCVV(
+        _ sut: SUT,
+        toDeliver expectedResult: ShowCVVClient.ShowCVVResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.showCVV(cardId: 12345678901, completion: { receivedResult in
+            
+            switch (expectedResult, receivedResult) {
+                
+            case let (
+                .failure(expected as NSError),
+                .failure(received as NSError)
+            ):
+                XCTAssertNoDiff(expected, received, file: file, line: line)
+                
+            case let (.success(expected), .success(received)):
+                XCTAssertNoDiff(expected, received, file: file, line: line)
+                
+            default:
+                XCTFail("Expected \(expectedResult), but got \(receivedResult).", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        })
         
         wait(for: [exp], timeout: 1.0)
     }
