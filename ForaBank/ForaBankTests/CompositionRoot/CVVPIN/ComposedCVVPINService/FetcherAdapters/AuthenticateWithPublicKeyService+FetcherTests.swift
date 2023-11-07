@@ -63,7 +63,7 @@ final class AuthenticateWithPublicKeyService_FetcherTests: XCTestCase {
         expect(sut, toDeliver: .failure(.serviceError(.makeSessionKeyFailure)))
     }
     
-    func test_fetch_shouldDeliver_OnSuccess () {
+    func test_fetch_shouldDeliverValueOnSuccess () {
         
         let sessionIDValue = UUID().uuidString
         let sessionKeyValue = anyData()

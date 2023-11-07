@@ -12,7 +12,6 @@ import XCTest
 
 fileprivate typealias SUT = FormSessionKeyService
 
-
 final class FormSessionKeyService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnLoadCodeFailure() {
