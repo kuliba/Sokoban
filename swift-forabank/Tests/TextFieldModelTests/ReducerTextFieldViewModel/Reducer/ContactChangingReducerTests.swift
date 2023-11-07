@@ -350,6 +350,44 @@ final class ContactChangingReducerTests: XCTestCase {
         ])
     }
     
+    func test_reduce_nonDigitInputOnlyEmojiShouldInsert() throws {
+        
+        let (state, sut) = makeSUT()
+        
+        let result = try sut.reduce(
+            state,
+            actions: { _ in .startEditing },
+            { try $0.insert("😀") },
+            { try $0.insert("🥶") }
+        )
+        
+        XCTAssertNoDiff(result, [
+            .placeholder("Enter contact name or phone"),
+            .editing(.empty),
+            .editing(.init("😀",   cursorAt: 2)),
+            .editing(.init("😀🥶", cursorAt: 4))
+        ])
+    }
+    
+    func test_reduce_nonDigitInputWithEmojiShouldInsert() throws {
+        
+        let (state, sut) = makeSUT()
+        
+        let result = try sut.reduce(
+            state,
+            actions: { _ in .startEditing },
+            { try $0.insert("q") },
+            { try $0.insert("🤯") }
+        )
+        
+        XCTAssertNoDiff(result, [
+            .placeholder("Enter contact name or phone"),
+            .editing(.empty),
+            .editing(.init("q",   cursorAt: 1)),
+            .editing(.init("q🤯", cursorAt: 5))
+        ])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

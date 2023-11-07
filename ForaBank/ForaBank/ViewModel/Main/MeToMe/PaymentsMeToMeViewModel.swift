@@ -34,7 +34,16 @@ class PaymentsMeToMeViewModel: ObservableObject {
         case loading
     }
 
-    init(_ model: Model, swapViewModel: ProductsSwapView.ViewModel, paymentsAmount: PaymentsAmountView.ViewModel, title: String, mode: Mode = .general, state: State = .normal, bottomSheet: BottomSheet? = nil, sheet: Sheet? = nil) {
+    init(
+        _ model: Model,
+        swapViewModel: ProductsSwapView.ViewModel,
+        paymentsAmount: PaymentsAmountView.ViewModel,
+        title: String,
+        mode: Mode = .general,
+        state: State = .normal,
+        bottomSheet: BottomSheet? = nil,
+        sheet: Sheet? = nil
+    ) {
         
         self.model = model
         self.swapViewModel = swapViewModel
@@ -144,6 +153,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             if response.needOTP == false {
                                 
                                 let mode = modeForSuccessView(
+                                    templateId: getTemplateId(),
                                     productIdFrom: swapViewModel.productIdFrom,
                                     productIdTo: swapViewModel.productIdTo,
                                     transferData: response
@@ -178,7 +188,12 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
                     switch payload.result {
                     case let .success(transferData):
-                        let mode = modeForSuccessView(productIdFrom: swapViewModel.productIdFrom, productIdTo: swapViewModel.productIdTo, transferData: transferData)
+                        let mode = modeForSuccessView(
+                            templateId: getTemplateId(),
+                            productIdFrom: swapViewModel.productIdFrom,
+                            productIdTo: swapViewModel.productIdTo,
+                            transferData: transferData
+                        )
                         
                         guard let success = Payments.Success(
                             model: model,
@@ -645,7 +660,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.action.send(PaymentsMeToMeAction.InteractionEnabled(isUserInteractionEnabled: value))
     }
     
-    private func modeForSuccessView (productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, transferData: TransferResponseData) -> PaymentsSuccessViewModel.Mode{
+    private func modeForSuccessView(templateId: Int?, productIdFrom: ProductData.ID?, productIdTo: ProductData.ID?, transferData: TransferResponseData) -> PaymentsSuccessViewModel.Mode {
         if let productIdFrom = productIdFrom,
            let _ = model.product(productId: productIdFrom) as? ProductDepositData {
             return .makePaymentFromDeposit(from: productIdFrom, to: productIdTo, transferData)
@@ -654,7 +669,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                 let _ = model.product(productId: productIdTo) as? ProductDepositData {
                  return .makePaymentToDeposit(from: productIdFrom, to: productIdTo, transferData)
              }
-        return .meToMe(from: productIdFrom, to: productIdTo, transferData)
+        return .meToMe(templateId: templateId, from: productIdFrom, to: productIdTo, transferData)
     }
     
     private func isSwapEnabled(isSwapButtonEnabled: Bool, productFrom: ProductData?, productTo: ProductData?) -> Bool {
@@ -993,6 +1008,17 @@ extension PaymentsMeToMeViewModel {
         
         return (from, to)
     }
+    
+    func getTemplateId() -> Int? {
+        
+        switch mode {
+        case let .templatePayment(templateId, _):
+            return templateId
+            
+        default:
+            return nil
+        }
+    }
 }
 
 // MARK: - Action
@@ -1093,7 +1119,47 @@ extension PaymentsMeToMeViewModel {
 
 struct MeToMePayment: Equatable {
     
-    let payerProductId: Int
-    let payeeProductId: Int
-    let amount: Double
+    private let amount: Double?
+    private let payerProductId: Int
+    private let payeeProductId: Int
+    let templateId: Int?
+
+    internal init(
+        templateId: Int? = nil,
+        payerProductId: Int,
+        payeeProductId: Int,
+        amount: Double?
+    ) {
+        
+        self.templateId = templateId
+        self.payerProductId = payerProductId
+        self.payeeProductId = payeeProductId
+        self.amount = amount
+    }
+    
+    init?(mode: PaymentsSuccessViewModel.Mode) {
+
+        switch mode {
+        case let .meToMe(
+            templateId: templateId,
+            from: productFrom,
+            to: productTo,
+            transferData):
+            
+            guard let productFrom = productFrom,
+                  let productTo = productTo else {
+                return nil
+            }
+                    
+            self.init(
+                templateId: templateId,
+                payerProductId: Int(productFrom),
+                payeeProductId: Int(productTo),
+                amount: transferData.amount
+            )
+
+        default:
+            return nil
+        }
+    }
 }

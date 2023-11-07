@@ -22,7 +22,7 @@ struct QRFailedView: View {
                 VStack(spacing: 8) {
                     
                     Text(viewModel.title)
-                        .font(Font.textH3SB18240())
+                        .font(Font.textH3Sb18240())
                         .foregroundColor(Color.textSecondary)
                     
                     Text(viewModel.content)

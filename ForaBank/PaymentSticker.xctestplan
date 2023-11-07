@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "5D5C6787-1477-42D9-983B-02DD45688E9D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
+      }
+    }
+  ],
+  "version" : 1
+}

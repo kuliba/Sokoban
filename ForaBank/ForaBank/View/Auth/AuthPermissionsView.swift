@@ -39,7 +39,7 @@ extension AuthPermissionsView {
                 
                 ZStack(alignment: .center) {
                     Circle()
-                        .fill(Color.bGIconGrayLightest)
+                        .fill(Color.bgIconGrayLightest)
                         .frame(width: 170, height: 170)
                     viewModel.icon
                         .resizable()
@@ -77,7 +77,7 @@ extension AuthPermissionsView {
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 48, maxHeight: 48)
                     .background(buttonViewModel.style.background)
-                    .font(.buttonLargeSB16180())
+                    .font(.buttonLargeSb16180())
                     .foregroundColor(buttonViewModel.style.textColor)
                     .cornerRadius(8)
                     

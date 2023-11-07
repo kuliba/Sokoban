@@ -18,12 +18,22 @@ extension DecodableLanding.Data {
             
             let md5hash: String
             let title, subInfo: String?
-            let details: Details
-        }
-        
-        struct Details: Decodable, Equatable {
+            let detail: Detail?
             
-            let detailsGroupId, detailViewId: String
+            enum CodingKeys: String, CodingKey {
+                case md5hash, title, subInfo
+                case detail = "details"
+            }
+            
+            struct Detail: Decodable, Equatable {
+                let groupId: String
+                let viewId: String
+                
+                enum CodingKeys: String, CodingKey {
+                    case groupId = "detailsGroupId"
+                    case viewId = "detailViewId"
+                }
+            }
         }
     }
 }

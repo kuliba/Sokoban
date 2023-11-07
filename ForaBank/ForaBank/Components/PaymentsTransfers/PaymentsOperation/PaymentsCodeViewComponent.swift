@@ -300,6 +300,7 @@ struct PaymentsCodeView: View {
                 
                 errorLabel
             }
+            
         }
     }
     
@@ -309,6 +310,7 @@ struct PaymentsCodeView: View {
             .resizable()
             .renderingMode(.template)
             .foregroundColor(.mainColorsGray)
+            .accessibilityIdentifier("PaymentsCodeIcon")
     }
     
     @ViewBuilder
@@ -326,6 +328,7 @@ struct PaymentsCodeView: View {
                         removal: .opacity
                     )
                 )
+                .accessibilityIdentifier("PaymentsCodeTitle")
         }
     }
     
@@ -340,6 +343,7 @@ struct PaymentsCodeView: View {
         .textFieldStyle(DefaultTextFieldStyle())
         .frame(height: 24)
         .keyboardType(.numberPad)
+        .accessibilityIdentifier("PaymentsCodeTextField")
     }
     
     @ViewBuilder
@@ -360,10 +364,12 @@ struct PaymentsCodeView: View {
                             .background(Color.white)
                             .cornerRadius(90)
                             .frame(height: 24)
+                            .accessibilityIdentifier("PaymentsСodeSendAgainButton")
                     }
                     
                 case let .timer(timerViewModel):
                     PaymentsCodeView.TimerView(viewModel: timerViewModel)
+                        .accessibilityIdentifier("PaymentsCodeTimer")
                 }
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -378,6 +384,7 @@ struct PaymentsCodeView: View {
             Text(errorMessage)
                 .foregroundColor(.systemColorError)
                 .font(.textBodySR12160())
+                .accessibilityIdentifier("PaymentsCodeErrorText")
         }
     }
 }

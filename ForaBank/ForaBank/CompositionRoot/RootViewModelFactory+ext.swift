@@ -63,7 +63,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
-            onExit: onRegister
+            onRegister: onRegister
         )
     }
     

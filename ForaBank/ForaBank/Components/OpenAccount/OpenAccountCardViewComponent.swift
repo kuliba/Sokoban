@@ -82,7 +82,7 @@ struct OpenAccountCardView: View {
                                 .frame(width: 2, height: 2)
                             
                             Text(numberCard)
-                                .font(.textBodyXSR11140())
+                                .font(.textBodyXsR11140())
                                 .foregroundColor(.mainColorsWhite)
                         }.padding(.leading, 29)
                     } else {
@@ -94,11 +94,11 @@ struct OpenAccountCardView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         
                         Text(viewModel.accountTitle)
-                            .font(.textBodyXSR11140())
+                            .font(.textBodyXsR11140())
                             .foregroundColor(.mainColorsGrayMedium)
                         
                         Text(viewModel.balance)
-                            .font(.textBodyXSSB11140())
+                            .font(.textBodyXsSb11140())
                             .foregroundColor(.mainColorsWhite)
 
                     }.padding(.top, 2)

@@ -187,7 +187,7 @@ extension Services {
         }
         
         func checkActivation(
-            completion: @escaping (Result<Void, Error>) -> Void
+            completion: @escaping (Swift.Result<Void, Error>) -> Void
         ) {
             rsaKeyPairLoader.load {
                 
@@ -238,7 +238,7 @@ extension Services {
         }
         
         typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
-        typealias CacheCompletion = (Result<Void, Error>) -> Void
+        typealias CacheCompletion = (Swift.Result<Void, Error>) -> Void
         
         func cache(
             success: AuthSuccess
@@ -461,7 +461,7 @@ extension Services {
         }
         
         typealias FormSessionKeySuccess = FormSessionKeyService.Success
-        typealias FormSessionKeyCacheCompletion = (Result<Void, Error>) -> Void
+        typealias FormSessionKeyCacheCompletion = (Swift.Result<Void, Error>) -> Void
         
         func cache(success: FormSessionKeySuccess) {
             

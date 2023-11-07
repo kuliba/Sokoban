@@ -7,6 +7,7 @@
 
 import CvvPin
 import Foundation
+import enum ServerAgent.ServerStatusCode
 
 struct APISessionCode: Decodable, Equatable {
  
@@ -64,7 +65,7 @@ private extension API.ServerResponse where Payload == APISessionCode, ServerStat
                     
 private extension API.ServerResponse<APISessionCode, Int>.StatusCode {
     
-    init(_ serverStatusCode: ForaBank.ServerStatusCode) {
+    init(_ serverStatusCode: ServerAgent.ServerStatusCode) {
         
         switch serverStatusCode {
         case .ok:

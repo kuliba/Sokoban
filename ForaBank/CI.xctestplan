@@ -118,27 +118,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ForaCryptoTests",
-        "name" : "ForaCryptoTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "TransferPublicKeyTests",
-        "name" : "TransferPublicKeyTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "LandingUICompomentTests",
-        "name" : "LandingUICompomentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "LinkableTextTests",
         "name" : "LinkableTextTests"
       }
@@ -146,8 +125,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "CryptoSwaddlerTests",
-        "name" : "CryptoSwaddlerTests"
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
       }
     },
     {
@@ -160,15 +139,22 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "URLRequestFactoryTests",
-        "name" : "URLRequestFactoryTests"
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "KeyChainStoreTests",
-        "name" : "KeyChainStoreTests"
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
       }
     },
     {
@@ -188,8 +174,57 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "FetcherTests",
         "name" : "FetcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
       }
     }
   ],

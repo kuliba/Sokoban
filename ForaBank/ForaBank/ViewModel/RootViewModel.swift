@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
+import CodableLanding
+import LandingMapping
+import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
@@ -15,8 +18,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     @Published var selected: TabType
     @Published var alert: Alert.ViewModel?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
-    @Published var isLinkActive: Bool = false
+    @Published private(set) var link: Link?
     
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
@@ -26,7 +28,8 @@ class RootViewModel: ObservableObject, Resetable {
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
     private let model: Model
-    private let onExit: () -> Void
+    private let infoDictionary: [String : Any]?
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -35,8 +38,9 @@ class RootViewModel: ObservableObject, Resetable {
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
+        infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        onExit: @escaping () -> Void
+        onRegister: @escaping () -> Void
     ) {
         self.selected = .main
         self.mainViewModel = mainViewModel
@@ -44,7 +48,8 @@ class RootViewModel: ObservableObject, Resetable {
         self.chatViewModel = chatViewModel
         self.informerViewModel = informerViewModel
         self.model = model
-        self.onExit = onExit
+        self.infoDictionary = infoDictionary
+        self.onRegister = onRegister
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -58,6 +63,11 @@ class RootViewModel: ObservableObject, Resetable {
         mainViewModel.reset()
         paymentsViewModel.reset()
         chatViewModel.reset()
+    }
+    
+    func resetLink() {
+        
+        link = nil
     }
     
     private func bindAuth() {
@@ -76,10 +86,12 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = AuthLoginViewModel(
-                        model,
-                        rootActions: rootActions,
-                        onRegister: onExit
+                    let loginViewModel = ComposedLoginViewModel(
+                        authLoginViewModel: .init(
+                            model,
+                            rootActions: rootActions,
+                            onRegister: onRegister
+                        )
                     )
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
@@ -286,7 +298,9 @@ class RootViewModel: ObservableObject, Resetable {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Notification.Transition.Process:
@@ -314,7 +328,7 @@ class RootViewModel: ObservableObject, Resetable {
                         case let .success(appInfo):
                             LoggerAgent.shared.log(level: .debug, category: .ui, message: "received ModelAction.AppVersion.Response, success, info: \(appInfo)")
                             
-                            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
+                            if let appVersion = self.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
                                 
                                 self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
                                     guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
@@ -412,6 +426,172 @@ class RootViewModel: ObservableObject, Resetable {
     }()
 }
 
+extension AuthLoginViewModel {
+    
+    convenience init(
+        _ model: Model,
+        buttons: [ButtonAuthView.ViewModel] = [],
+        rootActions: RootViewModel.RootActions,
+        onRegister: @escaping () -> Void
+    ) {
+        self.init(
+            eventPublishers: model.eventPublishers,
+            eventHandlers: .init(
+                onRegisterCardNumber: model.register(cardNumber:),
+                catalogProduct: model.catalogProduct,
+                showSpinner: rootActions.spinner.show,
+                hideSpinner: rootActions.spinner.hide
+            ),
+            factory: model.authLoginViewModelFactory(
+                rootActions: rootActions
+            ),
+            onRegister: onRegister
+        )
+    }
+}
+
+private extension Model {
+    
+    var eventPublishers: AuthLoginViewModel.EventPublishers {
+        
+        .init(
+            clientInformMessage: clientInform
+                .filter { [self] _ in
+                    
+                    !clientInformStatus.isShowNotAuthorized
+                }
+                .compactMap(\.data?.notAuthorized)
+                .handleEvents(receiveOutput: { [self] _ in
+                    
+                    clientInformStatus.isShowNotAuthorized = true
+                })
+                .eraseToAnyPublisher(),
+            
+            checkClientResponse: action
+                .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
+                .eraseToAnyPublisher(),
+            
+            catalogProducts: catalogProducts
+                .eraseToAnyPublisher(),
+            
+            sessionStateFcmToken: sessionState
+                .combineLatest(fcmToken)
+                .eraseToAnyPublisher()
+        )
+    }
+    
+    func register(cardNumber: String) -> Void {
+        
+        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
+        
+        action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
+    }
+    
+    func catalogProduct(
+        for request: AuthLoginViewModel.EventHandlers.Request
+    ) -> CatalogProductData? {
+        
+        switch request {
+        case let .id(id):
+            return catalogProducts.value.first {
+                $0.id == id
+            }
+            
+        case let .tarif(tarif, type: type):
+            return catalogProducts.value.first {
+                $0.tariff == tarif &&
+                $0.productType == type
+            }
+        }
+    }
+}
+
+extension ModelAuthLoginViewModelFactory: AuthLoginViewModelFactory {}
+
+// MARK: - Factory
+
+extension Model {
+    
+    func authLoginViewModelFactory(
+        rootActions: RootViewModel.RootActions
+    ) -> ModelAuthLoginViewModelFactory {
+        
+        ModelAuthLoginViewModelFactory(
+            model: self,
+            rootActions: rootActions
+        )
+    }
+}
+
+final class ModelAuthLoginViewModelFactory {
+    
+    private let model: Model
+    private let rootActions: RootViewModel.RootActions
+    
+    init(
+        model: Model,
+        rootActions: RootViewModel.RootActions
+    ) {
+        self.model = model
+        self.rootActions = rootActions
+    }
+    
+    func makeAuthConfirmViewModel(
+        confirmCodeLength: Int,
+        phoneNumber: String,
+        resendCodeDelay: TimeInterval,
+        backAction: @escaping () -> Void
+    ) -> AuthConfirmViewModel {
+        
+        .init(
+            model,
+            confirmCodeLength: confirmCodeLength,
+            phoneNumber: phoneNumber,
+            resendCodeDelay: resendCodeDelay,
+            backAction: backAction,
+            rootActions: rootActions
+        )
+    }
+    
+    func makeAuthProductsViewModel(
+        action: @escaping (_ id: Int) -> Void,
+        dismissAction: @escaping () -> Void
+    ) -> AuthProductsViewModel {
+        
+        .init(
+            model,
+            products: model.catalogProducts.value,
+            action: action,
+            dismissAction: dismissAction
+        )
+    }
+    
+    func makeOrderProductViewModel(
+        productData: CatalogProductData
+    ) -> OrderProductView.ViewModel {
+        
+        .init(
+            model,
+            productData: productData
+        )
+    }
+    
+    func makeLandingViewModel(
+        _ type: AbroadType,
+        config: UILanding.Component.Config,
+        goMain: @escaping GoMainAction,
+        orderCard: @escaping OrderCardAction
+    ) -> LandingWrapperViewModel {
+        
+        self.model.landingViewModelFactory(
+            abroadType: type,
+            config: config,
+            goMain: goMain,
+            orderCard: orderCard
+        )
+    }
+}
+
 //MARK: - Types
 
 extension RootViewModel {
@@ -467,7 +647,7 @@ enum RootViewModelAction {
         
         struct ShowLogin: Action {
             
-            let viewModel: AuthLoginViewModel
+            let viewModel: ComposedLoginViewModel
         }
         
         struct ShowLock: Action {

@@ -74,7 +74,10 @@ class AuthProductsViewModel: ObservableObject {
                 
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
                 switch action {
                 case let payload as ModelAction.General.DownloadImage.Response:
                     switch payload.result {
@@ -109,8 +112,8 @@ class AuthProductsViewModel: ObservableObject {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func requestImages(for products: [CatalogProductData]) {

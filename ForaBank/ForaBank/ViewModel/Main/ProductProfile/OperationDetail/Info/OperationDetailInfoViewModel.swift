@@ -59,7 +59,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                   let operatorValue = model.dictionaryAnywayOperator(for: puref),
                   let image = operatorValue.iconImageData?.image else {
                 
-                return .ic40ZKXServices
+                return .ic40ZkxServices
             }
             
             return image

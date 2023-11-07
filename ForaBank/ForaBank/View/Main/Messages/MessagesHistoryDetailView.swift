@@ -21,9 +21,9 @@ struct MessagesHistoryDetailView: View {
                 .resizable()
                 .frame(width: 24, height: 24)
                 .foregroundColor(.iconWhite)
-                .background(Circle().frame(width: 40, height: 40).foregroundColor(.bGIconRedLight))
+                .background(Circle().frame(width: 40, height: 40).foregroundColor(.bgIconRedLight))
                 .frame(width: 32, height: 32)
-                .background(Circle().frame(width: 64, height: 64).foregroundColor(.bGIconRedLight))
+                .background(Circle().frame(width: 64, height: 64).foregroundColor(.bgIconRedLight))
                 .padding(32)
                 .accessibilityIdentifier("MessageHistoryDetailIcon")
             

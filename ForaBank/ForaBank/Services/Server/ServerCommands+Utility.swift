@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 
 extension ServerCommands {
     
@@ -171,42 +172,6 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
-            }
-        }
-        
-        /*
-         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getJsonAbroad
-        */
-        struct GetJsonAbroad: ServerCommand {
-            
-            let token: String
-            let endpoint = "/dict/getJsonAbroad"
-            let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]?
-            
-            struct Payload: Encodable {}
-            
-            struct Response: ServerResponse {
-                
-                let statusCode: ServerStatusCode
-                let errorMessage: String?
-                let data: TransferAbroadResponseData?
-            }
-            
-            init(token: String, serial: String?) {
-                
-                self.token = token
-                
-                if let serial = serial {
-                    
-                    var parameters = [ServerCommandParameter]()
-                    parameters.append(.init(name: "serial", value: serial))
-                    self.parameters = parameters
-                    
-                } else {
-                    
-                    self.parameters = nil
-                }
             }
         }
     }

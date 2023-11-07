@@ -121,7 +121,7 @@ extension Services {
             }
         }
         
-        typealias LoadShowCVVSessionResult = Result<ShowCVVSession, Error>
+        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Error>
         typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
         
         func loadShowCVVSession(

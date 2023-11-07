@@ -77,7 +77,7 @@ struct ButtonOrderView: View {
                     .foregroundColor(viewModel.backgroundColor)
                 
                 Text(viewModel.title)
-                    .font(.buttonLargeSB16180())
+                    .font(.buttonLargeSb16180())
                     .foregroundColor(viewModel.textColor)
             }
         }

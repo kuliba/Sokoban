@@ -65,6 +65,7 @@ struct ContactsBankPrefferedItemView: View {
                         .frame(width: 56, height: 56)
                         .cornerRadius(90)
                         .overlay(FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -16))
+                        .accessibilityIdentifier("PreferredBankLogo")
                     
                 } else {
                     
@@ -79,13 +80,14 @@ struct ContactsBankPrefferedItemView: View {
                     if let contactName = viewModel.contactName {
                         
                         Text(contactName)
-                            .font(.textBodyXSSB11140())
+                            .font(.textBodyXsSb11140())
                             .foregroundColor(Color.textSecondary)
                     }
                     
                     Text(viewModel.name)
                         .foregroundColor(Color.textPlaceholder)
-                        .font(.textBodyXSR11140())
+                        .font(.textBodyXsR11140())
+                        .accessibilityIdentifier("PreferredBankName")
                 }
             }
         }

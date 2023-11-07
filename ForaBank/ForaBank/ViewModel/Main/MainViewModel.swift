@@ -118,6 +118,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
+                    
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+                    
                     // TODO: replace with injected factory
                     link = .userAccount(.init(
                         model: model,
@@ -604,7 +607,8 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             do {
                                 
-                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: {})
+                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())})
                                 bind(operationViewModel)
                                 
                                 await MainActor.run {
@@ -626,7 +630,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case .c2bSubscribeURL(let url):
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.action.send(MainViewModelAction.Close.Link())
                         })
                         bind(paymentsViewModel)
                         
@@ -792,7 +796,10 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as TemplatesListViewModelAction.CloseAction:
-                    link = nil
+                    self.action.send(DelayWrappedAction(
+                             delayMS: 800,
+                             action: MainViewModelAction.Close.Link())
+                         )
                     
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     

@@ -50,7 +50,7 @@ struct QRSearchItemView: View {
                     
                     Circle()
                         .frame(width: 40, height: 40)
-                        .foregroundColor(.bGIconRedLight)
+                        .foregroundColor(.bgIconRedLight)
                     
                     viewModel.icon
                         .resizable()

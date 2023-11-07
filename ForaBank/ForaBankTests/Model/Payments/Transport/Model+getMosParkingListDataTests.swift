@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import ServerAgent
 import XCTest
 
 final class Model_getMosParkingListDataTests: XCTestCase {

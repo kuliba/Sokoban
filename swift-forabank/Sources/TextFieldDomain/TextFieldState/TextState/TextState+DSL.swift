@@ -53,12 +53,12 @@ public extension TextState {
     
     var beforeCursor: String {
         
-        .init(text[text.startIndex..<cursorIndex])
+        .init(text.prefix(upTo: cursorIndex))
     }
     
     var afterCursor: String {
         
-        .init(text[cursorIndex..<text.endIndex])
+        .init(text.suffix(from: cursorIndex))
     }
     
     var view: View {

@@ -85,15 +85,15 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         
         XCTAssertEqual(expandedViewModel.title, "Банк получателя")
         
-        guard case let .placeholder(placeholerText) = expandedViewModel.textField.state else {
+        guard case let .placeholder(placeholderText) = expandedViewModel.textField.state else {
             XCTFail("textField must be in placeholder state")
             return
         }
         
-        XCTAssertEqual(placeholerText, "Выберите банк")
+        XCTAssertEqual(placeholderText, "Выберите банк")
         
-        guard case let .filterred(selectAll: selectAllViewModel, banks: banksList) = expandedViewModel.list else {
-            XCTFail("list state must be in filterred state")
+        guard case let .filtered(selectAll: selectAllViewModel, banks: banksList) = expandedViewModel.list else {
+            XCTFail("list state must be in filtered state")
             return
         }
         
@@ -132,15 +132,15 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         
         XCTAssertEqual(expandedViewModel.title, "Банк получателя")
         
-        guard case let .placeholder(placeholerText) = expandedViewModel.textField.state else {
+        guard case let .placeholder(placeholderText) = expandedViewModel.textField.state else {
             XCTFail("textField must be in placeholder state")
             return
         }
         
-        XCTAssertEqual(placeholerText, "0447788")
+        XCTAssertEqual(placeholderText, "0447788")
         
-        guard case let .filterred(selectAll: selectAllViewModel, banks: banksList) = expandedViewModel.list else {
-            XCTFail("list state must be in filterred state")
+        guard case let .filtered(selectAll: selectAllViewModel, banks: banksList) = expandedViewModel.list else {
+            XCTFail("list state must be in filtered state")
             return
         }
         

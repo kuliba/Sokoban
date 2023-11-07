@@ -136,6 +136,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         
                         self.templateButton = .init(
                             model: model,
+                            state: .init(details: details),
                             operation: nil,
                             operationDetail: details
                         )
@@ -174,6 +175,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось добавить шаблон", icon: .check)))
                 
             }).store(in: &bindings)
+        
+        model.action
+            .compactMap { $0 as? ModelAction.Operation.Detail.ResponseWithEmptyData }
+            .receive(on: DispatchQueue.main)
+            .map { _ in false }
+            .assign(to: &$isLoading)
         
         action
             .receive(on: DispatchQueue.main)

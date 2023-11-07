@@ -77,7 +77,7 @@ extension Services {
             }
         }
         
-        typealias LoadChangePINSessionCompletion = (Result<ChangePINSession, Error>) -> Void
+        typealias LoadChangePINSessionCompletion = (Swift.Result<ChangePINSession, Error>) -> Void
         
         func loadSession(
             completion: @escaping LoadChangePINSessionCompletion

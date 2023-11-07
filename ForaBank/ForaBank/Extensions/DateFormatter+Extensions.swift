@@ -34,6 +34,19 @@ extension DateFormatter {
         return dateFormatter
     }
     
+    static var closeDepositDate: DateFormatter {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.dateStyle = DateFormatter.Style.long
+
+        dateFormatter.dateFormat =  "dd.MM.yyyy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+
+        return dateFormatter
+    }
+    
     static let iso8601: DateFormatter = DateFormatterISO8601()
     
     static let minutsAndSecond: DateFormatter = {

@@ -5,12 +5,11 @@
 //  Created by Max Gribov on 25.01.2022.
 //
 
-import Foundation
 import Combine
+import Foundation
+import ServerAgent
 
 class ServerAgentEmptyMock: ServerAgentProtocol {
-    
-    let action: PassthroughSubject<Action, Never> = .init()
     
     func executeCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerCommand {
         
