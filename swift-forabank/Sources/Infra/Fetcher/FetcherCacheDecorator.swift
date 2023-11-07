@@ -43,6 +43,11 @@ extension FetcherCacheDecorator: Fetcher {
                         self?.handleSuccess(success)
                         return success
                     }
+                    .mapError { failure in
+                        
+                        self?.handleFailure(failure)
+                        return failure
+                    }
             )
         }
     }
