@@ -77,7 +77,11 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainViewModel(model)
+        let sut = MainViewModel(
+            model,
+            sections: MainSectionViewModel.makeMainSection(model),
+            makeOperationStateViewModel: { .preview }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
@@ -104,7 +108,11 @@ final class MainViewModelTests: XCTestCase {
         )
         model.clientInfo.value = makeClientInfoDummy()
         
-        let sut = MainViewModel(model)
+        let sut = MainViewModel(
+            model,
+            sections: MainSectionViewModel.makeMainSection(model),
+            makeOperationStateViewModel: { .preview }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix

@@ -205,7 +205,11 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            mainViewModel: .init(model),
+            mainViewModel: .init(
+                model,
+                sections: MainSectionViewModel.makeMainSection(model),
+                makeOperationStateViewModel: { .preview }
+            ),
             paymentsViewModel: .init(model: model),
             chatViewModel: .init(),
             informerViewModel: .init(model),
