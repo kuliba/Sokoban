@@ -32,7 +32,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptWithPadding(data: data)
-            log(.debug, "Encrypt with padding using transport public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt \(String(data: data, encoding: .utf8) ?? "n/a") with padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
@@ -45,7 +45,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.transportEncryptNoPadding(data: data)
-            log(.debug, "Encrypt without padding using transport public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt \(String(data: data, encoding: .utf8) ?? "n/a") without padding using transport public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
@@ -58,11 +58,11 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
         
         do {
             let encrypted = try decoratee.processingEncryptWithPadding(data: data)
-            log(.debug, "Encrypt using processing public key success (\(encrypted.count)).", #file, #line)
+            log(.debug, "Encrypt \(String(data: data, encoding: .utf8) ?? "n/a") using processing public key success (\(encrypted.count)).", #file, #line)
             
             return encrypted
         } catch {
-            log(.error, "Encrypt using processing public key failure: \(error).", #file, #line)
+            log(.error, "Encrypt \(String(data: data, encoding: .utf8) ?? "n/a") using processing public key failure: \(error).", #file, #line)
             throw error
         }
     }
@@ -138,7 +138,7 @@ extension LoggingCVVPINCryptoDecorator: CVVPINCrypto {
                 publicKey: publicKey,
                 privateKey: privateKey
             )
-            log(.debug, "hashSignVerify success for data: \"\(String(data: data, encoding: .utf8) ?? "n/a")\".", #file, #line)
+            log(.debug, "hashSignVerify success for \"\(string)\".", #file, #line)
             
             return data
         } catch {

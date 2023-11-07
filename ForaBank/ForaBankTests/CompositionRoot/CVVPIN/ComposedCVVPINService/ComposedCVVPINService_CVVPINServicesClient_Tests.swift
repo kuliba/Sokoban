@@ -9,11 +9,6 @@ import CVVPIN_Services
 @testable import ForaBank
 import XCTest
 
-fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
-fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
-fileprivate typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
-fileprivate typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConfirmationCodeResult
-
 final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     
     // MARK: - ActivateCVVPINClient
@@ -818,18 +813,6 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     }
 }
 
-private func anySuccess(
-    _ phoneValue: String = UUID().uuidString
-) -> ActivateResult {
-    
-    .success(.init(phoneValue: phoneValue))
-}
-
-private func anySuccess() -> ChangePINResult {
-    
-    .success(())
-}
-
 private extension ComposedCVVPINService {
     
     func changePIN(
@@ -843,24 +826,6 @@ private extension ComposedCVVPINService {
     ) {
         confirmActivation(anyOTP(), completion)
     }
-}
-
-private func anySuccess(
-    _ eventIDValue: String = UUID().uuidString,
-    _ phoneValue: String = UUID().uuidString
-) -> GetPINConfirmationCodeResult {
-    
-    .success(.init(
-        otpEventID: .init(eventIDValue: eventIDValue),
-        phone: phoneValue
-    ))
-}
-
-private func anySuccess(
-    _ cvvValue: String = .init(UUID().uuidString.prefix(3))
-) -> ShowCVVService.Result {
-    
-    .success(.init(cvvValue: cvvValue))
 }
 
 private extension Array where Element == ActivateCVVPINClient.ActivateResult {
