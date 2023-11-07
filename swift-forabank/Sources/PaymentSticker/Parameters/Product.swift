@@ -31,6 +31,22 @@ public extension Operation.Parameter {
             let nameProduct: String
             let balance: String
             let description: String
+            
+            public init(
+                paymentSystem: String,
+                background: String,
+                title: String,
+                nameProduct: String,
+                balance: String,
+                description: String
+            ) {
+                self.paymentSystem = paymentSystem
+                self.background = background
+                self.title = title
+                self.nameProduct = nameProduct
+                self.balance = balance
+                self.description = description
+            }
         }
         
         public enum State {
