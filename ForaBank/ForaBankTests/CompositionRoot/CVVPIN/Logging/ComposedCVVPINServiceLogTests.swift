@@ -9,11 +9,6 @@ import CVVPIN_Services
 @testable import ForaBank
 import XCTest
 
-fileprivate typealias ActivateResult = CVVPINFunctionalityActivationService.ActivateResult
-fileprivate typealias ChangePINResult = ChangePINService.ChangePINResult
-fileprivate typealias ConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
-fileprivate typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConfirmationCodeResult
-
 final class ComposedCVVPINServiceLogTests: XCTestCase {
     
     func test_init_shouldNotMessageLogger() {
@@ -287,34 +282,6 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
     }
 }
 
-private func anySuccess(
-    _ phoneValue: String = UUID().uuidString
-) -> ActivateResult {
-    
-    .success(.init(phoneValue: phoneValue))
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ActivateResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
-private func anySuccess() -> ChangePINResult {
-    
-    .success(())
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ChangePINResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
 private extension ComposedCVVPINService {
     
     func changePIN(
@@ -328,46 +295,4 @@ private extension ComposedCVVPINService {
     ) {
         confirmActivation(anyOTP(), completion)
     }
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ConfirmResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
-private func anySuccess(
-    _ eventIDValue: String = UUID().uuidString,
-    _ phoneValue: String = UUID().uuidString
-) -> GetPINConfirmationCodeResult {
-    
-    .success(.init(
-        otpEventID: .init(eventIDValue: eventIDValue),
-        phone: phoneValue
-    ))
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> GetPINConfirmationCodeResult {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-}
-
-private func anySuccess(
-    _ cvvValue: String = .init(UUID().uuidString.prefix(3))
-) -> ShowCVVService.Result {
-    
-    .success(.init(cvvValue: cvvValue))
-}
-
-private func anyFailure(
-    _ statusCode: Int,
-    _ errorMessage: String = UUID().uuidString
-) -> ShowCVVService.Result {
-    
-    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
