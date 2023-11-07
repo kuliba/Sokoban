@@ -46,7 +46,7 @@ public extension CachingChangePINServiceDecorator {
                     
                     switch result {
                     case .failure:
-                        completion(.failure(.other(.decryptionFailure)))
+                        completion(.failure(.serviceError(.decryptionFailure)))
                         
                     case .success:
                         completion(.success(response))

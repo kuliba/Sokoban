@@ -35,7 +35,7 @@ enum ActivateCVVPINError: Error {
     case serviceFailure
 }
 
-enum ConfirmationCodeError: Error{
+enum ConfirmationCodeError: Error {
     
     case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
     case server(statusCode: Int, errorMessage: String)

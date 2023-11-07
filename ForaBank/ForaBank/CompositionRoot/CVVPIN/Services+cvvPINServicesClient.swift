@@ -756,12 +756,12 @@ extension Services {
                     )
                     completion(.success(.init(cvvValue: cvvValue)))
                 } catch {
-                    completion(.failure(.serviceError(.makeJSONFailure)))
+                    completion(.failure(error))
                 }
             }
         }
         
-        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
+        typealias LoadShowCVVSessionResult = Result<ShowCVVSession, Error>
         typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
         
         func loadShowCVVSession(
@@ -1041,7 +1041,7 @@ private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .other:
+        case .serviceError:
             self = .serviceFailure
         }
     }
@@ -1064,7 +1064,7 @@ private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .other:
+        case .serviceError:
             self = .serviceFailure
         }
     }
