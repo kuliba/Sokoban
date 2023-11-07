@@ -15,7 +15,8 @@ final class FetcherDecoratorTests: XCTestCase {
         let (_, decoratee, spy) = makeSUT()
         
         XCTAssertNoDiff(decoratee.callCount, 0)
-        XCTAssertNoDiff(spy.callCount, 0)
+        XCTAssertNoDiff(spy.handledSuccesses.count, 0)
+        XCTAssertNoDiff(spy.handledFailures.count, 0)
     }
     
     func test_fetch_shouldDeliverErrorOnLoadFailure() {
@@ -254,11 +255,6 @@ final class FetcherDecoratorTests: XCTestCase {
         
         private(set) var handledSuccesses = [Success]()
         private(set) var handledFailures = [Failure]()
-        
-        var callCount: Int {
-        
-            handledSuccesses.count + handledFailures.count
-        }
         
         func handleSuccess(_ success: Success) {
             
