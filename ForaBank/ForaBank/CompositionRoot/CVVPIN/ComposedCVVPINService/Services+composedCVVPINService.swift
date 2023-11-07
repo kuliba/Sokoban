@@ -236,19 +236,20 @@ extension Services {
             })
         }
         
-       typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        typealias CacheCompletion = (Result<Void, Error>) -> Void
         
         func cache(
             success: AuthSuccess
         ) {
-            let payload = (success.sessionID, success.sessionTTL)
-            cacheSessionID(payload: payload) { _ in }
+            let sessionIDPayload = (success.sessionID, success.sessionTTL)
+            cacheSessionID(payload: sessionIDPayload) { _ in }
             
-            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
+            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
+            cacheSessionKey(payload: sessionKeyPayload) { _ in }
         }
         
         typealias CacheSessionIDPayload = (AuthSuccess.SessionID, AuthSuccess.SessionTTL)
-        typealias CacheCompletion = (Result<Void, Error>) -> Void
         
         func cacheSessionID(
             payload: CacheSessionIDPayload,
@@ -261,13 +262,15 @@ extension Services {
             )
         }
         
+        typealias CacheSessionKeyPayload = (AuthSuccess.SessionKey, AuthSuccess.SessionTTL)
+
         func cacheSessionKey(
-            sessionKey: AuthSuccess.SessionKey,
+            payload: CacheSessionKeyPayload,
             completion: @escaping CacheCompletion
         ) {
             sessionKeyLoader.save(
-                .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
+                .init(sessionKeyValue: payload.0.sessionKeyValue),
+                validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
         }
@@ -448,17 +451,18 @@ extension Services {
         }
         
         typealias FormSessionKeySuccess = FormSessionKeyService.Success
-
-        func cache(success: FormSessionKeySuccess) {
+        typealias FormSessionKeyCacheCompletion = (Result<Void, Error>) -> Void
         
-            let payload = (success.eventID, success.sessionTTL)
-            cacheSessionID(payload: payload) { _ in }
+        func cache(success: FormSessionKeySuccess) {
             
-            cacheSessionKey(sessionKey: success.sessionKey) { _ in }
+            let sessionIDPayload = (success.eventID, success.sessionTTL)
+            cacheSessionID(payload: sessionIDPayload) { _ in }
+            
+            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
+            cacheSessionKey(payload: sessionKeyPayload) { _ in }
         }
         
         typealias FormSessionKeyCacheSessionIDPayload = (FormSessionKeySuccess.EventID, FormSessionKeySuccess.SessionTTL)
-        typealias FormSessionKeyCacheCompletion = (Result<Void, Error>) -> Void
         
         func cacheSessionID(
             payload: FormSessionKeyCacheSessionIDPayload,
@@ -471,14 +475,15 @@ extension Services {
             )
         }
         
-#warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
+        typealias FormSessionKeyCacheSessionKeyPayload = (FormSessionKeyService.SessionKey, FormSessionKeySuccess.SessionTTL)
+        
         func cacheSessionKey(
-            sessionKey: FormSessionKeyService.SessionKey,
+            payload: FormSessionKeyCacheSessionKeyPayload,
             completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionKeyLoader.save(
-                .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
+                .init(sessionKeyValue: payload.0.sessionKeyValue),
+                validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
         }
