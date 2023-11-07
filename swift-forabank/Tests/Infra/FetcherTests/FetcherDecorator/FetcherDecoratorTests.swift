@@ -124,7 +124,7 @@ final class FetcherDecoratorTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FetcherCacheDecorator<Request, Item, TestError>
+    private typealias SUT = FetcherDecorator<Request, Item, TestError>
     private typealias Spy = DecoratorSpy<Item, TestError>
     
     private func makeSUT(

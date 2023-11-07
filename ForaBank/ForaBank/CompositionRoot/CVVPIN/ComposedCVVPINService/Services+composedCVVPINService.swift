@@ -76,7 +76,7 @@ extension Services {
             process: process(completion:)
         )
         
-        let cachingGetCodeService = FetcherCacheDecorator(
+        let cachingGetCodeService = FetcherDecorator(
             decoratee: getCodeService,
             cache: cache(response:)
         )
@@ -90,7 +90,7 @@ extension Services {
             makeSessionKey: makeSessionKey(string:completion:)
         )
         
-        let cachingFormSessionKeyService = FetcherCacheDecorator(
+        let cachingFormSessionKeyService = FetcherDecorator(
             decoratee: formSessionKeyService,
             cache: cache(success:)
         )
@@ -101,7 +101,7 @@ extension Services {
             process: process(payload:completion:)
         )
         
-        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherCacheDecorator(
+        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherDecorator(
             decoratee: bindPublicKeyWithEventIDService,
             cache: rsaKeyPairStore.deleteCacheIgnoringResult
         )
@@ -118,7 +118,7 @@ extension Services {
             makeSessionKey: makeSessionKey(response:completion:)
         )
         
-        let cachingAuthWithPublicKeyService = FetcherCacheDecorator(
+        let cachingAuthWithPublicKeyService = FetcherDecorator(
             decoratee: authenticateWithPublicKeyService,
             cache: cache(success:)
         )
@@ -138,7 +138,7 @@ extension Services {
             ephemeralLifespan: ephemeralLifespan
         )
         
-        let cachingChangePINService = FetcherCacheDecorator(
+        let cachingChangePINService = FetcherDecorator(
             decoratee: changePINService,
             cache: cache(response:)
         )

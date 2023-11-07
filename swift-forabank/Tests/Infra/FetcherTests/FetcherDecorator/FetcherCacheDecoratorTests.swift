@@ -89,7 +89,7 @@ final class FetcherCacheDecoratorTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FetcherCacheDecorator<Request, Item, Error>
+    private typealias SUT = FetcherDecorator<Request, Item, Error>
     
     private func makeSUT(
         file: StaticString = #file,
