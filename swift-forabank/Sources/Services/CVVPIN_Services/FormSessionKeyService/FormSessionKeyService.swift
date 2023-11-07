@@ -22,7 +22,7 @@ public final class FormSessionKeyService {
     
     public typealias ProcessResult = Swift.Result<Response, APIError>
     public typealias ProcessCompletion = (ProcessResult) -> Void
-    public typealias Process = (Payload, @escaping ProcessCompletion) -> Void
+    public typealias Process = (ProcessPayload, @escaping ProcessCompletion) -> Void
     
     public typealias MakeSessionKeyResult = Swift.Result<SessionKey, Swift.Error>
     public typealias MakeSessionKeyCompletion = (MakeSessionKeyResult) -> Void
@@ -131,7 +131,7 @@ extension FormSessionKeyService {
         }
     }
     
-    public struct Payload {
+    public struct ProcessPayload {
         
         public let code: Code
         public let data: Data

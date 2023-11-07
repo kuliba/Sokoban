@@ -251,33 +251,6 @@ final class FormSessionKeyServiceTests: XCTestCase {
         )
     }
     
-    private func expectConfirm(
-        _ sut: SUT,
-        toDeliver expectedResults: [SUT.Result],
-        on action: @escaping () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        var receivedResults = [SUT.Result]()
-        let exp = expectation(description: "wait for completion")
-        
-        sut.formSessionKey {
-            
-            receivedResults.append($0)
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 1.0)
-        
-        assert(
-            receivedResults.mapToEquatable(),
-            equals: expectedResults.mapToEquatable(),
-            file: file, line: line
-        )
-    }
-    
     private final class LoadCodeSpy {
         
         private(set) var completions = [SUT.CodeCompletion]()
@@ -320,14 +293,14 @@ final class FormSessionKeyServiceTests: XCTestCase {
     
     private final class ProcessSpy {
         
-        typealias Message = (payload: SUT.Payload, completion: SUT.ProcessCompletion)
+        typealias Message = (payload: SUT.ProcessPayload, completion: SUT.ProcessCompletion)
         
         private(set) var messages = [Message]()
         
         var callCount: Int { messages.count }
         
         func process(
-            _ payload: SUT.Payload,
+            _ payload: SUT.ProcessPayload,
             completion: @escaping SUT.ProcessCompletion
         ) {
             messages.append((payload, completion))

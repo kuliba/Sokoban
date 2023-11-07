@@ -6,17 +6,17 @@
 //
 
 import CVVPIN_Services
+import Fetcher
 import Foundation
 
 extension Services {
     
-#warning("replace CachingAuthWithPublicKeyServiceDecorator with protocol")
     static func makeChangePINService(
         rsaKeyPairLoader: any Loader<RSAKeyPair>,
         sessionIDLoader: any Loader<SessionID>,
         otpEventIDLoader: any Loader<ChangePINService.OTPEventID>,
         sessionKeyLoader: any Loader<SessionKey>,
-        cachingAuthWithPublicKeyService: CachingAuthWithPublicKeyServiceDecorator,
+        authWithPublicKeyService: any AuthWithPublicKeyFetcher,
         confirmChangePINRemoteService: ConfirmChangePINRemoteService,
         changePINRemoteService: Services.ChangePINRemoteService,
         cvvPINCrypto: CVVPINCrypto,
@@ -32,7 +32,7 @@ extension Services {
             makePINChangeJSON: makePINChangeJSON,
             changePINProcess: changePINProcess
         )
-
+        
         return changePINService
         
         // MARK: - ChangePIN Adapters
@@ -60,7 +60,7 @@ extension Services {
                 
                 switch result {
                 case .failure:
-                    cachingAuthWithPublicKeyService.authenticateWithPublicKey {
+                    authWithPublicKeyService.fetch {
                         
                         completion(
                             $0

@@ -63,3 +63,81 @@ func anySessionID(
     
     .init(sessionIDValue: sessionIDValue)
 }
+
+typealias CVVPINActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+
+func anySuccess(
+    _ phoneValue: String = UUID().uuidString
+) -> CVVPINActivateResult {
+    
+    .success(.init(phoneValue: phoneValue))
+}
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> CVVPINActivateResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+typealias ChangePINResult = ChangePINService.ChangePINResult
+
+func anySuccess() -> ChangePINResult {
+    
+    .success(())
+}
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ChangePINResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+typealias CVVPINConfirmResult = CVVPINFunctionalityActivationService.ConfirmResult
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> CVVPINConfirmResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+typealias GetPINConfirmationCodeResult = ChangePINService.GetPINConfirmationCodeResult
+
+func anySuccess(
+    _ eventIDValue: String = UUID().uuidString,
+    _ phoneValue: String = UUID().uuidString
+) -> GetPINConfirmationCodeResult {
+    
+    .success(.init(
+        otpEventID: .init(eventIDValue: eventIDValue),
+        phone: phoneValue
+    ))
+}
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> GetPINConfirmationCodeResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+func anySuccess(
+    _ cvvValue: String = .init(UUID().uuidString.prefix(3))
+) -> ShowCVVService.Result {
+    
+    .success(.init(cvvValue: cvvValue))
+}
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> ShowCVVService.Result {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}

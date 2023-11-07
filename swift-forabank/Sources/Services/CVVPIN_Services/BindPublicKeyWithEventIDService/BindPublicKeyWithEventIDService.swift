@@ -20,7 +20,7 @@ public final class BindPublicKeyWithEventIDService {
     
     public typealias ProcessResult = Swift.Result<Void, APIError>
     public typealias ProcessCompletion = (ProcessResult) -> Void
-    public typealias Process = (Payload, @escaping ProcessCompletion) -> Void
+    public typealias Process = (ProcessPayload, @escaping ProcessCompletion) -> Void
     
     private let loadEventID: LoadEventID
     private let makeSecretJSON: MakeSecretJSON
@@ -96,7 +96,7 @@ extension BindPublicKeyWithEventIDService {
         }
     }
     
-    public struct Payload {
+    public struct ProcessPayload {
         
         public let eventID: EventID
         public let data: Data

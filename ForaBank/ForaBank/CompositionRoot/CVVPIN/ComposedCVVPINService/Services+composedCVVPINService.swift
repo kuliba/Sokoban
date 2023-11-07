@@ -6,6 +6,7 @@
 //
 
 import CVVPIN_Services
+import Fetcher
 import Foundation
 import GenericRemoteService
 
@@ -14,8 +15,9 @@ extension GenericLoaderOf: Loader {}
 // MARK: - CVVPINServicesClient
 
 extension Services {
-        
+    
     typealias RSAKeyPair = RSADomain.KeyPair
+    typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
     
     static func composedCVVPINService(
         httpClient: HTTPClient,
@@ -39,7 +41,7 @@ extension Services {
         
         // MARK: Ephemeral Stores & Loaders
         
-        #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
+#warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
         let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
@@ -74,9 +76,9 @@ extension Services {
             process: process(completion:)
         )
         
-        let cachingGetCodeService = CachingGetProcessingSessionCodeServiceDecorator(
+        let cachingGetCodeService = FetcherCacheDecorator(
             decoratee: getCodeService,
-            cache: cache(response:completion:)
+            cache: cache(response:)
         )
         
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
@@ -88,10 +90,9 @@ extension Services {
             makeSessionKey: makeSessionKey(string:completion:)
         )
         
-        let cachingFormSessionKeyService = CachingFormSessionKeyServiceDecorator(
+        let cachingFormSessionKeyService = FetcherCacheDecorator(
             decoratee: formSessionKeyService,
-            cacheSessionID: cacheSessionID,
-            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
+            cache: cache(success:)
         )
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
@@ -100,9 +101,9 @@ extension Services {
             process: process(payload:completion:)
         )
         
-        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = RSAKeyPairCacheCleaningBindPublicKeyWithEventIDServiceDecorator(
+        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherCacheDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            clearCache: rsaKeyPairStore.deleteCacheIgnoringResult
+            cache: rsaKeyPairStore.deleteCacheIgnoringResult
         )
         
         let activationService = CVVPINFunctionalityActivationService(
@@ -116,13 +117,12 @@ extension Services {
             process: process(data:completion:),
             makeSessionKey: makeSessionKey(response:completion:)
         )
-
-        let cachingAuthWithPublicKeyService = CachingAuthWithPublicKeyServiceDecorator(
+        
+        let cachingAuthWithPublicKeyService = FetcherCacheDecorator(
             decoratee: authenticateWithPublicKeyService,
-            cacheSessionID: cacheSessionID(payload:completion:),
-            cacheSessionKey: cacheSessionKey(sessionKey:completion:)
+            cache: cache(success:)
         )
-                
+        
         // MARK: Configure Change PIN Service
         
         let changePINService = makeChangePINService(
@@ -130,7 +130,7 @@ extension Services {
             sessionIDLoader: sessionIDLoader,
             otpEventIDLoader: otpEventIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            cachingAuthWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: cachingAuthWithPublicKeyService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             changePINRemoteService: changePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
@@ -138,18 +138,18 @@ extension Services {
             ephemeralLifespan: ephemeralLifespan
         )
         
-        let cachingChangePINService = CachingChangePINServiceDecorator(
+        let cachingChangePINService = FetcherCacheDecorator(
             decoratee: changePINService,
-            cache: cache(otpEventID:completion:)
+            cache: cache(response:)
         )
-
+        
         // MARK: Configure Show CVV Service
         
         let showCVVService = makeShowCVVService(
             rsaKeyPairLoader: rsaKeyPairLoader,
             sessionIDLoader: sessionIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            cachingAuthWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: cachingAuthWithPublicKeyService,
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker
@@ -162,12 +162,12 @@ extension Services {
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
-            getPINConfirmationCode: cachingChangePINService.getPINConfirmationCode,
+            getPINConfirmationCode: cachingChangePINService.fetch(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
         )
-                
+        
         return cvvPINServicesClient
         
         // MARK: - Helpers
@@ -236,9 +236,24 @@ extension Services {
             })
         }
         
+        typealias AuthSuccess = AuthenticateWithPublicKeyService.Success
+        typealias CacheCompletion = (Result<Void, Error>) -> Void
+        
+        func cache(
+            success: AuthSuccess
+        ) {
+            let sessionIDPayload = (success.sessionID, success.sessionTTL)
+            cacheSessionID(payload: sessionIDPayload) { _ in }
+            
+            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
+            cacheSessionKey(payload: sessionKeyPayload) { _ in }
+        }
+        
+        typealias CacheSessionIDPayload = (AuthSuccess.SessionID, AuthSuccess.SessionTTL)
+        
         func cacheSessionID(
-            payload: CachingAuthWithPublicKeyServiceDecorator.CacheSessionIDPayload,
-            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+            payload: CacheSessionIDPayload,
+            completion: @escaping CacheCompletion
         ) {
             sessionIDLoader.save(
                 .init(value: payload.0.sessionIDValue),
@@ -247,13 +262,15 @@ extension Services {
             )
         }
         
+        typealias CacheSessionKeyPayload = (AuthSuccess.SessionKey, AuthSuccess.SessionTTL)
+
         func cacheSessionKey(
-            sessionKey: AuthenticateWithPublicKeyService.Success.SessionKey,
-            completion: @escaping CachingAuthWithPublicKeyServiceDecorator.CacheCompletion
+            payload: CacheSessionKeyPayload,
+            completion: @escaping CacheCompletion
         ) {
             sessionKeyLoader.save(
-                .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
+                .init(sessionKeyValue: payload.0.sessionKeyValue),
+                validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
         }
@@ -295,7 +312,7 @@ extension Services {
         }
         
         func process(
-            payload: BindPublicKeyWithEventIDService.Payload,
+            payload: BindPublicKeyWithEventIDService.ProcessPayload,
             completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
         ){
             bindPublicKeyWithEventIDRemoteService.process(payload) {
@@ -305,27 +322,25 @@ extension Services {
         }
         
         // MARK: - ChangePIN Adapters
-
-        func cache(
-            otpEventID: ChangePINService.OTPEventID,
-            completion: @escaping CachingChangePINServiceDecorator.CacheCompletion
-        ) {
+        
+        func cache(response: ChangePINService.ConfirmResponse) {
+            
             // short time
             let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
             
             otpEventIDLoader.save(
-                otpEventID,
+                response.otpEventID,
                 validUntil: validUntil,
-                completion: completion
+                completion: { _ in }
             )
         }
-
+        
         // MARK: - CVVPINFunctionalityActivation Adapters
         
         func getCode(
             completion: @escaping CVVPINFunctionalityActivationService.GetCodeCompletion
         ) {
-            cachingGetCodeService.getCode { result in
+            cachingGetCodeService.fetch { result in
                 
                 completion(
                     result
@@ -338,7 +353,7 @@ extension Services {
         func formSessionKey(
             completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
         ) {
-            cachingFormSessionKeyService.formSessionKey { result in
+            cachingFormSessionKeyService.fetch { result in
                 
                 completion(
                     result
@@ -352,8 +367,8 @@ extension Services {
             otp: CVVPINFunctionalityActivationService.OTP,
             completion: @escaping CVVPINFunctionalityActivationService.BindPublicKeyWithEventIDCompletion
         ) {
-            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.bind(
-                otp: .init(otpValue: otp.otpValue)
+            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.fetch(
+                .init(otpValue: otp.otpValue)
             ) {
                 completion($0.mapError(CVVPINFunctionalityActivationService.BindPublicKeyError.init))
             }
@@ -371,8 +386,7 @@ extension Services {
         }
         
         func cache(
-            response: GetProcessingSessionCodeService.Response,
-            completion: @escaping (Result<Void, Error>) -> Void
+            response: GetProcessingSessionCodeService.Response
         ) {
             // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
             let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
@@ -380,7 +394,7 @@ extension Services {
             sessionCodeLoader.save(
                 .init(sessionCodeValue: response.code),
                 validUntil: validUntil,
-                completion: completion
+                completion: { _ in }
             )
         }
         
@@ -411,7 +425,7 @@ extension Services {
         }
         
         func process(
-            payload: FormSessionKeyService.Payload,
+            payload: FormSessionKeyService.ProcessPayload,
             completion: @escaping FormSessionKeyService.ProcessCompletion
         ) {
             formSessionKeyRemoteService.process(
@@ -436,9 +450,23 @@ extension Services {
             })
         }
         
+        typealias FormSessionKeySuccess = FormSessionKeyService.Success
+        typealias FormSessionKeyCacheCompletion = (Result<Void, Error>) -> Void
+        
+        func cache(success: FormSessionKeySuccess) {
+            
+            let sessionIDPayload = (success.eventID, success.sessionTTL)
+            cacheSessionID(payload: sessionIDPayload) { _ in }
+            
+            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
+            cacheSessionKey(payload: sessionKeyPayload) { _ in }
+        }
+        
+        typealias FormSessionKeyCacheSessionIDPayload = (FormSessionKeySuccess.EventID, FormSessionKeySuccess.SessionTTL)
+        
         func cacheSessionID(
-            payload: CachingFormSessionKeyServiceDecorator.CacheSessionIDPayload,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+            payload: FormSessionKeyCacheSessionIDPayload,
+            completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionIDLoader.save(
                 .init(value: payload.0.eventIDValue),
@@ -447,14 +475,15 @@ extension Services {
             )
         }
         
-        #warning("is there a Session Key TTL? or using `ephemeralLifespan` is ok?")
+        typealias FormSessionKeyCacheSessionKeyPayload = (FormSessionKeyService.SessionKey, FormSessionKeySuccess.SessionTTL)
+        
         func cacheSessionKey(
-            sessionKey: FormSessionKeyService.SessionKey,
-            completion: @escaping CachingFormSessionKeyServiceDecorator.CacheCompletion
+            payload: FormSessionKeyCacheSessionKeyPayload,
+            completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionKeyLoader.save(
-                .init(sessionKeyValue: sessionKey.sessionKeyValue),
-                validUntil: currentDate().addingTimeInterval(ephemeralLifespan),
+                .init(sessionKeyValue: payload.0.sessionKeyValue),
+                validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
         }
@@ -468,10 +497,10 @@ extension Services {
     typealias MappingRemoteService<Input, Output, MapResponseError: Error> = RemoteService<Input, Output, Error, Error, MapResponseError>
     
     typealias AuthWithPublicKeyRemoteService = MappingRemoteService<Data, AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.APIError>
-    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.Payload, Void, BindPublicKeyWithEventIDService.APIError>
+    typealias BindPublicKeyWithEventIDRemoteService = MappingRemoteService<BindPublicKeyWithEventIDService.ProcessPayload, Void, BindPublicKeyWithEventIDService.APIError>
     typealias ChangePINRemoteService = MappingRemoteService<(SessionID, Data), Void, ChangePINService.ChangePINAPIError>
     typealias ConfirmChangePINRemoteService = MappingRemoteService<SessionID, ChangePINService.EncryptedConfirmResponse, ChangePINService.ConfirmAPIError>
-    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.Payload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
+    typealias FormSessionKeyRemoteService = MappingRemoteService<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, FormSessionKeyService.APIError>
     typealias GetCodeRemoteService = MappingRemoteService<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.APIError>
     typealias ShowCVVRemoteService = MappingRemoteService<(SessionID, Data), ShowCVVService.EncryptedCVV, ShowCVVService.APIError>
     
