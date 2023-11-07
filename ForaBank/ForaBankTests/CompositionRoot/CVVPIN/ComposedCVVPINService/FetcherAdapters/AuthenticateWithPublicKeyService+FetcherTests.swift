@@ -128,10 +128,45 @@ final class AuthenticateWithPublicKeyService_FetcherTests: XCTestCase {
             
             switch (expectedResult, receivedResult) {
             case let (
-                .failure(expected as NSError),
-                .failure(received as NSError)
+                .failure(expected),
+                .failure(received)
             ):
-                XCTAssertNoDiff(expected, received, file: file, line: line)
+                switch (expected, received) {
+                case let (
+                    .invalid(expectedStatusCode, expectedInvalidData),
+                    .invalid(receivedStatusCode, receivedInvalidData)
+                ):
+                    XCTAssertNoDiff(expectedStatusCode, receivedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(expectedInvalidData, receivedInvalidData, file: file, line: line)
+                    
+                case (.network, .network):
+                    break
+                    
+                case let (
+                    .server(expectedStatusCode, expectedErrorMessage),
+                    .server(receivedStatusCode, receivedErrorMessage)
+                ):
+                    XCTAssertNoDiff(expectedStatusCode, receivedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(expectedErrorMessage, receivedErrorMessage, file: file, line: line)
+                    
+                case let (
+                    .serviceError(expected),
+                    .serviceError(received)
+                ):
+                    switch (expected, received) {
+                    case (.activationFailure, .activationFailure),
+                        (.makeSessionKeyFailure, .makeSessionKeyFailure),
+                        (.missingRSAPublicKey, .missingRSAPublicKey),
+                        (.prepareKeyExchangeFailure, .prepareKeyExchangeFailure):
+                        break
+                        
+                    default:
+                        XCTFail("Expected \(expected), but got \(received)", file: file, line: line)
+                    }
+                    
+                default:
+                    XCTFail("Expected \(expectedResult), but got \(receivedResult)", file: file, line: line)
+                }
                 
             case let (
                 .success(expected),
