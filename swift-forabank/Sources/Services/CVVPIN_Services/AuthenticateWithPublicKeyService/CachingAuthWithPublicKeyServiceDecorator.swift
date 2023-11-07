@@ -8,6 +8,8 @@
 /// - Note: `SessionKey` is `SymmetricKey` is `SharedSecret`
 ///
 #warning("component looks similar to CachingFormSessionKeyServiceDecorator")
+
+#warning("add protocol for and conform adapter to it")
 public final class CachingAuthWithPublicKeyServiceDecorator {
     
     public typealias Service = AuthenticateWithPublicKeyService

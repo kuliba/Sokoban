@@ -5,56 +5,44 @@
 //  Created by Igor Malyarov on 27.09.2023.
 //
 
-import ForaCrypto
 import Foundation
 
-enum RootViewModelFactory {
-    
-    typealias Crypto = ForaCrypto.Crypto
+enum RootViewModelFactory {}
+
+extension RootViewModelFactory {
     
     static func make(
-        with model: Model
+        model: Model,
+        logger: LoggerAgentProtocol
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let log = LoggerAgent.shared.log
-        
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            _transportKey: Crypto.transportKey,
-            _processingKey: Crypto.processingKey,
-            log: { log(.error, .crypto, $0, $1, $2) }
-        )
-        
-        let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
-        
-#warning("fix lifespans before release")
-        let (cvvPINServicesClient, onExit) = Services.cvvPINServicesClient(
+        let (productProfileViewModelFactory, onExit) = make(
             httpClient: httpClient,
-            cvvPINCrypto: LoggingCVVPINCryptoDecorator(
-                decoratee: cvvPINCrypto,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
-            cvvPINJSONMaker: LoggingCVVPINJSONMakerDecorator(
-                decoratee: cvvPINJSONMaker,
-                log: { log($0, .crypto, $1, $2, $3) }
-            ),
-            rsaKeyPairLifespan: .rsaKeyPairLifespan,
-            ephemeralLifespan: .ephemeralLifespan,
-            log: { log($0, $1, $2, $3, $4) }
+            logger: logger,
+            model: model
         )
         
-        let productProfileViewModelFactory = {
-            
-            ProductProfileViewModel(
-                model,
-                cvvPINServicesClient: cvvPINServicesClient,
-                onExit: onExit,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
+        return make(
+            model: model,
+            productProfileViewModelFactory: productProfileViewModelFactory,
+            onExit: onExit
+        )
+    }
+}
+
+// TODO: needs better naming
+private extension RootViewModelFactory {
+    
+    typealias MakeProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias OnExit = () -> Void
+    
+    static func make(
+        model: Model,
+        productProfileViewModelFactory: @escaping MakeProductProfileViewModelFactory,
+        onExit: @escaping OnExit
+    ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
@@ -81,67 +69,52 @@ enum RootViewModelFactory {
             onExit: onExit
         )
     }
-}
-
-extension LiveExtraLoggingCVVPINCrypto: CVVPINCrypto {}
-extension LiveCVVPINJSONMaker: CVVPINJSONMaker {}
-
-// MARK: - Adapters
-
-private extension LiveExtraLoggingCVVPINCrypto{
     
-    init(
-        _transportKey: @escaping () throws -> SecKey,
-        _processingKey: @escaping () throws -> SecKey,
-        log: @escaping Log
-    ) {
-        self.init(
-            transportKey: {
-                
-                do {
-                    return try LiveExtraLoggingCVVPINCrypto.TransportKey(
-                        key: _transportKey()
-                    )
-                } catch {
-                    log("Transport Key loading failure: \(error).", #file, #line)
-                    throw error
-                }
-            },
-            processingKey: {
-                
-                do {
-                    return try LiveExtraLoggingCVVPINCrypto.ProcessingKey(
-                        key: _processingKey()
-                    )
-                } catch {
-                    log("Processing Key loading failure: \(error).", #file, #line)
-                    throw error
-                }
-            },
+    static func make(
+        httpClient: HTTPClient,
+        logger: LoggerAgentProtocol,
+        model: Model
+    ) -> (MakeProductProfileViewModelFactory, OnExit) {
+        
+        let rsaKeyPairStore = makeLoggingStore(
+            logger: logger
+        )
+        
+        let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
+        
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
+            httpClient: httpClient,
+            logger: logger,
+            rsaKeyPairStore: rsaKeyPairStore
+        )
+        
+        let productProfileViewModelFactory = {
+            
+            ProductProfileViewModel(
+                model,
+                cvvPINServicesClient: cvvPINServicesClient,
+                onExit: onExit,
+                product: $0,
+                rootView: $1,
+                dismissAction: $2
+            )
+        }
+        
+        return (productProfileViewModelFactory, onExit)
+    }
+    
+    static func makeLoggingStore(
+        logger: LoggerAgentProtocol
+    ) -> any Store<RSADomain.KeyPair> {
+        
+        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        
+        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
+        let rsaKeyPairStore = LoggingStoreDecorator(
+            decoratee: store,
             log: log
         )
-    }
-}
-
-// MARK: - Lifespans
-
-private extension TimeInterval {
-    
-    static var rsaKeyPairLifespan: Self {
         
-#if RELEASE
-        15_778_463
-#else
-        600
-#endif
-    }
-    
-    static var ephemeralLifespan: Self {
-        
-#if RELEASE
-        15
-#else
-        30
-#endif
+        return rsaKeyPairStore
     }
 }
