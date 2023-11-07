@@ -103,7 +103,8 @@ extension Services {
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            cache: rsaKeyPairStore.deleteCacheIgnoringResult
+            handleSuccess: { _ in },
+            handleFailure: clearRSACacheOnError
         )
         
         let activationService = CVVPINFunctionalityActivationService(
@@ -318,6 +319,15 @@ extension Services {
             bindPublicKeyWithEventIDRemoteService.process(payload) {
                 
                 completion($0.mapError { .init($0) })
+            }
+        }
+        
+        func clearRSACacheOnError(
+            _ error: BindPublicKeyWithEventIDService.Failure
+        ) {
+            // clear cache if retryAttempts == 0
+            if case .server = error {
+                rsaKeyPairStore.deleteCacheIgnoringResult()
             }
         }
         
