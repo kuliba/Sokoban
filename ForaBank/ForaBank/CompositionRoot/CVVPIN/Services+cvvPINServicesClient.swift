@@ -756,12 +756,12 @@ extension Services {
                     )
                     completion(.success(.init(cvvValue: cvvValue)))
                 } catch {
-                    completion(.failure(.serviceError(.makeJSONFailure)))
+                    completion(.failure(error))
                 }
             }
         }
         
-        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Swift.Error>
+        typealias LoadShowCVVSessionResult = Result<ShowCVVSession, Error>
         typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
         
         func loadShowCVVSession(
