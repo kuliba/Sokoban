@@ -373,6 +373,7 @@
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */; };
+		2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
@@ -2422,6 +2423,7 @@
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticateWithPublicKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
@@ -5122,6 +5124,7 @@
 			isa = PBXGroup;
 			children = (
 				2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */,
+				2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */,
 			);
 			path = FetcherAdapters;
 			sourceTree = "<group>";
@@ -12819,6 +12822,7 @@
 				C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */,
 				834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */,
 				779CF7AD2A6E6CB500011812 /* EncryptionLocalAgentTests.swift in Sources */,
+				2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
