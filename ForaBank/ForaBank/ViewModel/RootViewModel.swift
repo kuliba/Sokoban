@@ -186,8 +186,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 personAgreements: payload.conditions,
                                 rootActions: rootActions,
                                 tokenIntent: payload.tokenIntent
-                            )),
-                        onExit: onExit
+                            ))
                     ))
                 
                 case _ as RootViewModelAction.CloseAlert:

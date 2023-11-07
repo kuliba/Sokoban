@@ -45,13 +45,12 @@ private extension RootViewModelFactory {
         let mainViewModel = MainViewModel(
             model,
             productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onRegister
+            onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onRegister
+            productProfileViewModelFactory: productProfileViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()
@@ -91,7 +90,6 @@ private extension RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 cvvPINServicesClient: cvvPINServicesClient,
-                onExit: onExit,
                 product: $0,
                 rootView: $1,
                 dismissAction: $2
