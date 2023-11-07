@@ -146,7 +146,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
     
     // MARK: - getPINConfirmationCode
     
-    func test_getPINConfirmationCode_shouldDeliveractivationErrorOnActivationFailureFailure() {
+    func test_getPINConfirmationCode_shouldDeliverActivationErrorOnActivationFailureFailure() {
         
         let sut = makeSUT(
             getPINConfirmationCodeResult: .failure(.activationFailure)
@@ -182,7 +182,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         expectGetPINConfirmationCode(sut, toDeliver: .failure(.serviceFailure))
     }
     
-    func test_getPINConfirmationCode_shouldDeliverRetryErrorOnRetryFailure() {
+    func test_getPINConfirmationCode_shouldDeliverServerErrorOnRetryFailure() {
         
         let statusCode = 500
         let errorMessage = "Activation Failure"
@@ -240,6 +240,103 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         )
         
         expectGetPINConfirmationCode(sut, toDeliver: .success(phone))
+    }
+    
+    // MARK: - changePin
+    
+    func test_changePin_shouldDeliverServiceErrorOnActivationFailureFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.activationFailure)
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnAuthenticationFailureFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.authenticationFailure)
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnInvalidFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.invalid(statusCode: 500, data: anyData()))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnNetworkFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.network)
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverRetryErrorOnRetryFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let retryAttempts = 4
+        let sut = makeSUT(
+            changePINResult: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
+    }
+    
+    func test_changePin_shouldDeliverServerErrorOnServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Activation Failure"
+        let sut = makeSUT(
+            changePINResult: .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnCheckSessionFailureFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.serviceError(.checkSessionFailure))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnDecryptionFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.serviceError(.decryptionFailure))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverServiceErrorOnMakeJSONFailure() {
+        
+        let sut = makeSUT(
+            changePINResult: .failure(.serviceError(.makeJSONFailure))
+        )
+        
+        expectChangePin(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_changePin_shouldDeliverVoidOnActivateSuccess() {
+        
+        let sut = makeSUT(
+            changePINResult: .success(())
+        )
+        
+        expectChangePin(sut, toDeliver: .success(()))
     }
     
     // MARK: - Helpers
@@ -394,6 +491,41 @@ final class ComposedCVVPINServiceTests: XCTestCase {
             
             exp.fulfill()
         })
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expectChangePin(
+        _ sut: SUT,
+        toDeliver expectedResult: ChangePINClient.ChangePINResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.changePin(
+            cardId: 12345678901,
+            newPin: UUID().uuidString,
+            otp: UUID().uuidString,
+            completion: { receivedResult in
+                
+                switch (expectedResult, receivedResult) {
+                    
+                case let (
+                    .failure(expected as NSError),
+                    .failure(received as NSError)
+                ):
+                    XCTAssertNoDiff(expected, received, file: file, line: line)
+                    
+                case (.success(()), .success(())):
+                    break
+                    
+                default:
+                    XCTFail("Expected \(expectedResult), but got \(receivedResult).", file: file, line: line)
+                }
+                
+                exp.fulfill()
+            })
         
         wait(for: [exp], timeout: 1.0)
     }
