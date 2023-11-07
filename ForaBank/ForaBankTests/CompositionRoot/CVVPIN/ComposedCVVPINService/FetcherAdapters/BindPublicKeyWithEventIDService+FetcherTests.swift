@@ -75,6 +75,13 @@ final class BindPublicKeyWithEventIDService_FetcherTests: XCTestCase {
         expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
     }
     
+    func test_fetch_shouldDeliverVoidOnSuccess() {
+        
+        let sut = makeSUT()
+        
+        expect(sut, toDeliver: .success(()))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

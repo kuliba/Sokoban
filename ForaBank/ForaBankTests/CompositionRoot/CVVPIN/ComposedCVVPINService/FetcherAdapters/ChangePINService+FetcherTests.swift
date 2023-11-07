@@ -86,13 +86,16 @@ final class ChangePINService_FetcherTests: XCTestCase {
         })
     }
     
-    func test_fetch_shouldDeliver_OnSuccess() {
+    func test_fetch_shouldDeliverValueOnSuccess() {
         
         let eventIDValue = UUID().uuidString
         let phone = "+7..9876"
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: .success(.init(otpEventID: .init(eventIDValue: eventIDValue), phone: phone)), on: {
+        expect(sut, toDeliver: .success(.init(
+            otpEventID: .init(eventIDValue: eventIDValue),
+            phone: phone
+        )), on: {
             
             spy.complete(with: .success(eventIDValue))
             spy.complete(with: .success(phone), at: 1)
