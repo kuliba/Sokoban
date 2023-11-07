@@ -16,7 +16,7 @@ extension RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let (productProfileViewModelFactory, onExit) = make(
+        let (productProfileViewModelFactory, onRegister) = make(
             httpClient: httpClient,
             logger: logger,
             model: model
@@ -25,7 +25,7 @@ extension RootViewModelFactory {
         return make(
             model: model,
             productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            onRegister: onRegister
         )
     }
 }
@@ -34,24 +34,24 @@ extension RootViewModelFactory {
 private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias OnExit = () -> Void
+    typealias OnRegister = () -> Void
     
     static func make(
         model: Model,
         productProfileViewModelFactory: @escaping MakeProductProfileViewModelFactory,
-        onExit: @escaping OnExit
+        onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
             productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            onExit: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
             productProfileViewModelFactory: productProfileViewModelFactory,
-            onExit: onExit
+            onExit: onRegister
         )
         
         let chatViewModel = ChatViewModel()
@@ -64,7 +64,7 @@ private extension RootViewModelFactory {
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
-            onExit: onExit
+            onExit: onRegister
         )
     }
     
@@ -72,7 +72,7 @@ private extension RootViewModelFactory {
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model
-    ) -> (MakeProductProfileViewModelFactory, OnExit) {
+    ) -> (MakeProductProfileViewModelFactory, OnRegister) {
         
         let rsaKeyPairStore = makeLoggingStore(
             logger: logger
