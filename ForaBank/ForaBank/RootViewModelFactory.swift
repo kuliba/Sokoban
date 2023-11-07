@@ -23,7 +23,6 @@ enum RootViewModelFactory {
     static func make(
         with model: Model
     ) -> RootViewModel {
-        
         let httpClient = model.authenticatedHTTPClient()
         
         let operationStateViewModelFactory = {
@@ -35,7 +34,8 @@ enum RootViewModelFactory {
                 ),
                 transfer: { event, completion in
                     
-                }
+                },
+                products: $0
             ))
         }
         
