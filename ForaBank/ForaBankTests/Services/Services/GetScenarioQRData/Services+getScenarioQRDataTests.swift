@@ -20,30 +20,13 @@ final class ServicesGetScenarioQRDataTests: XCTestCase {
         }
     }
     
-    func test_getScenarioQRData_shouldDeliverErrorOnCreateRequestFailure() throws {
-        
-        let (sut, spy) = makeSUT()
-        
-        expect(sut, toDeliver: [.failure(.createRequest(anyError()))]) {
-            spy.complete(with: .failure(anyNSError()))
-        }
-    }
-    
     func test_getScenarioQRData_shouldDeliverErrorOnPerformRequestFailure() throws {
         
+        let performRequestError = anyError()
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.performRequest(anyError()))]) {
-            spy.complete(with: .failure(anyNSError()))
-        }
-    }
-    
-    func test_getScenarioQRData_shouldDeliverErrorOnMapResponseFailure() throws {
-        
-        let (sut, spy) = makeSUT()
-        
-        expect(sut, toDeliver: [.failure(.mapResponse(anyError()))]) {
-            spy.complete(with: .failure(anyNSError()))
+        expect(sut, toDeliver: [.failure(.performRequest(performRequestError))]) {
+            spy.complete(with: .failure(performRequestError))
         }
     }
     
@@ -111,11 +94,25 @@ final class ServicesGetScenarioQRDataTests: XCTestCase {
         
         XCTAssertNoDiff(results.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(results.count) instead.", file: file, line: line)
         
-        zip(results, expectedResults).enumerated().forEach { index, element in
+        zip(results, expectedResults)
+            .enumerated()
+            .forEach { index, element in
             
             switch element {
-            case let (.failure(received as NSError?), .failure(expected as NSError?)):
-                XCTAssertNoDiff(received, expected, file: file, line: line)
+            case let (.failure(received), .failure(expected)):
+                switch (received, expected) {
+                case let (.createRequest(received as NSError), .createRequest(expected as NSError)):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+    
+                case let (.performRequest(received as NSError), .performRequest(expected as NSError)):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+    
+                case let (.mapResponse(received as NSError), .mapResponse(expected as NSError)):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+    
+                default:
+                    XCTFail("Expected \(expected), got \(received) instead.", file: file, line: line)
+                }
                 
             case let (.success(received), .success(expected)):
                 XCTAssertNoDiff(received, expected, file: file, line: line)
