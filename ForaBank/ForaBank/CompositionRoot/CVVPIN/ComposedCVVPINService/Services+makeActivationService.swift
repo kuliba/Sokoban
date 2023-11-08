@@ -20,16 +20,14 @@ extension Services {
         getCodeRemoteService: GetCodeRemoteService,
         sessionCodeLoader: any Loader<SessionCode>,
         sessionIDLoader: any Loader<SessionID>,
-        sessionKeyLoader: any Loader<SessionKey>,
         formSessionKeyRemoteService: FormSessionKeyRemoteService,
         bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
         cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode,
         cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess,
         onBindKeyFailure: @escaping OnBindKeyFailure,
-        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
-        _makeSecretRequestJSON: @escaping () throws -> Data,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
-        cvvPINJSONMaker: CVVPINJSONMaker
+        makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
+        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON
     ) -> CVVPINFunctionalityActivationService {
         
         let getCodeService = GetProcessingSessionCodeService(
@@ -43,7 +41,7 @@ extension Services {
         
         let formSessionKeyService = FormSessionKeyService(
             loadCode: loadCode(completion:),
-            makeSecretRequestJSON: makeSecretRequestJSON(completion:),
+            makeSecretRequestJSON: makeSecretRequestJSON,
             process: process(payload:completion:),
             makeSessionKey: makeSessionKey
         )
@@ -95,12 +93,6 @@ extension Services {
                         .map(FormSessionKeyService.Code.init)
                 )
             }
-        }
-        
-        func makeSecretRequestJSON(
-            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
-        ) {
-            completion(.init(catching: _makeSecretRequestJSON))
         }
         
         func process(

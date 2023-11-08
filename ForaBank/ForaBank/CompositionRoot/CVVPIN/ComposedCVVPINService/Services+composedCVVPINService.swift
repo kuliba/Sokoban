@@ -80,21 +80,14 @@ extension Services {
             getCodeRemoteService: getCodeRemoteService,
             sessionCodeLoader: sessionCodeLoader,
             sessionIDLoader: sessionIDLoader,
-            sessionKeyLoader: sessionKeyLoader,
             formSessionKeyRemoteService: formSessionKeyRemoteService,
             bindPublicKeyWithEventIDRemoteService: bindPublicKeyWithEventIDRemoteService,
             cacheGetProcessingSessionCode: cache(response:),
             cacheFormSessionKeySuccess: cache(success:),
             onBindKeyFailure: clearRSACacheOnError,
-            makeSecretJSON: makeSecretJSON(otp:completion:),
-            _makeSecretRequestJSON: {
-                
-                try cvvPINJSONMaker.makeSecretRequestJSON(
-                    publicKey: echdKeyPair.publicKey
-                )
-            },
             makeSessionKey: makeSessionKey(string:completion:),
-            cvvPINJSONMaker: cvvPINJSONMaker
+            makeSecretRequestJSON: makeSecretRequestJSON,
+            makeSecretJSON: makeSecretJSON(otp:completion:)
         )
         
         let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
@@ -327,6 +320,17 @@ extension Services {
         
         // MARK: - FormSessionKey Adapters
 
+        func makeSecretRequestJSON(
+            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
+        ) {
+            completion(.init {
+                
+                try cvvPINJSONMaker.makeSecretRequestJSON(
+                    publicKey: echdKeyPair.publicKey
+                )
+            })
+        }
+        
         func makeSessionKey(
             string: String,
             completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
