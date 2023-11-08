@@ -330,6 +330,7 @@
 		2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */; };
 		2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5190302A7E0BE80014B0B7 /* URLRequestFactory */; };
 		2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A06DC2F2AFACBDD0049709E /* ServerAgent */; };
+		2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DC312AFB72500049709E /* Services+makeActivationService.swift */; };
 		2A0702792A19F89B009B704A /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0702782A19F89B009B704A /* TextFieldComponent */; };
 		2A0776F82A02515600118373 /* XCTestCase+getJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */; };
 		2A0776FC2A0252F100118373 /* getScenarioQRData_1_1_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */; };
@@ -2446,6 +2447,7 @@
 		2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ActivateCVVPINClient.swift"; sourceTree = "<group>"; };
 		2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ChangePINClient.swift"; sourceTree = "<group>"; };
 		2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+composedCVVPINService.swift"; sourceTree = "<group>"; };
+		2A06DC312AFB72500049709E /* Services+makeActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationService.swift"; sourceTree = "<group>"; };
 		2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+getJSON.swift"; sourceTree = "<group>"; };
 		2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_1_1.json; sourceTree = "<group>"; };
 		2A0F2F4329AE338E0054B920 /* MCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCError.swift; sourceTree = "<group>"; };
@@ -5858,6 +5860,7 @@
 			children = (
 				2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */,
 				2ABD78312AF90CC7001B5860 /* FetcherAdapters */,
+				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
 				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
 				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
@@ -12254,6 +12257,7 @@
 				2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
+				2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
