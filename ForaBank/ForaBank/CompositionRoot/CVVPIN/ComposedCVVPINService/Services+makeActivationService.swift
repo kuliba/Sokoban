@@ -28,7 +28,7 @@ extension Services {
         onBindKeyFailure: @escaping OnBindKeyFailure,
         makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
         _makeSecretRequestJSON: @escaping () throws -> Data,
-        extractSharedSecret: @escaping (String) throws -> Data,
+        makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> CVVPINFunctionalityActivationService {
         
@@ -45,7 +45,7 @@ extension Services {
             loadCode: loadCode(completion:),
             makeSecretRequestJSON: makeSecretRequestJSON(completion:),
             process: process(payload:completion:),
-            makeSessionKey: makeSessionKey(string:completion:)
+            makeSessionKey: makeSessionKey
         )
         
         let cachingFormSessionKeyService = FetcherDecorator(
@@ -114,17 +114,6 @@ extension Services {
             }
         }
         
-        #warning("replace with injection")
-        func makeSessionKey(
-            string: String,
-            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
-        ) {
-            completion(.init {
-                
-                try .init(sessionKeyValue: extractSharedSecret(string))
-            })
-        }
-                
         // MARK: - BindPublicKeyWithEventID Adapters
         
         func loadEventID(

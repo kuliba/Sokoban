@@ -93,13 +93,7 @@ extension Services {
                     publicKey: echdKeyPair.publicKey
                 )
             },
-            extractSharedSecret:  {
-                
-                try cvvPINCrypto.extractSharedSecret(
-                    from: $0,
-                    using: echdKeyPair.privateKey
-                )
-            },
+            makeSessionKey: makeSessionKey(string:completion:),
             cvvPINJSONMaker: cvvPINJSONMaker
         )
         
@@ -331,8 +325,23 @@ extension Services {
             )
         }
         
-        // MARK: - Cache (FormSessionKey)
+        // MARK: - FormSessionKey Adapters
 
+        func makeSessionKey(
+            string: String,
+            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
+        ) {
+            completion(.init {
+                
+                try .init(
+                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
+                        from: string,
+                        using: echdKeyPair.privateKey
+                    )
+                )
+            })
+        }
+        
         typealias FormSessionKeySuccess = FormSessionKeyService.Success
         typealias FormSessionKeyCacheCompletion = (Swift.Result<Void, Error>) -> Void
         
