@@ -8,21 +8,39 @@
 import Foundation
 import SwiftUI
 
+public struct TipViewConfiguration {
+    
+    let titleFont: Font
+    let titleForeground: Color
+    let backgroundView: Color
+    
+    public init(
+        titleFont: Font,
+        titleForeground: Color,
+        backgroundView: Color
+    ) {
+        self.titleFont = titleFont
+        self.titleForeground = titleForeground
+        self.backgroundView = backgroundView
+    }
+}
+
 struct TipView: View {
     
     let viewModel: TipViewModel
+    let configuration: TipViewConfiguration
     
     var body: some View {
         
         HStack(spacing: 12) {
             
             icon(with: viewModel.imageName)
-            title()
+            title(configuration: configuration)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(Color.gray.opacity(0.2).edgesIgnoringSafeArea([]))
+        .background(configuration.backgroundView)
         .cornerRadius(90)
     }
     
@@ -40,13 +58,13 @@ struct TipView: View {
         }
     }
     
-    private func title() -> some View {
+    private func title(configuration: TipViewConfiguration) -> some View {
         
         Text(viewModel.text)
-            .font(.subheadline)
+            .font(configuration.titleFont)
             .lineLimit(2)
             .lineSpacing(5)
-            .foregroundColor(.gray.opacity(0.2))
+            .foregroundColor(configuration.titleForeground)
             .padding(.trailing, 40)
     }
 }
@@ -61,6 +79,11 @@ struct PaymentHintView_Previews: PreviewProvider {
             viewModel: .init(
                 imageName: "ellipsis.message",
                 text: "Выберите счет карты, к которому будет привязан стикер"
+            ),
+            configuration: .init(
+                titleFont: .body,
+                titleForeground: .black,
+                backgroundView: .gray
             )
         )
         .previewLayout(.sizeThatFits)
