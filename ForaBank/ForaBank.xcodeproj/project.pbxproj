@@ -5866,12 +5866,7 @@
 			children = (
 				2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */,
 				2ABD78312AF90CC7001B5860 /* FetcherAdapters */,
-				2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */,
-				2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */,
-				2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */,
-				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
-				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
-				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
+				2AE886302AFB9D9900D86E84 /* CVVPINServicesFactory */,
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
 				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
@@ -6311,6 +6306,19 @@
 				2AE5973329F918C30083F138 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AE886302AFB9D9900D86E84 /* CVVPINServicesFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */,
+				2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */,
+				2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */,
+				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
+				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
+				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
+			);
+			path = CVVPINServicesFactory;
 			sourceTree = "<group>";
 		};
 		2AE9835429A2394C0001DF72 /* ProductGroupViewComponent */ = {
