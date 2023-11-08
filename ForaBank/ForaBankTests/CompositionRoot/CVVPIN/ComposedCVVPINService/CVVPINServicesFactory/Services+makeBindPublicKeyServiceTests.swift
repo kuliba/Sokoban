@@ -93,7 +93,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
             bindPublicKeyProcess: processSpy.process,
             makeSecretJSON: { _, completion in
                 
-                completion(.init { try makeSecretJSONResult.get() })
+                completion(makeSecretJSONResult)
             },
             onBindKeyFailure: handleFailureSpy.handleFailure(_:)
         )
