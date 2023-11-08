@@ -517,5 +517,3 @@ private extension ChangePINService.AuthenticateError {
         }
     }
 }
-
-typealias MappingRemoteServiceError<MapResponseError: Error> = RemoteServiceError<Error, Error, MapResponseError>
