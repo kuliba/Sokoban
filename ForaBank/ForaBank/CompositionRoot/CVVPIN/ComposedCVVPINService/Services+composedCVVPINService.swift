@@ -76,18 +76,30 @@ extension Services {
         
         // MARK: Configure CVV-PIN Services
 
-        let activationService = Services.makeActivationService(
+        let getCodeService = makeGetCodeService(
             getCodeRemoteService: getCodeRemoteService,
+            cacheGetProcessingSessionCode: cache(response:)
+        )
+        
+        let formSessionKeyService = makeFormSessionKeyService(
             sessionCodeLoader: sessionCodeLoader,
-            sessionIDLoader: sessionIDLoader,
             formSessionKeyRemoteService: formSessionKeyRemoteService,
-            bindPublicKeyWithEventIDRemoteService: bindPublicKeyWithEventIDRemoteService,
-            cacheGetProcessingSessionCode: cache(response:),
-            cacheFormSessionKeySuccess: cache(success:),
-            onBindKeyFailure: clearRSACacheOnError,
-            makeSessionKey: makeSessionKey(string:completion:),
             makeSecretRequestJSON: makeSecretRequestJSON,
-            makeSecretJSON: makeSecretJSON(otp:completion:)
+            makeSessionKey: makeSessionKey(string:completion:),
+            cacheFormSessionKeySuccess: cache(success:)
+        )
+        
+        let bindPublicKeyService = makeBindPublicKeyService(
+            sessionIDLoader: sessionIDLoader,
+            bindPublicKeyWithEventIDRemoteService: bindPublicKeyWithEventIDRemoteService,
+            makeSecretJSON: makeSecretJSON(otp:completion:),
+            onBindKeyFailure: clearRSACacheOnError
+        )
+        
+        let activationService = makeActivationService(
+            getCode: getCodeService.fetch,
+            formSessionKey: formSessionKeyService.fetch,
+            bindPublicKeyWithEventID: bindPublicKeyService.fetch
         )
         
         let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(

@@ -12,32 +12,16 @@ import GenericRemoteService
 
 extension Services {
     
-    typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
+    typealias CachingFormSessionKeyService = Fetcher<FormSessionKeyService.Payload, FormSessionKeyService.Success, FormSessionKeyService.Failure>
     typealias CacheFormSessionKeySuccess = (FormSessionKeyService.Success) -> Void
-    typealias OnBindKeyFailure = (BindPublicKeyWithEventIDService.Failure) -> Void
     
-    static func makeActivationService(
-        getCodeRemoteService: GetCodeRemoteService,
+    static func makeFormSessionKeyService(
         sessionCodeLoader: any Loader<SessionCode>,
-        sessionIDLoader: any Loader<SessionID>,
         formSessionKeyRemoteService: FormSessionKeyRemoteService,
-        bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
-        cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode,
-        cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess,
-        onBindKeyFailure: @escaping OnBindKeyFailure,
-        makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
-        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON
-    ) -> CVVPINFunctionalityActivationService {
-        
-        let getCodeService = GetProcessingSessionCodeService(
-            process: process(completion:)
-        )
-        
-        let cachingGetCodeService = FetcherDecorator(
-            decoratee: getCodeService,
-            cache: cacheGetProcessingSessionCode
-        )
+        makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
+        cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess
+    ) -> any CachingFormSessionKeyService {
         
         let formSessionKeyService = FormSessionKeyService(
             loadCode: loadCode(completion:),
@@ -51,39 +35,12 @@ extension Services {
             cache: cacheFormSessionKeySuccess
         )
         
-        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
-            loadEventID: loadEventID(completion:),
-            makeSecretJSON: makeSecretJSON,
-            process: process(payload:completion:)
-        )
+        return cachingFormSessionKeyService
         
-        let rsaKeyPairCacheCleaningBindPublicKeyService = FetcherDecorator(
-            decoratee: bindPublicKeyWithEventIDService,
-            handleFailure: onBindKeyFailure
-        )
-        
-        let activationService = Services.makeActivationService(
-            getCode: cachingGetCodeService.fetch,
-            formSessionKey: cachingFormSessionKeyService.fetch,
-            bindPublicKeyWithEventID: rsaKeyPairCacheCleaningBindPublicKeyService.fetch
-        )
-        
-        return activationService
-        
-        // MARK: - GetProcessingSessionCode Adapters
-        
-        func process(
-            completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
-        ) {
-            getCodeRemoteService.process {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
         // MARK: - FormSessionKey Adapters
         
         func loadCode(
-            completion:@escaping FormSessionKeyService.CodeCompletion
+            completion: @escaping FormSessionKeyService.CodeCompletion
         ) {
             sessionCodeLoader.load { result in
                 
@@ -105,6 +62,33 @@ extension Services {
                 completion($0.mapError { .init($0) })
             }
         }
+    }
+}
+
+extension Services {
+    
+    typealias BindPublicKeyService = Fetcher<BindPublicKeyWithEventIDService.Payload, BindPublicKeyWithEventIDService.Success, BindPublicKeyWithEventIDService.Failure>
+    typealias OnBindKeyFailure = (BindPublicKeyWithEventIDService.Failure) -> Void
+    
+    static func makeBindPublicKeyService(
+        sessionIDLoader: any Loader<SessionID>,
+        bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
+        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
+        onBindKeyFailure: @escaping OnBindKeyFailure
+   ) -> any BindPublicKeyService {
+        
+        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
+            loadEventID: loadEventID(completion:),
+            makeSecretJSON: makeSecretJSON,
+            process: process(payload:completion:)
+        )
+        
+        let rsaKeyPairCacheCleaningBindPublicKeyService = FetcherDecorator(
+            decoratee: bindPublicKeyWithEventIDService,
+            handleFailure: onBindKeyFailure
+        )
+        
+        return rsaKeyPairCacheCleaningBindPublicKeyService
         
         // MARK: - BindPublicKeyWithEventID Adapters
         
@@ -129,31 +113,7 @@ extension Services {
     }
 }
 
-// MARK: - Adapters
-
-private extension RemoteService where Input == Void {
-    
-    func process(completion: @escaping ProcessCompletion) {
-        
-        process((), completion: completion)
-    }
-}
-
 // MARK: - Mappers
-
-private extension GetProcessingSessionCodeService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
 
 private extension FormSessionKeyService.APIError {
     
