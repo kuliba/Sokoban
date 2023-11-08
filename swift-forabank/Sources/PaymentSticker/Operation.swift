@@ -9,7 +9,7 @@ import Foundation
 
 public struct Operation {
     
-    var parameters: [Parameter]
+    public var parameters: [Parameter]
     
     public init(
         parameters: [Operation.Parameter]
@@ -50,7 +50,9 @@ extension [Operation.Parameter] {
         return self.firstIndex(where: { $0.id.rawValue == id })
     }
     
-    func replaceParameter(newParameter: Operation.Parameter) -> [Operation.Parameter] {
+    public func replaceParameter(
+        newParameter: Operation.Parameter
+    ) -> [Operation.Parameter] {
         
         guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
         else { return self }
@@ -60,7 +62,7 @@ extension [Operation.Parameter] {
         return parameters
     }
     
-    func replaceParameterOptions(
+    public func replaceParameterOptions(
         newParameter: Operation.Parameter.Select
     ) -> [Operation.Parameter] {
         
@@ -105,7 +107,12 @@ public extension Operation.Parameter.Select {
             title: parameter.title,
             placeholder: parameter.placeholder,
             options: parameter.options,
-            state: parameter.state
+            state: .selected(.init(
+                title: parameter.title,
+                placeholder: option.name,
+                name: option.name,
+                iconName: option.iconName
+            ))
         )
     }
 }
