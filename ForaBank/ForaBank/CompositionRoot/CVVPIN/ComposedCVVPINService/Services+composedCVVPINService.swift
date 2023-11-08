@@ -85,8 +85,8 @@ extension Services {
             bindPublicKeyWithEventIDRemoteService: bindPublicKeyWithEventIDRemoteService,
             cacheGetProcessingSessionCode: cache(response:),
             cacheFormSessionKeySuccess: cache(success:),
-            cacheRSAKeyPair: cacheRSAKeyPair,
             onBindKeyFailure: clearRSACacheOnError,
+            makeSecretJSON: makeSecretJSON(otp:completion:),
             _makeSecretRequestJSON: {
                 
                 try cvvPINJSONMaker.makeSecretRequestJSON(
@@ -266,19 +266,33 @@ extension Services {
             )
         }
         
-        // MARK: - Clear RSA Storage on error (BindPublicKeyWithEventID)
-        
-        func cacheRSAKeyPair(
-            rsaKeyPair: RSAKeyPair,
-            completion: @escaping (Swift.Result<Void, Error>) -> Void
-        ) {
-            rsaKeyPairLoader.save(
-                rsaKeyPair,
-                validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan),
-                completion: completion
-            )
-        }
+        // MARK: - BindPublicKeyWithEventID Adapters
 
+        func makeSecretJSON(
+            otp: BindPublicKeyWithEventIDService.OTP,
+            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                do {
+                    let sessionKey = try result.get()
+                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
+                        otp: otp.otpValue,
+                        sessionKey: sessionKey
+                    )
+                    
+                    rsaKeyPairLoader.save(
+                        rsaKeyPair,
+                        validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan)
+                    ) {
+                        completion($0.map { _ in data })
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
+        
         func clearRSACacheOnError(
             _ error: BindPublicKeyWithEventIDService.Failure
         ) {

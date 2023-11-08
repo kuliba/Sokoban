@@ -14,7 +14,6 @@ extension Services {
     
     typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
     typealias CacheFormSessionKeySuccess = (FormSessionKeyService.Success) -> Void
-    typealias CacheRSAKeyPair = (RSAKeyPair, @escaping (Swift.Result<Void, Error>) -> Void) -> Void
     typealias OnBindKeyFailure = (BindPublicKeyWithEventIDService.Failure) -> Void
     
     static func makeActivationService(
@@ -26,8 +25,8 @@ extension Services {
         bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
         cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode,
         cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess,
-        cacheRSAKeyPair: @escaping CacheRSAKeyPair,
         onBindKeyFailure: @escaping OnBindKeyFailure,
+        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
         _makeSecretRequestJSON: @escaping () throws -> Data,
         extractSharedSecret: @escaping (String) throws -> Data,
         cvvPINJSONMaker: CVVPINJSONMaker
@@ -56,7 +55,7 @@ extension Services {
         
         let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
             loadEventID: loadEventID(completion:),
-            makeSecretJSON: makeSecretJSON(otp:completion:),
+            makeSecretJSON: makeSecretJSON,
             process: process(payload:completion:)
         )
         
@@ -134,29 +133,6 @@ extension Services {
             sessionIDLoader.load {
                 
                 completion($0.map { .init(eventIDValue: $0.value) })
-            }
-        }
-        
-        func makeSecretJSON(
-            otp: BindPublicKeyWithEventIDService.OTP,
-            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                do {
-                    let sessionKey = try result.get()
-                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp.otpValue,
-                        sessionKey: sessionKey
-                    )
-                    
-                    cacheRSAKeyPair(rsaKeyPair) {
-                        
-                        completion($0.map { _ in data })
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
             }
         }
         
