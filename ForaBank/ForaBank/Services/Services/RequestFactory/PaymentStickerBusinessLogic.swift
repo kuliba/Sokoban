@@ -65,7 +65,7 @@ extension BusinessLogic {
         completion: @escaping (OperationResult) -> Void
     ) {
         
-        let result: OperationResult = reduce(
+        let result: OperationResult = process(
             operation: operation,
             event: event,
             completion: completion
@@ -77,8 +77,7 @@ extension BusinessLogic {
 
 extension BusinessLogic {
     
-    //TODO: rename process
-    func reduce(
+    func process(
         operation: PaymentSticker.Operation,
         event: Event,
         completion: @escaping (OperationResult) -> Void
