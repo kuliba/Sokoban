@@ -8,21 +8,44 @@
 import Foundation
 import SwiftUI
 
+public struct ConfigurationOperationView {
+
+    let tipViewConfig: TipViewConfiguration
+    let stickerViewConfig: StickerViewConfiguration
+    let selectViewConfig: SelectViewConfiguration
+    
+    public init(
+        tipViewConfig: TipViewConfiguration,
+        stickerViewConfig: StickerViewConfiguration,
+        selectViewConfig: SelectViewConfiguration
+    ) {
+        self.tipViewConfig = tipViewConfig
+        self.stickerViewConfig = stickerViewConfig
+        self.selectViewConfig = selectViewConfig
+    }
+}
+
 public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
+    let configuration: ConfigurationOperationView
     
     public init(
-        model: OperationStateViewModel
+        model: OperationStateViewModel,
+        configuration: ConfigurationOperationView
     ) {
         self.model = model
+        self.configuration = configuration
     }
     
     public var body: some View {
 
         switch model.state {
         case .operation:
-            OperationProcessView(model: model)
+            OperationProcessView(
+                model: model,
+                configuration: configuration
+            )
         
         case let .result(result):
             OperationResultView(
@@ -98,6 +121,7 @@ struct OperationResultView<ButtonsView: View>: View {
 struct OperationProcessView: View {
     
     @ObservedObject var model: OperationStateViewModel
+    let configuration: ConfigurationOperationView
     
     var body: some View {
         
@@ -107,21 +131,32 @@ struct OperationProcessView: View {
                 
                 VStack(spacing: 32) {
                     
-                    ForEach(model.scrollParameters, content: parameterView)
+                    ForEach(model.scrollParameters) { parameter in
+                        
+                        parameterView(
+                            parameter: parameter,
+                            configuration: configuration
+                        )
+                    }
                 }
             }
             .padding(.horizontal)
             
-            continueButton()
+            continueButton(configuration: configuration)
         }
     }
     
     @ViewBuilder
-    private func continueButton() -> some View {
+    private func continueButton(
+        configuration: ConfigurationOperationView
+    ) -> some View {
         
         if let amount = model.amountParameter {
             
-            parameterView(parameter: amount)
+            parameterView(
+                parameter: amount,
+                configuration: configuration
+            )
             
         } else {
             
@@ -142,13 +177,17 @@ struct OperationProcessView: View {
     
     @ViewBuilder
     private func parameterView(
-        parameter: Operation.Parameter
+        parameter: Operation.Parameter,
+        configuration: ConfigurationOperationView
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
         let viewModel = mapper.map(parameter)
         
-        ParameterView(viewModel: viewModel)
+        ParameterView(
+            viewModel: viewModel,
+            configuration: configuration
+        )
     }
 }
 
@@ -164,6 +203,7 @@ extension Operation.Parameter: Identifiable {
             switch select.id {
             case "city":
                 return .city
+                
             case "transferType":
                 return .transferType
             
