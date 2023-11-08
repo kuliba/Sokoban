@@ -519,23 +519,3 @@ private extension ChangePINService.AuthenticateError {
 }
 
 typealias MappingRemoteServiceError<MapResponseError: Error> = RemoteServiceError<Error, Error, MapResponseError>
-
-private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
-    
-    init(_ error: FormSessionKeyService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceError:
-            self = .serviceFailure
-        }
-    }
-}
