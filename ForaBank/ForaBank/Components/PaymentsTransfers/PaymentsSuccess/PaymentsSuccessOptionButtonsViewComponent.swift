@@ -66,8 +66,7 @@ extension Model {
             case .template:
                 
                 guard let operationDetail = source.operationDetail,
-                      operationDetail.restrictedTemplateButton,
-                      let operation = source.operation else {
+                      operationDetail.restrictedTemplateButton else {
                     return nil
                 }
                 
@@ -91,7 +90,7 @@ extension Model {
                         state: state,
                         operation: source.operation,
                         operationDetail: operationDetail
-                    )    
+                    )
                     
                 default:
                     
