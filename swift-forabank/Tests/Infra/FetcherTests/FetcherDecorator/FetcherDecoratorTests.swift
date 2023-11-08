@@ -1,5 +1,5 @@
 //
-//  FetcherCacheDecoratorTests.swift
+//  FetcherDecoratorTests.swift
 //  
 //
 //  Created by Igor Malyarov on 06.11.2023.
@@ -8,19 +8,20 @@
 import Fetcher
 import XCTest
 
-final class FetcherCacheDecoratorTests: XCTestCase {
+final class FetcherDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, decoratee, cacheSpy) = makeSUT()
+        let (_, decoratee, spy) = makeSUT()
         
         XCTAssertNoDiff(decoratee.callCount, 0)
-        XCTAssertNoDiff(cacheSpy.callCount, 0)
+        XCTAssertNoDiff(spy.handledSuccesses.count, 0)
+        XCTAssertNoDiff(spy.handledFailures.count, 0)
     }
     
     func test_fetch_shouldDeliverErrorOnLoadFailure() {
         
-        let loadError = anyError("Load Failure")
+        let loadError = testError("Load Failure")
         let (sut, decoratee, _) = makeSUT()
         
         expect(sut, toDeliver: [.failure(loadError)], on: {
@@ -47,49 +48,84 @@ final class FetcherCacheDecoratorTests: XCTestCase {
         
         fetch(sut, payload) {
             
-            decoratee.complete(with: .failure(anyError()))
+            decoratee.complete(with: .failure(testError()))
         }
         
         XCTAssertNoDiff(decoratee.payloads, [payload])
     }
     
-    func test_fetch_shouldNotCacheOnLoadFailure() {
+    func test_fetch_shouldNotHandleSuccessOnLoadFailure() {
         
-        let loadError = anyError("Load Failure")
-        let (sut, decoratee, cacheSpy) = makeSUT()
+        let loadError = testError("Load Failure")
+        let (sut, decoratee, spy) = makeSUT()
         
         fetch(sut) { decoratee.complete(with: .failure(loadError)) }
         
-        XCTAssertNoDiff(cacheSpy.cachedValues, [])
+        XCTAssertNoDiff(spy.handledSuccesses, [])
     }
     
-    func test_fetch_shouldCacheValueOnLoadSuccess() {
+    func test_fetch_shouldHandleSuccessOnLoadSuccess() {
         
         let item = anyItem()
-        let (sut, decoratee, cacheSpy) = makeSUT()
+        let (sut, decoratee, spy) = makeSUT()
         
         fetch(sut) { decoratee.complete(with: .success(item)) }
         
-        XCTAssertNoDiff(cacheSpy.cachedValues, [item])
+        XCTAssertNoDiff(spy.handledSuccesses, [item])
     }
     
-    func test_fetch_shouldNotCacheOnInstanceDeallocation() {
+    func test_fetch_shouldNotHandleSuccesOnInstanceDeallocation() {
         
         var sut: SUT?
         let decoratee: FetcherSpy
-        let cacheSpy: CacheSpy<Item>
-        (sut, decoratee, cacheSpy) = makeSUT()
+        let spy: Spy
+        (sut, decoratee, spy) = makeSUT()
         
         sut?.fetch(anyRequest()) { _ in }
         sut = nil
         decoratee.complete(with: .success(anyItem()))
         
-        XCTAssertNoDiff(cacheSpy.cachedValues, [])
+        XCTAssertNoDiff(spy.handledSuccesses, [])
+    }
+    
+    func test_fetch_shouldHandleFailureOnLoadFailure() {
+        
+        let loadError = testError("Load Failure")
+        let (sut, decoratee, spy) = makeSUT()
+        
+        fetch(sut) { decoratee.complete(with: .failure(loadError)) }
+        
+        XCTAssertNoDiff(spy.handledFailures, [loadError])
+    }
+    
+    func test_fetch_shouldNotHandleFailureOnLoadSuccess() {
+        
+        let item = anyItem()
+        let (sut, decoratee, spy) = makeSUT()
+        
+        fetch(sut) { decoratee.complete(with: .success(item)) }
+        
+        XCTAssertNoDiff(spy.handledFailures, [])
+    }
+    
+    func test_fetch_shouldNotHandleFailureOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let decoratee: FetcherSpy
+        let spy: Spy
+        (sut, decoratee, spy) = makeSUT()
+        
+        sut?.fetch(anyRequest()) { _ in }
+        sut = nil
+        decoratee.complete(with: .success(anyItem()))
+        
+        XCTAssertNoDiff(spy.handledFailures, [])
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = FetcherCacheDecorator<Request, Item, Error>
+    private typealias SUT = FetcherDecorator<Request, Item, TestError>
+    private typealias Spy = DecoratorSpy<Item, TestError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -97,20 +133,21 @@ final class FetcherCacheDecoratorTests: XCTestCase {
     ) -> (
         sut: SUT,
         decoratee: FetcherSpy,
-        cacheSpy: CacheSpy<Item>
+        spy: Spy
     ) {
         let decoratee = FetcherSpy()
-        let cacheSpy = CacheSpy<Item>()
+        let spy = Spy()
         let sut = SUT(
             decoratee: decoratee,
-            cache: cacheSpy.cache
+            handleSuccess: spy.handleSuccess(_:),
+            handleFailure: spy.handleFailure(_:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(decoratee, file: file, line: line)
-        trackForMemoryLeaks(cacheSpy, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, decoratee, cacheSpy)
+        return (sut, decoratee, spy)
     }
     
     private func fetch(
@@ -130,12 +167,12 @@ final class FetcherCacheDecoratorTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        toDeliver expectedResults: [Result<Item, Error>],
+        toDeliver expectedResults: [Result<Item, TestError>],
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var receivedResults = [Result<Item, Error>]()
+        var receivedResults = [Result<Item, TestError>]()
         let exp = expectation(description: "wait for completion")
         
         sut.fetch(anyRequest()) {
@@ -190,7 +227,7 @@ final class FetcherCacheDecoratorTests: XCTestCase {
         
         typealias Payload = Request
         typealias Success = Item
-        typealias Failure = Error
+        typealias Failure = TestError
         
         typealias Message = (payload: Payload, completion: FetchCompletion)
         
@@ -207,22 +244,26 @@ final class FetcherCacheDecoratorTests: XCTestCase {
         }
         
         func complete(
-            with result: Result<Success, Error>,
+            with result: Result<Success, TestError>,
             at index: Int = 0
         ) {
             messages[index].completion(result)
         }
     }
     
-    private final class CacheSpy<Value> {
+    private final class DecoratorSpy<Success, Failure: Error> {
         
-        private(set) var cachedValues = [Value]()
+        private(set) var handledSuccesses = [Success]()
+        private(set) var handledFailures = [Failure]()
         
-        var callCount: Int { cachedValues.count }
-        
-        func cache(_ item: Value) {
+        func handleSuccess(_ success: Success) {
             
-            cachedValues.append(item)
+            handledSuccesses.append(success)
+        }
+        
+        func handleFailure(_ failure: Failure) {
+            
+            handledFailures.append(failure)
         }
     }
 }
@@ -238,19 +279,20 @@ private struct Request: Equatable {
     
     let value: String
 }
+
 private struct Item: Equatable {
     
     let value: String
 }
 
-private struct AnyError: Error {
+private struct TestError: Error & Equatable {
     
     let message: String
 }
 
-private func anyError(
+private func testError(
     _ message: String = "any error"
-) -> Error {
+) -> TestError {
     
-    AnyError(message: message)
+    TestError(message: message)
 }

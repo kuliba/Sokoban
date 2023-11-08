@@ -327,13 +327,12 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
-                onExit: {},
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        onExit: {}
+        onRegister: {}
     )
     
     static let sampleProducts = MainViewModel(
@@ -352,13 +351,12 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
-                onExit: {},
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        onExit: {}
+        onRegister: {}
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -378,12 +376,11 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
-                onExit: {},
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        onExit: {}
+        onRegister: {}
     )
 }

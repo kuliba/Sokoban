@@ -31,7 +31,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
-    private let onExit: () -> Void
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -39,19 +39,19 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void
+        onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
+        self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void
+        onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -64,7 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
+        self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -125,8 +125,7 @@ class MainViewModel: ObservableObject, Resetable {
                         dismissAction: { [weak self] in
                             
                             self?.action.send(MainViewModelAction.Close.Link())
-                        },
-                        onExit: self.onExit
+                        }
                     ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:

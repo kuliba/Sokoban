@@ -76,7 +76,11 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = AuthLoginViewModel(model, rootActions: rootActions)
+                    let loginViewModel = AuthLoginViewModel(
+                        model,
+                        rootActions: rootActions,
+                        onRegister: onExit
+                    )
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
                     action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
@@ -182,8 +186,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 personAgreements: payload.conditions,
                                 rootActions: rootActions,
                                 tokenIntent: payload.tokenIntent
-                            )),
-                        onExit: onExit
+                            ))
                     ))
                 
                 case _ as RootViewModelAction.CloseAlert:

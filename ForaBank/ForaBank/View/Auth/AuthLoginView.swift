@@ -211,10 +211,12 @@ struct AuthLoginView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AuthLoginView(viewModel: .init(header: AuthLoginViewModel.HeaderViewModel.init(),
-                                       buttons: [.init(.abroad, action: {}), .init(.card, action: {})],
-                                       rootActions: .emptyMock,
-                                       model: .emptyMock))
+        AuthLoginView(viewModel: .init(
+            header: AuthLoginViewModel.HeaderViewModel.init(),
+            buttons: [.init(.abroad, action: {}), .init(.card, action: {})],
+            rootActions: .emptyMock,
+            model: .emptyMock,
+            onRegister: {}
+        ))
     }
 }
-
