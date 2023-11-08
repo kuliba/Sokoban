@@ -13,11 +13,13 @@ import GenericRemoteService
 extension Services {
     
     typealias BindPublicKeyService = Fetcher<BindPublicKeyWithEventIDService.Payload, BindPublicKeyWithEventIDService.Success, BindPublicKeyWithEventIDService.Failure>
+    typealias BindPublicKeyProcessError = MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>
+    typealias BindPublicKeyProcess = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Swift.Result<Void, BindPublicKeyProcessError>) -> Void) -> Void
     typealias OnBindKeyFailure = (BindPublicKeyWithEventIDService.Failure) -> Void
     
     static func makeBindPublicKeyService(
         sessionIDLoader: any Loader<SessionID>,
-        bindPublicKeyWithEventIDRemoteService: BindPublicKeyWithEventIDRemoteService,
+        bindPublicKeyProcess: @escaping BindPublicKeyProcess,
         makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
         onBindKeyFailure: @escaping OnBindKeyFailure
     ) -> any BindPublicKeyService {
@@ -50,7 +52,7 @@ extension Services {
             payload: BindPublicKeyWithEventIDService.ProcessPayload,
             completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
         ){
-            bindPublicKeyWithEventIDRemoteService.process(payload) {
+            bindPublicKeyProcess(payload) {
                 
                 completion($0.mapError { .init($0) })
             }

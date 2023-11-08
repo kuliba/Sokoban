@@ -91,7 +91,7 @@ extension Services {
         
         let bindPublicKeyService = makeBindPublicKeyService(
             sessionIDLoader: sessionIDLoader,
-            bindPublicKeyWithEventIDRemoteService: bindPublicKeyWithEventIDRemoteService,
+            bindPublicKeyProcess: bindPublicKeyWithEventIDRemoteService.process,
             makeSecretJSON: makeSecretJSON(otp:completion:),
             onBindKeyFailure: clearRSACacheOnError
         )
