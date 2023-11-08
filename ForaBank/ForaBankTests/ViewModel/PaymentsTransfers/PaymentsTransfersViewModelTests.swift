@@ -95,12 +95,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 ProductProfileViewModel(
                     model,
                     cvvPINServicesClient: cvvPINServicesClient,
-                    onExit: {},
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction
                 )
-            }, onExit: {}
+            }
         )
         
         trackForMemoryLeaks(model, file: file, line: line)

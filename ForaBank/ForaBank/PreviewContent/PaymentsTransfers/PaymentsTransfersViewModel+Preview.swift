@@ -81,13 +81,11 @@ extension PaymentsTransfersViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
-                onExit: {},
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        onExit: {},
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
