@@ -97,10 +97,13 @@ extension BusinessLogic {
                 )
             
                 return .success(.operation(operation))
-                
+            
             case .openBranch:
                 return .success(.operation(operation))
-            }
+                
+            case .chevronTapped:
+                return .success(.operation(operation))
+                }
             
         case .continueButtonTapped:
             
