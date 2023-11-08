@@ -87,8 +87,19 @@ extension Services {
             cacheFormSessionKeySuccess: cache(success:),
             cacheRSAKeyPair: cacheRSAKeyPair,
             onBindKeyFailure: clearRSACacheOnError,
-            echdKeyPair: echdKeyPair,
-            cvvPINCrypto: cvvPINCrypto,
+            _makeSecretRequestJSON: {
+                
+                try cvvPINJSONMaker.makeSecretRequestJSON(
+                    publicKey: echdKeyPair.publicKey
+                )
+            },
+            extractSharedSecret:  {
+                
+                try cvvPINCrypto.extractSharedSecret(
+                    from: $0,
+                    using: echdKeyPair.privateKey
+                )
+            },
             cvvPINJSONMaker: cvvPINJSONMaker
         )
         

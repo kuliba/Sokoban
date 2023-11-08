@@ -28,8 +28,8 @@ extension Services {
         cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess,
         cacheRSAKeyPair: @escaping CacheRSAKeyPair,
         onBindKeyFailure: @escaping OnBindKeyFailure,
-        echdKeyPair: ECDHDomain.KeyPair,
-        cvvPINCrypto: CVVPINCrypto,
+        _makeSecretRequestJSON: @escaping () throws -> Data,
+        extractSharedSecret: @escaping (String) throws -> Data,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> CVVPINFunctionalityActivationService {
         
@@ -101,12 +101,7 @@ extension Services {
         func makeSecretRequestJSON(
             completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
         ) {
-            completion(.init {
-                
-                try cvvPINJSONMaker.makeSecretRequestJSON(
-                    publicKey: echdKeyPair.publicKey
-                )
-            })
+            completion(.init(catching: _makeSecretRequestJSON))
         }
         
         func process(
@@ -120,18 +115,14 @@ extension Services {
             }
         }
         
+        #warning("replace with injection")
         func makeSessionKey(
             string: String,
             completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
         ) {
             completion(.init {
                 
-                try .init(
-                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
-                        from: string,
-                        using: echdKeyPair.privateKey
-                    )
-                )
+                try .init(sessionKeyValue: extractSharedSecret(string))
             })
         }
                 
