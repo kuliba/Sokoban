@@ -120,7 +120,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
             case .failure:
                 XCTFail("Expected success, but got failure.", file: file, line: line)
                 
-            case .success():
+            case .success:
                 break
             }
             
@@ -147,7 +147,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
             case .failure:
                 break
                 
-            case .success():
+            case .success:
                 XCTFail("Expected failure, but got success.", file: file, line: line)
             }
             
