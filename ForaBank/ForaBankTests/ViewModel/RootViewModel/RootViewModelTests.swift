@@ -208,7 +208,7 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 sections: MainSectionViewModel.makeMainSection(model),
-                makeOperationStateViewModel: { .preview }
+                makeOperationStateViewModel: { _ in .preview }
             ),
             paymentsViewModel: .init(model: model),
             chatViewModel: .init(),
