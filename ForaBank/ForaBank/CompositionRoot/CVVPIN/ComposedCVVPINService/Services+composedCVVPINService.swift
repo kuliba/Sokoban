@@ -103,7 +103,6 @@ extension Services {
         
         let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherDecorator(
             decoratee: bindPublicKeyWithEventIDService,
-            handleSuccess: { _ in },
             handleFailure: clearRSACacheOnError
         )
         
