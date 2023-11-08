@@ -621,6 +621,7 @@
 		2AE886342AFBA23200D86E84 /* MappingRemoteServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */; };
 		2AE886372AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */; };
 		2AE886392AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */; };
+		2AE8863B2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */; };
 		2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9834C29A223040001DF72 /* ValueSpy.swift */; };
 		2AE9835129A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */; };
 		2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */; };
@@ -2750,6 +2751,7 @@
 		2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingRemoteServiceError.swift; sourceTree = "<group>"; };
 		2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
 		2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyServiceTests.swift"; sourceTree = "<group>"; };
+		2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeServiceTests.swift"; sourceTree = "<group>"; };
 		2AE9834C29A223040001DF72 /* ValueSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsFreeCardAvailableHelperTests.swift; sourceTree = "<group>"; };
 		2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfProductViewModelHelpersTests.swift; sourceTree = "<group>"; };
@@ -6335,8 +6337,9 @@
 		2AE886352AFBA7E500D86E84 /* CVVPINServicesFactory */ = {
 			isa = PBXGroup;
 			children = (
-				2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */,
+				2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */,
 				2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */,
+				2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */,
 			);
 			path = CVVPINServicesFactory;
 			sourceTree = "<group>";
@@ -13562,6 +13565,7 @@
 				C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */,
 				834E3F6F2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
+				2AE8863B2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */,
 				2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */,
