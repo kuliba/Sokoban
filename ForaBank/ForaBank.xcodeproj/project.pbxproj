@@ -372,6 +372,11 @@
 		2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = 2A1F086D2A7A2EE400C5B11B /* public.crt */; };
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
+		2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */; };
+		2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */; };
+		2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */; };
+		2A235F7D2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */; };
+		2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */; };
 		2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
@@ -2420,6 +2425,11 @@
 		2A1F086D2A7A2EE400C5B11B /* public.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public.crt; sourceTree = "<group>"; };
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
+		2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticateWithPublicKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BindPublicKeyWithEventIDService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormSessionKeyService+FetcherTests.swift"; sourceTree = "<group>"; };
+		2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetProcessingSessionCodeService+FetcherTests.swift"; sourceTree = "<group>"; };
 		2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unimplemented.swift; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
@@ -5116,6 +5126,18 @@
 			path = PublicTransportKey;
 			sourceTree = "<group>";
 		};
+		2A235F752AFA339100E42E36 /* FetcherAdapters */ = {
+			isa = PBXGroup;
+			children = (
+				2A235F762AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift */,
+				2A235F782AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift */,
+				2A235F7A2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift */,
+				2A235F7C2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift */,
+				2A235F7E2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift */,
+			);
+			path = FetcherAdapters;
+			sourceTree = "<group>";
+		};
 		2A2E32F529A39596008B9626 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
@@ -5442,6 +5464,7 @@
 			children = (
 				2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */,
 				2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */,
+				2A235F752AFA339100E42E36 /* FetcherAdapters */,
 			);
 			path = ComposedCVVPINService;
 			sourceTree = "<group>";
@@ -12678,6 +12701,7 @@
 				2A80B5692AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift in Sources */,
 				2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */,
 				2A5190392A7E12770014B0B7 /* RequestFactory+makeSecretRequestTests.swift in Sources */,
+				2A235F772AFA33CC00E42E36 /* AuthenticateWithPublicKeyService+FetcherTests.swift in Sources */,
 				2A51903E2A7E77B90014B0B7 /* Model+authorizedHTTPClientTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				2A6724102ADADA2A00FAD522 /* Crypto+anySecKey.swift in Sources */,
@@ -12720,6 +12744,7 @@
 				2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */,
 				2AED642A2A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
+				2A235F7D2AFA61D300E42E36 /* FormSessionKeyService+FetcherTests.swift in Sources */,
 				682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */,
 				77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */,
 				7743781829F1797000C3D5B1 /* CreateInterestDepositTransferPayloadTests.swift in Sources */,
@@ -12751,6 +12776,7 @@
 				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
+				2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */,
 				77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */,
 				2A58FAB22AD71F3600BD1967 /* anyData.swift in Sources */,
 				77E1805C27AC8CAE0006ACC9 /* TestingAppDelegate.swift in Sources */,
@@ -12779,6 +12805,7 @@
 				2A51903B2A7E12CB0014B0B7 /* RequestFactory+makeBindPublicKeyWithEventIDRequestTests.swift in Sources */,
 				2AECD58D29FC519800FC0E81 /* SearchBarComponentTests.swift in Sources */,
 				77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */,
+				2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */,
 				2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */,
 				774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */,
 				2A58FAB62AD722BE00BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequestTests.swift in Sources */,
@@ -12807,6 +12834,7 @@
 				C130E3742A8FBE11002F99BC /* PaymentsTests.swift in Sources */,
 				834731E62A13BCB2002590A3 /* PaymentsServicesTests.swift in Sources */,
 				779CF7AD2A6E6CB500011812 /* EncryptionLocalAgentTests.swift in Sources */,
+				2A235F792AFA405900E42E36 /* BindPublicKeyWithEventIDService+FetcherTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
 				77ED5FAB2A2F78DE001BFA3D /* ProductProfileViewModelTests.swift in Sources */,
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
