@@ -74,7 +74,7 @@ extension Services {
         
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
-        // MARK: Configure CVV-PIN Services
+        // MARK: Configure CVV-PIN Activation Service
 
         let getCodeService = makeGetCodeService(
             getCodeRemoteService: getCodeRemoteService,
@@ -102,14 +102,12 @@ extension Services {
             bindPublicKeyWithEventID: bindPublicKeyService.fetch
         )
         
-        let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
-            prepareKeyExchange: prepareKeyExchange(completion:),
-            process: process(data:completion:),
-            makeSessionKey: makeSessionKey(response:completion:)
-        )
+        // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
         
-        let cachingAuthWithPublicKeyService = FetcherDecorator(
-            decoratee: authenticateWithPublicKeyService,
+        let authWithPublicKeyService = makeAuthWithPublicKeyService(
+            prepareKeyExchange: prepareKeyExchange(completion:),
+            authWithPublicKeyRemoteService: authWithPublicKeyRemoteService,
+            makeSessionKey: makeSessionKey(response:completion:),
             cache: cache(success:)
         )
         
@@ -120,7 +118,7 @@ extension Services {
             sessionIDLoader: sessionIDLoader,
             otpEventIDLoader: otpEventIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: authWithPublicKeyService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             changePINRemoteService: changePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
@@ -139,7 +137,7 @@ extension Services {
             rsaKeyPairLoader: rsaKeyPairLoader,
             sessionIDLoader: sessionIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: authWithPublicKeyService,
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker
@@ -198,16 +196,6 @@ extension Services {
                         rsaKeyPair: result.get()
                     )
                 })
-            }
-        }
-        
-        func process(
-            data: Data,
-            completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
-        ) {
-            authWithPublicKeyRemoteService.process(data) {
-                
-                completion($0.mapError { .init($0) })
             }
         }
         
@@ -531,20 +519,6 @@ private extension ChangePINService.AuthenticateError {
 }
 
 typealias MappingRemoteServiceError<MapResponseError: Error> = RemoteServiceError<Error, Error, MapResponseError>
-
-private extension AuthenticateWithPublicKeyService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<AuthenticateWithPublicKeyService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
 
 private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
     

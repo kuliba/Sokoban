@@ -617,6 +617,7 @@
 		2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */; };
 		2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */; };
 		2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */; };
+		2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */; };
 		2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9834C29A223040001DF72 /* ValueSpy.swift */; };
 		2AE9835129A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */; };
 		2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */; };
@@ -2742,6 +2743,7 @@
 		2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeService.swift"; sourceTree = "<group>"; };
 		2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyService.swift"; sourceTree = "<group>"; };
 		2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyService.swift"; sourceTree = "<group>"; };
+		2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyService.swift"; sourceTree = "<group>"; };
 		2AE9834C29A223040001DF72 /* ValueSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsFreeCardAvailableHelperTests.swift; sourceTree = "<group>"; };
 		2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfProductViewModelHelpersTests.swift; sourceTree = "<group>"; };
@@ -6315,6 +6317,7 @@
 				2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */,
 				2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */,
 				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
+				2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */,
 				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
 				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
 			);
@@ -13065,6 +13068,7 @@
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
 				774A8B662865FDAF00B81140 /* PaymentsInfoViewComponent.swift in Sources */,
 				5044B5F9293553A200F233EF /* TransfersAdvantagesViewComponent.swift in Sources */,
+				2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */,
 				6820927F27AB0E1B003DCAFD /* BankData.swift in Sources */,
 				EDDFE3A62756BEC600F57C71 /* DetailInformationViewCell.swift in Sources */,
 				834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */,
