@@ -297,6 +297,12 @@ extension BusinessLogic {
 
 extension BusinessLogic {
     
+    struct City {
+        
+        let id: String
+        let name: String
+    }
+    
     typealias TransferPayload = TransferEvent
     
     public enum TransferResponse {

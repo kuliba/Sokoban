@@ -35,7 +35,8 @@ enum RootViewModelFactory {
                 transfer: { event, completion in
                     
                 },
-                products: $0
+                products: $0,
+                cityList: $1
             ))
         }
         

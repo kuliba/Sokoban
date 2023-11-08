@@ -80,7 +80,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _ in .preview }
+            makeOperationStateViewModel: { _  in .preview }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -111,7 +111,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _ in .preview }
+            makeOperationStateViewModel: { _  in .preview }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

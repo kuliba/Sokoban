@@ -171,7 +171,7 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .paymentSticker(viewModel):
-            OperationView(model: viewModel)
+            OperationView(model: viewModel, configuration: .)
         }
     }
     

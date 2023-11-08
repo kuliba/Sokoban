@@ -141,6 +141,8 @@ extension OperationStateViewModel {
         case .openBranch:
             //TODO: send Branch View
             return nil
+        case .chevronTapped(_):
+            return nil
         }
     }
     
