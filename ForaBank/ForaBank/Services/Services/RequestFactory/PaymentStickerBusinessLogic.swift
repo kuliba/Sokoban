@@ -25,15 +25,18 @@ final class BusinessLogic {
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transfer: Transfer
     let products: [Product]
+    let cityList: [City]
     
     init(
         dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
         transfer: @escaping Transfer,
-        products: [Product]
+        products: [Product],
+        cityList: [City]
     ) {
         self.dictionaryService = dictionaryService
         self.transfer = transfer
         self.products = products
+        self.cityList = cityList
     }
 }
 
