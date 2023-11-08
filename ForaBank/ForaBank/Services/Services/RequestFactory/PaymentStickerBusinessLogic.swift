@@ -270,7 +270,9 @@ extension BusinessLogic {
                         description: banner.subtitle,
                         options: banner.txtConditionList.map({
                             
-                            Operation.Parameter.Sticker.Option.init(title: $0.name, description: $0.description)
+                            Operation.Parameter.Sticker.Option(
+                                title: $0.name,
+                                description: "\($0.description) \($0.value)")
                         })
                     ))
                       
