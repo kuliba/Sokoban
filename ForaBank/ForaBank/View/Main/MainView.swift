@@ -171,7 +171,10 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .paymentSticker(viewModel):
-            OperationView(model: viewModel, configuration: .)
+            OperationView(
+                model: viewModel,
+                configuration: MainView.configurationOperationView()
+            )
         }
     }
     
@@ -341,7 +344,7 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _ in .preview }
+        makeOperationStateViewModel: { _,_  in .preview }
     )
     
     static let sampleProducts = MainViewModel(
@@ -353,7 +356,7 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _ in .preview }
+        makeOperationStateViewModel: { _,_  in .preview }
     )
     
     static let sampleOldCurrency = MainViewModel(
@@ -365,6 +368,50 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _ in .preview }
+        makeOperationStateViewModel: { _,_  in .preview }
     )
+}
+
+extension MainView {
+    
+    static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
+     
+        PaymentSticker.ConfigurationOperationView(
+            tipViewConfig: .init(
+                titleFont: .textBodyMR14200(),
+                titleForeground: .textSecondary,
+                backgroundView: .mainColorsGrayLightest
+            ), stickerViewConfig: .init(
+                rectangleColor: .mainColorsGrayLightest,
+                configHeader: .init(
+                    titleFont: .textH3Sb18240(),
+                    titleColor: .mainColorsBlack,
+                    descriptionFont: .textBodySR12160(),
+                    descriptionColor: .textPlaceholder
+                ),
+                configOption: .init(
+                    titleFont: .textBodySR12160(),
+                    titleColor: .textPlaceholder,
+                    iconColor: .systemColorActive,
+                    descriptionFont: .textH4M16240(),
+                    descriptionColor: .secondary
+                )),
+            selectViewConfig: .init(
+                selectOptionConfig: .init(
+                    titleFont: .textBodyMR14180(),
+                    titleForeground: .textPlaceholder,
+                    placeholderForeground: .textTertiary,
+                    placeholderFont: .textBodyMR14180()
+                ),
+                optionsListConfig: .init(
+                    titleFont: .textH4M16240(),
+                    titleForeground: .textSecondary
+                ),
+                optionConfig: .init(
+                    nameFont: .textH4M16240(),
+                    nameForeground: .textSecondary
+                )
+            )
+        )
+    }
 }
