@@ -23,17 +23,23 @@ final class BusinessLogic {
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    let makeTransferService: RemoteService<String, MakeTransferResponse>
     let transfer: Transfer
     let products: [Product]
     let cityList: [City]
     
     init(
         dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
+        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
+        makeTransferService: RemoteService<String, MakeTransferResponse>,
         transfer: @escaping Transfer,
         products: [Product],
         cityList: [City]
     ) {
         self.dictionaryService = dictionaryService
+        self.transferService = transferService
+        self.makeTransferService = makeTransferService
         self.transfer = transfer
         self.products = products
         self.cityList = cityList
@@ -186,6 +192,11 @@ extension BusinessLogic {
             }
             
             return .success(.operation(operation))
+            
+            transferService.process(.init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))) { result in
+            
+                
+            }
             
         case let .product(productEvents):
             

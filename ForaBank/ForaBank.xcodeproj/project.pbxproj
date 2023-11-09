@@ -1564,6 +1564,10 @@
 		C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C130E3752A8FC184002F99BC /* C2BOperation.swift */; };
 		C13825452AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */; };
 		C13825472AB9D6E200AD2AF2 /* Model+RequisitesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */; };
+		C139D9102AFC3A18008B5F5E /* CommissionProductTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D90F2AFC3A18008B5F5E /* CommissionProductTransfer.swift */; };
+		C139D9122AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */; };
+		C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */; };
+		C139D9162AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
 		C140F14A2AE8CE5100623E1D /* ContentPreviewForBuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = C140F1492AE8CE5100623E1D /* ContentPreviewForBuild.swift */; };
 		C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F02A84259000FAD5AA /* AccountCellViewModelTests.swift */; };
@@ -3542,6 +3546,10 @@
 		C130E3752A8FC184002F99BC /* C2BOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BOperation.swift; sourceTree = "<group>"; };
 		C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakePaymentsSuccessOptionButtonsViewModelTests.swift; sourceTree = "<group>"; };
 		C13825462AB9D6E200AD2AF2 /* Model+RequisitesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+RequisitesTests.swift"; sourceTree = "<group>"; };
+		C139D90F2AFC3A18008B5F5E /* CommissionProductTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissionProductTransfer.swift; sourceTree = "<group>"; };
+		C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+CommissionProductTransfer.swift"; sourceTree = "<group>"; };
+		C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeTransferResponse.swift; sourceTree = "<group>"; };
+		C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+MakeTransfer.swift"; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
 		C140F1492AE8CE5100623E1D /* ContentPreviewForBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPreviewForBuild.swift; sourceTree = "<group>"; };
 		C140F14B2AEA719600623E1D /* PaymentSticker.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PaymentSticker.xctestplan; sourceTree = "<group>"; };
@@ -8767,6 +8775,8 @@
 			children = (
 				C19738E62AF3970100101B1B /* _StickerDictionary.swift */,
 				C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */,
+				C139D90F2AFC3A18008B5F5E /* CommissionProductTransfer.swift */,
+				C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -8804,6 +8814,8 @@
 				C19738E52AF396D000101B1B /* Domain */,
 				C1BA23E42ACD543B00425B10 /* Service+Payments.swift */,
 				C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */,
+				C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */,
+				C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */,
 			);
 			path = PaymentService;
 			sourceTree = "<group>";
@@ -11394,6 +11406,7 @@
 				77F468B8284524B3008C9579 /* ChatViewModel.swift in Sources */,
 				7768FBE2291C07EE00908420 /* Model+PaymentsSFP.swift in Sources */,
 				0C4B0BBA28620F9F004B7F69 /* FastPaymentContractFullInfoType.swift in Sources */,
+				C139D9162AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift in Sources */,
 				6845336C279843DF00104A8B /* ServerCommands+Utility.swift in Sources */,
 				0C9CC08728992517000DB396 /* ProductStatementMerchantGroup.swift in Sources */,
 				68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */,
@@ -11610,6 +11623,7 @@
 				687F9B0727FBF2B2007A38A5 /* ProductCardData.swift in Sources */,
 				0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */,
 				774A8B652865FDAF00B81140 /* PaymentsSpoilerButtonViewComponent.swift in Sources */,
+				C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */,
 				2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
@@ -11966,6 +11980,7 @@
 				0BE0BDFD29071BE10064549E /* QRButtonsViewComponent.swift in Sources */,
 				0CC2BDAB2A0544A1000C588F /* TemplatesItemViewModels.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
+				C139D9102AFC3A18008B5F5E /* CommissionProductTransfer.swift in Sources */,
 				ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */,
 				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,
 				777460FD2922F37C00D3FF46 /* ContactsCountriesSectionView.swift in Sources */,
@@ -12243,6 +12258,7 @@
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				2AED64302A416BBA00A52C35 /* TransportPaymentsHelpers.swift in Sources */,
+				C139D9122AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift in Sources */,
 				C154986E2907DB6900D00670 /* ContactsListSectionViewModel.swift in Sources */,
 				773E6837298B816800B75482 /* PaymentsSubscribeViewComponent.swift in Sources */,
 				EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */,

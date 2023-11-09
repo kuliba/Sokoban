@@ -32,6 +32,11 @@ enum RootViewModelFactory {
                     input: .stickerOrderForm,
                     httpClient: httpClient
                 ),
+                transferService: Services.createCommissionProductTransferRequest(
+                    input: .init(parameters: []),
+                    httpClient: httpClient
+                ),
+                makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 transfer: { event, completion in
                     
                 },
