@@ -14,5 +14,15 @@ public extension Operation.Parameter {
         let value: String
         let title: String
         let icon: String
+        
+        public init(
+            value: String,
+            title: String,
+            icon: String
+        ) {
+            self.value = value
+            self.title = title
+            self.icon = icon
+        }
     }
 }
