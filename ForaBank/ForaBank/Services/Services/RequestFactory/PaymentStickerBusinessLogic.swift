@@ -177,6 +177,20 @@ extension BusinessLogic {
                     )))
                 }
             }
+        
+        case let .input(events):
+            switch events {
+            case .getOtpCode:
+                return .success(.operation(operation))
+
+            case let .valueUpdate(input):
+                
+                let parametersUpdate = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .input(input)
+                )
+                return .success(.operation(parametersUpdate))
+            }
             
         case .continueButtonTapped:
            
@@ -195,6 +209,32 @@ extension BusinessLogic {
                 
                 return .success(.operation(operation))
                 
+            } else if let input = operation.parameters.first(where: { $0.id == .input }) {
+                
+                switch input {
+                case let .input(input):
+                    
+                    makeTransferService.process(input.value) { result in
+                       
+                        switch result {
+                        case let .success(makeTransfer):
+                            completion(.success(.result(OperationStateViewModel.OperationResult(
+                                result: .success,
+                                title: "Успешная заявка",
+                                description: makeTransfer.data.productOrderingResponseMessage,
+                                amount: "100"
+                            ))))
+
+                        case let .failure(error):
+                            return
+                        }
+                    }
+                    return .success(.operation(operation))
+
+                default:
+                    return .success(.operation(operation))
+                }
+                
             } else {
              
                 transferService.process(.init(
@@ -210,6 +250,7 @@ extension BusinessLogic {
                         
                         switch result {
                         case .success:
+                            
                             completion(.success(.operation(operation.updateOperation(
                                 operation: operation,
                                 newParameter: .input(.init(
