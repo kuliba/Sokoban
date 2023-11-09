@@ -298,7 +298,7 @@ extension CurrencyListView {
                         .foregroundColor(.mainColorsGrayLightest)
 
                     Text(viewModel.title)
-                        .font(.textBodyMSB14200())
+                        .font(.textBodyMSb14200())
                         .foregroundColor(.mainColorsGray)
 
                 }.frame(width: 29, height: 60)

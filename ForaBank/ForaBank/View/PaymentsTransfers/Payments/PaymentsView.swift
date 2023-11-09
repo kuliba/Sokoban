@@ -30,6 +30,8 @@ struct PaymentsView: View {
             case let .operation(operationViewModel):
                 PaymentsOperationView(viewModel: operationViewModel)
                     .zIndex(0)
+            case let .linkNotActive(viewModel):
+                PaymentsSuccessView(viewModel: viewModel)
             }
             
             if let spinnerViewModel = viewModel.spinner {

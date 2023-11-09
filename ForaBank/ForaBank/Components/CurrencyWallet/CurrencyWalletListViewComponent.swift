@@ -214,15 +214,18 @@ extension CurrencyWalletListViewModel {
 
         let sortedProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
         let filteredProducts = filter.filteredProducts(sortedProducts)
-
-        let products = filteredProducts.map { ProductView.ViewModel(
-            with: $0,
-            size: .small,
-            style: .main,
-            model: model,
-            cardAction: nil,
-            showCvv: nil
-        ) }
+        
+        let products = filteredProducts.map {
+         
+            ProductView.ViewModel(
+                with: $0,
+                size: .small,
+                style: .main,
+                model: model,
+                cardAction: nil,
+                showCvv: nil
+            )
+        }
 
         return products
     }
@@ -230,13 +233,8 @@ extension CurrencyWalletListViewModel {
     static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation) -> [ProductView.ViewModel] {
 
         let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
-        let products = filteredProducts.map { ProductView.ViewModel(
-            with: $0,
-            size: .small,
-            style: .main,
-            model: model,
-            cardAction: nil,
-            showCvv: nil) }
+
+        let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model) }
 
         return products
     }

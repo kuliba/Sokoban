@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 import SwiftUI
 
 extension ModelAction {
@@ -74,7 +75,15 @@ extension Model {
                 
                 do {
                     
-                    try self.localAgent.store(self.images.value, serial: nil)
+                    if let images = localAgent.load(type: [String: ImageData].self) {
+                        
+                        let updatedImages = self.dictionaryImagesReduce(images: self.images.value, updateItems: images.imageDataMapper())
+                        try self.localAgent.store(updatedImages, serial: nil)
+                        
+                    } else {
+                        
+                        try self.localAgent.store(self.images.value, serial: nil)
+                    }
                     
                 } catch {
                     

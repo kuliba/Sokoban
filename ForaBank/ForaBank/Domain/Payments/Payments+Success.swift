@@ -137,7 +137,7 @@ extension Payments.Success {
     ) {
         
         switch mode {
-        case let .meToMe(from: _, to: _, transferData):
+        case let .meToMe(templateId: _, from: _, to: _, transferData):
             guard let documentStatus = transferData.documentStatus else {
                 return nil
             }
@@ -239,7 +239,7 @@ extension Payments.Success {
                 with: mode,
                 documentStatus: documentStatus,
                 operation: nil,
-                meToMePayment: nil
+                meToMePayment: .init(mode: mode)
             ),
             Payments.ParameterButton.repeatButton(mode, documentStatus: documentStatus),
             Payments.ParameterButton.actionButtonMain()
@@ -630,7 +630,7 @@ extension Payments.ParameterSuccessOptionButtons {
             return .init(
                 options: options,
                 operationDetail: operationDetail,
-                templateID: nil,
+                templateID: meToMePayment?.templateId,
                 meToMePayment: meToMePayment,
                 operation: operation
             )

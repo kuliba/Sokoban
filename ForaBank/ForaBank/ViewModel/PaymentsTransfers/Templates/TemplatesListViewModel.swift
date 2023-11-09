@@ -19,7 +19,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var idList: UUID = UUID()
     
     @Published var categorySelector: OptionSelectorView.ViewModel?
-    @Published var deletePannel: DeletePannelViewModel?
+    @Published var deletePanel: DeletePannelViewModel?
     
     @Published var items: [ItemViewModel]
 
@@ -53,7 +53,7 @@ class TemplatesListViewModel: ObservableObject {
         self.navBarState = navBarState
         self.categorySelector = categorySelector
         self.items = items
-        self.deletePannel = deletePannel
+        self.deletePanel = deletePannel
         self.dismissAction = dismissAction
         self.model = model
     }
@@ -414,7 +414,7 @@ private extension TemplatesListViewModel {
                         self.state = .select
                         updateNavBar(event: .setDelete)
                         self.selectedItemsIds.value = []
-                        self.deletePannel = getDeletePannelModel(selectedCount: 0)
+                        self.deletePanel = getDeletePanelModel(selectedCount: 0)
                         
                         self.items = reduceItems(rawItems: self.itemsRaw.value,
                                                  isDataUpdating: false,
@@ -439,7 +439,7 @@ private extension TemplatesListViewModel {
                         state = .normal
                         updateNavBar(event: .setRegular)
                         selectedItemsIds.value = []
-                        deletePannel = nil
+                        deletePanel = nil
                         
                         for item in itemsRaw.value {
                             
@@ -638,7 +638,7 @@ private extension TemplatesListViewModel {
                 
                 if case .select = self.state {
                     
-                    deletePannel = getDeletePannelModel(selectedCount: selected.count)
+                    deletePanel = getDeletePanelModel(selectedCount: selected.count)
                 }
                 
             }.store(in: &bindings)
@@ -1009,7 +1009,7 @@ extension TemplatesListViewModel {
         return categoriesIds.contains(categoryId)
     }
     
-    func getDeletePannelModel(selectedCount: Int) -> DeletePannelViewModel {
+    func getDeletePanelModel(selectedCount: Int) -> DeletePannelViewModel {
         
         .init(description: "Выбрано \(selectedCount)",
               selectAllButton: .init(icon: .ic24CheckCircle,

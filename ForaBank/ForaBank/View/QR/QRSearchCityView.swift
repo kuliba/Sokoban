@@ -18,7 +18,7 @@ struct QRSearchCityView: View {
             HStack {
                 
                 Text(viewModel.title)
-                    .font(Font.textH3UnderlineSB18240())
+                    .font(.textH3UnderlineSb18240())
                     .foregroundColor(Color.textSecondary)
                     .frame(height: 30)
                 

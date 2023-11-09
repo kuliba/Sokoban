@@ -40,7 +40,7 @@ struct InfoProductSheet: View {
             Button(action: sendSelected.action) {
                 
                 Text(sendSelected.title)
-                    .font(.textH3UnderlineSB18240())
+                    .font(.textH3UnderlineSb18240())
                     .multilineTextAlignment(.center)
                     .foregroundColor(Color.textSecondary)
                     .frame(width: 328, height: 24, alignment: .center)
@@ -54,7 +54,7 @@ struct InfoProductSheet: View {
             Button(action: sendAll.action) {
                 
                 Text(sendAll.title)
-                    .font(.textH3UnderlineSB18240())
+                    .font(.textH3UnderlineSb18240())
                     .multilineTextAlignment(.center)
                     .foregroundColor(Color.textSecondary)
                     .frame(width: 328, height: 24, alignment: .center)

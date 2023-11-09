@@ -5,9 +5,10 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
-import Foundation
-import UIKit
 import FirebaseMessaging
+import Foundation
+import ServerAgent
+import UIKit
 
 //MARK: - Actions
 
@@ -888,62 +889,7 @@ internal extension Model {
             }
         }
     }
-    
-    // MARK: - Pre-Auth
-
-    func handleJsonAbroadRequest(_ serial: String?) {
         
-        LoggerAgent.shared.log(category: .model, message: "handleJsonAbroadRequest")
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        let typeDict: DictionaryType = .jsonAbroad
-        guard self.dictionariesUpdating.value.contains(typeDict) == false else { return }
-        self.dictionariesUpdating.value.insert(typeDict)
-        
-        let command = ServerCommands.UtilityController.GetJsonAbroad(token: token, serial: serial)
-        
-        LoggerAgent.shared.log(category: .model, message: "execute command: \(command)")
-        serverAgent.executeCommand(command: command) { result in
-            
-            self.dictionariesUpdating.value.remove(typeDict)
-            
-            switch result {
-            case let .success(response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let data = response.data else {
-                        
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    self.transferAbroad.value = data
-                    
-                    do {
-                        
-                        try self.localAgent.store(data, serial: nil)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-
-                default:
-
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: String(describing: response.errorMessage))
-                }
-
-            case let .failure(error):
-                self.handleServerCommandError(error: error, command: command)
-            }
-        }
-    }
-    
     func handleOrderLeadRequest(_ payload: ModelAction.Auth.OrderLead.Request) {
         
         LoggerAgent.shared.log(category: .model, message: "handleOrderLeadRequest")

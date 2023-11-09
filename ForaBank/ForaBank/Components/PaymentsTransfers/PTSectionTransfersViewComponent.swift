@@ -76,7 +76,7 @@ struct PTSectionTransfersView: View {
     var body: some View {
         Text(viewModel.title) 
             .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.textH2SB20282())
+            .font(.textH2Sb20282())
             .foregroundColor(.textSecondary)
             .padding(.top, 30)
             .padding(.bottom, 14)

@@ -42,7 +42,9 @@ extension PaymentsInfoView {
             
             model.images
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] images in
+                .sink { [weak self] images in
+                    
+                    guard let self else { return }
                     
                     guard case .shimmer(let imageId) = icon else {
                         return
@@ -56,7 +58,7 @@ extension PaymentsInfoView {
                         
                         withAnimation {
                             
-                            icon = .remote(image)
+                            self.icon = .remote(image)
                         }
 
                     } else {
@@ -131,6 +133,7 @@ struct PaymentsInfoView: View {
                 Text(viewModel.title)
                     .font(.textBodyMR14200())
                     .foregroundColor(.textPlaceholder)
+                    .accessibilityIdentifier("PaymentsInfoComponentTitleCompact")
                 
                 Spacer()
                 
@@ -140,6 +143,7 @@ struct PaymentsInfoView: View {
                         .font(.textBodyMR14180())
                         .lineLimit(1)
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("PaymentsInfoComponentTextCompact")
                 }
             }
             .padding(.horizontal, 16)
@@ -155,10 +159,13 @@ struct PaymentsInfoView: View {
                     Text(viewModel.title)
                         .font(.textBodySR12160())
                         .foregroundColor(.textPlaceholder)
+                        .accessibilityIdentifier("PaymentsInfoComponentTitle")
+                    
                     
                     Text(viewModel.content)
                         .font(.textBodyMR14200())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("PaymentsInfoComponentText")
                 }
                 
                 Spacer()
@@ -193,22 +200,26 @@ extension PaymentsInfoView {
                     .renderingMode(.original)
                     .clipShape(Circle())
                     .frame(width: 32, height: 32)
+                    .accessibilityIdentifier("PaymentsInfoComponentIconRemote")
                 
             case let .local(image):
                 image
                     .renderingMode(.template)
                     .foregroundColor(.mainColorsGray)
+                    .accessibilityIdentifier("PaymentsInfoComponentIconLocal")
   
             case .shimmer:
                 Circle()
                     .foregroundColor(.mainColorsGrayMedium)
                     .frame(width: 32, height: 32)
                     .shimmering()
+                    .accessibilityIdentifier("PaymentsInfoComponentIconShimmer")
                 
             case .placeholder:
                 Image.ic24IconMessage
                     .renderingMode(.template)
                     .foregroundColor(.mainColorsGray)
+                    .accessibilityIdentifier("PaymentsInfoComponentIconPlaceholder")
             }
         }
     }

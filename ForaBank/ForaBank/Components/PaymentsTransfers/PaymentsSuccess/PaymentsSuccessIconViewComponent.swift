@@ -61,12 +61,14 @@ struct PaymentsSuccessIconView: View {
                 .renderingMode(.original)
                 .aspectRatio(contentMode: .fit)
                 .frame(height: viewModel.size)
+                .accessibilityIdentifier("SuccessPageImage")
             
         } else {
             
             Circle()
                 .frame(height: viewModel.size)
                 .foregroundColor(.mainColorsGrayLightest)
+                .accessibilityIdentifier("SuccessPageDefaultImage")
         }
     }
 }

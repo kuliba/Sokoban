@@ -11,8 +11,8 @@ extension Landing {
     
     public struct MultiLineHeader: Equatable {
         
-        let backgroundColor: String
-        let regularTextList, boldTextList: [String]?
+        public let backgroundColor: String
+        public let regularTextList, boldTextList: [String]?
         
         public init(
             backgroundColor: String,

@@ -43,6 +43,7 @@ struct PaymentsSuccessLinkView: View {
             
             Image.ic24ExternalLink
                 .foregroundColor(.iconGray)
+                .accessibilityIdentifier("SuccessPageExternalLinkIcon")
             
             Text(viewModel.title)
                 .font(.textBodyMM14200())
@@ -51,6 +52,7 @@ struct PaymentsSuccessLinkView: View {
                     
                     openURL(viewModel.url)
                 }
+                .accessibilityIdentifier("SuccessPageExternalLinkText")
             
         }
         .padding(.vertical, 10)

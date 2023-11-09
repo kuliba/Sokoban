@@ -112,27 +112,41 @@ extension Array where Element == TransferAnywayData.Additional {
 
 extension TransferMe2MeData {
     
-    static func me2MeStub() -> [TransferMe2MeData] {
+    static func me2MeStub(
+        accountId: Int? = nil,
+        cardId: Int? = nil,
+        amount: Decimal? = nil
+    ) -> [TransferMe2MeData] {
         
-        let payer = TransferData.Payer(
-            inn: nil,
-            accountId: nil,
-            accountNumber: nil,
-            cardId: 1,
-            cardNumber: nil,
-            phoneNumber: nil
-        )
-        let amount: Double? = nil
-        
-        let parameterList = [
+        return [
             TransferMe2MeData(
                 amount: amount,
                 check: false,
                 comment: nil,
                 currencyAmount: "RUB",
-                payer: payer,
-                bankId: "12345678")]
+                payer: .sample(
+                    accountId: accountId,
+                    cardId: cardId
+                ),
+                bankId: "12345678")
+        ]
+    }
+}
+
+extension TransferData.Payer {
+    
+    static func sample(
+        accountId: Int? = nil,
+        cardId: Int? = nil
+    ) -> Self {
         
-        return parameterList
+        .init(
+            inn: nil,
+            accountId: accountId,
+            accountNumber: nil,
+            cardId: cardId,
+            cardNumber: nil,
+            phoneNumber: nil
+        )
     }
 }

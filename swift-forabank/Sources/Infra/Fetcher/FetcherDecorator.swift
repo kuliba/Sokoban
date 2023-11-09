@@ -9,21 +9,22 @@ public final class FetcherDecorator<Payload, Success, Failure>
 where Failure: Error {
     
     public typealias Decoratee = Fetcher<Payload, Success, Failure>
-    public typealias HandleSuccess = (Success) -> Void
-    public typealias HandleFailure = (Failure) -> Void
+    public typealias Handle = () -> Void
+    public typealias OnSuccess = (Success, @escaping Handle) -> Void
+    public typealias OnFailure = (Failure, @escaping Handle) -> Void
     
     private let decoratee: any Decoratee
-    private let handleSuccess: HandleSuccess
-    private let handleFailure: HandleFailure
+    private let onSuccess: OnSuccess
+    private let onFailure: OnFailure
     
     public init(
         decoratee: any Decoratee,
-        handleSuccess: @escaping HandleSuccess,
-        handleFailure: @escaping HandleFailure
+        onSuccess: @escaping OnSuccess,
+        onFailure: @escaping OnFailure
     ) {
         self.decoratee = decoratee
-        self.handleSuccess = handleSuccess
-        self.handleFailure = handleFailure
+        self.onSuccess = onSuccess
+        self.onFailure = onFailure
     }
 }
 
@@ -35,19 +36,13 @@ extension FetcherDecorator: Fetcher {
     ) {
         decoratee.fetch(payload) { [weak self] result in
             
-            completion(
-                result
-                    .map { success in
-                        
-                        self?.handleSuccess(success)
-                        return success
-                    }
-                    .mapError { failure in
-                        
-                        self?.handleFailure(failure)
-                        return failure
-                    }
-            )
+            switch result {
+            case let .failure(error):
+                self?.onFailure(error) { completion(result) }
+                
+            case let .success(success):
+                self?.onSuccess(success) { completion(result) }
+            }
         }
     }
 }
@@ -56,13 +51,60 @@ public extension FetcherDecorator {
     
     convenience init(
         decoratee: any Decoratee,
-        cache: @escaping HandleSuccess
+        onSuccess: @escaping OnSuccess
     ) {
         self.init(
             decoratee: decoratee,
-            handleSuccess: cache,
-            handleFailure: { _ in }
+            onSuccess: onSuccess,
+            onFailure: { _, completion in completion() }
+        )
+    }
+    
+    convenience init(
+        decoratee: any Decoratee,
+        onFailure: @escaping OnFailure
+    ) {
+        self.init(
+            decoratee: decoratee,
+            onSuccess: { _, completion in completion() },
+            onFailure: onFailure
         )
     }
 }
 
+public extension FetcherDecorator {
+    
+    typealias HandleSuccess = (Success) -> Void
+    
+    convenience init(
+        decoratee: any Decoratee,
+        handleSuccess: @escaping HandleSuccess
+    ) {
+        self.init(
+            decoratee: decoratee,
+            onSuccess: { success, completion in
+                
+                handleSuccess(success)
+                completion()
+            },
+            onFailure: { _, completion in completion() }
+        )
+    }
+    
+    typealias HandleFailure = (Failure) -> Void
+    
+    convenience init(
+        decoratee: any Decoratee,
+        handleFailure: @escaping HandleFailure
+    ) {
+        self.init(
+            decoratee: decoratee,
+            onSuccess: { _, completion in completion() },
+            onFailure: { failure, completion in
+                
+                handleFailure(failure)
+                completion()
+            }
+        )
+    }
+}

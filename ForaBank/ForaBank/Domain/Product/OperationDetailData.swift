@@ -89,7 +89,6 @@ struct OperationDetailData: Codable, Equatable {
     let printData: PrintMapData?
     let paymentMethod: PaymentMethod?
     
-    
     enum PaymentMethod: String, Codable, Unknownable {
     
         case cash = "Наличные"

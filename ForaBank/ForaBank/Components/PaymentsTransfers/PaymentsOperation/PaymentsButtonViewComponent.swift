@@ -98,6 +98,7 @@ struct PaymentsButtonView: View {
         
         ButtonSimpleView(viewModel: viewModel.button)
             .frame(height: 56)
+            .accessibilityIdentifier("PaymentsButtonContinueButton")
     }
 }
 

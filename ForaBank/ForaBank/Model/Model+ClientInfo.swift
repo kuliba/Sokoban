@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 
 //MARK: - Actions
 
@@ -385,6 +386,24 @@ extension Model {
                 ))
             }
         }
+    }
+}
+
+// MARK: - Adapters
+
+private extension ServerCommandMediaParameter {
+    
+    init?(with imageData: ImageData, fileName: String) {
+        
+        guard let data = imageData.jpegData else {
+            return nil
+        }
+        
+        self.init(
+            fileName: fileName + ".jpeg",
+            data: data,
+            mimeType: "image/jpeg"
+        )
     }
 }
 

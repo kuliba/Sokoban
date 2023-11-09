@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "5E20592D-2A8B-4B0D-805A-22A3223DF55D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}

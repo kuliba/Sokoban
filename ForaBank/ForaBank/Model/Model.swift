@@ -5,11 +5,14 @@
 //  Created by Max Gribov on 21.12.2021.
 //
 
-import Foundation
+import CodableLanding
 import Combine
+import Foundation
+import LandingUIComponent
 import os
-import UserModel
+import ServerAgent
 import SymmetricEncryption
+import UserModel
 
 class Model {
     
@@ -24,8 +27,9 @@ class Model {
     let fcmToken: CurrentValueSubject<String?, Never>
 
     //MARK: Pre-Auth
-    let transferAbroad: CurrentValueSubject<TransferAbroadResponseData?, Never>
-    
+    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -174,7 +178,8 @@ class Model {
         self.depositsInfo = .init(DepositsInfoData())
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
-        self.transferAbroad = .init(nil)
+        self.transferLanding = .init(.success(.none))
+        self.orderCardLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
@@ -242,8 +247,27 @@ class Model {
         let sessionAgent = SessionAgent()
         
         // server agent
-        let enviroment = Config.serverAgentEnvironment
-        let serverAgent = ServerAgent(enviroment: enviroment)
+        let environment = Config.serverAgentEnvironment
+        let serverAgent = ServerAgent(
+            baseURL: environment.baseURL,
+            encoder: .serverDate,
+            decoder: .serverDate,
+            logError: { LoggerAgent.shared.log(level: .error, category: .network, message: $0) },
+            logMessage: { LoggerAgent.shared.log(category: .network, message: $0) },
+            sendAction: { action in
+                
+                switch action {
+                case .networkActivityEvent:
+                    sessionAgent.action.send(SessionAgentAction.Event.Network())
+                    
+                case .notAuthorized:
+                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.notAuthorized")
+                    
+                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
+                }
+            }
+        )
 
         // keychain agent
         let keychainAgent = ValetKeychainAgent(valetName: "ru.forabank.sense.valet")
@@ -306,7 +330,6 @@ class Model {
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Auth.Session.Activated")
                     action.send(ModelAction.Auth.Session.Activated())
                     
-                    try? localAgent.clear(type: [String: ImageData].self)
                     loadCachedPublicData()
                     LoggerAgent.shared.log(category: .model, message: "sent ModelAction.Dictionary.UpdateCache.All")
                     action.send(ModelAction.Dictionary.UpdateCache.All())
@@ -388,8 +411,6 @@ class Model {
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "received SessionAgentAction.Session.Start.Request")
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Start.Request")
-                    self.action.send(ModelAction.Settings.ResetProfileOnboardSettings())
-
                     self.action.send(ModelAction.Auth.Session.Start.Request())
                     
                 case _ as SessionAgentAction.Session.Extend:
@@ -403,28 +424,6 @@ class Model {
                     
                     LoggerAgent.shared.log(level: .debug, category: .model, message: "sent ModelAction.Auth.Session.Timeout.Request")
                     self.action.send(ModelAction.Auth.Session.Timeout.Request())
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-        
-        //MARK: - Server Agent Action
-        
-        serverAgent.action
-            .receive(on: queue)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as ServerAgentAction.NetworkActivityEvent:
-                    sessionAgent.action.send(SessionAgentAction.Event.Network())
-                    
-                case _ as ServerAgentAction.NotAuthorized:
-                    LoggerAgent.shared.log(level: .error, category: .model, message: "received ServerAgentAction.NotAuthorized")
-                    
-                    LoggerAgent.shared.log(category: .model, message: "sent SessionAgentAction.Session.Terminate")
-                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 default:
                     break
@@ -756,10 +755,7 @@ class Model {
                     
                 case _ as ModelAction.Settings.ApplicationSettings.Request:
                     handleAppSettingsRequest()
-               
-                case _ as ModelAction.Settings.ResetProfileOnboardSettings:
-                    handleResetProfileOnboardingSettings()
-
+                    
                     //MARK: - BankClients
                 
                 case let payload as ModelAction.BankClient.Request:
@@ -904,9 +900,6 @@ class Model {
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
                     
-                    case .jsonAbroad: //legacy
-                        handleJsonAbroadRequest(payload.serial)
-                        
                     case .clientInform:
                         handleClientInform(payload.serial)
                     }
@@ -1037,6 +1030,10 @@ class Model {
     }
 }
 
+// MARK: - Protocol Conformances
+
+extension ServerAgent: ServerAgentProtocol {}
+
 //MARK: - Public Methods
 
 extension Model {
@@ -1122,7 +1119,7 @@ private extension Model {
             }
         }
     }
-    
+        
     func loadCachedPublicData() {
         
         if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
@@ -1192,18 +1189,21 @@ private extension Model {
             
             self.currencyWalletList.value = currencyWalletList
         }
-        
-        if let transferAbroad = localAgent.load(type: TransferAbroadResponseData.self) {
-            
-            self.transferAbroad.value = transferAbroad
-        }
-        
+                
+        loadLanding()
+                
         if let qrMapping = localAgent.load(type: QRMapping.self) {
             
             self.qrMapping.value = qrMapping
         }
     }
     
+    func loadLanding() {
+        
+        self.transferLanding.value = .success(localAgent.load(.transfer))
+        self.orderCardLanding.value = .success(localAgent.load(.orderCard))
+    }
+
     func loadCachedAuthorizedData() {
         
         self.products.value = productsCacheLoad()
@@ -1448,6 +1448,45 @@ private extension Model {
     }
 }
 
+// MARK: - Adapter
+
+private extension LocalAgentProtocol {
+    
+    func load(_ abroadType: AbroadType) -> UILanding? {
+        
+        switch abroadType {
+        case .transfer:
+            return load(type: LocalAgentDomain.AbroadTransfer.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .orderCard:
+            return load(type: LocalAgentDomain.AbroadOrderCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+        }
+    }
+}
+
 //MARK: - Extensions
 
 extension ChaChaPolyEncryptionAgent: EncryptionAgent {}
+
+// MARK: - Local Agent Domain
+
+enum LocalAgentDomain {}
+
+extension LocalAgentDomain {
+    
+    typealias Landing = CodableLanding
+        
+    struct AbroadOrderCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AbroadTransfer: Codable {
+        
+        let landing: Landing
+    }
+}

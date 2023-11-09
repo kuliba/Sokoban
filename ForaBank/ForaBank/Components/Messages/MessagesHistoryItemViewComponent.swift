@@ -59,7 +59,7 @@ struct MessagesHistoryItemView: View {
                     
                     Circle()
                         .frame(width: 40, height: 40)
-                        .foregroundColor(.bGIconRedLight)
+                        .foregroundColor(.bgIconRedLight)
                         .accessibilityIdentifier("MessageHistoryItemIconBackground")
                     
                     viewModel.icon

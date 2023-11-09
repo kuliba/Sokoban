@@ -195,7 +195,7 @@ struct ProductProfileOptionsPannelView: View {
                 if let title = viewModel.title {
                     
                     Text(title)
-                        .font(.textH3SB18240())
+                        .font(.textH3Sb18240())
                         .foregroundColor(.textSecondary)
                 }
                 

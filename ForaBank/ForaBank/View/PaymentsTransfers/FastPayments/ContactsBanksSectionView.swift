@@ -117,7 +117,7 @@ struct SearchPlaceholderView: View {
             VStack(spacing: 16) {
                 
                 Text(viewModel.title)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                     .foregroundColor(.mainColorsBlack)
                     .multilineTextAlignment(.center)
 
