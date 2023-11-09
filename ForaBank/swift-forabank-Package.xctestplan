@@ -50,13 +50,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LandingUICompomentTests",
-        "name" : "LandingUICompomentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "LinkableTextTests",
         "name" : "LinkableTextTests"
       }
@@ -172,6 +165,132 @@
         "containerPath" : "container:",
         "identifier" : "CVVPINServicesTests",
         "name" : "CVVPINServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPIN_ServicesTests",
+        "name" : "CVVPIN_ServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
       }
     }
   ],

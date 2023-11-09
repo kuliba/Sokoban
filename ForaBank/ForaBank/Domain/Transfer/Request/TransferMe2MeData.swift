@@ -11,7 +11,7 @@ class TransferMe2MeData: TransferData {
     
     let bankId: String
     
-    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, bankId: String) {
+    init(amount: Decimal?, check: Bool, comment: String?, currencyAmount: String, payer: Payer?, bankId: String) {
         
         self.bankId = bankId
 
@@ -19,7 +19,7 @@ class TransferMe2MeData: TransferData {
     }
     
     //TODO: remove after a switch to a Decimal in the related code in the project
-    convenience init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, bankId: String) {
+    convenience init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer?, bankId: String) {
         
         let amountDecimal: Decimal? = {
             

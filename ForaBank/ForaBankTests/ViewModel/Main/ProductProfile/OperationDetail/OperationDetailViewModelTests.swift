@@ -180,7 +180,7 @@ extension OperationDetailViewModelTests {
         )
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(sut.templateButton?.testState, .complete)
+        XCTAssertNoDiff(sut.templateButton?.state.testState, .complete)
     }
     
     func test_modelAction_operationDetailResponse_transferEnumAccountClose_shouldSetupTemplateButtonComplete() throws {

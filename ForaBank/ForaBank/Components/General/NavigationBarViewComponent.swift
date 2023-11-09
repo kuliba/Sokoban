@@ -305,6 +305,7 @@ struct NavigationBarView: View {
                             .foregroundColor(viewModel.foreground)
                             .lineLimit(1)
                             .opacity(viewModel.opacity)
+                            .accessibilityIdentifier("NavigationBarSubTitle")
                     }
                 }
                 
@@ -407,6 +408,7 @@ extension NavigationBarView {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .foregroundColor(foregroundColor)
+                    .accessibilityIdentifier("NavigationBarIcon1")
             }
         }
     }
@@ -429,6 +431,7 @@ extension NavigationBarView {
                         .frame(width: 24, height: 24)
                         .foregroundColor(viewModel.isDisabled ? .mainColorsGrayMedium
                                                               : foreground)
+                        .accessibilityIdentifier("NavigationBarIcon2")
                 
                     if let markedDot = viewModel.markedDot {
                     
@@ -475,12 +478,14 @@ extension NavigationBarView {
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 24, height: 24)
+                    .accessibilityIdentifier("NavigationBarIconNormal")
                 
             case .large:
                 viewModel.icon
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 32, height: 32)
+                    .accessibilityIdentifier("NavigationBarIconLarge")
             }
         }
     }
@@ -547,17 +552,17 @@ struct NavigationBarView_Previews: PreviewProvider {
                 
                 ZStack {
                     
-                    Color.bGIconGrayLightest
+                    Color.bgIconGrayLightest
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack(spacing: 20) {
-                        Color.bGIconDeepBlueLight
+                        Color.bgIconDeepBlueLight
                             .frame(height: 50)
-                        Color.bGIconDeepLimeLight
+                        Color.bgIconDeepLimeLight
                             .frame(height: 50)
-                        Color.bGIconDeepIndigoLight
+                        Color.bgIconDeepIndigoLight
                             .frame(height: 50)
-                        Color.bGIconDeepOrangeLight
+                        Color.bgIconDeepOrangeLight
                             .frame(height: 50)
                     }
                 }

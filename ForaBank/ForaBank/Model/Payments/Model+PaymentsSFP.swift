@@ -44,7 +44,7 @@ extension Model {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             
-            let productId = Self.productWithSource(source: operation.source, productId: String(product.id))
+            let productId = productWithSource(source: operation.source, productId: String(product.id))
             let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
             
             //message
@@ -334,11 +334,12 @@ extension Payments.ParameterAmount {
 
 extension Model {
     
-    static func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
+    func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
     
         switch source {
-        case .some(.template):
-            return nil
+        case let .template(templateID):
+            let template = paymentTemplates.value.first { $0.id == templateID }
+            return template?.payerProductId?.description
             
         default:
             return productId

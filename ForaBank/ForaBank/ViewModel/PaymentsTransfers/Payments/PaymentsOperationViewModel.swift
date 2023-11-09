@@ -282,8 +282,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     switch action {
                     case let payload as PaymentsSectionViewModelAction.ItemValueDidChanged:
-                        
-                        guard payload.value.isChanged == true else {
+                        guard payload.value.isChanged || payload.value.currencyIsChanged else {
                             return
                         }
                         self.action.send(PaymentsOperationViewModelAction.ItemDidUpdated(parameterId: payload.value.id))

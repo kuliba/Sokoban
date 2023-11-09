@@ -68,3 +68,13 @@ extension ImageData {
     
     static let empty = ImageData(data: Data())
 }
+
+ //MARK: Helpers
+
+extension [String: ImageData] {
+    
+    func imageDataMapper() -> [(id: String, image: ImageData)] {
+        
+        self.map( { (id: $0.key, image: $0.value) } )
+    }
+}

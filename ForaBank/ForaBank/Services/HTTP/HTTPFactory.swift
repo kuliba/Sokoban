@@ -36,3 +36,14 @@ extension URLSessionHTTPClient: HTTPClient {
         }
     }
 }
+
+extension HTTPFactory {
+    
+    static func cachelessLoggingNoSharedCookiesURLSessionHTTPClient(
+    ) -> HTTPClient {
+        
+        let delegate = LoggingURLSessionDelegate(log: LoggerAgent.shared.log)
+        
+        return URLSessionHTTPClient.noSharedCookieStoreNoUrlCache(delegate: delegate)
+    }
+}

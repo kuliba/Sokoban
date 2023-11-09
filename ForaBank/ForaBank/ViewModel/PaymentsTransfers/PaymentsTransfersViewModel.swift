@@ -50,13 +50,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
-    private let onExit: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -70,7 +68,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -84,7 +81,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -94,7 +90,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
         
         self.navButtonsRight = navButtonsRight
         
@@ -147,6 +142,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value
                     else {return }
                     
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     // TODO: replace with factory
                     link = .userAccount(.init(
                         model: model,
@@ -155,8 +151,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             self?.action.send(PaymentsTransfersViewModelAction
                                 .Close.Link())
-                        },
-                        onExit: onExit
+                        }
                     ))
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
@@ -478,7 +473,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as TemplatesListViewModelAction.CloseAction:
-                    link = nil
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 800,
+                        action: PaymentsTransfersViewModelAction.Close.Link())
+                    )
                     
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
@@ -487,7 +485,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                         self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
                             .init(productId: payload.productId))
-                    }
+                        }
                 default:
                     break
                 }
@@ -1060,7 +1058,7 @@ extension NavigationBarView.ViewModel {
             ],
             rightItems: [
                 NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: .qr_Icon,
+                    icon: .ic40Qr,
                     action: navTrailingAction
                 )
             ]
@@ -1083,7 +1081,7 @@ extension NavigationBarView.ViewModel {
             ],
             rightItems: [
                 NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: .qr_Icon,
+                    icon: .ic40Qr,
                     action: navTrailingAction
                 )
             ]
@@ -1140,7 +1138,8 @@ extension PaymentsTransfersViewModel {
             (.mobile, let paymentData),
             (.outside, let paymentData),
             (.phone, let paymentData),
-            (.transport, let paymentData):
+            (.transport, let paymentData),
+            (.taxAndStateService, let paymentData):
             
             let paymentsViewModel = PaymentsViewModel(
                 source: .latestPayment(paymentData.id),
@@ -1150,17 +1149,14 @@ extension PaymentsTransfersViewModel {
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.Link())
                 }
-            
-            bind(paymentsViewModel)
-            
-            self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-            )
-            
-        case (.taxAndStateService, let paymentData as PaymentServiceData):
-            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
-            
+                
+                bind(paymentsViewModel)
+                
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+                )
+
         default: //error matching
             bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
         }

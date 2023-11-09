@@ -112,7 +112,7 @@ extension String {
         return true
     }
     
-    func filterred(regEx: String) throws -> String {
+    func filtered(regEx: String) throws -> String {
         
         let value = self
         
@@ -126,7 +126,7 @@ extension String {
         }
     }
 
-    func filterred() -> String {
+    func filtered() -> String {
         filter { ("0"..."9").contains($0) }
     }
     
@@ -252,6 +252,24 @@ extension String {
         return self.range(
             of: "^[0-9]*$",
             options: .regularExpression) != nil
+    }
+}
+
+extension String {
+    var filterValue: String {
+        
+        if self.notContainsLetters {
+            return self.filtered()
+        }
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+extension String {
+    var notContainsLetters: Bool {
+        let wanted = CharacterSet(charactersIn: "0123456789- +")
+        return unicodeScalars
+            .allSatisfy(wanted.contains)
     }
 }
 

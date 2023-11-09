@@ -18,6 +18,7 @@ struct PDFDocumentView: UIViewRepresentable {
         pdfView.document = document
         pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
         pdfView.autoScales = true
+        pdfView.accessibilityIdentifier = "PDFView"
         
         return pdfView
     }

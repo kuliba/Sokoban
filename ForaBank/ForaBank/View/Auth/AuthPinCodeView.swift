@@ -229,7 +229,7 @@ extension AuthPinCodeView.NumPadView {
             Button(action: action) {
                 
                 Text(title)
-                    .font(.textBodyMSB14200())
+                    .font(.textBodyMSb14200())
                     .foregroundColor(.textSecondary)
             }
             .frame(width: 80, height: 80)
@@ -259,7 +259,7 @@ extension AuthPinCodeView {
                         Text(cancelButton.title)
                     }
                     .foregroundColor(.textSecondary)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                 }
                 
                 Spacer()
@@ -274,7 +274,7 @@ extension AuthPinCodeView {
                         Text(continueButton.title)
                     }
                     .foregroundColor(.textSecondary)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                 }
             }
             .padding([.leading,.trailing, .bottom], 20)

@@ -11,13 +11,23 @@ extension DecodableLanding.Data {
     
     struct Detail: Decodable, Equatable {
         
-        let detailsGroupId: String
+        let groupId: String
         let dataGroup: [DataGroup]
         
+        enum CodingKeys: String, CodingKey {
+            case groupId = "detailsGroupId"
+            case dataGroup
+        }
+
         struct DataGroup: Decodable, Equatable {
             
-            let detailViewId: String
+            let viewId: String
             let dataView: [DataView]
+            
+            enum CodingKeys: String, CodingKey {
+                case viewId = "detailViewId"
+                case dataView
+            }
         }
     }
 }

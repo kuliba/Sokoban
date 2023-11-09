@@ -11,7 +11,9 @@ extension DecodableLanding.Data {
     
     struct PageTitle: Decodable, Equatable {
         
-        let text: String
+        let title: String
+        let subTitle: String?
+
         let transparency: Bool
     }
 }

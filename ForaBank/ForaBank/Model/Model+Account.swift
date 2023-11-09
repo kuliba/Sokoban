@@ -5,6 +5,7 @@
 //  Created by Pavel Samsonov on 13.06.2022.
 //
 
+import ServerAgent
 import SwiftUI
 
 // MARK: - Helpers

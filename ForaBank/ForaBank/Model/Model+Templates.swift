@@ -263,8 +263,7 @@ extension Model {
     
     func handleTemplatesListRequest() {
         
-        guard let token
-        else {
+        guard let token else {
             handledUnauthorizedCommandAttempt()
             return
         }
@@ -292,8 +291,10 @@ extension Model {
                     
                     Task {
                         
-                        let updatedImages = await Self.reduce(images: self.images.value,
-                                                              with: data.templateList)
+                        let updatedImages = await Self.reduce(
+                            images: self.images.value,
+                            with: data.templateList
+                        )
 
                         if self.images.value != updatedImages {
 

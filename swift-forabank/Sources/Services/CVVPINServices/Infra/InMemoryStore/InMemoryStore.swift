@@ -31,7 +31,9 @@ extension InMemoryStore: Store {
     public func retrieve(
         completion: @escaping RetrievalCompletion
     ) {
-        queue.async {
+        queue.async { [weak self] in
+            
+            guard let self else { return }
             
             completion(.init {
                 
@@ -45,7 +47,9 @@ extension InMemoryStore: Store {
         validUntil: Date,
         completion: @escaping InsertionCompletion
     ) {
-        queue.async(flags: .barrier) {
+        queue.async(flags: .barrier) { [weak self] in
+            
+            guard let self else { return }
             
             self.cache = (local, validUntil)
             completion(.success(()))
@@ -55,7 +59,9 @@ extension InMemoryStore: Store {
     public func deleteCache(
         completion: @escaping DeletionCompletion
     ) {
-        queue.async(flags: .barrier) {
+        queue.async(flags: .barrier) { [weak self] in
+            
+            guard let self else { return }
             
             self.cache = nil
             completion(.success(()))

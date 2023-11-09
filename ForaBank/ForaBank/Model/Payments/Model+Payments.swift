@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServerAgent
 
 //MARK: - Actions
 
@@ -445,7 +446,10 @@ extension Model {
                 
             case .transport:
                 return .transport
-                
+           
+            case .taxAndStateService:
+                return try latestPayment.getServiceIdentifierForTaxService()
+
             default:
                 throw Payments.Error.unsupported
             }
@@ -855,7 +859,11 @@ extension Model {
     }
     
     /// update dependend on each other parameters
-    func paymentsProcessDependencyReducer(operation: Payments.Operation, parameterId: Payments.Parameter.ID, parameters: [PaymentsParameterRepresentable]) -> PaymentsParameterRepresentable? {
+    func paymentsProcessDependencyReducer(
+        operation: Payments.Operation,
+        parameterId: Payments.Parameter.ID,
+        parameters: [PaymentsParameterRepresentable]
+    ) -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .fssp:

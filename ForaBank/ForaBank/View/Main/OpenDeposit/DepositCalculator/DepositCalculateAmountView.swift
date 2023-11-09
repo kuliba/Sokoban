@@ -184,7 +184,7 @@ extension DepositCalculateAmountView {
                     return false
                 }
                 
-                var temporary = text.filterred()
+                var temporary = text.filtered()
                 
                 if string.isEmpty && temporary.count > 0 {
                     
@@ -192,17 +192,17 @@ extension DepositCalculateAmountView {
                     temporary = text.replacingCharacters(in: stringRange, with: string)
                 }
                 
-                let filterred = "\(temporary)\(string)".filterred()
+                let filtered = "\(temporary)\(string)".filtered()
                 
-                if filterred.isEmpty == true {
+                if filtered.isEmpty == true {
                     return true
                 }
                 
-                if filterred.count > 1 && filterred.first == "0" {
+                if filtered.count > 1 && filtered.first == "0" {
                     return false
                 }
                 
-                guard let value = Double(filterred), value <= viewModel.bounds.upperBound else {
+                guard let value = Double(filtered), value <= viewModel.bounds.upperBound else {
                     return false
                 }
                 

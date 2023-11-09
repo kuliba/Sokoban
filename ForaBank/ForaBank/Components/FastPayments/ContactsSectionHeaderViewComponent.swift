@@ -80,7 +80,7 @@ struct ContactsSectionHeaderView: View {
             
             Text(viewModel.title)
                 .foregroundColor(Color.textSecondary)
-                .font(.textH3SB18240())
+                .font(.textH3Sb18240())
             
             Spacer()
             

@@ -91,7 +91,7 @@ struct TransfersAdvantagesView: View {
             VStack(alignment: .leading, spacing: 26) {
 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.mainColorsBlack)
                 
                 VStack(alignment: .leading, spacing: 20) {

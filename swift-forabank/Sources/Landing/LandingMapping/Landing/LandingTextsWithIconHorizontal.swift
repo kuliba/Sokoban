@@ -11,8 +11,8 @@ extension Landing {
     
     public struct TextsWithIconHorizontal: Equatable {
         
-        let md5hash, title: String
-        let contentCenterAndPull: Bool
+        public let md5hash, title: String
+        public let contentCenterAndPull: Bool
         
         public init(
             md5hash: String,

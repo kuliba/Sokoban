@@ -34,7 +34,7 @@ struct OperationDetailInfoView: View {
                 
                 Text(viewModel.title)
                     .foregroundColor(.textSecondary)
-                    .font(.textH4SB16240())
+                    .font(.textH4Sb16240())
                     .accessibilityIdentifier("OperationDetailInfoPageTitle")
                 
                 Spacer()

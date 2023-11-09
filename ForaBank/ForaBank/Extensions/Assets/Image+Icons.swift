@@ -10,6 +10,10 @@
 
 import SwiftUI
 
+private class BundleProvider {
+    static let bundle = Bundle(for: BundleProvider.self)
+}
+
 public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
@@ -27,7 +31,7 @@ public extension Image {
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
     static var ic16Tariff: Image { Image(#function) }
-    static var ic16ZKX: Image { Image(#function) }
+    static var ic16Zkx: Image { Image(#function) }
     static var ic16Activity: Image { Image(#function) }
     static var ic16AdditionalCardGrey: Image { Image(#function) }
     static var ic16AdditionalCardWhite: Image { Image(#function) }
@@ -136,6 +140,7 @@ public extension Image {
     static var ic16Database: Image { Image(#function) }
     static var ic16DeactivatedCreditCard: Image { Image(#function) }
     static var ic16Delete: Image { Image(#function) }
+    static var ic16Denied: Image { Image(#function) }
     static var ic16Disc: Image { Image(#function) }
     static var ic16Divide: Image { Image(#function) }
     static var ic16DivideCircle: Image { Image(#function) }
@@ -358,6 +363,7 @@ public extension Image {
     static var ic16Volume1: Image { Image(#function) }
     static var ic16Volume2: Image { Image(#function) }
     static var ic16VolumeX: Image { Image(#function) }
+    static var ic16Waiting: Image { Image(#function) }
     static var ic16Watch: Image { Image(#function) }
     static var ic16WheelOfFortune: Image { Image(#function) }
     static var ic16Wifi: Image { Image(#function) }
@@ -371,12 +377,15 @@ public extension Image {
     static var ic16ZapOff: Image { Image(#function) }
     static var ic16ZoomIn: Image { Image(#function) }
     static var ic16ZoomOut: Image { Image(#function) }
+    static var ic18Check: Image { Image(#function) }
     static var ic20ForaNy: Image { Image(#function) }
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
     static var ic24Tariff: Image { Image(#function) }
     static var ic24Abroad: Image { Image(#function) }
+    static var ic24AbroadLine: Image { Image(#function) }
+    static var ic24Account1: Image { Image(#function) }
     static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
@@ -506,6 +515,7 @@ public extension Image {
     static var ic24Dribbble: Image { Image(#function) }
     static var ic24DriversLicense: Image { Image(#function) }
     static var ic24Droplet: Image { Image(#function) }
+    static var ic24EWallet: Image { Image(#function) }
     static var ic24Edit: Image { Image(#function) }
     static var ic24Edit2: Image { Image(#function) }
     static var ic24Edit3: Image { Image(#function) }
@@ -531,6 +541,7 @@ public extension Image {
     static var ic24FilePluseColor: Image { Image(#function) }
     static var ic24Film: Image { Image(#function) }
     static var ic24Filter: Image { Image(#function) }
+    static var ic24FireColor: Image { Image(#function) }
     static var ic24Fish: Image { Image(#function) }
     static var ic24Flag: Image { Image(#function) }
     static var ic24Folder: Image { Image(#function) }
@@ -570,6 +581,7 @@ public extension Image {
     static var ic24Italic: Image { Image(#function) }
     static var ic24Key: Image { Image(#function) }
     static var ic24Keyboard: Image { Image(#function) }
+    static var ic24Kids: Image { Image(#function) }
     static var ic24Layers: Image { Image(#function) }
     static var ic24Layout: Image { Image(#function) }
     static var ic24LifeBuoy: Image { Image(#function) }
@@ -609,6 +621,7 @@ public extension Image {
     static var ic24MinusCircle: Image { Image(#function) }
     static var ic24MinusSquare: Image { Image(#function) }
     static var ic24MinusSquares: Image { Image(#function) }
+    static var ic24Mlm: Image { Image(#function) }
     static var ic24Monitor: Image { Image(#function) }
     static var ic24Moon: Image { Image(#function) }
     static var ic24MoreHorizontal: Image { Image(#function) }
@@ -621,6 +634,7 @@ public extension Image {
     static var ic24Navigation: Image { Image(#function) }
     static var ic24NewCard: Image { Image(#function) }
     static var ic24NewCardColor: Image { Image(#function) }
+    static var ic24Nfc: Image { Image(#function) }
     static var ic24Octagon: Image { Image(#function) }
     static var ic24OtherCard: Image { Image(#function) }
     static var ic24Package: Image { Image(#function) }
@@ -676,6 +690,7 @@ public extension Image {
     static var ic24Rss: Image { Image(#function) }
     static var ic24Save: Image { Image(#function) }
     static var ic24Sbp: Image { Image(#function) }
+    static var ic24SbpLine: Image { Image(#function) }
     static var ic24Scissors: Image { Image(#function) }
     static var ic24Search: Image { Image(#function) }
     static var ic24Send: Image { Image(#function) }
@@ -697,12 +712,16 @@ public extension Image {
     static var ic24Sliders: Image { Image(#function) }
     static var ic24Smartphone: Image { Image(#function) }
     static var ic24Smile: Image { Image(#function) }
+    static var ic24SmsColor: Image { Image(#function) }
     static var ic24SmsCode: Image { Image(#function) }
     static var ic24Speaker: Image { Image(#function) }
     static var ic24Square: Image { Image(#function) }
     static var ic24Star: Image { Image(#function) }
+    static var ic24Sticker: Image { Image(#function) }
     static var ic24StopCircle: Image { Image(#function) }
     static var ic24Sts: Image { Image(#function) }
+    static var ic24SubscrOn: Image { Image(#function) }
+    static var ic24SubscrOnColor: Image { Image(#function) }
     static var ic24Subscriptions: Image { Image(#function) }
     static var ic24Sun: Image { Image(#function) }
     static var ic24Sunrise: Image { Image(#function) }
@@ -770,20 +789,28 @@ public extension Image {
     static var ic24Zkx: Image { Image(#function) }
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
+    static var ic32AbroadLine: Image { Image(#function) }
     static var ic32Camera: Image { Image(#function) }
     static var ic32Edit2: Image { Image(#function) }
+    static var ic32Emblem: Image { Image(#function) }
     static var ic32Globe: Image { Image(#function) }
     static var ic32Image: Image { Image(#function) }
+    static var ic32Location: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
+    static var ic32Office: Image { Image(#function) }
     static var ic32Sbp: Image { Image(#function) }
+    static var ic32SbpLine: Image { Image(#function) }
+    static var ic32Service: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
     static var ic32Trash: Image { Image(#function) }
     static var ic32UserCheck: Image { Image(#function) }
     static var ic32UserPlus: Image { Image(#function) }
+    static var ic40Qr: Image { Image(#function) }
     static var ic40TvInternet: Image { Image(#function) }
-    static var ic40ZKXServices: Image { Image(#function) }
+    static var ic40ZkxServices: Image { Image(#function) }
     static var ic40AirTickets: Image { Image(#function) }
     static var ic40ArrowRightCircle: Image { Image(#function) }
+    static var ic40BankServices: Image { Image(#function) }
     static var ic40Beauty: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
     static var ic40ClothesAccessories: Image { Image(#function) }
@@ -821,6 +848,7 @@ public extension Image {
     static var ic48Check: Image { Image(#function) }
     static var ic48Clock: Image { Image(#function) }
     static var ic48Close: Image { Image(#function) }
+    static var ic48Credit: Image { Image(#function) }
     static var ic48Info: Image { Image(#function) }
     static var ic48PinAtm: Image { Image(#function) }
     static var ic48PinManyBranchesBlack: Image { Image(#function) }
@@ -840,6 +868,5 @@ public extension Image {
     static var ic64ForaColor: Image { Image(#function) }
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
-    static var qr_Icon: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }
 }

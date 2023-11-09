@@ -29,7 +29,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load failure: \(retrievalFailureMessage)."
+            "LoaderDecorator<Item>: Load failure: \(retrievalFailureMessage)."
         ])
     }
     
@@ -45,7 +45,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load success: \(item)."
+            "LoaderDecorator<Item>: Load success: \(item)."
         ])
     }
     
@@ -62,7 +62,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save failure: \(insertionFailureMessage)."
+            "LoaderDecorator<Item>: Save failure: \(insertionFailureMessage)."
         ])
     }
     
@@ -78,7 +78,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save failure: \(deletionFailureMessage)."
+            "LoaderDecorator<Item>: Save failure: \(deletionFailureMessage)."
         ])
     }
     
@@ -93,7 +93,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success."
+            "LoaderDecorator<Item>: Save success."
         ])
     }
     

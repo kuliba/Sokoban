@@ -13,7 +13,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
     
     func test_makeRequest_shouldThrowOnEmptySessionID() throws {
         
-        let (sessionID, data) = (anySessionID(""), anyData())
+        let (sessionID, data) = (makeSessionID(""), anyData())
         
         try XCTAssertThrowsAsNSError(
             makeRequest(sessionID, data),
@@ -23,7 +23,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
     
     func test_makeRequest_shouldThrowOnEmptyData() throws {
         
-        let (sessionID, data) = (anySessionID(), Data())
+        let (sessionID, data) = (makeSessionID(), Data())
         
         try XCTAssertThrowsAsNSError(
             makeRequest(sessionID, data),
@@ -50,7 +50,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetRequestBody() throws {
         
-        let (sessionID, data) = (anySessionID(), anyData())
+        let (sessionID, data) = (makeSessionID(), anyData())
         let request = try makeRequest(sessionID, data)
         
         let httpBody = try XCTUnwrap(request.httpBody)
@@ -66,7 +66,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        _ sessionID: ForaBank.SessionID = anySessionID(),
+        _ sessionID: ForaBank.SessionID = makeSessionID(),
         _ data: Data = .init("any data".utf8)
     ) throws -> URLRequest {
         

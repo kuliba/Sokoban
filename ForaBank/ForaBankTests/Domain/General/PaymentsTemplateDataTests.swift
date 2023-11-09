@@ -20,8 +20,9 @@ final class PaymentsTemplateDataTests: XCTestCase {
         let type = Kind.mobile
         let transferData = Me2MeData.me2MeStub()
         
-        let template = PaymentTemplateData.templateStub(type: type,
-                                                        parameterList: transferData)
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
         
         XCTAssertNil(template.phoneNumber)
     }
@@ -31,8 +32,9 @@ final class PaymentsTemplateDataTests: XCTestCase {
         let type = Kind.mobile
         let transferData = GeneralData.generalStub()
         
-        let template = PaymentTemplateData.templateStub(type: type,
-                                                        parameterList: transferData)
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
         let insideByPhonePhoneNumber = template.phoneNumber
         
         XCTAssertEqual(
@@ -45,8 +47,9 @@ final class PaymentsTemplateDataTests: XCTestCase {
         let type = Kind.mobile
         let transferData = GeneralData.generalStub()
         
-        let template = PaymentTemplateData.templateStub(type: type,
-                                                        parameterList: transferData)
+        let template = PaymentTemplateData.templateStub(
+            type: type,
+            parameterList: transferData)
         
         XCTAssertEqual(
             template.foraBankId,
@@ -66,11 +69,8 @@ final class PaymentsTemplateDataTests: XCTestCase {
         
         XCTAssertNil(insideByPhoneBankId)
     }
-}
-
-
- //MARK: Computed Property Tests
-extension PaymentsTemplateDataTests {
+    
+    //MARK: Computed Property Tests
     
     func test_paymentsTemplate_shouldReturnTransferAnywayData() throws {
         
@@ -84,18 +84,18 @@ extension PaymentsTemplateDataTests {
         
         XCTAssertNotNil(anywayData)
         XCTAssertEqual(anywayData.amount, 100)
-        XCTAssertEqual(anywayData.additional,
-                       [.init(
-                        fieldid: 1,
-                        fieldname: "trnPickupPoint",
-                        fieldvalue: "AM"
-                       ),
-                        .init(
-                            fieldid: 1,
-                            fieldname: "RecipientID",
-                            fieldvalue: "number"
-                        )
-                       ])
+        XCTAssertEqual(anywayData.additional, [
+            .init(
+                fieldid: 1,
+                fieldname: "trnPickupPoint",
+                fieldvalue: "AM"
+            ),
+            .init(
+                fieldid: 1,
+                fieldname: "RecipientID",
+                fieldvalue: "number"
+            )
+        ])
     }
     
     func test_paymentsTemplate_shouldReturnTransferAnywayDataNil() throws {
@@ -108,16 +108,38 @@ extension PaymentsTemplateDataTests {
         
         XCTAssertNil(template.transferAnywayData)
     }
-
-    func test_paymentsTemplate_shouldReturnPayerProductIdNil() throws {
+    
+    func test_paymentsTemplate_shouldReturnPayerProductIdNilOnNilPayer() throws {
         
-        let transferData = Me2MeData.me2MeStub()
+        let transferData = Me2MeData.me2MeStub(accountId: nil)
         let template = PaymentTemplateData.templateStub(
             type: .betweenTheir,
             parameterList: transferData
         )
         
         XCTAssertNil(template.payerProductId)
+    }
+    
+    func test_paymentsTemplate_shouldReturnPayerProductOnAccountID() throws {
+        
+        let transferData = Me2MeData.me2MeStub(accountId: 123)
+        let template = PaymentTemplateData.templateStub(
+            type: .betweenTheir,
+            parameterList: transferData
+        )
+        
+        XCTAssertEqual(template.payerProductId, 123)
+    }
+    
+    func test_paymentsTemplate_shouldReturnPayerProductOnCardID() throws {
+        
+        let transferData = Me2MeData.me2MeStub(cardId: 456)
+        let template = PaymentTemplateData.templateStub(
+            type: .betweenTheir,
+            parameterList: transferData
+        )
+        
+        XCTAssertEqual(template.payerProductId, 456)
     }
     
     func test_paymentsTemplate_shouldReturnPayerProductId() throws {
@@ -129,16 +151,13 @@ extension PaymentsTemplateDataTests {
         )
         
         let payerProductId = try XCTUnwrap(template.payerProductId)
-
+        
         XCTAssertNotNil(payerProductId)
         XCTAssertEqual(template.amount, 100)
         XCTAssertEqual(template.payerProductId, 1)
     }
-}
-
+    
     //MARK: PaymentTemplateData.Kind Tests
-
-extension PaymentsTemplateDataTests {
     
     func test_paymentsTemplateKind_description_shouldReturnBetweenTheir() throws {
         

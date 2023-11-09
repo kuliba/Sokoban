@@ -64,7 +64,7 @@ struct MyProductsView: View {
                         }) {
                     
                             Text(viewModel.openProductTitle)
-                                .font(.buttonLargeSB16180())
+                                .font(.buttonLargeSb16180())
                                 .foregroundColor(viewModel.editModeState == .active
                                                  ? .mainColorsGray : .mainColorsBlack)
                                 .frame(maxWidth: .infinity, minHeight: 48)

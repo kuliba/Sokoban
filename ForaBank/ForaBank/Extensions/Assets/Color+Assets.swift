@@ -10,33 +10,37 @@
 
 import SwiftUI
 
-public extension Color {
-    static var bGIconAmberLight: Color { Color(#function) }
-    static var bGIconBlack: Color { Color(#function) }
-    static var bGIconBlueLight: Color { Color(#function) }
-    static var bGIconBlueLightest: Color { Color(#function) }
-    static var bGIconCyanLight: Color { Color(#function) }
-    static var bGIconDeepBlueLight: Color { Color(#function) }
-    static var bGIconDeepIndigoLight: Color { Color(#function) }
-    static var bGIconDeepLimeLight: Color { Color(#function) }
-    static var bGIconDeepOrangeLight: Color { Color(#function) }
-    static var bGIconDeepPurpleLight: Color { Color(#function) }
-    static var bGIconDeepPurpleLightest: Color { Color(#function) }
-    static var bGIconDeepPurpleMedium: Color { Color(#function) }
-    static var bGIconGrayLightest: Color { Color(#function) }
-    static var bGIconGreenLight: Color { Color(#function) }
-    static var bGIconGreenLightest: Color { Color(#function) }
-    static var bGIconIndigoLight: Color { Color(#function) }
-    static var bGIconIndigoLightest: Color { Color(#function) }
-    static var bGIconLimeLight: Color { Color(#function) }
-    static var bGIconOrangeLight: Color { Color(#function) }
-    static var bGIconOrangeLightest: Color { Color(#function) }
-    static var bGIconPinkLight: Color { Color(#function) }
-    static var bGIconPinkLightest: Color { Color(#function) }
-    static var bGIconPurpleLight: Color { Color(#function) }
-    static var bGIconRedLight: Color { Color(#function) }
-    static var bGIconTealLight: Color { Color(#function) }
-    static var bGIconYellowLight: Color { Color(#function) }
+private class BundleProvider {
+    static let bundle = Bundle(for: BundleProvider.self)
+}
+
+public extension ShapeStyle where Self == Color {
+    static var bgIconAmberLight: Color { Color(#function) }
+    static var bgIconBlack: Color { Color(#function) }
+    static var bgIconBlueLight: Color { Color(#function) }
+    static var bgIconBlueLightest: Color { Color(#function) }
+    static var bgIconCyanLight: Color { Color(#function) }
+    static var bgIconDeepBlueLight: Color { Color(#function) }
+    static var bgIconDeepIndigoLight: Color { Color(#function) }
+    static var bgIconDeepLimeLight: Color { Color(#function) }
+    static var bgIconDeepOrangeLight: Color { Color(#function) }
+    static var bgIconDeepPurpleLight: Color { Color(#function) }
+    static var bgIconDeepPurpleLightest: Color { Color(#function) }
+    static var bgIconDeepPurpleMedium: Color { Color(#function) }
+    static var bgIconGrayLightest: Color { Color(#function) }
+    static var bgIconGreenLight: Color { Color(#function) }
+    static var bgIconGreenLightest: Color { Color(#function) }
+    static var bgIconIndigoLight: Color { Color(#function) }
+    static var bgIconIndigoLightest: Color { Color(#function) }
+    static var bgIconLimeLight: Color { Color(#function) }
+    static var bgIconOrangeLight: Color { Color(#function) }
+    static var bgIconOrangeLightest: Color { Color(#function) }
+    static var bgIconPinkLight: Color { Color(#function) }
+    static var bgIconPinkLightest: Color { Color(#function) }
+    static var bgIconPurpleLight: Color { Color(#function) }
+    static var bgIconRedLight: Color { Color(#function) }
+    static var bgIconTealLight: Color { Color(#function) }
+    static var bgIconYellowLight: Color { Color(#function) }
     static var backgroundBackground: Color { Color(#function) }
     static var barsBars: Color { Color(#function) }
     static var blurBlack20: Color { Color(#function) }
@@ -65,7 +69,8 @@ public extension Color {
     static var cardMultibonus: Color { Color(#function) }
     static var cardPlatinume: Color { Color(#function) }
     static var cardPlug: Color { Color(#function) }
-    static var cardRIO: Color { Color(#function) }
+    static var cardRio: Color { Color(#function) }
+    static var cardSticker: Color { Color(#function) }
     static var creditConsumer: Color { Color(#function) }
     static var creditMortgage: Color { Color(#function) }
     static var iconBlack: Color { Color(#function) }

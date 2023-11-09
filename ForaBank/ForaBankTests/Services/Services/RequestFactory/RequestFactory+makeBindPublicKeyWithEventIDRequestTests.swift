@@ -74,7 +74,7 @@ final class RequestFactory_makeBindPublicKeyWithEventIDRequestTests: XCTestCase 
             keyData: Data(keyString.utf8)
         )
         
-        let request = try RequestFactory.makeBindPublicKeyWithEventIDRequest(with: publicKeyWithEventID)
+        let request = try RequestFactory.createBindPublicKeyWithEventIDRequest(with: publicKeyWithEventID)
         
         return (publicKeyWithEventID, request)
     }

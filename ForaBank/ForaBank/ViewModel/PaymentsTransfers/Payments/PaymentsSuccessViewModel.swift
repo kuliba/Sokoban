@@ -81,7 +81,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 operationDetailData = detailData
              
                 switch mode {
-                case let .meToMe(from: productFromID, to: productToID, transferData):
+                case let .meToMe(templateId: templateId, from: productFromID, to: productToID, transferData):
                     guard let productIdFrom = productFromID,
                           let productIdTo = productToID,
                           let productFrom = adapter.product(productId: productIdFrom),
@@ -101,6 +101,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         operationDetail: fakeOperationDetailData,
                         operation: self.operation,
                         meToMePayment: .init(
+                            templateId: templateId,
                             payerProductId: productIdFrom,
                             payeeProductId: productIdTo,
                             amount: amount
@@ -503,7 +504,7 @@ extension PaymentsSuccessViewModel {
     enum Mode: Equatable {
         
         case normal
-        case meToMe(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
+        case meToMe(templateId: Int?, from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case closeDeposit(Currency, balance: Double, CloseProductTransferData)
         case closeAccount(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
         case closeAccountEmpty(ProductData.ID, Currency, balance: Double, CloseProductTransferData)

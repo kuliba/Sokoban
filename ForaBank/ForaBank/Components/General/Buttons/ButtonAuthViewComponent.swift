@@ -43,7 +43,7 @@ extension ButtonAuthView {
 
 extension ButtonAuthView.ViewModel {
     
-    enum ButtonType {
+    enum ButtonType: Equatable {
         
         case abroad
         case card

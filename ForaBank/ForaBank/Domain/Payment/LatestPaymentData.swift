@@ -71,3 +71,31 @@ extension LatestPaymentData: Equatable, Hashable {
             hasher.combine(type)
         }
 }
+
+ //MARK: Helpers
+
+extension LatestPaymentData {
+    
+    func getServiceIdentifierForTaxService() throws -> Payments.Service {
+        
+        guard let latestPayment = self as? PaymentServiceData,
+              let `operator` = Payments.Operator(rawValue: latestPayment.puref)
+        else {
+            throw Payments.Error.unsupported
+        }
+        
+        switch `operator` {
+        case .fms:
+            return .fms
+            
+        case .fns, .fnsUin:
+            return .fns
+            
+        case .fssp:
+            return .fssp
+            
+        default:
+            throw Payments.Error.unsupported
+        }
+    }
+}

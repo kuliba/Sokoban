@@ -71,7 +71,7 @@ struct OpenAccountButtonView: View {
                     .foregroundColor(.mainColorsRed)
 
                 Text(viewModel.title)
-                    .font(.buttonLargeSB16180())
+                    .font(.buttonLargeSb16180())
                     .foregroundColor(.mainColorsWhite)
             }
         }

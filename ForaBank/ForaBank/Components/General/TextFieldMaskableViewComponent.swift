@@ -125,11 +125,11 @@ struct TextFieldMaskableView: UIViewRepresentable {
     static func updateMasked(value: String?, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String? {
 
         // filter update from unexpected synbols
-        let filteredUpdate = (try? update.filterred(regEx: regExp)) ?? update
+        let filteredUpdate = (try? update.filtered(regEx: regExp)) ?? update
         
         if let value = value {
             
-            // replace value characters with filterred update characters in given range
+            // replace value characters with filtered update characters in given range
             var updatedValue = value
             let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
             let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
@@ -141,16 +141,16 @@ struct TextFieldMaskableView: UIViewRepresentable {
             }
             
             // remove mask from value
-            let filterredValue = (try? updatedValue.filterred(regEx: regExp)) ?? updatedValue
+            let filteredValue = (try? updatedValue.filtered(regEx: regExp)) ?? updatedValue
             
             // apply mask to result value
-            let masked = filterredValue.masked(masks: masks)
+            let masked = filteredValue.masked(masks: masks)
             
             return masked.count > 0 ? masked : nil
             
         } else {
             
-            // return filterred value if masks array empty
+            // return filtered value if masks array empty
             guard masks.isEmpty == false else {
                 return filteredUpdate
             }

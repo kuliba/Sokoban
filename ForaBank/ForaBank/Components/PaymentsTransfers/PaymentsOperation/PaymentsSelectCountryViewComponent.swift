@@ -722,7 +722,7 @@ struct PaymentsSelectCountryView: View {
                         if let subtitle = viewModel.subtitle {
                             
                             Text(subtitle)
-                                .font(.textBodyXSR11140())
+                                .font(.textBodyXsR11140())
                                 .foregroundColor(.textPlaceholder)
                                 .lineLimit(1)
                                 .multilineTextAlignment(.center)

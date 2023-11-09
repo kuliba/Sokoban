@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "65EC32AC-DB0F-4E21-9949-85C8B37B656F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    }
+  ],
+  "version" : 1
+}

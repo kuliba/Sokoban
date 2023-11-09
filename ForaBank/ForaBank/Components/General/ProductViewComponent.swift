@@ -469,7 +469,7 @@ struct ProductView: View {
         switch viewModel.appearance.size {
         case .large: return .textBodyMR14200()
         case .normal: return .textBodyMR14200()
-        case .small: return .textBodyXSR11140()
+        case .small: return .textBodyXsR11140()
         }
     }
     
@@ -620,7 +620,7 @@ extension ProductView {
             switch appearance.size {
             case .large: return .textBodySR12160()
             case .normal: return .textBodySR12160()
-            case .small: return .textBodyXSR11140()
+            case .small: return .textBodyXsR11140()
             }
         }
         
@@ -658,9 +658,9 @@ extension ProductView {
         var textFont: Font {
             
             switch appearance.size {
-            case .large: return .textBodyMSB14200()
-            case .normal: return .textBodyMSB14200()
-            case .small: return .textBodyXSR11140()
+            case .large: return .textBodyMSb14200()
+            case .normal: return .textBodyMSb14200()
+            case .small: return .textBodyXsR11140()
             }
         }
         
@@ -1079,7 +1079,7 @@ extension ProductView.ViewModel {
         statusAction: nil,
         appearance: .init(
             textColor: .mainColorsBlackMedium,
-            background: .init(color: .cardRIO, image: Image( "Cover Deposit"))),
+            background: .init(color: .cardRio, image: Image( "Cover Deposit"))),
         isUpdating: false,
         productType: .deposit
     )
@@ -1165,7 +1165,7 @@ private extension ProductView.ViewModel.Appearance {
 private extension ProductView.ViewModel.Appearance.Background {
     
     static let red: Self =          .init(color: .mainColorsRed, image: nil)
-    static let cardRIO: Self =      .init(color: .cardRIO,       image: nil)
+    static let cardRIO: Self =      .init(color: .cardRio,       image: nil)
     static let cardInfinite: Self = .init(color: .cardInfinite,  image: nil)
     
     static let infiniteSample: Self = .init(

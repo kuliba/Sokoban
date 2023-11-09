@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import ServerAgent
 
 struct SessionCredentials {
-    
+
     let token: String
 #if MOCK
     let csrfAgent: MockCSRFAgent<MockEncryptionAgent>

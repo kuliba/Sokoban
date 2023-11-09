@@ -35,25 +35,25 @@ enum ProductStatementMerchantGroup: String, Identifiable, CaseIterable {
     var color: Color {
         
         switch self {
-        case .internalOperations: return .bGIconRedLight
-        case .services: return .bGIconPurpleLight
-        case .others: return .bGIconPinkLight
-        case .beauty: return .bGIconPinkLightest
-        case .education: return .bGIconDeepPurpleMedium
-        case .hobby: return .bGIconDeepPurpleLight
-        case .stateServices: return .bGIconIndigoLight
-        case .transport: return .bGIconIndigoLightest
-        case .communicationInternetTV: return .bGIconBlueLight
-        case .aviaTickets: return .bGIconBlueLightest
-        case .health: return .bGIconTealLight
-        case .houseRenovation: return .bGIconGreenLight
-        case .variousGoods: return .bGIconGreenLightest
-        case .supermarket: return .bGIconLimeLight
-        case .trainTickets: return .bGIconDeepOrangeLight
-        case .restaurantsAndCafes: return .bGIconOrangeLight
-        case .multimedia: return .bGIconOrangeLightest
-        case .restAndTravel: return .bGIconAmberLight
-        case .clothesAnAccessories: return .bGIconYellowLight
+        case .internalOperations: return .bgIconRedLight
+        case .services: return .bgIconPurpleLight
+        case .others: return .bgIconPinkLight
+        case .beauty: return .bgIconPinkLightest
+        case .education: return .bgIconDeepPurpleMedium
+        case .hobby: return .bgIconDeepPurpleLight
+        case .stateServices: return .bgIconIndigoLight
+        case .transport: return .bgIconIndigoLightest
+        case .communicationInternetTV: return .bgIconBlueLight
+        case .aviaTickets: return .bgIconBlueLightest
+        case .health: return .bgIconTealLight
+        case .houseRenovation: return .bgIconGreenLight
+        case .variousGoods: return .bgIconGreenLightest
+        case .supermarket: return .bgIconLimeLight
+        case .trainTickets: return .bgIconDeepOrangeLight
+        case .restaurantsAndCafes: return .bgIconOrangeLight
+        case .multimedia: return .bgIconOrangeLightest
+        case .restAndTravel: return .bgIconAmberLight
+        case .clothesAnAccessories: return .bgIconYellowLight
         }
     }
     

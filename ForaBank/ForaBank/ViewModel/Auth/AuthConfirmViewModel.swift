@@ -69,7 +69,9 @@ class AuthConfirmViewModel: ObservableObject {
         
         model.action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Response:
@@ -185,17 +187,25 @@ class AuthConfirmViewModel: ObservableObject {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                 case _ as AuthConfirmViewModelAction.RepeatCode.DelayFinished:
                     LoggerAgent.shared.log(category: .ui, message: "received AuthConfirmViewModelAction.RepeatCode.DelayFinished")
+                    
                     withAnimation {
-                        info?.state = .button(.init(action: { [weak self] in
-                            LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.RepeatCode.Requested")
-                            self?.action.send(AuthConfirmViewModelAction.RepeatCode.Requested())
-                        }))
+                        
+                        self.info?.state = .button(.init(
+                            action: { [weak self] in
+                                
+                                LoggerAgent.shared.log(category: .ui, message: "sent AuthConfirmViewModelAction.RepeatCode.Requested")
+                                self?.action.send(AuthConfirmViewModelAction.RepeatCode.Requested())
+                            }
+                        ))
                     }
+                    
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "repeat code button added")
                     
                 case _ as AuthConfirmViewModelAction.RepeatCode.Requested:
@@ -221,7 +231,9 @@ class AuthConfirmViewModel: ObservableObject {
         code.$state
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
+            .sink { [weak self] state in
+                
+                guard let self else { return }
                 
                 switch state {
                 case .edit:
