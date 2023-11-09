@@ -83,9 +83,13 @@ public extension Operation {
     ) -> Operation {
         
         var operation = operation
-        operation.parameters = operation.parameters.replaceParameter(
-            newParameter: newParameter
-        )
+        if operation.parameters.contains(where: { $0.id.rawValue == newParameter.id.rawValue }) {
+            operation.parameters = operation.parameters.replaceParameter(
+                newParameter: newParameter
+            )
+        } else {
+            operation.parameters.append(newParameter)
+        }
         
         return operation
     }
