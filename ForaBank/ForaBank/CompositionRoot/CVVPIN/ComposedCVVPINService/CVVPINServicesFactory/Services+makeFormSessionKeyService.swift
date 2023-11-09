@@ -13,11 +13,14 @@ import GenericRemoteService
 extension Services {
     
     typealias CachingFormSessionKeyService = Fetcher<FormSessionKeyService.Payload, FormSessionKeyService.Success, FormSessionKeyService.Failure>
+    typealias FormSessionKeyProcessError = MappingRemoteServiceError<FormSessionKeyService.APIError>
+    typealias FormSessionKeyProcessResult = Swift.Result<FormSessionKeyService.Response, FormSessionKeyProcessError>
+    typealias FormSessionKeyProcess = (FormSessionKeyService.ProcessPayload, @escaping (FormSessionKeyProcessResult) -> Void) -> Void
     typealias CacheFormSessionKeySuccess = (FormSessionKeyService.Success) -> Void
     
     static func makeFormSessionKeyService(
         sessionCodeLoader: any Loader<SessionCode>,
-        formSessionKeyRemoteService: FormSessionKeyRemoteService,
+        formSessionKeyProcess: @escaping FormSessionKeyProcess,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
         cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess
@@ -56,7 +59,7 @@ extension Services {
             payload: FormSessionKeyService.ProcessPayload,
             completion: @escaping FormSessionKeyService.ProcessCompletion
         ) {
-            formSessionKeyRemoteService.process(
+            formSessionKeyProcess(
                 .init(code: payload.code, data: payload.data)
             ) {
                 completion($0.mapError { .init($0) })

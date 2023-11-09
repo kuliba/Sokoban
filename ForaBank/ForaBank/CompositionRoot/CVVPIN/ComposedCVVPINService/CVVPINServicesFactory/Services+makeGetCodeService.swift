@@ -14,9 +14,11 @@ extension Services {
     
     typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
     typealias GetCodeService = Fetcher<GetProcessingSessionCodeService.Payload, GetProcessingSessionCodeService.Success, GetProcessingSessionCodeService.Failure>
+    typealias GetCodeServiceError = MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>
+    typealias GetCodeServiceProcess = (@escaping (Swift.Result<GetProcessingSessionCodeService.Response, GetCodeServiceError>) -> Void) -> Void
     
     static func makeGetCodeService(
-        getCodeRemoteService: GetCodeRemoteService,
+        getCodeServiceProcess: @escaping GetCodeServiceProcess,
         cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode
     ) -> any GetCodeService {
         
@@ -36,21 +38,11 @@ extension Services {
         func process(
             completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
         ) {
-            getCodeRemoteService.process {
+            getCodeServiceProcess {
                 
                 completion($0.mapError { .init($0) })
             }
         }
-    }
-}
-
-// MARK: - Adapters
-
-private extension RemoteService where Input == Void {
-    
-    func process(completion: @escaping ProcessCompletion) {
-        
-        process((), completion: completion)
     }
 }
 

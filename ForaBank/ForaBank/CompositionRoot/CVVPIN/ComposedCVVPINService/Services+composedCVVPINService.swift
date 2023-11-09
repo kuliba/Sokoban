@@ -77,13 +77,13 @@ extension Services {
         // MARK: Configure CVV-PIN Activation Service
 
         let getCodeService = makeGetCodeService(
-            getCodeRemoteService: getCodeRemoteService,
+            getCodeServiceProcess: getCodeRemoteService.process,
             cacheGetProcessingSessionCode: cache(response:)
         )
         
         let formSessionKeyService = makeFormSessionKeyService(
             sessionCodeLoader: sessionCodeLoader,
-            formSessionKeyRemoteService: formSessionKeyRemoteService,
+            formSessionKeyProcess: formSessionKeyRemoteService.process,
             makeSecretRequestJSON: makeSecretRequestJSON,
             makeSessionKey: makeSessionKey(string:completion:),
             cacheFormSessionKeySuccess: cache(success:)
@@ -480,6 +480,16 @@ struct SessionCode {
 struct SessionKey {
     
     let sessionKeyValue: Data
+}
+
+// MARK: - Adapters
+
+private extension RemoteService where Input == Void {
+    
+    func process(completion: @escaping ProcessCompletion) {
+        
+        process((), completion: completion)
+    }
 }
 
 // MARK: - Error Mappers
