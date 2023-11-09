@@ -34,14 +34,14 @@ final class Services_makeActivationServiceTests: XCTestCase {
     
     func test_activate_shouldDeliverErrorOnFormSessionKeyInvalidFailure() {
         
-        let statusode = 500
+        let statusCode = 500
         let invalidData = anyData()
         let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
         
-        expectActivate(sut, toDeliver: .failure(.invalid(statusCode: statusode, data: invalidData)), on: {
+        expectActivate(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             
             getCodeSpy.complete(with: anySuccess())
-            formSessionKeySpy.complete(with: .failure(.invalid(statusCode: statusode, data: invalidData)))
+            formSessionKeySpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
         })
     }
     
@@ -150,6 +150,46 @@ final class Services_makeActivationServiceTests: XCTestCase {
         XCTAssertNil(receivedResult)
     }
     
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, bindPublicKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
+            
+            bindPublicKeySpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
+        })
+    }
+    
+    func test_confirmActivation_shouldDeliverVoidOnSuccess() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, _, _, bindPublicKeySpy) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: .success(()), on: {
+            
+            bindPublicKeySpy.complete(with: .success(()))
+        })
+    }
+    
+    func test_confirmActivation_shouldNotDeliverBindKeyResultOnInstanceDeallocation() {
+        
+        var sut: SUT?
+        let bindPublicKeySpy: BindPublicKeyService
+        (sut, _, _, bindPublicKeySpy) = makeSUT()
+        var receivedResult: SUT.ConfirmResult?
+        
+        sut?.confirmActivation(withOTP: anyOTO()) { receivedResult = $0 }
+        sut = nil
+        bindPublicKeySpy.complete(with: .success(()))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(receivedResult)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = CVVPINFunctionalityActivationService
@@ -240,6 +280,70 @@ final class Services_makeActivationServiceTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
     }
+    
+    private func expectConfirm(
+        _ sut: SUT,
+        toDeliver expectedResult: SUT.ConfirmResult,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.confirmActivation(withOTP: anyOTO()) { receivedResult in
+            
+            switch (receivedResult, expectedResult) {
+            case let (
+                .failure(received),
+                .failure(expected)
+            ):
+                switch (received, expected) {
+                case let (
+                    .invalid(receivedStatusCode, receivedInvalidData),
+                    .invalid(expectedStatusCode, expectedInvalidData)
+                ):
+                    XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
+                    
+                case (.network, .network):
+                    break
+                    
+                case let (
+                    .retry(receivedStatusCode, receivedErrorMessage, receivedRetryAttempts),
+                    .retry(expectedStatusCode, expectedErrorMessage, expectedRetryAttempts)
+                ):
+                    XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                    XCTAssertNoDiff(receivedRetryAttempts, expectedRetryAttempts, file: file, line: line)
+                    
+                case let (
+                    .server(receivedStatusCode, receivedErrorMessage),
+                    .server(expectedStatusCode, expectedErrorMessage)
+                ):
+                    XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                    
+                case (.serviceFailure, .serviceFailure):
+                    break
+                    
+                default:
+                    XCTFail("\nExpected \(expected), but got \(received) instead.", file: file, line: line)
+                }
+                
+            case (.success(()), .success(())):
+                break
+
+            default:
+                XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
 }
 
 extension FetcherSpy
@@ -283,4 +387,11 @@ private func anySuccess(
         eventID: .init(eventIDValue: eventIDValue),
         sessionTTL: sessionTTLValue
     ))
+}
+
+private func anyOTO(
+    otpValue: String = UUID().uuidString
+) -> CVVPINFunctionalityActivationService.OTP {
+    
+    .init(otpValue: otpValue)
 }
