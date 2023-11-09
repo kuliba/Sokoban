@@ -199,37 +199,45 @@ extension BusinessLogic {
             }
             
         case let .product(productEvents):
+            return reduceProductEvent(productEvents, operation)
             
-            switch productEvents {
-            case let .chevronTapped(product, state):
-                let newOperation = operation.updateOperation(
-                    operation: operation,
-                    newParameter: .product(.init(
-                        state: state,
-                        selectedProduct: product.selectedProduct,
-                        allProducts: product.allProducts
-                    ))
-                )
-                return .success(.operation(newOperation))
-                
-            case let .selectProduct(option, product):
-                
-                let operation = operation.updateOperation(
-                    operation: operation,
-                    newParameter: .product(.init(
-                        state: .select,
-                        selectedProduct: option,
-                        allProducts: product.allProducts))
-                )
-                
-                return .success(.operation(operation))
-            }
         default:
             return .success(.operation(operation))
         }
     }
     
-    func selectOption(
+    fileprivate func reduceProductEvent(
+        _ productEvents: (Event.ProductEvent),
+        _ operation: PaymentSticker.Operation
+    ) -> BusinessLogic.OperationResult {
+        
+        switch productEvents {
+        case let .chevronTapped(product, state):
+            let newOperation = operation.updateOperation(
+                operation: operation,
+                newParameter: .product(.init(
+                    state: state,
+                    selectedProduct: product.selectedProduct,
+                    allProducts: product.allProducts
+                ))
+            )
+            return .success(.operation(newOperation))
+            
+        case let .selectProduct(option, product):
+            
+            let operation = operation.updateOperation(
+                operation: operation,
+                newParameter: .product(.init(
+                    state: .select,
+                    selectedProduct: option,
+                    allProducts: product.allProducts))
+            )
+            
+            return .success(.operation(operation))
+        }
+    }
+    
+    fileprivate func selectOption(
         id: String,
         operation: PaymentSticker.Operation,
         parameter: PaymentSticker.Operation.Parameter.Select
