@@ -12,12 +12,142 @@ import XCTest
 final class Services_makeActivationServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
-    
+        
         let (_, getCodeSpy, formSessionKeySpy, bindPublicKeySpy) = makeSUT()
         
         XCTAssertEqual(getCodeSpy.callCount, 0)
         XCTAssertEqual(formSessionKeySpy.callCount, 0)
         XCTAssertEqual(bindPublicKeySpy.callCount, 0)
+    }
+    
+    func test_activate_shouldDeliverErrorOnGetCodeFailure() {
+        
+        let statusode = 500
+        let invalidData = anyData()
+        let (sut, getCodeSpy, _, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.invalid(statusCode: statusode, data: invalidData)), on: {
+            
+            getCodeSpy.complete(with: .failure(.invalid(statusCode: statusode, data: invalidData)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyInvalidFailure() {
+        
+        let statusode = 500
+        let invalidData = anyData()
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.invalid(statusCode: statusode, data: invalidData)), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.invalid(statusCode: statusode, data: invalidData)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyNetworkFailure() {
+        
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.network), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.network))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyServerFailure() {
+        
+        let statusode = 500
+        let errorMessage = "Server Failure"
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.server(statusCode: statusode, errorMessage: errorMessage)), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.server(statusCode: statusode, errorMessage: errorMessage)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyServiceFailureMakeJSONFailure() {
+        
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.serviceFailure), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyServiceFailureMakeSessionKeyFailure() {
+        
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.serviceFailure), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.serviceError(.makeSessionKeyFailure)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnFormSessionKeyServiceFailureMissingCodeFailure() {
+        
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .failure(.serviceFailure), on: {
+            
+            getCodeSpy.complete(with: anySuccess())
+            formSessionKeySpy.complete(with: .failure(.serviceError(.missingCode)))
+        })
+    }
+    
+    func test_activate_shouldDeliverPhoneOnSuccess() {
+        
+        let phone = "+7..8976"
+        let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        
+        expectActivate(sut, toDeliver: .success(.init(phoneValue: phone)), on: {
+            
+            getCodeSpy.complete(with: anySuccess(phone: phone))
+            formSessionKeySpy.complete(with: anySuccess())
+        })
+    }
+    
+    func test_activate_shouldNotDeliverGetCodeResultOnInstanceDeallocation() {
+        
+        let phone = "+7..8976"
+        var sut: SUT?
+        let getCodeSpy: GetCodeService
+        (sut, getCodeSpy, _, _) = makeSUT()
+        var receivedResult: SUT.ActivateResult?
+        
+        sut?.activate { receivedResult = $0 }
+        sut = nil
+        getCodeSpy.complete(with: anySuccess(phone: phone))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNil(receivedResult)
+    }
+    
+    func test_activate_shouldNotDeliverFormSessionKeyResultOnInstanceDeallocation() {
+        
+        let phone = "+7..8976"
+        var sut: SUT?
+        let getCodeSpy: GetCodeService
+        let formSessionKeySpy: FormKeyService
+        (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
+        var receivedResult: SUT.ActivateResult?
+        
+        sut?.activate { receivedResult = $0 }
+        getCodeSpy.complete(with: anySuccess(phone: phone))
+        sut = nil
+        formSessionKeySpy.complete(with: anySuccess())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNil(receivedResult)
     }
     
     // MARK: - Helpers
@@ -26,7 +156,7 @@ final class Services_makeActivationServiceTests: XCTestCase {
     private typealias GetCodeService = FetcherSpy<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error>
     private typealias FormKeyService = FetcherSpy<Void, FormSessionKeyService.Success, FormSessionKeyService.Error>
     private typealias BindPublicKeyService = FetcherSpy<BindPublicKeyWithEventIDService.OTP, Void, BindPublicKeyWithEventIDService.Error>
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -36,11 +166,11 @@ final class Services_makeActivationServiceTests: XCTestCase {
         formSessionKeySpy: FormKeyService,
         bindPublicKeySpy: BindPublicKeyService
     ) {
-
+        
         let getCodeSpy = GetCodeService()
         let formSessionKeySpy = FormKeyService()
         let bindPublicKeySpy = BindPublicKeyService()
-
+        
         let sut = Services.makeActivationService(
             getCode: getCodeSpy.fetch,
             formSessionKey: formSessionKeySpy.fetch,
@@ -54,6 +184,62 @@ final class Services_makeActivationServiceTests: XCTestCase {
         
         return (sut, getCodeSpy, formSessionKeySpy, bindPublicKeySpy)
     }
+    
+    private func expectActivate(
+        _ sut: SUT,
+        toDeliver expectedResult: SUT.ActivateResult,
+        on action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        
+        sut.activate { receivedResult in
+            
+            switch (receivedResult, expectedResult) {
+            case let (
+                .failure(received),
+                .failure(expected)
+            ):
+                switch (received, expected) {
+                case let (
+                    .invalid(receivedStatusCode, receivedInvalidData),
+                    .invalid(expectedStatusCode, expectedInvalidData)
+                ):
+                    XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
+                    
+                case (.network, .network):
+                    break
+                    
+                case let (
+                    .server(receivedStatusCode, receivedErrorMessage),
+                    .server(expectedStatusCode, expectedErrorMessage)
+                ):
+                    XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                    XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                    
+                case (.serviceFailure, .serviceFailure):
+                    break
+                    
+                default:
+                    XCTFail("\nExpected \(expected), but got \(received) instead.", file: file, line: line)
+                }
+                
+            case let (.success(received), .success(expected)):
+                XCTAssertNoDiff(received.equatable, expected.equatable, file: file, line: line)
+                
+            default:
+                XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
 }
 
 extension FetcherSpy
@@ -63,4 +249,38 @@ where Payload == Void {
         
         fetch((), completion: completion)
     }
+}
+
+private extension CVVPINFunctionalityActivationService.Phone {
+    
+    var equatable: EquatablePhone {
+        
+        .init(phone: phoneValue)
+    }
+    
+    struct EquatablePhone: Equatable {
+        
+        let phone: String
+    }
+}
+
+private func anySuccess(
+    code: String = UUID().uuidString,
+    phone: String = UUID().uuidString
+) -> Result<GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error> {
+    
+    .success(.init(code: code, phone: phone))
+}
+
+private func anySuccess(
+    sessionKeyValue: Data = anyData(),
+    eventIDValue: String = UUID().uuidString,
+    sessionTTLValue: Int = 31
+) -> Result<FormSessionKeyService.Success, FormSessionKeyService.Error> {
+    
+    .success(.init(
+        sessionKey: .init(sessionKeyValue: sessionKeyValue),
+        eventID: .init(eventIDValue: eventIDValue),
+        sessionTTL: sessionTTLValue
+    ))
 }
