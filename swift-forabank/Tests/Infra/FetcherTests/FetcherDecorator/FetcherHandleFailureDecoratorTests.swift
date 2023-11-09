@@ -1,5 +1,5 @@
 //
-//  FetcherDecoratorTests.swift
+//  FetcherHandleFailureDecoratorTests.swift
 //  
 //
 //  Created by Igor Malyarov on 06.11.2023.
@@ -8,7 +8,7 @@
 import Fetcher
 import XCTest
 
-final class FetcherDecoratorTests: XCTestCase {
+final class FetcherHandleFailureDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -64,14 +64,14 @@ final class FetcherDecoratorTests: XCTestCase {
         XCTAssertNoDiff(spy.handledSuccesses, [])
     }
     
-    func test_fetch_shouldHandleSuccessOnLoadSuccess() {
+    func test_fetch_shouldIgnoreSuccessOnLoadSuccess() {
         
         let item = anyItem()
         let (sut, decoratee, spy) = makeSUT()
         
         fetch(sut) { decoratee.complete(with: .success(item)) }
         
-        XCTAssertNoDiff(spy.handledSuccesses, [item])
+        XCTAssertNoDiff(spy.handledSuccesses, [])
     }
     
     func test_fetch_shouldNotHandleSuccesOnInstanceDeallocation() {
@@ -139,8 +139,7 @@ final class FetcherDecoratorTests: XCTestCase {
         let spy = Spy()
         let sut = SUT(
             decoratee: decoratee,
-            onSuccess: spy.handleSuccess(_:),
-            onFailure: spy.handleFailure(_:)
+            handleFailure: spy.handleFailure(_:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

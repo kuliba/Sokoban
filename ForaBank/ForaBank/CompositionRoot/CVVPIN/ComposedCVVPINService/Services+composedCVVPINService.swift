@@ -70,57 +70,44 @@ extension Services {
             log: { networkLog(.info, $0, $1, $2) }
         )
         
-        // MARK: Configure CVV-PIN Services
-        
-        let getCodeService = GetProcessingSessionCodeService(
-            process: process(completion:)
-        )
-        
-        let cachingGetCodeService = FetcherDecorator(
-            decoratee: getCodeService,
-            cache: cache(response:)
-        )
+        // MARK: - ECHD Key Pair
         
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
-        let formSessionKeyService = FormSessionKeyService(
-            loadCode: loadCode(completion:),
-            makeSecretRequestJSON: makeSecretRequestJSON(completion:),
-            process: process(payload:completion:),
-            makeSessionKey: makeSessionKey(string:completion:)
+        // MARK: Configure CVV-PIN Activation Service
+
+        let getCodeService = makeGetCodeService(
+            getCodeServiceProcess: getCodeRemoteService.process,
+            cacheGetProcessingSessionCode: cache(response:)
         )
         
-        let cachingFormSessionKeyService = FetcherDecorator(
-            decoratee: formSessionKeyService,
-            cache: cache(success:)
+        let formSessionKeyService = makeFormSessionKeyService(
+            sessionCodeLoader: sessionCodeLoader,
+            formSessionKeyProcess: formSessionKeyRemoteService.process,
+            makeSecretRequestJSON: makeSecretRequestJSON,
+            makeSessionKey: makeSessionKey(string:completion:),
+            cacheFormSessionKeySuccess: cache(success:)
         )
         
-        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
-            loadEventID: loadEventID(completion:),
+        let bindPublicKeyService = makeBindPublicKeyService(
+            sessionIDLoader: sessionIDLoader,
+            bindPublicKeyProcess: bindPublicKeyWithEventIDRemoteService.process,
             makeSecretJSON: makeSecretJSON(otp:completion:),
-            process: process(payload:completion:)
+            onBindKeyFailure: clearRSACacheOnError
         )
         
-        let rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService = FetcherDecorator(
-            decoratee: bindPublicKeyWithEventIDService,
-            handleSuccess: { _ in },
-            handleFailure: clearRSACacheOnError
+        let activationService = makeActivationService(
+            getCode: getCodeService.fetch,
+            formSessionKey: formSessionKeyService.fetch,
+            bindPublicKeyWithEventID: bindPublicKeyService.fetch
         )
         
-        let activationService = CVVPINFunctionalityActivationService(
-            getCode: getCode(completion:),
-            formSessionKey: formSessionKey(completion:),
-            bindPublicKeyWithEventID: bindPublicKeyWithEventID
-        )
+        // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
         
-        let authenticateWithPublicKeyService = AuthenticateWithPublicKeyService(
+        let authWithPublicKeyService = makeAuthWithPublicKeyService(
             prepareKeyExchange: prepareKeyExchange(completion:),
-            process: process(data:completion:),
-            makeSessionKey: makeSessionKey(response:completion:)
-        )
-        
-        let cachingAuthWithPublicKeyService = FetcherDecorator(
-            decoratee: authenticateWithPublicKeyService,
+            authWithPublicKeyRemoteService: authWithPublicKeyRemoteService,
+            makeSessionKey: makeSessionKey(response:completion:),
             cache: cache(success:)
         )
         
@@ -131,7 +118,7 @@ extension Services {
             sessionIDLoader: sessionIDLoader,
             otpEventIDLoader: otpEventIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: authWithPublicKeyService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             changePINRemoteService: changePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
@@ -150,7 +137,7 @@ extension Services {
             rsaKeyPairLoader: rsaKeyPairLoader,
             sessionIDLoader: sessionIDLoader,
             sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: cachingAuthWithPublicKeyService,
+            authWithPublicKeyService: authWithPublicKeyService,
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker
@@ -212,16 +199,6 @@ extension Services {
             }
         }
         
-        func process(
-            data: Data,
-            completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
-        ) {
-            authWithPublicKeyRemoteService.process(data) {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
-        
         func makeSessionKey(
             response: AuthenticateWithPublicKeyService.Response,
             completion: @escaping AuthenticateWithPublicKeyService.MakeSessionKeyCompletion
@@ -277,16 +254,7 @@ extension Services {
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
-        
-        func loadEventID(
-            completion: @escaping BindPublicKeyWithEventIDService.EventIDCompletion
-        ) {
-            sessionIDLoader.load {
-                
-                completion($0.map { .init(eventIDValue: $0.value) })
-            }
-        }
-        
+
         func makeSecretJSON(
             otp: BindPublicKeyWithEventIDService.OTP,
             completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
@@ -312,16 +280,6 @@ extension Services {
             }
         }
         
-        func process(
-            payload: BindPublicKeyWithEventIDService.ProcessPayload,
-            completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
-        ){
-            bindPublicKeyWithEventIDRemoteService.process(payload) {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
-        
         func clearRSACacheOnError(
             _ error: BindPublicKeyWithEventIDService.Failure
         ) {
@@ -331,7 +289,7 @@ extension Services {
             }
         }
         
-        // MARK: - ChangePIN Adapters
+        // MARK: - Cache (ChangePIN)
         
         func cache(response: ChangePINService.ConfirmResponse) {
             
@@ -345,56 +303,8 @@ extension Services {
             )
         }
         
-        // MARK: - CVVPINFunctionalityActivation Adapters
-        
-        func getCode(
-            completion: @escaping CVVPINFunctionalityActivationService.GetCodeCompletion
-        ) {
-            cachingGetCodeService.fetch { result in
-                
-                completion(
-                    result
-                        .map(CVVPINFunctionalityActivationService.GetCodeResponse.init)
-                        .mapError(CVVPINFunctionalityActivationService.GetCodeResponseError.init)
-                )
-            }
-        }
-        
-        func formSessionKey(
-            completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
-        ) {
-            cachingFormSessionKeyService.fetch { result in
-                
-                completion(
-                    result
-                        .map(CVVPINFunctionalityActivationService.FormSessionKeySuccess.init)
-                        .mapError(CVVPINFunctionalityActivationService.FormSessionKeyError.init)
-                )
-            }
-        }
-        
-        func bindPublicKeyWithEventID(
-            otp: CVVPINFunctionalityActivationService.OTP,
-            completion: @escaping CVVPINFunctionalityActivationService.BindPublicKeyWithEventIDCompletion
-        ) {
-            rsaKeyPairCacheCleaningBindPublicKeyWithEventIDService.fetch(
-                .init(otpValue: otp.otpValue)
-            ) {
-                completion($0.mapError(CVVPINFunctionalityActivationService.BindPublicKeyError.init))
-            }
-        }
-        
-        // MARK: - GetProcessingSessionCode Adapters
-        
-        func process(
-            completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
-        ) {
-            getCodeRemoteService.process {
-                
-                completion($0.mapError { .init($0) })
-            }
-        }
-        
+        // MARK: - Cache (GetProcessingSessionCode)
+
         func cache(
             response: GetProcessingSessionCodeService.Response
         ) {
@@ -409,20 +319,7 @@ extension Services {
         }
         
         // MARK: - FormSessionKey Adapters
-        
-        func loadCode(
-            completion:@escaping FormSessionKeyService.CodeCompletion
-        ) {
-            sessionCodeLoader.load { result in
-                
-                completion(
-                    result
-                        .map(\.sessionCodeValue)
-                        .map(FormSessionKeyService.Code.init)
-                )
-            }
-        }
-        
+
         func makeSecretRequestJSON(
             completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
         ) {
@@ -432,17 +329,6 @@ extension Services {
                     publicKey: echdKeyPair.publicKey
                 )
             })
-        }
-        
-        func process(
-            payload: FormSessionKeyService.ProcessPayload,
-            completion: @escaping FormSessionKeyService.ProcessCompletion
-        ) {
-            formSessionKeyRemoteService.process(
-                .init(code: payload.code, data: payload.data)
-            ) {
-                completion($0.mapError { .init($0) })
-            }
         }
         
         func makeSessionKey(
@@ -596,6 +482,16 @@ struct SessionKey {
     let sessionKeyValue: Data
 }
 
+// MARK: - Adapters
+
+private extension RemoteService where Input == Void {
+    
+    func process(completion: @escaping ProcessCompletion) {
+        
+        process((), completion: completion)
+    }
+}
+
 // MARK: - Error Mappers
 
 enum AuthError: Error {
@@ -629,153 +525,5 @@ private extension ChangePINService.AuthenticateError {
         case .authenticationFailure:
             self = .authenticationFailure
         }
-    }
-}
-
-typealias MappingRemoteServiceError<MapResponseError: Error> = RemoteServiceError<Error, Error, MapResponseError>
-
-private extension AuthenticateWithPublicKeyService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<AuthenticateWithPublicKeyService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
-
-private extension BindPublicKeyWithEventIDService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
-
-private extension FormSessionKeyService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<FormSessionKeyService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.GetCodeResponseError {
-    
-    init(_ error: GetProcessingSessionCodeService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-        }
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.FormSessionKeyError {
-    
-    init(_ error: FormSessionKeyService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceError:
-            self = .serviceFailure
-        }
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.BindPublicKeyError {
-    
-    init(_ error: BindPublicKeyWithEventIDService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .retry(statusCode, errorMessage, retryAttempts):
-            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceError:
-            self = .serviceFailure
-        }
-    }
-}
-
-private extension GetProcessingSessionCodeService.APIError {
-    
-    init(_ error: MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .network
-            
-        case let .mapResponse(mapResponseError):
-            self = mapResponseError
-        }
-    }
-}
-
-private extension RemoteService where Input == Void {
-    
-    func process(completion: @escaping ProcessCompletion) {
-        
-        process((), completion: completion)
-    }
-}
-
-// MARK: - Mappers
-
-private extension CVVPINFunctionalityActivationService.FormSessionKeySuccess {
-    
-    init(_ success: FormSessionKeyService.Success) {
-        
-        self.init(
-            sessionKey: .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
-            eventID: .init(eventIDValue: success.eventID.eventIDValue),
-            sessionTTL: success.sessionTTL
-        )
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.GetCodeResponse {
-    
-    init(_ response: GetProcessingSessionCodeService.Response) {
-        
-        self.init(code: response.code, phone: response.phone)
     }
 }

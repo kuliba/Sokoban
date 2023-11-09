@@ -9,21 +9,21 @@ public final class FetcherDecorator<Payload, Success, Failure>
 where Failure: Error {
     
     public typealias Decoratee = Fetcher<Payload, Success, Failure>
-    public typealias HandleSuccess = (Success) -> Void
-    public typealias HandleFailure = (Failure) -> Void
+    public typealias OnSuccess = (Success) -> Void
+    public typealias OnFailure = (Failure) -> Void
     
     private let decoratee: any Decoratee
-    private let handleSuccess: HandleSuccess
-    private let handleFailure: HandleFailure
+    private let onSuccess: OnSuccess
+    private let onFailure: OnFailure
     
     public init(
         decoratee: any Decoratee,
-        handleSuccess: @escaping HandleSuccess,
-        handleFailure: @escaping HandleFailure
+        onSuccess: @escaping OnSuccess,
+        onFailure: @escaping OnFailure
     ) {
         self.decoratee = decoratee
-        self.handleSuccess = handleSuccess
-        self.handleFailure = handleFailure
+        self.onSuccess = onSuccess
+        self.onFailure = onFailure
     }
 }
 
@@ -39,12 +39,12 @@ extension FetcherDecorator: Fetcher {
                 result
                     .map { success in
                         
-                        self?.handleSuccess(success)
+                        self?.onSuccess(success)
                         return success
                     }
                     .mapError { failure in
                         
-                        self?.handleFailure(failure)
+                        self?.onFailure(failure)
                         return failure
                     }
             )
@@ -56,13 +56,23 @@ public extension FetcherDecorator {
     
     convenience init(
         decoratee: any Decoratee,
-        cache: @escaping HandleSuccess
+        cache: @escaping OnSuccess
     ) {
         self.init(
             decoratee: decoratee,
-            handleSuccess: cache,
-            handleFailure: { _ in }
+            onSuccess: cache,
+            onFailure: { _ in }
+        )
+    }
+    
+    convenience init(
+        decoratee: any Decoratee,
+        handleFailure: @escaping OnFailure
+    ) {
+        self.init(
+            decoratee: decoratee,
+            onSuccess: { _ in },
+            onFailure: handleFailure
         )
     }
 }
-
