@@ -455,6 +455,8 @@
 		2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */; };
 		2A5190452A7EAC890014B0B7 /* PublicKeyWithEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
+		2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */; };
+		2A53FB832AFD62320045F3B0 /* FetcherSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */; };
 		2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */; };
 		2A5457572A3B48F9007617C3 /* TransportPaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */; };
 		2A5457592A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */; };
@@ -2585,6 +2587,8 @@
 		2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveInactiveSessionAgent.swift; sourceTree = "<group>"; };
 		2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyWithEventID.swift; sourceTree = "<group>"; };
 		2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldView+ext.swift"; sourceTree = "<group>"; };
+		2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationServiceTests.swift"; sourceTree = "<group>"; };
+		2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetcherSpy.swift; sourceTree = "<group>"; };
 		2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModel.swift; sourceTree = "<group>"; };
 		2A5457562A3B48F9007617C3 /* TransportPaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TransportPaymentsView.swift; path = ForaBank/View/PaymentsTransfers/TransportPaymentsView.swift; sourceTree = SOURCE_ROOT; };
 		2A5457582A3C5F4D007617C3 /* TransportPaymentsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModelTests.swift; sourceTree = "<group>"; };
@@ -6338,6 +6342,8 @@
 				2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */,
 				2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */,
 				2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */,
+				2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */,
+				2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */,
 			);
 			path = CVVPINServicesFactory;
 			sourceTree = "<group>";
@@ -13368,6 +13374,7 @@
 				2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
 				2A4A19F02AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift in Sources */,
+				2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */,
 				C1B6B5D42A8F63AD0073741A /* Model+PaymentsC2BTests.swift in Sources */,
 				77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */,
 				C155ABDB2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift in Sources */,
@@ -13436,6 +13443,7 @@
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
+				2A53FB832AFD62320045F3B0 /* FetcherSpy.swift in Sources */,
 				2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */,
 				77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */,
 				833764FD2A385DF700F7C1AB /* CardViewComponentTests.swift in Sources */,
