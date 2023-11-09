@@ -18,12 +18,24 @@ extension Services {
         enum PathPrefix {
             
             case processing(Processing)
+            case dict
+            case binding
+            case transfer
             
             var path: String {
                 
                 switch self {
                 case let .processing(processing):
                     return "processing/\(processing.rawValue)"
+
+                case .dict:
+                    return "dict"
+
+                case .binding:
+                    return "rest/binding"
+
+                case .transfer:
+                    return "rest/transfer"
                 }
             }
             
@@ -39,13 +51,18 @@ extension Services {
         enum Version: String {
             
             case v1
+            case v2
         }
         
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
             case changePIN
+            case createStickerPayment
             case formSessionKey
+            case getJsonAbroad
+            case getScenarioQRData
+            case getStickerPayment
             case getPINConfirmationCode
             case getProcessingSessionCode
             case processPublicKeyAuthenticationRequest
@@ -125,6 +142,18 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let createLandingRequest: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getJsonAbroad
+    )
+    
+    static let createStickerPayment: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .createStickerPayment
+    )
+    
     static let formSessionKey: Self = .init(
         pathPrefix: .processing(.registration),
         version: .v1,
@@ -141,6 +170,18 @@ extension Services.Endpoint {
         pathPrefix: .processing(.registration),
         version: .v1,
         serviceName: .getProcessingSessionCode
+    )
+    
+    static let getScenarioQRDataRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getScenarioQRData
+    )
+    
+    static let getStickerPaymentRequest: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getStickerPayment
     )
     
     static let processPublicKeyAuthenticationRequest: Self = .init(

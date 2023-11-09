@@ -21,7 +21,7 @@ public final class ShowCVVService {
     public typealias ProcessCompletion = (ProcessResult) -> Void
     public typealias Process = (Payload, @escaping ProcessCompletion) -> Void
     
-    public typealias DecryptCVVResult = Swift.Result<CVV, Error>
+    public typealias DecryptCVVResult = Swift.Result<CVV, Swift.Error>
     public typealias DecryptCVVCompletion = (DecryptCVVResult) -> Void
     public typealias DecryptCVV = (EncryptedCVV, @escaping DecryptCVVCompletion) -> Void
     
@@ -63,7 +63,7 @@ extension ShowCVVService {
         case activationFailure
         case authenticationFailure
         case invalid(statusCode: Int, data: Data)
-        case connectivity
+        case network
         case server(statusCode: Int, errorMessage: String)
         case serviceError(ServiceError)
         
@@ -227,7 +227,7 @@ private extension ShowCVVService.Error {
             self = .invalid(statusCode: statusCode, data: data)
             
         case .connectivity:
-            self = .connectivity
+            self = .network
             
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)

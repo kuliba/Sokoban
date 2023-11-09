@@ -695,7 +695,7 @@ extension ProductProfileHistoryView {
             VStack(alignment: .leading, spacing: 8) {
                 
                 Text(viewModel.title)
-                    .font(.textBodyMSB14200())
+                    .font(.textBodyMSb14200())
                     .foregroundColor(.textSecondary)
                     .padding(.bottom, 16)
                     .accessibilityIdentifier("historyGroupDate")

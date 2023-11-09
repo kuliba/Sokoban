@@ -5,8 +5,9 @@
 //  Created by Max Gribov on 30.01.2023.
 //
 
-import XCTest
 @testable import ForaBank
+import ServerAgent
+import XCTest
 
 class ServerCommandsSPBTests: XCTestCase {
     

@@ -7,10 +7,18 @@
 
 import XCTest
 @testable import ForaBank
+@testable import ServerAgent
 
 class ServerAgentTests: XCTestCase {
     
-    let serverAgent = ServerAgent(enviroment: .test)
+    let serverAgent = ServerAgent(
+        baseURL: "abc",
+        encoder: .init(),
+        decoder: .init(),
+        logError: { _ in },
+        logMessage: { _ in },
+        sendAction: { _ in }
+    )
     let token = UUID().uuidString
 
     func testRequest_With_ServerCommand() throws {

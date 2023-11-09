@@ -20,7 +20,7 @@ public final class BindPublicKeyWithEventIDService {
     
     public typealias ProcessResult = Swift.Result<Void, APIError>
     public typealias ProcessCompletion = (ProcessResult) -> Void
-    public typealias Process = (Payload, @escaping ProcessCompletion) -> Void
+    public typealias Process = (ProcessPayload, @escaping ProcessCompletion) -> Void
     
     private let loadEventID: LoadEventID
     private let makeSecretJSON: MakeSecretJSON
@@ -55,9 +55,9 @@ public extension BindPublicKeyWithEventIDService {
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
+        public enum ServiceError {
             
             case makeJSONFailure
             case missingEventID
@@ -96,7 +96,7 @@ extension BindPublicKeyWithEventIDService {
         }
     }
     
-    public struct Payload {
+    public struct ProcessPayload {
         
         public let eventID: EventID
         public let data: Data
@@ -115,7 +115,7 @@ private extension BindPublicKeyWithEventIDService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.missingEventID)))
+                completion(.failure(.serviceError(.missingEventID)))
                 
             case let .success(eventID):
                 makeSecretJSON(otp, eventID, completion)
@@ -134,7 +134,7 @@ private extension BindPublicKeyWithEventIDService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.makeJSONFailure)))
+                completion(.failure(.serviceError(.makeJSONFailure)))
                 
             case let .success(json):
                 process(eventID, json, completion)

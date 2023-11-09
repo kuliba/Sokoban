@@ -14,8 +14,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var model: Model = AppDelegate.shared.model
+    private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var rootViewModel = RootViewModelFactory.make(
-        with: model
+        model: model,
+        logger: logger
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -66,7 +68,7 @@ extension SceneDelegate {
                 switch action {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
-                    rootViewModel.link = nil
+                    rootViewModel.resetLink()
                     
                 default:
                     break

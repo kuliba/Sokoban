@@ -65,9 +65,9 @@ final class ProductConfigTests: XCTestCase {
         
         let sut = makeSUT(size: .small)
         
-        XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyXSR11140())
-        XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodyXSR11140())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyXSR11140())
+        XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyXsR11140())
+        XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodyXsR11140())
+        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyXsR11140())
     }
     
     func test_fontConfig_normalSize() {
@@ -76,7 +76,7 @@ final class ProductConfigTests: XCTestCase {
         
         XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyMR14200())
         XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodySR12160())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSB14200())
+        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSb14200())
     }
     
     func test_fontConfig_largeSize() {
@@ -85,7 +85,7 @@ final class ProductConfigTests: XCTestCase {
         
         XCTAssertEqual(sut.fontConfig.nameFontForCard, .textBodyMR14200())
         XCTAssertEqual(sut.fontConfig.nameFontForHeader, .textBodySR12160())
-        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSB14200())
+        XCTAssertEqual(sut.fontConfig.nameFontForFooter, .textBodyMSb14200())
     }
     
     // MARK: - Test Size Config

@@ -47,14 +47,14 @@ extension TemplateButton {
            let amount = Double(amountTemplate),
            detail.amount.description != amount.description {
             
-            return .refresh
+            return .refresh(templateId: template.id)
         }
         
         let detailPayerId = detail.payerCardId ?? detail.payerAccountId
         
         if template.parameterList.last?.payer?.productIdDescription != detailPayerId.description {
             
-            return .refresh
+            return .refresh(templateId: template.id)
         }
         
         switch template.parameterList.last {
@@ -68,6 +68,7 @@ extension TemplateButton {
             
         case let payload as TransferAnywayData:
             return handlePayloadWithAnywayData(
+                template.id,
                 model,
                 operation,
                 payload
@@ -83,6 +84,7 @@ extension TemplateButton {
         _ template: PaymentTemplateData,
         _ payload: TransferGeneralData
     ) -> TemplateButtonView.ViewModel.State {
+        
         switch operation.service {
         case .toAnotherCard:
             let anotherCard = try? operation.parameters.value(forIdentifier: .productTemplate)
@@ -91,10 +93,10 @@ extension TemplateButton {
                   let payeeInternalId = generalData.payeeInternal?.cardId ?? generalData.payeeInternal?.accountId,
                   anotherCard?.digits == payeeInternalId.description
             else {
-                return .refresh
+                return .refresh(templateId: template.id)
             }
             
-            return .complete
+            return .complete(templateId: template.id)
             
         default:
             
@@ -102,18 +104,35 @@ extension TemplateButton {
             let kpp = try? operation.parameters.value(forIdentifier: .requisitsKpp)
             let accountNumber = try? operation.parameters.value(forIdentifier: .requisitsAccountNumber)
             let name = try? operation.parameters.value(forIdentifier: .requisitsName)
+            let companyName = try? operation.parameters.value(forIdentifier: .requisitsCompanyName)
             let comment = try? operation.parameters.value(forIdentifier: .requisitsMessage)
+            let bankBic = try? operation.parameters.value(forIdentifier: .requisitsBankBic)
             
             guard let payeeExternal = payload.payeeExternal else {
                 return .idle
             }
             
-            if payeeExternal.inn?.description != inn || payeeExternal.kpp != kpp || payeeExternal.accountNumber != accountNumber || payeeExternal.name != name || template.parameterList.first?.comment != comment {
+            let external = TransferGeneralData.PayeeExternal(
+                inn: inn,
+                kpp: kpp,
+                accountId: nil,
+                accountNumber: accountNumber ?? "",
+                bankBIC: bankBic,
+                cardId: nil,
+                cardNumber: nil,
+                compilerStatus: nil,
+                date: nil,
+                name: name ?? companyName ?? "",
+                tax: nil
+            )
+            
+            if payeeExternal != external, template.parameterList.first?.comment != comment {
                 
-                return .refresh
+                return .refresh(templateId: template.id)
+                
             } else {
                 
-                return .complete
+                return .complete(templateId: template.id)
             }
         }
     }
@@ -139,12 +158,13 @@ extension TemplateButton {
             }
             
             let templatePayment = MeToMePayment(
+                templateId: meToMePayment.templateId,
                 payerProductId: payerProductId,
                 payeeProductId: payeeProductId,
                 amount: amount
             )
             
-            return templatePayment == meToMePayment ? .complete : .refresh
+            return templatePayment == meToMePayment ? .complete(templateId: template.id) : .refresh(templateId: template.id)
             
         default:
             return .idle
@@ -152,6 +172,7 @@ extension TemplateButton {
     }
     
     fileprivate static func equalValuesInAnywayData(
+        _ templateId: Int,
         _ payload: TransferAnywayData,
         _ sfpRestrictedAdditional: [String],
         _ values: [String]
@@ -165,14 +186,15 @@ extension TemplateButton {
                 
             } else {
                 
-                return .refresh
+                return .refresh(templateId: templateId)
             }
         }
         
-        return .complete
+        return .complete(templateId: templateId)
     }
     
     fileprivate static func handlePayloadWithAnywayData(
+        _ templateId: Int,
         _ model: Model,
         _ operation: (Payments.Operation),
         _ payload: TransferAnywayData
@@ -184,18 +206,21 @@ extension TemplateButton {
         )
         
         guard let additional else {
-            return .complete
+            return .complete(templateId: templateId)
         }
         
         let values = additional.map(\.fieldvalue)
         
-        let sfpRestrictedAdditional = [
+        let restrictedAdditional = [
             Payments.Parameter.Identifier.sfpAmount.rawValue,
             Payments.Parameter.Identifier.code.rawValue,
-            "CcyCode"
+            Payments.Parameter.Identifier.countryTransferNumber.rawValue,
+            Payments.Parameter.Identifier.countryPhone.rawValue,
+            "CcyCode",
+            "a3_PenaltyList_1_2"
         ]
         
-        return equalValuesInAnywayData(payload, sfpRestrictedAdditional, values)
+        return equalValuesInAnywayData(templateId, payload, restrictedAdditional, values)
     }
     
     static func parametersOperation(
@@ -215,14 +240,13 @@ extension TemplateButton {
     
     static func createMe2MeParameterList(
         model: Model,
-        operationDetail: OperationDetailData,
-        template: PaymentTemplateData
+        operationDetail: OperationDetailData
     ) -> [TransferData]? {
         
-        let payerProductId = operationDetail.payerCardId ?? operationDetail.payerAccountId
-        guard let templateParameterList = template.parameterList.last as? TransferGeneralData,
-              let payeeProductId = templateParameterList.payeeInternal?.accountId ?? templateParameterList.payeeInternal?.cardId,
-              let payee = model.allProducts.first(where: {$0.id == payeeProductId }),
+        let payerProductId = operationDetail.payerProductId
+        let payeeProductId = operationDetail.payeeProductId
+        
+        guard let payee = model.allProducts.first(where: {$0.id == payeeProductId }),
               let payerData = model.allProducts.first(where: { $0.id == payerProductId }),
               let payer = TransferGeneralData.Payer(productData: payerData)
         else {

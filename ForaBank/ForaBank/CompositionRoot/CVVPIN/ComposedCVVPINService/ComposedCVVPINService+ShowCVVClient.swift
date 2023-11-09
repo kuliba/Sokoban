@@ -40,7 +40,7 @@ private extension ShowCVVError {
         case .authenticationFailure:
             self = .serviceFailure
             
-        case .connectivity:
+        case .network:
             self = .serviceFailure
             
         case .invalid:

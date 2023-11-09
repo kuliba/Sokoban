@@ -31,7 +31,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
-    private let onExit: () -> Void
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -39,19 +39,19 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void
+        onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
+        self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
-        onExit: @escaping () -> Void
+        onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
         self.sections = [
@@ -64,7 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.productProfileViewModelFactory = productProfileViewModelFactory
-        self.onExit = onExit
+        self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
         bind()
@@ -118,6 +118,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
+                    
+                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+                    
                     // TODO: replace with injected factory
                     link = .userAccount(.init(
                         model: model,
@@ -125,8 +128,7 @@ class MainViewModel: ObservableObject, Resetable {
                         dismissAction: { [weak self] in
                             
                             self?.action.send(MainViewModelAction.Close.Link())
-                        },
-                        onExit: self.onExit
+                        }
                     ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
@@ -605,7 +607,8 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             do {
                                 
-                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: {})
+                                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link())})
                                 bind(operationViewModel)
                                 
                                 await MainActor.run {
@@ -627,7 +630,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case .c2bSubscribeURL(let url):
                         self.action.send(MainViewModelAction.Close.FullScreenSheet())
                         let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                            self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            self?.action.send(MainViewModelAction.Close.Link())
                         })
                         bind(paymentsViewModel)
                         
@@ -793,7 +796,10 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case _ as TemplatesListViewModelAction.CloseAction:
-                    link = nil
+                    self.action.send(DelayWrappedAction(
+                             delayMS: 800,
+                             action: MainViewModelAction.Close.Link())
+                         )
                     
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     

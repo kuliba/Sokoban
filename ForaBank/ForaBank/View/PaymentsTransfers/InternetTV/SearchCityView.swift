@@ -18,7 +18,7 @@ struct SearchCityView: View {
             HStack {
                 
                 Text(viewModel.title)
-                    .font(Font.textH3SB18240())
+                    .font(Font.textH3Sb18240())
                     .foregroundColor(Color.textSecondary)
                     .frame(height: 20)
                 

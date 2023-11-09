@@ -39,7 +39,7 @@ extension ProductProfileDetailView {
             HStack {
                 
                 Text(viewModel.title)
-                    .font(.textH2SB20282())
+                    .font(.textH2Sb20282())
                     .foregroundColor(.textWhite)
                 
                 Spacer()

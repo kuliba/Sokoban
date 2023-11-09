@@ -67,7 +67,7 @@ extension AuthConfirmView {
             VStack(spacing: 32) {
                 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                     .padding([.leading,.trailing], 20)
                     .multilineTextAlignment(.center)

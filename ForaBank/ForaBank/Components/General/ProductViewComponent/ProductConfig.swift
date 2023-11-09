@@ -119,19 +119,19 @@ extension ProductView.ViewModel {
             return .init(
                 nameFontForCard: .textBodyMR14200(),
                 nameFontForHeader: .textBodySR12160(),
-                nameFontForFooter: .textBodyMSB14200())
+                nameFontForFooter: .textBodyMSb14200())
             
         case .normal:
             return .init(
                 nameFontForCard: .textBodyMR14200(),
                 nameFontForHeader: .textBodySR12160(),
-                nameFontForFooter: .textBodyMSB14200())
+                nameFontForFooter: .textBodyMSb14200())
             
         case .small:
             return .init(
-                nameFontForCard: .textBodyXSR11140(),
-                nameFontForHeader: .textBodyXSR11140(),
-                nameFontForFooter: .textBodyXSR11140())
+                nameFontForCard: .textBodyXsR11140(),
+                nameFontForHeader: .textBodyXsR11140(),
+                nameFontForFooter: .textBodyXsR11140())
         }
     }
     

@@ -11,14 +11,17 @@ extension Landing {
     
     public struct PageTitle: Equatable {
         
-        let text: String
-        let transparency: Bool
+        public let text: String
+        public let subtitle: String?
+        public let transparency: Bool
         
         public init(
             text: String,
+            subtitle: String?,
             transparency: Bool
         ) {
             self.text = text
+            self.subtitle = subtitle
             self.transparency = transparency
         }
     }

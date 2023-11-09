@@ -55,10 +55,10 @@ public extension AuthenticateWithPublicKeyService {
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
-            
+        public enum ServiceError {
+            #warning("check unused cases")
             case activationFailure
             case makeSessionKeyFailure
             case missingRSAPublicKey
@@ -99,9 +99,24 @@ extension AuthenticateWithPublicKeyService {
         public let sessionKey: SessionKey
         public let sessionTTL: SessionTTL
         
+        public init(
+            sessionID: SessionID,
+            sessionKey: SessionKey,
+            sessionTTL: SessionTTL
+        ) {
+            self.sessionID = sessionID
+            self.sessionKey = sessionKey
+            self.sessionTTL = sessionTTL
+        }
+        
         public struct SessionID {
             
             public let sessionIDValue: String
+            
+            public init(sessionIDValue: String) {
+             
+                self.sessionIDValue = sessionIDValue
+            }
         }
         
         public typealias SessionTTL = Int
@@ -129,7 +144,7 @@ private extension AuthenticateWithPublicKeyService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.prepareKeyExchangeFailure)))
+                completion(.failure(.serviceError(.prepareKeyExchangeFailure)))
                 
             case let .success(data):
                 process(data, completion)
@@ -172,7 +187,7 @@ private extension AuthenticateWithPublicKeyService {
                             sessionTTL: .init(response.sessionTTL)
                         )
                     }
-                    .mapError { _ in .other(.makeSessionKeyFailure)}
+                    .mapError { _ in .serviceError(.makeSessionKeyFailure)}
             )
         }
     }

@@ -1,5 +1,5 @@
 //
-//  RequestFactory+makeBindPublicKeyWithEventIDRequest.swift
+//  RequestFactory+createBindPublicKeyWithEventIDRequest.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 05.08.2023.

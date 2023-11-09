@@ -72,9 +72,9 @@ extension DepositCalculateAmountViewModel {
 
         DispatchQueue.main.async {
 
-            let filterred = textField.text?.filterred()
+            let filtered = textField.text?.filtered()
 
-            guard let text = filterred, let value = Double(text) else {
+            guard let text = filtered, let value = Double(text) else {
                 textField.text = self.valueCurrency
                 return
             }

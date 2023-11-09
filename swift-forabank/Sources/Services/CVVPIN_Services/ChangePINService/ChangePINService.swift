@@ -87,9 +87,9 @@ extension ChangePINService {
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
-        case other(Other)
+        case serviceError(ServiceError)
         
-        public enum Other {
+        public enum ServiceError {
             
             case checkSessionFailure
             case decryptionFailure
@@ -122,6 +122,14 @@ extension ChangePINService {
         
         public let otpEventID: OTPEventID
         public let phone: String
+        
+        public init(
+            otpEventID: OTPEventID,
+            phone: String
+        ) {
+            self.otpEventID = otpEventID
+            self.phone = phone
+        }
     }
     
     public struct EncryptedConfirmResponse {
@@ -236,7 +244,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.decryptionFailure)))
+                completion(.failure(.serviceError(.decryptionFailure)))
                 
             case let .success(eventID):
                 decrypt(.init(eventIDValue: eventID), encrypted, completion)
@@ -256,7 +264,7 @@ private extension ChangePINService {
             completion(
                 result
                     .map { .init(otpEventID: eventID, phone: $0)}
-                    .mapError { _ in .other(.decryptionFailure) }
+                    .mapError { _ in .serviceError(.decryptionFailure) }
             )
         }
     }
@@ -276,7 +284,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.failure(.other(.makeJSONFailure)))
+                completion(.failure(.serviceError(.makeJSONFailure)))
                 
             case let .success((json, sessionID)):
                 changePINProcess(sessionID, json, completion)

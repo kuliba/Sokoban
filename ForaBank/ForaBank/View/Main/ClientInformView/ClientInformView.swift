@@ -25,7 +25,7 @@ struct ClientInformView: View {
                     .opacity(isShowNavBar ? 1 : 0.999)
 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                     .padding(.bottom, 6)
                     .padding()
@@ -39,7 +39,7 @@ struct ClientInformView: View {
                 VStack(spacing: 24) {
                 
                     Circle()
-                        .foregroundColor(.bGIconGrayLightest)
+                        .foregroundColor(.bgIconGrayLightest)
                         .frame(width: 64, height: 64)
                         .overlay13 { Image.ic24Tool
                                             .renderingMode(.original)
@@ -50,7 +50,7 @@ struct ClientInformView: View {
                     if !isShowNavBar {
                     
                         Text(viewModel.title)
-                            .font(.textH3SB18240())
+                            .font(.textH3Sb18240())
                             .foregroundColor(.textSecondary)
                     }
                 
@@ -102,7 +102,7 @@ struct ClientInformItemView: View {
         HStack(alignment: .top, spacing: 20) {
             
             Circle()
-                .foregroundColor(.bGIconGrayLightest)
+                .foregroundColor(.bgIconGrayLightest)
                 .frame(width: 40, height: 40)
                 .overlay13 { viewModel.icon }
                 

@@ -40,7 +40,7 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
                 log(.error, "Store \(String(describing: self)): Retrieval failure: \(error).", #file, #line)
                 
             case let .success((model, validUntil)):
-                log(.info, "Store \(String(describing: self)): Successfully retrieved \(model) valid until \(validUntil).", #file, #line)
+                log(.info, "Store \(String(describing: self)): Retrieval success: \(model) valid until \(validUntil).", #file, #line)
             }
             completion(result)
         }
@@ -57,10 +57,10 @@ extension LoggingStoreDecorator: CVVPINServices.Store {
             
             switch result {
             case let .failure(error):
-                log(.error, "Store \(String(describing: self)): Failed to insert \(local) validUntil \(validUntil): \(error).", #file, #line)
+                log(.error, "Store \(String(describing: self)): Insertion failure: \(local) validUntil \(validUntil): \(error).", #file, #line)
                 
             case .success:
-                log(.info, "Store \(String(describing: self)): Successfully inserted \(local) validUntil \(validUntil).", #file, #line)
+                log(.info, "Store \(String(describing: self)): Insertion success: \(local) validUntil \(validUntil).", #file, #line)
             }
             completion(result)
         }

@@ -9,24 +9,22 @@ import Foundation
 
 public struct Landing: Equatable {
     
-    let header: [Header]
-    let main: [DataView]
-    let footer: [String]?
-    let details: [Detail]
-    let serial: String
-    
-    public init(
-        header: [Header],
-        main: [DataView],
-        footer: [String]?,
-        details: [Detail],
-        serial: String
-    ) {
+    public let header: [DataView]
+    public let main: [DataView]
+    public let footer: [DataView]
+    public let details: [Detail]
+    public let serial: String?
+    public let statusCode: Int
+    public let errorMessage: String?
+
+    public init(header: [DataView], main: [DataView], footer: [DataView], details: [Detail], serial: String?, statusCode: Int, errorMessage: String?) {
         self.header = header
         self.main = main
         self.footer = footer
         self.details = details
         self.serial = serial
+        self.statusCode = statusCode
+        self.errorMessage = errorMessage
     }
 }
 
@@ -34,12 +32,30 @@ extension Landing {
     
     public enum DataView: Equatable {
         
-        case iconWithTwoTextLines(IconWithTwoTextLines)
-        case listHorizontalRoundImage(ListHorizontalRoundImage)
-        case multiLineHeader(MultiLineHeader)
-        case empty
+        case list(List)
+        case multi(Multi)
         
-        case multiTextsWithIconsHorizontalArray([MuiltiTextsWithIconsHorizontal])
+        public enum List: Equatable {
+            case horizontalRectangleImage(ListHorizontalRectangleImage)
+            case horizontalRoundImage(ListHorizontalRoundImage)
+            case verticalRoundImage(ListVerticalRoundImage)
+            case dropDownTexts(ListDropDownTexts)
+        }
+        
+        public enum Multi: Equatable {
+            case lineHeader(MultiLineHeader)
+            case markersText(MultiMarkersText)
+            case text(MultiText)
+            case textsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
+            case buttons(MultiButtons)
+            case typeButtons(MultiTypeButtons)
+        }
+
+        case iconWithTwoTextLines(IconWithTwoTextLines)
+        case pageTitle(PageTitle)
         case textsWithIconHorizontal(TextsWithIconHorizontal)
+        case image(ImageBlock)
+        case imageSvg(ImageSvg)
+        case verticalSpacing(VerticalSpacing)
     }
 }

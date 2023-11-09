@@ -531,7 +531,7 @@ extension PaymentsProductTemplateView {
                             return
                         }
                         
-                        let filterredValue = (try? value.filterred(regEx: editViewModel.textField.regExp)) ?? value
+                        let filterredValue = (try? value.filtered(regEx: editViewModel.textField.regExp)) ?? value
                         let maskedValue = filterredValue.masked(masks: editViewModel.textField.masks)
                         editViewModel.textField.text = maskedValue
                         
@@ -755,13 +755,13 @@ extension PaymentsProductTemplateView {
                                             .foregroundColor(.textPrimary)
                                     
                                         Text(template.numberPostfix)
-                                        .font(.textBodyXSR11140())
+                                        .font(.textBodyXsR11140())
                                         .foregroundColor(.textPrimary)
                                     }
                                     .padding(.bottom, 9)
                                         
                                     Text(template.name)
-                                        .font(.textBodyXSR11140())
+                                        .font(.textBodyXsR11140())
                                         .foregroundColor(.textPrimary)
                                         .opacity(0.5)
                                     

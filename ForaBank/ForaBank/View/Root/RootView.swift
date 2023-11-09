@@ -19,147 +19,135 @@ struct RootView: View {
                 
                 TabView(selection: $viewModel.selected) {
                     
-                    NavigationView {
-                        
-                        MainView(viewModel: viewModel.mainViewModel)
-                        
-                    }
-                    .tabItem {
-                        
-                        tabIcon(type: .main, selected: viewModel.selected)
-                        Text(RootViewModel.TabType.main.name)
-                            .foregroundColor(.black)
-                            .accessibilityIdentifier("tabBarMainButton")
-                    }
-                    .tag(RootViewModel.TabType.main)
-                    
-                    NavigationView {
-                        
-                        PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
-                    }
-                    .tabItem {
-                        
-                        tabIcon(type: .payments, selected: viewModel.selected)
-                        Text(RootViewModel.TabType.payments.name)
-                            .foregroundColor(.black)
-                            .accessibilityIdentifier("tabBarTransferButton")
-                    }
-                    .tag(RootViewModel.TabType.payments)
-                    
-                    ChatView(viewModel: viewModel.chatViewModel)
-                        .tabItem {
-                            
-                            tabIcon(type: .chat, selected: viewModel.selected)
-                            Text(RootViewModel.TabType.chat.name)
-                                .foregroundColor(.black)
-                                .accessibilityIdentifier("tabBarChatButton")
-                        }
-                        .tag(RootViewModel.TabType.chat)
-                    
+                    mainViewTab()
+                    paymentsViewTab()
+                    chatViewTab()
                 } //tabView
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
-            }
+            } //geo
             
             //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.
-            if let link = viewModel.link  {
-                
-                switch link {
-                case .messages(let messagesHistoryViewModel):
-                    //FIXME: looks like NavigationView required
-                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                    //FIXME: looks like zIndex not needed
-                        .zIndex(.greatestFiniteMagnitude)
-                    
-                case .me2me(let requestMeToMeModel):
-                    //FIXME: looks like NavigationView required
-                    MeToMeRequestView(viewModel: requestMeToMeModel)
-                    //FIXME: looks like zIndex not needed
-                        .zIndex(.greatestFiniteMagnitude)
-                    
-                case .userAccount(let viewModel):
-                    NavigationView {
-                        UserAccountView(viewModel: viewModel)
-                    }
-                    
-                case let .payments(paymentsViewModel):
-                    NavigationView {
-                        PaymentsView(viewModel: paymentsViewModel)
-                    }
-                }
-            } //geo
+            viewModel.link.map(destinationView(link:))
         }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .alert(
+            item: $viewModel.alert,
+            content: Alert.init(with:)
+        )
+    }
+    
+    private func mainViewTab() -> some View {
         
+        NavigationView {
+            
+            MainView(viewModel: viewModel.mainViewModel)
+        }
+        .taggedTabItem(.main, selected: viewModel.selected)
+        .accessibilityIdentifier("tabBarMainButton")
+    }
+    
+    private func paymentsViewTab() -> some View {
+        
+        NavigationView {
+            
+            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+        }
+        .taggedTabItem(.payments, selected: viewModel.selected)
+        .accessibilityIdentifier("tabBarTransferButton")
+    }
+    
+    private func chatViewTab() -> some View {
+        
+        ChatView(viewModel: viewModel.chatViewModel)
+            .taggedTabItem(.chat, selected: viewModel.selected)
+            .accessibilityIdentifier("tabBarChatButton")
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        link: RootViewModel.Link
+    ) -> some View {
+        
+        switch link {
+        case .messages(let messagesHistoryViewModel):
+            //FIXME: looks like NavigationView required
+            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            //FIXME: looks like zIndex not needed
+                .zIndex(.greatestFiniteMagnitude)
+            
+        case .me2me(let requestMeToMeModel):
+            //FIXME: looks like NavigationView required
+            MeToMeRequestView(viewModel: requestMeToMeModel)
+            //FIXME: looks like zIndex not needed
+                .zIndex(.greatestFiniteMagnitude)
+            
+        case .userAccount(let viewModel):
+            NavigationView {
+                UserAccountView(viewModel: viewModel)
+            }
+            
+        case let .payments(paymentsViewModel):
+            NavigationView {
+                PaymentsView(viewModel: paymentsViewModel)
+            }
+        }
     }
 }
 
-extension RootView {
+extension View {
     
-    private func tabIcon(type: RootViewModel.TabType, selected: RootViewModel.TabType) -> AnyView {
+    func taggedTabItem(
+        _ tab: RootViewModel.TabType,
+        selected: RootViewModel.TabType
+    ) -> some View  {
         
-        if type == selected {
-            
-            switch type {
-            case .main:
-                return AnyView(
-                    Image.ic24LogoForaColor
-                        .renderingMode(.original)
-                )
+        self
+            .tabItem {
                 
-            case .payments:
-                return AnyView(
-                    Image.ic24PaymentsActive
-                        .renderingMode(.original)
-                )
-                
-            case .history:
-                return AnyView(
-                    Image.ic24HistoryActive
-                        .renderingMode(.original)
-                )
-                
-            case .chat:
-                return AnyView(
-                    Image.ic24ChatActive
-                        .renderingMode(.original)
-                )
+                tab.tabIcon(isSelected: tab == selected)
+                Text(tab.name)
+                    .foregroundColor(.black)
             }
+            .tag(tab)
+    }
+}
+
+extension RootViewModel.TabType {
+    
+    @ViewBuilder
+    func tabIcon(
+        isSelected: Bool
+    ) -> some View {
+        
+        let icon = icon(isSelected: isSelected)
+        
+        if isSelected {
             
+            icon
+                .renderingMode(.original)
         } else {
             
-            switch type {
-            case .main:
-                return AnyView(
-                    Image.ic24LogoForaLine
-                        .renderingMode(.template)
-                        .foregroundColor(.iconGray)
-                )
-                
-            case .payments:
-                return AnyView(
-                    Image.ic24PaymentsInactive
-                        .renderingMode(.template)
-                        .foregroundColor(.iconGray)
-                )
-                
-            case .history:
-                return AnyView(
-                    Image.ic24HistoryInactive
-                        .renderingMode(.template)
-                        .foregroundColor(.iconGray)
-                )
-                
-            case .chat:
-                return AnyView(
-                    Image.ic24ChatInactive
-                        .renderingMode(.template)
-                        .foregroundColor(.iconGray)
-                )
-            }
+            icon
+                .renderingMode(.template)
+                .foregroundColor(.iconGray)
+        }
+    }
+    
+    func icon(isSelected: Bool) -> Image {
+        
+        switch self {
+        case .main:
+            return isSelected ? .ic24LogoForaColor : .ic24LogoForaLine
+            
+        case .payments:
+            return isSelected ? .ic24PaymentsActive : .ic24PaymentsInactive
+            
+        case .history:
+            return isSelected ? .ic24HistoryActive : .ic24HistoryInactive
+            
+        case .chat:
+            return isSelected ? .ic24ChatActive : .ic24ChatInactive
         }
     }
 }
@@ -175,7 +163,7 @@ struct RootView_Previews: PreviewProvider {
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
-                onExit: {}
+                onRegister: {}
             )
         )
     }

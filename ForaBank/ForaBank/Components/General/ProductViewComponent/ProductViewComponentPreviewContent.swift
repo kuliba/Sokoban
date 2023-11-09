@@ -174,7 +174,7 @@ extension ProductView.ViewModel {
         statusAction: nil,
         appearance: .init(
             textColor: .mainColorsBlackMedium,
-            background: .init(color: .cardRIO, image: Image( "Cover Deposit"))),
+            background: .init(color: .cardRio, image: Image( "Cover Deposit"))),
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
@@ -271,7 +271,7 @@ private extension ProductView.ViewModel.Appearance {
 private extension ProductView.ViewModel.Appearance.Background {
     
     static let red: Self =          .init(color: .mainColorsRed, image: nil)
-    static let cardRIO: Self =      .init(color: .cardRIO,       image: nil)
+    static let cardRIO: Self =      .init(color: .cardRio,       image: nil)
     static let cardInfinite: Self = .init(color: .cardInfinite,  image: nil)
     
     static let infiniteSample: Self = .init(

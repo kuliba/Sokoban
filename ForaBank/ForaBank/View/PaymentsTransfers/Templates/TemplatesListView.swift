@@ -123,7 +123,7 @@ struct TemplatesListView: View {
                 } //case style
                 
                 
-                if let deletePannelViewModel = viewModel.deletePannel {
+                if let deletePannelViewModel = viewModel.deletePanel {
                     
                     DeletePannelView(viewModel: deletePannelViewModel)
                 }
@@ -241,7 +241,7 @@ extension TemplatesListView {
                                                                   : Color.buttonPrimary)
                         .overlay13 {
                             Text(viewModel.saveButtonText)
-                                .font(.textH3SB18240())
+                                .font(.textH3Sb18240())
                                 .foregroundColor(.textWhite)
                         }
                 }.disabled(viewModel.isNameNotValid)
@@ -262,7 +262,7 @@ extension TemplatesListView {
             VStack(alignment: .leading, spacing: 15) {
 
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
                     .padding(.leading)
                 
@@ -307,7 +307,7 @@ extension TemplatesListView {
                     .background(Circle().foregroundColor(.gray))
                 
                 Text(viewModel.title)
-                    .font(.textH2SB20282())
+                    .font(.textH2Sb20282())
                     .foregroundColor(.textSecondary)
                     .padding(.top, 20)
                 
@@ -331,7 +331,7 @@ extension TemplatesListView {
                             .cornerRadius(8)
                         
                         Text(viewModel.button.title)
-                            .font(.textH3SB18240())
+                            .font(.textH3Sb18240())
                             .foregroundColor(.textSecondary)
                     }
                 }

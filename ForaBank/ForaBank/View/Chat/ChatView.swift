@@ -32,7 +32,7 @@ struct UnderConstructionTextBlockView: View {
                     .frame(width: 88, height: 88)
             VStack(spacing: 12) {
                 Text(viewModel.title)
-                    .font(.textH3SB18240())
+                    .font(.textH3Sb18240())
                 Text(viewModel.subTitle)
                     .font(.textBodyMR14200())
                     .multilineTextAlignment(.center)

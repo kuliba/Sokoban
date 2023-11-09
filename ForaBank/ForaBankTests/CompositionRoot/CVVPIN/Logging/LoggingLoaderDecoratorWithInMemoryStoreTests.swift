@@ -24,7 +24,7 @@ final class LoggingLoaderDecoratorWithInMemoryStoreTests: XCTestCase {
         load(sut)
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: load failure: emptyCache."
+            "LoaderDecorator<Item>: Load failure: emptyCache."
         ])
     }
     
@@ -35,7 +35,7 @@ final class LoggingLoaderDecoratorWithInMemoryStoreTests: XCTestCase {
         save(sut, anyItem(), validUntil: .init())
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success."
+            "LoaderDecorator<Item>: Save success."
         ])
     }
     
@@ -50,8 +50,8 @@ final class LoggingLoaderDecoratorWithInMemoryStoreTests: XCTestCase {
         load(sut)
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success.",
-            "LoaderDecorator<Item>: load failure: invalidCache(validatedAt: \(currentDate()), validUntil: \(expired))."
+            "LoaderDecorator<Item>: Save success.",
+            "LoaderDecorator<Item>: Load failure: invalidCache(validatedAt: \(currentDate()), validUntil: \(expired))."
         ])
     }
     
@@ -66,8 +66,8 @@ final class LoggingLoaderDecoratorWithInMemoryStoreTests: XCTestCase {
         load(sut)
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: save success.",
-            "LoaderDecorator<Item>: load success: \(item)."
+            "LoaderDecorator<Item>: Save success.",
+            "LoaderDecorator<Item>: Load success: \(item)."
         ])
     }
     

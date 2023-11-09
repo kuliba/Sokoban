@@ -9,55 +9,107 @@ let package = Package(
         .macOS(.v11),
     ],
     products: [
+        .loadableModel,
+        .loadableResourceComponent,
+        .paymentSticker,
+        .phoneNumberWrapper,
+        .sharedAPIInfra,
+        .textFieldModel,
+        // Landing
+        .codableLanding,
+        .landingMapping,
+        .landingUIComponent,
+        // PaymentsComponents
+        .paymentsComponents,
+        // Infra
+        .fetcher,
+        .keyChainStore,
+        // Services
         .cryptoSwaddler,
         .cvvPin,
+        .cvvPIN_Services,
+        .cvvPINServices,
         .foraCrypto,
-        .landingComponentsOld,
-        .landingEngineOld,
-        .loadableResourceComponent,
+        .genericRemoteService,
+        .getProcessingSessionCodeService,
+        .serverAgent,
+        .symmetricEncryption,
+        .transferPublicKey,
+        .urlRequestFactory,
+        // UI
+        .linkableText,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pinCodeUI,
         .productUI,
         .searchBarComponent,
-        .sharedAPIInfra,
-        .symmetricEncryption,
         .textFieldComponent,
-        .textFieldModel,
         .uiKitHelpers,
+        // WIP: Explorations
         .userModel,
-        // infra
-        .keyChainStore,
-        // services
-        .cvvPIN_Services,
-        .cvvPINServices,
-        .genericRemoteService,
-        .getProcessingSessionCodeService,
-        .urlRequestFactory,
-        // landing
-        .landingMapping,
-        .landingUICompoment,
-        .landingUpdater,
-        .transferPublicKey,
-        // UI
-        .linkableText
     ],
     dependencies: [
         .combineSchedulers,
         .customDump,
-        .tagged
+        .phoneNumberKit,
+        .tagged,
+        .shimmer,
     ],
     targets: [
+        .loadableModel,
+        .loadableModelTests,
+        .loadableResourceComponent,
+        .loadableResourceComponentTests,
+        .paymentSticker,
+        .paymentStickerTests,
+        .phoneNumberWrapper,
+        .phoneNumberWrapperTests,
+        .sharedAPIInfra,
+        .sharedAPIInfraTests,
+        .textFieldDomain,
+        .textFieldDomainTests,
+        .textFieldModel,
+        .textFieldModelTests,
+        // Landing
+        .codableLanding,
+        .landingMapping,
+        .landingMappingTests,
+        .landingUIComponent,
+        .landingUIComponentTests,
+        // PaymentsComponents
+        .paymentsComponents,
+        .paymentsComponentsTests,
+        // Infra
+        .fetcher,
+        .fetcherTests,
+        .keyChainStore,
+        .keyChainStoreTests,
+        // Services
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
         .cvvPinTests,
-        .landingComponentsOld,
-        .landingEngineOld,
+        .cvvPIN_Services,
+        .cvvPIN_ServicesTests,
+        .cvvPINServices,
+        .cvvPINServicesTests,
         .foraCrypto,
         .foraCryptoTests,
-        .loadableResourceComponent,
-        .loadableResourceComponentTests,
+        .genericRemoteService,
+        .genericRemoteServiceTests,
+        .getProcessingSessionCodeService,
+        .getProcessingSessionCodeServiceTests,
+        .serverAgent,
+        .serverAgentTests,
+        .symmetricEncryption,
+        .symmetricEncryptionTests,
+        .transferPublicKey,
+        .transferPublicKeyTests,
+        .urlRequestFactory,
+        .urlRequestFactoryTests,
+        // UI
+        .linkableText,
+        .linkableTextTests,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
@@ -65,97 +117,24 @@ let package = Package(
         .pinCodeUITests,
         .productUI,
         .searchBarComponent,
-        .sharedAPIInfra,
-        .sharedAPIInfraTests,
-        .symmetricEncryption,
-        .symmetricEncryptionTests,
         .textFieldComponent,
         .textFieldComponentTests,
-        .textFieldDomain,
-        .textFieldDomainTests,
-        .textFieldModel,
-        .textFieldModelTests,
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        // WIP: Explorations
         .wipTests,
         .userModel,
         .userModelTests,
-        // infra
-        .keyChainStore,
-        .keyChainStoreTests,
-        // services
-        .cvvPIN_Services,
-        .cvvPINServices,
-        .cvvPINServicesTests,
-        .genericRemoteService,
-        .genericRemoteServiceTests,
-        .getProcessingSessionCodeService,
-        .getProcessingSessionCodeServiceTests,
-        .urlRequestFactory,
-        .urlRequestFactoryTests,
-        // landing
-        .landingMapping,
-        .landingMappingTests,
-        .landingUICompoment,
-        .landingUICompomentTests,
-        .landingUpdater,
-        .transferPublicKey,
-        .transferPublicKeyTests,
-        // UI
-        .linkableText,
-        .linkableTextTests,
     ]
 )
 
 private extension Product {
     
-    static let cryptoSwaddler = library(
-        name: .cryptoSwaddler,
+    static let loadableModel = library(
+        name: .loadableModel,
         targets: [
-            .cryptoSwaddler,
-        ]
-    )
-    
-    static let cvvPin = library(
-        name: .cvvPin,
-        targets: [
-            .cvvPin,
-        ]
-    )
-    
-    static let genericRemoteService = library(
-        name: .genericRemoteService,
-        targets: [
-            .genericRemoteService,
-        ]
-    )
-    
-    static let foraCrypto = library(
-        name: .foraCrypto,
-        targets: [
-            .foraCrypto,
-        ]
-    )
-    
-    static let getProcessingSessionCodeService = library(
-        name: .getProcessingSessionCodeService,
-        targets: [
-            .getProcessingSessionCodeService,
-        ]
-    )
-    
-    static let landingComponentsOld = library(
-        name: .landingComponentsOld,
-        targets: [
-            .landingComponentsOld,
-        ]
-    )
-    
-    static let landingEngineOld = library(
-        name: .landingEngineOld,
-        targets: [
-            .landingEngineOld,
+            .loadableModel,
         ]
     )
     
@@ -163,6 +142,82 @@ private extension Product {
         name: .loadableResourceComponent,
         targets: [
             .loadableResourceComponent,
+        ]
+    )
+    
+    static let paymentSticker = library(
+        name: .paymentSticker,
+        targets: [
+            .paymentSticker,
+        ]
+    )
+    
+    static let phoneNumberWrapper = library(
+        name: .phoneNumberWrapper,
+        targets: [
+            .phoneNumberWrapper,
+        ]
+    )
+    
+    static let sharedAPIInfra = library(
+        name: .sharedAPIInfra,
+        targets: [
+            .sharedAPIInfra,
+        ]
+    )
+    
+    static let textFieldModel = library(
+        name: .textFieldModel,
+        targets: [
+            .textFieldModel,
+        ]
+    )
+    
+    static let userModel = library(
+        name: .userModel,
+        targets: [
+            .userModel
+        ]
+    )
+    
+    // MARK: - Landing
+    
+    static let codableLanding = library(
+        name: .codableLanding,
+        targets: [
+            .codableLanding
+        ]
+    )
+    
+    static let landingMapping = library(
+        name: .landingMapping,
+        targets: [
+            .landingMapping
+        ]
+    )
+    
+    static let landingUIComponent = library(
+        name: .landingUIComponent,
+        targets: [
+            .landingUIComponent
+        ]
+    )
+    
+    // MARK: - PaymentsComponents
+    
+    static let paymentsComponents = library(
+        name: .paymentsComponents,
+        targets: [
+            .paymentsComponents,
+        ]
+    )
+    
+    // MARK: - UI
+    
+    static let linkableText = library(
+        name: .linkableText,
+        targets: [
+            .linkableText
         ]
     )
     
@@ -201,38 +256,10 @@ private extension Product {
         ]
     )
     
-    static let sharedAPIInfra = library(
-        name: .sharedAPIInfra,
-        targets: [
-            .sharedAPIInfra,
-        ]
-    )
-    
-    static let symmetricEncryption = library(
-        name: .symmetricEncryption,
-        targets: [
-            .symmetricEncryption,
-        ]
-    )
-    
     static let textFieldComponent = library(
         name: .textFieldComponent,
         targets: [
             .textFieldComponent,
-        ]
-    )
-    
-    static let textFieldModel = library(
-        name: .textFieldModel,
-        targets: [
-            .textFieldModel,
-        ]
-    )
-    
-    static let transferPublicKey = library(
-        name: .transferPublicKey,
-        targets: [
-            .transferPublicKey,
         ]
     )
     
@@ -243,14 +270,14 @@ private extension Product {
         ]
     )
     
-    static let userModel = library(
-        name: .userModel,
+    // MARK: - Infra
+    
+    static let fetcher = library(
+        name: .fetcher,
         targets: [
-            .userModel
+            .fetcher
         ]
     )
-    
-    // MARK: - Infra
     
     static let keyChainStore = library(
         name: .keyChainStore,
@@ -261,6 +288,56 @@ private extension Product {
     
     // MARK: - Services
     
+    static let cryptoSwaddler = library(
+        name: .cryptoSwaddler,
+        targets: [
+            .cryptoSwaddler,
+        ]
+    )
+    
+    static let cvvPin = library(
+        name: .cvvPin,
+        targets: [
+            .cvvPin,
+        ]
+    )
+    
+    static let genericRemoteService = library(
+        name: .genericRemoteService,
+        targets: [
+            .genericRemoteService,
+        ]
+    )
+    
+    static let foraCrypto = library(
+        name: .foraCrypto,
+        targets: [
+            .foraCrypto,
+        ]
+    )
+    
+    static let getProcessingSessionCodeService = library(
+        name: .getProcessingSessionCodeService,
+        targets: [
+            .getProcessingSessionCodeService,
+        ]
+    )
+    
+    static let serverAgent = library(
+        name: .serverAgent,
+        targets: [
+            .serverAgent,
+        ]
+    )
+    
+    static let symmetricEncryption = library(
+        name: .symmetricEncryption,
+        targets: [
+            .symmetricEncryption,
+        ]
+    )
+    
+
     static let cvvPIN_Services = library(
         name: .cvvPIN_Services,
         targets: [
@@ -282,41 +359,223 @@ private extension Product {
         ]
     )
     
-    // landing
-    
-    static let landingMapping = library(
-        name: .landingMapping,
+    static let transferPublicKey = library(
+        name: .transferPublicKey,
         targets: [
-            .landingMapping
+            .transferPublicKey,
         ]
     )
-
-    static let landingUICompoment = library(
-        name: .landingUICompoment,
-        targets: [
-            .landingUICompoment
-        ]
-    )
-
-    static let landingUpdater = library(
-        name: .landingUpdater,
-        targets: [
-            .landingUpdater
-        ]
-    )
-    
-    // MARK: - UI
-    
-    static let linkableText = library(
-        name: .linkableText,
-        targets: [
-            .linkableText
-        ]
-    )
-    
 }
 
 private extension Target {
+    
+    static let loadableModel = target(
+        name: .loadableModel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableModelTests = testTarget(
+        name: .loadableModelTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableModel,
+        ]
+    )
+    
+    static let loadableResourceComponent = target(
+        name: .loadableResourceComponent,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+        ]
+    )
+    static let loadableResourceComponentTests = testTarget(
+        name: .loadableResourceComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .loadableResourceComponent,
+        ]
+    )
+    
+    static let paymentSticker = target(
+        name: .paymentSticker,
+        dependencies: [
+            .genericRemoteService
+        ]
+    )
+    
+    static let paymentStickerTests = testTarget(
+        name: .paymentStickerTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .paymentSticker
+        ]
+    )
+    
+    static let phoneNumberWrapper = target(
+        name: .phoneNumberWrapper,
+        dependencies: [
+            .phoneNumberKit
+        ]
+    )
+    
+    static let phoneNumberWrapperTests = testTarget(
+        name: .phoneNumberWrapperTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .phoneNumberWrapper,
+        ]
+    )
+    
+    static let sharedAPIInfra = target(
+        name: .sharedAPIInfra
+    )
+    static let sharedAPIInfraTests = testTarget(
+        name: .sharedAPIInfraTests,
+        dependencies: [
+            .sharedAPIInfra,
+        ]
+    )
+    
+    static let textFieldDomain = target(
+        name: .textFieldDomain,
+        dependencies: []
+    )
+    static let textFieldDomainTests = testTarget(
+        name: .textFieldDomainTests,
+        dependencies: [
+            .customDump,
+            .textFieldDomain,
+        ]
+    )
+    
+    static let textFieldModel = target(
+        name: .textFieldModel,
+        dependencies: [
+            .combineSchedulers,
+            .textFieldDomain,
+        ]
+    )
+    static let textFieldModelTests = testTarget(
+        name: .textFieldModelTests,
+        dependencies: [
+            .combineSchedulers,
+            .customDump,
+            .textFieldDomain,
+            .textFieldModel,
+        ]
+    )
+    
+    // MARK: - Landing
+    
+    static let codableLanding = target(
+        name: .codableLanding,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.codableLanding)"
+    )
+    
+    static let landingMapping = target(
+        name: .landingMapping,
+        dependencies: [
+            .tagged,
+        ],
+        path: "Sources/Landing/\(String.landingMapping)"
+    )
+    static let landingMappingTests = testTarget(
+        name: .landingMappingTests,
+        dependencies: [
+            // external
+            .customDump,
+            // internal modules
+            .landingMapping,
+        ],
+        path: "Tests/Landing/\(String.landingMappingTests)"
+    )
+    
+    static let landingUIComponent = target(
+        name: .landingUIComponent,
+        dependencies: [
+            .combineSchedulers,
+            .tagged,
+            .shimmer,
+        ],
+        path: "Sources/Landing/\(String.landingUIComponent)"
+    )
+    static let landingUIComponentTests = testTarget(
+        name: .landingUIComponentTests,
+        dependencies: [
+            // internal modules
+            .landingUIComponent,
+        ],
+        path: "Tests/Landing/\(String.landingUIComponentTests)"
+    )
+    
+    // MARK: - PaymentsComponents
+    
+    static let paymentsComponents = target(
+        name: .paymentsComponents,
+        dependencies: [
+            .textFieldComponent,
+        ],
+        path: "Sources/\(String.paymentsComponents)"
+    )
+    
+    static let paymentsComponentsTests = testTarget(
+        name: .paymentsComponentsTests,
+        dependencies: [
+            // internal modules
+            .paymentsComponents,
+        ],
+        path: "Tests/\(String.paymentsComponentsTests)"
+    )
+    
+    // MARK: - Infra
+    
+    static let fetcher = target(
+        name: .fetcher,
+        path: "Sources/Infra/\(String.fetcher)"
+    )
+    static let fetcherTests = testTarget(
+        name: .fetcherTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .fetcher,
+        ],
+        path: "Tests/Infra/\(String.fetcherTests)"
+    )
+    
+    static let keyChainStore = target(
+        name: .keyChainStore,
+        path: "Sources/Infra/\(String.keyChainStore)"
+    )
+    static let keyChainStoreTests = testTarget(
+        name: .keyChainStoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .keyChainStore,
+        ],
+        path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    // MARK: - Services
     
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
@@ -353,6 +612,36 @@ private extension Target {
             // internal modules
             .cvvPin,
         ]
+    )
+    
+    static let cvvPIN_Services = target(
+        name: .cvvPIN_Services,
+        path: "Sources/Services/\(String.cvvPIN_Services)"
+    )
+    static let cvvPIN_ServicesTests = testTarget(
+        name: .cvvPIN_ServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cvvPIN_Services,
+        ],
+        path: "Tests/Services/\(String.cvvPIN_ServicesTests)"
+    )
+    
+    static let cvvPINServices = target(
+        name: .cvvPINServices,
+        path: "Sources/Services/\(String.cvvPINServices)"
+    )
+    static let cvvPINServicesTests = testTarget(
+        name: .cvvPINServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cvvPINServices,
+        ],
+        path: "Tests/Services/\(String.cvvPINServicesTests)"
     )
     
     static let foraCrypto = target(
@@ -404,35 +693,77 @@ private extension Target {
         path: "Tests/Services/\(String.getProcessingSessionCodeServiceTests)"
     )
     
-    static let landingComponentsOld = target(
-        name: .landingComponentsOld,
-        dependencies: [],
-        resources: [.process("Preview")]
+    static let serverAgent = target(
+        name: .serverAgent,
+        path: "Sources/Services/\(String.serverAgent)"
     )
-    
-    static let landingEngineOld = target(
-        name: .landingEngineOld,
-        dependencies: [
-            .landingComponentsOld
-        ]
-    )
-    
-    static let loadableResourceComponent = target(
-        name: .loadableResourceComponent,
+    static let serverAgentTests = testTarget(
+        name: .serverAgentTests,
         dependencies: [
             // external packages
-            .combineSchedulers,
-        ]
-    )
-    static let loadableResourceComponentTests = testTarget(
-        name: .loadableResourceComponentTests,
-        dependencies: [
-            // external packages
-            .combineSchedulers,
             .customDump,
             // internal modules
-            .loadableResourceComponent,
+            .serverAgent,
+        ],
+        path: "Tests/Services/\(String.serverAgentTests)"
+    )
+    
+    static let symmetricEncryption = target(
+        name: .symmetricEncryption
+    )
+    static let symmetricEncryptionTests = testTarget(
+        name: .symmetricEncryptionTests,
+        dependencies: [
+            .symmetricEncryption,
         ]
+    )
+    
+    static let transferPublicKey = target(
+        name: .transferPublicKey,
+        path: "Sources/Services/\(String.transferPublicKey)"
+    )
+    static let transferPublicKeyTests = testTarget(
+        name: .transferPublicKeyTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .transferPublicKey,
+        ],
+        path: "Tests/Services/\(String.transferPublicKeyTests)"
+    )
+    
+    static let urlRequestFactory = target(
+        name: .urlRequestFactory,
+        path: "Sources/Services/\(String.urlRequestFactory)"
+    )
+    static let urlRequestFactoryTests = testTarget(
+        name: .urlRequestFactoryTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+        ],
+        path: "Tests/Services/\(String.urlRequestFactoryTests)"
+    )
+
+    // MARK: - UI
+    
+    static let linkableText = target(
+        name: .linkableText,
+        path: "Sources/UI/\(String.linkableText)"
+    )
+    
+    static let linkableTextTests = testTarget(
+        name: .linkableTextTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .linkableText,
+        ],
+        path: "Tests/UI/\(String.linkableTextTests)"
     )
     
     static let manageSubscriptionsUI = target(
@@ -475,27 +806,6 @@ private extension Target {
         ]
     )
     
-    static let sharedAPIInfra = target(
-        name: .sharedAPIInfra
-    )
-    static let sharedAPIInfraTests = testTarget(
-        name: .sharedAPIInfraTests,
-        dependencies: [
-            .sharedAPIInfra,
-        ]
-    )
-    
-    static let symmetricEncryption = target(
-        name: .symmetricEncryption
-    )
-    
-    static let symmetricEncryptionTests = testTarget(
-        name: .symmetricEncryptionTests,
-        dependencies: [
-            .symmetricEncryption,
-        ]
-    )
-    
     static let textFieldComponent = target(
         name: .textFieldComponent,
         dependencies: [
@@ -516,35 +826,6 @@ private extension Target {
         ]
     )
     
-    static let textFieldDomain = target(
-        name: .textFieldDomain,
-        dependencies: []
-    )
-    static let textFieldDomainTests = testTarget(
-        name: .textFieldDomainTests,
-        dependencies: [
-            .customDump,
-            .textFieldDomain,
-        ]
-    )
-    
-    static let textFieldModel = target(
-        name: .textFieldModel,
-        dependencies: [
-            .combineSchedulers,
-            .textFieldDomain,
-        ]
-    )
-    static let textFieldModelTests = testTarget(
-        name: .textFieldModelTests,
-        dependencies: [
-            .combineSchedulers,
-            .customDump,
-            .textFieldDomain,
-            .textFieldModel,
-        ]
-    )
-    
     static let textFieldUI = target(
         name: .textFieldUI,
         dependencies: [
@@ -561,22 +842,9 @@ private extension Target {
         ]
     )
     
-    static let transferPublicKey = target(
-        name: .transferPublicKey,
-        path: "Sources/Services/\(String.transferPublicKey)"
-    )
-    static let transferPublicKeyTests = testTarget(
-        name: .transferPublicKeyTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .transferPublicKey,
-        ],
-        path: "Tests/Services/\(String.transferPublicKeyTests)"
-    )
-    
     static let uiKitHelpers = target(name: .uiKitHelpers)
+    
+    // MARK: - WIP: Explorations
     
     static let wipTests = testTarget(
         name: .wipTests,
@@ -601,155 +869,28 @@ private extension Target {
             .userModel
         ]
     )
-    
-    // MARK: - Infra
-    
-    static let keyChainStore = target(
-        name: .keyChainStore,
-        path: "Sources/Infra/\(String.keyChainStore)"
-    )
-    static let keyChainStoreTests = testTarget(
-        name: .keyChainStoreTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .keyChainStore,
-        ],
-        path: "Tests/Infra/\(String.keyChainStoreTests)"
-    )
-    
-    // MARK: - Services
-    
-    static let cvvPIN_Services = target(
-        name: .cvvPIN_Services,
-        path: "Sources/Services/\(String.cvvPIN_Services)"
-    )
-    static let cvvPINServices = target(
-        name: .cvvPINServices,
-        path: "Sources/Services/\(String.cvvPINServices)"
-    )
-    static let cvvPINServicesTests = testTarget(
-        name: .cvvPINServicesTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .cvvPINServices,
-        ],
-        path: "Tests/Services/\(String.cvvPINServicesTests)"
-    )
-    
-    static let urlRequestFactory = target(
-        name: .urlRequestFactory,
-        path: "Sources/Services/\(String.urlRequestFactory)"
-    )
-    static let urlRequestFactoryTests = testTarget(
-        name: .urlRequestFactoryTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .urlRequestFactory,
-        ],
-        path: "Tests/Services/\(String.urlRequestFactoryTests)"
-    )
-    
-    // landing
-    
-    static let landingMapping = target(
-        name: .landingMapping,
-        path: "Sources/Landing/\(String.landingMapping)"
-    )
-    static let landingMappingTests = testTarget(
-        name: .landingMappingTests,
-        dependencies: [
-            // external
-            .customDump,
-            // internal modules
-            .landingMapping,
-        ],
-        path: "Tests/Landing/\(String.landingMappingTests)"
-    )
-    static let landingUpdater = target(
-        name: .landingUpdater,
-        path: "Sources/Landing/\(String.landingUpdater)"
-    )
-    static let landingUICompoment = target(
-        name: .landingUICompoment,
-        path: "Sources/Landing/\(String.landingUICompoment)"
-    )
-    static let landingUICompomentTests = testTarget(
-        name: .landingUICompomentTests,
-        dependencies: [
-            // internal modules
-            .landingUICompoment,
-        ],
-        path: "Tests/Landing/\(String.landingUICompomentTests)"
-    )
-    
-    // MARK: - UI
-    
-    static let linkableText = target(
-        name: .linkableText,
-        path: "Sources/UI/\(String.linkableText)"
-    )
-    static let linkableTextTests = testTarget(
-        name: .linkableTextTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .linkableText,
-        ],
-        path: "Tests/UI/\(String.linkableTextTests)"
-    )
 }
 
 private extension Target.Dependency {
     
-    static let cryptoSwaddler = byName(
-        name: .cryptoSwaddler
-    )
-    
-    static let cvvPin = byName(
-        name: .cvvPin
-    )
-    
-    static let foraCrypto = byName(
-        name: .foraCrypto
-    )
-    
-    static let genericRemoteService = byName(
-        name: .genericRemoteService
-    )
-    
-    static let getProcessingSessionCodeService = byName(
-        name: .getProcessingSessionCodeService
-    )
-    
-    static let landingComponentsOld = byName(
-        name: .landingComponentsOld
+    static let loadableModel = byName(
+        name: .loadableModel
     )
     
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
     )
     
-    static let pickerWithPreviewComponent = byName(
-        name: .pickerWithPreviewComponent
+    static let paymentSticker = byName(
+        name: .paymentSticker
     )
     
-    static let pinCodeUI = byName(
-        name: .pinCodeUI
+    static let phoneNumberWrapper = byName(
+        name: .phoneNumberWrapper
     )
     
     static let sharedAPIInfra = byName(
         name: .sharedAPIInfra
-    )
-    
-    static let symmetricEncryption = byName(
-        name: .symmetricEncryption
     )
     
     static let textFieldComponent = byName(
@@ -764,29 +905,73 @@ private extension Target.Dependency {
         name: .textFieldModel
     )
     
-    static let textFieldUI = byName(
-        name: .textFieldUI
+    static let userModel = byName(
+        name: .userModel
     )
     
-    static let transferPublicKey = byName(
-        name: .transferPublicKey
+    // MARK: - Landing
+    
+    static let codableLanding = byName(
+        name: .codableLanding
+    )
+    static let landingMapping = byName(
+        name: .landingMapping
+    )
+    static let landingUIComponent = byName(
+        name: .landingUIComponent
+    )
+
+    // MARK: - PaymentsComponents
+    
+    static let paymentsComponents = byName(
+        name: .paymentsComponents
+    )
+    
+    static let serverAgent = byName(
+        name: .serverAgent
+    )
+    
+    // MARK: - UI
+    
+    static let linkableText = byName(
+        name: .linkableText
+    )
+    
+    static let pickerWithPreviewComponent = byName(
+        name: .pickerWithPreviewComponent
+    )
+    
+    static let pinCodeUI = byName(
+        name: .pinCodeUI
+    )
+    
+    static let textFieldUI = byName(
+        name: .textFieldUI
     )
     
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
     )
     
-    static let userModel = byName(
-        name: .userModel
-    )
-    
     // MARK: - Infra
+    
+    static let fetcher = byName(
+        name: .fetcher
+    )
     
     static let keyChainStore = byName(
         name: .keyChainStore
     )
     
     // MARK: - Services
+    
+    static let cryptoSwaddler = byName(
+        name: .cryptoSwaddler
+    )
+    
+    static let cvvPin = byName(
+        name: .cvvPin
+    )
     
     static let cvvPIN_Services = byName(
         name: .cvvPIN_Services
@@ -796,50 +981,79 @@ private extension Target.Dependency {
         name: .cvvPINServices
     )
     
+    static let foraCrypto = byName(
+        name: .foraCrypto
+    )
+    
+    static let genericRemoteService = byName(
+        name: .genericRemoteService
+    )
+    
+    static let getProcessingSessionCodeService = byName(
+        name: .getProcessingSessionCodeService
+    )
+    
+    static let transferPublicKey = byName(
+        name: .transferPublicKey
+    )
+    
+    static let symmetricEncryption = byName(
+        name: .symmetricEncryption
+    )
+    
     static let urlRequestFactory = byName(
         name: .urlRequestFactory
-    )
-    
-    // landing
-    static let landingMapping = byName(
-        name: .landingMapping
-    )
-    static let landingUICompoment = byName(
-        name: .landingUICompoment
-    )
-    static let landingUpdater = byName(
-        name: .landingUpdater
-    )
-    
-    // MARK: - UI
-    
-    static let linkableText = byName(
-        name: .linkableText
     )
 }
 
 private extension String {
     
-    static let cryptoSwaddler = "CryptoSwaddler"
-    static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
-    
-    static let cvvPin = "CvvPin"
-    static let cvvPinTests = "CvvPinTests"
-    
-    static let foraCrypto = "ForaCrypto"
-    static let foraCryptoTests = "ForaCryptoTests"
-    
-    static let genericRemoteService = "GenericRemoteService"
-    static let genericRemoteServiceTests = "GenericRemoteServiceTests"
-    
-    static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
-    static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
-    
-    static let landingComponentsOld = "LandingComponentsOld"
-    static let landingEngineOld = "LandingEngineOld"
+    static let loadableModel = "LoadableModel"
+    static let loadableModelTests = "LoadableModelTests"
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let paymentSticker = "PaymentSticker"
+    static let paymentStickerTests = "PaymentStickerTests"
+    
+    static let phoneNumberWrapper = "PhoneNumberWrapper"
+    static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
+    
+    static let sharedAPIInfra = "SharedAPIInfra"
+    static let sharedAPIInfraTests = "SharedAPIInfraTests"
+    
+    static let textFieldComponent = "TextFieldComponent"
+    static let textFieldComponentTests = "TextFieldComponentTests"
+    
+    static let textFieldDomain = "TextFieldDomain"
+    static let textFieldDomainTests = "TextFieldDomainTests"
+    
+    static let textFieldModel = "TextFieldModel"
+    static let textFieldModelTests = "TextFieldModelTests"
+    
+    static let wipTests = "WIPTests"
+    
+    static let userModel = "UserModel"
+    static let userModelTests = "UserModelTests"
+    
+    // MARK: - Landing
+    
+    static let codableLanding = "CodableLanding"
+    static let landingMapping = "LandingMapping"
+    static let landingMappingTests = "LandingMappingTests"
+    static let landingUIComponent = "LandingUIComponent"
+    static let landingUIComponentTests = "LandingUIComponentTests"
+    
+    // MARK: - PaymentsComponents
+    
+    static let paymentsComponents = "PaymentsComponents"
+    static let paymentsComponentsTests = "PaymentsComponentsTests"
+    
+    // MARK: - UI
+    
+    static let linkableText = "LinkableText"
+    static let linkableTextTests = "LinkableTextTests"
     
     static let manageSubscriptionsUI = "ManageSubscriptionsUI"
     
@@ -853,60 +1067,53 @@ private extension String {
     
     static let searchBarComponent = "SearchBarComponent"
     
-    static let sharedAPIInfra = "SharedAPIInfra"
-    static let sharedAPIInfraTests = "SharedAPIInfraTests"
-    
-    static let symmetricEncryption = "SymmetricEncryption"
-    static let symmetricEncryptionTests = "SymmetricEncryptionTests"
-    
-    static let textFieldComponent = "TextFieldComponent"
-    static let textFieldComponentTests = "TextFieldComponentTests"
-    
-    static let textFieldDomain = "TextFieldDomain"
-    static let textFieldDomainTests = "TextFieldDomainTests"
-    
-    static let textFieldModel = "TextFieldModel"
-    static let textFieldModelTests = "TextFieldModelTests"
-    
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     
-    static let transferPublicKey = "TransferPublicKey"
-    static let transferPublicKeyTests = "TransferPublicKeyTests"
-    
     static let uiKitHelpers = "UIKitHelpers"
-    
-    static let wipTests = "WIPTests"
-    
-    static let userModel = "UserModel"
-    static let userModelTests = "UserModelTests"
     
     // MARK: - Infra
     
+    static let fetcher = "Fetcher"
+    static let fetcherTests = "FetcherTests"
+    
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
-
+    
     // MARK: - Services
     
+    static let cryptoSwaddler = "CryptoSwaddler"
+    static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
+    
+    static let cvvPin = "CvvPin"
+    static let cvvPinTests = "CvvPinTests"
+    
     static let cvvPIN_Services = "CVVPIN_Services"
+    static let cvvPIN_ServicesTests = "CVVPIN_ServicesTests"
     
     static let cvvPINServices = "CVVPINServices"
     static let cvvPINServicesTests = "CVVPINServicesTests"
     
+    static let foraCrypto = "ForaCrypto"
+    static let foraCryptoTests = "ForaCryptoTests"
+    
+    static let genericRemoteService = "GenericRemoteService"
+    static let genericRemoteServiceTests = "GenericRemoteServiceTests"
+    
+    static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
+    static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"
+    
+    static let serverAgent = "ServerAgent"
+    static let serverAgentTests = "ServerAgentTests"
+    
+    static let symmetricEncryption = "SymmetricEncryption"
+    static let symmetricEncryptionTests = "SymmetricEncryptionTests"
+    
+    static let transferPublicKey = "TransferPublicKey"
+    static let transferPublicKeyTests = "TransferPublicKeyTests"
+    
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
-
-    // landing
-    static let landingMapping = "LandingMapping"
-    static let landingMappingTests = "LandingMappingTests"
-    static let landingUICompoment = "LandingUICompoment"
-    static let landingUICompomentTests = "LandingUICompomentTests"
-    static let landingUpdater = "LandingUpdater"
-
-    // MARK: - UI
-    
-    static let linkableText = "LinkableText"
-    static let linkableTextTests = "LinkableTextTests"
 }
 
 // MARK: - Point-Free
@@ -941,6 +1148,14 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_tagged,
         from: .init(0, 7, 0)
     )
+    static let shimmer = Package.Dependency.package(
+        url: .swift_shimmer_path,
+        exact: .init(1, 0, 1)
+    )
+    static let phoneNumberKit = Package.Dependency.package(
+        url: .phoneNumberKit_path,
+        exact: .init(3, 5, 8)
+    )
 }
 
 private extension Target.Dependency {
@@ -973,6 +1188,14 @@ private extension Target.Dependency {
         name: .tagged,
         package: .swift_tagged
     )
+    static let shimmer = product(
+        name: .shimmer,
+        package: .swift_shimmer
+    )
+    static let phoneNumberKit = product(
+        name: .phoneNumberKit,
+        package: .phoneNumberKit
+    )
 }
 
 private extension String {
@@ -999,4 +1222,11 @@ private extension String {
     
     static let tagged = "Tagged"
     static let swift_tagged = "swift-tagged"
+    
+    static let shimmer = "Shimmer"
+    static let swift_shimmer = "SwiftUI-Shimmer"
+    static let swift_shimmer_path = "https://github.com/markiv/SwiftUI-Shimmer"
+    
+    static let phoneNumberKit = "PhoneNumberKit"
+    static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
 }

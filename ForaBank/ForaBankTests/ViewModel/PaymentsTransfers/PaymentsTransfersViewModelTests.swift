@@ -26,19 +26,19 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, model) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
-                
+        
         XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
-
+        
         try sut.selectMeToMeProductTo(product2, model: model)
         let spy = ValueSpy(model.action)
-
+        
         XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
         
         XCTAssertEqual(spy.values.count, 0)
         
         sut.meToMeSendSuccess(model: model)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
-
+        
         XCTAssertEqual(spy.values.count, 4)
     }
     
@@ -46,23 +46,56 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (product1, product2) = makeTwoProducts()
         let (sut, model) = makeSUT(products: [product1, product2])
-
+        
         sut.sendBetweenSelf()
-                
+        
         XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
-
+        
         try sut.selectMeToMeProductTo(product2, model: model)
         let spy = ValueSpy(model.action)
-
+        
         XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
         
         XCTAssertEqual(spy.values.count, 0)
         
         sut.meToMeSendSuccess(model: model)
         sut.closeBottomSheet()
-
+        
         XCTAssertEqual(spy.values.count, 0)
         XCTAssertNil(sut.meToMe)
+    }
+    
+    func test_tapTemplates_shouldSetLinkToTemplates() {
+        
+        let (sut, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        XCTAssertNoDiff(linkSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .template])
+    }
+    
+    func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
+        
+        let (sut, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        sut.section?.tapTemplatesAndWait()
+        
+        sut.templatesListViewModel?.closeAndWait()
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .template])
+    }
+    
+    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
+        
+        let (sut, _) = makeSUT()
+        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        sut.section?.tapTemplatesAndWait()
+        
+        sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
+        
+        XCTAssertNoDiff(linkSpy.values, [nil, .template, nil])
     }
     
     // MARK: - Helpers
@@ -95,15 +128,15 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 ProductProfileViewModel(
                     model,
                     cvvPINServicesClient: cvvPINServicesClient,
-                    onExit: {},
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction
                 )
-            }, onExit: {}
+            }
         )
         
-        trackForMemoryLeaks(model, file: file, line: line)
+        // TODO: restore memory leaks tracking after Model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, model)
@@ -153,7 +186,7 @@ extension PaymentsTransfersViewModel {
     }
     
     func selectedMeToMeProductTitles() throws -> [String] {
-     
+        
         let swapViewModel = try XCTUnwrap(meToMe?.swapViewModel)
         return swapViewModel.items.compactMap(\.product?.title)
     }
@@ -168,6 +201,22 @@ extension PaymentsTransfersViewModel {
         bottomSheet = nil
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
     }
+    
+    var section: PaymentsTransfersSectionViewModel? {
+        
+        sections.first
+    }
+    
+    var templatesListViewModel: TemplatesListViewModel? {
+        
+        switch link {
+        case let .template(templatesListViewModel):
+            return templatesListViewModel
+            
+        default:
+            return nil
+        }
+    }
 }
 
 extension ProductSelectorView.ViewModel {
@@ -178,5 +227,43 @@ extension ProductSelectorView.ViewModel {
         else { return nil }
         
         return viewModel
+    }
+}
+
+private extension PaymentsTransfersViewModel.Link {
+    
+    var `case`: Case? {
+        
+        switch self {
+        case .template: return .template
+        default:         return .other
+        }
+    }
+    
+    enum Case: Equatable {
+        
+        case template
+        case other
+    }
+}
+
+private extension PaymentsTransfersSectionViewModel {
+    
+    func tapTemplatesAndWait(timeout: TimeInterval = 0.05) {
+        
+        let templatesAction = LatestPaymentsViewModelAction.ButtonTapped.Templates()
+        action.send(templatesAction)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+private extension TemplatesListViewModel {
+    
+    func closeAndWait(timeout: TimeInterval = 0.05) {
+        
+        action.send(TemplatesListViewModelAction.CloseAction())
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }

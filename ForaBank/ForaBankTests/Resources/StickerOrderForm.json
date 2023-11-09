@@ -1,0 +1,91 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "header": [
+            {
+                "type": "PAGE_TITLE",
+                "data": {
+                    "title": "Оформление заявки",
+                    "isFixed": true
+                }
+            }
+        ],
+        "main": [
+            {
+                "type": "TEXTS_WITH_ICON_HORIZONTAL",
+                "data": {
+                    "md5hash": "472c6bf19f04641f277d838797288bfa",
+                    "title": "Выберите счет карты, к которому будет привязан стикер",
+                    "contentCenterAndPull": false
+                }
+            },
+            {
+                "type": "PRODUCT_INFO",
+                "data": {
+                    "title": "Платежный стикер",
+                    "subTitle": "Стоимость обслуживания взимается единоразово за весь срок при заказе стикера ",
+                    "currencyCode": 810.0,
+                    "currency": "RUB",
+                    "md5hash": "66148dfe4f00acfbf08da9ddf07cabff",
+                    "txtConditionList": [
+                        {
+                            "name": "При получении в офисе",
+                            "description": "",
+                            "value": 790.0
+                        },
+                        {
+                            "name": "При доставке курьером",
+                            "description": "",
+                            "value": 1500.0
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "PRODUCT_SELECT",
+                "data": {
+                    "withoutPadding": true
+                }
+            },
+            {
+                "type": "SEPARATOR_START_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            },
+            {
+                "type": "VERTICAL_SELECTOR",
+                "data": {
+                    "title": "Выберите способ доставки",
+                    "subTitle": "Выберите значение",
+                    "md5hash": "8a7af0edd29b167bf02c7ba17153d2a6",
+                    "list": [
+                        {
+                            "type": "typeDeliveryOffice",
+                            "md5hash": "1a1d2457d9fea470354bef35a6eb48eb",
+                            "title": "Получить в офисе",
+                            "backgroundColor": "#94BCFF",
+                            "value": 790.0
+                        },
+                        {
+                            "type": "typeDeliveryCourier",
+                            "md5hash": "f15e0a6e625980de374b4fc14df5e8f4",
+                            "title": "Доставка курьером",
+                            "backgroundColor": "#B39CDB",
+                            "value": 1500.0
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "SEPARATOR_END_OPERATOR",
+                "data": {
+                    "color": "#F6F6F7"
+                }
+            }
+        ],
+        "footer": [],
+        "serial": "051a8c3dd042a7e02fdcc27d02b067a5"
+    }
+}

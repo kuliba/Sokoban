@@ -11,7 +11,7 @@ import Foundation
 extension RequestFactory {
     
     static func makeSecretRequest(
-        payload: FormSessionKeyService.Payload
+        payload: FormSessionKeyService.ProcessPayload
     ) throws -> URLRequest {
         
         let factory = try factory(for: .formSessionKey)

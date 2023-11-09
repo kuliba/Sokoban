@@ -14,14 +14,14 @@ final class RequestFactory_makeGetPINConfirmationCodeRequestTests: XCTestCase {
     func test_makeRequest_shouldThrowOnEmptySessionID() throws {
         
         try XCTAssertThrowsAsNSError(
-            makeRequest(with: anySessionID("")),
+            makeRequest(with: makeSessionID("")),
             error: URLRequestFactory.Service.Error.emptySessionID
         )
     }
     
     func test_makeRequest_shouldSetRequestURL() throws {
         
-        let sessionID = anySessionID()
+        let sessionID = makeSessionID()
         let request = try makeRequest(with: sessionID)
         
         XCTAssertNoDiff(
@@ -47,7 +47,7 @@ final class RequestFactory_makeGetPINConfirmationCodeRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        with sessionID: ForaBank.SessionID = anySessionID()
+        with sessionID: ForaBank.SessionID = makeSessionID()
     ) throws -> URLRequest {
         
         let request = try RequestFactory.makeGetPINConfirmationCodeRequest(sessionID: sessionID)

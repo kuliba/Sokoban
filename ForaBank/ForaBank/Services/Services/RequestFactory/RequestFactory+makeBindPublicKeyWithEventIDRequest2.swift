@@ -12,7 +12,7 @@ import URLRequestFactory
 extension RequestFactory {
     
     static func makeBindPublicKeyWithEventIDRequest(
-        payload: BindPublicKeyWithEventIDService.Payload
+        payload: BindPublicKeyWithEventIDService.ProcessPayload
     ) throws -> URLRequest {
         
         let factory = try factory(for: .bindPublicKeyWithEventID)

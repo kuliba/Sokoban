@@ -106,7 +106,7 @@ extension Model {
         parameters.append(headerParameter)
         visible.append(headerParameter.id)
         
-        let productId = Self.productWithSource(source: source, productId: String(product.id))
+        let productId = productWithSource(source: source, productId: String(product.id))
         let productParameter = Payments.ParameterProduct(value: productId, filter: filter, isEditable: true)
         parameters.append(productParameter)
         required.append(productParameter.id)

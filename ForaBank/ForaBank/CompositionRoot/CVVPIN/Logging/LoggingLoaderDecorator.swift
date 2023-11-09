@@ -35,10 +35,10 @@ extension LoggingLoaderDecorator: Loader {
             
             switch result {
             case let .failure(error):
-                log(.error, "\(String(describing: self)): load failure: \(error).", #file, #line)
+                log(.error, "\(String(describing: self)): Load failure: \(error).", #file, #line)
                 
             case let .success(model):
-                log(.info, "\(String(describing: self)): load success: \(model).", #file, #line)
+                log(.info, "\(String(describing: self)): Load success: \(model).", #file, #line)
             }
             
             completion(result)
@@ -59,10 +59,10 @@ extension LoggingLoaderDecorator: Loader {
             
             switch result {
             case let .failure(error):
-                log(.error, "\(String(describing: self)): save failure: \(error).", #file, #line)
+                log(.error, "\(String(describing: self)): Save failure: \(error).", #file, #line)
                 
             case .success:
-                log(.info, "\(String(describing: self)): save success.", #file, #line)
+                log(.info, "\(String(describing: self)): Save success.", #file, #line)
             }
             
             completion(result)

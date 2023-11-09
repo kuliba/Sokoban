@@ -20,10 +20,10 @@ public struct TextState: Equatable {
         
         self.text = text
         
-        if (0...text.count) ~= cursorPosition {
+        if (0...text.utf16.count) ~= cursorPosition {
             self.cursorPosition = cursorPosition
         } else {
-            self.cursorPosition = text.count
+            self.cursorPosition = text.utf16.count
         }
     }
 }

@@ -310,6 +310,7 @@ struct PaymentsInputView: View {
                 .resizable()
                 .renderingMode(.original)
                 .foregroundColor(.mainColorsGray)
+                .accessibilityIdentifier("PaymentsInputIcon")
             
         } else {
             
@@ -331,6 +332,7 @@ struct PaymentsInputView: View {
                         removal: .opacity
                     )
                 )
+                .accessibilityIdentifier("PaymentsInputTitle")
         }
     }
     
@@ -344,6 +346,7 @@ struct PaymentsInputView: View {
                 font: .systemFont(ofSize: 16),
                 textColor: .textSecondary
             )
+            .accessibilityIdentifier("PaymentsInputTextField")
             
         } else {
             
@@ -353,6 +356,7 @@ struct PaymentsInputView: View {
                     .font(.textH4M16240())
                     .foregroundColor(.textSecondary)
                     .padding(.vertical, 7)
+                    .accessibilityIdentifier("PaymentsInputTextFieldUneditable")
             }
         }
     }
@@ -369,6 +373,7 @@ struct PaymentsInputView: View {
                     .renderingMode(.template)
                     .foregroundColor(.mainColorsGray)
             }
+            .accessibilityIdentifier("PaymentsInputAdditionalButton")
         }
     }
     
@@ -380,6 +385,7 @@ struct PaymentsInputView: View {
             Text(info)
                 .font(.textBodySR12160())
                 .foregroundColor(.textPlaceholder)
+                .accessibilityIdentifier("PaymentsInputInfoText")
         }
     }
     
@@ -391,6 +397,7 @@ struct PaymentsInputView: View {
             Text(warning)
                 .font(.textBodySR12160())
                 .foregroundColor(.systemColorError)
+                .accessibilityIdentifier("PaymentsInputWarningText")
         }
     }
 }
