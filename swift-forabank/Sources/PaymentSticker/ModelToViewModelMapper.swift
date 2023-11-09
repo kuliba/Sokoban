@@ -82,7 +82,7 @@ public extension ModelToViewModelMapper {
                 .init(
                     parameter: amountViewModel,
                     continueButtonTapped: {
-                        action(.continueButtonTapped)
+                        action(.continueButtonTapped(.getOTPCode))
                     }
                 ))
             

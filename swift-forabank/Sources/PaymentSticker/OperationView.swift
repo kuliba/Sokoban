@@ -161,7 +161,7 @@ struct OperationProcessView: View {
         } else {
             
             Button {
-                model.event(.continueButtonTapped)
+                model.event(.continueButtonTapped(.continue))
             } label: {
                 
                 Text("Продолжить")

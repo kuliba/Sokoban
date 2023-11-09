@@ -20,7 +20,7 @@ final public class OperationStateViewModel: ObservableObject {
     ) {
         self.state = state
         self.blackBoxGet = blackBoxGet
-        event(.continueButtonTapped)
+        event(.continueButtonTapped(.continue))
     }
     
     public var scrollParameters: [Operation.Parameter] {

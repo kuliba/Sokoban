@@ -179,23 +179,52 @@ extension BusinessLogic {
             }
             
         case .continueButtonTapped:
+           
+            if operation.parameters.count == 0 {
                 
-            dictionaryService.process(.stickerOrderForm) { result in
-                
-                switch result {
-                case let .success(dictionaryResponse):
-                    completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
+                dictionaryService.process(.stickerOrderForm) { result in
                     
-                case let .failure(error):
-                   return
+                    switch result {
+                    case let .success(dictionaryResponse):
+                        completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
+                        
+                    case let .failure(error):
+                        return
+                    }
                 }
-            }
-            
-            return .success(.operation(operation))
-            
-            transferService.process(.init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))) { result in
-            
                 
+                return .success(.operation(operation))
+                
+            } else {
+             
+                transferService.process(.init(
+                    currencyAmount: "RUB",
+                    amount: 790,
+                    check: false,
+                    payer: .init(cardId: "10000114306"),
+                    productToOrderInfo: .init(
+                        type: "STICKER",
+                        deliverToOffice: true,
+                        officeId: "1112"
+                    ))) { result in
+                        
+                        switch result {
+                        case .success:
+                            completion(.success(.operation(operation.updateOperation(
+                                operation: operation,
+                                newParameter: .input(.init(
+                                    value: "",
+                                    title: "Введите код из смс",
+                                    icon: ""
+                                ))
+                            ))))
+
+                        case let .failure(error):
+                            return
+                        }
+                    }
+                
+                return .success(.operation(operation))
             }
             
         case let .product(productEvents):
