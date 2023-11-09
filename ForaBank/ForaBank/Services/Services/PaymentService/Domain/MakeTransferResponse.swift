@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct MakeTransferResponse: Decodable {
+    
+    let paymentOperationDetailId: Int
+    let documentStatus: String
+    let productOrderingResponseMessage: String
+}
