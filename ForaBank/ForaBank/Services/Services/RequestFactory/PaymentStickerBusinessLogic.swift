@@ -267,7 +267,7 @@ extension BusinessLogic {
                 switch main.data {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
-                        id: "city",
+                        id: .citySelector,
                         value: "",
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
@@ -289,7 +289,7 @@ extension BusinessLogic {
                       
                 case let .officeSelector(officeSelector):
                     return Operation.Parameter.select(.init(
-                        id: "officeSelector",
+                        id: .officeSelector,
                         value: "",
                         title: officeSelector.title,
                         placeholder: officeSelector.subtitle,
@@ -312,7 +312,7 @@ extension BusinessLogic {
                 
                 case let .selector(selector):
                     return Operation.Parameter.select(.init(
-                        id: "transferType",
+                        id: .transferTypeSticker,
                         value: "",
                         title: selector.title,
                         placeholder: selector.subtitle,
@@ -356,7 +356,7 @@ extension BusinessLogic {
                 switch main.data {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
-                        id: "city",
+                        id: .citySelector,
                         value: "",
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
@@ -370,7 +370,7 @@ extension BusinessLogic {
                     
               case let .officeSelector(officeSelector):
                   return Operation.Parameter.select(.init(
-                      id: "officeSelector",
+                    id: .officeSelector,
                       value: "",
                       title: officeSelector.title,
                       placeholder: officeSelector.subtitle,
