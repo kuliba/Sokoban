@@ -67,17 +67,19 @@ private extension RootViewModelFactory {
         )
     }
     
+    typealias RSAStoreClear = () -> Void
+
     static func make(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model
-    ) -> (MakeProductProfileViewModelFactory, OnRegister) {
+    ) -> (MakeProductProfileViewModelFactory, RSAStoreClear) {
         
         let rsaKeyPairStore = makeLoggingStore(
             logger: logger
         )
         
-        let onExit = rsaKeyPairStore.deleteCacheIgnoringResult
+        let rsaStoreClear = rsaKeyPairStore.deleteCacheIgnoringResult
         
         let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
@@ -96,7 +98,7 @@ private extension RootViewModelFactory {
             )
         }
         
-        return (productProfileViewModelFactory, onExit)
+        return (productProfileViewModelFactory, rsaStoreClear)
     }
     
     static func makeLoggingStore(

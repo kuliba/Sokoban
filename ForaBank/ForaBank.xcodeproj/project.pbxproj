@@ -330,6 +330,7 @@
 		2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */; };
 		2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5190302A7E0BE80014B0B7 /* URLRequestFactory */; };
 		2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A06DC2F2AFACBDD0049709E /* ServerAgent */; };
+		2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DC312AFB72500049709E /* Services+makeActivationService.swift */; };
 		2A0702792A19F89B009B704A /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A0702782A19F89B009B704A /* TextFieldComponent */; };
 		2A0776F82A02515600118373 /* XCTestCase+getJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */; };
 		2A0776FC2A0252F100118373 /* getScenarioQRData_1_1_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */; };
@@ -613,6 +614,14 @@
 		2AE5973129F918C30083F138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973029F918C30083F138 /* Assets.xcassets */; };
 		2AE5973429F918C30083F138 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973329F918C30083F138 /* Preview Assets.xcassets */; };
 		2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779F71382A24FAE600D7FF26 /* PaymentsOperationViewModelTests.swift */; };
+		2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */; };
+		2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */; };
+		2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */; };
+		2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */; };
+		2AE886342AFBA23200D86E84 /* MappingRemoteServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */; };
+		2AE886372AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */; };
+		2AE886392AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */; };
+		2AE8863B2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */; };
 		2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9834C29A223040001DF72 /* ValueSpy.swift */; };
 		2AE9835129A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */; };
 		2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */; };
@@ -2446,6 +2455,7 @@
 		2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ActivateCVVPINClient.swift"; sourceTree = "<group>"; };
 		2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ChangePINClient.swift"; sourceTree = "<group>"; };
 		2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+composedCVVPINService.swift"; sourceTree = "<group>"; };
+		2A06DC312AFB72500049709E /* Services+makeActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationService.swift"; sourceTree = "<group>"; };
 		2A0776F72A02515600118373 /* XCTestCase+getJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+getJSON.swift"; sourceTree = "<group>"; };
 		2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_1_1.json; sourceTree = "<group>"; };
 		2A0F2F4329AE338E0054B920 /* MCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCError.swift; sourceTree = "<group>"; };
@@ -2734,6 +2744,14 @@
 		2AE5973329F918C30083F138 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoadableResourceComponent.xctestplan; sourceTree = "<group>"; };
 		2AE7E4D529EE63300058863D /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeService.swift"; sourceTree = "<group>"; };
+		2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyService.swift"; sourceTree = "<group>"; };
+		2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyService.swift"; sourceTree = "<group>"; };
+		2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyService.swift"; sourceTree = "<group>"; };
+		2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappingRemoteServiceError.swift; sourceTree = "<group>"; };
+		2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeBindPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
+		2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeFormSessionKeyServiceTests.swift"; sourceTree = "<group>"; };
+		2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetCodeServiceTests.swift"; sourceTree = "<group>"; };
 		2AE9834C29A223040001DF72 /* ValueSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSpy.swift; sourceTree = "<group>"; };
 		2AE9835029A2385F0001DF72 /* IsFreeCardAvailableHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsFreeCardAvailableHelperTests.swift; sourceTree = "<group>"; };
 		2AE9835229A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayOfProductViewModelHelpersTests.swift; sourceTree = "<group>"; };
@@ -5681,6 +5699,7 @@
 				2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */,
 				2A4A19EF2AF5180100F66EDF /* ComposedCVVPINService_CVVPINServicesClient_Tests.swift */,
 				2A235F752AFA339100E42E36 /* FetcherAdapters */,
+				2AE886352AFBA7E500D86E84 /* CVVPINServicesFactory */,
 			);
 			path = ComposedCVVPINService;
 			sourceTree = "<group>";
@@ -5858,8 +5877,7 @@
 			children = (
 				2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */,
 				2ABD78312AF90CC7001B5860 /* FetcherAdapters */,
-				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
-				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
+				2AE886302AFB9D9900D86E84 /* CVVPINServicesFactory */,
 				2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */,
 				2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */,
 				2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */,
@@ -6299,6 +6317,31 @@
 				2AE5973329F918C30083F138 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AE886302AFB9D9900D86E84 /* CVVPINServicesFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */,
+				2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */,
+				2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */,
+				2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */,
+				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
+				2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */,
+				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
+				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
+			);
+			path = CVVPINServicesFactory;
+			sourceTree = "<group>";
+		};
+		2AE886352AFBA7E500D86E84 /* CVVPINServicesFactory */ = {
+			isa = PBXGroup;
+			children = (
+				2AE8863A2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift */,
+				2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */,
+				2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */,
+			);
+			path = CVVPINServicesFactory;
 			sourceTree = "<group>";
 		};
 		2AE9835429A2394C0001DF72 /* ProductGroupViewComponent */ = {
@@ -10176,6 +10219,7 @@
 			children = (
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */,
+				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2A6AF2162AF8E52700655156 /* Fetcher.xctestplan */,
 				2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */,
 				2AC3282E2ADEF2C500443A84 /* CVVPINServices.xctestplan */,
@@ -10183,7 +10227,6 @@
 				2AC410E62A986BBF00D0AC00 /* CryptoSwaddler.xctestplan */,
 				833885742AA7845800CE8834 /* LandingMapping.xctestplan */,
 				2AEF71992AA0A51800480990 /* LinkableText.xctestplan */,
-				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
 				2AB66F052A5F57D800B6FF5B /* CvvPin.xctestplan */,
 				2A727A242A93805D00235EFF /* TransferPublicKey.xctestplan */,
 				2AE640052A4639AD00BF379D /* LoadableResourceComponent.xctestplan */,
@@ -12116,6 +12159,7 @@
 				A5C7A1B5275BF2C3003BEF6D /* IsSingleServiceModel.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
 				776E67B5292D0F6B00F587A7 /* ProductData+Filter.swift in Sources */,
+				2AE8862B2AFB9C1900D86E84 /* Services+makeGetCodeService.swift in Sources */,
 				0C4356FA29ED864A0044C72B /* EnvironmentKey.swift in Sources */,
 				687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
@@ -12254,6 +12298,7 @@
 				2A45AF782AA72B5300762DEE /* Services+getLandingService.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
+				2A06DC322AFB72510049709E /* Services+makeActivationService.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
@@ -12488,6 +12533,7 @@
 				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
 				EDDC591F288FE53C00C08D06 /* PhoneNumberView.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
+				2AE8862F2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
 				77E1804527AC39840006ACC9 /* FMSData.swift in Sources */,
@@ -12517,6 +12563,7 @@
 				6820922E27A978D0003DCAFD /* ServerCommands+Dictionary.swift in Sources */,
 				7758401727B1BD6000251969 /* Payments+Operation.swift in Sources */,
 				5059D44A2863B76E00DA446D /* CurrencyListVIewComponent.swift in Sources */,
+				2AE886342AFBA23200D86E84 /* MappingRemoteServiceError.swift in Sources */,
 				0BA7F27529320A8300A13EA1 /* DocumentPicker.swift in Sources */,
 				2AEF685C2AE5640900E0EBD7 /* ResponseMapper+mapShowCVVResponse.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
@@ -12609,6 +12656,7 @@
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
+				2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */,
 				774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */,
 				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,
 				77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */,
@@ -13041,6 +13089,7 @@
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
 				774A8B662865FDAF00B81140 /* PaymentsInfoViewComponent.swift in Sources */,
 				5044B5F9293553A200F233EF /* TransfersAdvantagesViewComponent.swift in Sources */,
+				2AE886322AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift in Sources */,
 				6820927F27AB0E1B003DCAFD /* BankData.swift in Sources */,
 				EDDFE3A62756BEC600F57C71 /* DetailInformationViewCell.swift in Sources */,
 				834731DD2A1370A7002590A3 /* NoCompanyInListViewModel.swift in Sources */,
@@ -13502,6 +13551,7 @@
 				7758401B27B2A0CB00251969 /* PaymentsOperationTests.swift in Sources */,
 				2AA4C9F02A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift in Sources */,
 				C172098C2A9E28EC0020CE93 /* ProductDataFilterTests.swift in Sources */,
+				2AE886392AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift in Sources */,
 				2AB5FEA829E6833E0055BE57 /* UIImage+TestHelpers.swift in Sources */,
 				7735E6E52A407D4F0013C8A7 /* PaymentsSuccessViewModelTests.swift in Sources */,
 				77B6B3612852318500E3001B /* PeriodTests.swift in Sources */,
@@ -13515,6 +13565,7 @@
 				C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */,
 				834E3F6F2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
+				2AE8863B2AFBE50600D86E84 /* Services+makeGetCodeServiceTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				2AA7EDBC2A783CCB00F5B00D /* LoggingURLSessionDelegateTests.swift in Sources */,
 				2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */,
@@ -13547,6 +13598,7 @@
 				8306D1402ACB27A300134FE0 /* Services+getScenarioQRDataTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,
 				2A3039322A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift in Sources */,
+				2AE886372AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift in Sources */,
 				C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */,
 				2A1F08662A794C0300C5B11B /* Services+EndpointFormSessionKeyTests.swift in Sources */,
 				2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */,
