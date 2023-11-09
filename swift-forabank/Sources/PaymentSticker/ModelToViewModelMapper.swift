@@ -87,7 +87,14 @@ public extension ModelToViewModelMapper {
                 ))
             
         case let .input(input):
-            return .input(.init(parameter: input))
+            return .input(.init(
+                parameter: input,
+                updateValue: { text in
+                    
+                    action(.input(.valueUpdate(.init(value: text, title: input.title, icon: input.icon))))
+                    
+                }
+            ))
         }
     }
 }

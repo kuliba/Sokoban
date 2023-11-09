@@ -15,6 +15,16 @@ struct InputView: View {
     let model: InputViewModel
     
     var body: some View {
+    
+        let binding = Binding<String>(get: {
+            
+            model.updateValue(self.text)
+            return self.text
+            
+        }, set: {
+            
+            self.text = $0
+        })
         
         HStack(alignment: .top, spacing: 16) {
 
@@ -82,6 +92,6 @@ struct InputView_Previews: PreviewProvider {
                 value: "123456",
                 title: "Введите код",
                 icon: "SystemIcon"
-            )))
+            ), updateValue: { _ in }))
     }
 }
