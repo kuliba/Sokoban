@@ -41,6 +41,7 @@ extension RequestFactory {
         request.httpMethod = "POST"
         request.httpBody = input.json
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
         return request
     }
     
@@ -72,7 +73,7 @@ extension RequestFactory {
     struct StickerPayment {
         
         let currencyAmount: String
-        let amount: String
+        let amount: Double
         let check: Bool
         let payer: Payer
         let productToOrderInfo: Order
