@@ -45,21 +45,9 @@ final public class OperationStateViewModel: ObservableObject {
             case let .failure(error):
                 self.handleAPIError(error)
                 
-            case let .success(state):
-                
-                if operation.parameters.contains(where: { $0.id == .input }) {
-                    
-                    self.state = .result(.init(
-                        result: .success,
-                        title: "Успешная заявка",
-                        description: "Спасибо за заказ! В ближайшее время с вами свяжется наш курьер для уточнения места и времени доставки.",
-                        amount: "790 Р"
-                    ))
-                    
-                } else {
-                    
-                    self.state = state
-                }
+            case let .success(state):    
+                self.state = state
+
             }
         }
     }
@@ -90,6 +78,18 @@ extension OperationStateViewModel {
         public let title: String
         public let description: String
         public let amount: String
+        
+        public init(
+            result: Result,
+            title: String,
+            description: String,
+            amount: String
+        ) {
+            self.result = result
+            self.title = title
+            self.description = description
+            self.amount = amount
+        }
         
         public enum Result {
             
