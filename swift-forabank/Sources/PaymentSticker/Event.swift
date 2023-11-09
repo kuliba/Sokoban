@@ -18,8 +18,15 @@ public enum Event {
     
     case product(ProductEvent)
     case select(SelectEvent)
-    case continueButtonTapped
+    case continueButtonTapped(ButtonEvent)
     case input(InputEvent)
+    
+    public enum ButtonEvent {
+    
+        case `continue`
+        case getOTPCode
+        case makeTransfer
+    }
     
     public enum InputEvent {
         
