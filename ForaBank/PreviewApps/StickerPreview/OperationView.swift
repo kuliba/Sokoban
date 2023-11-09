@@ -121,7 +121,7 @@ struct OperationProcessView: View {
         } else {
             
             Button {
-                model.event(.continueButtonTapped)
+                model.event(.continueButtonTapped(.continue))
             } label: {
                 
                 Text("Продолжить")
@@ -143,7 +143,45 @@ struct OperationProcessView: View {
         let mapper = ModelToViewModelMapper(model)
         let viewModel = mapper.map(parameter)
         
-        ParameterView(viewModel: viewModel)
+        ParameterView(
+            viewModel: viewModel,
+            configuration: .init(
+                tipViewConfig: .init(
+                    titleFont: .body,
+                    titleForeground: .cyan,
+                    backgroundView: .gray
+                ),
+            stickerViewConfig: .init(
+                rectangleColor: .gray,
+                configHeader: .init(
+                    titleFont: .body,
+                    titleColor: .cyan,
+                    descriptionFont: .body,
+                    descriptionColor: .cyan
+                ),
+                configOption: .init(
+                    titleFont: .body,
+                    titleColor: .cyan,
+                    iconColor: .blue,
+                    descriptionFont: .body,
+                    descriptionColor: .cyan
+                )),
+            selectViewConfig: .init(
+                selectOptionConfig: .init(
+                    titleFont: .body,
+                    titleForeground: .blue,
+                    placeholderForeground: .gray,
+                    placeholderFont: .body
+                ),
+                optionsListConfig: .init(
+                    titleFont: .body,
+                    titleForeground: .cyan
+                ),
+                optionConfig: .init(
+                    nameFont: .body,
+                    nameForeground: .cyan
+                ))
+        ))
     }
 }
 
