@@ -133,7 +133,7 @@ extension Services.Endpoint {
     
     static let makeTransfer: Self = .init(
         pathPrefix: .transfer,
-        version: .v1,
+        version: nil,
         serviceName: .makeTransfer
     )
 }
