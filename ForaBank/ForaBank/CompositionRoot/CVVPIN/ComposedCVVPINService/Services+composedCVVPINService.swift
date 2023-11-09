@@ -128,7 +128,7 @@ extension Services {
         
         let cachingChangePINService = FetcherDecorator(
             decoratee: changePINService,
-            cache: cache(response:)
+            handleSuccess: cache(response:)
         )
         
         // MARK: Configure Show CVV Service

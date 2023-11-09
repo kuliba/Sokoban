@@ -28,7 +28,7 @@ extension Services {
         
         let cachingGetCodeService = FetcherDecorator(
             decoratee: getCodeService,
-            cache: cacheGetProcessingSessionCode
+            handleSuccess: cacheGetProcessingSessionCode
         )
         
         return cachingGetCodeService
