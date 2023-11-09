@@ -1,6 +1,6 @@
 //
-//  FetcherHandleFailureDecoratorTests.swift
-//
+//  FetcherHandleSuccessTests.swift
+//  
 //
 //  Created by Igor Malyarov on 06.11.2023.
 //
@@ -8,7 +8,7 @@
 import Fetcher
 import XCTest
 
-final class FetcherHandleFailureDecoratorTests: XCTestCase {
+final class FetcherHandleSuccessTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -19,84 +19,84 @@ final class FetcherHandleFailureDecoratorTests: XCTestCase {
     }
     
     func test_fetch_shouldDeliverErrorOnLoadFailure() {
-
+        
         let loadError = testError("Load Failure")
         let (sut, decoratee, _) = makeSUT()
-
+        
         expect(sut, payload: anyRequest(), toDeliver: [
             .failure(loadError)
         ], on: {
             decoratee.complete(with: .failure(loadError))
         })
     }
-
+    
     func test_fetch_shouldDeliverValueOnLoadSuccess() {
-
+        
         let item = anyItem()
         let (sut, decoratee, _) = makeSUT()
-
+        
         expect(sut, payload: anyRequest(), toDeliver: [
             .success(item)
         ], on: {
             decoratee.complete(with: .success(item))
         })
     }
-
+    
     func test_fetch_shouldPassPayloadToDecoratee() {
-
+        
         let payload = anyRequest()
         let (sut, decoratee, _) = makeSUT()
-
+        
         fetch(sut, payload) {
-
+            
             decoratee.complete(with: .failure(testError()))
         }
-
+        
         XCTAssertNoDiff(decoratee.payloads, [payload])
     }
-
-    func test_fetch_shouldHandleFailureOnLoadFailure() {
-
+    
+    func test_fetch_shouldNotCacheOnLoadFailure() {
+        
         let loadError = testError("Load Failure")
         let (sut, decoratee, spy) = makeSUT()
-
-        fetch(sut) {
-
-            decoratee.complete(with: .failure(loadError))
-        }
-
-        XCTAssertNoDiff(spy.failures, [loadError])
-    }
-
-    func test_fetch_shouldNotHandleFailureOnLoadSuccess() {
-
-        let item = anyItem()
-        let (sut, decoratee, spy) = makeSUT()
-
-        fetch(sut) { decoratee.complete(with: .success(item)) }
-
+        
+        fetch(sut) { decoratee.complete(with: .failure(loadError)) }
+        
         XCTAssertNoDiff(spy.callCount, 0)
     }
-
-    func test_fetch_shouldNotHandleFailureOnInstanceDeallocation() {
-
+    
+    func test_fetch_shouldCacheValueOnLoadSuccess() {
+        
+        let item = anyItem()
+        let (sut, decoratee, spy) = makeSUT()
+        
+        fetch(sut) {
+            
+            decoratee.complete(with: .success(item))
+        }
+        
+        XCTAssertNoDiff(spy.values, [item])
+    }
+    
+    func test_fetch_shouldNotCacheOnInstanceDeallocation() {
+        
         var sut: SUT?
         let decoratee: Decoratee
         let spy: HandleSpy
         (sut, decoratee, spy) = makeSUT()
-
+        
         sut?.fetch(anyRequest()) { _ in }
         sut = nil
-        decoratee.complete(with: .failure(testError()))
-
+        decoratee.complete(with: .success(anyItem()))
+        
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = FetcherDecorator<Request, Item, TestError>
-    private typealias Decoratee = FetcherSpy<Request, Item, TestError>
-    private typealias HandleSpy = HandleFailureSpy<TestError>
+    private typealias SUT = FetcherDecorator<Request, Item, Error>
+    private typealias Decoratee = FetcherSpy<Request, Item, Error>
+    private typealias HandleSpy = HandleSuccessSpy<Item>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -110,7 +110,7 @@ final class FetcherHandleFailureDecoratorTests: XCTestCase {
         let spy = HandleSpy()
         let sut = SUT(
             decoratee: decoratee,
-            handleFailure: spy.handleFailure
+            handleSuccess: spy.handleValue
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -120,15 +120,15 @@ final class FetcherHandleFailureDecoratorTests: XCTestCase {
         return (sut, decoratee, spy)
     }
     
-    private final class HandleFailureSpy<Failure: Error> {
+    private final class HandleSuccessSpy<Value> {
         
-        private(set) var failures = [Failure]()
+        private(set) var values = [Value]()
         
-        var callCount: Int { failures.count }
+        var callCount: Int { values.count }
         
-        func handleFailure(_ failure: Failure) {
+        func handleValue(_ value: Value) {
             
-            failures.append(failure)
+            values.append(value)
         }
     }
 }

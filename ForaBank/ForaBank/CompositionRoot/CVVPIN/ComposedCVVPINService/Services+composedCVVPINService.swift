@@ -35,7 +35,7 @@ extension Services {
         
         // MARK: Configure Infra: Stores & Loaders
         
-        let rsaKeyPairLoader = loggingLoaderDecorator(
+        let rsaKeyPairLoader = loggingLoader(
             store: rsaKeyPairStore
         )
         
@@ -47,19 +47,19 @@ extension Services {
         let sessionKeyStore = InMemoryStore<SessionKey>()
         let sessionIDStore = InMemoryStore<SessionID>()
         
-        let otpEventIDLoader = loggingLoaderDecorator(
+        let otpEventIDLoader = loggingLoader(
             store: otpEventIDStore
         )
         
-        let sessionCodeLoader = loggingLoaderDecorator(
+        let sessionCodeLoader = loggingLoader(
             store: sessionCodeStore
         )
         
-        let sessionKeyLoader = loggingLoaderDecorator(
+        let sessionKeyLoader = loggingLoader(
             store: sessionKeyStore
         )
         
-        let sessionIDLoader = loggingLoaderDecorator(
+        let sessionIDLoader = loggingLoader(
             store: sessionIDStore
         )
         
@@ -128,7 +128,7 @@ extension Services {
         
         let cachingChangePINService = FetcherDecorator(
             decoratee: changePINService,
-            cache: cache(response:)
+            handleSuccess: cache(response:)
         )
         
         // MARK: Configure Show CVV Service
@@ -160,9 +160,9 @@ extension Services {
         
         // MARK: - Helpers
         
-        func loggingLoaderDecorator<T>(
+        func loggingLoader<T>(
             store: any Store<T>
-        ) -> LoggingLoaderDecorator<T> {
+        ) -> any Loader<T> {
             
             LoggingLoaderDecorator(
                 decoratee: GenericLoaderOf(

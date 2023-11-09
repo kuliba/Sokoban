@@ -30,7 +30,7 @@ extension Services {
         
         let cachingAuthWithPublicKeyService = FetcherDecorator(
             decoratee: authenticateWithPublicKeyService,
-            cache: cache
+            handleSuccess: { _ in }//cache
         )
         
         return cachingAuthWithPublicKeyService

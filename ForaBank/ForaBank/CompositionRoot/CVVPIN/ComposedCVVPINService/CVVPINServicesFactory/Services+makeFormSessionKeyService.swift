@@ -35,7 +35,7 @@ extension Services {
         
         let cachingFormSessionKeyService = FetcherDecorator(
             decoratee: formSessionKeyService,
-            cache: cacheFormSessionKeySuccess
+            handleSuccess: cacheFormSessionKeySuccess
         )
         
         return cachingFormSessionKeyService
