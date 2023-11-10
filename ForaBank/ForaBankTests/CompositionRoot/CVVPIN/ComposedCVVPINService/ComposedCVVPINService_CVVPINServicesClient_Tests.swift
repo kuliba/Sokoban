@@ -248,7 +248,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         let (sut, _, _, _, getPINConfirmationCodeSpy, _, _) = makeSUT()
         
         expectGetPINConfirmationCode(sut, toDeliver: [
-            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
         ], on: {
             getPINConfirmationCodeSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
         })
@@ -971,6 +971,7 @@ private extension ChangePINClient.GetPINConfirmationCodeResult {
     enum _GetPINConfirmationCodeError: Error & Equatable {
         
         case activationFailure
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
         
@@ -979,7 +980,10 @@ private extension ChangePINClient.GetPINConfirmationCodeResult {
             switch error {
             case .activationFailure:
                 self = .activationFailure
-                
+             
+            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
+
             case let .server(statusCode: statusCode, errorMessage: errorMessage):
                 self = .server(statusCode: statusCode, errorMessage: errorMessage)
                 
