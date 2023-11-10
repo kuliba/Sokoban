@@ -123,7 +123,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
         let sut = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: { product, rootView, dismissAction in
+            makeProductProfileViewModel: { product, rootView, dismissAction in
                 
                 ProductProfileViewModel(
                     model,

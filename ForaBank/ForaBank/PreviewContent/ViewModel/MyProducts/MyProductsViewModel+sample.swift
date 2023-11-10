@@ -17,7 +17,7 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
                 .emptyMock,
@@ -40,7 +40,7 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
                 .emptyMock,

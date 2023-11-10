@@ -14,7 +14,7 @@ import PinCodeUI
 class MyProductsViewModel: ObservableObject {
     
     typealias CardAction = (CardDomain.CardEvent) -> Void
-    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -35,7 +35,7 @@ class MyProductsViewModel: ObservableObject {
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
     private let cardAction: CardAction?
-    private let productProfileViewModelFactory: ProductProfileViewModelFactory
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private var bindings = Set<AnyCancellable>()
     
     
@@ -46,13 +46,13 @@ class MyProductsViewModel: ObservableObject {
          editModeState: EditMode = .inactive,
          model: Model = .emptyMock,
          cardAction: CardAction? = nil,
-         productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:]
     ) {
         self.model = model
         self.cardAction = cardAction
-        self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.editModeState = editModeState
         self.navigationBar = navigationBar
         self.totalMoneyVM = totalMoney
@@ -65,7 +65,7 @@ class MyProductsViewModel: ObservableObject {
     convenience init(
         _ model: Model,
         cardAction: CardAction? = nil,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
@@ -75,7 +75,7 @@ class MyProductsViewModel: ObservableObject {
             editModeState: .inactive,
             model: model,
             cardAction: cardAction,
-            productProfileViewModelFactory: productProfileViewModelFactory,
+            makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:]
         )
@@ -256,7 +256,7 @@ class MyProductsViewModel: ObservableObject {
                             .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = productProfileViewModelFactory(product, "\(type(of: self))", { [weak self] in self?.link = nil }
+                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }
                         )
                         else { return }
                         

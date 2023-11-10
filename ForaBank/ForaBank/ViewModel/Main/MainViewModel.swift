@@ -11,7 +11,7 @@ import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -30,7 +30,7 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let productProfileViewModelFactory: ProductProfileViewModelFactory
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -38,19 +38,19 @@ class MainViewModel: ObservableObject, Resetable {
         navButtonsRight: [NavigationBarButtonViewModel],
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
-        self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -63,7 +63,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionAtmView.ViewModel.initial
         ]
         self.model = model
-        self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -99,7 +99,7 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = productProfileViewModelFactory(
+                          let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
                             { [weak self] in self?.link = nil })
@@ -419,7 +419,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
                             model,
-                            productProfileViewModelFactory: productProfileViewModelFactory
+                            makeProductProfileViewModel: makeProductProfileViewModel
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)

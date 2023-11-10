@@ -207,12 +207,12 @@ final class RootViewModelTests: XCTestCase {
         let sut = RootViewModel(
             mainViewModel: .init(
                 model,
-                productProfileViewModelFactory: { _,_,_ in nil },
+                makeProductProfileViewModel: { _,_,_ in nil },
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
-                productProfileViewModelFactory: { _,_,_ in nil }
+                makeProductProfileViewModel: { _,_,_ in nil }
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

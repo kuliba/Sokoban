@@ -76,7 +76,7 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
                 
             ProductProfileViewModel(
                 .emptyMock,

@@ -16,16 +16,26 @@ extension RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let (productProfileViewModelFactory, onRegister) = make(
+        let rsaKeyPairStore = makeLoggingRSAKeyPairStore(
+            logger: logger
+        )
+        
+        let resetCVVPINActivation = makeResetCVVPINActivation(
+            rsaKeyPairStore: rsaKeyPairStore,
+            logger: logger
+        )
+        
+        let makeProductProfileViewModel = make(
             httpClient: httpClient,
+            rsaKeyPairStore: rsaKeyPairStore,
             logger: logger,
             model: model
         )
         
         return make(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onRegister: onRegister
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            onRegister: resetCVVPINActivation
         )
     }
 }
@@ -33,24 +43,74 @@ extension RootViewModelFactory {
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
-    typealias MakeProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    static func makeLoggingRSAKeyPairStore(
+        logger: LoggerAgentProtocol
+    ) -> any Store<RSADomain.KeyPair> {
+        
+        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
+        
+        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
+        
+        return LoggingStoreDecorator(
+            decoratee: store,
+            log: log
+        )
+    }
+    
+    typealias ResetCVVPINActivation = () -> Void
+    
+    static func makeResetCVVPINActivation(
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
+        logger: LoggerAgentProtocol
+    ) -> ResetCVVPINActivation {
+        
+        return rsaKeyPairStore.deleteCacheIgnoringResult
+    }
+    
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    
+    static func make(
+        httpClient: HTTPClient,
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
+        logger: LoggerAgentProtocol,
+        model: Model
+    ) -> MakeProductProfileViewModel {
+        
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
+            httpClient: httpClient,
+            logger: logger,
+            rsaKeyPairStore: rsaKeyPairStore
+        )
+        
+        return {
+            
+            ProductProfileViewModel(
+                model,
+                cvvPINServicesClient: cvvPINServicesClient,
+                product: $0,
+                rootView: $1,
+                dismissAction: $2
+            )
+        }
+    }
+    
     typealias OnRegister = () -> Void
     
     static func make(
         model: Model,
-        productProfileViewModelFactory: @escaping MakeProductProfileViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
+            makeProductProfileViewModel: makeProductProfileViewModel,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory
+            makeProductProfileViewModel: makeProductProfileViewModel
         )
         
         let chatViewModel = ChatViewModel()
@@ -65,54 +125,5 @@ private extension RootViewModelFactory {
             model,
             onRegister: onRegister
         )
-    }
-    
-    typealias ResetCVVPINActivation = () -> Void
-
-    static func make(
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
-        model: Model
-    ) -> (MakeProductProfileViewModelFactory, ResetCVVPINActivation) {
-        
-        let rsaKeyPairStore = makeLoggingStore(
-            logger: logger
-        )
-        
-        let rsaStoreClear = rsaKeyPairStore.deleteCacheIgnoringResult
-        
-        let cvvPINServicesClient = Services.cvvPINServicesClient(
-            httpClient: httpClient,
-            logger: logger,
-            rsaKeyPairStore: rsaKeyPairStore
-        )
-        
-        let productProfileViewModelFactory = {
-            
-            ProductProfileViewModel(
-                model,
-                cvvPINServicesClient: cvvPINServicesClient,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
-        
-        return (productProfileViewModelFactory, rsaStoreClear)
-    }
-    
-    static func makeLoggingStore(
-        logger: LoggerAgentProtocol
-    ) -> any Store<RSADomain.KeyPair> {
-        
-        let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
-        
-        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
-        let rsaKeyPairStore = LoggingStoreDecorator(
-            decoratee: store,
-            log: log
-        )
-        
-        return rsaKeyPairStore
     }
 }
