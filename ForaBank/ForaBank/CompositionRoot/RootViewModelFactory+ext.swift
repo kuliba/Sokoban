@@ -95,7 +95,8 @@ private extension RootViewModelFactory {
     }
     
     typealias OnRegister = () -> Void
-    
+    typealias MakeLoginViewModel = (RootViewModel.RootActions) -> ComposedLoginViewModel
+
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
@@ -117,13 +118,24 @@ private extension RootViewModelFactory {
         
         let informerViewModel = InformerView.ViewModel(model)
         
+        let makeLoginViewModel: MakeLoginViewModel = {
+            
+            ComposedLoginViewModel(
+                authLoginViewModel: .init(
+                    model,
+                    rootActions: $0,
+                    onRegister: onRegister
+                )
+            )
+        }
+        
         return .init(
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,
             informerViewModel: informerViewModel,
             model,
-            onRegister: onRegister
+            makeLoginViewModel: makeLoginViewModel
         )
     }
 }

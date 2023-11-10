@@ -11,6 +11,8 @@ import Combine
 
 class RootViewModel: ObservableObject, Resetable {
     
+    typealias MakeLoginViewModel = (RootViewModel.RootActions) -> ComposedLoginViewModel
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
@@ -26,7 +28,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let infoDictionary: [String : Any]?
-    private let onRegister: () -> Void
+    private let makeLoginViewModel: MakeLoginViewModel
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -37,7 +39,7 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        onRegister: @escaping () -> Void
+        makeLoginViewModel: @escaping MakeLoginViewModel
     ) {
         self.selected = .main
         self.mainViewModel = mainViewModel
@@ -46,7 +48,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
-        self.onRegister = onRegister
+        self.makeLoginViewModel = makeLoginViewModel
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -83,13 +85,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = ComposedLoginViewModel(
-                        authLoginViewModel: .init(
-                            model,
-                            rootActions: rootActions,
-                            onRegister: onRegister
-                        )
-                    )
+                    let loginViewModel = makeLoginViewModel(rootActions)
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
                     action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))

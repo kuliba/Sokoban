@@ -218,7 +218,7 @@ final class RootViewModelTests: XCTestCase {
             informerViewModel: .init(model),
             infoDictionary: infoDictionary,
             model,
-            onRegister: {}
+            makeLoginViewModel: { _ in .init(authLoginViewModel: .preview) }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
