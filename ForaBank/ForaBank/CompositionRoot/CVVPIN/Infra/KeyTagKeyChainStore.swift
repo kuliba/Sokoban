@@ -13,8 +13,25 @@ typealias KeyTagKeyChainStore<Key> = KeyChainStore<KeyTag, Key>
 
 enum KeyTag: String {
     
-    case cvvPIN
+    case cvvPINActivation
     case rsa
+}
+
+extension KeyTagKeyChainStore
+where Key == String {
+    
+    convenience init(keyTag: KeyTag) {
+        
+        self.init(
+            keyTag: keyTag,
+            data: { .init($0.utf8) },
+            key: {
+                try .init(data: $0, encoding: .utf8).get(orThrow: DataToStringConversionError())
+            }
+        )
+    }
+    
+    struct DataToStringConversionError: Swift.Error {}
 }
 
 extension KeyTagKeyChainStore
