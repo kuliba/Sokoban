@@ -22,78 +22,84 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
         XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnPrepareExchangeFailure() {
+    func test_fetch_shouldNotCacheOnPrepareExchangeFailure() {
         
-        let (sut, prepareKeyExchangeSpy, _, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, _, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.serviceError(.prepareKeyExchangeFailure)), on: {
             
             prepareKeyExchangeSpy.complete(with: .failure(anyError()))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnAuthRemoteServiceCreateRequestFailure() {
+    func test_fetch_shouldNotCacheOnAuthRemoteServiceCreateRequestFailure() {
         
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             authRemoteServiceSpy.complete(with: .failure(.createRequest(anyError())))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnAuthRemoteServicePerformRequestFailure() {
+    func test_fetch_shouldNotCacheOnAuthRemoteServicePerformRequestFailure() {
         
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             authRemoteServiceSpy.complete(with: .failure(.performRequest(anyError())))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnAuthRemoteServiceMapResponseInvalidFailure() {
+    func test_fetch_shouldNotCacheOnAuthRemoteServiceMapResponseInvalidFailure() {
         
         let statusCode = 500
         let invalidData = anyData()
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             authRemoteServiceSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnAuthRemoteServiceMapResponseNetworkFailure() {
+    func test_fetch_shouldNotCacheOnAuthRemoteServiceMapResponseNetworkFailure() {
         
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             authRemoteServiceSpy.complete(with: .failure(.mapResponse(.network)))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnAuthRemoteServiceMapResponseServerFailure() {
+    func test_fetch_shouldNotCacheOnAuthRemoteServiceMapResponseServerFailure() {
         
         let statusCode = 500
         let errorMessage = "Map Response Failure"
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, _, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             
             prepareKeyExchangeSpy.complete(with: .success(anyData()))
             authRemoteServiceSpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
-    func test_fetch_shouldDeliverErrorOnMakeSessionKeyFailure() {
+    func test_fetch_shouldNotCacheOnMakeSessionKeyFailure() {
         
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, makeSessionKeySpy, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, makeSessionKeySpy, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.serviceError(.makeSessionKeyFailure)), on: {
             
@@ -101,6 +107,7 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
             authRemoteServiceSpy.complete(with: anySuccess())
             makeSessionKeySpy.complete(with: .failure(anyError()))
         })
+        XCTAssertEqual(cacheSpy.callCount, 0)
     }
     
     func test_fetch_shouldDeliverValueOnSuccess() {
@@ -109,7 +116,7 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
         let publicServerSessionKeyValue = UUID().uuidString
         let sessionTTL = 11
         let sessionKeyValue = anyData()
-        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, makeSessionKeySpy, _) = makeSUT()
+        let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, makeSessionKeySpy, cacheSpy) = makeSUT()
         
         expect(sut, toDeliver: .success(.init(
             sessionID: .init(sessionIDValue: sessionIDValue),
@@ -124,6 +131,13 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
             ))
             makeSessionKeySpy.complete(with: .success(.init(sessionKeyValue: sessionKeyValue)))
         })
+        XCTAssertNoDiff(cacheSpy.cachedValues.map(\.equatable), [
+            .init(
+                sessionIDValue: sessionIDValue,
+                sessionKeyValue: sessionKeyValue,
+                sessionTTL: sessionTTL
+            )
+        ])
     }
     
     // MARK: - Helpers
@@ -151,7 +165,7 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
             prepareKeyExchange: prepareKeyExchangeSpy.fetch,
             authRemoteService: authRemoteServiceSpy,
             makeSessionKey: makeSessionKeySpy.fetch,
-            cache: cacheSpy.cache(success:)
+            cache: cacheSpy.cache(value:)
         )
         
         trackForMemoryLeaks(prepareKeyExchangeSpy, file: file, line: line)
@@ -223,12 +237,14 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
     
     private final class CacheSpy {
         
-        private(set) var callCount: Int = 0
+        typealias Value = AuthenticateWithPublicKeyService.Success
         
-        func cache(
-            success: AuthenticateWithPublicKeyService.Success
-        ) {
-            callCount += 1
+        private(set) var cachedValues = [Value]()
+        var callCount: Int { cachedValues.count }
+        
+        func cache(value: Value) {
+            
+            cachedValues.append(value)
         }
     }
 }
