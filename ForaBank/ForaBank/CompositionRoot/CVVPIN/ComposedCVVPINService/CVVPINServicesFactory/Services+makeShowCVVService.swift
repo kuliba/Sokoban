@@ -6,15 +6,19 @@
 //
 
 import CVVPIN_Services
+import Fetcher
+import Foundation
 
 extension Services {
+    
+    typealias _ShowCVVRemoteService = Fetcher<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
 
     static func makeShowCVVService(
         rsaKeyPairLoader: any Loader<RSAKeyPair>,
         sessionIDLoader: any Loader<SessionID>,
         sessionKeyLoader: any Loader<SessionKey>,
         authWithPublicKeyService: any AuthWithPublicKeyFetcher,
-        showCVVRemoteService: ShowCVVRemoteService,
+        showCVVRemoteService: any _ShowCVVRemoteService,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> ShowCVVService {
@@ -94,7 +98,7 @@ extension Services {
             payload: ShowCVVService.Payload,
             completion: @escaping ShowCVVService.ProcessCompletion
         ) {
-            showCVVRemoteService.process((
+            showCVVRemoteService.fetch((
                 .init(value: payload.sessionID.sessionIDValue),
                 payload.data
             )) {

@@ -45,7 +45,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
-    func test_handleFailure_shouldReceiveFailureOnProcessFailure() {
+    func test_handleFailure_shouldReceiveFailureOnProcessCreateRequestFailure() {
         
         let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
         
@@ -53,6 +53,66 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
             
             sessionIDLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.createRequest(anyError())))
+        })
+        XCTAssertEqual(handleFailureSpy.callCount, 1)
+    }
+    
+    func test_handleFailure_shouldReceiveFailureOnProcessPerformRequestFailure() {
+        
+        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.performRequest(anyError())))
+        })
+        XCTAssertEqual(handleFailureSpy.callCount, 1)
+    }
+    
+    func test_handleFailure_shouldReceiveFailureOnProcessMapResponseInvalidFailure() {
+        
+        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: 500, data: anyData()))))
+        })
+        XCTAssertEqual(handleFailureSpy.callCount, 1)
+    }
+    
+    func test_handleFailure_shouldReceiveFailureOnProcessMapResponseNetworkFailure() {
+        
+        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.network)))
+        })
+        XCTAssertEqual(handleFailureSpy.callCount, 1)
+    }
+    
+    func test_handleFailure_shouldReceiveFailureOnProcessMapResponseRetryFailure() {
+        
+        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.retry(statusCode: 500, errorMessage: "Retry Failure", retryAttempts: 2))))
+        })
+        XCTAssertEqual(handleFailureSpy.callCount, 1)
+    }
+    
+    func test_handleFailure_shouldReceiveFailureOnProcessMapResponseServerFailure() {
+        
+        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.server(statusCode: 500, errorMessage: "Server Failure"))))
         })
         XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
