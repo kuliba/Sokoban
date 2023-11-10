@@ -101,6 +101,7 @@ enum CheckCVVPINFunctionalityError: Error {
 enum GetPINConfirmationCodeError: Error {
     
     case activationFailure
+    case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
     case server(statusCode: Int, errorMessage: String)
     case serviceFailure
 }

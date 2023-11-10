@@ -66,8 +66,8 @@ private extension GetPINConfirmationCodeError {
         case .invalid, .network, .serviceError:
             self = .serviceFailure
             
-        case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: _):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
+            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
             
         case let .server(statusCode: statusCode, errorMessage: errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
