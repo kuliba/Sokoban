@@ -15,32 +15,29 @@ final class MapChangePINResponseTests: XCTestCase {
         let invalidData = Data("invalid data".utf8)
         let codes = [199, 200, 201, 399, 400, 401, 404, 500]
         
-        for code in codes {
+        for statusCode in codes {
             
             let result = map(
                 invalidData,
-                anyHTTPURLResponse(with: code)
+                httpStatusCode: statusCode
             )
             
-            assert(result, .failure(.invalidData(statusCode: code, data: invalidData)))
+            assert(result, .failure(.invalidData(statusCode: statusCode, data: invalidData)))
         }
     }
     
-    func test_map_shouldDeliverServerErrorOnNon200Non$05AndValidData() throws {
+    func test_map_shouldDeliverServerErrorOnNon200Non500AndValidData() throws {
         
         let serverStatusCode = 7512
         let errorMessage = "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения"
-        let validData = makeServerErrorData(
-            statusCode: serverStatusCode,
-            errorMessage: errorMessage
-        )
-        let non200Non406Non500Codes = [199, 201, 399, 400, 401, 404, 501]
+        let non200Non500Codes = [199, 201, 399, 400, 401, 404, 406, 501]
         
-        for code in non200Non406Non500Codes {
+        for statusCode in non200Non500Codes {
             
             let result = map(
-                validData,
-                anyHTTPURLResponse(with: code)
+                httpStatusCode: statusCode,
+                serverStatusCode: serverStatusCode,
+                errorMessage: errorMessage
             )
             
             assert(result, .failure(.error(
@@ -85,7 +82,7 @@ final class MapChangePINResponseTests: XCTestCase {
         let invalidData = anyData()
         
         let result = map(
-            invalidData: invalidData,
+            invalidData,
             httpStatusCode: weakPINHTTPStatusCode()
         )
         
@@ -139,13 +136,14 @@ final class MapChangePINResponseTests: XCTestCase {
      Пример ответа о нефинальной ошибке:
      http-код состояния (HTTP status code): 500
      {
-        "statusCode": 7512,
-        "errorMessage": "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
-        "retryAttempts": 2
+     "statusCode": 7512,
+     "errorMessage": "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
+     "retryAttempts": 2
      }
      */
     func test_map_shouldDeliverRetryErrorOnResponse500AndValidData() throws {
         
+        let httpStatusCode = 500
         let serverStatusCode = 7512
         let errorMessage = "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения"
         let validData = try JSONSerialization.data(withJSONObject: [
@@ -153,9 +151,8 @@ final class MapChangePINResponseTests: XCTestCase {
             "errorMessage": errorMessage,
             "retryAttempts": 2
         ] as [String: Any])
-        let response500 = anyHTTPURLResponse(with: 500)
         
-        let result = map(validData, response500)
+        let result = map(validData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.retry(
             statusCode: serverStatusCode,
@@ -168,21 +165,21 @@ final class MapChangePINResponseTests: XCTestCase {
      Пример ответа о финальной ошибке (нет retryAttempts):
      http-код состояния (HTTP status code): 500
      {
-        "statusCode": 7506,
-        "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
+     "statusCode": 7506,
+     "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
      }
      */
     func test_map_shouldDeliverServerErrorOnResponse500AndInvalidData() throws {
         
+        let httpStatusCode = 500
         let serverStatusCode = 7506
         let errorMessage = "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
         let validData = makeServerErrorData(
             statusCode: serverStatusCode,
             errorMessage: errorMessage
         )
-        let response500 = anyHTTPURLResponse(with: 500)
         
-        let result = map(validData, response500)
+        let result = map(validData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.error(
             statusCode: serverStatusCode,
@@ -193,9 +190,9 @@ final class MapChangePINResponseTests: XCTestCase {
     func test_map_shouldDeliverInvalidDataErrorOnResponse200AndNonEmptyData() throws {
         
         let nonEmptyData = anyData()
-        let response200 = anyHTTPURLResponse(with: 200)
+        let httpStatusCode = 200
         
-        let result = map(nonEmptyData, response200)
+        let result = map(nonEmptyData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.invalidData(statusCode: 200, data: nonEmptyData)))
         XCTAssertFalse(nonEmptyData.isEmpty)
@@ -209,9 +206,9 @@ final class MapChangePINResponseTests: XCTestCase {
     func test_map_shouldDeliverSuccessOnResponse200AndValidData() throws {
         
         let data = Data()
-        let response200 = anyHTTPURLResponse(with: 200)
+        let httpStatusCode = 200
         
-        let result = map(data, response200)
+        let result = map(data, httpStatusCode: httpStatusCode)
         
         assert(result, .success(()))
         XCTAssertTrue(data.isEmpty)
@@ -223,30 +220,11 @@ final class MapChangePINResponseTests: XCTestCase {
     
     private func map(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> ChangePINResult {
-        
-        ResponseMapper.mapChangePINResponse(data, httpURLResponse)
-    }
-    
-    private func map(
-        _ data: Data,
         httpStatusCode: Int
     ) -> ChangePINResult {
         
         ResponseMapper.mapChangePINResponse(
             data,
-            anyHTTPURLResponse(with: httpStatusCode)
-        )
-    }
-    
-    private func map(
-        invalidData: Data,
-        httpStatusCode: Int
-    ) -> ChangePINResult {
-        
-        ResponseMapper.mapChangePINResponse(
-            invalidData,
             anyHTTPURLResponse(with: httpStatusCode)
         )
     }
