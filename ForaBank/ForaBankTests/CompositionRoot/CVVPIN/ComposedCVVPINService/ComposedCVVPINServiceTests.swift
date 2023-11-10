@@ -191,7 +191,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
             getPINConfirmationCodeResult: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
         )
         
-        expectGetPINConfirmationCode(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
+        expectGetPINConfirmationCode(sut, toDeliver: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
     }
     
     func test_getPINConfirmationCode_shouldDeliverServerErrorOnServerFailure() {
