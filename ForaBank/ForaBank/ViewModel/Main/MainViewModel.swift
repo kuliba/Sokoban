@@ -118,9 +118,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    
+
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
-                    
+                                        
                     // TODO: replace with injected factory
                     link = .userAccount(.init(
                         model: model,

@@ -19,13 +19,6 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
-        "identifier" : "EDB14392265FDA430028EF5A",
-        "name" : "ForaBankTests"
-      }
-    },
-    {
-      "target" : {
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
@@ -57,13 +50,6 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "PickerWithPreviewComponentTests",
         "name" : "PickerWithPreviewComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PinCodeUITests",
-        "name" : "PinCodeUITests"
       }
     },
     {
@@ -160,6 +146,20 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CVVPINServicesTests",
         "name" : "CVVPINServicesTests"
       }
@@ -202,15 +202,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "PaymentsComponentsTests",
-        "name" : "PaymentsComponentsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ServerAgentTests",
-        "name" : "ServerAgentTests"
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
       }
     },
     {
@@ -225,6 +218,13 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "URLRequestFactoryTests",
         "name" : "URLRequestFactoryTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "EDB14392265FDA430028EF5A",
+        "name" : "ForaBankTests"
       }
     }
   ],

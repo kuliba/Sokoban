@@ -66,7 +66,7 @@ final class MainViewModelTests: XCTestCase {
             )
         )
     }
-    
+
     // MARK: - Helpers
     
     private func makeSUT(

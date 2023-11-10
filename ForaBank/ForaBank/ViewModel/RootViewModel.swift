@@ -53,7 +53,7 @@ class RootViewModel: ObservableObject, Resetable {
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
-                
+        
         bind()
         bindAuth()
     }
@@ -120,7 +120,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLock, animated: true")
                     action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
-                
+                    
                 case .unlockRequiredManual:
                     guard coverPresented != .lock else {
                         return
@@ -160,7 +160,7 @@ class RootViewModel: ObservableObject, Resetable {
         action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     private func bind() {
-
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -214,7 +214,7 @@ class RootViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-
+        
         model.action
             .compactMap { $0 as? ModelAction.DeepLink.Process }
             .map(\.type)
@@ -224,69 +224,29 @@ class RootViewModel: ObservableObject, Resetable {
                 switch deepLink {
                 case let .me2me(bankId):
                     self.action.send(ModelAction.Consent.Me2MeDebit.Request(bankid: bankId))
-
+                    
                 case let .c2b(url):
-                  
-                    Task {
-                        
-                        do {
+                    let operationViewModel = PaymentsViewModel(
+                        source: .c2b(url),
+                        model: model,
+                        closeAction: { [weak self] in
                             
-                            let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
-                                
-                                self?.action.send(RootViewModelAction.CloseLink())
-                            })
-                            
-                            await MainActor.run {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.alert = .init(title: "Ошибка оплаты", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                                    
-                                    self?.action.send(RootViewModelAction.CloseAlert())
-                                    
-                                }))
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            self?.action.send(RootViewModelAction.CloseLink())
                         }
-                    }
+                    )
+                    self.link = .payments(operationViewModel)
                     
                 case let .c2bSubscribe(url):
-                  
-                    Task {
-                        
-                        do {
+                    let operationViewModel = PaymentsViewModel(
+                        source: .c2bSubscribe(url),
+                        model: model,
+                        closeAction: { [weak self] in
                             
-                            let operationViewModel = try await PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                                
-                                self?.action.send(RootViewModelAction.CloseLink())
-                            })
-                            
-                            await MainActor.run {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.alert = .init(title: "Ошибка привязки счета", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                                    
-                                    self?.action.send(RootViewModelAction.CloseAlert())
-                                    
-                                }))
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+                            self?.action.send(RootViewModelAction.CloseLink())
                         }
-                    }
-
+                    )
+                    self.link = .payments(operationViewModel)
+                    
                 case let .sbpPay(tokenIntent):
                     self.model.action.send(ModelAction.SbpPay.Register.Request(tokenIntent: tokenIntent))
                     self.model.action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
@@ -350,7 +310,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         self.action.send(RootViewModelAction.DismissAll())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-
+                            
                             self.link = .me2me(.init(model: consentData.getConcentLegacy()))
                         }
                         
@@ -377,7 +337,7 @@ class RootViewModel: ObservableObject, Resetable {
                         
                         self.action.send(RootViewModelAction.DismissAll())
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-
+                            
                             self.action.send(RootViewModelAction.ShowUserProfile(
                                 tokenIntent: payload.tokenIntent,
                                 conditions: personAgreement
@@ -592,7 +552,7 @@ final class ModelAuthLoginViewModelFactory {
     }
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension RootViewModel {
     
@@ -691,3 +651,4 @@ enum RootViewModelAction {
         let conditions: [PersonAgreement]
     }
 }
+
