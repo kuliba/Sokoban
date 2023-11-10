@@ -337,6 +337,7 @@
 		2A118E1F2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */; };
 		2A118E212AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E202AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift */; };
 		2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */; };
+		2A118E252AFEC388007EF30E /* BoolKeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E242AFEC388007EF30E /* BoolKeyChainStoreTests.swift */; };
 		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
@@ -2481,6 +2482,7 @@
 		2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAuthLoginViewModelFactory.swift; sourceTree = "<group>"; };
 		2A118E202AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+authLoginViewModelFactory.swift"; sourceTree = "<group>"; };
 		2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+ext.swift"; sourceTree = "<group>"; };
+		2A118E242AFEC388007EF30E /* BoolKeyChainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolKeyChainStoreTests.swift; sourceTree = "<group>"; };
 		2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFieldViewVithBindingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewVithBindingPreviewApp.swift; sourceTree = "<group>"; };
 		2A14A8562A2750450018511E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -5552,6 +5554,7 @@
 			isa = PBXGroup;
 			children = (
 				2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */,
+				2A118E242AFEC388007EF30E /* BoolKeyChainStoreTests.swift */,
 				2A3599B12ADA8ECC00820369 /* PublicSecKeyChainStoreTests.swift */,
 				2A3599B32ADA916800820369 /* PrivateSecKeyChainStoreTests.swift */,
 				2A3599AA2ADA800F00820369 /* Helpers */,
@@ -13588,6 +13591,7 @@
 				2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */,
 				7757DB522A711BDA00745EFF /* LocalAgentOldSymmetricKeyCleanerTests.swift in Sources */,
 				684192DA279998F800B4E184 /* ProductStatementDataTests.swift in Sources */,
+				2A118E252AFEC388007EF30E /* BoolKeyChainStoreTests.swift in Sources */,
 				6820923227A97A7C003DCAFD /* ServerCommandsDictionaryTests.swift in Sources */,
 				77517FD427A98052005CFB77 /* ServerCommandsProductTests.swift in Sources */,
 				2A3F934D2ABEE75A00669C1A /* AuthLoginViewModelTests.swift in Sources */,
