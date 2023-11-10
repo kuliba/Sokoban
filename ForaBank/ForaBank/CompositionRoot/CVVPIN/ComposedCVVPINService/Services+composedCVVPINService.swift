@@ -26,7 +26,7 @@ extension Services {
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
-        rsaKeyPairLifespan: TimeInterval,
+        cvvPINActivationLifespan: TimeInterval,
         ephemeralLifespan: TimeInterval
     ) -> ComposedCVVPINService {
         
@@ -270,7 +270,7 @@ extension Services {
                     
                     rsaKeyPairLoader.save(
                         rsaKeyPair,
-                        validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan)
+                        validUntil: currentDate().addingTimeInterval(cvvPINActivationLifespan)
                     ) {
                         completion($0.map { _ in data })
                     }

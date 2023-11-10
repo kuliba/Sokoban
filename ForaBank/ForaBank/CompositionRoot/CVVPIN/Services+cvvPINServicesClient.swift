@@ -12,7 +12,7 @@ import Foundation
 
 private extension TimeInterval {
     
-    static var rsaKeyPairLifespan: Self {
+    static var cvvPINActivationLifespan: Self {
         
 #if RELEASE
         15_778_463
@@ -68,7 +68,7 @@ extension Services {
             rsaKeyPairStore: rsaKeyPairStore,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,
-            rsaKeyPairLifespan: .rsaKeyPairLifespan,
+            cvvPINActivationLifespan: .cvvPINActivationLifespan,
             ephemeralLifespan: .ephemeralLifespan
         )
     }
