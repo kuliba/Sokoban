@@ -126,7 +126,7 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         let result = format(.ru(.startsWith8(.moreThen10Digits)))
         
-        XCTAssertNoDiff(result, "+7 963 000-00-000")
+        XCTAssertNoDiff(result, "+7 963 000-00-00")
     }
     
     //MARK: - test format us
@@ -161,11 +161,39 @@ final class PhoneNumberWrapperTests: XCTestCase {
 
     //MARK: - test format other
 
-    func test_format_otherNotValid_long() {
+    func test_format_otherNotValid_longArmenia() {
         
-        let result = format(.otherNotValid(.long))
+        let result = format(.otherNotValid(.longArmenia))
         
-        XCTAssertNoDiff(result, "+352 111 222 33344455566")
+        XCTAssertNoDiff(result, "+374 11 122233")
+    }
+    
+    func test_format_otherNotValid_longLuxembourg() {
+        
+        let result = format(.otherNotValid(.longLuxembourg))
+        
+        XCTAssertNoDiff(result, "+352 111 222 333")
+    }
+    
+    func test_format_otherNotValid_longPhilippines() {
+        
+        let result = format(.otherNotValid(.longPhilippines))
+        
+        XCTAssertNoDiff(result, "+63 121 545 4545")
+    }
+    
+    func test_format_otherNotValid_longTurkey() {
+        
+        let result = format(.otherNotValid(.longTurkey))
+        
+        XCTAssertNoDiff(result, "+90 121 312 15 45")
+    }
+    
+    func test_format_otherNotValid_longUSA() {
+        
+        let result = format(.otherNotValid(.longUSA))
+        
+        XCTAssertNoDiff(result, "+1 232-545-4545")
     }
 
     func test_format_otherNotValid_short() {

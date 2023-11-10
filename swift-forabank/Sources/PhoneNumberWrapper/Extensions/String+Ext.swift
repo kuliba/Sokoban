@@ -50,10 +50,7 @@ extension String {
                 result.append(character)
             }
         }
-        let remainderRange = index..<number.endIndex
-        let substring: String = remainderRange.isEmpty ? "" : String(number[remainderRange])
-
-        return substring.isEmpty ? result : result + substring
+        return result
     }
     
     func getMaskedNumber() -> String {
@@ -64,7 +61,6 @@ extension String {
             range: nil
         )
     }
-
 }
 
 extension String {
