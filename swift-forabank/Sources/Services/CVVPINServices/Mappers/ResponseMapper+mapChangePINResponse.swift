@@ -25,13 +25,6 @@ public extension ResponseMapper {
                     return .failure(.invalidData(statusCode: 200, data: data))
                 }
                 
-            case 406:
-                let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                return .failure(.weakPIN(
-                    statusCode: serverError.statusCode,
-                    errorMessage: serverError.errorMessage
-                ))
-                
             case 500:
                 do {
                     let retry = try JSONDecoder().decode(Retry.self, from: data)
@@ -42,10 +35,19 @@ public extension ResponseMapper {
                     ))
                 } catch {
                     let serverError = try JSONDecoder().decode(ServerError.self, from: data)
-                    return .failure(.error(
-                        statusCode: serverError.statusCode,
-                        errorMessage: serverError.errorMessage
-                    ))
+                    if serverError.statusCode == weakPINServerStatusCode() {
+                        
+                        return .failure(.weakPIN(
+                            statusCode: serverError.statusCode,
+                            errorMessage: serverError.errorMessage
+                        ))
+                        
+                    } else {
+                        return .failure(.error(
+                            statusCode: serverError.statusCode,
+                            errorMessage: serverError.errorMessage
+                        ))
+                    }
                 }
                 
             default:
@@ -86,4 +88,6 @@ public extension ResponseMapper {
         let errorMessage: String
         let retryAttempts: Int
     }
+    
+    private static func weakPINServerStatusCode() -> Int { 7051 }
 }
