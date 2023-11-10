@@ -12,7 +12,7 @@ import Foundation
 extension Services {
     
     static func makeChangePINService(
-        rsaKeyPairLoader: any Loader<RSAKeyPair>,
+        rsaKeyPairLoader: any Loader<RSADomain.KeyPair>,
         sessionIDLoader: any Loader<SessionID>,
         otpEventIDLoader: any Loader<ChangePINService.OTPEventID>,
         sessionKeyLoader: any Loader<SessionKey>,
@@ -53,7 +53,7 @@ extension Services {
         }
         
         func authenticate(
-            _ rsaKeyPair: RSAKeyPair,
+            _ rsaKeyPair: RSADomain.KeyPair,
             _ completion: @escaping ChangePINService.AuthenticateCompletion
         ) {
             sessionIDLoader.load { result in

@@ -16,7 +16,17 @@ extension RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let rsaKeyPairStore = makeLoggingRSAKeyPairStore(
+        let cvvPINActivationStore = makeLoggingStore(
+            store: KeyTagKeyChainStore<Bool>(
+                keyTag: .cvvPINActivation
+            ),
+            logger: logger
+        )
+        
+        let rsaKeyPairStore = makeLoggingStore(
+            store: KeyTagKeyChainStore<RSADomain.KeyPair>(
+                keyTag: .rsa
+            ),
             logger: logger
         )
         
@@ -28,6 +38,7 @@ extension RootViewModelFactory {
         let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
             logger: logger,
+            activationStore: cvvPINActivationStore,
             rsaKeyPairStore: rsaKeyPairStore
         )
         
@@ -53,13 +64,12 @@ extension RootViewModelFactory {
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
-    static func makeLoggingRSAKeyPairStore(
+    static func makeLoggingStore<Key>(
+        store: any Store<Key>,
         logger: LoggerAgentProtocol
-    ) -> any Store<RSADomain.KeyPair> {
+    ) -> any Store<Key> {
         
         let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
-        
-        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
         
         return LoggingStoreDecorator(
             decoratee: store,

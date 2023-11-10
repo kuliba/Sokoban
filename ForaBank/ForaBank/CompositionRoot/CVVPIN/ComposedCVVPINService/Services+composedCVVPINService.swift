@@ -16,13 +16,13 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
-    typealias RSAKeyPair = RSADomain.KeyPair
     typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
     
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSAKeyPair>,
+        activationStore: any Store<Bool>,
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
@@ -75,7 +75,7 @@ extension Services {
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         // MARK: Configure CVV-PIN Activation Service
-
+        
         let getCodeService = makeGetCodeService(
             getCodeServiceProcess: getCodeRemoteService.process,
             cacheGetProcessingSessionCode: cache(response:)
@@ -241,7 +241,7 @@ extension Services {
         }
         
         typealias CacheSessionKeyPayload = (AuthSuccess.SessionKey, AuthSuccess.SessionTTL)
-
+        
         func cacheSessionKey(
             payload: CacheSessionKeyPayload,
             completion: @escaping CacheCompletion
@@ -254,7 +254,7 @@ extension Services {
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
-
+        
         func makeSecretJSON(
             otp: BindPublicKeyWithEventIDService.OTP,
             completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
@@ -304,7 +304,7 @@ extension Services {
         }
         
         // MARK: - Cache (GetProcessingSessionCode)
-
+        
         func cache(
             response: GetProcessingSessionCodeService.Response
         ) {
@@ -319,7 +319,7 @@ extension Services {
         }
         
         // MARK: - FormSessionKey Adapters
-
+        
         func makeSecretRequestJSON(
             completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
         ) {

@@ -12,9 +12,9 @@ import Foundation
 extension Services {
     
     typealias _ShowCVVRemoteService = Fetcher<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
-
+    
     static func makeShowCVVService(
-        rsaKeyPairLoader: any Loader<RSAKeyPair>,
+        rsaKeyPairLoader: any Loader<RSADomain.KeyPair>,
         sessionIDLoader: any Loader<SessionID>,
         sessionKeyLoader: any Loader<SessionKey>,
         authWithPublicKeyService: any AuthWithPublicKeyFetcher,
@@ -31,7 +31,7 @@ extension Services {
         )
         
         return showCVVService
-
+        
         // MARK: - ShowCVV Adapters
         
         func authenticate(
@@ -50,7 +50,7 @@ extension Services {
         }
         
         func authenticate(
-            _ rsaKeyPair: RSAKeyPair,
+            _ rsaKeyPair: RSADomain.KeyPair,
             _ completion: @escaping ShowCVVService.AuthenticateCompletion
         ) {
             sessionIDLoader.load { result in
@@ -144,7 +144,7 @@ extension Services {
         }
         
         func loadShowCVVSession(
-            _ rsaKeyPair: RSAKeyPair,
+            _ rsaKeyPair: RSADomain.KeyPair,
             _ completion: @escaping LoadShowCVVSessionCompletion
         ) {
             sessionKeyLoader.load { result in
@@ -164,10 +164,10 @@ extension Services {
         
         struct ShowCVVSession {
             
-            let rsaKeyPair: RSAKeyPair
+            let rsaKeyPair: RSADomain.KeyPair
             let sessionKey: SessionKey
         }
-
+        
     }
 }
 
