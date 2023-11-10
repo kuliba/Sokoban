@@ -25,12 +25,22 @@ extension RootViewModelFactory {
             logger: logger
         )
         
-        let makeProductProfileViewModel = make(
+        let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
-            rsaKeyPairStore: rsaKeyPairStore,
             logger: logger,
-            model: model
+            rsaKeyPairStore: rsaKeyPairStore
         )
+        
+        let makeProductProfileViewModel = {
+            
+            ProductProfileViewModel(
+                model,
+                cvvPINServicesClient: cvvPINServicesClient,
+                product: $0,
+                rootView: $1,
+                dismissAction: $2
+            )
+        }
         
         return make(
             model: model,
@@ -68,32 +78,6 @@ private extension RootViewModelFactory {
     }
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    
-    static func make(
-        httpClient: HTTPClient,
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
-        logger: LoggerAgentProtocol,
-        model: Model
-    ) -> MakeProductProfileViewModel {
-        
-        let cvvPINServicesClient = Services.cvvPINServicesClient(
-            httpClient: httpClient,
-            logger: logger,
-            rsaKeyPairStore: rsaKeyPairStore
-        )
-        
-        return {
-            
-            ProductProfileViewModel(
-                model,
-                cvvPINServicesClient: cvvPINServicesClient,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
-    }
-    
     typealias OnRegister = () -> Void
     
     static func make(
