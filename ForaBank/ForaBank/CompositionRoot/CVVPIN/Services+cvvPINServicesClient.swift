@@ -8,6 +8,31 @@
 import ForaCrypto
 import Foundation
 
+// MARK: - Lifespans
+
+private extension TimeInterval {
+    
+    static var rsaKeyPairLifespan: Self {
+        
+#if RELEASE
+        15_778_463
+#else
+        600
+#endif
+    }
+    
+    static var ephemeralLifespan: Self {
+        
+#if RELEASE
+        15
+#else
+        30
+#endif
+    }
+}
+
+// MARK: - CVVPINServicesClient
+
 extension Services {
     
     static func cvvPINServicesClient(
@@ -84,28 +109,5 @@ private extension LiveExtraLoggingCVVPINCrypto{
             },
             log: errorLog
         )
-    }
-}
-
-// MARK: - Lifespans
-
-private extension TimeInterval {
-    
-    static var rsaKeyPairLifespan: Self {
-        
-#if RELEASE
-        15_778_463
-#else
-        600
-#endif
-    }
-    
-    static var ephemeralLifespan: Self {
-        
-#if RELEASE
-        15
-#else
-        30
-#endif
     }
 }
