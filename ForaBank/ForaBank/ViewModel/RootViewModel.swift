@@ -11,7 +11,7 @@ import Combine
 
 class RootViewModel: ObservableObject, Resetable {
     
-    typealias MakeLoginViewModel = (RootViewModel.RootActions) -> ComposedLoginViewModel
+    typealias ShowLoginAction = (RootViewModel.RootActions) -> RootViewModelAction.Cover.ShowLogin
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -28,7 +28,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let infoDictionary: [String : Any]?
-    private let makeLoginViewModel: MakeLoginViewModel
+    private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -39,7 +39,7 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        makeLoginViewModel: @escaping MakeLoginViewModel
+        showLoginAction: @escaping ShowLoginAction
     ) {
         self.selected = .main
         self.mainViewModel = mainViewModel
@@ -48,7 +48,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
-        self.makeLoginViewModel = makeLoginViewModel
+        self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -85,10 +85,9 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = makeLoginViewModel(rootActions)
-                    
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
-                    action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
+                    
+                    action.send(showLoginAction(rootActions))
                     
                 case .signInRequired:
                     guard coverPresented != .lock else {
