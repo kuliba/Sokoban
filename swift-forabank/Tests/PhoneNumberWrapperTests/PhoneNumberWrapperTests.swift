@@ -13,9 +13,8 @@ final class PhoneNumberWrapperTests: XCTestCase {
     
     func test_isValidPhoneNumber_ru_notValid() {
          
-        // TODO: - fixes
-        /*XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
-        XCTAssertFalse(isValid(.ru(.startsWithPlus8(.equals10Digits))))*/
+        XCTAssertFalse(isValid(.ru(.startsWith8(.equals10Digits))))
+        XCTAssertFalse(isValid(.ru(.startsWithPlus8(.equals10Digits))))
         XCTAssertFalse(isValid(.ru(.startsWith8(.lessThen10Digits))))
         XCTAssertFalse(isValid(.ru(.startsWith8(.moreThen10Digits))))
     }
@@ -112,8 +111,8 @@ final class PhoneNumberWrapperTests: XCTestCase {
     func test_format_ru_numberStartsWith9_10Digits() {
         
         let result = format(.ru(.startsWith9(.equals10Digits)))
-        
-        XCTAssertNoDiff(result, "+9 630 000-00-0")
+        // 963 код Сирии
+        XCTAssertNoDiff(result, "+963 000 000 0")
     }
         
     func test_format_ru_NumberLessThan10Digits() {
@@ -166,14 +165,14 @@ final class PhoneNumberWrapperTests: XCTestCase {
         
         let result = format(.otherNotValid(.long))
         
-        XCTAssertNoDiff(result, "+3 521 112-22-33344455566")
+        XCTAssertNoDiff(result, "+352 111 222 33344455566")
     }
 
     func test_format_otherNotValid_short() {
         
         let result = format(.otherNotValid(.short))
         
-        XCTAssertNoDiff(result, "+1 122 3")
+        XCTAssertNoDiff(result, "+1 122-3")
     }
 
     // MARK: - Helpers

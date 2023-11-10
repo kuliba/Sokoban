@@ -147,7 +147,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
             countryCodeReplace: .turkey)
         
         // then
-        XCTAssertEqual(updated, "+9 09")
+        XCTAssertEqual(updated, "+90 9")
     }
     
     func test_updateMasked_shouldFilterLetter() throws {
@@ -213,7 +213,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
             update: update,
             countryCodeReplace: .armenian)
         
-        XCTAssertEqual(updated, "+3 74")
+        XCTAssertEqual(updated, "+374")
     }
     
     func test_updateMasked_shouldNotChangeNilValue_onEmptyUpdate() throws {
@@ -292,7 +292,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-        XCTAssertEqual(updated, "+3 74")
+        XCTAssertEqual(updated, "+374")
     }
 
     func test_updateMasked_shouldNotLimitResult_onNilLimit() throws {
@@ -334,7 +334,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: limit)
         
-        XCTAssertEqual(updated, "+3 73")
+        XCTAssertEqual(updated, "+373")
     }
     
     func test_shouldNotCompleteturkeyCountryCodes_onPartialCode_typeAbroad() throws {
@@ -362,7 +362,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .turkey, limit: limit)
         
-        XCTAssertEqual(updated, "+9 1")
+        XCTAssertEqual(updated, "+91")
     }
     
     func test_updateMasked_shouldCompleteArmenianCountryCode_typeAbroad() throws {
@@ -375,7 +375,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
-#warning("`+3` could be pasted but not typed (entering `3` would invoke substitution ) - the assert is different in original `test_updateMasked_shouldCompleteArmenianCountryCode`: XCTAssertEqual(updated, ____)")
         XCTAssertEqual(updated, "+374")
     }
     
@@ -389,7 +388,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
-        XCTAssertEqual(updated, "+3 74")
+        XCTAssertEqual(updated, "+374")
     }
     
     func test_updateMasked_shouldCompleteArmenianCountryCode2_typeAbroad() throws {
@@ -415,7 +414,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
-        XCTAssertEqual(updated, "+3 74")
+        XCTAssertEqual(updated, "+374")
     }
     
     // MARK: Helpers

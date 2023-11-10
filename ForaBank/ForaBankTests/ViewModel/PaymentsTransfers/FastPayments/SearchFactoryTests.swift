@@ -158,9 +158,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "2916")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+2 916")
+        XCTAssertNoDiff(sut.text, "+291 6")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+2 916"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
@@ -202,9 +202,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "2916")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+2 916")
+        XCTAssertNoDiff(sut.text, "+291 6")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+2 916"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
     
