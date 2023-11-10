@@ -346,15 +346,6 @@ final class Services_makeActivationServiceTests: XCTestCase {
     }
 }
 
-extension FetcherSpy
-where Payload == Void {
-    
-    func fetch(completion: @escaping FetchCompletion) {
-        
-        fetch((), completion: completion)
-    }
-}
-
 private extension CVVPINFunctionalityActivationService.Phone {
     
     var equatable: EquatablePhone {

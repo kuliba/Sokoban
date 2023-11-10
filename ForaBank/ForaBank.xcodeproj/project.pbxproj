@@ -431,6 +431,8 @@
 		2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F1B262A498AA900D8FE55 /* MosParkingPickerDataMapper.swift */; };
 		2A3F934D2ABEE75A00669C1A /* AuthLoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F934C2ABEE75A00669C1A /* AuthLoginViewModelTests.swift */; };
 		2A3F93512ABF112700669C1A /* RootViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3F93502ABF112700669C1A /* RootViewModelTests.swift */; };
+		2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */; };
+		2A44B67A2AFD748E00E269EC /* FetcherSpy+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44B6792AFD748E00E269EC /* FetcherSpy+ext.swift */; };
 		2A4593C62A7CC8B6008593A3 /* Services+keyExchangeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */; };
 		2A4593C92A7CCAC6008593A3 /* Services+transferPublicKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593C82A7CCAC6008593A3 /* Services+transferPublicKeyService.swift */; };
 		2A4593D52A7CFA74008593A3 /* URL+StaticString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4593D42A7CFA74008593A3 /* URL+StaticString.swift */; };
@@ -497,6 +499,7 @@
 		2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */; };
 		2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */; };
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
+		2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */; };
 		2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */; };
 		2A6DC72D2AF3CA1800688401 /* StoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */; };
 		2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */; };
@@ -2563,6 +2566,8 @@
 		2A3F93502ABF112700669C1A /* RootViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelTests.swift; sourceTree = "<group>"; };
 		2A43A28229EC596300B32AB1 /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
 		2A4444842AF5868900DAED3A /* CVVPIN_Services.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CVVPIN_Services.xctestplan; sourceTree = "<group>"; };
+		2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
+		2A44B6792AFD748E00E269EC /* FetcherSpy+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetcherSpy+ext.swift"; sourceTree = "<group>"; };
 		2A4593C52A7CC8B6008593A3 /* Services+keyExchangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+keyExchangeService.swift"; sourceTree = "<group>"; };
 		2A4593C82A7CCAC6008593A3 /* Services+transferPublicKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+transferPublicKeyService.swift"; sourceTree = "<group>"; };
 		2A4593D42A7CFA74008593A3 /* URL+StaticString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+StaticString.swift"; sourceTree = "<group>"; };
@@ -2629,6 +2634,7 @@
 		2A6B33852AA5031A001F5603 /* ServerCommandParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandParameter.swift; sourceTree = "<group>"; };
 		2A6B33872AA5032F001F5603 /* ServerCommandMediaParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandMediaParameter.swift; sourceTree = "<group>"; };
 		2A6B338D2AA50398001F5603 /* ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
+		2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A6DC7292AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorWithStoreTests.swift; sourceTree = "<group>"; };
 		2A6DC72C2AF3CA1800688401 /* StoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreSpy.swift; sourceTree = "<group>"; };
 		2A6DC72E2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingLoaderDecoratorTests.swift; sourceTree = "<group>"; };
@@ -5961,6 +5967,7 @@
 				2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */,
 				2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */,
 				2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */,
+				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
 				2A77B6492ADFC3C50022600F /* SymmetricKey.swift */,
 			);
 			path = Infra;
@@ -6343,7 +6350,9 @@
 				2AE886382AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift */,
 				2AE886362AFBA7F900D86E84 /* Services+makeBindPublicKeyServiceTests.swift */,
 				2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */,
+				2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */,
 				2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */,
+				2A44B6792AFD748E00E269EC /* FetcherSpy+ext.swift */,
 			);
 			path = CVVPINServicesFactory;
 			sourceTree = "<group>";
@@ -13151,6 +13160,7 @@
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				C18D25F62A25A91400DF5643 /* CircleAnimatableAnge.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
+				2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */,
 				77138CEF29C9802E005EDE8F /* PaymentsSuccessLinkViewComponent.swift in Sources */,
 				505592FE2941F77F002A102E /* OrderProductViewComponent.swift in Sources */,
 				682092BB27AC170B003DCAFD /* DaDataPhoneData.swift in Sources */,
@@ -13307,6 +13317,7 @@
 			files = (
 				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
+				2A44B67A2AFD748E00E269EC /* FetcherSpy+ext.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				0CAB7B532A45DE99001B8C93 /* Model+PaymentTemplates.swift in Sources */,
 				77D0386E2988488600FBE5AB /* ServerCommandsC2BSubscriptionTests.swift in Sources */,
@@ -13419,6 +13430,7 @@
 				83E455EB2AC590C60045BEC1 /* QrDataMapperTests.swift in Sources */,
 				833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */,
 				77BE9A39290C20D7006046B1 /* PaymentsSectionViewModelTests.swift in Sources */,
+				2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */,
 				77C3829E27E3351B00B5246E /* TextFieldFormatableViewComponentTests.swift in Sources */,
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
