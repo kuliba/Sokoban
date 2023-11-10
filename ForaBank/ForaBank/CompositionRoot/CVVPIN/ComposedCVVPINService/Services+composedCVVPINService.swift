@@ -106,7 +106,7 @@ extension Services {
         
         let authWithPublicKeyService = makeAuthWithPublicKeyService(
             prepareKeyExchange: prepareKeyExchange(completion:),
-            authWithPublicKeyRemoteService: authWithPublicKeyRemoteService,
+            authRemoteService: authWithPublicKeyRemoteService,
             makeSessionKey: makeSessionKey(response:completion:),
             cache: cache(success:)
         )

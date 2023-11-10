@@ -45,7 +45,7 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
     }
     
-    func test_init_shouldNotCacheOnProcessFailure() {
+    func test_init_shouldNotCacheOnProcessCreateRequestFailure() {
         
         let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
         
@@ -53,6 +53,54 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
             
             sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.createRequest(anyError())))
+        })
+        XCTAssertEqual(handleSuccessSpy.callCount, 0)
+    }
+    
+    func test_init_shouldNotCacheOnProcessPerformRequestFailure() {
+        
+        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionCodeLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.performRequest(anyError())))
+        })
+        XCTAssertEqual(handleSuccessSpy.callCount, 0)
+    }
+    
+    func test_init_shouldNotCacheOnProcessMapResponseInvalidFailure() {
+        
+        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionCodeLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: 500, data: anyData()))))
+        })
+        XCTAssertEqual(handleSuccessSpy.callCount, 0)
+    }
+    
+    func test_init_shouldNotCacheOnProcessMapResponseNetworkFailure() {
+        
+        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionCodeLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.network)))
+        })
+        XCTAssertEqual(handleSuccessSpy.callCount, 0)
+    }
+    
+    func test_init_shouldNotCacheOnProcessMapResponseServerFailure() {
+        
+        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        
+        expectFailure(sut, on: {
+            
+            sessionCodeLoader.completeLoad(with: anySuccess())
+            processSpy.complete(with: .failure(.mapResponse(.server(statusCode: 500, errorMessage: "Server Failure"))))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
     }
