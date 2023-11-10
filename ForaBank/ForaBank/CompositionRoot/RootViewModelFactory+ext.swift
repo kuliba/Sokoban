@@ -67,13 +67,13 @@ private extension RootViewModelFactory {
         )
     }
     
-    typealias RSAStoreClear = () -> Void
+    typealias ResetCVVPINActivation = () -> Void
 
     static func make(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         model: Model
-    ) -> (MakeProductProfileViewModelFactory, RSAStoreClear) {
+    ) -> (MakeProductProfileViewModelFactory, ResetCVVPINActivation) {
         
         let rsaKeyPairStore = makeLoggingStore(
             logger: logger
