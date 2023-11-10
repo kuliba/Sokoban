@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 15.06.2023.
 //
 
+import CvvPin
 import SwiftUI
 
 struct TransportPaymentsView<MosParkingView: View>: View {
@@ -232,6 +233,7 @@ struct TransportPaymentsView_Previews: PreviewProvider {
         TransportPaymentsView(viewModel: viewModel) {
             
             Text("MosParkingView")
+            
         }
     }
 }

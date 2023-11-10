@@ -29,6 +29,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let infoDictionary: [String : Any]?
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -38,9 +39,9 @@ class RootViewModel: ObservableObject, Resetable {
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
-        _ model: Model
+        _ model: Model,
+        onRegister: @escaping () -> Void
     ) {
-        
         self.selected = .main
         self.mainViewModel = mainViewModel
         self.paymentsViewModel = paymentsViewModel
@@ -48,6 +49,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
+        self.onRegister = onRegister
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -55,7 +57,7 @@ class RootViewModel: ObservableObject, Resetable {
         bind()
         bindAuth()
     }
-    
+
     func reset() {
         
         mainViewModel.reset()
@@ -87,7 +89,8 @@ class RootViewModel: ObservableObject, Resetable {
                     let loginViewModel = ComposedLoginViewModel(
                         authLoginViewModel: .init(
                             model,
-                            rootActions: rootActions
+                            rootActions: rootActions,
+                            onRegister: onRegister
                         )
                     )
                     
@@ -195,9 +198,9 @@ class RootViewModel: ObservableObject, Resetable {
                                 personAgreements: payload.conditions,
                                 rootActions: rootActions,
                                 tokenIntent: payload.tokenIntent
-                            )))
-                    )
-                    
+                            ))
+                    ))
+                
                 case _ as RootViewModelAction.CloseAlert:
                     LoggerAgent.shared.log(level: .debug, category: .ui, message: "received RootViewModelAction.CloseAlert")
                     alert = nil
@@ -388,7 +391,8 @@ extension AuthLoginViewModel {
     convenience init(
         _ model: Model,
         buttons: [ButtonAuthView.ViewModel] = [],
-        rootActions: RootViewModel.RootActions
+        rootActions: RootViewModel.RootActions,
+        onRegister: @escaping () -> Void
     ) {
         self.init(
             eventPublishers: model.eventPublishers,
@@ -400,7 +404,8 @@ extension AuthLoginViewModel {
             ),
             factory: model.authLoginViewModelFactory(
                 rootActions: rootActions
-            )
+            ),
+            onRegister: onRegister
         )
     }
 }

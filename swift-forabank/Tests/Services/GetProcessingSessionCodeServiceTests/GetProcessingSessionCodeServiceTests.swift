@@ -128,7 +128,7 @@ final class GetProcessingSessionCodeServiceTests: XCTestCase {
         let spy: HTTPClientSpy
         (sut, spy) = makeSUT()
         let httpError = anyError("http error")
-        var results = [GetProcessingSessionCodeService.Result]()
+        var results = [SessionCodeDomain.Result]()
         
         sut?.process { results.append($0) }
         sut = nil
@@ -164,7 +164,7 @@ final class GetProcessingSessionCodeServiceTests: XCTestCase {
     
     private final class HTTPClientSpy {
         
-        typealias Completion = GetProcessingSessionCodeService.ResponseCompletion
+        typealias Completion = SessionCodeDomain.ResponseCompletion
         typealias Message = (request: URLRequest, completion: Completion)
         
         private(set) var messages = [Message]()
@@ -208,12 +208,12 @@ final class GetProcessingSessionCodeServiceTests: XCTestCase {
     
     private func expect(
         _ sut: GetProcessingSessionCodeService,
-        toDeliver expectedResults: [GetProcessingSessionCodeService.Result],
+        toDeliver expectedResults: [SessionCodeDomain.Result],
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var receivedResults = [GetProcessingSessionCodeService.Result]()
+        var receivedResults = [SessionCodeDomain.Result]()
         
         sut.process { receivedResults.append($0) }
         action()

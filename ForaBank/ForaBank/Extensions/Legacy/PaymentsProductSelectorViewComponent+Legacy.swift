@@ -9,14 +9,21 @@ import Foundation
 
 extension PaymentsProductSelectorView.ViewModel {
     
-    convenience init(productsData: [ProductData], model: Model) {
-        
+    convenience init(
+        productsData: [ProductData],
+        model: Model
+    ) {
         self.init(categories: nil, products: [])
-
+        
         var products = [ProductView.ViewModel]()
         for product in productsData {
-            
-            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model)
+            // для маленьких карт action не нужны - нет функционал CVV/PIN
+            let productViewModel = ProductView.ViewModel(
+                with: product,
+                size: .small,
+                style: .main,
+                model: model
+            )
             products.append(productViewModel)
         }
         

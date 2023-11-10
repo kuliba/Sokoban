@@ -7,8 +7,6 @@
 
 import Foundation
 
-enum ResponseMapper {}
-
 extension ResponseMapper {
     
     typealias StickerDictionaryResult = Result<StickerDictionaryResponse, StickerDictionaryError>
@@ -50,12 +48,6 @@ extension ResponseMapper {
             errorMessage: String
         )
         case invalidData(statusCode: Int, data: Data)
-    }
-    
-    struct ServerError: Decodable, Equatable {
-        
-        let statusCode: Int
-        let errorMessage: String
     }
 }
 

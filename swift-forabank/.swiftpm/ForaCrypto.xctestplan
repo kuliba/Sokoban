@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6674690F-674C-4F28-BFFF-1E065B79EEE3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    }
+  ],
+  "version" : 1
+}

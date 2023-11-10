@@ -13,72 +13,6 @@
   },
   "testTargets" : [
     {
-      "enabled" : false,
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "WIPTests",
-        "name" : "WIPTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldModelTests",
-        "name" : "TextFieldModelTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldDomainTests",
-        "name" : "TextFieldDomainTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldComponentTests",
-        "name" : "TextFieldComponentTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "UserModelTests",
-        "name" : "UserModelTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PickerWithPreviewComponentTests",
-        "name" : "PickerWithPreviewComponentTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LoadableResourceComponentTests",
-        "name" : "LoadableResourceComponentTests"
-      }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldUITests",
-        "name" : "TextFieldUITests"
-      }
-    },
-    {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "CvvPinTests",
@@ -86,11 +20,38 @@
       }
     },
     {
-      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
       "target" : {
         "containerPath" : "container:",
         "identifier" : "GetProcessingSessionCodeServiceTests",
         "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
       }
     },
     {
@@ -110,29 +71,44 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "GenericRemoteServiceTests",
-        "name" : "GenericRemoteServiceTests"
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
+        "identifier" : "TextFieldDomainTests",
+        "name" : "TextFieldDomainTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LinkableTextTests",
-        "name" : "LinkableTextTests"
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "LandingUIComponentTests",
-        "name" : "LandingUIComponentTests"
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UserModelTests",
+        "name" : "UserModelTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "WIPTests",
+        "name" : "WIPTests"
       }
     },
     {
@@ -140,6 +116,13 @@
         "containerPath" : "container:",
         "identifier" : "LandingMappingTests",
         "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
       }
     },
     {
@@ -165,7 +148,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "PaymentsComponentsTests",
         "name" : "PaymentsComponentsTests"
       }
@@ -175,6 +158,69 @@
         "containerPath" : "container:",
         "identifier" : "PaymentStickerTests",
         "name" : "PaymentStickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPIN_ServicesTests",
+        "name" : "CVVPIN_ServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
       }
     }
   ],

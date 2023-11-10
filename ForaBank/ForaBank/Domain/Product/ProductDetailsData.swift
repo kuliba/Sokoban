@@ -15,4 +15,6 @@ struct ProductDetailsData: Codable, Equatable {
     let inn: String
     let kpp: String
     let payeeName: String
+    let maskCardNumber: String?
+    let cardNumber: String?
 }

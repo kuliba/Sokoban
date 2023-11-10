@@ -724,7 +724,8 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         let rootActionsSpy = RootActionsSpy()
         let sut = AuthLoginViewModel(
             model,
-            rootActions: rootActionsSpy.rootActions()
+            rootActions: rootActionsSpy.rootActions(),
+            onRegister: {}
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)

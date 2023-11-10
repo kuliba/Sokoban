@@ -11,7 +11,7 @@ import GenericRemoteService
 extension Services {
 
     typealias GetJsonAbroadType = RequestFactory.GetJsonAbroadType
-    typealias GetStickerDictionary = RemoteService<GetJsonAbroadType, StickerDictionaryResponse>
+    typealias GetStickerDictionary = RemoteService<GetJsonAbroadType, StickerDictionaryResponse, Error, Error, Error>
 
     static func stickerDictRequest(
         input: RequestFactory.GetJsonAbroadType,

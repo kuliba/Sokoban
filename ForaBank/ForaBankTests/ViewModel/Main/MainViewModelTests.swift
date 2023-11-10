@@ -66,7 +66,7 @@ final class MainViewModelTests: XCTestCase {
             )
         )
     }
-    
+
     // MARK: - Helpers
     
     private func makeSUT(
@@ -77,7 +77,7 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainViewModel(model)
+        let sut = MainViewModel(model, productProfileViewModelFactory: { _,_,_  in nil }, onRegister: {})
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
@@ -104,7 +104,7 @@ final class MainViewModelTests: XCTestCase {
         )
         model.clientInfo.value = makeClientInfoDummy()
         
-        let sut = MainViewModel(model)
+        let sut = MainViewModel(model, productProfileViewModelFactory: { _,_,_  in nil }, onRegister: {})
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix

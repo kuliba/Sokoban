@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E71FD524-29B1-4E65-95A9-F6D4BDC243ED",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPINServiceTests",
+        "name" : "CVVPINServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

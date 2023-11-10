@@ -12,20 +12,22 @@ extension ActivityView {
     
     struct ViewModel {
         
-        var activityItems: [Any]
-        var applicationActivities: [UIActivity]? = nil
+        let activityItems: [Any]
+        let applicationActivities: [UIActivity]? = nil
     }
 }
 
 struct ActivityView: UIViewControllerRepresentable {
     
-    var viewModel: ActivityView.ViewModel
+    let viewModel: ActivityView.ViewModel
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityView>) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: viewModel.activityItems, applicationActivities: viewModel.applicationActivities)
-        return controller
+        
+        return .init(
+            activityItems: viewModel.activityItems,
+            applicationActivities: viewModel.applicationActivities
+        )
     }
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityView>) {}
-    
 }

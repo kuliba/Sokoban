@@ -19,14 +19,15 @@ public final class BusinessLogic {
     public typealias TransferResult = Result<TransferResponse, TransferError>
     public typealias TransferCompletion = (TransferResult) -> Void
     public typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
+    public typealias DictionaryService = RemoteService<Operation, Operation, Error, Error, Error>
     
-    private let dictionaryService: RemoteService<Operation, Operation>
+    private let dictionaryService: DictionaryService
     private let transfer: Transfer
     
     private let reduce: Reducer.Reduce
     
     public init(
-        dictionaryService: RemoteService<Operation, Operation>,
+        dictionaryService: DictionaryService,
         transfer: @escaping Transfer,
         reduce: @escaping Reducer.Reduce
     ) {
