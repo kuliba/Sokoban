@@ -13,11 +13,12 @@ extension Services {
     
     typealias AuthWithPublicKeyService = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
     typealias PrepareKeyExchange = (@escaping AuthenticateWithPublicKeyService.PrepareKeyExchangeCompletion) -> Void
+    typealias AuthRemoteService = Fetcher<Data, AuthenticateWithPublicKeyService.Response, MappingRemoteServiceError<AuthenticateWithPublicKeyService.APIError>>
     typealias CacheAuthSuccess = (AuthenticateWithPublicKeyService.Success) -> Void
     
     static func makeAuthWithPublicKeyService(
         prepareKeyExchange: @escaping PrepareKeyExchange,
-        authWithPublicKeyRemoteService: AuthWithPublicKeyRemoteService,
+        authRemoteService: any AuthRemoteService,
         makeSessionKey: @escaping AuthenticateWithPublicKeyService.MakeSessionKey,
         cache: @escaping CacheAuthSuccess
     ) -> any AuthWithPublicKeyService{
@@ -30,7 +31,7 @@ extension Services {
         
         let cachingAuthWithPublicKeyService = FetcherDecorator(
             decoratee: authenticateWithPublicKeyService,
-            handleSuccess: { _ in }//cache
+            handleSuccess: cache
         )
         
         return cachingAuthWithPublicKeyService
@@ -41,7 +42,7 @@ extension Services {
             data: Data,
             completion: @escaping AuthenticateWithPublicKeyService.ProcessCompletion
         ) {
-            authWithPublicKeyRemoteService.process(data) {
+            authRemoteService.fetch(data) {
                 
                 completion($0.mapError { .init($0) })
             }
