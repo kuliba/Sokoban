@@ -127,7 +127,7 @@ extension Services {
             changePINRemoteService: changePINRemoteService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             publicRSAKeyDecrypt: publicRSAKeyDecrypt(string:completion:),
-            cvvPINJSONMaker: cvvPINJSONMaker
+            _makePINChangeJSON: cvvPINJSONMaker.makePINChangeJSON
         )
         
         let cachingChangePINService = FetcherDecorator(

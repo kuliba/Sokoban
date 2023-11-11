@@ -157,8 +157,21 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         })
     }
     
+    func test_changePIN_shouldDeliverErrorOnMakeJSONFailure() throws {
+        
+        let session = try anySession(keyPair: anyRSAKeyPair())
+        let (sut, _, loadSessionSpy, _,_,_) = makeSUT(
+            makePINChangeJSONResult: .failure(anyNSError())
+        )
+        
+        expect(sut, toChangePINWith: .failure(.serviceError(.makeJSONFailure)), on: {
+            
+            loadSessionSpy.complete(with: .success(session))
+        })
+    }
+    
     func test_changePIN_shouldDeliverErrorOnRemoteServiceCreateRequestFailure() throws {
-
+        
         let session = try anySession(keyPair: anyRSAKeyPair())
         let (sut, _, loadSessionSpy, changePINRemoteSpy, _,_) = makeSUT()
         
@@ -262,8 +275,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
     private typealias ProcessingKey = LiveExtraLoggingCVVPINCrypto.ProcessingKey
     
     private func makeSUT(
-        transportKeyResult: Result<TransportKey, Error> = anyTransportKeyResult(),
-        processingKeyResult: Result<ProcessingKey, Error> = anyProcessingKeyResult(),
+        makePINChangeJSONResult: Result<Data, Error> = .success(anyData()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -280,20 +292,13 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         let changePINRemoteSpy = ChangePINRemoteSpy()
         let confirmRemoteSpy = ConfirmRemoteSpy()
         
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            transportKey: transportKeyResult.get,
-            processingKey: processingKeyResult.get,
-            log: { _,_,_ in }
-        )
-        let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
-        
         let sut = Services.makeChangePINService(
             auth: authSpy.fetch(completion:),
             loadSession: loadSessionSpy.fetch(completion:),
             changePINRemoteService: changePINRemoteSpy,
             confirmChangePINRemoteService: confirmRemoteSpy,
             publicRSAKeyDecrypt: decryptSpy.fetch(_:completion:),
-            cvvPINJSONMaker: cvvPINJSONMaker
+            _makePINChangeJSON: { _,_,_,_,_,_,_ in try makePINChangeJSONResult.get() }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -481,4 +486,3 @@ private func anySession(
         rsaPrivateKey: keyPair.privateKey
     )
 }
-

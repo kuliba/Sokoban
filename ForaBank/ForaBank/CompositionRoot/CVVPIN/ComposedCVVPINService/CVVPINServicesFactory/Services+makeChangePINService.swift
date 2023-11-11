@@ -18,6 +18,8 @@ extension Services {
     typealias StringDecryptCompletion = (Result<String, Error>) -> Void
     typealias StringDecrypt = (String, @escaping StringDecryptCompletion) -> Void
     
+    typealias MakePINChangeJSON = (ChangePINService.SessionID, ChangePINService.CardID, ChangePINService.OTP, ChangePINService.PIN, ChangePINService.OTPEventID, SessionKey, RSADomain.PrivateKey) throws -> Data
+    
     typealias _ChangePINRemoteService = Fetcher<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
     typealias _ConfirmChangePINRemoteService = Fetcher<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
     
@@ -27,7 +29,7 @@ extension Services {
         changePINRemoteService: any _ChangePINRemoteService,
         confirmChangePINRemoteService: any _ConfirmChangePINRemoteService,
         publicRSAKeyDecrypt: @escaping StringDecrypt,
-        cvvPINJSONMaker: CVVPINJSONMaker
+        _makePINChangeJSON: @escaping MakePINChangeJSON
     ) -> ChangePINService {
         
         let changePINService = ChangePINService(
@@ -90,14 +92,14 @@ extension Services {
                     
                     completion(.init {
                         
-                        let json = try cvvPINJSONMaker.makePINChangeJSON(
-                            sessionID: sessionID,
-                            cardID: .init(cardIDValue: cardID.cardIDValue),
-                            otp: .init(otpValue: otp.otpValue),
-                            pin: .init(pinValue: pin.pinValue),
-                            otpEventID: session.otpEventID,
-                            sessionKey: session.sessionKey,
-                            rsaPrivateKey: session.rsaPrivateKey
+                        let json = try _makePINChangeJSON(
+                            sessionID,
+                            .init(cardIDValue: cardID.cardIDValue),
+                            .init(otpValue: otp.otpValue),
+                            .init(pinValue: pin.pinValue),
+                            session.otpEventID,
+                            session.sessionKey,
+                            session.rsaPrivateKey
                         )
                         
                         return (sessionID, json)
