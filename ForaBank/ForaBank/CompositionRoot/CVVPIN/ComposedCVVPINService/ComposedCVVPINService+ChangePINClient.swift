@@ -54,20 +54,14 @@ extension ComposedCVVPINService: ChangePINClient {
 
 private extension GetPINConfirmationCodeError {
     
-    init(_ error: ChangePINService.Error) {
+    init(_ error: ChangePINService.GetPINConfirmationCodeError) {
         
         switch error {
         case .activationFailure:
             self = .activationFailure
             
-        case .authenticationFailure:
+        case .authenticationFailure, .decryptionFailure, .invalid, .network:
             self = .serviceFailure
-            
-        case .invalid, .network, .serviceError:
-            self = .serviceFailure
-            
-        case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
-            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
             
         case let .server(statusCode: statusCode, errorMessage: errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
@@ -77,19 +71,13 @@ private extension GetPINConfirmationCodeError {
 
 private extension ChangePINError {
     
-    init(_ error: ChangePINService.Error) {
+    init(_ error: ChangePINService.ChangePINError) {
         
         switch error {
         case .activationFailure:
-            self = .serviceFailure
+            self = .activationFailure
             
-        case .authenticationFailure:
-            self = .serviceFailure
-            
-        case .invalid:
-            self = .serviceFailure
-            
-        case .network:
+        case .authenticationFailure, .invalid, .makeJSONFailure, .network:
             self = .serviceFailure
             
         case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
@@ -98,8 +86,8 @@ private extension ChangePINError {
         case let .server(statusCode: statusCode, errorMessage: errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
             
-        case .serviceError:
-            self = .serviceFailure
+        case let .weakPIN(statusCode: statusCode, errorMessage: errorMessage):
+            self = .weakPIN(statusCode: statusCode, errorMessage: errorMessage)
         }
     }
 }

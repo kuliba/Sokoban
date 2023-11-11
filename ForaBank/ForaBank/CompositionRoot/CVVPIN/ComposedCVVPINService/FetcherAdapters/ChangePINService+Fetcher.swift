@@ -13,7 +13,7 @@ extension ChangePINService: Fetcher {
     
     public typealias Payload = Void
     public typealias Success = ConfirmResponse
-    public typealias Failure = Error
+    public typealias Failure = GetPINConfirmationCodeError
     
     public func fetch(
         _ payload: Void,

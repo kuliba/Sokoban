@@ -9,23 +9,23 @@ import Foundation
 
 public final class ChangePINService {
     
-    public typealias AuthenticateResult = Swift.Result<SessionID, AuthenticateError>
+    public typealias AuthenticateResult = Result<SessionID, AuthenticateError>
     public typealias AuthenticateCompletion = (AuthenticateResult) -> Void
     public typealias Authenticate = (@escaping AuthenticateCompletion) -> Void
-
-    public typealias PublicRSAKeyDecryptResult = Swift.Result<String, Swift.Error>
+    
+    public typealias PublicRSAKeyDecryptResult = Result<String, Error>
     public typealias PublicRSAKeyDecryptCompletion = (PublicRSAKeyDecryptResult) -> Void
     public typealias PublicRSAKeyDecrypt = (String, @escaping PublicRSAKeyDecryptCompletion) -> Void
     
-    public typealias ConfirmProcessResult = Swift.Result<EncryptedConfirmResponse, ConfirmAPIError>
+    public typealias ConfirmProcessResult = Result<EncryptedConfirmResponse, ConfirmAPIError>
     public typealias ConfirmProcessCompletion = (ConfirmProcessResult) -> Void
     public typealias ConfirmProcess = (SessionID, @escaping ConfirmProcessCompletion) -> Void
     
-    public typealias MakePINChangeJSONResult = Swift.Result<(SessionID, Data), Swift.Error>
+    public typealias MakePINChangeJSONResult = Result<(SessionID, Data), Error>
     public typealias MakePINChangeJSONCompletion = (MakePINChangeJSONResult) -> Void
     public typealias MakePINChangeJSON = (CardID, PIN, OTP, @escaping MakePINChangeJSONCompletion) -> Void
     
-    public typealias ChangePINProcessResult = Swift.Result<Void, ChangePINAPIError>
+    public typealias ChangePINProcessResult = Result<Void, ChangePINAPIError>
     public typealias ChangePINProcessCompletion = (ChangePINProcessResult) -> Void
     public typealias ChangePINProcess = ((SessionID, Data), @escaping ChangePINProcessCompletion) -> Void
     
@@ -52,7 +52,7 @@ public final class ChangePINService {
 
 public extension ChangePINService {
     
-    typealias GetPINConfirmationCodeResult = Swift.Result<ConfirmResponse, Error>
+    typealias GetPINConfirmationCodeResult = Result<ConfirmResponse, GetPINConfirmationCodeError>
     typealias GetPINConfirmationCodeCompletion = (GetPINConfirmationCodeResult) -> Void
     
     func getPINConfirmationCode(
@@ -60,11 +60,21 @@ public extension ChangePINService {
     ) {
         _authenticate(completion)
     }
+    
+    enum GetPINConfirmationCodeError: Error {
+        
+        case activationFailure
+        case authenticationFailure
+        case decryptionFailure
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+    }
 }
 
 public extension ChangePINService {
     
-    typealias ChangePINResult = Swift.Result<Void, Error>
+    typealias ChangePINResult = Result<Void, ChangePINError>
     typealias ChangePINCompletion = (ChangePINResult) -> Void
     
     func changePIN(
@@ -75,47 +85,42 @@ public extension ChangePINService {
     ) {
         makePINChangeJSON(cardID, pin, otp, completion)
     }
+    
+    enum ChangePINError: Error {
+        
+        case activationFailure
+        case authenticationFailure
+        case invalid(statusCode: Int, data: Data)
+        case makeJSONFailure
+        case network
+        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
+        case weakPIN(statusCode: Int, errorMessage: String)
+        case server(statusCode: Int, errorMessage: String)
+    }
 }
 
 extension ChangePINService {
     
-    public enum Error: Swift.Error {
-        
-        case activationFailure
-        case authenticationFailure
-        case invalid(statusCode: Int, data: Data)
-        case network
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case serviceError(ServiceError)
-        
-        public enum ServiceError {
-            
-            case checkSessionFailure
-            case decryptionFailure
-            case makeJSONFailure
-        }
-    }
-    
-    public enum AuthenticateError: Swift.Error {
+    public enum AuthenticateError: Error {
         
         case activationFailure
         case authenticationFailure
     }
     
-    public enum ConfirmAPIError: Swift.Error {
+    public enum ConfirmAPIError: Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
     }
     
-    public enum ChangePINAPIError: Swift.Error {
+    public enum ChangePINAPIError: Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
+        case weakPIN(statusCode: Int, errorMessage: String)
     }
     
     public struct ConfirmResponse {
@@ -151,7 +156,7 @@ extension ChangePINService {
         public let cardIDValue: Int
         
         public init(cardIDValue: Int) {
-         
+            
             self.cardIDValue = cardIDValue
         }
     }
@@ -161,7 +166,7 @@ extension ChangePINService {
         public let eventIDValue: String
         
         public init(eventIDValue: String) {
-
+            
             self.eventIDValue = eventIDValue
         }
     }
@@ -171,7 +176,7 @@ extension ChangePINService {
         public let otpValue: String
         
         public init(otpValue: String) {
-         
+            
             self.otpValue = otpValue
         }
     }
@@ -181,7 +186,7 @@ extension ChangePINService {
         public let pinValue: String
         
         public init(pinValue: String) {
-         
+            
             self.pinValue = pinValue
         }
     }
@@ -191,7 +196,7 @@ extension ChangePINService {
         public let sessionIDValue: String
         
         public init(sessionIDValue: String) {
-         
+            
             self.sessionIDValue = sessionIDValue
         }
     }
@@ -209,7 +214,7 @@ private extension ChangePINService {
             switch result {
             case let .failure(error):
                 completion(.failure(.init(error)))
-
+                
             case let .success(sessionID):
                 confirmProcess(sessionID, completion)
             }
@@ -244,7 +249,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.failure(.serviceError(.decryptionFailure)))
+                completion(.failure(.decryptionFailure))
                 
             case let .success(eventID):
                 decrypt(.init(eventIDValue: eventID), encrypted, completion)
@@ -264,7 +269,7 @@ private extension ChangePINService {
             completion(
                 result
                     .map { .init(otpEventID: eventID, phone: $0)}
-                    .mapError { _ in .serviceError(.decryptionFailure) }
+                    .mapError { _ in .decryptionFailure }
             )
         }
     }
@@ -284,7 +289,7 @@ private extension ChangePINService {
             
             switch result {
             case .failure:
-                completion(.failure(.serviceError(.makeJSONFailure)))
+                completion(.failure(.makeJSONFailure))
                 
             case let .success((json, sessionID)):
                 changePINProcess(sessionID, json, completion)
@@ -301,12 +306,12 @@ private extension ChangePINService {
             
             guard self != nil else { return }
             
-            completion(result.mapError(Error.init))
+            completion(result.mapError(ChangePINError.init))
         }
     }
 }
 
-private extension ChangePINService.Error {
+private extension ChangePINService.GetPINConfirmationCodeError {
     
     init( _ error: ChangePINService.AuthenticateError) {
         
@@ -332,7 +337,10 @@ private extension ChangePINService.Error {
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
         }
     }
+}
 
+private extension ChangePINService.ChangePINError {
+    
     init(_ error: ChangePINService.ChangePINAPIError) {
         
         switch error {
@@ -347,6 +355,9 @@ private extension ChangePINService.Error {
             
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case let .weakPIN(statusCode, errorMessage):
+            self = .weakPIN(statusCode: statusCode, errorMessage: errorMessage)
         }
     }
 }

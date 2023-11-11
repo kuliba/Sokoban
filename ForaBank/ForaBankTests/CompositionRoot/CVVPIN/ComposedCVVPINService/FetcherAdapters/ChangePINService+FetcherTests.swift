@@ -45,8 +45,6 @@ final class ChangePINService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnConfirmProcessNetworkFailure() {
         
-        let statusCode = 500
-        let invalidData = anyData()
         let (sut, _) = makeSUT(
             confirmProcessResult: .failure(.network)
         )
@@ -69,7 +67,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             
             spy.complete(with: .failure(anyError()))
         })
@@ -79,7 +77,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             
             spy.complete(with: .success(UUID().uuidString))
             spy.complete(with: .failure(anyError()), at: 1)
@@ -160,7 +158,8 @@ final class ChangePINService_FetcherTests: XCTestCase {
             ):
                 switch (expected, received) {
                 case (.activationFailure, .activationFailure),
-                    (.authenticationFailure, .authenticationFailure):
+                    (.authenticationFailure, .authenticationFailure),
+                    (.decryptionFailure, .decryptionFailure):
                     break
                     
                 case let (
@@ -174,33 +173,11 @@ final class ChangePINService_FetcherTests: XCTestCase {
                     break
                     
                 case let (
-                    .retry(expectedStatusCode, expectedErrorMessage, expectedRetryAttempts),
-                    .retry(receivedStatusCode, receivedErrorMessage, receivedRetryAttempts)
-                ):
-                    XCTAssertNoDiff(expectedStatusCode, receivedStatusCode, file: file, line: line)
-                    XCTAssertNoDiff(expectedErrorMessage, receivedErrorMessage, file: file, line: line)
-                    XCTAssertNoDiff(expectedRetryAttempts, receivedRetryAttempts, file: file, line: line)
-                    
-                case let (
                     .server(expectedStatusCode, expectedErrorMessage),
                     .server(receivedStatusCode, receivedErrorMessage)
                 ):
                     XCTAssertNoDiff(expectedStatusCode, receivedStatusCode, file: file, line: line)
                     XCTAssertNoDiff(expectedErrorMessage, receivedErrorMessage, file: file, line: line)
-                    
-                case let (
-                    .serviceError(expected),
-                    .serviceError(received)
-                ):
-                    switch (expected, received) {
-                    case (.checkSessionFailure, .checkSessionFailure),
-                        (.decryptionFailure, .decryptionFailure),
-                        (.makeJSONFailure, .makeJSONFailure):
-                        break
-                        
-                    default:
-                        XCTFail("Expected \(expected), but got \(received)", file: file, line: line)
-                    }
                     
                 default:
                     XCTFail("Expected \(expected), but got \(received)", file: file, line: line)
