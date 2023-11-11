@@ -16,12 +16,15 @@ extension Services {
     typealias LoadChangePinSession = (@escaping LoadChangePinSessionCompletion) -> Void
     typealias StringDecryptCompletion = (Result<String, Error>) -> Void
     typealias StringDecrypt = (String, @escaping StringDecryptCompletion) -> Void
-
+    
+    typealias _ChangePINRemoteService = Fetcher<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
+    typealias _ConfirmChangePINRemoteService = Fetcher<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
+    
     static func makeChangePINService(
         auth: @escaping Auth,
         loadSession: @escaping LoadChangePinSession,
-        changePINRemoteService: Services.ChangePINRemoteService,
-        confirmChangePINRemoteService: ConfirmChangePINRemoteService,
+        changePINRemoteService: any _ChangePINRemoteService,
+        confirmChangePINRemoteService: any _ConfirmChangePINRemoteService,
         publicRSAKeyDecrypt: @escaping StringDecrypt,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> ChangePINService {
@@ -56,7 +59,7 @@ extension Services {
             sessionID: ChangePINService.SessionID,
             completion: @escaping ChangePINService.ConfirmProcessCompletion
         ) {
-            confirmChangePINRemoteService.process(
+            confirmChangePINRemoteService.fetch(
                 .init(value: sessionID.sessionIDValue)
             ) {
                 completion(
@@ -106,7 +109,7 @@ extension Services {
             payload: (ChangePINService.SessionID, Data),
             completion: @escaping ChangePINService.ChangePINProcessCompletion
         ) {
-            changePINRemoteService.process((
+            changePINRemoteService.fetch((
                 .init(value: payload.0.sessionIDValue),
                 payload.1
             )) {

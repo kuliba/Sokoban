@@ -242,41 +242,6 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     }
 }
 
-private func anyTransportKeyResult() ->
-Result<LiveExtraLoggingCVVPINCrypto.TransportKey, Error> {
-    
-    Result {
-        
-        try ForaCrypto.Crypto.generateKeyPair(keyType: .rsa, keySize: .bits4096)
-    }
-    .map(\.publicKey)
-    .map(LiveExtraLoggingCVVPINCrypto.TransportKey.init(key:))
-}
-
-private func anyProcessingKeyResult() ->
-Result<LiveExtraLoggingCVVPINCrypto.ProcessingKey, Error> {
-    
-    Result {
-        
-        try ForaCrypto.Crypto.generateKeyPair(
-            keyType: .rsa,
-            keySize: .bits4096
-        )
-    }
-    .map(\.publicKey)
-    .map(LiveExtraLoggingCVVPINCrypto.ProcessingKey.init(key:))
-}
-
-private func anyRSAKeyPair() throws -> RSADomain.KeyPair {
-    
-    let (publicKey, privateKey) = try ForaCrypto.Crypto.generateKeyPair(
-        keyType: .rsa,
-        keySize: .bits4096
-    )
-
-    return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
-}
-
 private extension ShowCVVService.CVV {
     
     var equatable: EquatableCVV {
