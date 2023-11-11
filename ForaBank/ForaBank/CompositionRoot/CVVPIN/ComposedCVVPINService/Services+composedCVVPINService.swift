@@ -26,7 +26,7 @@ extension Services {
         case activationFailure
         case authenticationFailure
     }
-
+    
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
@@ -122,16 +122,13 @@ extension Services {
         // MARK: Configure Change PIN Service
         
         let changePINService = makeChangePINService(
-            otpEventIDLoader: otpEventIDLoader,
+            auth: auth(completion:),
+            loadSession: loadChangePINSession(completion:),
             rsaKeyPairLoader: rsaKeyPairLoader,
-            sessionIDLoader: sessionIDLoader,
-            sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: authWithPublicKeyService,
             changePINRemoteService: changePINRemoteService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
-            cvvPINJSONMaker: cvvPINJSONMaker,
-            ephemeralLifespan: ephemeralLifespan
+            cvvPINJSONMaker: cvvPINJSONMaker
         )
         
         let cachingChangePINService = FetcherDecorator(
@@ -428,6 +425,79 @@ extension Services {
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
+        }
+        
+        // MARK: - ChangePIN Adapters
+        
+        func loadChangePINSession(
+            completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            otpEventIDLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(otpEventID):
+                    loadChangePINSession(otpEventID, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionID):
+                    loadChangePINSession(otpEventID, sessionID, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    loadChangePINSession(otpEventID, sessionID, sessionKey, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ sessionKey: SessionKey,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(rsaKeyPair):
+                    completion(.success(.init(
+                        otpEventID: otpEventID,
+                        sessionID: sessionID,
+                        sessionKey: sessionKey,
+                        rsaPrivateKey: rsaKeyPair.privateKey
+                    )))
+                }
+            }
         }
         
         // MARK: - ShowCVV Adapters

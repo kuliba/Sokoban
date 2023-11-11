@@ -11,18 +11,18 @@ import Foundation
 
 extension Services {
     
+    typealias LoadChangePinSessionResult = Result<ChangePINSession, Error>
+    typealias LoadChangePinSessionCompletion = (LoadChangePinSessionResult) -> Void
+    typealias LoadChangePinSession = (@escaping LoadChangePinSessionCompletion) -> Void
+    
     static func makeChangePINService(
-        otpEventIDLoader: any Loader<ChangePINService.OTPEventID>,
+        auth: @escaping Auth,
+        loadSession: @escaping LoadChangePinSession,
         rsaKeyPairLoader: any Loader<RSADomain.KeyPair>,
-        sessionIDLoader: any Loader<SessionID>,
-        sessionKeyLoader: any Loader<SessionKey>,
-        authWithPublicKeyService: any AuthWithPublicKeyFetcher,
         changePINRemoteService: Services.ChangePINRemoteService,
         confirmChangePINRemoteService: ConfirmChangePINRemoteService,
         cvvPINCrypto: CVVPINCrypto,
-        cvvPINJSONMaker: CVVPINJSONMaker,
-        currentDate: @escaping () -> Date = Date.init,
-        ephemeralLifespan: TimeInterval
+        cvvPINJSONMaker: CVVPINJSONMaker
     ) -> ChangePINService {
         
         let changePINService = ChangePINService(
@@ -40,122 +40,15 @@ extension Services {
         func authenticate(
             completion: @escaping ChangePINService.AuthenticateCompletion
         ) {
-            rsaKeyPairLoader.load { result in
+            auth { result in
                 
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case let .success(rsaKeyPair):
-                    authenticate(rsaKeyPair, completion)
-                }
+                completion(
+                    result
+                        .map(\.value)
+                        .map(ChangePINService.SessionID.init)
+                        .mapError(ChangePINService.AuthenticateError.init)
+                )
             }
-        }
-        
-        func authenticate(
-            _ rsaKeyPair: RSADomain.KeyPair,
-            _ completion: @escaping ChangePINService.AuthenticateCompletion
-        ) {
-            sessionIDLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    authWithPublicKeyService.fetch {
-                        
-                        completion(
-                            $0
-                                .map(\.sessionID.sessionIDValue)
-                                .map(ChangePINService.SessionID.init(sessionIDValue:))
-                                .mapError { _ in .authenticationFailure })
-                    }
-                    
-                case let .success(sessionID):
-                    completion(.success(.init(
-                        sessionIDValue: sessionID.value
-                    )))
-                }
-            }
-        }
-        
-        typealias LoadChangePINSessionCompletion = (Swift.Result<ChangePINSession, Error>) -> Void
-        
-        func loadSession(
-            completion: @escaping LoadChangePINSessionCompletion
-        ) {
-            otpEventIDLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(otpEventID):
-                    loadSession(otpEventID, completion)
-                }
-            }
-        }
-        
-        func loadSession(
-            _ otpEventID: ChangePINService.OTPEventID,
-            _ completion: @escaping LoadChangePINSessionCompletion
-        ) {
-            sessionIDLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(sessionID):
-                    loadSession(otpEventID, sessionID, completion)
-                }
-            }
-        }
-        
-        func loadSession(
-            _ otpEventID: ChangePINService.OTPEventID,
-            _ sessionID: SessionID,
-            _ completion: @escaping LoadChangePINSessionCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(sessionKey):
-                    loadSession(otpEventID, sessionID, sessionKey, completion)
-                }
-            }
-        }
-        
-        func loadSession(
-            _ otpEventID: ChangePINService.OTPEventID,
-            _ sessionID: SessionID,
-            _ sessionKey: SessionKey,
-            _ completion: @escaping LoadChangePINSessionCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(rsaKeyPair):
-                    completion(.success(.init(
-                        otpEventID: otpEventID,
-                        sessionID: sessionID,
-                        sessionKey: sessionKey,
-                        rsaPrivateKey: rsaKeyPair.privateKey
-                    )))
-                }
-            }
-        }
-        
-        struct ChangePINSession {
-            
-            let otpEventID: ChangePINService.OTPEventID
-            let sessionID: ForaBank.SessionID
-            let sessionKey: SessionKey
-            let rsaPrivateKey: RSADomain.PrivateKey
         }
         
         func publicRSAKeyDecrypt(
@@ -243,6 +136,14 @@ extension Services {
             }
         }
     }
+    
+    struct ChangePINSession {
+        
+        let otpEventID: ChangePINService.OTPEventID
+        let sessionID: ForaBank.SessionID
+        let sessionKey: SessionKey
+        let rsaPrivateKey: RSADomain.PrivateKey
+    }
 }
 
 private extension ChangePINService.ConfirmAPIError {
@@ -269,6 +170,20 @@ private extension ChangePINService.ChangePINAPIError {
             
         case let .mapResponse(mapResponseError):
             self = mapResponseError
+        }
+    }
+}
+
+private extension ChangePINService.AuthenticateError {
+    
+    init(_ error: Services.AuthError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+            
+        case .authenticationFailure:
+            self = .authenticationFailure
         }
     }
 }
