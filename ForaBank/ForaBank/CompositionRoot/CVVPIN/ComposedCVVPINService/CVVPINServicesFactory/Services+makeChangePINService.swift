@@ -12,13 +12,13 @@ import Foundation
 extension Services {
     
     static func makeChangePINService(
+        otpEventIDLoader: any Loader<ChangePINService.OTPEventID>,
         rsaKeyPairLoader: any Loader<RSADomain.KeyPair>,
         sessionIDLoader: any Loader<SessionID>,
-        otpEventIDLoader: any Loader<ChangePINService.OTPEventID>,
         sessionKeyLoader: any Loader<SessionKey>,
         authWithPublicKeyService: any AuthWithPublicKeyFetcher,
-        confirmChangePINRemoteService: ConfirmChangePINRemoteService,
         changePINRemoteService: Services.ChangePINRemoteService,
+        confirmChangePINRemoteService: ConfirmChangePINRemoteService,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,

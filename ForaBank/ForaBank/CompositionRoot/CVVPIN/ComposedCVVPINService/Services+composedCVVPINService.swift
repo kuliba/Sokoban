@@ -113,13 +113,13 @@ extension Services {
         // MARK: Configure Change PIN Service
         
         let changePINService = makeChangePINService(
+            otpEventIDLoader: otpEventIDLoader,
             rsaKeyPairLoader: rsaKeyPairLoader,
             sessionIDLoader: sessionIDLoader,
-            otpEventIDLoader: otpEventIDLoader,
             sessionKeyLoader: sessionKeyLoader,
             authWithPublicKeyService: authWithPublicKeyService,
-            confirmChangePINRemoteService: confirmChangePINRemoteService,
             changePINRemoteService: changePINRemoteService,
+            confirmChangePINRemoteService: confirmChangePINRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,
             ephemeralLifespan: ephemeralLifespan
