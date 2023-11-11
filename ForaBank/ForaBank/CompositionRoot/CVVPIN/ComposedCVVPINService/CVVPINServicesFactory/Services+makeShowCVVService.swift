@@ -43,7 +43,7 @@ extension Services {
                 
                 completion(
                     result
-                        .map(\.value)
+                        .map(\.sessionIDValue)
                         .map(ShowCVVService.SessionID.init)
                         .mapError(ShowCVVService.AuthenticateError.init)
                 )
@@ -75,7 +75,7 @@ extension Services {
             completion: @escaping ShowCVVService.ProcessCompletion
         ) {
             showCVVRemoteService.fetch((
-                .init(value: payload.sessionID.sessionIDValue),
+                .init(sessionIDValue: payload.sessionID.sessionIDValue),
                 payload.data
             )) {
                 completion($0.mapError(ShowCVVService.APIError.init))

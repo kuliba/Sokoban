@@ -49,7 +49,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .failure(.createRequest(anyError())))
         })
     }
@@ -61,7 +61,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .failure(.createRequest(anyError())))
         })
     }
@@ -75,7 +75,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
         })
     }
@@ -87,7 +87,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .failure(.mapResponse(.network)))
         })
     }
@@ -101,7 +101,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
         })
     }
@@ -112,7 +112,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
             
-            authSpy.complete(with: .success(.init(value: UUID().uuidString)))
+            authSpy.complete(with: .success(.init(sessionIDValue: UUID().uuidString)))
             confirmRemoteSpy.complete(with: .success(.init(eventID: UUID().uuidString, phone: "+7..8945")))
             decryptSpy.complete(with: .failure(anyError()))
         })
@@ -124,7 +124,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
             
-            authSpy.complete(with: .success(.init(value: UUID().uuidString)))
+            authSpy.complete(with: .success(.init(sessionIDValue: UUID().uuidString)))
             confirmRemoteSpy.complete(with: .success(.init(eventID: UUID().uuidString, phone: "+7..8945")))
             decryptSpy.complete(with: .success(UUID().uuidString))
             decryptSpy.complete(with: .failure(anyError()))
@@ -140,7 +140,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .success(.init(otpEventID: .init(eventIDValue: eventIDValue), phone: phone)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             confirmRemoteSpy.complete(with: .success(.init(eventID: eventIDValue, phone: phone)))
             decryptSpy.complete(with: .success(eventIDValue))
             decryptSpy.complete(with: .success(phone), at: 1)
@@ -481,7 +481,7 @@ private func anySession(
     
     .init(
         otpEventID: .init(eventIDValue: otpEventIDValue),
-        sessionID: .init(value: sessionIDValue),
+        sessionID: .init(sessionIDValue: sessionIDValue),
         sessionKey: .init(sessionKeyValue: sessionKeyValue),
         rsaPrivateKey: keyPair.privateKey
     )

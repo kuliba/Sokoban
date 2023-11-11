@@ -239,13 +239,13 @@ extension Services {
                         completion(
                             $0
                                 .map(\.sessionID.sessionIDValue)
-                                .map(SessionID.init(value:))
+                                .map(SessionID.init(sessionIDValue:))
                                 .mapError { _ in .authenticationFailure })
                     }
                     
                 case let .success(sessionID):
                     completion(.success(
-                        .init(value: sessionID.value)
+                        .init(sessionIDValue: sessionID.sessionIDValue)
                     ))
                 }
             }
@@ -303,7 +303,7 @@ extension Services {
             completion: @escaping CacheCompletion
         ) {
             sessionIDLoader.save(
-                .init(value: payload.0.sessionIDValue),
+                .init(sessionIDValue: payload.0.sessionIDValue),
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
@@ -434,7 +434,7 @@ extension Services {
             completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionIDLoader.save(
-                .init(value: payload.0.eventIDValue),
+                .init(sessionIDValue: payload.0.eventIDValue),
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )

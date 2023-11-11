@@ -9,5 +9,5 @@ import Foundation
 
 struct SessionID: Equatable {
     
-    let value: String
+    let sessionIDValue: String
 }

@@ -59,7 +59,7 @@ final class RequestFactory_makeChangePINRequestTests: XCTestCase {
             from: httpBody
         )
         
-        XCTAssertNoDiff(decodedRequest.sessionId, sessionID.value)
+        XCTAssertNoDiff(decodedRequest.sessionId, sessionID.sessionIDValue)
         XCTAssertNoDiff(decodedRequest.dataAsData, data)
     }
     

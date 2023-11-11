@@ -12,5 +12,5 @@ func makeSessionID(
     _ value: String = UUID().uuidString
 ) -> ForaBank.SessionID {
     
-    .init(value: value)
+    .init(sessionIDValue: value)
 }

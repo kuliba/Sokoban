@@ -51,7 +51,7 @@ extension Services {
                 
                 completion(
                     result
-                        .map(\.value)
+                        .map(\.sessionIDValue)
                         .map(ChangePINService.SessionID.init)
                         .mapError(ChangePINService.AuthenticateError.init)
                 )
@@ -63,7 +63,7 @@ extension Services {
             completion: @escaping ChangePINService.ConfirmProcessCompletion
         ) {
             confirmChangePINRemoteService.fetch(
-                .init(value: sessionID.sessionIDValue)
+                .init(sessionIDValue: sessionID.sessionIDValue)
             ) {
                 completion(
                     $0
@@ -87,7 +87,7 @@ extension Services {
                     
                 case let .success(session):
                     let sessionID = ChangePINService.SessionID(
-                        sessionIDValue: session.sessionID.value
+                        sessionIDValue: session.sessionID.sessionIDValue
                     )
                     
                     completion(.init {
@@ -113,7 +113,7 @@ extension Services {
             completion: @escaping ChangePINService.ChangePINProcessCompletion
         ) {
             changePINRemoteService.fetch((
-                .init(value: payload.0.sessionIDValue),
+                .init(sessionIDValue: payload.0.sessionIDValue),
                 payload.1
             )) {
                 completion($0.mapError { .init($0) })
