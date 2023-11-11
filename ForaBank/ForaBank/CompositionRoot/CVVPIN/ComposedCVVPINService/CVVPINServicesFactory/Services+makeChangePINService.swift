@@ -14,6 +14,7 @@ extension Services {
     typealias LoadChangePinSessionResult = Result<ChangePINSession, Error>
     typealias LoadChangePinSessionCompletion = (LoadChangePinSessionResult) -> Void
     typealias LoadChangePinSession = (@escaping LoadChangePinSessionCompletion) -> Void
+    
     typealias StringDecryptCompletion = (Result<String, Error>) -> Void
     typealias StringDecrypt = (String, @escaping StringDecryptCompletion) -> Void
     
