@@ -672,15 +672,9 @@ private extension RemoteService where Input == Void {
 
 // MARK: - Error Mappers
 
-enum AuthError: Error {
-    
-    case activationFailure
-    case authenticationFailure
-}
-
 private extension ShowCVVService.AuthenticateError {
     
-    init(_ error: AuthError) {
+    init(_ error: Services.AuthError) {
         
         switch error {
         case .activationFailure:
@@ -694,7 +688,7 @@ private extension ShowCVVService.AuthenticateError {
 
 private extension ChangePINService.AuthenticateError {
     
-    init(_ error: AuthError) {
+    init(_ error: Services.AuthError) {
         
         switch error {
         case .activationFailure:
