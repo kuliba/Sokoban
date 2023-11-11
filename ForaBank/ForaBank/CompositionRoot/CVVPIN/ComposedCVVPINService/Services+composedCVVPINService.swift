@@ -21,7 +21,7 @@ extension Services {
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
+        rsaKeyPairStore: any RSAKeyPairStore,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,

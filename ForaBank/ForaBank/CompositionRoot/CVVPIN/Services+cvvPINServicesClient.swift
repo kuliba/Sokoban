@@ -36,10 +36,12 @@ private extension TimeInterval {
 
 extension Services {
     
+    typealias RSAKeyPairStore = Store<RSADomain.KeyPair>
+    
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>
+        rsaKeyPairStore: any RSAKeyPairStore
     ) -> CVVPINServicesClient {
         
         let cryptoLog = { logger.log(level: $0, category: .crypto, message: $1, file: $2, line: $3) }
