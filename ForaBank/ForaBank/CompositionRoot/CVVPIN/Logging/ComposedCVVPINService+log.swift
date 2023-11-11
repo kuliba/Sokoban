@@ -10,30 +10,15 @@ extension ComposedCVVPINService {
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     convenience init(
-        activate: @escaping Activate,
         changePIN: @escaping ChangePIN,
         checkActivation: @escaping CheckActivation,
         confirmActivation: @escaping ConfirmActivation,
         getPINConfirmationCode: @escaping GetPINConfirmationCode,
+        initiateActivation: @escaping InitiateActivation,
         showCVV: @escaping ShowCVV,
         log: @escaping Log
     ) {
         self.init(
-            activate: { completion in
-                
-                activate { result in
-                    
-                    switch result {
-                    case let .failure(error):
-                        log(.error, .crypto, "Activation failure: \(error).", #file, #line)
-                        
-                    case let .success(phone):
-                        log(.info, .crypto, "Activation success: \(phone).", #file, #line)
-                    }
-                    
-                    completion(result)
-                }
-            },
             changePIN: { cardID, pin ,otp, completion in
                 
                 changePIN(cardID, pin, otp) { result in
@@ -89,6 +74,21 @@ extension ComposedCVVPINService {
                         
                     case let .success(response):
                         log(.info, .crypto, "Get PIN Confirmation Code success: \(response.otpEventID.eventIDValue), \(response.phone).", #file, #line)
+                    }
+                    
+                    completion(result)
+                }
+            },
+            initiateActivation: { completion in
+                
+                initiateActivation { result in
+                    
+                    switch result {
+                    case let .failure(error):
+                        log(.error, .crypto, "Activation failure: \(error).", #file, #line)
+                        
+                    case let .success(phone):
+                        log(.info, .crypto, "Activation success: \(phone).", #file, #line)
                     }
                     
                     completion(result)

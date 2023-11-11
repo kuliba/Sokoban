@@ -146,11 +146,11 @@ extension Services {
         // MARK: - ComposedCVVPINService
         
         let cvvPINServicesClient = ComposedCVVPINService(
-            activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
+            initiateActivation: activationService.activate(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
