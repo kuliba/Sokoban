@@ -6363,8 +6363,8 @@
 				2AE8862E2AFB9D1700D86E84 /* Services+makeBindPublicKeyService.swift */,
 				2A06DC312AFB72500049709E /* Services+makeActivationService.swift */,
 				2AE886312AFB9E5000D86E84 /* Services+makeAuthWithPublicKeyService.swift */,
-				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
 				2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */,
+				2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */,
 			);
 			path = CVVPINServicesFactory;
 			sourceTree = "<group>";

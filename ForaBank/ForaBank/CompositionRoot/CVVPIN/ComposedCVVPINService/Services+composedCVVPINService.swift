@@ -18,6 +18,15 @@ extension Services {
     
     typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
     
+    typealias AuthCompletion = (Result<SessionID, AuthError>) -> Void
+    typealias Auth = (@escaping AuthCompletion) -> Void
+    
+    enum AuthError: Error {
+        
+        case activationFailure
+        case authenticationFailure
+    }
+
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
@@ -133,10 +142,8 @@ extension Services {
         // MARK: Configure Show CVV Service
         
         let showCVVService = makeShowCVVService(
-            rsaKeyPairLoader: rsaKeyPairLoader,
-            sessionIDLoader: sessionIDLoader,
-            sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: authWithPublicKeyService,
+            auth: auth(completion:),
+            loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker
@@ -178,6 +185,46 @@ extension Services {
             rsaKeyPairLoader.load {
                 
                 completion($0.map { _ in () })
+            }
+        }
+        
+        // MARK: - Auth
+        
+        func auth(completion: @escaping AuthCompletion) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    auth(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func auth(
+            _ rsaKeyPair: RSADomain.KeyPair,
+            _ completion: @escaping AuthCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    authWithPublicKeyService.fetch {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(SessionID.init(value:))
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(
+                        .init(value: sessionID.value)
+                    ))
+                }
             }
         }
         
@@ -381,6 +428,42 @@ extension Services {
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
+        }
+        
+        // MARK: - ShowCVV Adapters
+        
+        func loadShowCVVSession(
+            completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let.success(rsaKeyPair):
+                    loadShowCVVSession(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func loadShowCVVSession(
+            _ rsaKeyPair: RSADomain.KeyPair,
+            _ completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    completion(.success(.init(
+                        rsaKeyPair: rsaKeyPair,
+                        sessionKey: sessionKey
+                    )))
+                }
+            }
         }
     }
 }
