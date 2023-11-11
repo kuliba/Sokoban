@@ -21,7 +21,6 @@ extension Services {
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        activationStore: any Store<Bool>,
         rsaKeyPairStore: any Store<RSADomain.KeyPair>,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,

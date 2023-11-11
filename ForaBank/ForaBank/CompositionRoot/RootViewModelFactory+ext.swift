@@ -16,13 +16,6 @@ extension RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let cvvPINActivationStore = makeLoggingStore(
-            store: KeyTagKeyChainStore<Bool>(
-                keyTag: .cvvPINActivation
-            ),
-            logger: logger
-        )
-        
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
                 keyTag: .rsa
@@ -38,7 +31,6 @@ extension RootViewModelFactory {
         let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
             logger: logger,
-            activationStore: cvvPINActivationStore,
             rsaKeyPairStore: rsaKeyPairStore
         )
         
