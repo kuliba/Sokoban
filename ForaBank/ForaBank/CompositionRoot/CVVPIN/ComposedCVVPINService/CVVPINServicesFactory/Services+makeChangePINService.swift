@@ -14,14 +14,15 @@ extension Services {
     typealias LoadChangePinSessionResult = Result<ChangePINSession, Error>
     typealias LoadChangePinSessionCompletion = (LoadChangePinSessionResult) -> Void
     typealias LoadChangePinSession = (@escaping LoadChangePinSessionCompletion) -> Void
-    
+    typealias StringDecryptCompletion = (Result<String, Error>) -> Void
+    typealias StringDecrypt = (String, @escaping StringDecryptCompletion) -> Void
+
     static func makeChangePINService(
         auth: @escaping Auth,
         loadSession: @escaping LoadChangePinSession,
-        rsaKeyPairLoader: any Loader<RSADomain.KeyPair>,
         changePINRemoteService: Services.ChangePINRemoteService,
         confirmChangePINRemoteService: ConfirmChangePINRemoteService,
-        cvvPINCrypto: CVVPINCrypto,
+        publicRSAKeyDecrypt: @escaping StringDecrypt,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> ChangePINService {
         
@@ -48,29 +49,6 @@ extension Services {
                         .map(ChangePINService.SessionID.init)
                         .mapError(ChangePINService.AuthenticateError.init)
                 )
-            }
-        }
-        
-        func publicRSAKeyDecrypt(
-            string: String,
-            completion: @escaping ChangePINService.PublicRSAKeyDecryptCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                    
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(keyPair):
-                    completion(.init {
-                        
-                        try cvvPINCrypto.rsaDecrypt(
-                            string,
-                            withPrivateKey: keyPair.privateKey
-                        )
-                    })
-                }
             }
         }
         

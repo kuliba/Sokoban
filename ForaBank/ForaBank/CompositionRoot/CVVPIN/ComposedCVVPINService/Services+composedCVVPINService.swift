@@ -124,10 +124,9 @@ extension Services {
         let changePINService = makeChangePINService(
             auth: auth(completion:),
             loadSession: loadChangePINSession(completion:),
-            rsaKeyPairLoader: rsaKeyPairLoader,
             changePINRemoteService: changePINRemoteService,
             confirmChangePINRemoteService: confirmChangePINRemoteService,
-            cvvPINCrypto: cvvPINCrypto,
+            publicRSAKeyDecrypt: publicRSAKeyDecrypt(string:completion:),
             cvvPINJSONMaker: cvvPINJSONMaker
         )
         
@@ -182,6 +181,33 @@ extension Services {
             rsaKeyPairLoader.load {
                 
                 completion($0.map { _ in () })
+            }
+        }
+        
+        // MARK: - Crypto
+        
+        typealias StringDecryptCompletion = (Result<String, Error>) -> Void
+        
+        func publicRSAKeyDecrypt(
+            string: String,
+            completion: @escaping StringDecryptCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(keyPair):
+                    completion(.init {
+                        
+                        try cvvPINCrypto.rsaDecrypt(
+                            string,
+                            withPrivateKey: keyPair.privateKey
+                        )
+                    })
+                }
             }
         }
         
