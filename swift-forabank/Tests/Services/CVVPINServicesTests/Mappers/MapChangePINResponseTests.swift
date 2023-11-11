@@ -15,32 +15,29 @@ final class MapChangePINResponseTests: XCTestCase {
         let invalidData = Data("invalid data".utf8)
         let codes = [199, 200, 201, 399, 400, 401, 404, 500]
         
-        for code in codes {
+        for statusCode in codes {
             
             let result = map(
                 invalidData,
-                anyHTTPURLResponse(with: code)
+                httpStatusCode: statusCode
             )
             
-            assert(result, .failure(.invalidData(statusCode: code, data: invalidData)))
+            assert(result, .failure(.invalidData(statusCode: statusCode, data: invalidData)))
         }
     }
     
-    func test_map_shouldDeliverServerErrorOnNon200Non$05AndValidData() throws {
+    func test_map_shouldDeliverServerErrorOnNon200Non500AndValidData() throws {
         
         let serverStatusCode = 7512
         let errorMessage = "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения"
-        let validData = makeServerErrorData(
-            statusCode: serverStatusCode,
-            errorMessage: errorMessage
-        )
-        let non200Non406Non500Codes = [199, 201, 399, 400, 401, 404, 501]
+        let non200Non500Codes = [199, 201, 399, 400, 401, 404, 406, 501]
         
-        for code in non200Non406Non500Codes {
+        for statusCode in non200Non500Codes {
             
             let result = map(
-                validData,
-                anyHTTPURLResponse(with: code)
+                httpStatusCode: statusCode,
+                serverStatusCode: serverStatusCode,
+                errorMessage: errorMessage
             )
             
             assert(result, .failure(.error(
@@ -54,39 +51,99 @@ final class MapChangePINResponseTests: XCTestCase {
      Пример ответа о финальной ошибке в случае СЛАБОГО ПИНА (также как и при прочих финальных ошибках нет retryAttempts, но другой http-код ответа - не 406, а не 500):
      http-код состояния (HTTP status code): 406
      {
-        "statusCode": 7506,
-        "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
+     "statusCode": 7506,
+     "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
+     }
+     
+     Update 10.11.2023: Перечитала переписки с Суриным. В общем, 406 код- это как задумывалась, но не получилось, и отложилось до «рефакторинга».
+     А схему он не актуализировал.
+     Поэтому работаем с тем, что есть
+     в реальности код 500 и {
+     "statusCode": 7051,
+     "errorMessage": "Возникла техническая ошибка 7051. Свяжитесь с поддержкой банка для уточнения"
      }
      */
-    func test_map_shouldDeliverWeakPINErrorOnResponse406AndValidData() throws {
+    func test_map_shouldDeliverWeakPINErrorOnWeakPINHTTPStatusCodeAndWeakPINServerStatusCode() throws {
         
-        let serverStatusCode = 7506
-        let errorMessage = "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
-        let validData = makeServerErrorData(
-            statusCode: serverStatusCode,
-            errorMessage: errorMessage
+        let result = map(
+            httpStatusCode: weakPINHTTPStatusCode(),
+            serverStatusCode: weakPINServerStatusCode(),
+            errorMessage: weakPINErrorMessage()
         )
-        let response406 = anyHTTPURLResponse(with: 406)
-        
-        let result = map(validData, response406)
         
         assert(result, .failure(.weakPIN(
-            statusCode: serverStatusCode,
-            errorMessage: errorMessage
+            statusCode: weakPINServerStatusCode(),
+            errorMessage: weakPINErrorMessage()
         )))
+    }
+    
+    func test_map_shouldDeliverInvalidErrorOnWeakPINHTTPStatusCodeAndInvalidData() throws {
+        
+        let invalidData = anyData()
+        
+        let result = map(
+            invalidData,
+            httpStatusCode: weakPINHTTPStatusCode()
+        )
+        
+        assert(result, .failure(.invalidData(
+            statusCode: weakPINHTTPStatusCode(),
+            data: invalidData
+        )))
+    }
+    
+    func test_map_shouldDeliverServerErrorOnWeakPINHTTPStatusCodeAndNonWeakPINServerStatusCode() throws {
+        
+        for serverStatusCode in [7000, 7001, 7015, 7050] {
+            
+            let errorMessage = "Возникла техническая ошибка \(serverStatusCode). Свяжитесь с поддержкой банка для уточнения"
+            
+            let result = map(
+                httpStatusCode: weakPINHTTPStatusCode(),
+                serverStatusCode: serverStatusCode,
+                errorMessage: errorMessage
+            )
+            
+            assert(result, .failure(.error(
+                statusCode: serverStatusCode,
+                errorMessage: errorMessage
+            )))
+            
+            XCTAssertNotEqual(serverStatusCode, weakPINServerStatusCode())
+        }
+    }
+    
+    func test_map_shouldDeliverServerErrorOnNonWeakPINTTPStatusCodeNot500AndServerStatusCode7051AndValidData() throws {
+        
+        for httpStatusCode in [400, 401, 402, 406, 499, 501] {
+            
+            let result = map(
+                httpStatusCode: httpStatusCode,
+                serverStatusCode: weakPINServerStatusCode(),
+                errorMessage: weakPINErrorMessage()
+            )
+            
+            assert(result, .failure(.error(
+                statusCode: weakPINServerStatusCode(),
+                errorMessage: weakPINErrorMessage()
+            )))
+            
+            XCTAssertNotEqual(httpStatusCode, weakPINHTTPStatusCode())
+        }
     }
     
     /*
      Пример ответа о нефинальной ошибке:
      http-код состояния (HTTP status code): 500
      {
-        "statusCode": 7512,
-        "errorMessage": "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
-        "retryAttempts": 2
+     "statusCode": 7512,
+     "errorMessage": "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения",
+     "retryAttempts": 2
      }
      */
     func test_map_shouldDeliverRetryErrorOnResponse500AndValidData() throws {
         
+        let httpStatusCode = 500
         let serverStatusCode = 7512
         let errorMessage = "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения"
         let validData = try JSONSerialization.data(withJSONObject: [
@@ -94,9 +151,8 @@ final class MapChangePINResponseTests: XCTestCase {
             "errorMessage": errorMessage,
             "retryAttempts": 2
         ] as [String: Any])
-        let response500 = anyHTTPURLResponse(with: 500)
         
-        let result = map(validData, response500)
+        let result = map(validData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.retry(
             statusCode: serverStatusCode,
@@ -109,21 +165,21 @@ final class MapChangePINResponseTests: XCTestCase {
      Пример ответа о финальной ошибке (нет retryAttempts):
      http-код состояния (HTTP status code): 500
      {
-        "statusCode": 7506,
-        "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
+     "statusCode": 7506,
+     "errorMessage": "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
      }
      */
     func test_map_shouldDeliverServerErrorOnResponse500AndInvalidData() throws {
         
-        let serverStatusCode = 7512
-        let errorMessage = "Возникла техническая ошибка 7512. Свяжитесь с поддержкой банка для уточнения"
+        let httpStatusCode = 500
+        let serverStatusCode = 7506
+        let errorMessage = "Возникла техническая ошибка 7506. Свяжитесь с поддержкой банка для уточнения"
         let validData = makeServerErrorData(
             statusCode: serverStatusCode,
             errorMessage: errorMessage
         )
-        let response500 = anyHTTPURLResponse(with: 500)
         
-        let result = map(validData, response500)
+        let result = map(validData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.error(
             statusCode: serverStatusCode,
@@ -134,9 +190,9 @@ final class MapChangePINResponseTests: XCTestCase {
     func test_map_shouldDeliverInvalidDataErrorOnResponse200AndNonEmptyData() throws {
         
         let nonEmptyData = anyData()
-        let response200 = anyHTTPURLResponse(with: 200)
+        let httpStatusCode = 200
         
-        let result = map(nonEmptyData, response200)
+        let result = map(nonEmptyData, httpStatusCode: httpStatusCode)
         
         assert(result, .failure(.invalidData(statusCode: 200, data: nonEmptyData)))
         XCTAssertFalse(nonEmptyData.isEmpty)
@@ -150,9 +206,9 @@ final class MapChangePINResponseTests: XCTestCase {
     func test_map_shouldDeliverSuccessOnResponse200AndValidData() throws {
         
         let data = Data()
-        let response200 = anyHTTPURLResponse(with: 200)
+        let httpStatusCode = 200
         
-        let result = map(data, response200)
+        let result = map(data, httpStatusCode: httpStatusCode)
         
         assert(result, .success(()))
         XCTAssertTrue(data.isEmpty)
@@ -164,10 +220,28 @@ final class MapChangePINResponseTests: XCTestCase {
     
     private func map(
         _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
+        httpStatusCode: Int
     ) -> ChangePINResult {
         
-        ResponseMapper.mapChangePINResponse(data, httpURLResponse)
+        ResponseMapper.mapChangePINResponse(
+            data,
+            anyHTTPURLResponse(with: httpStatusCode)
+        )
+    }
+    
+    private func map(
+        httpStatusCode: Int,
+        serverStatusCode: Int,
+        errorMessage: String
+    ) -> ChangePINResult {
+        
+        ResponseMapper.mapChangePINResponse(
+            makeServerErrorData(
+                statusCode: serverStatusCode,
+                errorMessage: errorMessage
+            ),
+            anyHTTPURLResponse(with: httpStatusCode)
+        )
     }
     
     private func assert(
@@ -182,7 +256,7 @@ final class MapChangePINResponseTests: XCTestCase {
             .failure(received),
             .failure(expected)
         ):
-            XCTAssertEqual(received.view, expected.view, file: file, line: line)
+            XCTAssertNoDiff(received.view, expected.view, file: file, line: line)
             
         case (.success, .success):
             break
@@ -222,4 +296,11 @@ private extension ResponseMapper.ChangePINMappingError {
         case server(statusCode: Int, errorMessage: String)
         case weakPIN(statusCode: Int, errorMessage: String)
     }
+}
+
+private func weakPINHTTPStatusCode() -> Int { 500 }
+private func weakPINServerStatusCode() -> Int { 7051 }
+private func weakPINErrorMessage() -> String {
+    
+    "Возникла техническая ошибка 7051. Свяжитесь с поддержкой банка для уточнения"
 }
