@@ -16,7 +16,7 @@ extension Services {
     typealias LoadChangePinSession = (@escaping LoadChangePinSessionCompletion) -> Void
     
     typealias DecryptStringCompletion = (Result<String, Error>) -> Void
-    typealias DecryptString = (String, @escaping DecryptStringCompletion) -> Void
+    typealias AsyncDecryptString = (String, @escaping DecryptStringCompletion) -> Void
     
     typealias MakePINChangeJSON = (ChangePINService.SessionID, ChangePINService.CardID, ChangePINService.OTP, ChangePINService.PIN, ChangePINService.OTPEventID, SessionKey, RSADomain.PrivateKey) throws -> Data
     
@@ -28,7 +28,7 @@ extension Services {
         loadSession: @escaping LoadChangePinSession,
         changePINRemoteService: any _ChangePINRemoteService,
         confirmChangePINRemoteService: any _ConfirmChangePINRemoteService,
-        publicRSAKeyDecrypt: @escaping DecryptString,
+        publicRSAKeyDecrypt: @escaping AsyncDecryptString,
         _makePINChangeJSON: @escaping MakePINChangeJSON
     ) -> ChangePINService {
         

@@ -15,13 +15,15 @@ extension Services {
     typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
     typealias LoadShowCVVSession = (@escaping LoadShowCVVSessionCompletion) -> Void
     
+    typealias DecryptString = (String, RSADomain.PrivateKey) throws -> String
+    
     typealias _ShowCVVRemoteService = Fetcher<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
     
     static func makeShowCVVService(
         auth: @escaping Auth,
         loadSession: @escaping LoadShowCVVSession,
         showCVVRemoteService: any _ShowCVVRemoteService,
-        cvvPINCrypto: CVVPINCrypto,
+        decryptString: @escaping DecryptString,
         cvvPINJSONMaker: CVVPINJSONMaker
     ) -> ShowCVVService {
         
@@ -90,9 +92,9 @@ extension Services {
                 
                 do {
                     let rsaKeyPair = try $0.get().rsaKeyPair
-                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
+                    let cvvValue = try decryptString(
                         encryptedCVV.encryptedCVVValue,
-                        withPrivateKey: rsaKeyPair.privateKey
+                        rsaKeyPair.privateKey
                     )
                     completion(.success(.init(cvvValue: cvvValue)))
                 } catch {

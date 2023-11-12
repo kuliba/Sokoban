@@ -141,7 +141,7 @@ extension Services {
             auth: auth(completion:),
             loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
-            cvvPINCrypto: cvvPINCrypto,
+            decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
             cvvPINJSONMaker: cvvPINJSONMaker
         )
         
