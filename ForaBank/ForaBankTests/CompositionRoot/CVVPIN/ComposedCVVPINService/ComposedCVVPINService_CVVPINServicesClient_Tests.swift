@@ -500,12 +500,12 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
-    private typealias ActivateSpy = Spy<CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
-    private typealias ConfirmSpy = Spy<Void, CVVPINFunctionalityActivationService.ConfirmError>
-    private typealias CheckSpy = Spy<Void, Error>
-    private typealias GetPINConfirmationCodeSpy = Spy<ChangePINService.ConfirmResponse, ChangePINService.GetPINConfirmationCodeError>
-    private typealias ChangePINSpy = Spy<Void, ChangePINService.ChangePINError>
-    private typealias ShowCVVSpy = Spy<ShowCVVService.CVV, ShowCVVService.Error>
+    private typealias ActivateSpy = Spy<Void, CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
+    private typealias ConfirmSpy = Spy<Void, Void, CVVPINFunctionalityActivationService.ConfirmError>
+    private typealias CheckSpy = Spy<Void, Void, Error>
+    private typealias GetPINConfirmationCodeSpy = Spy<Void, ChangePINService.ConfirmResponse, ChangePINService.GetPINConfirmationCodeError>
+    private typealias ChangePINSpy = Spy<Void, Void, ChangePINService.ChangePINError>
+    private typealias ShowCVVSpy = Spy<Void, ShowCVVService.CVV, ShowCVVService.Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -527,12 +527,12 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         let changePINSpy = ChangePINSpy()
         let showCVVSpy = ShowCVVSpy()
         let sut = SUT(
-            changePIN: { _,_,_, completion  in changePINSpy.perform(completion) },
-            checkActivation: checkSpy.perform(_:),
-            confirmActivation: { _, completion  in confirmSpy.perform(completion) },
-            getPINConfirmationCode: getPINConfirmationCodeSpy.perform(_:),
-            initiateActivation: activateSpy.perform(_:),
-            showCVV: { _, completion in showCVVSpy.perform(completion) }
+            changePIN: { _,_,_, completion  in changePINSpy.process(completion: completion) },
+            checkActivation: checkSpy.process(completion:),
+            confirmActivation: { _, completion  in confirmSpy.process(completion: completion) },
+            getPINConfirmationCode: getPINConfirmationCodeSpy.process(completion:),
+            initiateActivation: activateSpy.process(completion:),
+            showCVV: { _, completion in showCVVSpy.process(completion: completion) }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -544,27 +544,6 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         trackForMemoryLeaks(showCVVSpy, file: file, line: line)
         
         return (sut, activateSpy, confirmSpy, checkSpy, getPINConfirmationCodeSpy, changePINSpy, showCVVSpy)
-    }
-    
-    final class Spy<Success, Failure: Error> {
-        
-        typealias Result = Swift.Result<Success, Failure>
-        typealias Completion = (Result) -> Void
-        
-        private(set) var completions = [Completion]()
-        
-        func perform(
-            _ completion: @escaping Completion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: Result,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
     }
     
     private func expectActivate(
