@@ -25,7 +25,7 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            "RemoteService: Created GET request any.url for input \"1\"."
+            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\".")
         ])
     }
     
@@ -41,8 +41,8 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            "RemoteService: Created GET request any.url for input \"1\".",
-            "RemoteService: request body: {\"data\":\"abcdef\"}"
+            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: request body: {\"data\":\"abcdef\"}")
         ])
     }
     
@@ -60,8 +60,8 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            "RemoteService: Created GET request any.url for input \"1\".",
-            "RemoteService: mapResponse success: abc."
+            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: mapResponse success: abc.")
         ])
     }
     
@@ -79,8 +79,8 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            "RemoteService: Created GET request any.url for input \"1\".",
-            "RemoteService: mapResponse failure: any: statusCode: 200, data: nil."
+            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: mapResponse failure: any: statusCode: 200, data: nil.")
         ])
     }
     
@@ -113,16 +113,6 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         trackForMemoryLeaks(perform, file: file, line: line)
         
         return (sut, spy, perform)
-    }
-    
-    private final class LogSpy {
-        
-        private(set) var messages = [String]()
-        
-        func log(_ message: String) {
-            
-            self.messages.append(message)
-        }
     }
     
     private final class PerformSpy<Payload, Response> {
@@ -167,5 +157,13 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         let message: String
         
         var description: String { message }
+    }
+}
+
+private extension LogSpy {
+    
+    func log(_ message: String) {
+        
+        log(.debug, .cache, message)
     }
 }
