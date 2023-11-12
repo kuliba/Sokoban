@@ -265,7 +265,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         
         struct Message: Equatable {
             
-            let evel: LoggerAgentLevel
+            let level: LoggerAgentLevel
             let category: LoggerAgentCategory
             let text: String
             
@@ -274,7 +274,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
                 _ category: LoggerAgentCategory,
                 _ text: String
             ) {
-                self.evel = level
+                self.level = level
                 self.category = category
                 self.text = text
             }
