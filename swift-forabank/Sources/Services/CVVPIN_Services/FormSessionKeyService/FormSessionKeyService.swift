@@ -99,13 +99,13 @@ extension FormSessionKeyService {
         }
         
         public typealias SessionTTL = Int
-
+        
         public struct EventID {
             
             public let eventIDValue: String
             
             public init(eventIDValue: String) {
-             
+                
                 self.eventIDValue = eventIDValue
             }
         }
@@ -116,7 +116,7 @@ extension FormSessionKeyService {
         public let sessionKeyValue: Data
         
         public init(sessionKeyValue: Data) {
-         
+            
             self.sessionKeyValue = sessionKeyValue
         }
     }
@@ -245,6 +245,8 @@ private extension FormSessionKeyService {
         }
     }
 }
+
+// MARK: - Error Mapping
 
 private extension FormSessionKeyService.Error {
     

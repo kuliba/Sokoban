@@ -58,23 +58,22 @@ public extension AuthenticateWithPublicKeyService {
         case serviceError(ServiceError)
         
         public enum ServiceError {
-            #warning("check unused cases")
             case activationFailure
             case makeSessionKeyFailure
             case missingRSAPublicKey
             case prepareKeyExchangeFailure
         }
     }
+}
+
+extension AuthenticateWithPublicKeyService {
     
-    enum APIError: Swift.Error {
+    public enum APIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
     }
-}
-
-extension AuthenticateWithPublicKeyService {
     
     public struct Response {
         
@@ -114,7 +113,7 @@ extension AuthenticateWithPublicKeyService {
             public let sessionIDValue: String
             
             public init(sessionIDValue: String) {
-             
+                
                 self.sessionIDValue = sessionIDValue
             }
         }
@@ -192,6 +191,8 @@ private extension AuthenticateWithPublicKeyService {
         }
     }
 }
+
+// MARK: - Error Mapping
 
 private extension AuthenticateWithPublicKeyService.Error {
     

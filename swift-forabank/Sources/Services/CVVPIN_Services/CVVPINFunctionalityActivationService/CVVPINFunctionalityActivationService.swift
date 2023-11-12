@@ -226,7 +226,7 @@ private extension CVVPINFunctionalityActivationService {
     }
 }
 
-// MARK: - Error Mappers
+// MARK: - Error Mapping
 
 private extension CVVPINFunctionalityActivationService.ActivateError {
     
@@ -261,7 +261,7 @@ private extension CVVPINFunctionalityActivationService.ActivateError {
         }
     }
 }
- 
+
 private extension CVVPINFunctionalityActivationService.ConfirmError {
     
     init(_ error: CVVPINFunctionalityActivationService.BindPublicKeyError) {

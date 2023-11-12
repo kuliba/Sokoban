@@ -311,6 +311,8 @@ private extension ChangePINService {
     }
 }
 
+// MARK: - Error Mapping
+
 private extension ChangePINService.GetPINConfirmationCodeError {
     
     init( _ error: ChangePINService.AuthenticateError) {

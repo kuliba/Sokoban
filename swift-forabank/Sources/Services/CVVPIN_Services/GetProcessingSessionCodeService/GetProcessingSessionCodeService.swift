@@ -44,17 +44,17 @@ public extension GetProcessingSessionCodeService {
         case network
         case server(statusCode: Int, errorMessage: String)
     }
+}
+
+extension GetProcessingSessionCodeService {
     
-    enum APIError: Swift.Error {
+    public enum APIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case server(statusCode: Int, errorMessage: String)
     }
-}
-
-extension GetProcessingSessionCodeService {
-
+    
     public struct Response {
         
         public let code: String
@@ -69,6 +69,8 @@ extension GetProcessingSessionCodeService {
         }
     }
 }
+
+// MARK: - Error Mapping
 
 private extension GetProcessingSessionCodeService.Error {
     
