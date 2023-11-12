@@ -288,6 +288,11 @@ final class ChangePINServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
+    private typealias AuthenticateSpy = Spy<Void, SUT.SessionID, SUT.AuthenticateError>
+    private typealias ChangePINProcessSpy = Spy<(SUT.SessionID, Data), Void, SUT.ChangePINAPIError>
+    private typealias ConfirmProcessSpy = Spy<SUT.SessionID, SUT.EncryptedConfirmResponse, SUT.ConfirmAPIError>
+    private typealias DecryptSpy = Spy<String, String, Error>
+    private typealias MakeJSONSpy = Spy<(SUT.CardID, SUT.PIN, SUT.OTP), (SUT.SessionID, Data), Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -306,10 +311,10 @@ final class ChangePINServiceTests: XCTestCase {
         let makeJSONSpy = MakeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
-            authenticate: authenticateSpy.authenticate(completion:),
-            publicRSAKeyDecrypt: decryptSpy.decrypt(_:completion:),
+            authenticate: authenticateSpy.process(completion:),
+            publicRSAKeyDecrypt: decryptSpy.process(_:completion:),
             confirmProcess: confirmProcessSpy.process(_:completion:),
-            makePINChangeJSON: makeJSONSpy.make(cardID:pin:otp:completion:),
+            makePINChangeJSON: makeJSONSpy.process(cardID:pin:otp:completion:),
             changePINProcess: changePINProcessSpy.process(_:completion:)
         )
         
@@ -414,7 +419,7 @@ final class ChangePINServiceTests: XCTestCase {
             ):
                 XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
                 XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
-                                
+                
             case (.success(()), .success(())):
                 break
                 
@@ -428,120 +433,6 @@ final class ChangePINServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private final class AuthenticateSpy {
-        
-        private(set) var completions = [SUT.AuthenticateCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func authenticate(
-            completion: @escaping SUT.AuthenticateCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.AuthenticateResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class DecryptSpy {
-        
-        typealias Message = (payload: String, completion: SUT.PublicRSAKeyDecryptCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func decrypt(
-            _ payload: String,
-            completion: @escaping SUT.PublicRSAKeyDecryptCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.PublicRSAKeyDecryptResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ConfirmProcessSpy {
-        
-        typealias Message = (payload: SUT.SessionID, completion: SUT.ConfirmProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: SUT.SessionID,
-            completion: @escaping SUT.ConfirmProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ConfirmProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class MakeJSONSpy {
-        
-        typealias Message = (payload: (SUT.CardID, SUT.PIN, SUT.OTP), completion: SUT.MakePINChangeJSONCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            cardID: SUT.CardID,
-            pin: SUT.PIN,
-            otp: SUT.OTP,
-            completion: @escaping SUT.MakePINChangeJSONCompletion
-        ) {
-            messages.append(((cardID, pin, otp), completion))
-        }
-        
-        func complete(
-            with result: SUT.MakePINChangeJSONResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ChangePINProcessSpy {
-        
-        typealias Message = (payload: (SUT.SessionID, Data), completion: SUT.ChangePINProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: (SUT.SessionID, Data),
-            completion: @escaping SUT.ChangePINProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ChangePINProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 
@@ -611,5 +502,18 @@ private extension ChangePINService.ConfirmResponse {
         
         let otpEventIDValue: String
         let phone: String
+    }
+}
+
+private extension Spy
+where Payload == (ChangePINService.CardID, ChangePINService.PIN, ChangePINService.OTP) {
+    
+    func process(
+        cardID: ChangePINService.CardID,
+        pin: ChangePINService.PIN,
+        otp: ChangePINService.OTP,
+        completion: @escaping Completion
+    ) {
+        process((cardID, pin, otp), completion: completion)
     }
 }
