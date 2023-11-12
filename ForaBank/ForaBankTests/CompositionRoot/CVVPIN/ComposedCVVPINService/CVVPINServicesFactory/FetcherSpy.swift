@@ -7,30 +7,16 @@
 
 import Fetcher
 
-final class FetcherSpy<Request, Item, F: Error>: Fetcher {
+typealias FetcherSpy<Payload, Success, Failure: Error> = Spy<Payload, Success, Failure>
+
+extension Spy: Fetcher {
     
-    typealias Payload = Request
-    typealias Success = Item
-    typealias Failure = F
-    
-    typealias Message = (payload: Payload, completion: FetchCompletion)
-    
-    private var messages = [Message]()
-    
-    var callCount: Int { messages.count }
-    var payloads: [Payload] { messages.map(\.payload) }
+    typealias FetchCompletion = Completion
     
     func fetch(
         _ payload: Payload,
         completion: @escaping FetchCompletion
     ) {
-        messages.append((payload, completion))
-    }
-    
-    func complete(
-        with result: Result<Success, F>,
-        at index: Int = 0
-    ) {
-        messages[index].completion(result)
+        process(payload, completion: completion)
     }
 }

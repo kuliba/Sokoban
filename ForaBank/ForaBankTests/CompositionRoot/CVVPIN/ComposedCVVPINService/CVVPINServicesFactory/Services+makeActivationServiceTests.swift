@@ -164,8 +164,6 @@ final class Services_makeActivationServiceTests: XCTestCase {
     
     func test_confirmActivation_shouldDeliverVoidOnSuccess() {
         
-        let statusCode = 500
-        let invalidData = anyData()
         let (sut, _, _, bindPublicKeySpy) = makeSUT()
         
         expectConfirm(sut, toDeliver: .success(()), on: {
@@ -214,7 +212,7 @@ final class Services_makeActivationServiceTests: XCTestCase {
         let sut = Services.makeActivationService(
             getCode: getCodeSpy.fetch,
             formSessionKey: formSessionKeySpy.fetch,
-            bindPublicKeyWithEventID: bindPublicKeySpy.fetch
+            bindPublicKeyWithEventID: bindPublicKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

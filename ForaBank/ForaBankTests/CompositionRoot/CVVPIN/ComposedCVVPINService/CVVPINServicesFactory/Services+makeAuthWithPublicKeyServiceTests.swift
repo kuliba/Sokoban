@@ -164,7 +164,7 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
         let sut = Services.makeAuthWithPublicKeyService(
             prepareKeyExchange: prepareKeyExchangeSpy.fetch,
             authRemoteService: authRemoteServiceSpy,
-            makeSessionKey: makeSessionKeySpy.fetch,
+            makeSessionKey: makeSessionKeySpy.process(_:completion:),
             cache: cacheSpy.cache(value:)
         )
         
