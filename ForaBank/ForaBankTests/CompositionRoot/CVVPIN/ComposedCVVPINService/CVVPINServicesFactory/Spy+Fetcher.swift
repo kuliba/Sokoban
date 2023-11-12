@@ -1,5 +1,5 @@
 //
-//  FetcherSpy.swift
+//  Spy+Fetcher.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 09.11.2023.
