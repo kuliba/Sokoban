@@ -133,7 +133,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
     
     private typealias SUT = Services.BindPublicKeyService
     private typealias SessionIDLoader = LoaderSpy<SessionID>
-    private typealias ProcessSpy = ServiceSpy<Result<Void, Services.BindPublicKeyProcessError>, BindPublicKeyWithEventIDService.ProcessPayload>
+    private typealias ProcessSpy = Spy<BindPublicKeyWithEventIDService.ProcessPayload, Void, Services.BindPublicKeyProcessError>
     
     private func makeSUT(
         makeSecretJSONResult: Result<Data, Error> = anySuccess(),
@@ -217,29 +217,6 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    final class ServiceSpy<T, Payload> {
-        
-        typealias Completion = (T) -> Void
-        typealias Message = (payload: Payload, completion: Completion)
-        
-        private var messages = [Message]()
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: Payload,
-            completion: @escaping Completion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: T,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
     
     private final class HandleFailureSpy {
