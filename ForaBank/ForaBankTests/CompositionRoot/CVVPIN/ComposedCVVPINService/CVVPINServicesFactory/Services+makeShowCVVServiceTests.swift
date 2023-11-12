@@ -43,12 +43,11 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     
     func test_showCVV_shouldDeliverErrorOnLoadSessionFailure() throws {
         
-        let sessionIDValue = UUID().uuidString
         let (sut, authSpy, loadSessionSpy, _) = makeSUT()
         
         expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
+            authSpy.complete(with: anySuccess())
             loadSessionSpy.complete(with: .failure(anyError()))
         })
     }
@@ -56,29 +55,25 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnMakeJSONFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
         let (sut, authSpy, loadSessionSpy, _) = makeSUT(
             makeShowCVVSecretJSONResult: .failure(anyError()))
         
         expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
         })
     }
     
     func test_showCVV_shouldDeliverErrorOnShowCVVRemoteServiceCreateRequestFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
             showCVVRemoteService.complete(with: .failure(.createRequest(anyError())))
         })
     }
@@ -86,14 +81,12 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnShowCVVRemoteServicePerformRequestFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
             showCVVRemoteService.complete(with: .failure(.performRequest(anyError())))
         })
     }
@@ -101,14 +94,12 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnShowCVVRemoteServiceMapResponseFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
             showCVVRemoteService.complete(with: .failure(.mapResponse(.connectivity)))
         })
     }
@@ -116,16 +107,14 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnSecondLoadSessionFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
         let encryptedCVVValue = UUID().uuidString
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT()
         
         expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
-            showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
+            showCVVRemoteService.complete(with: anySuccess())
             loadSessionSpy.complete(with: .failure(anyNSError()), at: 1)
         })
     }
@@ -133,28 +122,22 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     func test_showCVV_shouldDeliverErrorOnDecryptFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
-        let encryptedCVVValue = UUID().uuidString
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT(
             decryptStringResult: .failure(anyError())
         )
         
         expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
-            showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))), at: 1)
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
+            showCVVRemoteService.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair), at: 1)
         })
     }
     
     func test_showCVV_shouldDeliverCVVOnSuccess() throws {
         
         let keyPair = try anyRSAKeyPair()
-        let sessionIDValue = UUID().uuidString
-        let sessionKeyValue = anyData()
-        let encryptedCVVValue = UUID().uuidString
         let cvv = "861"
         let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT(
             decryptStringResult: .success(cvv)
@@ -162,10 +145,10 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .success(.init(cvvValue: cvv)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
-            showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
-            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))), at: 1)
+            authSpy.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair))
+            showCVVRemoteService.complete(with: anySuccess())
+            loadSessionSpy.complete(with: anySuccess(keyPair: keyPair), at: 1)
         })
     }
     
@@ -272,3 +255,29 @@ private extension ShowCVVService.CVV {
         let cvvValue: String
     }
 }
+
+private func anySuccess(
+    sessionIDValue: String = UUID().uuidString
+) -> Result<SessionID, Services.AuthError> {
+    
+    .success(.init(sessionIDValue: sessionIDValue))
+}
+
+private func anySuccess(
+    keyPair: RSADomain.KeyPair,
+    sessionKeyValue: Data = anyData()
+) -> Result<Services.ShowCVVSession, Error> {
+    
+    .success(.init(
+        rsaKeyPair: keyPair,
+        sessionKey: .init(sessionKeyValue: sessionKeyValue)
+    ))
+}
+
+private func anySuccess(
+    encryptedCVVValue: String = UUID().uuidString
+) -> Result<ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>> {
+    
+    .success(.init(encryptedCVVValue: encryptedCVVValue))
+}
+
