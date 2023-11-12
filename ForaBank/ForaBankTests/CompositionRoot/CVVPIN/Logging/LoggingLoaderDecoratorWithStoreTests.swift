@@ -29,7 +29,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: Load failure: \(retrievalFailureMessage)."
+            .init(.debug, .cache, "LoaderDecorator<Item>: Load failure: \(retrievalFailureMessage).")
         ])
     }
     
@@ -45,7 +45,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: Load success: \(item)."
+            .init(.debug, .cache, "LoaderDecorator<Item>: Load success: \(item).")
         ])
     }
     
@@ -62,7 +62,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: Save failure: \(insertionFailureMessage)."
+            .init(.debug, .cache, "LoaderDecorator<Item>: Save failure: \(insertionFailureMessage).")
         ])
     }
     
@@ -78,7 +78,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: Save failure: \(deletionFailureMessage)."
+            .init(.debug, .cache, "LoaderDecorator<Item>: Save failure: \(deletionFailureMessage).")
         ])
     }
     
@@ -93,7 +93,7 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            "LoaderDecorator<Item>: Save success."
+            .init(.debug, .cache, "LoaderDecorator<Item>: Save success.")
         ])
     }
     
@@ -197,16 +197,6 @@ final class LoggingLoaderDecoratorWithStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private final class LogSpy {
-        
-        private(set) var messages = [String]()
-        
-        func log(_ message: String) {
-            
-            self.messages.append(message)
-        }
-    }
-    
     private func anyItem(
         value: String = UUID().uuidString
     ) -> Item {
@@ -242,5 +232,13 @@ private extension LoggingLoaderDecorator {
             decoratee: decoratee,
             log: { _, message,_,_ in log(message) }
         )
+    }
+}
+
+private extension LogSpy {
+    
+    func log(_ message: String) {
+        
+        log(.debug, .cache, message)
     }
 }
