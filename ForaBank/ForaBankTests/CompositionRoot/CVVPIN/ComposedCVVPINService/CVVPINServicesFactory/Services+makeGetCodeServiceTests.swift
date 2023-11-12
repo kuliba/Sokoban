@@ -90,7 +90,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
     
     private typealias SUT = Services.GetCodeService
     private typealias ProcessResult = Result<GetProcessingSessionCodeService.Response, MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>>
-    private typealias ProcessSpy = ServiceSpy<ProcessResult, Void>
+    private typealias ProcessSpy = Spy<Void, GetProcessingSessionCodeService.Response, MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -103,7 +103,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeGetCodeService(
-            getCodeServiceProcess: processSpy.process,
+            getCodeServiceProcess: processSpy.process(completion:),
             cacheGetProcessingSessionCode: handleSuccessSpy.handle
         )
         
@@ -163,27 +163,6 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    final class ServiceSpy<T, Payload> {
-        
-        typealias Completion = (T) -> Void
-        
-        private var completions = [Completion]()
-        var callCount: Int { completions.count }
-        
-        func process(
-            completion: @escaping Completion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: T,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
     }
     
     private final class HandleSuccessSpy {
