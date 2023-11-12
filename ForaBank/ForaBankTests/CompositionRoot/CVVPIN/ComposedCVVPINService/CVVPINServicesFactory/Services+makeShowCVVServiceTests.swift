@@ -167,7 +167,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
             auth: authSpy.fetch(completion:),
             loadSession: loadSessionSpy.fetch(completion:),
             showCVVRemoteService: showCVVRemoteService,
-            cvvPINCrypto: cvvPINCrypto,
+            decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
             cvvPINJSONMaker: cvvPINJSONMaker
         )
         
