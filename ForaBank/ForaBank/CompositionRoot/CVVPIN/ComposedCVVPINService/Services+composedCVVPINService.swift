@@ -100,14 +100,19 @@ extension Services {
         let bindPublicKeyService = makeBindPublicKeyService(
             sessionIDLoader: sessionIDLoader,
             bindPublicKeyProcess: bindPublicKeyWithEventIDRemoteService.process,
-            makeSecretJSON: makeSecretJSON(otp:completion:),
-            onBindKeyFailure: clearRSACacheOnError
+            makeSecretJSON: makeSecretJSON(otp:completion:)
+        )
+        
+        let decoratedBindPublicKeyService = FetcherDecorator(
+            decoratee: bindPublicKeyService,
+            onSuccess: persistRSAKeyPair,
+            onFailure: clearRSAKeyPairStoreOnError
         )
         
         let activationService = makeActivationService(
             getCode: getCodeService.fetch,
             formSessionKey: formSessionKeyService.fetch,
-            bindPublicKeyWithEventID: bindPublicKeyService.fetch
+            bindPublicKeyWithEventID: decoratedBindPublicKeyService.fetch
         )
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
@@ -323,11 +328,22 @@ extension Services {
             }
         }
         
-        func clearRSACacheOnError(
-            _ error: BindPublicKeyWithEventIDService.Failure
+        func persistRSAKeyPair(
+            _ success: BindPublicKeyWithEventIDService.Success,
+            completion: @escaping () -> Void
+        ) {
+            
+#warning("finish this: load key pair from ephemeral store and save to persistent store")
+        }
+        
+        func clearRSAKeyPairStoreOnError(
+            _ error: BindPublicKeyWithEventIDService.Failure,
+            completion: @escaping () -> Void
         ) {
             // clear cache if retryAttempts == 0
-            if case .server = error {
+            if case let .retry(_,_, retryAttempts: retryAttempts) = error,
+               retryAttempts == 0 {
+                
                 rsaKeyPairStore.deleteCacheIgnoringResult()
             }
         }
