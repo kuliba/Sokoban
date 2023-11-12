@@ -144,7 +144,7 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         let sessionIDLoader = SessionIDLoader()
         let processSpy = ProcessSpy()
         let sut = Services.makeBindPublicKeyService(
-            sessionIDLoader: sessionIDLoader,
+            loadSessionID: sessionIDLoader.load(completion:),
             processBindPublicKey: processSpy.process,
             makeSecretJSON: { _, completion in
                 

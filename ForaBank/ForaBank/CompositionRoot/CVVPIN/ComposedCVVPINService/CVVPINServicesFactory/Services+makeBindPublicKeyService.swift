@@ -14,11 +14,15 @@ extension Services {
     
     typealias BindPublicKeyService = Fetcher<BindPublicKeyWithEventIDService.Payload, BindPublicKeyWithEventIDService.Success, BindPublicKeyWithEventIDService.Failure>
     
+    typealias LoadSessionIDResult = Result<SessionID, Error>
+    typealias LoadSessionIDCompletion = (Result<SessionID, Error>) -> Void
+    typealias LoadSessionID = (@escaping LoadSessionIDCompletion) -> Void
+    
     typealias ProcessBindPublicKeyError = MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>
     typealias ProcessBindPublicKey = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Result<Void, ProcessBindPublicKeyError>) -> Void) -> Void
     
     static func makeBindPublicKeyService(
-        sessionIDLoader: any Loader<SessionID>,
+        loadSessionID: @escaping LoadSessionID,
         processBindPublicKey: @escaping ProcessBindPublicKey,
         makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON
     ) -> any BindPublicKeyService {
@@ -34,7 +38,7 @@ extension Services {
         func loadEventID(
             completion: @escaping BindPublicKeyWithEventIDService.EventIDCompletion
         ) {
-            sessionIDLoader.load {
+            loadSessionID {
                 
                 completion($0.map { .init(eventIDValue: $0.sessionIDValue) })
             }

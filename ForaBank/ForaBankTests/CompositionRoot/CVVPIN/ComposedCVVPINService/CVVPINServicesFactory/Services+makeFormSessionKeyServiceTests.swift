@@ -154,7 +154,7 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeFormSessionKeyService(
-            sessionCodeLoader: sessionCodeLoader,
+            loadSessionCode: sessionCodeLoader.load(completion:),
             processFormSessionKey: processSpy.process,
             makeSecretRequestJSON: { $0(makeSecretRequestJSONResult) },
             makeSessionKey: { _, completion in completion(makeSessionKeyResult) },

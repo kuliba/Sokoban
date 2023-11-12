@@ -90,7 +90,7 @@ extension Services {
         )
         
         let formSessionKeyService = makeFormSessionKeyService(
-            sessionCodeLoader: sessionCodeLoader,
+            loadSessionCode: sessionCodeLoader.load(completion:),
             processFormSessionKey: formSessionKeyRemoteService.process,
             makeSecretRequestJSON: makeSecretRequestJSON,
             makeSessionKey: makeSessionKey(string:completion:),
@@ -98,7 +98,7 @@ extension Services {
         )
         
         let bindPublicKeyService = makeBindPublicKeyService(
-            sessionIDLoader: sessionIDLoader,
+            loadSessionID: sessionIDLoader.load(completion:),
             processBindPublicKey: bindPublicKeyRemoteService.process,
             makeSecretJSON: makeSecretJSON(otp:completion:)
         )

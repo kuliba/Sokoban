@@ -14,6 +14,10 @@ extension Services {
     
     typealias CachingFormSessionKeyService = Fetcher<FormSessionKeyService.Payload, FormSessionKeyService.Success, FormSessionKeyService.Failure>
     
+    typealias LoadSessionCodeResult = Result<SessionCode, Error>
+    typealias LoadSessionCodeCompletion = (LoadSessionCodeResult) -> Void
+    typealias LoadSessionCode = (@escaping LoadSessionCodeCompletion) -> Void
+    
     typealias ProcessFormSessionKeyError = MappingRemoteServiceError<FormSessionKeyService.APIError>
     typealias ProcessFormSessionKeyResult = Swift.Result<FormSessionKeyService.Response, ProcessFormSessionKeyError>
     typealias ProcessFormSessionKey = (FormSessionKeyService.ProcessPayload, @escaping (ProcessFormSessionKeyResult) -> Void) -> Void
@@ -21,7 +25,7 @@ extension Services {
     typealias CacheFormSessionKey = (FormSessionKeyService.Success) -> Void
     
     static func makeFormSessionKeyService(
-        sessionCodeLoader: any Loader<SessionCode>,
+        loadSessionCode: @escaping LoadSessionCode,
         processFormSessionKey: @escaping ProcessFormSessionKey,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
@@ -47,7 +51,7 @@ extension Services {
         func loadCode(
             completion: @escaping FormSessionKeyService.CodeCompletion
         ) {
-            sessionCodeLoader.load { result in
+            loadSessionCode { result in
                 
                 completion(
                     result
