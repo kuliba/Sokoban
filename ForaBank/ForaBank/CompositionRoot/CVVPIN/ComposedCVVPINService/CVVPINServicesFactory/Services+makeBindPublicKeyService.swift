@@ -15,7 +15,7 @@ extension Services {
     typealias BindPublicKeyService = Fetcher<BindPublicKeyWithEventIDService.Payload, BindPublicKeyWithEventIDService.Success, BindPublicKeyWithEventIDService.Failure>
     
     typealias ProcessBindPublicKeyError = MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>
-    typealias ProcessBindPublicKey = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Swift.Result<Void, ProcessBindPublicKeyError>) -> Void) -> Void
+    typealias ProcessBindPublicKey = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Result<Void, ProcessBindPublicKeyError>) -> Void) -> Void
     
     static func makeBindPublicKeyService(
         sessionIDLoader: any Loader<SessionID>,

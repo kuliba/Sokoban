@@ -158,7 +158,7 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
             processFormSessionKey: processSpy.process,
             makeSecretRequestJSON: { $0(makeSecretRequestJSONResult) },
             makeSessionKey: { _, completion in completion(makeSessionKeyResult) },
-            cacheFormSessionKeySuccess: handleSuccessSpy.handle
+            cacheFormSessionKey: handleSuccessSpy.handle
         )
         
         trackForMemoryLeaks(handleSuccessSpy, file: file, line: line)

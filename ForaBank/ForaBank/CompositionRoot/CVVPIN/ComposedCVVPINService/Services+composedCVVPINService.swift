@@ -94,7 +94,7 @@ extension Services {
             processFormSessionKey: formSessionKeyRemoteService.process,
             makeSecretRequestJSON: makeSecretRequestJSON,
             makeSessionKey: makeSessionKey(string:completion:),
-            cacheFormSessionKeySuccess: cache(success:)
+            cacheFormSessionKey: cache(success:)
         )
         
         let bindPublicKeyService = makeBindPublicKeyService(

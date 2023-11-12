@@ -18,14 +18,14 @@ extension Services {
     typealias ProcessFormSessionKeyResult = Swift.Result<FormSessionKeyService.Response, ProcessFormSessionKeyError>
     typealias ProcessFormSessionKey = (FormSessionKeyService.ProcessPayload, @escaping (ProcessFormSessionKeyResult) -> Void) -> Void
   
-    typealias CacheFormSessionKeySuccess = (FormSessionKeyService.Success) -> Void
+    typealias CacheFormSessionKey = (FormSessionKeyService.Success) -> Void
     
     static func makeFormSessionKeyService(
         sessionCodeLoader: any Loader<SessionCode>,
         processFormSessionKey: @escaping ProcessFormSessionKey,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
-        cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess
+        cacheFormSessionKey: @escaping CacheFormSessionKey
     ) -> any CachingFormSessionKeyService {
         
         let formSessionKeyService = FormSessionKeyService(
@@ -37,7 +37,7 @@ extension Services {
         
         let cachingFormSessionKeyService = FetcherDecorator(
             decoratee: formSessionKeyService,
-            handleSuccess: cacheFormSessionKeySuccess
+            handleSuccess: cacheFormSessionKey
         )
         
         return cachingFormSessionKeyService
