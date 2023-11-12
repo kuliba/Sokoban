@@ -102,6 +102,8 @@ final class ChangePINService_FetcherTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias DecryptSpy = Spy<String, String, Error>
+    
     private func makeSUT(
         authenticateResult: SUT.AuthenticateResult = anySuccess(),
         confirmProcessResult: SUT.ConfirmProcessResult = anySuccess(),
@@ -119,7 +121,7 @@ final class ChangePINService_FetcherTests: XCTestCase {
                 
                 completion(authenticateResult)
             },
-            publicRSAKeyDecrypt: spy.decrypt,
+            publicRSAKeyDecrypt: spy.process(_:completion:),
             confirmProcess: { _, completion in
                 
                 completion(confirmProcessResult)
@@ -196,25 +198,6 @@ final class ChangePINService_FetcherTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private final class DecryptSpy {
-        
-        private var completions = [SUT.PublicRSAKeyDecryptCompletion]()
-        
-        func decrypt(
-            _ string: String,
-            completion: @escaping SUT.PublicRSAKeyDecryptCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.PublicRSAKeyDecryptResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
     }
 }
 
