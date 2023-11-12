@@ -465,6 +465,7 @@
 		2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */; };
 		2A5190452A7EAC890014B0B7 /* PublicKeyWithEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
+		2A53F8E72B00CCCA00CF2843 /* LogSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */; };
 		2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */; };
 		2A53FB832AFD62320045F3B0 /* FetcherSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */; };
 		2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */; };
@@ -2610,6 +2611,7 @@
 		2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveInactiveSessionAgent.swift; sourceTree = "<group>"; };
 		2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyWithEventID.swift; sourceTree = "<group>"; };
 		2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldView+ext.swift"; sourceTree = "<group>"; };
+		2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSpy.swift; sourceTree = "<group>"; };
 		2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetcherSpy.swift; sourceTree = "<group>"; };
 		2A5457542A3B471D007617C3 /* TransportPaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportPaymentsViewModel.swift; sourceTree = "<group>"; };
@@ -6312,6 +6314,7 @@
 			isa = PBXGroup;
 			children = (
 				2AD437692B00BD200027286A /* Spy.swift */,
+				2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -13562,6 +13565,7 @@
 				776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */,
 				77EC58E5277221F80054D75C /* ServerAgentTests.swift in Sources */,
 				2A3F93512ABF112700669C1A /* RootViewModelTests.swift in Sources */,
+				2A53F8E72B00CCCA00CF2843 /* LogSpy.swift in Sources */,
 				C14303F32A842B4B00FAD5AA /* ProductDataTests.swift in Sources */,
 				2AF5E28E29BB4517004D69F3 /* Model+stubbed.swift in Sources */,
 				7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */,
