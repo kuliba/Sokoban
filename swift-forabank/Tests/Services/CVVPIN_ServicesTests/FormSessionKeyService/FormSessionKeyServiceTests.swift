@@ -192,6 +192,10 @@ final class FormSessionKeyServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = FormSessionKeyService
+    private typealias LoadCodeSpy = Spy<Void, SUT.Code, Error>
+    private typealias MakeJSONSpy = Spy<Void, Data, Error>
+    private typealias ProcessSpy = Spy<SUT.ProcessPayload, SUT.Response, SUT.APIError>
+    private typealias MakeSessionKeySpy = Spy<String, SUT.SessionKey, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -209,10 +213,10 @@ final class FormSessionKeyServiceTests: XCTestCase {
         let makeSessionKeySpy = MakeSessionKeySpy()
         
         let sut = SUT(
-            loadCode: loadCodeSpy.load(completion:),
-            makeSecretRequestJSON: makeJSONSpy.make(completion:),
-            process: processSpy.process,
-            makeSessionKey: makeSessionKeySpy.make
+            loadCode: loadCodeSpy.process(completion:),
+            makeSecretRequestJSON: makeJSONSpy.process(completion:),
+            process: processSpy.process(_:completion:),
+            makeSessionKey: makeSessionKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -249,92 +253,6 @@ final class FormSessionKeyServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class LoadCodeSpy {
-        
-        private(set) var completions = [SUT.CodeCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func load(
-            completion: @escaping SUT.CodeCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.CodeResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class MakeJSONSpy {
-        
-        private(set) var completions = [SUT.SecretRequestJSONCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func make(
-            completion: @escaping SUT.SecretRequestJSONCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.SecretRequestJSONResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class ProcessSpy {
-        
-        typealias Message = (payload: SUT.ProcessPayload, completion: SUT.ProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: SUT.ProcessPayload,
-            completion: @escaping SUT.ProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class MakeSessionKeySpy {
-        
-        typealias Message = (payload: String, completion: SUT.MakeSessionKeyCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            _ payload: String,
-            completion: @escaping SUT.MakeSessionKeyCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.MakeSessionKeyResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 
