@@ -334,6 +334,8 @@ extension Services {
         ) {
             
 #warning("finish this: load key pair from ephemeral store and save to persistent store")
+    
+            completion()
         }
         
         func clearRSAKeyPairStoreOnError(
@@ -345,9 +347,10 @@ extension Services {
                retryAttempts == 0 {
                 
                 rsaKeyPairStore.deleteCacheIgnoringResult()
+                completion()
             }
         }
-        
+
         // MARK: - ChangePIN Adapters
         
         func cache(response: ChangePINService.ConfirmResponse) {
