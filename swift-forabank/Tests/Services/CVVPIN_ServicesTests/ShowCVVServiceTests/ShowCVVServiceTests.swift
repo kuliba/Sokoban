@@ -189,6 +189,10 @@ final class ShowCVVServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ShowCVVService
+    private typealias AuthenticateSpy = Spy<Void, SUT.SessionID, SUT.AuthenticateError>
+    private typealias MakeJSONSpy = Spy<(SUT.CardID, SUT.SessionID), Data, Error>
+    private typealias ProcessSpy = Spy<SUT.Payload, SUT.EncryptedCVV, SUT.APIError>
+    private typealias DecryptCVVSpy = Spy<SUT.EncryptedCVV, SUT.CVV, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -206,10 +210,10 @@ final class ShowCVVServiceTests: XCTestCase {
         let decryptCVVSpy = DecryptCVVSpy()
         
         let sut = SUT(
-            authenticate: authenticateSpy.authenticate(completion:),
-            makeJSON: makeJSONSpy.make(cardID:sessionID:completion:),
+            authenticate: authenticateSpy.process(completion:),
+            makeJSON: makeJSONSpy.process(cardID:sessionID:completion:),
             process: processSpy.process(_:completion:),
-            decryptCVV: decryptCVVSpy.decrypt(_:completion:)
+            decryptCVV: decryptCVVSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -246,96 +250,6 @@ final class ShowCVVServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class AuthenticateSpy {
-        
-        private(set) var completions = [SUT.AuthenticateCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func authenticate(
-            completion: @escaping SUT.AuthenticateCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.AuthenticateResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class MakeJSONSpy {
-        
-        typealias Message = (payload: (SUT.CardID, SUT.SessionID), completion: SUT.MakeJSONCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            cardID: SUT.CardID,
-            sessionID: SUT.SessionID,
-            completion: @escaping SUT.MakeJSONCompletion
-        ) {
-            messages.append(((cardID, sessionID), completion))
-        }
-        
-        func complete(
-            with result: SUT.MakeJSONResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ProcessSpy {
-        
-        typealias Message = (payload: SUT.Payload, completion: SUT.ProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: SUT.Payload,
-            completion: @escaping SUT.ProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class DecryptCVVSpy {
-        
-        typealias Message = (payload: SUT.EncryptedCVV, completion: SUT.DecryptCVVCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func decrypt(
-            _ payload: SUT.EncryptedCVV,
-            completion: @escaping SUT.DecryptCVVCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.DecryptCVVResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 
@@ -438,4 +352,16 @@ private func anySuccess(
 ) -> ShowCVVService.ProcessResult {
     
     .success(.init(encryptedCVVValue: encryptedCVVValue))
+}
+
+private extension Spy
+where Payload == (ShowCVVService.CardID, ShowCVVService.SessionID) {
+    
+    func process(
+        cardID: ShowCVVService.CardID,
+        sessionID: ShowCVVService.SessionID,
+        completion: @escaping Completion
+    ) {
+        process((cardID, sessionID), completion: completion)
+    }
 }
