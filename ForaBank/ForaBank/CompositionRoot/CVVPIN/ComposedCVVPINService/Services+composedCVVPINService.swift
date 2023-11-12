@@ -73,7 +73,7 @@ extension Services {
         
         // MARK: Configure Remote Services
         
-        let (authWithPublicKeyRemoteService, bindPublicKeyWithEventIDRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(
+        let (authWithPublicKeyRemoteService, bindPublicKeyRemoteService, changePINRemoteService, confirmChangePINRemoteService, formSessionKeyRemoteService, getCodeRemoteService, showCVVRemoteService) = configureRemoteServices(
             httpClient: httpClient,
             log: { networkLog(.info, $0, $1, $2) }
         )
@@ -99,7 +99,7 @@ extension Services {
         
         let bindPublicKeyService = makeBindPublicKeyService(
             sessionIDLoader: sessionIDLoader,
-            processBindPublicKey: bindPublicKeyWithEventIDRemoteService.process,
+            processBindPublicKey: bindPublicKeyRemoteService.process,
             makeSecretJSON: makeSecretJSON(otp:completion:)
         )
         
