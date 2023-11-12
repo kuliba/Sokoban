@@ -85,7 +85,7 @@ extension Services {
         // MARK: Configure CVV-PIN Activation Service
         
         let getCodeService = makeGetCodeService(
-            getCodeServiceProcess: getCodeRemoteService.process,
+            processGetCodeService: getCodeRemoteService.process,
             cacheGetProcessingSessionCode: cache(response:)
         )
         

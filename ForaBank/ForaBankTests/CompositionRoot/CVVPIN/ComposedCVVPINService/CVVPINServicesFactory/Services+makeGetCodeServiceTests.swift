@@ -89,8 +89,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = Services.GetCodeService
-    private typealias ProcessResult = Result<GetProcessingSessionCodeService.Response, MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>>
-    private typealias ProcessSpy = Spy<Void, GetProcessingSessionCodeService.Response, MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>>
+    private typealias ProcessSpy = Spy<Void, Services.ProcessGetCodeSuccess, Services.ProcessGetCodeError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -103,7 +102,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeGetCodeService(
-            getCodeServiceProcess: processSpy.process(completion:),
+            processGetCodeService: processSpy.process(completion:),
             cacheGetProcessingSessionCode: handleSuccessSpy.handle
         )
         

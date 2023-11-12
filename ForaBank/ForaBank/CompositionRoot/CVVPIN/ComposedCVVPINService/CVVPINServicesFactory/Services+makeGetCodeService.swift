@@ -12,13 +12,18 @@ import GenericRemoteService
 
 extension Services {
     
-    typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
     typealias GetCodeService = Fetcher<GetProcessingSessionCodeService.Payload, GetProcessingSessionCodeService.Success, GetProcessingSessionCodeService.Failure>
-    typealias GetCodeServiceError = MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>
-    typealias GetCodeServiceProcess = (@escaping (Swift.Result<GetProcessingSessionCodeService.Response, GetCodeServiceError>) -> Void) -> Void
+    
+    typealias ProcessGetCodeSuccess = GetProcessingSessionCodeService.Response
+    typealias ProcessGetCodeError = MappingRemoteServiceError<GetProcessingSessionCodeService.APIError>
+    typealias ProcessGetCodeResult = Result<ProcessGetCodeSuccess, ProcessGetCodeError>
+    typealias ProcessGetCodeCompletion = (ProcessGetCodeResult) -> Void
+    typealias ProcessGetCode = (@escaping ProcessGetCodeCompletion) -> Void
+    
+    typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
     
     static func makeGetCodeService(
-        getCodeServiceProcess: @escaping GetCodeServiceProcess,
+        processGetCodeService: @escaping ProcessGetCode,
         cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode
     ) -> any GetCodeService {
         
@@ -38,7 +43,7 @@ extension Services {
         func process(
             completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
         ) {
-            getCodeServiceProcess {
+            processGetCodeService {
                 
                 completion($0.mapError { .init($0) })
             }
