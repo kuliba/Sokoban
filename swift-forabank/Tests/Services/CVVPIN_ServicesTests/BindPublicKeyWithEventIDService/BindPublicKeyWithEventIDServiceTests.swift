@@ -161,6 +161,9 @@ final class BindPublicKeyWithEventIDServiceTests: XCTestCase {
     // MARK: - Helper
     
     private typealias SUT = BindPublicKeyWithEventIDService
+    private typealias LoadEventIDSpy = Spy<Void, SUT.EventID, Error>
+    private typealias MakeSecretJSONSpy = Spy<SUT.OTP, Data, Error>
+    private typealias ProcessSpy = Spy<SUT.ProcessPayload, Void, SUT.APIError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -175,8 +178,8 @@ final class BindPublicKeyWithEventIDServiceTests: XCTestCase {
         let makeSecretJSONSpy = MakeSecretJSONSpy()
         let processSpy = ProcessSpy()
         let sut = SUT(
-            loadEventID: loadEventIDSpy.load(completion:),
-            makeSecretJSON: makeSecretJSONSpy.make(_:completion:),
+            loadEventID: loadEventIDSpy.process(completion:),
+            makeSecretJSON: makeSecretJSONSpy.process(_:completion:),
             process: processSpy.process(_:completion:)
         )
         
@@ -210,72 +213,6 @@ final class BindPublicKeyWithEventIDServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class LoadEventIDSpy {
-        
-        private(set) var completions = [SUT.EventIDCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func load(
-            completion: @escaping SUT.EventIDCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.EventIDResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class MakeSecretJSONSpy {
-        
-        typealias Message = (payload: SUT.OTP, completion: SUT.SecretJSONCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            _ payload: SUT.OTP,
-            completion: @escaping SUT.SecretJSONCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.SecretJSONResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ProcessSpy {
-        
-        typealias Message = (payload: SUT.ProcessPayload, completion: SUT.ProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: SUT.ProcessPayload,
-            completion: @escaping SUT.ProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 
