@@ -138,16 +138,6 @@ final class LiveCVVPINJSONMakerTests: XCTestCase {
         return (sut, crypto)
     }
     
-    private final class LogSpy {
-        
-        private(set) var messages = [String]()
-        
-        func log(_ message: String) {
-            
-            self.messages.append(message)
-        }
-    }
-    
     private struct RequestJSON: Decodable {
         
         let clientPublicKeyRSA: Data

@@ -206,11 +206,3 @@ private extension LoggingLoaderDecorator {
         )
     }
 }
-
-private extension LogSpy {
-    
-    func log(_ level: LoggerAgentLevel, _ message: String) {
-        
-        self.log(level, .cache, message)
-    }
-}

@@ -159,11 +159,3 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         var description: String { message }
     }
 }
-
-private extension LogSpy {
-    
-    func log(_ message: String) {
-        
-        log(.debug, .cache, message)
-    }
-}

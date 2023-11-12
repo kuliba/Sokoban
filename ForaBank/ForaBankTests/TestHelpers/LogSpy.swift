@@ -36,3 +36,19 @@ final class LogSpy {
         }
     }
 }
+
+extension LogSpy {
+    
+    func log(_ level: LoggerAgentLevel, _ message: String) {
+        
+        self.log(level, .cache, message)
+    }
+}
+
+extension LogSpy {
+    
+    func log(_ message: String) {
+        
+        log(.debug, .cache, message)
+    }
+}

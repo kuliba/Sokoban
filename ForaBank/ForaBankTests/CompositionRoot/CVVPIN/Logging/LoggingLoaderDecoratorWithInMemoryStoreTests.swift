@@ -148,11 +148,3 @@ private extension LoggingLoaderDecorator {
         )
     }
 }
-
-private extension LogSpy {
-    
-    func log(_ message: String) {
-        
-        log(.debug, .cache, message)
-    }
-}
