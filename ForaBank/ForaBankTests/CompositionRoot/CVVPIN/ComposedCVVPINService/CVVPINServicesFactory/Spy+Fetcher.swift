@@ -7,8 +7,6 @@
 
 import Fetcher
 
-typealias FetcherSpy<Payload, Success, Failure: Error> = Spy<Payload, Success, Failure>
-
 extension Spy: Fetcher {
     
     typealias FetchCompletion = Completion

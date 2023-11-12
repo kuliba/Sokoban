@@ -136,9 +136,9 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ShowCVVService
-    private typealias AuthSpy = FetcherSpy<Void, SessionID, Services.AuthError>
-    private typealias LoadSessionSpy = FetcherSpy<Void, Services.ShowCVVSession, Error>
-    private typealias ShowCVVRemoteService = FetcherSpy<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
+    private typealias AuthSpy = Spy<Void, SessionID, Services.AuthError>
+    private typealias LoadSessionSpy = Spy<Void, Services.ShowCVVSession, Error>
+    private typealias ShowCVVRemoteService = Spy<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
     private typealias TransportKey = LiveExtraLoggingCVVPINCrypto.TransportKey
     private typealias ProcessingKey = LiveExtraLoggingCVVPINCrypto.ProcessingKey
     

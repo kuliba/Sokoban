@@ -277,11 +277,11 @@ final class Services_makeChangePINServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
-    private typealias AuthSpy = FetcherSpy<Void, SessionID, Services.AuthError>
-    private typealias LoadSessionSpy = FetcherSpy<Void, Services.ChangePINSession, Error>
-    private typealias DecryptSpy = FetcherSpy<String, String, Error>
-    private typealias ChangePINRemoteSpy = FetcherSpy<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
-    private typealias ConfirmRemoteSpy = FetcherSpy<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
+    private typealias AuthSpy = Spy<Void, SessionID, Services.AuthError>
+    private typealias LoadSessionSpy = Spy<Void, Services.ChangePINSession, Error>
+    private typealias DecryptSpy = Spy<String, String, Error>
+    private typealias ChangePINRemoteSpy = Spy<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
+    private typealias ConfirmRemoteSpy = Spy<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
     private typealias TransportKey = LiveExtraLoggingCVVPINCrypto.TransportKey
     private typealias ProcessingKey = LiveExtraLoggingCVVPINCrypto.ProcessingKey
     
