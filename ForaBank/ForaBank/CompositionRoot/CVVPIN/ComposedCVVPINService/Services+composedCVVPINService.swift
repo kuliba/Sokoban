@@ -142,7 +142,7 @@ extension Services {
             loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
             decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            cvvPINJSONMaker: cvvPINJSONMaker
+            makeShowCVVSecretJSON: cvvPINJSONMaker.makeShowCVVSecretJSON(with:and:rsaKeyPair:sessionKey:)
         )
         
         // MARK: - ComposedCVVPINService

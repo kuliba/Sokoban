@@ -53,6 +53,21 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         })
     }
     
+    func test_showCVV_shouldDeliverErrorOnMakeJSONFailure() throws {
+        
+        let keyPair = try anyRSAKeyPair()
+        let sessionIDValue = UUID().uuidString
+        let sessionKeyValue = anyData()
+        let (sut, authSpy, loadSessionSpy, _) = makeSUT(
+            makeShowCVVSecretJSONResult: .failure(anyError()))
+        
+        expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
+            
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
+            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+        })
+    }
+    
     func test_showCVV_shouldDeliverErrorOnShowCVVRemoteServiceCreateRequestFailure() throws {
         
         let keyPair = try anyRSAKeyPair()
@@ -115,14 +130,35 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         })
     }
     
+    func test_showCVV_shouldDeliverErrorOnDecryptFailure() throws {
+        
+        let keyPair = try anyRSAKeyPair()
+        let sessionIDValue = UUID().uuidString
+        let sessionKeyValue = anyData()
+        let encryptedCVVValue = UUID().uuidString
+        let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT(
+            decryptStringResult: .failure(anyError())
+        )
+        
+        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+            
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
+            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
+            showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
+            loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))), at: 1)
+        })
+    }
+    
     func test_showCVV_shouldDeliverCVVOnSuccess() throws {
         
         let keyPair = try anyRSAKeyPair()
         let sessionIDValue = UUID().uuidString
         let sessionKeyValue = anyData()
+        let encryptedCVVValue = UUID().uuidString
         let cvv = "861"
-        let encryptedCVVValue = try encrypt(cvv, with: keyPair.publicKey)
-        let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT()
+        let (sut, authSpy, loadSessionSpy, showCVVRemoteService) = makeSUT(
+            decryptStringResult: .success(cvv)
+        )
         
         expect(sut, toDeliver: .success(.init(cvvValue: cvv)), on: {
             
@@ -145,6 +181,8 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
     private func makeSUT(
         transportKeyResult: Result<TransportKey, Error> = anyTransportKeyResult(),
         processingKeyResult: Result<ProcessingKey, Error> = anyProcessingKeyResult(),
+        makeShowCVVSecretJSONResult: Result<Data, Error> = .success(anyData()),
+        decryptStringResult: Result<String, Error> = .success(UUID().uuidString),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -156,19 +194,13 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         let authSpy = AuthSpy()
         let loadSessionSpy = LoadSessionSpy()
         let showCVVRemoteService = ShowCVVRemoteService()
-        let cvvPINCrypto = LiveExtraLoggingCVVPINCrypto(
-            transportKey: transportKeyResult.get,
-            processingKey: processingKeyResult.get,
-            log: { _,_,_ in }
-        )
-        let cvvPINJSONMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         
         let sut = Services.makeShowCVVService(
             auth: authSpy.fetch(completion:),
             loadSession: loadSessionSpy.fetch(completion:),
             showCVVRemoteService: showCVVRemoteService,
-            decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            cvvPINJSONMaker: cvvPINJSONMaker
+            decryptString: { _,_ in try decryptStringResult.get() },
+            makeShowCVVSecretJSON: { _,_,_,_ in try makeShowCVVSecretJSONResult.get() }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -225,20 +257,6 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func encrypt(
-        _ string: String,
-        with publicKey: RSADomain.PublicKey
-    ) throws -> String {
-        
-        let encrypted = try ForaCrypto.Crypto.encrypt(
-            data: .init(string.utf8),
-            withPublicKey: publicKey.key,
-            algorithm: .rsaEncryptionPKCS1
-        )
-        
-        return encrypted.base64EncodedString()
     }
 }
 
