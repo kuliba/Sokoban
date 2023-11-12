@@ -346,8 +346,7 @@ extension Services {
             if case let .retry(_,_, retryAttempts: retryAttempts) = error,
                retryAttempts == 0 {
                 
-                rsaKeyPairStore.deleteCacheIgnoringResult()
-                completion()
+                rsaKeyPairStore.deleteCache { _ in completion() }
             }
         }
 
