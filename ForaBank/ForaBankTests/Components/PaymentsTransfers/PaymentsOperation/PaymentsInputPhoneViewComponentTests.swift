@@ -49,9 +49,9 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
         insertAtCursorAndWait(.init(input), sut.textView)
 
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+(3"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .editing(.init("+(3", cursorAt: 3)))
+        XCTAssertNoDiff(sut.textView.state, .editing(.init("+3", cursorAt: 2)))
         XCTAssertFalse(countryCodes.map(\.from).contains(input))
     }
     
@@ -98,9 +98,9 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
         finishEditingAndWait(sut.textView)
         
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+(3", current: "+(3"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+3", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .noFocus("+(3"))
+        XCTAssertNoDiff(sut.textView.state, .noFocus("+3"))
     }
     
     func test_endEditing_shouldChangeValues_noSpy_countryCodeMatch() {

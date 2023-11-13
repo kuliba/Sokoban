@@ -1212,7 +1212,7 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = paymentData.phoneNumberRu
+                let phoneNumber = PhoneNumberKitFormater().format(paymentData.phoneNumber)
                 let bankId = paymentData.bankId
                 return paymentsProcessSourceReducerSFP(phone: phoneNumber,
                                                        bankId: bankId,
