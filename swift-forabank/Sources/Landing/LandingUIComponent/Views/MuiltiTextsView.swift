@@ -31,6 +31,7 @@ extension UILanding.Multi {
                         Text($0.rawValue)
                             .foregroundColor(config.colors.text)
                             .font(config.font)
+                            .accessibilityIdentifier("TextsViewText")
                     }
                 }
                 .padding(.horizontal, config.paddings.inside.horizontal)
