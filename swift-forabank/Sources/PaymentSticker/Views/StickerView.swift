@@ -32,6 +32,7 @@ struct StickerView: View {
                 HStack(alignment: .top, spacing: 20) {
                     
                     viewModel.sticker
+                        .resizable()
                         .frame(width: 112, height: 72, alignment: .center)
                     
                     VStack {
@@ -50,7 +51,6 @@ struct StickerView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 200)
     }
 }
 

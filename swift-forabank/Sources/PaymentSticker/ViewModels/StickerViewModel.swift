@@ -39,8 +39,8 @@ extension StickerViewModel {
 
         public var id: String { title }
         public let title: String
-        let icon: Image
-        let description: String
-        let iconColor: Color
+        public let icon: Image
+        public let description: String
+        public let iconColor: Color
     }
 }

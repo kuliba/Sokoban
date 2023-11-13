@@ -11,15 +11,18 @@ extension Operation.Parameter {
         
         let title: String
         let description: String
+        let image: ImageData
         let options: [Option]
         
         public init(
             title: String,
             description: String,
+            image: ImageData,
             options: [Operation.Parameter.Sticker.Option]
         ) {
             self.title = title
             self.description = description
+            self.image = image
             self.options = options
         }
         
