@@ -13,17 +13,23 @@ import GenericRemoteService
 extension Services {
     
     typealias CachingFormSessionKeyService = Fetcher<FormSessionKeyService.Payload, FormSessionKeyService.Success, FormSessionKeyService.Failure>
-    typealias FormSessionKeyProcessError = MappingRemoteServiceError<FormSessionKeyService.APIError>
-    typealias FormSessionKeyProcessResult = Swift.Result<FormSessionKeyService.Response, FormSessionKeyProcessError>
-    typealias FormSessionKeyProcess = (FormSessionKeyService.ProcessPayload, @escaping (FormSessionKeyProcessResult) -> Void) -> Void
-    typealias CacheFormSessionKeySuccess = (FormSessionKeyService.Success) -> Void
+    
+    typealias LoadSessionCodeResult = Result<SessionCode, Error>
+    typealias LoadSessionCodeCompletion = (LoadSessionCodeResult) -> Void
+    typealias LoadSessionCode = (@escaping LoadSessionCodeCompletion) -> Void
+    
+    typealias ProcessFormSessionKeyError = MappingRemoteServiceError<FormSessionKeyService.APIError>
+    typealias ProcessFormSessionKeyResult = Swift.Result<FormSessionKeyService.Response, ProcessFormSessionKeyError>
+    typealias ProcessFormSessionKey = (FormSessionKeyService.ProcessPayload, @escaping (ProcessFormSessionKeyResult) -> Void) -> Void
+  
+    typealias CacheFormSessionKey = (FormSessionKeyService.Success) -> Void
     
     static func makeFormSessionKeyService(
-        sessionCodeLoader: any Loader<SessionCode>,
-        formSessionKeyProcess: @escaping FormSessionKeyProcess,
+        loadSessionCode: @escaping LoadSessionCode,
+        processFormSessionKey: @escaping ProcessFormSessionKey,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
-        cacheFormSessionKeySuccess: @escaping CacheFormSessionKeySuccess
+        cacheFormSessionKey: @escaping CacheFormSessionKey
     ) -> any CachingFormSessionKeyService {
         
         let formSessionKeyService = FormSessionKeyService(
@@ -35,7 +41,7 @@ extension Services {
         
         let cachingFormSessionKeyService = FetcherDecorator(
             decoratee: formSessionKeyService,
-            handleSuccess: cacheFormSessionKeySuccess
+            handleSuccess: cacheFormSessionKey
         )
         
         return cachingFormSessionKeyService
@@ -43,9 +49,9 @@ extension Services {
         // MARK: - FormSessionKey Adapters
         
         func loadCode(
-            completion: @escaping FormSessionKeyService.CodeCompletion
+            completion: @escaping FormSessionKeyService.LoadCodeCompletion
         ) {
-            sessionCodeLoader.load { result in
+            loadSessionCode { result in
                 
                 completion(
                     result
@@ -59,7 +65,7 @@ extension Services {
             payload: FormSessionKeyService.ProcessPayload,
             completion: @escaping FormSessionKeyService.ProcessCompletion
         ) {
-            formSessionKeyProcess(
+            processFormSessionKey(
                 .init(code: payload.code, data: payload.data)
             ) {
                 completion($0.mapError { .init($0) })

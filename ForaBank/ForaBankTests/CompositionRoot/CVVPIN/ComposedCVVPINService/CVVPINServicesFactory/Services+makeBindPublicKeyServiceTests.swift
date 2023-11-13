@@ -14,126 +14,123 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let (_, sessionIDLoader, processSpy) = makeSUT()
         
         XCTAssertEqual(sessionIDLoader.callCount, 0)
-        XCTAssertEqual(handleFailureSpy.callCount, 0)
         XCTAssertEqual(processSpy.callCount, 0)
     }
     
     func test_handleFailure_shouldReceiveFailureOnLoadSessionIDFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, _) = makeSUT()
+        let (sut, sessionIDLoader, _) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.serviceError(.missingEventID)), on: {
             
             sessionIDLoader.completeLoad(with: .failure(anyError()))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnMakeSecretJSONFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, _) = makeSUT(
+        let (sut, sessionIDLoader, _) = makeSUT(
             makeSecretJSONResult: .failure(anyError())
         )
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessCreateRequestFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.createRequest(anyError())))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessPerformRequestFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.performRequest(anyError())))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessMapResponseInvalidFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
-            processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: 500, data: anyData()))))
+            processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessMapResponseNetworkFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.mapResponse(.network)))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessMapResponseRetryFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let statusCode = 500
+        let errorMessage = "Retry failure"
+        let retryAttempts = 2
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
-            processSpy.complete(with: .failure(.mapResponse(.retry(statusCode: 500, errorMessage: "Retry Failure", retryAttempts: 2))))
+            processSpy.complete(with: .failure(.mapResponse(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessMapResponseServerFailure() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let statusCode = 500
+        let errorMessage = "Server failure"
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectFailure(sut, on: {
+        expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
-            processSpy.complete(with: .failure(.mapResponse(.server(statusCode: 500, errorMessage: "Server Failure"))))
+            processSpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 1)
     }
     
     func test_handleFailure_shouldNotReceiveFailureOnSuccess() {
         
-        let (sut, handleFailureSpy, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, processSpy) = makeSUT()
         
-        expectSuccess(sut, on: {
+        expect(sut, toDeliver: .success(()), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .success(()))
         })
-        XCTAssertEqual(handleFailureSpy.callCount, 0)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = Services.BindPublicKeyService
     private typealias SessionIDLoader = LoaderSpy<SessionID>
-    private typealias ProcessSpy = Spy<BindPublicKeyWithEventIDService.ProcessPayload, Void, Services.BindPublicKeyProcessError>
+    private typealias ProcessSpy = Spy<BindPublicKeyWithEventIDService.ProcessPayload, Void, Services.ProcessBindPublicKeyError>
     
     private func makeSUT(
         makeSecretJSONResult: Result<Data, Error> = anySuccess(),
@@ -141,33 +138,30 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: any SUT,
-        handleFailureSpy: HandleFailureSpy,
         sessionIDLoader: SessionIDLoader,
         processSpy: ProcessSpy
     ) {
         let sessionIDLoader = SessionIDLoader()
         let processSpy = ProcessSpy()
-        let handleFailureSpy = HandleFailureSpy()
         let sut = Services.makeBindPublicKeyService(
-            sessionIDLoader: sessionIDLoader,
-            bindPublicKeyProcess: processSpy.process,
+            loadSessionID: sessionIDLoader.load(completion:),
+            processBindPublicKey: processSpy.process,
             makeSecretJSON: { _, completion in
                 
                 completion(makeSecretJSONResult)
-            },
-            onBindKeyFailure: handleFailureSpy.handleFailure(_:)
+            }
         )
         
         trackForMemoryLeaks(sessionIDLoader, file: file, line: line)
-        trackForMemoryLeaks(handleFailureSpy, file: file, line: line)
         trackForMemoryLeaks(processSpy, file: file, line: line)
         
-        return (sut, handleFailureSpy, sessionIDLoader, processSpy)
+        return (sut, sessionIDLoader, processSpy)
     }
     
-    private func expectSuccess(
+    private func expect(
         _ sut: any SUT,
         with otp: BindPublicKeyWithEventIDService.OTP? = nil,
+        toDeliver expectedResult: Result<(), BindPublicKeyWithEventIDService.Error>,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -176,12 +170,49 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         
         sut.fetch(otp ?? anyOTP()) { receivedResult in
             
-            switch receivedResult {
-            case .failure:
-                XCTFail("Expected success, but got failure.", file: file, line: line)
+            switch (receivedResult, expectedResult) {
+            case let (
+                .failure(.invalid(statusCode: receivedStatusCode, data: receivedInvalidData)),
+                .failure(.invalid(statusCode: expectedStatusCode, data: expectedInvalidData))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
                 
-            case .success:
+            case (.failure(.network), .failure(.network)):
                 break
+                
+            case let (
+                .failure(.retry(statusCode: receivedStatusCode, errorMessage: receivedErrorMessage, retryAttempts: receivedRetryAttempts)),
+                .failure(.retry(statusCode: expectedStatusCode, errorMessage: expectedErrorMessage, retryAttempts: expectedRetryAttempts))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                XCTAssertNoDiff(receivedRetryAttempts, expectedRetryAttempts, file: file, line: line)
+                
+            case let (
+                .failure(.server(statusCode: receivedStatusCode, errorMessage: receivedErrorMessage)),
+                .failure(.server(statusCode: expectedStatusCode, errorMessage: expectedErrorMessage))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                
+            case (
+                .failure(.serviceError(.makeJSONFailure)),
+                .failure(.serviceError(.makeJSONFailure))
+            ):
+                break
+                
+            case (
+                .failure(.serviceError(.missingEventID)),
+                .failure(.serviceError(.missingEventID))
+            ):
+                break
+                
+            case (.success(()), .success(())):
+                break
+                
+            default:
+                XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
             }
             
             exp.fulfill()
@@ -190,47 +221,6 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func expectFailure(
-        _ sut: any SUT,
-        with otp: BindPublicKeyWithEventIDService.OTP? = nil,
-        on action: @escaping () -> Void,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "wait for completion")
-        
-        sut.fetch(otp ?? anyOTP()) { receivedResult in
-            
-            switch receivedResult {
-            case .failure:
-                break
-                
-            case .success:
-                XCTFail("Expected failure, but got success.", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
-    private final class HandleFailureSpy {
-        
-        typealias Failure = BindPublicKeyWithEventIDService.Failure
-        
-        private(set) var failures = [Failure]()
-        
-        var callCount: Int { failures.count }
-        
-        func handleFailure(_ failure: Failure) {
-            
-            failures.append(failure)
-        }
     }
 }
 

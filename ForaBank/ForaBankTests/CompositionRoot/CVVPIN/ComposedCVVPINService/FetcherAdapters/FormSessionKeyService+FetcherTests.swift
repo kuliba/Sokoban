@@ -98,7 +98,7 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        loadCodeResult: SUT.CodeResult = anySuccess(),
+        loadCodeResult: SUT.LoadCodeResult = anySuccess(),
         makeSecretRequestJSONResult: SUT.SecretRequestJSONResult = anySuccess(),
         processResult: SUT.ProcessResult = anySuccess(),
         makeSessionKeyResult: SUT.MakeSessionKeyResult = anySuccess(),
@@ -200,7 +200,7 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
 
 private func anySuccess(
     codeValue: String = UUID().uuidString
-) -> SUT.CodeResult {
+) -> SUT.LoadCodeResult {
     
     .success(.init(codeValue: codeValue))
 }

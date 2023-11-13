@@ -37,9 +37,9 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
     
     func test_shouldLogInfoOnActivateSuccess() {
         
-        let phone = "+01234567"
+        let phoneValue = "+01234567"
         let (sut, spy) = makeSUT(
-            activateResult: anySuccess(phone)
+            activateResult: anySuccess(phoneValue: phoneValue)
         )
         let exp = expectation(description: "wait for expectation")
         
@@ -47,7 +47,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Activation success: Phone(phoneValue: \"\(phone)\").")
+            .init(.info, .crypto, "Activation success: \(phoneValue).")
         ])
     }
     
