@@ -43,7 +43,6 @@ public extension ModelToViewModelMapper {
         case let .tip(parameterHint):
             return .tip(
                 .init(
-                    imageName: "tipIcon",
                     text: parameterHint.title
                 )
             )
