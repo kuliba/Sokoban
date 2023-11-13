@@ -77,7 +77,10 @@ private extension CVVPINFunctionalityActivationService.GetCodeSuccess {
     
     init(_ response: GetProcessingSessionCodeService.Response) {
         
-        self.init(code: response.code, phone: response.phone)
+        self.init(
+            code: .init(codeValue: response.code),
+            phone: .init(phoneValue: response.phone)
+        )
     }
 }
 

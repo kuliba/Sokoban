@@ -102,16 +102,36 @@ final class Services_makeActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverPhoneOnSuccess() {
+    func test_activate_shouldDeliverValueOnSuccess() {
         
-        let phone = "+7..8976"
+        let codeValue = UUID().uuidString
+        let phoneValue = UUID().uuidString
+        let sessionKeyValue = anyData()
+        let eventIDValue = UUID().uuidString
+        let sessionTTL = 13
         let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
         
-        expectActivate(sut, toDeliver: .success(.init(phoneValue: phone)), on: {
-            
-            getCodeSpy.complete(with: anySuccess(phone: phone))
-            formSessionKeySpy.complete(with: anySuccess())
-        })
+        expectActivate(
+            sut,
+            toDeliver: .success(.init(
+                code: .init(codeValue: codeValue),
+                phone: .init(phoneValue: phoneValue),
+                sessionKey: .init(sessionKeyValue: sessionKeyValue),
+                eventID: .init(eventIDValue: eventIDValue),
+                sessionTTL: sessionTTL
+            )),
+            on: {
+                getCodeSpy.complete(with: .success(.init(
+                    code: .init(codeValue),
+                    phone: .init(phoneValue)
+                )))
+                formSessionKeySpy.complete(with: .success(.init(
+                    sessionKey: .init(sessionKeyValue: sessionKeyValue),
+                    eventID: .init(eventIDValue: eventIDValue),
+                    sessionTTL: sessionTTL
+                )))
+            }
+        )
     }
     
     func test_activate_shouldNotDeliverGetCodeResultOnInstanceDeallocation() {
@@ -344,16 +364,66 @@ final class Services_makeActivationServiceTests: XCTestCase {
     }
 }
 
-private extension CVVPINFunctionalityActivationService.Phone {
+private extension CVVPINFunctionalityActivationService.ActivateSuccess {
     
-    var equatable: EquatablePhone {
-        
-        .init(phone: phoneValue)
+    var equatable: EquatableActivateSuccess {
+    
+        .init(response: self)
     }
     
-    struct EquatablePhone: Equatable {
+    struct EquatableActivateSuccess: Equatable {
         
-        let phone: String
+        let codeValue: String
+        let phoneValue: String
+        let sessionKeyValue: Data
+        let eventIDValue: String
+        let sessionTTL: Int
+        
+        init(response: CVVPINFunctionalityActivationService.ActivateSuccess) {
+            
+            self.codeValue = response.code.codeValue
+            self.phoneValue = response.phone.phoneValue
+            self.sessionKeyValue = response.sessionKey.sessionKeyValue
+            self.eventIDValue = response.eventID.eventIDValue
+            self.sessionTTL = response.sessionTTL
+        }
+    }
+}
+
+private extension CVVPINFunctionalityActivationService.ActivateResult {
+    
+    func mapToEquatable() -> EquatableActivateResult {
+        
+        self
+            .map(CVVPINFunctionalityActivationService.ActivateSuccess.EquatableActivateSuccess.init(response:))
+            .mapError(EquatableActivateError.init)
+    }
+    
+    typealias EquatableActivateResult = Swift.Result<CVVPINFunctionalityActivationService.ActivateSuccess.EquatableActivateSuccess, EquatableActivateError>
+    
+    enum EquatableActivateError: Error & Equatable {
+        
+        case invalid(statusCode: Int, data: Data)
+        case network
+        case server(statusCode: Int, errorMessage: String)
+        case serviceFailure
+        
+        init(error: CVVPINFunctionalityActivationService.ActivateError) {
+            
+            switch error {
+            case let .invalid(statusCode: statusCode, data: data):
+                self = .invalid(statusCode: statusCode, data: data)
+                
+            case .network:
+                self = .network
+                
+            case let .server(statusCode: statusCode, errorMessage: errorMessage):
+                self = .server(statusCode: statusCode, errorMessage: errorMessage)
+                
+            case .serviceFailure:
+                self = .serviceFailure
+            }
+        }
     }
 }
 

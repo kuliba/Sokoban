@@ -53,12 +53,12 @@ final class ComposedCVVPINServiceTests: XCTestCase {
     
     func test_activate_shouldDeliverPhoneOnActivateSuccess() {
         
-        let phone = "+7..7856"
+        let phoneValue = "+7..7856"
         let sut = makeSUT(
-            activateResult: anySuccess(phone)
+            activateResult: anySuccess(phoneValue: phoneValue)
         )
         
-        expectActivate(sut, toDeliver: .success(.init(phone)))
+        expectActivate(sut, toDeliver: .success(.init(phoneValue)))
     }
     
     // MARK: - confirmWith

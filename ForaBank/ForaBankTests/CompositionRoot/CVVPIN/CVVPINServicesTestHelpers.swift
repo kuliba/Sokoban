@@ -67,10 +67,20 @@ func anySessionID(
 typealias CVVPINActivateResult = CVVPINFunctionalityActivationService.ActivateResult
 
 func anySuccess(
-    _ phoneValue: String = UUID().uuidString
+    codeValue: String = UUID().uuidString,
+    phoneValue: String = UUID().uuidString,
+    sessionKeyValue: Data = anyData(),
+    eventIDValue: String = UUID().uuidString,
+    sessionTTL: Int = 23
 ) -> CVVPINActivateResult {
     
-    .success(.init(phoneValue: phoneValue))
+    .success(.init(
+        code: .init(codeValue: codeValue),
+        phone: .init(phoneValue: phoneValue),
+        sessionKey: .init(sessionKeyValue: sessionKeyValue),
+        eventID: .init(eventIDValue: eventIDValue),
+        sessionTTL: sessionTTL
+    ))
 }
 
 func anyFailure(

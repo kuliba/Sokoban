@@ -107,16 +107,37 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverPhoneOnSuccess() {
+    func test_activate_shouldDeliverValueOnSuccess() {
         
-        let phone = UUID().uuidString
+        let codeValue = UUID().uuidString
+        let phoneValue = UUID().uuidString
+        let sessionKeyValue = anyData()
+        let eventIDValue = UUID().uuidString
+        let sessionTTL = 13
         let (sut, getCodeSpy, formSessionKeySpy, _) = makeSUT()
         
-        expectActivate(sut, toDeliver: [.success(.init(phoneValue: phone))], on: {
-            
-            getCodeSpy.complete(with: anySuccess(phone: phone))
-            formSessionKeySpy.complete(with: anySuccess())
-        })
+        expectActivate(
+            sut,
+            toDeliver: [.success(.init(
+                code: .init(codeValue: codeValue),
+                phone: .init(phoneValue: phoneValue),
+                sessionKey: .init(sessionKeyValue: sessionKeyValue),
+                eventID: .init(eventIDValue: eventIDValue),
+                sessionTTL: sessionTTL
+                
+            ))],
+            on: {
+                getCodeSpy.complete(with: .success(.init(
+                    code: .init(codeValue: codeValue),
+                    phone: .init(phoneValue: phoneValue)
+                )))
+                formSessionKeySpy.complete(with: .success(.init(
+                    sessionKey: .init(sessionKeyValue: sessionKeyValue),
+                    eventID: .init(eventIDValue: eventIDValue),
+                    sessionTTL: sessionTTL
+                )))
+            }
+        )
     }
     
     func test_activate_shouldNotDeliverGetCodeResultOnInstanceDeallocation() {
@@ -336,23 +357,31 @@ private extension CVVPINFunctionalityActivationService.ActivateResult {
     func mapToEquatable() -> EquatableActivateResult {
         
         self
-            .map(EquatableConfirmResponse.init)
-            .mapError(EquatableError.init)
+            .map(EquatableActivateSuccess.init(response:))
+            .mapError(EquatableActivateError.init)
     }
     
-    typealias EquatableActivateResult = Swift.Result<EquatableConfirmResponse, EquatableError>
+    typealias EquatableActivateResult = Swift.Result<EquatableActivateSuccess, EquatableActivateError>
     
-    struct EquatableConfirmResponse: Equatable {
+    struct EquatableActivateSuccess: Equatable {
         
-        let phone: String
+        let codeValue: String
+        let phoneValue: String
+        let sessionKeyValue: Data
+        let eventIDValue: String
+        let sessionTTL: Int
         
-        init(response: CVVPINFunctionalityActivationService.Phone) {
+        init(response: CVVPINFunctionalityActivationService.ActivateSuccess) {
             
-            self.phone = response.phoneValue
+            self.codeValue = response.code.codeValue
+            self.phoneValue = response.phone.phoneValue
+            self.sessionKeyValue = response.sessionKey.sessionKeyValue
+            self.eventIDValue = response.eventID.eventIDValue
+            self.sessionTTL = response.sessionTTL
         }
     }
     
-    enum EquatableError: Error & Equatable {
+    enum EquatableActivateError: Error & Equatable {
         
         case invalid(statusCode: Int, data: Data)
         case network
@@ -440,11 +469,14 @@ private extension CVVPINFunctionalityActivationService.ConfirmResult {
 }
 
 private func anySuccess(
-    code: String = UUID().uuidString,
-    phone: String = UUID().uuidString
+    codeValue: String = UUID().uuidString,
+    phoneValue: String = UUID().uuidString
 ) -> CVVPINFunctionalityActivationService.GetCodeResult {
     
-    .success(.init(code: code, phone: phone))
+    .success(.init(
+        code: .init(codeValue: codeValue),
+        phone: .init(phoneValue: phoneValue)
+    ))
 }
 
 private func anySuccess(
