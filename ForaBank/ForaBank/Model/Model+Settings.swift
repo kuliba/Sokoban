@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 //MARK: - Actions
 
@@ -14,6 +15,8 @@ extension ModelAction {
     enum Settings {
         
         struct GetUserSettings: Action {}
+        
+        struct ResetProfileOnboardSettings: Action {}
         
         struct UpdateUserSettingPush: Action {
 
@@ -324,6 +327,12 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
             }
         }
+    }
+    
+    func handleResetProfileOnboardingSettings() {
+                
+        @AppStorage(.isNeedOnboardingShow) var value: Bool = true
+        value = true
     }
     
     static func reduceSettings(userSettings: [UserSettingData], data: UserSettingData) -> [UserSettingData] {

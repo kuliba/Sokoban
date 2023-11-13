@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PinCodeUI
 
 struct ProductProfileView: View {
     
@@ -16,7 +17,7 @@ struct ProductProfileView: View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
     }
-
+    
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -60,7 +61,7 @@ struct ProductProfileView: View {
                                 .padding(.horizontal, 20)
                             
                             if let detailAccount = viewModel.detail {
-
+                                
                                 ProductProfileDetailView(viewModel: detailAccount)
                                     .padding(.horizontal, 20)
                             }
@@ -78,7 +79,7 @@ struct ProductProfileView: View {
                     
                     Color.clear
                         .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-           
+                    
                 })
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
@@ -95,6 +96,7 @@ struct ProductProfileView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
+                        
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
                             .edgesIgnoringSafeArea(.bottom)
@@ -118,6 +120,7 @@ struct ProductProfileView: View {
                         
                     case let .paymentsTransfers(paymentsTransfersViewModel):
                         PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
+                        
                     }
                 }
             }
@@ -125,26 +128,63 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-
+            
             if let closeAccountSpinner = viewModel.closeAccountSpinner {
                 CloseAccountSpinnerView(viewModel: closeAccountSpinner)
             }
             
-            if let spinner = viewModel.spinner {
+            viewModel.spinner.map { spinner in
                 
                 VStack {
-                    
                     SpinnerView(viewModel: spinner)
                 }
-                .frame(width: .infinity, height: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .zIndex(.greatestFiniteMagnitude)
             }
             
             Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
                     PaymentsSuccessView(viewModel: successViewModel.viewModel)
-
+                    
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
+                }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.successChangePin) { successViewModel in
+                    PaymentsSuccessView(viewModel: successViewModel)
+                    
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.confirmOtpView) {
+                    confirmCodeView(
+                        phoneNumber: $0.phone,
+                        cardId: $0.cardId,
+                        actionType: $0.action,
+                        reset: {
+                            viewModel.confirmOtpView = nil
+                        },
+                        showSpinner: {},
+                        resendRequest: $0.request,
+                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                    ).transition(.move(edge: .leading))
+                }
+            
+            Color.clear.frame(maxHeight: 0)
+                .fullScreenCover(item: $viewModel.changePin) {
+                    changePinCodeView(
+                        cardId: $0.cardId,
+                        actionType: .changePin($0.displayNumber),
+                        $0.model,
+                        confirm: viewModel.confirmShowCVV,
+                        confirmChangePin: viewModel.confirmChangePin,
+                        showSpinner: {},
+                        resendRequest: {},
+                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                    ).transition(.move(edge: .leading))
                 }
         }
         .navigationBarTitle("", displayMode: .inline)
@@ -161,7 +201,7 @@ struct ProductProfileView: View {
             switch sheet.type {
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
-
+                
             case let .placesMap(placesViewModel):
                 PlacesView(viewModel: placesViewModel)
             }
@@ -186,13 +226,13 @@ struct ProductProfileView: View {
             case let .meToMe(viewModel):
                 PaymentsMeToMeView(viewModel: viewModel)
                     .fullScreenCover(item: $viewModel.success) { successViewModel in
-
+                        
                         PaymentsSuccessView(viewModel: successViewModel)
-
+                        
                     }.transaction { transaction in
                         transaction.disablesAnimations = false
                     }
-                                
+                
             case let .printForm(printFormViewModel):
                 PrintFormView(viewModel: printFormViewModel)
                 
@@ -206,6 +246,84 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+    
+    private func changePinCodeView(
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
+        _ viewModel: PinCodeViewModel,
+        confirm: @escaping (OtpDomain.Otp, @escaping (ErrorDomain?) -> Void) -> Void,
+        confirmChangePin:  @escaping  (ConfirmViewModel.ChangePinStruct, @escaping (ErrorDomain?) -> Void) -> Void,
+        showSpinner: @escaping () -> Void,
+        resendRequest: @escaping () -> Void,
+        resendRequestAfterClose: @escaping (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void
+    ) -> some View {
+        
+        let buttonConfig: ButtonConfig = .init(
+            font: .textH1R24322(),
+            textColor: .textSecondary,
+            buttonColor: .mainColorsGrayLightest
+        )
+        
+        let pinConfig: PinCodeView.PinCodeConfig = .init(
+            font: .textH4M16240(),
+            foregroundColor: .textSecondary,
+            colorsForPin: .init(
+                normal: .mainColorsGrayMedium,
+                incorrect: .systemColorError,
+                correct: .systemColorActive,
+                printing: .mainColorsBlack)
+        )
+        
+        return PinCodeChangeView(
+            config: .init(
+                buttonConfig: buttonConfig,
+                pinCodeConfig: pinConfig
+            ),
+            viewModel: viewModel,
+            confirmationView: { phone, code in
+                
+                ConfirmCodeView(
+                    phoneNumber: .init(phone.value),
+                    newPin: code,
+                    cardId: cardId,
+                    actionType: actionType,
+                    reset: viewModel.resetState,
+                    resendRequest: resendRequest,
+                    handler: confirm,
+                    handlerChangePin: confirmChangePin,
+                    showSpinner: showSpinner,
+                    resendRequestAfterClose: resendRequestAfterClose
+                )
+            }
+        )
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("")
+    }
+    
+    private func confirmCodeView(
+        phoneNumber: PhoneDomain.Phone,
+        cardId: CardDomain.CardId,
+        actionType: ConfirmViewModel.CVVPinAction,
+        reset: @escaping () -> Void,
+        showSpinner: @escaping () -> Void,
+        resendRequest: @escaping () -> Void,
+        resendRequestAfterClose: @escaping (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void
+    ) -> some View {
+        
+        ConfirmCodeView(
+            phoneNumber: phoneNumber,
+            cardId: cardId,
+            actionType: actionType,
+            reset: reset,
+            resendRequest: resendRequest,
+            hasDefaultBackButton: false,
+            handler: viewModel.confirmShowCVV,
+            handlerChangePin: nil,
+            showSpinner: showSpinner,
+            resendRequestAfterClose: resendRequestAfterClose
+        )
     }
 }
 
@@ -232,6 +350,7 @@ struct ProfileView_Previews: PreviewProvider {
         Group {
             
             ProductProfileView(viewModel: .sample)
+            ProductProfileView(viewModel: .sadSample)
         }
     }
 }
@@ -246,14 +365,27 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        rootView: "")
+        cvvPINServicesClient: HappyCVVPINServicesClient(),
+        rootView: ""
+    )
+    
+    static let sadSample = ProductProfileViewModel(
+        navigationBar: NavigationBarView.ViewModel.sampleNoActionButton,
+        product: .sample,
+        buttons: .sample,
+        detail: .sample,
+        history: .sampleHistory,
+        cvvPINServicesClient: SadCVVPINServicesClient(),
+        rootView: ""
+    )
 }
 
 extension NavigationBarView.ViewModel {
-
+    
     static let sampleNoActionButton = NavigationBarView.ViewModel(
         title: "Platinum", subtitle: "· 4329",
         leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
         rightItems: [],
-        background: .purple, foreground: .iconWhite)
+        background: .purple, foreground: .iconWhite
+    )
 }

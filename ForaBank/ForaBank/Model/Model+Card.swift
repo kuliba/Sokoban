@@ -215,7 +215,6 @@ extension Model {
                     }
                 case .failure(let error):
                     continuation.resume(with: .failure(ModelRatesError.serverCommandError(error: error.localizedDescription)))
-                    
                 }
             }
         }

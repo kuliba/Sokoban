@@ -329,22 +329,76 @@ struct MainView_Previews: PreviewProvider {
 extension MainViewModel {
     
     static let sample = MainViewModel(
-        navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                          .init(icon: .ic24Bell, action: {})],
-        sections: [MainSectionProductsView.ViewModel.sample,
-                   MainSectionFastOperationView.ViewModel.sample,
-                   MainSectionPromoView.ViewModel.sample,
-                   MainSectionCurrencyMetallView.ViewModel.sample,
-                   MainSectionOpenProductView.ViewModel.sample])
+        navButtonsRight: [
+            .init(icon: .ic24Search, action: {}),
+            .init(icon: .ic24Bell, action: {})
+        ],
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sampleProducts = MainViewModel(
+        navButtonsRight: [
+            .init(icon: .ic24Search, action: {}),
+            .init(icon: .ic24Bell, action: {})
+        ], sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
     
     static let sampleOldCurrency = MainViewModel(
-                                    navButtonsRight: [.init(icon: .ic24Search, action: {}),
-                                                      .init(icon: .ic24Bell, action: {})],
-                                    sections: [MainSectionProductsView.ViewModel(.productsMock),
-                                               MainSectionFastOperationView.ViewModel.sample,
-                                               MainSectionPromoView.ViewModel.sample,
-                                               MainSectionCurrencyView.ViewModel.sample,
-                                               MainSectionOpenProductView.ViewModel.sample])
+        navButtonsRight: [
+            .init(icon: .ic24Search, action: {}),
+            .init(icon: .ic24Bell, action: {})
+        ],
+        sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        productProfileViewModelFactory: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
 }

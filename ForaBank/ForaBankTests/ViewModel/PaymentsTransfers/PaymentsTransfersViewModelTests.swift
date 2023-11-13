@@ -109,6 +109,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeSUT(
         products: [ProductData] = [],
+        cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -119,8 +120,20 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         if !products.isEmpty {
             model.products.value = [.card: products]
         }
-        
-        let sut = PaymentsTransfersViewModel(model: model)
+                
+        let sut = PaymentsTransfersViewModel(
+            model: model,
+            productProfileViewModelFactory: { product, rootView, dismissAction in
+                
+                ProductProfileViewModel(
+                    model,
+                    cvvPINServicesClient: cvvPINServicesClient,
+                    product: product,
+                    rootView: rootView,
+                    dismissAction: dismissAction
+                )
+            }
+        )
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)

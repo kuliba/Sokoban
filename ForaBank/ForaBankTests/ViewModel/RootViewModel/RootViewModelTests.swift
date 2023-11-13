@@ -205,12 +205,20 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
-            mainViewModel: .init(model),
-            paymentsViewModel: .init(model: model),
+            mainViewModel: .init(
+                model,
+                productProfileViewModelFactory: { _,_,_ in nil },
+                onRegister: {}
+            ),
+            paymentsViewModel: .init(
+                model: model,
+                productProfileViewModelFactory: { _,_,_ in nil }
+            ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary,
-            model
+            model,
+            onRegister: {}
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))

@@ -12,7 +12,7 @@ extension Services {
     
     typealias GetScenarioQR = (QRLink)
     typealias Result = Swift.Result<QRScenarioData, QrDataMapper.MapperError>
-    typealias GetScenarioQRData = RemoteService<GetScenarioQR, Result>
+    typealias GetScenarioQRData = RemoteService<GetScenarioQR, Result, Error, Error, Error>
     
     static func getScenarioQRData(
         httpClient: HTTPClient

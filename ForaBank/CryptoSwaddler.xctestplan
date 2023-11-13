@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "55CD10A7-CCFB-4CD0-BADD-A7E1A3629A51",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
