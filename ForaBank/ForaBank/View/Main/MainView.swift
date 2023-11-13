@@ -381,6 +381,14 @@ extension MainView {
                 headerTextFont: .textBodyMR14180(),
                 textColor: .textSecondary,
                 textFont: .textH4M16240(),
+                optionConfig: .init(
+                    numberColor: .textWhite,
+                    numberFont: .textBodyXsR11140(),
+                    nameColor: .textWhite.opacity(0.4),
+                    nameFont: .textBodyXsR11140(),
+                    balanceColor: .textWhite,
+                    balanceFont: .textBodyXsSb11140()
+                ),
                 background: .init(color: .mainColorsGrayLightest)
             ),
             inputViewConfig: .init(

@@ -226,6 +226,7 @@ extension ProductView {
         let headerTextFont: Font
         let textColor: Color
         let textFont: Font
+        let optionConfig: OptionConfig
         let background: Background
         
         public init(
@@ -233,13 +234,41 @@ extension ProductView {
             headerTextFont: Font,
             textColor: Color,
             textFont: Font,
+            optionConfig: OptionConfig,
             background: Background
         ) {
             self.headerTextColor = headerTextColor
             self.headerTextFont = headerTextFont
             self.textColor = textColor
             self.textFont = textFont
+            self.optionConfig = optionConfig
             self.background = background
+        }
+        
+        public struct OptionConfig {
+            
+            let numberColor: Color
+            let numberFont: Font
+            let nameColor: Color
+            let nameFont: Font
+            let balanceColor: Color
+            let balanceFont: Font
+            
+            public init(
+                numberColor: Color,
+                numberFont: Font,
+                nameColor: Color,
+                nameFont: Font,
+                balanceColor: Color,
+                balanceFont: Font
+            ) {
+                self.numberColor = numberColor
+                self.numberFont = numberFont
+                self.nameColor = nameColor
+                self.nameFont = nameFont
+                self.balanceColor = balanceColor
+                self.balanceFont = balanceFont
+            }
         }
         
         public struct Background {
@@ -266,6 +295,14 @@ extension ProductView.Appearance {
         headerTextFont: .body,
         textColor: .accentColor,
         textFont: .body,
+        optionConfig: .init(
+            numberColor: .black,
+            numberFont: .body,
+            nameColor: .black,
+            nameFont: .body,
+            balanceColor: .black,
+            balanceFont: .body
+        ),
         background: .init(color: .yellow, image: nil)
     )
 }
