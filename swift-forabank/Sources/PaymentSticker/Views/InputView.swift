@@ -9,12 +9,13 @@ import SwiftUI
 
 // MARK: - View
 
-struct InputView: View {
+public struct InputView: View {
     
     @State private var text: String = ""
     let model: InputViewModel
+    let configuration: InputConfiguration
     
-    var body: some View {
+    public var body: some View {
     
         let binding = Binding<String>(get: {
             
@@ -28,16 +29,22 @@ struct InputView: View {
         
         HStack(alignment: .top, spacing: 16) {
 
-            iconView
-                .frame(width: 24, height: 24)
-                .padding(.top, 5)
+            VStack {
+                
+                Spacer()
+                
+                iconView
+                    .frame(width: 24, height: 24)
+                
+                Spacer()
+            }
 
             content
                 .padding(.trailing, 16)
             
             Spacer()
         }
-        .padding(.init(top: 13, leading: 16, bottom: 7, trailing: 16))
+        .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 16))
         .background(Color.gray.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
@@ -55,18 +62,18 @@ struct InputView: View {
     @ViewBuilder
     private var iconView: some View {
         
-        Image(model.parameter.icon)
+        model.icon
             .resizable()
-            .renderingMode(.original)
-            .foregroundColor(.gray)
+            .frame(width: 24, height: 24, alignment: .center)
+            .foregroundColor(configuration.iconColor)
     }
     
     @ViewBuilder
     private var titleView: some View {
         
         Text(model.parameter.title)
-            .font(.body)
-            .foregroundColor(.gray.opacity(0.4))
+            .font(configuration.titleFont)
+            .foregroundColor(configuration.titleColor)
             .transition(
                 .asymmetric(
                     insertion: .move(edge: .bottom).combined(with: .opacity),
@@ -85,13 +92,41 @@ struct InputView: View {
     }
 }
 
+public extension InputView {
+    
+    struct InputConfiguration {
+
+        let titleFont: Font
+        let titleColor: Color
+        let iconColor: Color
+        
+        public init(
+            titleFont: Font,
+            titleColor: Color,
+            iconColor: Color
+        ) {
+            self.titleFont = titleFont
+            self.titleColor = titleColor
+            self.iconColor = iconColor
+        }
+    }
+}
+
 struct InputView_Previews: PreviewProvider {
+    
     static var previews: some View {
+        
         InputView(model: .init(
             parameter: .init(
                 value: "123456",
-                title: "Введите код",
-                icon: "SystemIcon"
-            ), updateValue: { _ in }))
+                title: "Введите код"
+            ),
+            icon: .init(systemName: "photo.fill"),
+            updateValue: { _ in }),
+            configuration: .init(
+                titleFont: .body,
+                titleColor: .black,
+                iconColor: .black
+            ))
     }
 }

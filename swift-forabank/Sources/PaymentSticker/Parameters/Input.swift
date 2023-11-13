@@ -13,16 +13,13 @@ public extension Operation.Parameter {
         
         public var value: String
         public let title: String
-        public let icon: String
         
         public init(
             value: String,
-            title: String,
-            icon: String
+            title: String
         ) {
             self.value = value
             self.title = title
-            self.icon = icon
         }
     }
 }
@@ -32,7 +29,6 @@ extension Operation.Parameter.Input {
     public func hash(into hasher: inout Hasher) {
         
         hasher.combine(title)
-        hasher.combine(icon)
         hasher.combine(value)
     }
     
@@ -40,6 +36,6 @@ extension Operation.Parameter.Input {
         lhs: Operation.Parameter.Input,
         rhs: Operation.Parameter.Input
     ) -> Bool {
-        lhs.icon == rhs.icon && lhs.title == rhs.title && lhs.value == rhs.value
+        lhs.title == rhs.title && lhs.value == rhs.value
     }
 }
