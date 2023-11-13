@@ -64,7 +64,7 @@ func anySessionID(
     .init(sessionIDValue: sessionIDValue)
 }
 
-typealias CVVPINActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+typealias CVVPINActivateResult = CVVPINInitiateActivationService.ActivateResult
 
 func anySuccess(
     codeValue: String = UUID().uuidString,

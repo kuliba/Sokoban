@@ -42,7 +42,7 @@ extension ComposedCVVPINService: ActivateCVVPINClient {
 
 private extension ActivateCVVPINError {
     
-    init(_ error: CVVPINFunctionalityActivationService.ActivateError) {
+    init(_ error: CVVPINInitiateActivationService.ActivateError) {
         
         switch error {
         case .invalid:

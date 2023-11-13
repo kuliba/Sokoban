@@ -70,3 +70,29 @@ where NewSuccess == Success {
         self.init(fetch: fetch, map: { $0 }, mapError: mapError)
     }
 }
+
+public extension FetchAdapter
+where Payload == Void {
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        map: @escaping Map,
+        mapError: @escaping MapError
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            map: map,
+            mapError: mapError
+        )
+    }
+    
+    func fetch(completion: @escaping NewFetchCompletion) {
+        
+        _fetch(()) { [weak self] result in
+            
+            guard let self else { return }
+            
+            completion(result.map(map).mapError(mapError))
+        }
+    }
+}

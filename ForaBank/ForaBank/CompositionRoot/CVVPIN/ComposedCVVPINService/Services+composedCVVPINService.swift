@@ -85,8 +85,8 @@ extension Services {
         // MARK: Configure CVV-PIN Activation Service
         
         let getCodeService = makeGetCodeService(
-            processGetCodeService: getCodeRemoteService.process,
-            cacheGetProcessingSessionCode: cache(response:)
+            processGetCode: getCodeRemoteService.process,
+            cacheGetProcessingSessionCode: cache(response:completion:)
         )
         
         let formSessionKeyService = makeFormSessionKeyService(
@@ -113,6 +113,34 @@ extension Services {
             getCode: getCodeService.fetch,
             formSessionKey: formSessionKeyService.fetch,
             bindPublicKeyWithEventID: decoratedBindPublicKeyService.fetch
+        )
+        
+        // MARK: - alt
+        
+        let adaptedGetCodeService = FetchAdapter(
+            getCodeService.fetch,
+            map: CVVPINInitiateActivationService.GetCodeSuccess.init,
+            mapError: CVVPINInitiateActivationService.GetCodeResponseError.init
+        )
+        
+        let adaptedFormSessionKeyService = FetchAdapter(
+            formSessionKeyService.fetch,
+            map: CVVPINInitiateActivationService.FormSessionKeySuccess.init,
+            mapError: CVVPINInitiateActivationService.FormSessionKeyError.init
+        )
+        
+        let initiateActivationService = CVVPINInitiateActivationService(
+            getCode: adaptedGetCodeService.fetch,
+            formSessionKey: adaptedFormSessionKeyService.fetch
+        )
+        
+        let decoratedInitiateActivationService = FetchDecorator(
+            initiateActivationService.activate(completion:),
+            handleResult: { result, completion in
+                
+#warning("store result")
+                completion()
+            }
         )
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
@@ -157,7 +185,7 @@ extension Services {
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
-            initiateActivation: activationService.activate(completion:),
+            initiateActivation: decoratedInitiateActivationService.fetch(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
@@ -529,7 +557,8 @@ extension Services {
         // MARK: - GetProcessingSessionCode
         
         func cache(
-            response: GetProcessingSessionCodeService.Response
+            response: GetProcessingSessionCodeService.Response,
+            completion: @escaping (Result<Void, Error>) -> Void
         ) {
             // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
             let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
@@ -537,7 +566,7 @@ extension Services {
             sessionCodeLoader.save(
                 .init(sessionCodeValue: response.code),
                 validUntil: validUntil,
-                completion: { _ in }
+                completion: completion
             )
         }
         
@@ -675,6 +704,29 @@ private extension RemoteService where Input == Void {
     }
 }
 
+private extension CVVPINInitiateActivationService.GetCodeSuccess {
+    
+    init(_ response: GetProcessingSessionCodeService.Response) {
+        
+        self.init(
+            code: .init(codeValue: response.code),
+            phone: .init(phoneValue: response.phone)
+        )
+    }
+}
+
+private extension CVVPINInitiateActivationService.FormSessionKeySuccess {
+    
+    init(_ success: FormSessionKeyService.Success) {
+        
+        self.init(
+            sessionKey: .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
+            eventID: .init(eventIDValue: success.eventID.eventIDValue),
+            sessionTTL: success.sessionTTL
+        )
+    }
+}
+
 // MARK: - Error Mappers
 
 private extension ShowCVVService.AuthenticateError {
@@ -701,6 +753,43 @@ private extension ChangePINService.AuthenticateError {
             
         case .authenticationFailure:
             self = .authenticationFailure
+        }
+    }
+}
+
+private extension CVVPINInitiateActivationService.GetCodeResponseError {
+    
+    init(_ error: GetProcessingSessionCodeService.Error) {
+        
+        switch error {
+        case let .invalid(statusCode: statusCode, data: data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode: statusCode, errorMessage: errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+        }
+    }
+}
+
+private extension CVVPINInitiateActivationService.FormSessionKeyError {
+    
+    init(_ error: FormSessionKeyService.Error) {
+        
+        switch error {
+        case let .invalid(statusCode: statusCode, data: data):
+            self = .invalid(statusCode: statusCode, data: data)
+            
+        case .network:
+            self = .network
+            
+        case let .server(statusCode: statusCode, errorMessage: errorMessage):
+            self = .server(statusCode: statusCode, errorMessage: errorMessage)
+            
+        case .serviceError:
+            self = .serviceFailure
         }
     }
 }

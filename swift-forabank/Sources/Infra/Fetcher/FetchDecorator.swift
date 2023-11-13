@@ -34,7 +34,29 @@ extension FetchDecorator: Fetcher {
         completion: @escaping FetchCompletion
     ) {
         _fetch(payload) { [weak self] result in
+            
+            self?.handleResult(result) { completion(result) }
+        }
+    }
+}
 
+public extension FetchDecorator
+where Payload == Void {
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        handleResult: @escaping HandleFetchResult
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            handleResult: handleResult
+        )
+    }
+    
+    func fetch(completion: @escaping FetchCompletion) {
+        
+        _fetch(()) { [weak self] result in
+            
             self?.handleResult(result) { completion(result) }
         }
     }

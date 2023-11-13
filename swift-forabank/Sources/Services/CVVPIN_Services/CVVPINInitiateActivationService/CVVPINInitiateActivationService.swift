@@ -163,8 +163,8 @@ extension CVVPINInitiateActivationService {
     
     public struct GetCodeSuccess {
         
-        let code: Code
-        let phone: Phone
+        public let code: Code
+        public let phone: Phone
         
         public init(
             code: Code,
