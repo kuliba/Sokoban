@@ -176,6 +176,7 @@ struct MainView: View {
                 configuration: MainView.configurationOperationView()
             )
             .navigationBarTitle("Оформление заявки", displayMode: .inline)
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
     

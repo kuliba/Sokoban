@@ -52,6 +52,7 @@ public struct OperationView: View {
                 model: model,
                 configuration: configuration
             )
+            .padding(.bottom, 20)
         
         case let .result(result):
             OperationResultView(
