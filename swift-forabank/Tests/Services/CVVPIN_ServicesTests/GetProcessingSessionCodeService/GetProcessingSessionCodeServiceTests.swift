@@ -83,6 +83,7 @@ final class GetProcessingSessionCodeServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = GetProcessingSessionCodeService
+    private typealias ProcessSpy = Spy<Void, SUT.Response, SUT.APIError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -125,26 +126,6 @@ final class GetProcessingSessionCodeServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class ProcessSpy {
-        
-        private(set) var completions = [SUT.ProcessCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func process(
-            completion: @escaping SUT.ProcessCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.ProcessResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
     }
 }
 

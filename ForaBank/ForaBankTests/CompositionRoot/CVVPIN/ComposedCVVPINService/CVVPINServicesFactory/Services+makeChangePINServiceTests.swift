@@ -110,10 +110,10 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         let (sut, authSpy, _,_, confirmRemoteSpy, decryptSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: UUID().uuidString)))
-            confirmRemoteSpy.complete(with: .success(.init(eventID: UUID().uuidString, phone: "+7..8945")))
+            authSpy.complete(with: anySuccess())
+            confirmRemoteSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .failure(anyError()))
         })
     }
@@ -122,10 +122,10 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         let (sut, authSpy, _,_, confirmRemoteSpy, decryptSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: UUID().uuidString)))
-            confirmRemoteSpy.complete(with: .success(.init(eventID: UUID().uuidString, phone: "+7..8945")))
+            authSpy.complete(with: anySuccess())
+            confirmRemoteSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .success(UUID().uuidString))
             decryptSpy.complete(with: .failure(anyError()))
         })
@@ -133,15 +133,14 @@ final class Services_makeChangePINServiceTests: XCTestCase {
     
     func test_getPINConfirmationCode_shouldDeliverValueOnSuccess() {
         
-        let sessionIDValue = UUID().uuidString
         let eventIDValue = UUID().uuidString
         let phone = "+7..8945"
         let (sut, authSpy, _,_, confirmRemoteSpy, decryptSpy) = makeSUT()
         
         expect(sut, toDeliver: .success(.init(otpEventID: .init(eventIDValue: eventIDValue), phone: phone)), on: {
             
-            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
-            confirmRemoteSpy.complete(with: .success(.init(eventID: eventIDValue, phone: phone)))
+            authSpy.complete(with: anySuccess())
+            confirmRemoteSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .success(eventIDValue))
             decryptSpy.complete(with: .success(phone), at: 1)
         })
@@ -151,7 +150,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         
         let (sut, _, loadSessionSpy, _,_,_) = makeSUT()
         
-        expect(sut, toChangePINWith: .failure(.serviceError(.makeJSONFailure)), on: {
+        expect(sut, toChangePINWith: .failure(.makeJSONFailure), on: {
             
             loadSessionSpy.complete(with: .failure(anyError()))
         })
@@ -164,7 +163,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
             makePINChangeJSONResult: .failure(anyNSError())
         )
         
-        expect(sut, toChangePINWith: .failure(.serviceError(.makeJSONFailure)), on: {
+        expect(sut, toChangePINWith: .failure(.makeJSONFailure), on: {
             
             loadSessionSpy.complete(with: .success(session))
         })
@@ -211,8 +210,6 @@ final class Services_makeChangePINServiceTests: XCTestCase {
     func test_changePIN_shouldDeliverErrorOnRemoteServiceMapResponseNetworkFailure() throws {
         
         let session = try anySession(keyPair: anyRSAKeyPair())
-        let statusCode = 500
-        let invalidData = anyData()
         let (sut, _, loadSessionSpy, changePINRemoteSpy, _,_) = makeSUT()
         
         expect(sut, toChangePINWith: .failure(.network), on: {
@@ -251,6 +248,20 @@ final class Services_makeChangePINServiceTests: XCTestCase {
         })
     }
     
+    func test_changePIN_shouldDeliverErrorOnRemoteServiceMapResponseWeakPINFailure() throws {
+        
+        let session = try anySession(keyPair: anyRSAKeyPair())
+        let statusCode = 500
+        let errorMessage = "Weak PIN Failure"
+        let (sut, _, loadSessionSpy, changePINRemoteSpy, _,_) = makeSUT()
+
+        expect(sut, toChangePINWith: .failure(.weakPIN(statusCode: statusCode, errorMessage: errorMessage)), on: {
+            
+            loadSessionSpy.complete(with: .success(session))
+            changePINRemoteSpy.complete(with: .failure(.mapResponse(.weakPIN(statusCode: statusCode, errorMessage: errorMessage))))
+        })
+    }
+    
     func test_changePIN_shouldDeliverVoidOnSuccess() throws {
         
         let session = try anySession(keyPair: anyRSAKeyPair())
@@ -266,11 +277,11 @@ final class Services_makeChangePINServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
-    private typealias AuthSpy = FetcherSpy<Void, SessionID, Services.AuthError>
-    private typealias LoadSessionSpy = FetcherSpy<Void, Services.ChangePINSession, Error>
-    private typealias DecryptSpy = FetcherSpy<String, String, Error>
-    private typealias ChangePINRemoteSpy = FetcherSpy<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
-    private typealias ConfirmRemoteSpy = FetcherSpy<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
+    private typealias AuthSpy = Spy<Void, SessionID, Services.AuthError>
+    private typealias LoadSessionSpy = Spy<Void, Services.ChangePINSession, Error>
+    private typealias DecryptSpy = Spy<String, String, Error>
+    private typealias ChangePINRemoteSpy = Spy<(SessionID, Data), Void, MappingRemoteServiceError<ChangePINService.ChangePINAPIError>>
+    private typealias ConfirmRemoteSpy = Spy<SessionID, ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>>
     private typealias TransportKey = LiveExtraLoggingCVVPINCrypto.TransportKey
     private typealias ProcessingKey = LiveExtraLoggingCVVPINCrypto.ProcessingKey
     
@@ -325,6 +336,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
             switch (receivedResult, expectedResult) {
             case (.failure(.activationFailure), .failure(.activationFailure)),
                 (.failure(.authenticationFailure), .failure(.authenticationFailure)),
+                (.failure(.decryptionFailure), .failure(.decryptionFailure)),
                 (.failure(.network), .failure(.network)):
                 break
                 
@@ -336,33 +348,11 @@ final class Services_makeChangePINServiceTests: XCTestCase {
                 XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
                 
             case let (
-                .failure(.retry(receivedStatusCode, receivedInvalidData, receivedRetryAttempts)),
-                .failure(.retry(expectedStatusCode, expectedInvalidData, expectedRetryAttempts))
-            ):
-                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
-                XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
-                XCTAssertNoDiff(receivedRetryAttempts, expectedRetryAttempts, file: file, line: line)
-                
-            case let (
                 .failure(.server(receivedStatusCode, receivedErrorMessage)),
                 .failure(.server(expectedStatusCode, expectedErrorMessage))
             ):
                 XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
                 XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
-                
-            case let (
-                .failure(.serviceError(receivedServiceError)),
-                .failure(.serviceError(expectedServiceError))
-            ):
-                switch (receivedServiceError, expectedServiceError) {
-                case (.checkSessionFailure, .checkSessionFailure),
-                    (.decryptionFailure, .decryptionFailure),
-                    (.makeJSONFailure, .makeJSONFailure):
-                    break
-                    
-                default:
-                    XCTFail("\nExpected \(expectedServiceError), but got \(receivedServiceError) instead.", file: file, line: line)
-                }
                 
             case let (
                 .success(receivedSuccess),
@@ -403,6 +393,7 @@ final class Services_makeChangePINServiceTests: XCTestCase {
             switch (receivedResult, expectedResult) {
             case (.failure(.activationFailure), .failure(.activationFailure)),
                 (.failure(.authenticationFailure), .failure(.authenticationFailure)),
+                (.failure(.makeJSONFailure), .failure(.makeJSONFailure)),
                 (.failure(.network), .failure(.network)):
                 break
                 
@@ -429,19 +420,12 @@ final class Services_makeChangePINServiceTests: XCTestCase {
                 XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
                 
             case let (
-                .failure(.serviceError(receivedServiceError)),
-                .failure(.serviceError(expectedServiceError))
+                .failure(.weakPIN(receivedStatusCode, receivedErrorMessage)),
+                .failure(.weakPIN(expectedStatusCode, expectedErrorMessage))
             ):
-                switch (receivedServiceError, expectedServiceError) {
-                case (.checkSessionFailure, .checkSessionFailure),
-                    (.decryptionFailure, .decryptionFailure),
-                    (.makeJSONFailure, .makeJSONFailure):
-                    break
-                    
-                default:
-                    XCTFail("\nExpected \(expectedServiceError), but got \(receivedServiceError) instead.", file: file, line: line)
-                }
-                
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                                
             case (.success(()), .success(())):
                 break
                 
@@ -485,4 +469,19 @@ private func anySession(
         sessionKey: .init(sessionKeyValue: sessionKeyValue),
         rsaPrivateKey: keyPair.privateKey
     )
+}
+
+private func anySuccess(
+    eventIDValue: String = UUID().uuidString,
+    phone: String = UUID().uuidString
+) -> Result<ChangePINService.EncryptedConfirmResponse, MappingRemoteServiceError<ChangePINService.ConfirmAPIError>> {
+    
+    .success(.init(eventID: eventIDValue, phone: phone))
+}
+
+private func anySuccess(
+    sessionIDValue: String = UUID().uuidString
+) -> Result<SessionID, Services.AuthError> {
+    
+    .success(.init(sessionIDValue: sessionIDValue))
 }

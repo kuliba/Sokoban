@@ -45,8 +45,6 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     
     func test_fetch_shouldDeliverErrorOnProcessNetworkFailure() {
         
-        let statusCode = 500
-        let invalidData = anyData()
         let sut = makeSUT(
             processResult: .failure(.network)
         )

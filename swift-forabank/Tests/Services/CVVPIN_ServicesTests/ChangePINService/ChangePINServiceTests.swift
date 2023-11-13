@@ -27,7 +27,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, authenticateSpy, _, _, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.activationFailure)], on: {
+        expect(sut, toDeliver: .failure(.activationFailure), on: {
             
             authenticateSpy.complete(with: .failure(.activationFailure))
         })
@@ -37,7 +37,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, authenticateSpy, _, _, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.authenticationFailure)], on: {
+        expect(sut, toDeliver: .failure(.authenticationFailure), on: {
             
             authenticateSpy.complete(with: .failure(.authenticationFailure))
         })
@@ -49,9 +49,7 @@ final class ChangePINServiceTests: XCTestCase {
         let invalidData = anyData()
         let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [
-            .failure(.invalid(statusCode: statusCode, data: invalidData))
-        ], on: {
+        expect(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
         })
@@ -61,7 +59,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [.failure(.network)], on: {
+        expect(sut, toDeliver: .failure(.network), on: {
             
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: .failure(.network))
@@ -74,9 +72,7 @@ final class ChangePINServiceTests: XCTestCase {
         let errorMessage = "Confirmation Error"
         let (sut, authenticateSpy, confirmProcessSpy, _, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [
-            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-        ], on: {
+        expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
         })
@@ -86,9 +82,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [
-            .failure(.serviceError(.decryptionFailure))
-        ], on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .failure(anyError()))
@@ -100,9 +94,7 @@ final class ChangePINServiceTests: XCTestCase {
         let otpEventID = UUID().uuidString
         let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [
-            .failure(.serviceError(.decryptionFailure))
-        ], on: {
+        expect(sut, toDeliver: .failure(.decryptionFailure), on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .success(otpEventID))
@@ -116,9 +108,7 @@ final class ChangePINServiceTests: XCTestCase {
         let phone = "+7..4589"
         let (sut, authenticateSpy, confirmProcessSpy, decryptSpy, _, _) = makeSUT()
         
-        expect(sut, toDeliver: [
-            .success(.init(otpEventID: .init(eventIDValue: otpEventID), phone: phone))
-        ], on: {
+        expect(sut, toDeliver: .success(.init(otpEventID: .init(eventIDValue: otpEventID), phone: phone)), on: {
             authenticateSpy.complete(with: anySuccess())
             confirmProcessSpy.complete(with: anySuccess())
             decryptSpy.complete(with: .success(otpEventID))
@@ -199,9 +189,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, _, _, _, makeJSONSpy, _) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [
-            .failure(.serviceError(.makeJSONFailure))
-        ], on: {
+        expectChangePIN(sut, toDeliver: .failure(.makeJSONFailure), on: {
             makeJSONSpy.complete(with: .failure(anyError()))
         })
     }
@@ -212,9 +200,7 @@ final class ChangePINServiceTests: XCTestCase {
         let invalidData = anyData()
         let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [
-            .failure(.invalid(statusCode: statusCode, data: invalidData))
-        ], on: {
+        expectChangePIN(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             makeJSONSpy.complete(with: anySuccess())
             changePINProcessSpy.complete(with: .failure(.invalid(statusCode: statusCode, data: invalidData)))
         })
@@ -224,7 +210,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [.failure(.network)], on: {
+        expectChangePIN(sut, toDeliver: .failure(.network), on: {
             
             makeJSONSpy.complete(with: anySuccess())
             changePINProcessSpy.complete(with: .failure(.network))
@@ -238,9 +224,7 @@ final class ChangePINServiceTests: XCTestCase {
         let retryAttempts = 5
         let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [
-            .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))
-        ], on: {
+        expectChangePIN(sut, toDeliver: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)), on: {
             makeJSONSpy.complete(with: anySuccess())
             changePINProcessSpy.complete(with: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)))
         })
@@ -252,9 +236,7 @@ final class ChangePINServiceTests: XCTestCase {
         let errorMessage = "Process Failure"
         let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [
-            .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
-        ], on: {
+        expectChangePIN(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             makeJSONSpy.complete(with: anySuccess())
             changePINProcessSpy.complete(with: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
         })
@@ -264,7 +246,7 @@ final class ChangePINServiceTests: XCTestCase {
         
         let (sut, _, _, _, makeJSONSpy, changePINProcessSpy) = makeSUT()
         
-        expectChangePIN(sut, toDeliver: [.success(())], on: {
+        expectChangePIN(sut, toDeliver: .success(()), on: {
             
             makeJSONSpy.complete(with: anySuccess())
             changePINProcessSpy.complete(with: anySuccess())
@@ -306,6 +288,11 @@ final class ChangePINServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ChangePINService
+    private typealias AuthenticateSpy = Spy<Void, SUT.SessionID, SUT.AuthenticateError>
+    private typealias ChangePINProcessSpy = Spy<(SUT.SessionID, Data), Void, SUT.ChangePINAPIError>
+    private typealias ConfirmProcessSpy = Spy<SUT.SessionID, SUT.EncryptedConfirmResponse, SUT.ConfirmAPIError>
+    private typealias DecryptSpy = Spy<String, String, Error>
+    private typealias MakeJSONSpy = Spy<(SUT.CardID, SUT.PIN, SUT.OTP), (SUT.SessionID, Data), Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -324,10 +311,10 @@ final class ChangePINServiceTests: XCTestCase {
         let makeJSONSpy = MakeJSONSpy()
         let changePINProcessSpy = ChangePINProcessSpy()
         let sut = SUT(
-            authenticate: authenticateSpy.authenticate(completion:),
-            publicRSAKeyDecrypt: decryptSpy.decrypt(_:completion:),
+            authenticate: authenticateSpy.process(completion:),
+            publicRSAKeyDecrypt: decryptSpy.process(_:completion:),
             confirmProcess: confirmProcessSpy.process(_:completion:),
-            makePINChangeJSON: makeJSONSpy.make(cardID:pin:otp:completion:),
+            makePINChangeJSON: makeJSONSpy.process(cardID:pin:otp:completion:),
             changePINProcess: changePINProcessSpy.process(_:completion:)
         )
         
@@ -343,255 +330,109 @@ final class ChangePINServiceTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
-        toDeliver expectedResults: [SUT.GetPINConfirmationCodeResult],
+        toDeliver expectedResult: SUT.GetPINConfirmationCodeResult,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var receivedResults = [SUT.GetPINConfirmationCodeResult]()
         let exp = expectation(description: "wait for completion")
         
-        sut.getPINConfirmationCode {
+        sut.getPINConfirmationCode { receivedResult in
             
-            receivedResults.append($0)
+            switch (receivedResult, expectedResult) {
+                
+            case (.failure(.activationFailure), .failure(.activationFailure)),
+                (.failure(.authenticationFailure), .failure(.authenticationFailure)),
+                (.failure(.decryptionFailure), .failure(.decryptionFailure)),
+                (.failure(.network), .failure(.network)):
+                break
+                
+            case let(
+                .failure(.invalid(receivedStatusCode, receivedInvalidData)),
+                .failure(.invalid(expectedStatusCode, expectedInvalidData))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
+                
+            case let(
+                .failure(.server(receivedStatusCode, receivedErrorMessage)),
+                .failure(.server(expectedStatusCode, expectedErrorMessage))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                
+            case let (
+                .success(receivedSuccess),
+                .success(expectedSuccess)
+            ):
+                XCTAssertNoDiff(receivedSuccess.equatable, expectedSuccess.equatable, file: file, line: line)
+                
+            default:
+                XCTFail("\nExpected \(expectedResult), but got \(receivedResult)", file: file, line: line)
+            }
+            
             exp.fulfill()
         }
         
         action()
         
         wait(for: [exp], timeout: 1.0)
-        
-        assert(
-            receivedResults.mapToEquatable(),
-            equals: expectedResults.mapToEquatable(),
-            file: file, line: line
-        )
     }
     
     private func expectChangePIN(
         _ sut: SUT,
-        toDeliver expectedResults: [SUT.ChangePINResult],
+        toDeliver expectedResult: SUT.ChangePINResult,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var receivedResults = [SUT.ChangePINResult]()
         let exp = expectation(description: "wait for completion")
         
-        sut.changePIN(for: anyCardID(), to: anyPIN(), otp: anyOTP()) {
+        sut.changePIN(for: anyCardID(), to: anyPIN(), otp: anyOTP()) { receivedResult in
             
-            receivedResults.append($0)
+            switch (receivedResult, expectedResult) {
+                
+            case (.failure(.activationFailure), .failure(.activationFailure)),
+                (.failure(.authenticationFailure), .failure(.authenticationFailure)),
+                (.failure(.makeJSONFailure), .failure(.makeJSONFailure)),
+                (.failure(.network), .failure(.network)):
+                break
+                
+            case let(
+                .failure(.invalid(receivedStatusCode, receivedInvalidData)),
+                .failure(.invalid(expectedStatusCode, expectedInvalidData))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedInvalidData, expectedInvalidData, file: file, line: line)
+                
+            case let(
+                .failure(.retry(receivedStatusCode, receivedErrorMessage, receivedRetryAttempts)),
+                .failure(.retry(expectedStatusCode, expectedErrorMessage, expectedRetryAttempts))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                XCTAssertNoDiff(receivedRetryAttempts, expectedRetryAttempts, file: file, line: line)
+                
+            case let(
+                .failure(.server(receivedStatusCode, receivedErrorMessage)),
+                .failure(.server(expectedStatusCode, expectedErrorMessage))
+            ):
+                XCTAssertNoDiff(receivedStatusCode, expectedStatusCode, file: file, line: line)
+                XCTAssertNoDiff(receivedErrorMessage, expectedErrorMessage, file: file, line: line)
+                
+            case (.success(()), .success(())):
+                break
+                
+            default:
+                XCTFail("\nExpected \(expectedResult), but got \(receivedResult)", file: file, line: line)
+            }
+            
             exp.fulfill()
         }
         
         action()
         
         wait(for: [exp], timeout: 1.0)
-        
-        assert(
-            receivedResults.mapToEquatable(),
-            equals: expectedResults.mapToEquatable(),
-            file: file, line: line
-        )
-    }
-    
-    private final class AuthenticateSpy {
-        
-        private(set) var completions = [SUT.AuthenticateCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func authenticate(
-            completion: @escaping SUT.AuthenticateCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.AuthenticateResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class DecryptSpy {
-        
-        typealias Message = (payload: String, completion: SUT.PublicRSAKeyDecryptCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func decrypt(
-            _ payload: String,
-            completion: @escaping SUT.PublicRSAKeyDecryptCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.PublicRSAKeyDecryptResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ConfirmProcessSpy {
-        
-        typealias Message = (payload: SUT.SessionID, completion: SUT.ConfirmProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: SUT.SessionID,
-            completion: @escaping SUT.ConfirmProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ConfirmProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class MakeJSONSpy {
-        
-        typealias Message = (payload: (SUT.CardID, SUT.PIN, SUT.OTP), completion: SUT.MakePINChangeJSONCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            cardID: SUT.CardID,
-            pin: SUT.PIN,
-            otp: SUT.OTP,
-            completion: @escaping SUT.MakePINChangeJSONCompletion
-        ) {
-            messages.append(((cardID, pin, otp), completion))
-        }
-        
-        func complete(
-            with result: SUT.MakePINChangeJSONResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class ChangePINProcessSpy {
-        
-        typealias Message = (payload: (SUT.SessionID, Data), completion: SUT.ChangePINProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: (SUT.SessionID, Data),
-            completion: @escaping SUT.ChangePINProcessCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.ChangePINProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-}
-
-private extension Array where Element == ChangePINService.GetPINConfirmationCodeResult {
-    
-    func mapToEquatable() -> [ChangePINService.GetPINConfirmationCodeResult.EquatableGetPINConfirmationCodeResult] {
-        
-        map { $0.mapToEquatable() }
-    }
-}
-
-private extension ChangePINService.GetPINConfirmationCodeResult {
-    
-    func mapToEquatable() -> EquatableGetPINConfirmationCodeResult {
-        
-        self
-            .map(EquatableConfirmResponse.init)
-            .mapError(EquatableError.init)
-    }
-    
-    typealias EquatableGetPINConfirmationCodeResult = Swift.Result<EquatableConfirmResponse, EquatableError>
-    
-    struct EquatableConfirmResponse: Equatable {
-        
-        let otpEventID: String
-        let phone: String
-        
-        init(response: ChangePINService.ConfirmResponse) {
-            
-            self.otpEventID = response.otpEventID.eventIDValue
-            self.phone = response.phone
-        }
-    }
-    
-    enum EquatableError: Error & Equatable {
-        
-        case activationFailure
-        case authenticationFailure
-        case invalid(statusCode: Int, data: Data)
-        case network
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case serviceError(ServiceError)
-        
-        init(error: ChangePINService.Error) {
-            
-            switch error {
-            case .activationFailure:
-                self = .activationFailure
-                
-            case .authenticationFailure:
-                self = .authenticationFailure
-                
-            case let .invalid(statusCode: statusCode, data: data):
-                self = .invalid(statusCode: statusCode, data: data)
-                
-            case .network:
-                self = .network
-                
-            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
-                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-                
-            case let .server(statusCode: statusCode, errorMessage: errorMessage):
-                self = .server(statusCode: statusCode, errorMessage: errorMessage)
-                
-            case let .serviceError(serviceError):
-                switch serviceError {
-                case .checkSessionFailure:
-                    self = .serviceError(.checkSessionFailure)
-                    
-                case .decryptionFailure:
-                    self = .serviceError(.decryptionFailure)
-                    
-                case .makeJSONFailure:
-                    self = .serviceError(.makeJSONFailure)
-                }
-            }
-        }
-        
-        enum ServiceError {
-            
-            case checkSessionFailure
-            case decryptionFailure
-            case makeJSONFailure
-        }
     }
 }
 
@@ -631,84 +472,6 @@ private func anySuccess(
     .success(())
 }
 
-private extension Array where Element == ChangePINService.ChangePINResult {
-    
-    func mapToEquatable() -> [ChangePINService.ChangePINResult.EquatableChangePINSResult] {
-        
-        map { $0.mapToEquatable() }
-    }
-}
-
-private extension ChangePINService.ChangePINResult {
-    
-    func mapToEquatable() -> EquatableChangePINSResult {
-        
-        self
-            .map(EquatableVoid.init)
-            .mapError(EquatableChangePINError.init)
-    }
-    
-    typealias EquatableChangePINSResult = Swift.Result<EquatableVoid, EquatableChangePINError>
-    
-    struct EquatableVoid: Equatable {
-        
-        init(_ void: Void) {}
-    }
-    
-    enum EquatableChangePINError: Error & Equatable {
-        
-        case activationFailure
-        case authenticationFailure
-        case invalid(statusCode: Int, data: Data)
-        case network
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case serviceError(ServiceError)
-        
-        init(error: ChangePINService.Error) {
-            
-            switch error {
-            case .activationFailure:
-                self = .activationFailure
-                
-            case .authenticationFailure:
-                self = .authenticationFailure
-                
-            case let .invalid(statusCode: statusCode, data: data):
-                self = .invalid(statusCode: statusCode, data: data)
-                
-            case .network:
-                self = .network
-                
-            case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):
-                self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-                
-            case let .server(statusCode: statusCode, errorMessage: errorMessage):
-                self = .server(statusCode: statusCode, errorMessage: errorMessage)
-                
-            case let .serviceError(serviceError):
-                switch serviceError {
-                case .checkSessionFailure:
-                    self = .serviceError(.checkSessionFailure)
-                    
-                case .decryptionFailure:
-                    self = .serviceError(.decryptionFailure)
-                    
-                case .makeJSONFailure:
-                    self = .serviceError(.makeJSONFailure)
-                }
-            }
-        }
-        
-        enum ServiceError {
-            
-            case checkSessionFailure
-            case decryptionFailure
-            case makeJSONFailure
-        }
-    }
-}
-
 private func anyCardID() -> ChangePINService.CardID {
     
     .init(cardIDValue: 12345678909)
@@ -726,4 +489,31 @@ private func anyOTP(
 ) -> ChangePINService.OTP {
     
     .init(otpValue: otpValue)
+}
+
+private extension ChangePINService.ConfirmResponse {
+    
+    var equatable: EquatableConfirmResponse {
+        
+        .init(otpEventIDValue: otpEventID.eventIDValue, phone: phone)
+    }
+    
+    struct EquatableConfirmResponse: Equatable {
+        
+        let otpEventIDValue: String
+        let phone: String
+    }
+}
+
+private extension Spy
+where Payload == (ChangePINService.CardID, ChangePINService.PIN, ChangePINService.OTP) {
+    
+    func process(
+        cardID: ChangePINService.CardID,
+        pin: ChangePINService.PIN,
+        otp: ChangePINService.OTP,
+        completion: @escaping Completion
+    ) {
+        process((cardID, pin, otp), completion: completion)
+    }
 }

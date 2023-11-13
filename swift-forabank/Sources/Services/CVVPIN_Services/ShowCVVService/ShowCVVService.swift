@@ -54,11 +54,8 @@ public extension ShowCVVService {
     ) {
         _authenticate(cardID, completion)
     }
-}
-
-extension ShowCVVService {
     
-    public enum Error: Swift.Error {
+    enum Error: Swift.Error {
         
         case activationFailure
         case authenticationFailure
@@ -73,6 +70,9 @@ extension ShowCVVService {
             case makeJSONFailure
         }
     }
+}
+
+extension ShowCVVService {
     
     public enum AuthenticateError: Swift.Error {
         
@@ -206,6 +206,8 @@ private extension ShowCVVService {
         }
     }
 }
+
+// MARK: - Error Mapping
 
 private extension ShowCVVService.Error {
     

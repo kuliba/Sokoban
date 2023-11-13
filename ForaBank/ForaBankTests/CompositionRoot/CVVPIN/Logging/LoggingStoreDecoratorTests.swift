@@ -215,31 +215,7 @@ final class LoggingStoreDecoratorTests: XCTestCase {
         
         let message = try XCTUnwrap(messages.first)
         XCTAssertNoDiff(message.level, level, file: file, line: line)
-        XCTAssert(message.message.contains(text))
-    }
-    
-    private final class LogSpy {
-        
-        private(set) var messages = [Message]()
-        
-        func log(_ level: LoggerAgentLevel, _ message: String) {
-            
-            self.messages.append(.init(level, message))
-        }
-        
-        struct Message: Equatable {
-            
-            let level: LoggerAgentLevel
-            let message: String
-            
-            init(
-                _ level: LoggerAgentLevel,
-                _ message: String
-            ) {
-                self.level = level
-                self.message = message
-            }
-        }
+        XCTAssert(message.text.contains(text))
     }
     
     private func anyItem(

@@ -159,6 +159,9 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = AuthenticateWithPublicKeyService
+    private typealias PrepareKeyExchangeSpy = Spy<Void, Data, Error>
+    private typealias ProcessSpy = Spy<Data, SUT.Response, SUT.APIError>
+    private typealias MakeSessionKeySpy = Spy<SUT.Response, SUT.Success.SessionKey, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -175,9 +178,9 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
         let makeSessionKeySpy = MakeSessionKeySpy()
         
         let sut = SUT(
-            prepareKeyExchange: prepareKeyExchangeSpy.prepare(completion:),
+            prepareKeyExchange: prepareKeyExchangeSpy.process(completion:),
             process: processSpy.process(_:completion:),
-            makeSessionKey: makeSessionKeySpy.make(_:completion:)
+            makeSessionKey: makeSessionKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line:  line)
@@ -213,72 +216,6 @@ final class AuthenticateWithPublicKeyServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class PrepareKeyExchangeSpy {
-        
-        private(set) var completions = [SUT.PrepareKeyExchangeCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func prepare(
-            completion: @escaping SUT.PrepareKeyExchangeCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.PrepareKeyExchangeResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class ProcessSpy {
-        
-        typealias Message = (data: Data, completion: SUT.ProcessCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ data: Data,
-            completion: @escaping SUT.ProcessCompletion
-        ) {
-            messages.append((data, completion))
-        }
-        
-        func complete(
-            with result: SUT.ProcessResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
-    }
-    
-    private final class MakeSessionKeySpy {
-        
-        typealias Message = (response: SUT.Response, completion: SUT.MakeSessionKeyCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func make(
-            _ response: SUT.Response,
-            completion: @escaping SUT.MakeSessionKeyCompletion
-        ) {
-            messages.append((response, completion))
-        }
-        
-        func complete(
-            with result: SUT.MakeSessionKeyResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 

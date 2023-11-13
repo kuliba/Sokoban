@@ -63,25 +63,24 @@ public extension BindPublicKeyWithEventIDService {
             case missingEventID
         }
     }
+}
+
+extension BindPublicKeyWithEventIDService {
     
-    enum APIError: Swift.Error {
+    public enum APIError: Swift.Error {
         
         case invalid(statusCode: Int, data: Data)
         case network
         case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
         case server(statusCode: Int, errorMessage: String)
     }
-}
-
-extension BindPublicKeyWithEventIDService {
-    
     
     public struct EventID {
         
         public let eventIDValue: String
         
         public init(eventIDValue: String) {
-         
+            
             self.eventIDValue = eventIDValue
         }
     }
@@ -158,6 +157,8 @@ private extension BindPublicKeyWithEventIDService {
     }
 }
 
+// MARK: - Error Mapping
+
 private extension BindPublicKeyWithEventIDService.Error {
     
     init(_ error: BindPublicKeyWithEventIDService.APIError) {
@@ -168,10 +169,10 @@ private extension BindPublicKeyWithEventIDService.Error {
             
         case .network:
             self = .network
-       
+            
         case let .retry(statusCode, errorMessage, retryAttempts):
             self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
-        
+            
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)
         }

@@ -29,7 +29,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, "LoaderDecorator<Item>: Load failure: \(loadFailureMessage).")
+            .init(.error, .cache, "LoaderDecorator<Item>: Load failure: \(loadFailureMessage).")
         ])
     }
     
@@ -44,7 +44,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, "LoaderDecorator<Item>: Load success: \(item).")
+            .init(.info, .cache, "LoaderDecorator<Item>: Load success: \(item).")
         ])
     }
     
@@ -60,7 +60,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, "LoaderDecorator<Item>: Save failure: \(saveFailureMessage).")
+            .init(.error, .cache, "LoaderDecorator<Item>: Save failure: \(saveFailureMessage).")
         ])
     }
     
@@ -74,7 +74,7 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         })
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, "LoaderDecorator<Item>: Save success.")
+            .init(.info, .cache, "LoaderDecorator<Item>: Save success.")
         ])
     }
     
@@ -167,30 +167,6 @@ final class LoggingLoaderDecoratorTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private final class LogSpy {
-        
-        private(set) var messages = [Message]()
-        
-        func log(_ level: LoggerAgentLevel, _ message: String) {
-            
-            self.messages.append(.init(level, message))
-        }
-        
-        struct Message: Equatable {
-            
-            let level: LoggerAgentLevel
-            let message: String
-            
-            init(
-                _ level: LoggerAgentLevel,
-                _ message: String
-            ) {
-                self.level = level
-                self.message = message
-            }
-        }
     }
     
     private func anyItem(

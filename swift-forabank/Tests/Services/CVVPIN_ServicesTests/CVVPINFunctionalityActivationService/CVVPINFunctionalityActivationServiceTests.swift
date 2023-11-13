@@ -238,6 +238,9 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = CVVPINFunctionalityActivationService
+    private typealias GetCodeSpy = Spy<Void, SUT.GetCodeResponse, SUT.GetCodeResponseError>
+    private typealias FormSessionKeySpy = Spy<Void, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
+    private typealias BindKeySpy = Spy<SUT.OTP, Void, SUT.BindPublicKeyError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -252,9 +255,9 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         let formSessionKeySpy = FormSessionKeySpy()
         let bindKeySpy = BindKeySpy()
         let sut = SUT(
-            getCode: getCodeSpy.get(completion:),
-            formSessionKey: formSessionKeySpy.form(completion:),
-            bindPublicKeyWithEventID: bindKeySpy.bind(_:completion:)
+            getCode: getCodeSpy.process(completion:),
+            formSessionKey: formSessionKeySpy.process(completion:),
+            bindPublicKeyWithEventID: bindKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -317,69 +320,6 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
             equals: expectedResults.mapToEquatable(),
             file: file, line: line
         )
-    }
-    
-    private final class GetCodeSpy {
-        
-        private(set) var completions = [SUT.GetCodeCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func get(
-            completion: @escaping SUT.GetCodeCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.GetCodeResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class FormSessionKeySpy {
-        
-        private(set) var completions = [SUT.FormSessionKeyCompletion]()
-        
-        var callCount: Int { completions.count }
-        
-        func form(
-            completion: @escaping SUT.FormSessionKeyCompletion
-        ) {
-            completions.append(completion)
-        }
-        
-        func complete(
-            with result: SUT.FormSessionKeyResult,
-            at index: Int = 0
-        ) {
-            completions[index](result)
-        }
-    }
-    
-    private final class BindKeySpy {
-        
-        typealias Message = (payload: SUT.OTP, completion: SUT.BindPublicKeyWithEventIDCompletion)
-        
-        private(set) var messages = [Message]()
-        
-        var callCount: Int { messages.count }
-        
-        func bind(
-            _ payload: SUT.OTP,
-            completion: @escaping SUT.BindPublicKeyWithEventIDCompletion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: SUT.BindPublicKeyWithEventIDResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
 }
 

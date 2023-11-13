@@ -250,36 +250,6 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         
         return (sut, spy)
     }
-    
-    private final class LogSpy {
-        
-        private(set) var messages = [Message]()
-        
-        func log(
-            _ level: LoggerAgentLevel,
-            _ category: LoggerAgentCategory,
-            _ text: String
-        ) {
-            messages.append(.init(level, category, text))
-        }
-        
-        struct Message: Equatable {
-            
-            let evel: LoggerAgentLevel
-            let category: LoggerAgentCategory
-            let text: String
-            
-            init(
-                _ level: LoggerAgentLevel,
-                _ category: LoggerAgentCategory,
-                _ text: String
-            ) {
-                self.evel = level
-                self.category = category
-                self.text = text
-            }
-        }
-    }
 }
 
 private extension ComposedCVVPINService {

@@ -143,9 +143,9 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = Services.AuthWithPublicKeyService
-    private typealias PrepareKeyExchangeSpy = FetcherSpy<Void, Data, Error>
-    private typealias AuthRemoteServiceSpy = FetcherSpy<Data, AuthenticateWithPublicKeyService.Response, MappingRemoteServiceError<AuthenticateWithPublicKeyService.APIError>>
-    private typealias MakeSessionKeySpy = FetcherSpy<AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.Success.SessionKey, Error>
+    private typealias PrepareKeyExchangeSpy = Spy<Void, Data, Error>
+    private typealias AuthRemoteServiceSpy = Spy<Data, AuthenticateWithPublicKeyService.Response, MappingRemoteServiceError<AuthenticateWithPublicKeyService.APIError>>
+    private typealias MakeSessionKeySpy = Spy<AuthenticateWithPublicKeyService.Response, AuthenticateWithPublicKeyService.Success.SessionKey, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -164,7 +164,7 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
         let sut = Services.makeAuthWithPublicKeyService(
             prepareKeyExchange: prepareKeyExchangeSpy.fetch,
             authRemoteService: authRemoteServiceSpy,
-            makeSessionKey: makeSessionKeySpy.fetch,
+            makeSessionKey: makeSessionKeySpy.process(_:completion:),
             cache: cacheSpy.cache(value:)
         )
         

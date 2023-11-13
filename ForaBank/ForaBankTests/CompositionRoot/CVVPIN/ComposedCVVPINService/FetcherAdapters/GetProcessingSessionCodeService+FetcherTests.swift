@@ -42,14 +42,12 @@ final class GetProcessingSessionCodeService_FetcherTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        processResult: SUT.ProcessResult,// = anySuccess(),
+        processResult: SUT.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(
-            process: { $0(processResult) }
-        )
+        let sut = SUT(process: { $0(processResult) })
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

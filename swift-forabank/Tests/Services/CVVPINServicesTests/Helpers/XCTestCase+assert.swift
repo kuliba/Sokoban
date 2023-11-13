@@ -19,7 +19,7 @@ extension XCTestCase {
         XCTAssertEqual(
             receivedResults.count,
             expectedResults.count,
-            "Received \(receivedResults.count) values, but expected \(expectedResults.count).",
+            "\nExpected \(expectedResults.count) values, but got \(receivedResults.count)",
             file: file, line: line
         )
         
@@ -44,7 +44,7 @@ extension XCTestCase {
                     
                 default:
                     XCTFail(
-                        "\nReceived \(received) values, but expected \(expected) at index \(index).",
+                        "\nExpected \(expected), but got \(received) at index \(index).",
                         file: file, line: line
                     )
                 }
@@ -61,7 +61,7 @@ extension XCTestCase {
         XCTAssertEqual(
             receivedResults.count,
             expectedResults.count,
-            "Received \(receivedResults.count) values, but expected \(expectedResults.count).",
+            "\nExpected \(expectedResults.count) values, but got \(receivedResults.count)",
             file: file, line: line
         )
         
@@ -80,7 +80,7 @@ extension XCTestCase {
                     
                 default:
                     XCTFail(
-                        "Received \(received) values, but expected \(expected) at index  \(index).",
+                        "\nExpected \(expected), but got \(received) at index \(index).",
                         file: file, line: line
                     )
                 }

@@ -164,8 +164,6 @@ final class Services_makeActivationServiceTests: XCTestCase {
     
     func test_confirmActivation_shouldDeliverVoidOnSuccess() {
         
-        let statusCode = 500
-        let invalidData = anyData()
         let (sut, _, _, bindPublicKeySpy) = makeSUT()
         
         expectConfirm(sut, toDeliver: .success(()), on: {
@@ -193,9 +191,9 @@ final class Services_makeActivationServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = CVVPINFunctionalityActivationService
-    private typealias GetCodeService = FetcherSpy<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error>
-    private typealias FormKeyService = FetcherSpy<Void, FormSessionKeyService.Success, FormSessionKeyService.Error>
-    private typealias BindPublicKeyService = FetcherSpy<BindPublicKeyWithEventIDService.OTP, Void, BindPublicKeyWithEventIDService.Error>
+    private typealias GetCodeService = Spy<Void, GetProcessingSessionCodeService.Response, GetProcessingSessionCodeService.Error>
+    private typealias FormKeyService = Spy<Void, FormSessionKeyService.Success, FormSessionKeyService.Error>
+    private typealias BindPublicKeyService = Spy<BindPublicKeyWithEventIDService.OTP, Void, BindPublicKeyWithEventIDService.Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -214,7 +212,7 @@ final class Services_makeActivationServiceTests: XCTestCase {
         let sut = Services.makeActivationService(
             getCode: getCodeSpy.fetch,
             formSessionKey: formSessionKeySpy.fetch,
-            bindPublicKeyWithEventID: bindPublicKeySpy.fetch
+            bindPublicKeyWithEventID: bindPublicKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

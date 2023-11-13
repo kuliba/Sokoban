@@ -137,7 +137,7 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     private typealias SessionCodeLoader = LoaderSpy<SessionCode>
     private typealias MakeSecretRequestJSONResult = FormSessionKeyService.SecretRequestJSONResult
     private typealias MakeSessionKeyResult = FormSessionKeyService.MakeSessionKeyResult
-    private typealias ProcessSpy = ServiceSpy<Services.FormSessionKeyProcessResult, FormSessionKeyService.ProcessPayload>
+    private typealias ProcessSpy = Spy<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, Services.FormSessionKeyProcessError>
     
     private func makeSUT(
         makeSecretRequestJSONResult: MakeSecretRequestJSONResult = anySuccess(),
@@ -218,29 +218,6 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    final class ServiceSpy<T, Payload> {
-        
-        typealias Completion = (T) -> Void
-        typealias Message = (payload: Payload, completion: Completion)
-        
-        private var messages = [Message]()
-        var callCount: Int { messages.count }
-        
-        func process(
-            _ payload: Payload,
-            completion: @escaping Completion
-        ) {
-            messages.append((payload, completion))
-        }
-        
-        func complete(
-            with result: T,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
     
     private final class HandleSuccessSpy {
