@@ -168,8 +168,8 @@ extension SelectView {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.selectOptionConfig.titleFont)
-                        .foregroundColor(config.selectOptionConfig.titleForeground)
+                        .font(config.selectOptionConfig.placeholderFont)
+                        .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     
                     Text(viewModel.placeholder)
                         .lineLimit(1)
