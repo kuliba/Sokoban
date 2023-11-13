@@ -238,7 +238,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = CVVPINFunctionalityActivationService
-    private typealias GetCodeSpy = Spy<Void, SUT.GetCodeResponse, SUT.GetCodeResponseError>
+    private typealias GetCodeSpy = Spy<Void, SUT.GetCodeSuccess, SUT.GetCodeResponseError>
     private typealias FormSessionKeySpy = Spy<Void, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
     private typealias BindKeySpy = Spy<SUT.OTP, Void, SUT.BindPublicKeyError>
     

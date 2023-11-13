@@ -39,7 +39,7 @@ extension Services {
                 
                 completion(
                     result
-                        .map(CVVPINFunctionalityActivationService.GetCodeResponse.init)
+                        .map(CVVPINFunctionalityActivationService.GetCodeSuccess.init)
                         .mapError(CVVPINFunctionalityActivationService.GetCodeResponseError.init)
                 )
             }
@@ -73,7 +73,7 @@ extension Services {
 
 // MARK: - Mappers
 
-private extension CVVPINFunctionalityActivationService.GetCodeResponse {
+private extension CVVPINFunctionalityActivationService.GetCodeSuccess {
     
     init(_ response: GetProcessingSessionCodeService.Response) {
         

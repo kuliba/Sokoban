@@ -11,7 +11,7 @@ import Foundation
 ///
 public final class CVVPINFunctionalityActivationService {
     
-    public typealias GetCodeResult = Result<GetCodeResponse, GetCodeResponseError>
+    public typealias GetCodeResult = Result<GetCodeSuccess, GetCodeResponseError>
     public typealias GetCodeCompletion = (GetCodeResult) -> Void
     public typealias GetCode = (@escaping GetCodeCompletion) -> Void
     
@@ -172,7 +172,7 @@ extension CVVPINFunctionalityActivationService {
         }
     }
     
-    public struct GetCodeResponse {
+    public struct GetCodeSuccess {
         
         let code: String
         let phone: String
@@ -210,7 +210,7 @@ extension CVVPINFunctionalityActivationService {
 private extension CVVPINFunctionalityActivationService {
     
     func _formSessionKey(
-        _ response: GetCodeResponse,
+        _ response: GetCodeSuccess,
         _ completion: @escaping ActivateCompletion
     ) {
         formSessionKey { [weak self] result in
