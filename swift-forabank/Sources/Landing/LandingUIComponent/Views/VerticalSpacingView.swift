@@ -25,6 +25,7 @@ struct VerticalSpacingView: View {
         Rectangle()
             .frame(height: config.value(byType: model.spacingType))
             .foregroundColor( config.backgroundColor(model.backgroundColor))
+            .accessibilityIdentifier("VerticalSpacingRectangle")
     }
 }
 
