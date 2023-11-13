@@ -49,7 +49,7 @@ extension Services {
         // MARK: - FormSessionKey Adapters
         
         func loadCode(
-            completion: @escaping FormSessionKeyService.CodeCompletion
+            completion: @escaping FormSessionKeyService.LoadCodeCompletion
         ) {
             loadSessionCode { result in
                 
