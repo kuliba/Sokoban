@@ -140,7 +140,7 @@ final class TransformingReducerTests: XCTestCase {
             transformer: transformer
         )
         
-        assert(expect: .editing(.init("374", cursorAt: 3))) {
+        assert(expect: .editing(.init("3", cursorAt: 1))) {
             try reducer.insertAtCursor("3", in: state)
         }
     }

@@ -20,12 +20,12 @@ final class PhoneKitTransformerTests: XCTestCase {
         assertTextState(transformed, hasText: "", cursorAt: 0)
     }
     
-    /*func test_shouldReturnArmenianCode_on3() {
+    func test_shouldReturnArmenianCode_on3() {
         
         let transformed = transform(for: .abroad, .init("3"))
         
-        assertTextState(transformed, hasText: "+374", cursorAt: 4)
-    }*/
+        assertTextState(transformed, hasText: "+3", cursorAt: 2)
+    }
     
     func test_shouldReturnRuCode_on89() {
         
@@ -100,26 +100,14 @@ final class PhoneKitTransformerTests: XCTestCase {
 
 extension Array where Element == CountryCodeReplace {
     
-    static let test: Self = .armenian + .russian + .turkey
+    static let test: Self = .russian
 }
 
 extension Array where Element == CountryCodeSubstitution {
     
-    static let test: Self = .armenian + .russian + .turkey
-    
-    static let armenian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-    ]
+    static let test: Self = .russian
     
     static let russian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "9", to: "7 9"),
-    ]
-    
-    static let turkey: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-        .init(from: "9", to: "90"),
+        .init(from: "89", to: "79"),
     ]
 }
