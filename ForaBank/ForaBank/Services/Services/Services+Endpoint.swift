@@ -40,6 +40,7 @@ extension Services {
             case createStickerPayment
             case createCommissionProductTransfer
             case makeTransfer
+            case getSvgImageList
         }
     }
 }
@@ -135,6 +136,12 @@ extension Services.Endpoint {
         pathPrefix: .transfer,
         version: nil,
         serviceName: .makeTransfer
+    )
+    
+    static let getImageList: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getSvgImageList
     )
 }
 
