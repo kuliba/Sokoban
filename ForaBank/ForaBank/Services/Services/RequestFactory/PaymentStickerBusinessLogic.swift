@@ -255,8 +255,7 @@ extension BusinessLogic {
                                 operation: operation,
                                 newParameter: .input(.init(
                                     value: "",
-                                    title: "Введите код из смс",
-                                    icon: ""
+                                    title: "Введите код из смс"
                                 ))
                             ))))
 

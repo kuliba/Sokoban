@@ -32,6 +32,13 @@ public extension Operation {
 }
 
 //MARK: Helpers
+extension Operation {
+
+    public func containedParameter(_ parameter: Operation.Parameter) -> Bool {
+        
+        self.parameters.contains(where: { $0.id.rawValue == parameter.id.rawValue })
+    }
+}
 
 extension [Operation.Parameter] {
     
@@ -104,10 +111,12 @@ public extension Operation {
     ) -> Operation {
         
         var operation = operation
-        if operation.parameters.contains(where: { $0.id.rawValue == newParameter.id.rawValue }) {
+        if containedParameter(newParameter) {
+            
             operation.parameters = operation.parameters.replaceParameter(
                 newParameter: newParameter
             )
+            
         } else {
             operation.parameters.append(newParameter)
         }
