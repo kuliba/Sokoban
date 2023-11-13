@@ -26,7 +26,10 @@ public struct ProductView: View {
             case let .list(productViewModel, productList):
                 
                 selectProductView(productViewModel)
-                optionsList(productList)
+                optionsList(
+                    productList,
+                    optionConfig: appearance.optionConfig
+                )
             }
         }
         .background(background())
@@ -34,19 +37,44 @@ public struct ProductView: View {
     }
     
     private func optionsList(
-        _ productList: [ProductViewModel]
+        _ productList: [ProductViewModel],
+        optionConfig: Appearance.OptionConfig
     ) -> some View {
         
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
             HStack(spacing: 10) {
                 
                 ForEach(productList, id: \.self) { product in
                     
-                    productOption(
-                        product: product,
-                        header: product.header
-                    )
+                    VStack(spacing: 8) {
+                     
+                        Text(product.footer.description)
+                            .font(optionConfig.numberFont)
+                            .foregroundColor(optionConfig.numberColor)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                     
+                        VStack(spacing: 4) {
+                            
+                            Text(product.main.name)
+                                .font(optionConfig.nameFont)
+                                .foregroundColor(optionConfig.nameColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            HStack {
+                                
+                                Text(product.main.balance)
+                                    .font(optionConfig.balanceFont)
+                                    .foregroundColor(optionConfig.balanceColor)
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+                    .background(Color.gray.opacity(0.4))
+                    .frame(width: 112, height: 71)
+                    .cornerRadius(8)
                 }
             }
         }
