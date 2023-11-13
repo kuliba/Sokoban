@@ -49,3 +49,24 @@ extension FetchAdapter: Fetcher {
     }
 }
 
+public extension FetchAdapter
+where NewFailure == Failure {
+
+    convenience init(
+        fetch: @escaping Fetch,
+        map: @escaping Map
+    ) {
+        self.init(fetch: fetch, map: map, mapError: { $0 })
+    }
+}
+
+public extension FetchAdapter
+where NewSuccess == Success {
+
+    convenience init(
+        fetch: @escaping Fetch,
+        mapError: @escaping MapError
+    ) {
+        self.init(fetch: fetch, map: { $0 }, mapError: mapError)
+    }
+}

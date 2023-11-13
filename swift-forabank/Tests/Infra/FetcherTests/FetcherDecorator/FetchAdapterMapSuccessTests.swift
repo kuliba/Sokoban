@@ -1,5 +1,5 @@
 //
-//  FetchAdapterMapFailureTests.swift
+//  FetchAdapterMapSuccessTests.swift
 //  
 //
 //  Created by Igor Malyarov on 13.11.2023.
@@ -8,7 +8,7 @@
 import Fetcher
 import XCTest
 
-final class FetchAdapterMapFailureTests: XCTestCase {
+final class FetchAdapterMapSuccessTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -21,7 +21,7 @@ final class FetchAdapterMapFailureTests: XCTestCase {
         
         let (sut, fetchSpy) = makeSUT()
         
-        expect(sut, toDeliver: .failure(.init(newErrorMessage: "Failure")),  on: {
+        expect(sut, toDeliver: .failure(.init(message: "Failure")),  on: {
             
             fetchSpy.complete(with: .failure(.init(message: "Failure")))
         })
@@ -31,7 +31,7 @@ final class FetchAdapterMapFailureTests: XCTestCase {
         
         let (sut, fetchSpy) = makeSUT()
         
-        expect(sut, toDeliver: .success(.init(value: "a nice value")),  on: {
+        expect(sut, toDeliver: .success(.init(newItemValue: "a nice value")),  on: {
             
             fetchSpy.complete(with: .success(.init(value: "a nice value")))
         })
@@ -67,11 +67,11 @@ final class FetchAdapterMapFailureTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = FetchAdapter<Request, Item, Item, TestError, NewError>
+    private typealias SUT = FetchAdapter<Request, Item, NewItem, TestError, TestError>
     private typealias FetchSpy = FetcherSpy<Request, Item, TestError>
     
     private func makeSUT(
-        mapError: @escaping (TestError) -> NewError = { .init(newErrorMessage: $0.message) },
+        map: @escaping (Item) -> NewItem = { .init(newItemValue: $0.value) },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -81,7 +81,7 @@ final class FetchAdapterMapFailureTests: XCTestCase {
         let fetchSpy = FetchSpy()
         let sut = SUT(
             fetch: fetchSpy.fetch(_:completion:),
-            mapError: mapError
+            map: map
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
