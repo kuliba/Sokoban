@@ -1,22 +1,24 @@
 //
-//  File.swift
+//  ImageData.swift
 //  
 //
 //  Created by Дмитрий Савушкин on 13.11.2023.
 //
 
 import Foundation
+import UIKit
+import SwiftUI
 
-struct ImageData: Codable, Equatable, Hashable {
+public struct ImageData: Codable, Equatable, Hashable {
 
     let data: Data
     
-    internal init(data: Data) {
+    public init(data: Data) {
         
         self.data = data
     }
 
-    init?(with uiImage: UIImage) {
+    public init?(with uiImage: UIImage) {
         
         guard let pngImageData = uiImage.pngData() else {
            return nil
@@ -25,7 +27,7 @@ struct ImageData: Codable, Equatable, Hashable {
         self.data = pngImageData
     }
     
-    init?(with svgImageData: SVGImageData) {
+    public init?(with svgImageData: SVGImageData) {
         
         guard let uiImage = svgImageData.uiImage else {
            return nil
@@ -75,4 +77,62 @@ extension [String: ImageData] {
         
         self.map( { (id: $0.key, image: $0.value) } )
     }
+}
+
+public struct SVGImageData: CustomStringConvertible, Equatable, Hashable {
+
+    public let description: String
+    
+    internal init(description: String) {
+        
+        self.description = description
+    }
+    
+    init?(data: Data) {
+        
+        guard let description = String(data: data, encoding: .utf8)  else {
+            return nil
+        }
+        
+        self.description = description
+    }
+}
+
+extension SVGImageData: Codable {
+    
+    public init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        description = try container.decode(String.self)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.singleValueContainer()
+        try container.encode(description)
+    }
+}
+
+extension SVGImageData {
+    
+    var imageData: Data? { description.data(using: .utf8) }
+    var uiImage: UIImage? {
+        
+        guard let imageData = imageData, let svgImage = UIImage(data: imageData) else {
+            return nil
+        }
+        
+        return svgImage
+    }
+    
+    var image: Image? {
+        
+        guard let uiImage = uiImage else {
+            return nil
+        }
+        
+        return Image(uiImage: uiImage)
+    }
+    
+    //TODO: ImageData
 }
