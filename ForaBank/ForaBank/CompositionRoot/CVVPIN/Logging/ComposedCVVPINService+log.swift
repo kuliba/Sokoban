@@ -87,8 +87,8 @@ extension ComposedCVVPINService {
                     case let .failure(error):
                         log(.error, .crypto, "Activation failure: \(error).", #file, #line)
                         
-                    case let .success(phone):
-                        log(.info, .crypto, "Activation success: \(phone).", #file, #line)
+                    case let .success(success):
+                        log(.info, .crypto, "Activation success: \(success.phone.phoneValue).", #file, #line)
                     }
                     
                     completion(result)

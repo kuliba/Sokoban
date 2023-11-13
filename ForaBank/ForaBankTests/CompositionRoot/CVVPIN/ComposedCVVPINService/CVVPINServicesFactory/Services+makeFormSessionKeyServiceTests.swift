@@ -137,7 +137,7 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     private typealias SessionCodeLoader = LoaderSpy<SessionCode>
     private typealias MakeSecretRequestJSONResult = FormSessionKeyService.SecretRequestJSONResult
     private typealias MakeSessionKeyResult = FormSessionKeyService.MakeSessionKeyResult
-    private typealias ProcessSpy = Spy<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, Services.FormSessionKeyProcessError>
+    private typealias ProcessSpy = Spy<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, Services.ProcessFormSessionKeyError>
     
     private func makeSUT(
         makeSecretRequestJSONResult: MakeSecretRequestJSONResult = anySuccess(),
@@ -154,11 +154,11 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeFormSessionKeyService(
-            sessionCodeLoader: sessionCodeLoader,
-            formSessionKeyProcess: processSpy.process,
+            loadSessionCode: sessionCodeLoader.load(completion:),
+            processFormSessionKey: processSpy.process,
             makeSecretRequestJSON: { $0(makeSecretRequestJSONResult) },
             makeSessionKey: { _, completion in completion(makeSessionKeyResult) },
-            cacheFormSessionKeySuccess: handleSuccessSpy.handle
+            cacheFormSessionKey: handleSuccessSpy.handle
         )
         
         trackForMemoryLeaks(handleSuccessSpy, file: file, line: line)
@@ -260,7 +260,7 @@ private func anySuccess(
     publicServerSessionKey: String = UUID().uuidString,
     eventID: String = UUID().uuidString,
     sessionTTL: Int = 43
-) -> Services.FormSessionKeyProcessResult {
+) -> Services.ProcessFormSessionKeyResult {
     
     .success(.init(
         publicServerSessionKey: publicServerSessionKey,

@@ -11,7 +11,7 @@ import Foundation
 ///
 public final class CVVPINFunctionalityActivationService {
     
-    public typealias GetCodeResult = Result<GetCodeResponse, GetCodeResponseError>
+    public typealias GetCodeResult = Result<GetCodeSuccess, GetCodeResponseError>
     public typealias GetCodeCompletion = (GetCodeResult) -> Void
     public typealias GetCode = (@escaping GetCodeCompletion) -> Void
     
@@ -42,7 +42,7 @@ public final class CVVPINFunctionalityActivationService {
 
 public extension CVVPINFunctionalityActivationService {
     
-    typealias ActivateResult = Result<Phone, ActivateError>
+    typealias ActivateResult = Result<ActivateSuccess, ActivateError>
     typealias ActivateCompletion = (ActivateResult) -> Void
     
     func activate(
@@ -56,8 +56,8 @@ public extension CVVPINFunctionalityActivationService {
             case let .failure(error):
                 completion(.failure(.init(error)))
                 
-            case let .success(response):
-                _formSessionKey(response, completion)
+            case let .success(success):
+                _formSessionKey(success, completion)
             }
         }
     }
@@ -133,6 +133,42 @@ public extension CVVPINFunctionalityActivationService {
 
 extension CVVPINFunctionalityActivationService {
     
+    public struct ActivateSuccess {
+        
+        // GetCodeSuccess
+        public let code: GetCodeSuccess.Code
+        public let phone: GetCodeSuccess.Phone
+        // FormSessionKeySuccess
+        public let sessionKey: FormSessionKeySuccess.SessionKey
+        public let eventID: FormSessionKeySuccess.EventID
+        public let sessionTTL: FormSessionKeySuccess.SessionTTL
+        
+        public init(
+            code: GetCodeSuccess.Code,
+            phone: GetCodeSuccess.Phone,
+            sessionKey: FormSessionKeySuccess.SessionKey,
+            eventID: FormSessionKeySuccess.EventID,
+            sessionTTL: FormSessionKeySuccess.SessionTTL
+        ) {
+            self.code = code
+            self.phone = phone
+            self.sessionKey = sessionKey
+            self.eventID = eventID
+            self.sessionTTL = sessionTTL
+        }
+        
+        internal init(
+            getCodeSuccess: GetCodeSuccess,
+            formSessionKeySuccess: FormSessionKeySuccess
+        ) {
+            self.code = getCodeSuccess.code
+            self.phone = getCodeSuccess.phone
+            self.sessionKey = formSessionKeySuccess.sessionKey
+            self.eventID = formSessionKeySuccess.eventID
+            self.sessionTTL = formSessionKeySuccess.sessionTTL
+        }
+    }
+    
     public struct FormSessionKeySuccess {
         
         public let sessionKey: SessionKey
@@ -163,7 +199,7 @@ extension CVVPINFunctionalityActivationService {
         
         public struct SessionKey {
             
-            let sessionKeyValue: Data
+            public let sessionKeyValue: Data
             
             public init(sessionKeyValue: Data) {
                 
@@ -172,17 +208,37 @@ extension CVVPINFunctionalityActivationService {
         }
     }
     
-    public struct GetCodeResponse {
+    public struct GetCodeSuccess {
         
-        let code: String
-        let phone: String
+        let code: Code
+        let phone: Phone
         
         public init(
-            code: String,
-            phone: String
+            code: Code,
+            phone: Phone
         ) {
             self.code = code
             self.phone = phone
+        }
+        
+        public struct Code {
+            
+            public let codeValue: String
+            
+            public init(codeValue: String) {
+                
+                self.codeValue = codeValue
+            }
+        }
+        
+        public struct Phone {
+            
+            public let phoneValue: String
+            
+            public init(phoneValue: String) {
+                
+                self.phoneValue = phoneValue
+            }
         }
     }
     
@@ -195,22 +251,12 @@ extension CVVPINFunctionalityActivationService {
             self.otpValue = otpValue
         }
     }
-    
-    public struct Phone {
-        
-        public let phoneValue: String
-        
-        public init(phoneValue: String) {
-            
-            self.phoneValue = phoneValue
-        }
-    }
 }
 
 private extension CVVPINFunctionalityActivationService {
     
     func _formSessionKey(
-        _ response: GetCodeResponse,
+        _ getCodeSuccess: GetCodeSuccess,
         _ completion: @escaping ActivateCompletion
     ) {
         formSessionKey { [weak self] result in
@@ -219,7 +265,13 @@ private extension CVVPINFunctionalityActivationService {
             
             completion(
                 result
-                    .map { _ in .init(phoneValue: response.phone) }
+                    .map { formSessionKeySuccess in
+                     
+                            .init(
+                                getCodeSuccess: getCodeSuccess,
+                                formSessionKeySuccess: formSessionKeySuccess
+                            )
+                    }
                     .mapError(ActivateError.init)
             )
         }

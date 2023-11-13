@@ -113,7 +113,6 @@ final class Services_makeAuthWithPublicKeyServiceTests: XCTestCase {
     func test_fetch_shouldDeliverValueOnSuccess() {
         
         let sessionIDValue = UUID().uuidString
-        let publicServerSessionKeyValue = UUID().uuidString
         let sessionTTL = 11
         let sessionKeyValue = anyData()
         let (sut, prepareKeyExchangeSpy, authRemoteServiceSpy, makeSessionKeySpy, cacheSpy) = makeSUT()

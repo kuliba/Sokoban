@@ -64,6 +64,7 @@ extension ListDropdownTextsUIView {
                         .frame(height: config.heights.title)
                         .padding(.top, config.paddings.titleTop)
                         .padding(.horizontal, config.paddings.titleHorizontal)
+                        .accessibilityIdentifier("ListDropdownTitle")
                     
                     config.divider
                         .frame(height: 0.5)
@@ -80,11 +81,13 @@ extension ListDropdownTextsUIView {
                     Text(item.title)
                         .font(config.fonts.itemTitle)
                         .foregroundColor(config.colors.itemTitle)
+                        .accessibilityIdentifier("ListDropdownItemTitle")
                     
                     Spacer()
                     
                     config.chevronDownImage
                         .rotationEffect(selectedItem == item ? .degrees(180) : .degrees(0))
+                        .accessibilityIdentifier("ListDropdownItemChevronDown")
                 }
                 .frame(height: config.heights.item)
                 .onTapGesture {

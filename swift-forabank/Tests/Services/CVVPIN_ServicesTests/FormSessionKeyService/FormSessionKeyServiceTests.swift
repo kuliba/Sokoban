@@ -333,7 +333,7 @@ private extension FormSessionKeyService.Result {
 
 private func anySuccess(
     codeValue: String = UUID().uuidString
-) -> FormSessionKeyService.CodeResult {
+) -> FormSessionKeyService.LoadCodeResult {
     
     .success(.init(codeValue: codeValue))
 }

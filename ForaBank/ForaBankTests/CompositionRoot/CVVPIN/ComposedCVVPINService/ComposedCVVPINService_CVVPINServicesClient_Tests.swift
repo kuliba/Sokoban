@@ -63,7 +63,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         
         expectActivate(sut, toDeliver: [.success("+7..3245")], on: {
             
-            activateSpy.complete(with: anySuccess("+7..3245"))
+            activateSpy.complete(with: anySuccess(phoneValue: "+7..3245"))
         })
     }
     
@@ -500,7 +500,7 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
-    private typealias ActivateSpy = Spy<Void, CVVPINFunctionalityActivationService.Phone, CVVPINFunctionalityActivationService.ActivateError>
+    private typealias ActivateSpy = Spy<Void, CVVPINFunctionalityActivationService.ActivateSuccess, CVVPINFunctionalityActivationService.ActivateError>
     private typealias ConfirmSpy = Spy<Void, Void, CVVPINFunctionalityActivationService.ConfirmError>
     private typealias CheckSpy = Spy<Void, Void, Error>
     private typealias GetPINConfirmationCodeSpy = Spy<Void, ChangePINService.ConfirmResponse, ChangePINService.GetPINConfirmationCodeError>

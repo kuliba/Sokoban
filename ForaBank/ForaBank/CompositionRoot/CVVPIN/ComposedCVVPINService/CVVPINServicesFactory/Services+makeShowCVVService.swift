@@ -15,14 +15,18 @@ extension Services {
     typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
     typealias LoadShowCVVSession = (@escaping LoadShowCVVSessionCompletion) -> Void
     
+    typealias DecryptString = (String, RSADomain.PrivateKey) throws -> String
+    
+    typealias MakeShowCVVSecretJSON = (ShowCVVService.CardID, ShowCVVService.SessionID, RSADomain.KeyPair, SessionKey) throws -> Data
+    
     typealias _ShowCVVRemoteService = Fetcher<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
     
     static func makeShowCVVService(
         auth: @escaping Auth,
         loadSession: @escaping LoadShowCVVSession,
         showCVVRemoteService: any _ShowCVVRemoteService,
-        cvvPINCrypto: CVVPINCrypto,
-        cvvPINJSONMaker: CVVPINJSONMaker
+        decryptString: @escaping DecryptString,
+        makeShowCVVSecretJSON: @escaping MakeShowCVVSecretJSON
     ) -> ShowCVVService {
         
         let showCVVService = ShowCVVService(
@@ -60,11 +64,11 @@ extension Services {
                 completion(.init {
                     
                     let session = try result.get()
-                    return try cvvPINJSONMaker.makeShowCVVSecretJSON(
-                        with: cardID,
-                        and: sessionID,
-                        rsaKeyPair: session.rsaKeyPair,
-                        sessionKey: session.sessionKey
+                    return try makeShowCVVSecretJSON(
+                        cardID,
+                        sessionID,
+                        session.rsaKeyPair,
+                        session.sessionKey
                     )
                 })
             }
@@ -90,9 +94,9 @@ extension Services {
                 
                 do {
                     let rsaKeyPair = try $0.get().rsaKeyPair
-                    let cvvValue = try cvvPINCrypto.rsaDecrypt(
+                    let cvvValue = try decryptString(
                         encryptedCVV.encryptedCVVValue,
-                        withPrivateKey: rsaKeyPair.privateKey
+                        rsaKeyPair.privateKey
                     )
                     completion(.success(.init(cvvValue: cvvValue)))
                 } catch {

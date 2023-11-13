@@ -12,9 +12,9 @@ import Foundation
 ///
 public final class FormSessionKeyService {
     
-    public typealias CodeResult = Swift.Result<Code, Swift.Error>
-    public typealias CodeCompletion = (CodeResult) -> Void
-    public typealias LoadCode = (@escaping CodeCompletion) -> Void
+    public typealias LoadCodeResult = Swift.Result<Code, Swift.Error>
+    public typealias LoadCodeCompletion = (LoadCodeResult) -> Void
+    public typealias LoadCode = (@escaping LoadCodeCompletion) -> Void
     
     public typealias SecretRequestJSONResult = Swift.Result<Data, Swift.Error>
     public typealias SecretRequestJSONCompletion = (SecretRequestJSONResult) -> Void

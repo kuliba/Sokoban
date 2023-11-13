@@ -13,36 +13,32 @@ import GenericRemoteService
 extension Services {
     
     typealias BindPublicKeyService = Fetcher<BindPublicKeyWithEventIDService.Payload, BindPublicKeyWithEventIDService.Success, BindPublicKeyWithEventIDService.Failure>
-    typealias BindPublicKeyProcessError = MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>
-    typealias BindPublicKeyProcess = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Swift.Result<Void, BindPublicKeyProcessError>) -> Void) -> Void
-    typealias OnBindKeyFailure = (BindPublicKeyWithEventIDService.Failure) -> Void
+    
+    typealias LoadSessionIDResult = Result<SessionID, Error>
+    typealias LoadSessionIDCompletion = (Result<SessionID, Error>) -> Void
+    typealias LoadSessionID = (@escaping LoadSessionIDCompletion) -> Void
+    
+    typealias ProcessBindPublicKeyError = MappingRemoteServiceError<BindPublicKeyWithEventIDService.APIError>
+    typealias ProcessBindPublicKey = (BindPublicKeyWithEventIDService.ProcessPayload, @escaping (Result<Void, ProcessBindPublicKeyError>) -> Void) -> Void
     
     static func makeBindPublicKeyService(
-        sessionIDLoader: any Loader<SessionID>,
-        bindPublicKeyProcess: @escaping BindPublicKeyProcess,
-        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON,
-        onBindKeyFailure: @escaping OnBindKeyFailure
+        loadSessionID: @escaping LoadSessionID,
+        processBindPublicKey: @escaping ProcessBindPublicKey,
+        makeSecretJSON: @escaping BindPublicKeyWithEventIDService.MakeSecretJSON
     ) -> any BindPublicKeyService {
         
-        let bindPublicKeyWithEventIDService = BindPublicKeyWithEventIDService(
+        return BindPublicKeyWithEventIDService(
             loadEventID: loadEventID(completion:),
             makeSecretJSON: makeSecretJSON,
             process: process(payload:completion:)
         )
-        
-        let rsaKeyPairCacheCleaningBindPublicKeyService = FetcherDecorator(
-            decoratee: bindPublicKeyWithEventIDService,
-            handleFailure: onBindKeyFailure
-        )
-        
-        return rsaKeyPairCacheCleaningBindPublicKeyService
         
         // MARK: - BindPublicKeyWithEventID Adapters
         
         func loadEventID(
             completion: @escaping BindPublicKeyWithEventIDService.EventIDCompletion
         ) {
-            sessionIDLoader.load {
+            loadSessionID {
                 
                 completion($0.map { .init(eventIDValue: $0.sessionIDValue) })
             }
@@ -52,7 +48,7 @@ extension Services {
             payload: BindPublicKeyWithEventIDService.ProcessPayload,
             completion: @escaping BindPublicKeyWithEventIDService.ProcessCompletion
         ){
-            bindPublicKeyProcess(payload) {
+            processBindPublicKey(payload) {
                 
                 completion($0.mapError { .init($0) })
             }

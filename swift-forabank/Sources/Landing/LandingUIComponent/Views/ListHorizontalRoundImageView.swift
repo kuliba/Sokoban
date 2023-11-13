@@ -45,7 +45,9 @@ struct ListHorizontalRoundImageView: View {
                             let item = model.data.list[index]
                             itemView(item: item)
                                 .padding(.trailing, index == model.data.list.count - 1 ? config.paddings.vStackContentHorizontal : 0)
+                                .accessibilityIdentifier("HorisontalItem")
                         }
+                        
                     }
                 }
                 .padding(.leading, config.paddings.vStackContentHorizontal)
@@ -54,6 +56,7 @@ struct ListHorizontalRoundImageView: View {
         .frame(height: config.height)
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
+        .accessibilityIdentifier("HorizontalGroup")
     }
     
     private func itemView (item: ComponentLHRI.ListItem) -> some View {
@@ -87,6 +90,7 @@ extension ListHorizontalRoundImageView {
                     maxWidth: .infinity,
                     maxHeight: .infinity,
                     alignment: .topTrailing)
+                .accessibilityIdentifier("HorisontalSubInfo")
         }
     }
 }
@@ -113,12 +117,14 @@ extension ListHorizontalRoundImageView {
                             Color.grayLightest
                                 .cornerRadius(config.item.cornerRadius)
                                 .frame(width: config.item.width, height: config.item.width)
+                                .accessibilityIdentifier("HorisontalItemNoImage")
                             
                         case let .some(image):
                             image
                                 .resizable()
                                 .cornerRadius(config.item.cornerRadius)
                                 .frame(width: config.item.width, height: config.item.width)
+                                .accessibilityIdentifier("HorisontalItemImage")
                         }
                         
                         item.title.map {
@@ -126,6 +132,7 @@ extension ListHorizontalRoundImageView {
                             Text($0)
                                 .font(config.detail.font)
                                 .foregroundColor(config.detail.color)
+                                .accessibilityIdentifier("HorisontalItemText")
                         }
                     }
                     
@@ -134,6 +141,7 @@ extension ListHorizontalRoundImageView {
                         ListHorizontalRoundImageView.SubInfoView(
                             text: $0,
                             config: config.subtitle)
+                            .accessibilityIdentifier("HorisontalItemSubInfo")
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)

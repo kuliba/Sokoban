@@ -32,7 +32,7 @@ struct Item: Equatable {
 }
 
 func testError(
-    _ message: String = "any error"
+    _ message: String = UUID().uuidString
 ) -> TestError {
     
     TestError(message: message)
