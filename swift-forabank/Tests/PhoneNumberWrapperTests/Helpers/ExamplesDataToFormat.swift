@@ -205,7 +205,11 @@ extension ExamplesDataToFormat {
     
     enum OtherNotValid: String {
         
-        case long = "35211122233344455566"
+        case longArmenia = "37411122233344455566"
+        case longLuxembourg = "35211122233344455566"
+        case longPhilippines = "63121545454542121"
+        case longTurkey = "901213121545454545454"
+        case longUSA = "1232545454545444"
         case short = "+11223"
     }
 }

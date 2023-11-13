@@ -23,66 +23,43 @@ extension String {
 
 extension String {
     
-    func applyPatternOnPhoneNumber() -> String {
+    func applyPatternOnPhoneNumber(mask: String) -> String {
         
         guard !self.onlyDigits().isEmpty else { return "" }
-        guard let regex = try? NSRegularExpression(
-            pattern: "[\\s-\\(\\)]",
-            options: .caseInsensitive
-        ) else { return "" }
         
-        let onlyDigits = self.onlyDigits()
-        let r = NSString(string: onlyDigits).range(of: onlyDigits)
-        var number = regex.stringByReplacingMatches(
-            in: onlyDigits,
-            options: .init(rawValue: 0),
-            range: r,
-            withTemplate: ""
-        )
-          
+        var number = self.onlyDigits()
         number = number.changeCodeIfNeeded()
-
-        let end = number.index(number.startIndex, offsetBy: number.count)
-        let range = number.startIndex..<end
-
-        switch number.count {
-        case 1:
-            number = number.replacingOccurrences(
-                of: "(\\d{1})",
-                with: "+$1",
-                options: .regularExpression
-            )
-        case 2...4:
-            number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d+)",
-                with: "+$1 $2",
-                options: .regularExpression,
-                range: range
-            )
-        case 5...7:
-            number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d{3})(\\d+)",
-                with: "+$1 $2 $3",
-                options: .regularExpression,
-                range: range
-            )
-            
-        case 8...9:
-            number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d{3})(\\d{3})(\\d+)",
-                with: "+$1 $2 $3-$4",
-                options: .regularExpression,
-                range: range
-            )
-        default:
-            number = number.replacingOccurrences(
-                of: "(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d+)",
-                with: "+$1 $2 $3-$4-$5",
-                options: .regularExpression,
-                range: range
-            )
+        return formatter(mask: mask)
+    }
+    
+    func formatter (mask:String) -> String {
+        
+        let number = self.replacingOccurrences(
+            of: "[^0-9]",
+            with: "",
+            options: .regularExpression
+        ).changeCodeIfNeeded()
+        
+        var result = ""
+        var index = number.startIndex
+        for character in mask where index < number.endIndex {
+            if character == "X" {
+                result.append(number[index])
+                index = number.index(after: index)
+            } else {
+                result.append(character)
+            }
         }
-        return number
+        return result
+    }
+    
+    func getMaskedNumber() -> String {
+        return self.replacingOccurrences(
+            of: "[0-9]",
+            with: "X",
+            options: .regularExpression,
+            range: nil
+        )
     }
 }
 

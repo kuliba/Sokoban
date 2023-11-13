@@ -112,7 +112,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         XCTAssertEqual(updated, "+7")
     }
     
-    func test_updateMasked_shouldSetTurkeyPrefix() throws {
+    func test_updateMasked_shouldSetTurkeyPrefix_typeAbroad() throws {
         
         //given
         let value = "+90"
@@ -120,7 +120,31 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 3, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .turkey)
+        let updated = updateMasked(
+            for: .abroad,
+            value: value,
+            inRange: range,
+            update: update,
+            countryCodeReplace: .turkey)
+        
+        // then
+        XCTAssertEqual(updated, "+90 9")
+    }
+    
+    func test_updateMasked_shouldSetTurkeyPrefix_typeOther() throws {
+        
+        //given
+        let value = "+90"
+        let update = "9"
+        let range = NSRange(location: 3, length: 0)
+        
+        // when
+        let updated = updateMasked(
+            for: .other,
+            value: value,
+            inRange: range,
+            update: update,
+            countryCodeReplace: .turkey)
         
         // then
         XCTAssertEqual(updated, "+90 9")
@@ -151,10 +175,10 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         XCTAssertEqual(value.count, location)
-        XCTAssertEqual(updated, "+7 925-5")
+        XCTAssertEqual(updated, "+7 925 5")
     }
     
-    func test_updateMasked_shouldNotAppendSpace() throws {
+    func test_updateMasked_shouldNotAppendSpace_typeAbroad() throws {
         
         //given
         let value = "+374"
@@ -163,13 +187,18 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: location, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
+        let updated = updateMasked(
+            for: .abroad,
+            value: value,
+            inRange: range,
+            update: update,
+            countryCodeReplace: .armenian)
         
         XCTAssertEqual(value.count, location)
         XCTAssertEqual(updated, value)
     }
     
-    func test_updateMasked_shouldUpdateNilValue() throws {
+    func test_updateMasked_shouldUpdateNilValue_typeOther() throws {
         
         //given
         let value: String? = nil
@@ -177,7 +206,12 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
+        let updated = updateMasked(
+            for: .other,
+            value: value,
+            inRange: range,
+            update: update,
+            countryCodeReplace: .armenian)
         
         XCTAssertEqual(updated, "+374")
     }
@@ -218,8 +252,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
-#warning("this assertion differs from original `test_updateMasked_shouldNotInsertAtFirst_onLengthEqualToLimit`: XCTAssertEqual(updated, value)")
-        XCTAssertNoDiff(updated, "+879252798613")
+        XCTAssertNoDiff(updated, "+7 925 279-86-13")
     }
     
     func test_updateMasked_shouldEnterInMiddleRange() throws {
@@ -232,10 +265,10 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         // when
         let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
-        XCTAssertEqual(updated, "+7 8252798613")
+        XCTAssertEqual(updated, "+7 825 279-86-13")
     }
     
-    func test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate() throws {
+    func test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate_typeAbroad() throws {
         
         //given
         let value = "+3"
@@ -243,12 +276,25 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 2, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian)
+        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .armenian)
         
         #warning("assertion differs from original test `test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate`: XCTAssertEqual(updated, \"+(3\")")
         XCTAssertEqual(updated, "+374")
     }
     
+    func test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate_typeOther() throws {
+        
+        //given
+        let value = "+3"
+        let update = ""
+        let range = NSRange(location: 2, length: 0)
+        
+        // when
+        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian)
+        
+        XCTAssertEqual(updated, "+374")
+    }
+
     func test_updateMasked_shouldNotLimitResult_onNilLimit() throws {
         
         //given
@@ -263,7 +309,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         XCTAssertEqual(updated, "+7 925 279-86-13")
     }
     
-    func test_shouldNotCompletearmenianCountryCodes_onPartialCode() throws {
+    func test_shouldNotCompletearmenianCountryCodes_onPartialCode_typeAbroad() throws {
         
         //given
         let value = "+37"
@@ -272,12 +318,26 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: limit)
+        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: limit)
         
         XCTAssertEqual(updated, "+373")
     }
     
-    func test_shouldNotCompleteturkeyCountryCodes_onPartialCode() throws {
+    func test_shouldNotCompletearmenianCountryCodes_onPartialCode_typeOther() throws {
+        
+        //given
+        let value = "+37"
+        let update = "3"
+        let range = NSRange(location: 3, length: 0)
+        let limit: Int? = nil
+        
+        // when
+        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: limit)
+        
+        XCTAssertEqual(updated, "+373")
+    }
+    
+    func test_shouldNotCompleteturkeyCountryCodes_onPartialCode_typeAbroad() throws {
         
         //given
         let value = "+9"
@@ -286,12 +346,26 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .turkey, limit: limit)
+        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .turkey, limit: limit)
         
         XCTAssertEqual(updated, "+91")
     }
     
-    func test_updateMasked_shouldCompleteArmenianCountryCode() throws {
+    func test_shouldNotCompleteturkeyCountryCodes_onPartialCode_typeOther() throws {
+        
+        //given
+        let value = "+9"
+        let update = "1"
+        let range = NSRange(location: 2, length: 0)
+        let limit: Int? = nil
+        
+        // when
+        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .turkey, limit: limit)
+        
+        XCTAssertEqual(updated, "+91")
+    }
+    
+    func test_updateMasked_shouldCompleteArmenianCountryCode_typeAbroad() throws {
         
         //given
         let value = "+3"
@@ -299,13 +373,25 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
+        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
-#warning("`+3` could be pasted but not typed (entering `3` would invoke substitution ) - the assert is different in original `test_updateMasked_shouldCompleteArmenianCountryCode`: XCTAssertEqual(updated, ____)")
         XCTAssertEqual(updated, "+374")
     }
     
-    func test_updateMasked_shouldCompleteArmenianCountryCode2() throws {
+    func test_updateMasked_shouldCompleteArmenianCountryCode_typeOther() throws {
+        
+        //given
+        let value = "+3"
+        let update = ""
+        let range = NSRange(location: 0, length: 0)
+        
+        // when
+        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
+        
+        XCTAssertEqual(updated, "+374")
+    }
+    
+    func test_updateMasked_shouldCompleteArmenianCountryCode2_typeAbroad() throws {
         
         //given
         let value = ""
@@ -313,7 +399,20 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
+        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
+        
+        XCTAssertEqual(updated, "+374")
+    }
+    
+    func test_updateMasked_shouldCompleteArmenianCountryCode2_typeOther() throws {
+        
+        //given
+        let value = ""
+        let update = "3"
+        let range = NSRange(location: 0, length: 0)
+        
+        // when
+        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .armenian, limit: nil)
         
         XCTAssertEqual(updated, "+374")
     }
@@ -322,6 +421,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
     
     /// resembles `TextFieldPhoneNumberViewComponentsTests.swift`
     func updateMasked(
+        for type: ContactsViewModel.PaymentsType = .other,
         value: String?,
         inRange range: NSRange,
         update: String,
@@ -342,6 +442,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let substitutions: [CountryCodeSubstitution] = countryCodeReplace?.map(\.substitution) ?? []
         
         let transformer = Transformers.phoneKit(
+            for: type,
             filterSymbols: filterSymbols ?? [],
             substitutions: substitutions,
             limit: limit

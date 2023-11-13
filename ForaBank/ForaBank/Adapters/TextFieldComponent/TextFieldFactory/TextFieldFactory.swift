@@ -129,6 +129,7 @@ extension TextFieldFactory {
     /// Creates a view model for phone number input text field.
     /// Uses `PhoneKit` to format and validate input.
     static func makePhoneKitTextField(
+        for type: ContactsViewModel.PaymentsType,
         initialPhoneNumber: String?,
         placeholderText: String,
         filterSymbols: [Character],
@@ -143,6 +144,7 @@ extension TextFieldFactory {
             placeholderText: placeholderText
         )
         let transformer = Transformers.phoneKit(
+            for: type,
             filterSymbols: filterSymbols,
             substitutions: countryCodeReplaces.map(\.substitution),
             limit: limit
