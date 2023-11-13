@@ -43,15 +43,29 @@ public extension ModelToViewModelMapper {
         case let .tip(parameterHint):
             return .tip(
                 .init(
-                    imageName: "message",
+                    imageName: "tipIcon",
                     text: parameterHint.title
                 )
             )
             
         case let .select(parameter):
+            
+            var icon: Image
+            if parameter.id == .citySelector {
+                
+                icon = .init("ic24MapPin")
+            } else if parameter.id == .officeSelector {
+                
+                icon = .init("ic24Bank")
+            } else {
+                
+                icon = .init("ic16ArrowDownCircle")
+            }
+            
             return .select(
                 .init(
                     parameter: parameter,
+                    icon: icon,
                     chevronButtonTapped: {
                         
                         action(.select(.chevronTapped(parameter)))
@@ -89,9 +103,10 @@ public extension ModelToViewModelMapper {
         case let .input(input):
             return .input(.init(
                 parameter: input,
+                icon: .init("ic24SmsCode"),
                 updateValue: { text in
                     
-                    action(.input(.valueUpdate(.init(value: text, title: input.title, icon: input.icon))))
+                    action(.input(.valueUpdate(.init(value: text, title: input.title))))
                     
                 }
             ))
