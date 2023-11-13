@@ -27,11 +27,11 @@ final class PhoneKitTransformerTests: XCTestCase {
         assertTextState(transformed, hasText: "+374", cursorAt: 4)
     }*/
     
-    func test_shouldReturnRuCode_on8() {
+    func test_shouldReturnRuCode_on89() {
         
-        let transformed = transform(.init("8"))
+        let transformed = transform(.init("89"))
         
-        assertTextState(transformed, hasText: "+7", cursorAt: 2)
+        assertTextState(transformed, hasText: "+7 9", cursorAt: 4)
     }
     
     /*func test_shouldReturnRuCodeWith9_on9() {
