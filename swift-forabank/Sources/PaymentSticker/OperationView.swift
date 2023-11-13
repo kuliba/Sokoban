@@ -135,7 +135,7 @@ struct OperationProcessView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 32) {
+                VStack(spacing: 16) {
                     
                     ForEach(model.scrollParameters) { parameter in
                         

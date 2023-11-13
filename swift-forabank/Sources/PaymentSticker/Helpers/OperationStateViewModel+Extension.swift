@@ -250,7 +250,7 @@ extension OperationStateViewModel {
             operation.parameters.remove(at: indexAmountParameter)
         }
         
-        operation.parameters.append(.input(.init(value: "", title: "Введите код", icon: "system name")))
+        operation.parameters.append(.input(.init(value: "", title: "Введите код")))
         
         return operation
     }
@@ -358,6 +358,7 @@ extension Array where Element == Operation.Parameter {
         .sticker(.init(
             title: "Платежный стике",
             description: "Стоимость обслуживания взимается единоразово за весь срок при заказе стикера",
+            image: .empty,
             options: [
                 .init(
                     title: "При получении в офисе",
