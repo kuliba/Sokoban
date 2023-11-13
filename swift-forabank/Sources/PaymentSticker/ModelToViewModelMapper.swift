@@ -28,12 +28,13 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
+                    sticker: Image(uiImage: parameterSticker.image.uiImage ?? .checkmark),
                     options: parameterSticker.options.map {
                         
                         .init(
                             title: $0.title,
                             icon: .init("Arrow Circle"),
-                            description: $0.description,
+                            description: "\($0.description.dropLast(2)) ₽",
                             iconColor: .green
                         )
                     }

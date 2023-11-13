@@ -28,6 +28,7 @@ enum RootViewModelFactory {
                     httpClient: httpClient
                 ),
                 makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
+                imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
                 transfer: { event, completion in
                     
                 },
