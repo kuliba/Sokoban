@@ -22,9 +22,11 @@ final class BusinessLogic {
     typealias TransferCompletion = (TransferResult) -> Void
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
+    //TODO: replace remoteService to closure or protocol
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
     let makeTransferService: RemoteService<String, MakeTransferResponse>
+    let imageLoaderService: RemoteService<[String], [ImageData]>
     let transfer: Transfer
     let products: [Product]
     let cityList: [City]
@@ -33,6 +35,7 @@ final class BusinessLogic {
         dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
         transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
         makeTransferService: RemoteService<String, MakeTransferResponse>,
+        imageLoaderService: RemoteService<[String], [ImageData]>,
         transfer: @escaping Transfer,
         products: [Product],
         cityList: [City]
@@ -40,6 +43,7 @@ final class BusinessLogic {
         self.dictionaryService = dictionaryService
         self.transferService = transferService
         self.makeTransferService = makeTransferService
+        self.imageLoaderService = imageLoaderService
         self.transfer = transfer
         self.products = products
         self.cityList = cityList
@@ -200,8 +204,35 @@ extension BusinessLogic {
                     
                     switch result {
                     case let .success(dictionaryResponse):
-                        completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
                         
+                        let state = self.dictionaryStickerReduce(operation, dictionaryResponse)
+                        switch state {
+                        case let .operation(operation):
+                            switch dictionaryResponse {
+                            case let .orderForm(sticker):
+                                
+                                switch sticker.main.first(where: { $0.type == .productInfo })?.data {
+                                case let .banner(banner):
+                                    
+                                    self.imageLoader(operation: operation, banner: banner) { result in
+                                        
+                                        switch result {
+                                        case let .success(state):
+                                            completion(.success(state))
+                                            
+                                        case let .failure(error):
+                                            return
+                                        }
+                                    }
+                                    
+                                default: break
+                                }
+                            default:
+                                break
+                            }
+                        case .result(let operationResult):
+                            return
+                        }
                     case let .failure(error):
                         return
                     }
@@ -356,6 +387,7 @@ extension BusinessLogic {
                     return Operation.Parameter.sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
+                        image: PaymentSticker.ImageData(data: Data()),
                         options: banner.txtConditionList.map({
                             
                             Operation.Parameter.Sticker.Option(
@@ -471,6 +503,44 @@ extension BusinessLogic {
             }
             
             return .operation(.init(parameters: newOperation))
+        }
+    }
+    
+    func imageLoader(
+        operation: PaymentSticker.Operation,
+        banner: StickerDictionaryResponse.Banner,
+        completion: @escaping (OperationResult) -> Void
+    ) {
+        
+        self.imageLoaderService.process([banner.md5hash]) { result in
+            
+            switch result {
+            case let .success(images):
+                if let uiImage = SVGKImage(data: images.first?.data).uiImage,
+                   let image = PaymentSticker.ImageData(with: uiImage) {
+                    
+                    let newOperation = operation.updateOperation(
+                        operation: operation,
+                        newParameter: .sticker(.init(
+                            title: banner.title,
+                            description: banner.subtitle,
+                            image: image,
+                            options: banner.txtConditionList.map { item in
+                                
+                                    .init(
+                                        title: item.name,
+                                        description: "\(item.value.description.dropLast(2)) ₽"
+                                    )
+                            }
+                        ))
+                    )
+                    
+                    completion(.success(.operation(newOperation)))
+                }
+                
+            case let .failure(error):
+                return
+            }
         }
     }
 }
