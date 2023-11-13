@@ -61,6 +61,22 @@ extension Services {
             }
         )
     }
+    
+    typealias GetImageList = RemoteService<[String], [ImageData]>
+    
+    static func getImageListRequest(
+        httpClient: HTTPClient
+    ) -> GetImageList {
+        
+        return .init(
+            createRequest: RequestFactory.getImageList,
+            performRequest: httpClient.performRequest,
+            mapResponse: {
+                
+                return try ResponseMapper.getImageListResponse($0, $1).get()
+            }
+        )
+    }
 }
 
 struct StickerPayment {
