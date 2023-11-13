@@ -52,9 +52,7 @@ struct TipView: View {
                 .foregroundColor(.white)
                 .frame(width: 32, height: 32)
             
-            Image(imageName)
-                .resizable()
-                .frame(width: 24, height: 24)
+            Text("💬")
         }
     }
     
