@@ -172,7 +172,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
     
     // MARK: - confirmActivation
     
-    func test_activate_shouldDeliverErrorOnBindKeyInvalidFailure() {
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyInvalidFailure() {
         
         let statusCode = 500
         let invalidData = anyData()
@@ -185,7 +185,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverErrorOnBindKeyNetworkFailure() {
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyNetworkFailure() {
         
         let (sut, _, _, bindKeySpy) = makeSUT()
         
@@ -195,7 +195,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverErrorOnBindKeyRetryFailure() {
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyRetryFailure() {
         
         let statusCode = 500
         let errorMessage = "Forn Session Key Error"
@@ -209,7 +209,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverErrorOnBindKeyServerFailure() {
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyServerFailure() {
         
         let statusCode = 500
         let errorMessage = "Forn Session Key Error"
@@ -222,7 +222,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverErrorOnBindKeyServiceFailure() {
+    func test_confirmActivation_shouldDeliverErrorOnBindKeyServiceFailure() {
         
         let (sut, _, _, bindKeySpy) = makeSUT()
         
@@ -232,7 +232,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldDeliverVoidOnSuccess() {
+    func test_confirmActivation_shouldDeliverVoidOnSuccess() {
         
         let (sut, _, _, bindKeySpy) = makeSUT()
         
@@ -242,7 +242,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         })
     }
     
-    func test_activate_shouldNotDeliverBindKeyResultOnInstanceDeallocation() {
+    func test_confirmActivation_shouldNotDeliverBindKeyResultOnInstanceDeallocation() {
         
         var sut: SUT?
         let bindKeySpy: BindKeySpy
