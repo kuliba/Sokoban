@@ -8,12 +8,11 @@
 import Foundation
 import SwiftUI
 import Combine
-import CodableLanding
-import LandingMapping
-import LandingUIComponent
 
 class RootViewModel: ObservableObject, Resetable {
     
+    typealias ShowLoginAction = (RootViewModel.RootActions) -> RootViewModelAction.Cover.ShowLogin
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
@@ -29,7 +28,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let infoDictionary: [String : Any]?
-    private let onRegister: () -> Void
+    private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
     
@@ -40,7 +39,7 @@ class RootViewModel: ObservableObject, Resetable {
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
-        onRegister: @escaping () -> Void
+        showLoginAction: @escaping ShowLoginAction
     ) {
         self.selected = .main
         self.mainViewModel = mainViewModel
@@ -49,7 +48,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
-        self.onRegister = onRegister
+        self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions
         paymentsViewModel.rootActions = rootActions
@@ -86,16 +85,9 @@ class RootViewModel: ObservableObject, Resetable {
                     
                     resetRootView()
                     
-                    let loginViewModel = ComposedLoginViewModel(
-                        authLoginViewModel: .init(
-                            model,
-                            rootActions: rootActions,
-                            onRegister: onRegister
-                        )
-                    )
-                    
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.ShowLogin")
-                    action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
+                    
+                    action.send(showLoginAction(rootActions))
                     
                 case .signInRequired:
                     guard coverPresented != .lock else {
@@ -159,6 +151,7 @@ class RootViewModel: ObservableObject, Resetable {
         LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.SwitchTab, type: .main")
         action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
+    
     private func bind() {
         
         action
@@ -386,172 +379,6 @@ class RootViewModel: ObservableObject, Resetable {
     }()
 }
 
-extension AuthLoginViewModel {
-    
-    convenience init(
-        _ model: Model,
-        buttons: [ButtonAuthView.ViewModel] = [],
-        rootActions: RootViewModel.RootActions,
-        onRegister: @escaping () -> Void
-    ) {
-        self.init(
-            eventPublishers: model.eventPublishers,
-            eventHandlers: .init(
-                onRegisterCardNumber: model.register(cardNumber:),
-                catalogProduct: model.catalogProduct,
-                showSpinner: rootActions.spinner.show,
-                hideSpinner: rootActions.spinner.hide
-            ),
-            factory: model.authLoginViewModelFactory(
-                rootActions: rootActions
-            ),
-            onRegister: onRegister
-        )
-    }
-}
-
-private extension Model {
-    
-    var eventPublishers: AuthLoginViewModel.EventPublishers {
-        
-        .init(
-            clientInformMessage: clientInform
-                .filter { [self] _ in
-                    
-                    !clientInformStatus.isShowNotAuthorized
-                }
-                .compactMap(\.data?.notAuthorized)
-                .handleEvents(receiveOutput: { [self] _ in
-                    
-                    clientInformStatus.isShowNotAuthorized = true
-                })
-                .eraseToAnyPublisher(),
-            
-            checkClientResponse: action
-                .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
-                .eraseToAnyPublisher(),
-            
-            catalogProducts: catalogProducts
-                .eraseToAnyPublisher(),
-            
-            sessionStateFcmToken: sessionState
-                .combineLatest(fcmToken)
-                .eraseToAnyPublisher()
-        )
-    }
-    
-    func register(cardNumber: String) -> Void {
-        
-        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
-        
-        action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
-    }
-    
-    func catalogProduct(
-        for request: AuthLoginViewModel.EventHandlers.Request
-    ) -> CatalogProductData? {
-        
-        switch request {
-        case let .id(id):
-            return catalogProducts.value.first {
-                $0.id == id
-            }
-            
-        case let .tarif(tarif, type: type):
-            return catalogProducts.value.first {
-                $0.tariff == tarif &&
-                $0.productType == type
-            }
-        }
-    }
-}
-
-extension ModelAuthLoginViewModelFactory: AuthLoginViewModelFactory {}
-
-// MARK: - Factory
-
-extension Model {
-    
-    func authLoginViewModelFactory(
-        rootActions: RootViewModel.RootActions
-    ) -> ModelAuthLoginViewModelFactory {
-        
-        ModelAuthLoginViewModelFactory(
-            model: self,
-            rootActions: rootActions
-        )
-    }
-}
-
-final class ModelAuthLoginViewModelFactory {
-    
-    private let model: Model
-    private let rootActions: RootViewModel.RootActions
-    
-    init(
-        model: Model,
-        rootActions: RootViewModel.RootActions
-    ) {
-        self.model = model
-        self.rootActions = rootActions
-    }
-    
-    func makeAuthConfirmViewModel(
-        confirmCodeLength: Int,
-        phoneNumber: String,
-        resendCodeDelay: TimeInterval,
-        backAction: @escaping () -> Void
-    ) -> AuthConfirmViewModel {
-        
-        .init(
-            model,
-            confirmCodeLength: confirmCodeLength,
-            phoneNumber: phoneNumber,
-            resendCodeDelay: resendCodeDelay,
-            backAction: backAction,
-            rootActions: rootActions
-        )
-    }
-    
-    func makeAuthProductsViewModel(
-        action: @escaping (_ id: Int) -> Void,
-        dismissAction: @escaping () -> Void
-    ) -> AuthProductsViewModel {
-        
-        .init(
-            model,
-            products: model.catalogProducts.value,
-            action: action,
-            dismissAction: dismissAction
-        )
-    }
-    
-    func makeOrderProductViewModel(
-        productData: CatalogProductData
-    ) -> OrderProductView.ViewModel {
-        
-        .init(
-            model,
-            productData: productData
-        )
-    }
-    
-    func makeLandingViewModel(
-        _ type: AbroadType,
-        config: UILanding.Component.Config,
-        goMain: @escaping GoMainAction,
-        orderCard: @escaping OrderCardAction
-    ) -> LandingWrapperViewModel {
-        
-        self.model.landingViewModelFactory(
-            abroadType: type,
-            config: config,
-            goMain: goMain,
-            orderCard: orderCard
-        )
-    }
-}
-
 // MARK: - Types
 
 extension RootViewModel {
@@ -651,4 +478,3 @@ enum RootViewModelAction {
         let conditions: [PersonAgreement]
     }
 }
-

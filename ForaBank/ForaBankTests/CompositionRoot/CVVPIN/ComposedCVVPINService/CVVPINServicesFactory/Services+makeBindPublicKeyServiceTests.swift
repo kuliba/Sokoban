@@ -268,7 +268,7 @@ private func anySuccess(
     _ value: String = UUID().uuidString
 ) -> Result<SessionID, Error> {
     
-    .success(.init(value: value))
+    .success(.init(sessionIDValue: value))
 }
 
 private func anyOTP(

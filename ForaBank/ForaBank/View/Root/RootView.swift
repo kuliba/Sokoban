@@ -163,7 +163,10 @@ struct RootView_Previews: PreviewProvider {
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
-                onRegister: {}
+                showLoginAction: { _ in
+                
+                        .init(viewModel: .init(authLoginViewModel: .preview))
+                }
             )
         )
     }

@@ -581,11 +581,11 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         let changePINSpy = ChangePINSpy()
         let showCVVSpy = ShowCVVSpy()
         let sut = SUT(
-            activate: activateSpy.perform(_:),
             changePIN: { _,_,_, completion  in changePINSpy.perform(completion) },
             checkActivation: checkSpy.perform(_:),
             confirmActivation: { _, completion  in confirmSpy.perform(completion) },
             getPINConfirmationCode: getPINConfirmationCodeSpy.perform(_:),
+            initiateActivation: activateSpy.perform(_:),
             showCVV: { _, completion in showCVVSpy.perform(completion) }
         )
         

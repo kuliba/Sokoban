@@ -13,7 +13,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
-    typealias ProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -49,12 +49,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let productProfileViewModelFactory: ProductProfileViewModelFactory
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -67,7 +67,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
-        self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -80,7 +80,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        productProfileViewModelFactory: @escaping ProductProfileViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -89,7 +89,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
-        self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         
         self.navButtonsRight = navButtonsRight
         
@@ -123,7 +123,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = productProfileViewModelFactory(
+                          let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
                             { [weak self] in self?.link = nil })

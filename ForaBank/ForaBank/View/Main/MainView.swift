@@ -340,7 +340,7 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
                 .emptyMock,
@@ -364,7 +364,7 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
                 .emptyMock,
@@ -389,7 +389,7 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        productProfileViewModelFactory: { product, rootView, dismissAction in
+        makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
                 .emptyMock,

@@ -233,11 +233,11 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         
         let spy = LogSpy()
         let sut = SUT(
-            activate: { $0(activateResult) },
             changePIN: { _,_,_, completion  in completion(changePINResult) },
             checkActivation: { $0(checkActivationResult) },
             confirmActivation: { _, completion  in completion(confirmActivationResult) },
             getPINConfirmationCode: { $0(getPINConfirmationCodeResult) },
+            initiateActivation: { $0(activateResult) },
             showCVV: { _, completion in completion(showCVVResult) },
             log: { level, category, text,_,_ in
                 

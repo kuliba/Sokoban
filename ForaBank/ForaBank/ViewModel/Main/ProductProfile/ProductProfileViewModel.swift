@@ -330,7 +330,7 @@ private extension ProductProfileViewModel {
                 model.setPreferredProductID(to: product.activeProductId)
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    productProfileViewModelFactory: productProfileViewModelFactory,
+                    makeProductProfileViewModel: makeProductProfileViewModel,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -821,7 +821,7 @@ private extension ProductProfileViewModel {
                         let myProductsViewModel = MyProductsViewModel(
                             model,
                             cardAction: cardAction,
-                            productProfileViewModelFactory: productProfileViewModelFactory
+                            makeProductProfileViewModel: makeProductProfileViewModel
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1445,7 +1445,7 @@ private extension ProductProfileViewModel {
             }.store(in: &bindings)
     }
     
-    func productProfileViewModelFactory(
+    func makeProductProfileViewModel(
         product: ProductData,
         rootView: String,
         dismissAction: @escaping () -> Void

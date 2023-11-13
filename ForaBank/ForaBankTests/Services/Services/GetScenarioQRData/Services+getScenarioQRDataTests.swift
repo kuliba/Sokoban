@@ -70,7 +70,7 @@ final class ServicesGetScenarioQRDataTests: XCTestCase {
         .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
     
-    typealias Result = Swift.Result<Services.Result, RemoteServiceError<Error, Error, Error>>
+    typealias Result = Swift.Result<Services.GetScenarioResult, RemoteServiceError<Error, Error, Error>>
     
     private func expect(
         _ sut: Services.GetScenarioQRData,

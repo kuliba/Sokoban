@@ -12,7 +12,7 @@ extension ComposedCVVPINService: ActivateCVVPINClient {
     func activate(
         completion: @escaping ActivateCompletion
     ) {
-        activate { [weak self] result in
+        initiateActivation { [weak self] result in
             
             guard self != nil else { return }
             

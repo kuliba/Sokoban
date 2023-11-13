@@ -8,12 +8,40 @@
 import ForaCrypto
 import Foundation
 
+// MARK: - Lifespans
+
+#warning("fix lifespans before release")
+private extension TimeInterval {
+    
+    static var cvvPINActivationLifespan: Self {
+        
+#if RELEASE
+        15_778_463
+#else
+        600
+#endif
+    }
+    
+    static var ephemeralLifespan: Self {
+        
+#if RELEASE
+        15
+#else
+        30
+#endif
+    }
+}
+
+// MARK: - CVVPINServicesClient
+
 extension Services {
+    
+    typealias RSAKeyPairStore = Store<RSADomain.KeyPair>
     
     static func cvvPINServicesClient(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSADomain.KeyPair>
+        rsaKeyPairStore: any RSAKeyPairStore
     ) -> CVVPINServicesClient {
         
         let cryptoLog = { logger.log(level: $0, category: .crypto, message: $1, file: $2, line: $3) }
@@ -28,7 +56,6 @@ extension Services {
             log: cryptoLog
         )
         
-#warning("fix lifespans before release")
         let jsonMaker = LiveCVVPINJSONMaker(crypto: cvvPINCrypto)
         let cvvPINJSONMaker = LoggingCVVPINJSONMakerDecorator(
             decoratee: jsonMaker,
@@ -41,7 +68,7 @@ extension Services {
             rsaKeyPairStore: rsaKeyPairStore,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker,
-            rsaKeyPairLifespan: .rsaKeyPairLifespan,
+            cvvPINActivationLifespan: .cvvPINActivationLifespan,
             ephemeralLifespan: .ephemeralLifespan
         )
     }
@@ -84,28 +111,5 @@ private extension LiveExtraLoggingCVVPINCrypto{
             },
             log: errorLog
         )
-    }
-}
-
-// MARK: - Lifespans
-
-private extension TimeInterval {
-    
-    static var rsaKeyPairLifespan: Self {
-        
-#if RELEASE
-        15_778_463
-#else
-        600
-#endif
-    }
-    
-    static var ephemeralLifespan: Self {
-        
-#if RELEASE
-        15
-#else
-        30
-#endif
     }
 }

@@ -16,17 +16,25 @@ extension GenericLoaderOf: Loader {}
 
 extension Services {
     
-    typealias RSAKeyPair = RSADomain.KeyPair
     typealias AuthWithPublicKeyFetcher = Fetcher<AuthenticateWithPublicKeyService.Payload, AuthenticateWithPublicKeyService.Success, AuthenticateWithPublicKeyService.Failure>
+    
+    typealias AuthCompletion = (Result<SessionID, AuthError>) -> Void
+    typealias Auth = (@escaping AuthCompletion) -> Void
+    
+    enum AuthError: Error {
+        
+        case activationFailure
+        case authenticationFailure
+    }
     
     static func composedCVVPINService(
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
-        rsaKeyPairStore: any Store<RSAKeyPair>,
+        rsaKeyPairStore: any RSAKeyPairStore,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker,
         currentDate: @escaping () -> Date = Date.init,
-        rsaKeyPairLifespan: TimeInterval,
+        cvvPINActivationLifespan: TimeInterval,
         ephemeralLifespan: TimeInterval
     ) -> ComposedCVVPINService {
         
@@ -75,7 +83,7 @@ extension Services {
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         // MARK: Configure CVV-PIN Activation Service
-
+        
         let getCodeService = makeGetCodeService(
             getCodeServiceProcess: getCodeRemoteService.process,
             cacheGetProcessingSessionCode: cache(response:)
@@ -114,16 +122,12 @@ extension Services {
         // MARK: Configure Change PIN Service
         
         let changePINService = makeChangePINService(
-            rsaKeyPairLoader: rsaKeyPairLoader,
-            sessionIDLoader: sessionIDLoader,
-            otpEventIDLoader: otpEventIDLoader,
-            sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: authWithPublicKeyService,
-            confirmChangePINRemoteService: confirmChangePINRemoteService,
+            auth: auth(completion:),
+            loadSession: loadChangePINSession(completion:),
             changePINRemoteService: changePINRemoteService,
-            cvvPINCrypto: cvvPINCrypto,
-            cvvPINJSONMaker: cvvPINJSONMaker,
-            ephemeralLifespan: ephemeralLifespan
+            confirmChangePINRemoteService: confirmChangePINRemoteService,
+            publicRSAKeyDecrypt: publicRSAKeyDecrypt(string:completion:),
+            _makePINChangeJSON: cvvPINJSONMaker.makePINChangeJSON
         )
         
         let cachingChangePINService = FetcherDecorator(
@@ -134,10 +138,8 @@ extension Services {
         // MARK: Configure Show CVV Service
         
         let showCVVService = makeShowCVVService(
-            rsaKeyPairLoader: rsaKeyPairLoader,
-            sessionIDLoader: sessionIDLoader,
-            sessionKeyLoader: sessionKeyLoader,
-            authWithPublicKeyService: authWithPublicKeyService,
+            auth: auth(completion:),
+            loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
             cvvPINCrypto: cvvPINCrypto,
             cvvPINJSONMaker: cvvPINJSONMaker
@@ -146,11 +148,11 @@ extension Services {
         // MARK: - ComposedCVVPINService
         
         let cvvPINServicesClient = ComposedCVVPINService(
-            activate: activationService.activate(completion:),
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
+            initiateActivation: activationService.activate(completion:),
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
@@ -179,6 +181,73 @@ extension Services {
             rsaKeyPairLoader.load {
                 
                 completion($0.map { _ in () })
+            }
+        }
+        
+        // MARK: - Crypto
+        
+        typealias StringDecryptCompletion = (Result<String, Error>) -> Void
+        
+        func publicRSAKeyDecrypt(
+            string: String,
+            completion: @escaping StringDecryptCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                    
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(keyPair):
+                    completion(.init {
+                        
+                        try cvvPINCrypto.rsaDecrypt(
+                            string,
+                            withPrivateKey: keyPair.privateKey
+                        )
+                    })
+                }
+            }
+        }
+        
+        // MARK: - Auth
+        
+        func auth(completion: @escaping AuthCompletion) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.activationFailure))
+                    
+                case let .success(rsaKeyPair):
+                    auth(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func auth(
+            _ rsaKeyPair: RSADomain.KeyPair,
+            _ completion: @escaping AuthCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case .failure:
+                    authWithPublicKeyService.fetch {
+                        
+                        completion(
+                            $0
+                                .map(\.sessionID.sessionIDValue)
+                                .map(SessionID.init(sessionIDValue:))
+                                .mapError { _ in .authenticationFailure })
+                    }
+                    
+                case let .success(sessionID):
+                    completion(.success(
+                        .init(sessionIDValue: sessionID.sessionIDValue)
+                    ))
+                }
             }
         }
         
@@ -234,14 +303,14 @@ extension Services {
             completion: @escaping CacheCompletion
         ) {
             sessionIDLoader.save(
-                .init(value: payload.0.sessionIDValue),
+                .init(sessionIDValue: payload.0.sessionIDValue),
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
         }
         
         typealias CacheSessionKeyPayload = (AuthSuccess.SessionKey, AuthSuccess.SessionTTL)
-
+        
         func cacheSessionKey(
             payload: CacheSessionKeyPayload,
             completion: @escaping CacheCompletion
@@ -254,7 +323,7 @@ extension Services {
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
-
+        
         func makeSecretJSON(
             otp: BindPublicKeyWithEventIDService.OTP,
             completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
@@ -270,7 +339,7 @@ extension Services {
                     
                     rsaKeyPairLoader.save(
                         rsaKeyPair,
-                        validUntil: currentDate().addingTimeInterval(rsaKeyPairLifespan)
+                        validUntil: currentDate().addingTimeInterval(cvvPINActivationLifespan)
                     ) {
                         completion($0.map { _ in data })
                     }
@@ -304,7 +373,7 @@ extension Services {
         }
         
         // MARK: - Cache (GetProcessingSessionCode)
-
+        
         func cache(
             response: GetProcessingSessionCodeService.Response
         ) {
@@ -319,7 +388,7 @@ extension Services {
         }
         
         // MARK: - FormSessionKey Adapters
-
+        
         func makeSecretRequestJSON(
             completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
         ) {
@@ -365,7 +434,7 @@ extension Services {
             completion: @escaping FormSessionKeyCacheCompletion
         ) {
             sessionIDLoader.save(
-                .init(value: payload.0.eventIDValue),
+                .init(sessionIDValue: payload.0.eventIDValue),
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
@@ -382,6 +451,115 @@ extension Services {
                 validUntil: currentDate() + .init(payload.1),
                 completion: completion
             )
+        }
+        
+        // MARK: - ChangePIN Adapters
+        
+        func loadChangePINSession(
+            completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            otpEventIDLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(otpEventID):
+                    loadChangePINSession(otpEventID, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            sessionIDLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionID):
+                    loadChangePINSession(otpEventID, sessionID, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    loadChangePINSession(otpEventID, sessionID, sessionKey, completion)
+                }
+            }
+        }
+        
+        func loadChangePINSession(
+            _ otpEventID: ChangePINService.OTPEventID,
+            _ sessionID: SessionID,
+            _ sessionKey: SessionKey,
+            _ completion: @escaping LoadChangePinSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(rsaKeyPair):
+                    completion(.success(.init(
+                        otpEventID: otpEventID,
+                        sessionID: sessionID,
+                        sessionKey: sessionKey,
+                        rsaPrivateKey: rsaKeyPair.privateKey
+                    )))
+                }
+            }
+        }
+        
+        // MARK: - ShowCVV Adapters
+        
+        func loadShowCVVSession(
+            completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            rsaKeyPairLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let.success(rsaKeyPair):
+                    loadShowCVVSession(rsaKeyPair, completion)
+                }
+            }
+        }
+        
+        func loadShowCVVSession(
+            _ rsaKeyPair: RSADomain.KeyPair,
+            _ completion: @escaping LoadShowCVVSessionCompletion
+        ) {
+            sessionKeyLoader.load { result in
+                
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                    
+                case let .success(sessionKey):
+                    completion(.success(.init(
+                        rsaKeyPair: rsaKeyPair,
+                        sessionKey: sessionKey
+                    )))
+                }
+            }
         }
     }
 }
@@ -494,15 +672,9 @@ private extension RemoteService where Input == Void {
 
 // MARK: - Error Mappers
 
-enum AuthError: Error {
-    
-    case activationFailure
-    case authenticationFailure
-}
-
 private extension ShowCVVService.AuthenticateError {
     
-    init(_ error: AuthError) {
+    init(_ error: Services.AuthError) {
         
         switch error {
         case .activationFailure:
@@ -516,7 +688,7 @@ private extension ShowCVVService.AuthenticateError {
 
 private extension ChangePINService.AuthenticateError {
     
-    init(_ error: AuthError) {
+    init(_ error: Services.AuthError) {
         
         switch error {
         case .activationFailure:

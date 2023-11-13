@@ -16,70 +16,17 @@ extension RootViewModelFactory {
         
         let httpClient = model.authenticatedHTTPClient()
         
-        let (productProfileViewModelFactory, onRegister) = make(
-            httpClient: httpClient,
-            logger: logger,
-            model: model
-        )
-        
-        return make(
-            model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onRegister: onRegister
-        )
-    }
-}
-
-// TODO: needs better naming
-private extension RootViewModelFactory {
-    
-    typealias MakeProductProfileViewModelFactory = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias OnRegister = () -> Void
-    
-    static func make(
-        model: Model,
-        productProfileViewModelFactory: @escaping MakeProductProfileViewModelFactory,
-        onRegister: @escaping OnRegister
-    ) -> RootViewModel {
-        
-        let mainViewModel = MainViewModel(
-            model,
-            productProfileViewModelFactory: productProfileViewModelFactory,
-            onRegister: onRegister
-        )
-        
-        let paymentsViewModel = PaymentsTransfersViewModel(
-            model: model,
-            productProfileViewModelFactory: productProfileViewModelFactory
-        )
-        
-        let chatViewModel = ChatViewModel()
-        
-        let informerViewModel = InformerView.ViewModel(model)
-        
-        return .init(
-            mainViewModel: mainViewModel,
-            paymentsViewModel: paymentsViewModel,
-            chatViewModel: chatViewModel,
-            informerViewModel: informerViewModel,
-            model,
-            onRegister: onRegister
-        )
-    }
-    
-    typealias RSAStoreClear = () -> Void
-
-    static func make(
-        httpClient: HTTPClient,
-        logger: LoggerAgentProtocol,
-        model: Model
-    ) -> (MakeProductProfileViewModelFactory, RSAStoreClear) {
-        
         let rsaKeyPairStore = makeLoggingStore(
+            store: KeyTagKeyChainStore<RSADomain.KeyPair>(
+                keyTag: .rsa
+            ),
             logger: logger
         )
         
-        let rsaStoreClear = rsaKeyPairStore.deleteCacheIgnoringResult
+        let resetCVVPINActivation = makeResetCVVPINActivation(
+            rsaKeyPairStore: rsaKeyPairStore,
+            logger: logger
+        )
         
         let cvvPINServicesClient = Services.cvvPINServicesClient(
             httpClient: httpClient,
@@ -87,7 +34,7 @@ private extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let productProfileViewModelFactory = {
+        let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
                 model,
@@ -98,21 +45,84 @@ private extension RootViewModelFactory {
             )
         }
         
-        return (productProfileViewModelFactory, rsaStoreClear)
+        return make(
+            model: model,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            onRegister: resetCVVPINActivation
+        )
     }
+}
+
+// TODO: needs better naming
+private extension RootViewModelFactory {
     
-    static func makeLoggingStore(
+    static func makeLoggingStore<Key>(
+        store: any Store<Key>,
         logger: LoggerAgentProtocol
-    ) -> any Store<RSADomain.KeyPair> {
+    ) -> any Store<Key> {
         
         let log = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         
-        let store = KeyTagKeyChainStore<RSADomain.KeyPair>(keyTag: .rsa)
-        let rsaKeyPairStore = LoggingStoreDecorator(
+        return LoggingStoreDecorator(
             decoratee: store,
             log: log
         )
+    }
+    
+    typealias ResetCVVPINActivation = () -> Void
+    
+    static func makeResetCVVPINActivation(
+        rsaKeyPairStore: any Store<RSADomain.KeyPair>,
+        logger: LoggerAgentProtocol
+    ) -> ResetCVVPINActivation {
         
-        return rsaKeyPairStore
+        return rsaKeyPairStore.deleteCacheIgnoringResult
+    }
+    
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias OnRegister = () -> Void
+    
+    static func make(
+        model: Model,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        onRegister: @escaping OnRegister
+    ) -> RootViewModel {
+        
+        let mainViewModel = MainViewModel(
+            model,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            onRegister: onRegister
+        )
+        
+        let paymentsViewModel = PaymentsTransfersViewModel(
+            model: model,
+            makeProductProfileViewModel: makeProductProfileViewModel
+        )
+        
+        let chatViewModel = ChatViewModel()
+        
+        let informerViewModel = InformerView.ViewModel(model)
+        
+        let showLoginAction = {
+            
+            let loginViewModel = ComposedLoginViewModel(
+                authLoginViewModel: .init(
+                    model,
+                    rootActions: $0,
+                    onRegister: onRegister
+                )
+            )
+            
+            return RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel)
+        }
+        
+        return .init(
+            mainViewModel: mainViewModel,
+            paymentsViewModel: paymentsViewModel,
+            chatViewModel: chatViewModel,
+            informerViewModel: informerViewModel,
+            model,
+            showLoginAction: showLoginAction
+        )
     }
 }

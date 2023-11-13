@@ -11,13 +11,15 @@ import Foundation
 
 extension Services {
     
+    typealias LoadShowCVVSessionResult = Result<ShowCVVSession, Error>
+    typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
+    typealias LoadShowCVVSession = (@escaping LoadShowCVVSessionCompletion) -> Void
+    
     typealias _ShowCVVRemoteService = Fetcher<(SessionID, Data), ShowCVVService.EncryptedCVV, MappingRemoteServiceError<ShowCVVService.APIError>>
-
+    
     static func makeShowCVVService(
-        rsaKeyPairLoader: any Loader<RSAKeyPair>,
-        sessionIDLoader: any Loader<SessionID>,
-        sessionKeyLoader: any Loader<SessionKey>,
-        authWithPublicKeyService: any AuthWithPublicKeyFetcher,
+        auth: @escaping Auth,
+        loadSession: @escaping LoadShowCVVSession,
         showCVVRemoteService: any _ShowCVVRemoteService,
         cvvPINCrypto: CVVPINCrypto,
         cvvPINJSONMaker: CVVPINJSONMaker
@@ -31,46 +33,20 @@ extension Services {
         )
         
         return showCVVService
-
+        
         // MARK: - ShowCVV Adapters
         
         func authenticate(
             completion: @escaping ShowCVVService.AuthenticateCompletion
         ) {
-            rsaKeyPairLoader.load { result in
+            auth { result in
                 
-                switch result {
-                case .failure:
-                    completion(.failure(.activationFailure))
-                    
-                case let .success(rsaKeyPair):
-                    authenticate(rsaKeyPair, completion)
-                }
-            }
-        }
-        
-        func authenticate(
-            _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping ShowCVVService.AuthenticateCompletion
-        ) {
-            sessionIDLoader.load { result in
-                
-                switch result {
-                case .failure:
-                    authWithPublicKeyService.fetch {
-                        
-                        completion(
-                            $0
-                                .map(\.sessionID.sessionIDValue)
-                                .map(ShowCVVService.SessionID.init)
-                                .mapError { _ in .authenticationFailure })
-                    }
-                    
-                case let .success(sessionID):
-                    completion(.success(
-                        .init(sessionIDValue: sessionID.value)
-                    ))
-                }
+                completion(
+                    result
+                        .map(\.sessionIDValue)
+                        .map(ShowCVVService.SessionID.init)
+                        .mapError(ShowCVVService.AuthenticateError.init)
+                )
             }
         }
         
@@ -79,7 +55,7 @@ extension Services {
             sessionID: ShowCVVService.SessionID,
             completion: @escaping ShowCVVService.MakeJSONCompletion
         ) {
-            loadShowCVVSession { result in
+            loadSession { result in
                 
                 completion(.init {
                     
@@ -99,10 +75,10 @@ extension Services {
             completion: @escaping ShowCVVService.ProcessCompletion
         ) {
             showCVVRemoteService.fetch((
-                .init(value: payload.sessionID.sessionIDValue),
+                .init(sessionIDValue: payload.sessionID.sessionIDValue),
                 payload.data
             )) {
-                completion($0.mapError { .init($0) })
+                completion($0.mapError(ShowCVVService.APIError.init))
             }
         }
         
@@ -110,7 +86,7 @@ extension Services {
             encryptedCVV: ShowCVVService.EncryptedCVV,
             completion: @escaping ShowCVVService.DecryptCVVCompletion
         ) {
-            loadShowCVVSession {
+            loadSession {
                 
                 do {
                     let rsaKeyPair = try $0.get().rsaKeyPair
@@ -124,50 +100,12 @@ extension Services {
                 }
             }
         }
+    }
+    
+    struct ShowCVVSession {
         
-        typealias LoadShowCVVSessionResult = Swift.Result<ShowCVVSession, Error>
-        typealias LoadShowCVVSessionCompletion = (LoadShowCVVSessionResult) -> Void
-        
-        func loadShowCVVSession(
-            completion: @escaping LoadShowCVVSessionCompletion
-        ) {
-            rsaKeyPairLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let.success(rsaKeyPair):
-                    loadShowCVVSession(rsaKeyPair, completion)
-                }
-            }
-        }
-        
-        func loadShowCVVSession(
-            _ rsaKeyPair: RSAKeyPair,
-            _ completion: @escaping LoadShowCVVSessionCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                    
-                case let .success(sessionKey):
-                    completion(.success(.init(
-                        rsaKeyPair: rsaKeyPair,
-                        sessionKey: sessionKey
-                    )))
-                }
-            }
-        }
-        
-        struct ShowCVVSession {
-            
-            let rsaKeyPair: RSAKeyPair
-            let sessionKey: SessionKey
-        }
-
+        let rsaKeyPair: RSADomain.KeyPair
+        let sessionKey: SessionKey
     }
 }
 
@@ -181,6 +119,20 @@ private extension ShowCVVService.APIError {
             
         case let .mapResponse(mapResponseError):
             self = mapResponseError
+        }
+    }
+}
+
+private extension ShowCVVService.AuthenticateError {
+    
+    init(_ error: Services.AuthError) {
+        
+        switch error {
+        case .activationFailure:
+            self = .activationFailure
+        
+        case .authenticationFailure:
+            self = .authenticationFailure
         }
     }
 }

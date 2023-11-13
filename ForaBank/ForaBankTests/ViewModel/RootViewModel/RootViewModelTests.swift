@@ -207,18 +207,21 @@ final class RootViewModelTests: XCTestCase {
         let sut = RootViewModel(
             mainViewModel: .init(
                 model,
-                productProfileViewModelFactory: { _,_,_ in nil },
+                makeProductProfileViewModel: { _,_,_ in nil },
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
-                productProfileViewModelFactory: { _,_,_ in nil }
+                makeProductProfileViewModel: { _,_,_ in nil }
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary,
             model,
-            onRegister: {}
+            showLoginAction: { _ in
+            
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
