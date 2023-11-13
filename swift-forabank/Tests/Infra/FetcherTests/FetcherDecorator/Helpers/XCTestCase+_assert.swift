@@ -61,4 +61,32 @@ extension XCTestCase {
                 }
             }
     }
+    
+    func _assert<T: Equatable, E: Error & Equatable>(
+        _ receivedResults: [Result<T, E>],
+        equals expectedResults: [Result<T, E>],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(receivedResults.count, expectedResults.count, "\nExpected \(expectedResults.count) values, bit got \(receivedResults.count).", file: file, line: line)
+        
+        zip(receivedResults, expectedResults)
+            .enumerated()
+            .forEach { index, element in
+                
+                switch element {
+                case let (
+                    .failure(received),
+                    .failure(expected)
+                ):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+                    
+                case let (.success(received), .success(expected)):
+                    XCTAssertNoDiff(received, expected, file: file, line: line)
+                    
+                default:
+                    XCTFail("Expected \(element.1), but got \(element.0).", file: file, line: line)
+                }
+            }
+    }
 }
