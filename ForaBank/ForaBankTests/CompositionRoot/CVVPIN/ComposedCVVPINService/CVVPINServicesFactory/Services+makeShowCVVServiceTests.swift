@@ -48,7 +48,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .failure(anyError()))
         })
     }
@@ -62,7 +62,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
             showCVVRemoteService.complete(with: .failure(.createRequest(anyError())))
         })
@@ -77,7 +77,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
             showCVVRemoteService.complete(with: .failure(.performRequest(anyError())))
         })
@@ -92,7 +92,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.network), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
             showCVVRemoteService.complete(with: .failure(.mapResponse(.connectivity)))
         })
@@ -108,7 +108,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .failure(.serviceError(.decryptionFailure)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
             showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
             loadSessionSpy.complete(with: .failure(anyNSError()), at: 1)
@@ -126,7 +126,7 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         expect(sut, toDeliver: .success(.init(cvvValue: cvv)), on: {
             
-            authSpy.complete(with: .success(.init(value: sessionIDValue)))
+            authSpy.complete(with: .success(.init(sessionIDValue: sessionIDValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))))
             showCVVRemoteService.complete(with: .success(.init(encryptedCVVValue: encryptedCVVValue)))
             loadSessionSpy.complete(with: .success(.init(rsaKeyPair: keyPair, sessionKey: .init(sessionKeyValue: sessionKeyValue))), at: 1)
@@ -240,41 +240,6 @@ final class Services_makeShowCVVServiceTests: XCTestCase {
         
         return encrypted.base64EncodedString()
     }
-}
-
-private func anyTransportKeyResult() ->
-Result<LiveExtraLoggingCVVPINCrypto.TransportKey, Error> {
-    
-    Result {
-        
-        try ForaCrypto.Crypto.generateKeyPair(keyType: .rsa, keySize: .bits4096)
-    }
-    .map(\.publicKey)
-    .map(LiveExtraLoggingCVVPINCrypto.TransportKey.init(key:))
-}
-
-private func anyProcessingKeyResult() ->
-Result<LiveExtraLoggingCVVPINCrypto.ProcessingKey, Error> {
-    
-    Result {
-        
-        try ForaCrypto.Crypto.generateKeyPair(
-            keyType: .rsa,
-            keySize: .bits4096
-        )
-    }
-    .map(\.publicKey)
-    .map(LiveExtraLoggingCVVPINCrypto.ProcessingKey.init(key:))
-}
-
-private func anyRSAKeyPair() throws -> RSADomain.KeyPair {
-    
-    let (publicKey, privateKey) = try ForaCrypto.Crypto.generateKeyPair(
-        keyType: .rsa,
-        keySize: .bits4096
-    )
-
-    return (privateKey: .init(key: privateKey), publicKey: .init(key: publicKey))
 }
 
 private extension ShowCVVService.CVV {

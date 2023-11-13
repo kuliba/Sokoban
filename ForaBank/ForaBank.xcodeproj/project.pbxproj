@@ -339,6 +339,8 @@
 		2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */; };
 		2A118E252AFEC388007EF30E /* BoolKeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E242AFEC388007EF30E /* BoolKeyChainStoreTests.swift */; };
 		2A118E272AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */; };
+		2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */; };
+		2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */; };
 		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
@@ -2485,6 +2487,8 @@
 		2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+ext.swift"; sourceTree = "<group>"; };
 		2A118E242AFEC388007EF30E /* BoolKeyChainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolKeyChainStoreTests.swift; sourceTree = "<group>"; };
 		2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINFunctionalityActivationService+Fetcher.swift"; sourceTree = "<group>"; };
+		2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINServiceTests.swift"; sourceTree = "<group>"; };
+		2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINHelpers.swift; sourceTree = "<group>"; };
 		2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFieldViewVithBindingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewVithBindingPreviewApp.swift; sourceTree = "<group>"; };
 		2A14A8562A2750450018511E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -6378,6 +6382,8 @@
 				2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */,
 				2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */,
 				2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */,
+				2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */,
+				2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */,
 				2A53FB822AFD62320045F3B0 /* FetcherSpy.swift */,
 				2A44B6792AFD748E00E269EC /* FetcherSpy+ext.swift */,
 			);
@@ -13652,6 +13658,7 @@
 				2A6DC7362AF3F25700688401 /* KeyChainStore+StoreTests.swift in Sources */,
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				C13825452AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift in Sources */,
+				2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
@@ -13660,6 +13667,7 @@
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
 				2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */,
 				2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */,
+				2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */,
 				2AEDAD5229A6157300017F73 /* OperatorDataTestHelpersTests.swift in Sources */,
 				8306D1402ACB27A300134FE0 /* Services+getScenarioQRDataTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,

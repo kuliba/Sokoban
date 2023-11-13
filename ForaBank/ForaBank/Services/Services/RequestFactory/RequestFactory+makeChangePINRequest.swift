@@ -18,7 +18,7 @@ extension RequestFactory {
         
         return try factory.makeRequest(
             for: .changePIN(.init(
-                sessionID: .init(value: sessionID.value),
+                sessionID: .init(value: sessionID.sessionIDValue),
                 data: data
             ))
         )

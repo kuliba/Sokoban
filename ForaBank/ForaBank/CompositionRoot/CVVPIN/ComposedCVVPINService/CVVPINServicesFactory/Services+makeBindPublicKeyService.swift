@@ -44,7 +44,7 @@ extension Services {
         ) {
             sessionIDLoader.load {
                 
-                completion($0.map { .init(eventIDValue: $0.value) })
+                completion($0.map { .init(eventIDValue: $0.sessionIDValue) })
             }
         }
         

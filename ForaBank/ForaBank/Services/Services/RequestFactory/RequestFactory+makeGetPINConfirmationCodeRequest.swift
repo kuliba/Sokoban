@@ -15,11 +15,11 @@ extension RequestFactory {
         
         let factory = try factory(
             for: .getPINConfirmationCode,
-            with: [("sessionId", sessionID.value)]
+            with: [("sessionId", sessionID.sessionIDValue)]
         )
         
         return try factory.makeRequest(
-            for: .getPINConfirmationCode(.init(value: sessionID.value))
+            for: .getPINConfirmationCode(.init(value: sessionID.sessionIDValue))
         )
     }
 }
