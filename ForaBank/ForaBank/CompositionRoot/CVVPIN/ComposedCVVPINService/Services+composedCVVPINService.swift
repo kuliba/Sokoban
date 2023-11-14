@@ -124,13 +124,18 @@ extension Services {
             processFormSessionKey: formSessionKeyRemoteService.process
         )
         
+        let sessionCache = CVVPINSessionCache(
+            _cacheSessionID: sessionIDLoader.save,
+            _cacheSessionKey: sessionKeyLoader.save
+        )
+        
         typealias InitiateActivation = ComposedCVVPINService.InitiateActivation
         
         let initiateActivation: InitiateActivation = { completion in
             
             initiateActivationService.activate { result in
                 
-                handleActivateResult(result: result, completion: completion)
+                sessionCache.handleActivateResult(result, completion: completion)
             }
         }
         
@@ -579,60 +584,6 @@ extension Services {
             )
         }
         
-        func handleActivateResult(
-            result: CVVPINInitiateActivationService.ActivateResult,
-            completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
-        ) {
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-                
-            case let .success(success):
-                let validUntil = currentDate() + .init(success.sessionTTL)
-                cacheSessionID(success, validUntil, completion)
-            }
-        }
-        
-        func cacheSessionID(
-            _ success: CVVPINInitiateActivationService.ActivateSuccess,
-            _ validUntil: Date,
-            _ completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
-        ) {
-            sessionIDLoader.save(
-                .init(sessionIDValue: success.eventID.eventIDValue),
-                validUntil: validUntil
-            ) { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.serviceFailure))
-                    
-                case .success:
-                    cacheSessionKey(success, validUntil, completion)
-                }
-            }
-        }
-        
-        func cacheSessionKey(
-            _ success: CVVPINInitiateActivationService.ActivateSuccess,
-            _ validUntil: Date,
-            _ completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
-        ) {
-            sessionKeyLoader.save(
-                .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
-                validUntil: validUntil
-            ) { result in
-                
-                switch result {
-                case .failure:
-                    completion(.failure(.serviceFailure))
-                    
-                case .success:
-                    completion(.success(success))
-                }
-            }
-        }
-        
         // MARK: - ShowCVV Adapters
         
         func loadShowCVVSession(
@@ -786,6 +737,30 @@ private extension CVVPINInitiateActivationService.FormSessionKeySuccess {
             sessionKey: .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
             eventID: .init(eventIDValue: success.eventID.eventIDValue),
             sessionTTL: success.sessionTTL
+        )
+    }
+}
+
+private extension CVVPINSessionCache {
+    
+    typealias _CacheSessionID = (SessionID, Date, @escaping CacheCompletion) -> Void
+    typealias _CacheSessionKey = (SessionKey, Date, @escaping CacheCompletion) -> Void
+    
+    convenience init(
+        _cacheSessionID: @escaping _CacheSessionID,
+        _cacheSessionKey: @escaping _CacheSessionKey,
+        currentDate: @escaping CurrentDate = Date.init
+    ) {
+        self.init(
+            cacheSessionID: { payload, completion in
+                
+                _cacheSessionID(payload.0, payload.1, completion)
+            },
+            cacheSessionKey: { payload, completion in
+                
+                _cacheSessionKey(payload.0, payload.1, completion)
+            },
+            currentDate: currentDate
         )
     }
 }
