@@ -15,7 +15,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceNotSfp_shouldReturnNil() {
         
         let operation: Payments.Operation = .init(service: .avtodor)
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -26,7 +25,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudNil_shouldReturnNil() {
         
         let operation: Payments.Operation = .init(service: .sfp)
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -37,7 +35,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudValueG_shouldReturnNil() {
         
         let operation = operation(parameters: [paramSfpAntifraudG])
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -48,7 +45,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudValueNotGWithoutAmount_shouldReturnNil() {
         
         let operation = operation(parameters: [paramSfpAntifraud, paramPhone, paramRecipient])
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -59,7 +55,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudValueNotGWithoutPhone_shouldReturnNil() {
         
         let operation = operation(parameters: [paramSfpAntifraud, paramAmount, paramPhone])
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -70,7 +65,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudValueNotGWithoutRecipient_shouldReturnNil() {
         
         let operation = operation(parameters: [paramSfpAntifraud, paramAmount, paramRecipient])
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -81,7 +75,6 @@ final class Model_AntifraudDataTests: XCTestCase {
     func test_paymentsAntifraudData_serviceSfp_sfpAntifraudValueNotGWithAllParameters_shouldReturnData() {
         
         let operation = operation(parameters: [paramSfpAntifraud, paramAmount, paramPhone, paramRecipient])
-        
         let sut: Model = .mockWithEmptyExcept()
         
         let result = sut.paymentsAntifraudData(for: operation)
@@ -142,7 +135,7 @@ private extension String {
     static let sfpAntifraudId: Self = Payments.Parameter.Identifier.sfpAntifraud.rawValue
 }
 
-private extension Payments {
+private extension Payments.AntifraudData {
     
     struct EquatableAntifraudData: Equatable {
         
@@ -150,11 +143,8 @@ private extension Payments {
         let phone: String
         let amount: String
     }
-}
 
-private extension Payments.AntifraudData {
-    
-    var equatable: Payments.EquatableAntifraudData {
+    var equatable: EquatableAntifraudData {
         .init(
             payeeName: self.payeeName,
             phone: self.phone,
