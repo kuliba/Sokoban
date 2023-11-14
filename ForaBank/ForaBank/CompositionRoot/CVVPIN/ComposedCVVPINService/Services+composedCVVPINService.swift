@@ -50,7 +50,7 @@ extension Services {
         // MARK: Ephemeral Stores & Loaders
         
 #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
-        #warning("move into `loggingLoader` to hide stores")
+#warning("move into `loggingLoader` to hide stores")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
         let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
@@ -80,7 +80,7 @@ extension Services {
         )
         
         // MARK: - ECHD Key Pair
-        #warning("hide echdKeyPair! expose only endpoints that use it")
+#warning("hide echdKeyPair! expose only endpoints that use it")
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         // MARK: Configure CVV-PIN Activation Service
@@ -124,10 +124,15 @@ extension Services {
             processFormSessionKey: formSessionKeyRemoteService.process
         )
         
-        let decoratedInitiateActivationService = FetchDecorator(
-            initiateActivationService.activate(completion:),
-            handleResult: handleActivateResult
-        )
+        typealias InitiateActivation = ComposedCVVPINService.InitiateActivation
+        
+        let initiateActivation: InitiateActivation = { completion in
+            
+            initiateActivationService.activate { result in
+                
+                handleActivateResult(result: result, completion: completion)
+            }
+        }
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
         
@@ -171,7 +176,8 @@ extension Services {
             checkActivation: checkActivation(completion:),
             confirmActivation: activationService.confirmActivation,
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
-            initiateActivation: decoratedInitiateActivationService.fetch(completion:),
+            // initiateActivation: decoratedInitiateActivationService.fetch(completion:),
+            initiateActivation: initiateActivation,
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
@@ -348,7 +354,7 @@ extension Services {
         ) {
             
 #warning("finish this: load key pair from ephemeral store and save to persistent store")
-    
+            
             completion()
         }
         
@@ -363,7 +369,7 @@ extension Services {
                 rsaKeyPairStore.deleteCache { _ in completion() }
             }
         }
-
+        
         // MARK: - ChangePIN Adapters
         
         func cache(response: ChangePINService.ConfirmResponse) {
@@ -402,7 +408,7 @@ extension Services {
                 }
             }
         }
-
+        
         func loadChangePINSession(
             completion: @escaping LoadChangePinSessionCompletion
         ) {
@@ -575,27 +581,54 @@ extension Services {
         
         func handleActivateResult(
             result: CVVPINInitiateActivationService.ActivateResult,
-            completion: @escaping () -> Void
+            completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
         ) {
             switch result {
             case let .failure(error):
-#warning("error is not handled")
+                completion(.failure(error))
                 
             case let .success(success):
                 let validUntil = currentDate() + .init(success.sessionTTL)
+                cacheSessionID(success, validUntil, completion)
+            }
+        }
+        
+        func cacheSessionID(
+            _ success: CVVPINInitiateActivationService.ActivateSuccess,
+            _ validUntil: Date,
+            _ completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
+        ) {
+            sessionIDLoader.save(
+                .init(sessionIDValue: success.eventID.eventIDValue),
+                validUntil: validUntil
+            ) { result in
                 
-                sessionIDLoader.save(
-                    .init(sessionIDValue: success.eventID.eventIDValue),
-                    validUntil: validUntil
-                ) { _ in // ignoring result
+                switch result {
+                case .failure:
+                    completion(.failure(.serviceFailure))
                     
-                    sessionKeyLoader.save(
-                        .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
-                        validUntil: validUntil
-                    ) { _ in // ignoring result
-                        
-                        completion()
-                    }
+                case .success:
+                    cacheSessionKey(success, validUntil, completion)
+                }
+            }
+        }
+        
+        func cacheSessionKey(
+            _ success: CVVPINInitiateActivationService.ActivateSuccess,
+            _ validUntil: Date,
+            _ completion: @escaping (CVVPINInitiateActivationService.ActivateResult) -> Void
+        ) {
+            sessionKeyLoader.save(
+                .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
+                validUntil: validUntil
+            ) { result in
+                
+                switch result {
+                case .failure:
+                    completion(.failure(.serviceFailure))
+                    
+                case .success:
+                    completion(.success(success))
                 }
             }
         }
