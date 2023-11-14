@@ -42,14 +42,29 @@ class PlacesListViewModel: ObservableObject {
         return atmItemsWithDistances.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
     }
     
-    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLocation: CLLocationCoordinate2D) {
+    func update(
+        with atmList: [AtmData],
+        metroStationsList: [AtmMetroStationData]?,
+        referenceLocation: CLLocationCoordinate2D
+    ) {
         
-        let atmListSorted = Self.atmItemsSorted(atmList: atmList, referenceLocation: referenceLocation)
+        let atmListSorted = Self.atmItemsSorted(
+            atmList: atmList,
+            referenceLocation: referenceLocation
+        )
         
         var items = [ItemViewModel]()
         for atmItem in atmListSorted {
             
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLocation: referenceLocation, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
+            let item = ItemViewModel(
+                atmItem: atmItem,
+                metroStationsList: metroStationsList,
+                currentLocation: referenceLocation,
+                action: { [weak self] in
+                
+                self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))
+            })
+            
             items.append(item)
         }
         

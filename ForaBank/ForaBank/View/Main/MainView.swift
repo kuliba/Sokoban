@@ -77,7 +77,9 @@ struct MainView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                viewModel.link.map(destinationView)
+                viewModel.link.map({
+                    destinationView(model: viewModel.model, link: $0)
+                })
             }
             
             Color.clear
@@ -107,6 +109,7 @@ struct MainView: View {
     
     @ViewBuilder
     private func destinationView(
+        model: Model,
         link: MainViewModel.Link
     ) -> some View {
         
@@ -173,7 +176,12 @@ struct MainView: View {
         case let .paymentSticker(viewModel):
             OperationView(
                 model: viewModel,
-                configuration: MainView.configurationOperationView()
+                configuration: MainView.configurationOperationView(),
+                branchesView: PlacesListView(viewModel: .init(
+                    atmList: model.dictionaryAtmList() ?? [],
+                    metroStationsList: model.dictionaryAtmMetroStations(),
+                    referenceLocation: .init(latitude: 0, longitude: 0)
+                ))
             )
             .navigationBarTitle("Оформление заявки", displayMode: .inline)
             .edgesIgnoringSafeArea(.bottom)

@@ -31,7 +31,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     var rootActions: RootViewModel.RootActions?
     
-    private let model: Model
+    let model: Model
     private var bindings = Set<AnyCancellable>()
     
     init(

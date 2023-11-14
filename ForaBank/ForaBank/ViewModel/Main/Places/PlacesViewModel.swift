@@ -157,7 +157,11 @@ class PlacesViewModel: ObservableObject {
                 case .list:
                     
                     let filterredAtmList = Self.filtered(atmList: atmList, filter: filter)
-                    let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, referenceLocation: referenceLocation.coordinate)
+                    let listViewModel = PlacesListViewModel(
+                        atmList: filterredAtmList,
+                        metroStationsList: atmMetroStations,
+                        referenceLocation: referenceLocation.coordinate
+                    )
                     
                     withAnimation {
                         self.list = listViewModel
