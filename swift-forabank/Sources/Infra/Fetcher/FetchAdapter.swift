@@ -13,21 +13,34 @@ where Failure: Error,
     public typealias FetchCompletion = (FetchResult) -> Void
     public typealias Fetch = (Payload, @escaping FetchCompletion) -> Void
     
-    public typealias Map = (Success) -> NewSuccess
-    public typealias MapError = (Failure) -> NewFailure
+    public typealias MapResult = (Result<Success, Failure>) -> Result<NewSuccess, NewFailure>
     
     private let _fetch: Fetch
-    private let map: Map
-    private let mapError: MapError
-    
+    private let mapResult: MapResult
+
     public init(
+        fetch: @escaping Fetch,
+        mapResult: @escaping MapResult
+    ) {
+        self._fetch = fetch
+        self.mapResult = mapResult
+    }
+}
+
+public extension FetchAdapter {
+    
+    typealias Map = (Success) -> NewSuccess
+    typealias MapError = (Failure) -> NewFailure
+    
+    convenience init(
         fetch: @escaping Fetch,
         map: @escaping Map,
         mapError: @escaping MapError
     ) {
-        self._fetch = fetch
-        self.map = map
-        self.mapError = mapError
+        self.init(
+            fetch: fetch,
+            mapResult: { $0.map(map).mapError(mapError) }
+        )
     }
 }
 
@@ -44,7 +57,7 @@ extension FetchAdapter: Fetcher {
             
             guard let self else { return }
             
-            completion(result.map(map).mapError(mapError))
+            completion(mapResult(result))
         }
     }
 }
@@ -92,7 +105,7 @@ where Payload == Void {
             
             guard let self else { return }
             
-            completion(result.map(map).mapError(mapError))
+            completion(mapResult(result))
         }
     }
 }
