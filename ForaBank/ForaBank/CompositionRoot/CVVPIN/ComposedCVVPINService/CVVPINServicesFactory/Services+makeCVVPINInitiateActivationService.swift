@@ -32,7 +32,7 @@ extension Services {
         let formSessionKeyService = FormSessionKeyService(
             makeSecretRequestJSON: _makeSecretRequestJSON,
             process: process(payload:completion:),
-            makeSessionKey: makeSessionKey
+            makeSessionKey: _makeSessionKey
         )
         
         let adaptedFormSessionKeyService = FetchAdapter(
@@ -45,7 +45,10 @@ extension Services {
             getCode: adaptedGetCodeService.fetch,
             formSessionKey: { code, completion in
                 
-                adaptedFormSessionKeyService.fetch(.init(codeValue: code.codeValue), completion: completion)
+                adaptedFormSessionKeyService.fetch(
+                    .init(codeValue: code.codeValue),
+                    completion: completion
+                )
             }
         )
         
@@ -68,7 +71,7 @@ extension Services {
             completion(.init(catching: makeSecretRequestJSON))
         }
         
-        func makeSessionKey(
+        func _makeSessionKey(
             string: String,
             completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
         ) {
