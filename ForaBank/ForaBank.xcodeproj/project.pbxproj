@@ -542,6 +542,7 @@
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
 		2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */; };
 		2A7915F42AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */; };
+		2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */; };
 		2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */; };
 		2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7AB1922AA1065400D37BD6 /* LinkableText */; };
 		2A7B5EE42AB068C9002F2D00 /* ComposedLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE32AB068C9002F2D00 /* ComposedLoginView.swift */; };
@@ -622,6 +623,7 @@
 		2AD437672B00A9CD0027286A /* XCTestCase+assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD437662B00A9CD0027286A /* XCTestCase+assert.swift */; };
 		2AD4376A2B00BD200027286A /* Spy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD437692B00BD200027286A /* Spy.swift */; };
 		2AD54D342B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD54D332B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift */; };
+		2AD54D362B03868100481463 /* CVVPINSessionCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD54D352B03868100481463 /* CVVPINSessionCacheTests.swift */; };
 		2AD5E2282A42FF94007D7196 /* MosParkingPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */; };
 		2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
@@ -2696,6 +2698,7 @@
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A7915F32AE853AA006B6882 /* ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapProcessPublicKeyAuthenticationResponse.swift"; sourceTree = "<group>"; };
+		2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINSessionCache.swift; sourceTree = "<group>"; };
 		2A7AA49F29C8DC0100126C30 /* ProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsGroupSettings.swift; sourceTree = "<group>"; };
 		2A7B5EE32AB068C9002F2D00 /* ComposedLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedLoginView.swift; sourceTree = "<group>"; };
 		2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedLoginViewModel.swift; sourceTree = "<group>"; };
@@ -2771,6 +2774,7 @@
 		2AD437662B00A9CD0027286A /* XCTestCase+assert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assert.swift"; sourceTree = "<group>"; };
 		2AD437692B00BD200027286A /* Spy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spy.swift; sourceTree = "<group>"; };
 		2AD54D332B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationService.swift"; sourceTree = "<group>"; };
+		2AD54D352B03868100481463 /* CVVPINSessionCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINSessionCacheTests.swift; sourceTree = "<group>"; };
 		2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingPicker.swift; sourceTree = "<group>"; };
 		2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapperTests.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
@@ -6391,6 +6395,7 @@
 			isa = PBXGroup;
 			children = (
 				2AE886332AFBA23200D86E84 /* MappingRemoteServiceError.swift */,
+				2A79C9F62B039995003E6DDC /* CVVPINSessionCache.swift */,
 				2AD54D332B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift */,
 				2AE8862A2AFB9C1900D86E84 /* Services+makeGetCodeService.swift */,
 				2AE8862C2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift */,
@@ -6414,6 +6419,7 @@
 				2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */,
 				2A6B8E5F2AFE1DCD00E533F4 /* Services+makeShowCVVServiceTests.swift */,
 				2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */,
+				2AD54D352B03868100481463 /* CVVPINSessionCacheTests.swift */,
 				2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */,
 				2A53FB822AFD62320045F3B0 /* Spy+Fetcher.swift */,
 			);
@@ -12696,6 +12702,7 @@
 				0BE0BE01290F28940064549E /* ServerCommand+QR.swift in Sources */,
 				C1F799A329CD18DF0048346B /* Model+ChangeAbroad.swift in Sources */,
 				774A8B4A2865FD3600B81140 /* MyProductsView.swift in Sources */,
+				2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */,
 				7709F12428EDDC22008B5EC4 /* Payments+Step.swift in Sources */,
 				EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
@@ -13726,6 +13733,7 @@
 				2A89FB9A2A836179008F6B87 /* Crypto+AESTests.swift in Sources */,
 				2A4B54222AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift in Sources */,
 				2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */,
+				2AD54D362B03868100481463 /* CVVPINSessionCacheTests.swift in Sources */,
 				7789794929CB6C1200ECF684 /* XCTestCase+ext.swift in Sources */,
 				2A3039282A17D2150008701D /* PhoneKitTransformerTests.swift in Sources */,
 				2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */,
