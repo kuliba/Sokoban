@@ -40,9 +40,7 @@ final class StringExtensionsTests: XCTestCase {
     
     func test_changeCodeIfNeeded_needChange() {
         
-        XCTAssertNoDiff("8".changeCodeIfNeeded(), "7")
         XCTAssertNoDiff("89".changeCodeIfNeeded(), "79")
-        XCTAssertNoDiff("80".changeCodeIfNeeded(), "70")
     }
     
     func test_changeCodeIfNeeded_notChange() {
@@ -50,6 +48,8 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertNoDiff("9".changeCodeIfNeeded(), "9")
         XCTAssertNoDiff("5".changeCodeIfNeeded(), "5")
         XCTAssertNoDiff("3".changeCodeIfNeeded(), "3")
+        XCTAssertNoDiff("8".changeCodeIfNeeded(), "8")
+        XCTAssertNoDiff("80".changeCodeIfNeeded(), "80")
     }
 
     // MARK: - test applyPatternOnPhoneNumber
@@ -68,7 +68,7 @@ final class StringExtensionsTests: XCTestCase {
         
         XCTAssertNoDiff("7".applyPatternOnPhoneNumber(mask: .defaultMask), "+7")
         XCTAssertNoDiff("+7".applyPatternOnPhoneNumber(mask: .defaultMask), "+7")
-        XCTAssertNoDiff("8".applyPatternOnPhoneNumber(mask: .defaultMask), "+7")
+        XCTAssertNoDiff("8".applyPatternOnPhoneNumber(mask: .defaultMask), "+8")
         XCTAssertNoDiff("5".applyPatternOnPhoneNumber(mask: .defaultMask), "+5")
     }
 

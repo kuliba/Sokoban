@@ -130,9 +130,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "8")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.text, "+8")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+8"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
@@ -174,9 +174,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "8")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.text, "+8")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+8"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
