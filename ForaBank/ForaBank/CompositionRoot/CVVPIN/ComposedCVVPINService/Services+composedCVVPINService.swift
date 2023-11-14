@@ -51,17 +51,11 @@ extension Services {
         
 #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
 #warning("move into `loggingLoader` to hide stores")
-        let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
-        let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
         let sessionIDStore = InMemoryStore<SessionID>()
         
         let otpEventIDLoader = loggingLoader(
-            store: otpEventIDStore
-        )
-        
-        let sessionCodeLoader = loggingLoader(
-            store: sessionCodeStore
+            store: InMemoryStore<ChangePINService.OTPEventID>()
         )
         
         let sessionKeyLoader = loggingLoader(
@@ -542,22 +536,6 @@ extension Services {
             sessionKeyLoader.save(
                 .init(sessionKeyValue: payload.0.sessionKeyValue),
                 validUntil: currentDate() + .init(payload.1),
-                completion: completion
-            )
-        }
-        
-        // MARK: - GetProcessingSessionCode
-        
-        func cache(
-            response: GetProcessingSessionCodeService.Response,
-            completion: @escaping (Result<Void, Error>) -> Void
-        ) {
-            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-            let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
-            
-            sessionCodeLoader.save(
-                .init(sessionCodeValue: response.code),
-                validUntil: validUntil,
                 completion: completion
             )
         }
