@@ -27,19 +27,17 @@ extension Services {
     
     typealias MakeSecretJSON = (String, SessionKey) throws -> (Data, RSADomain.KeyPair)
     
-    #warning("loadSessionID + loadSessionKey = Load Session!!")
-    static func makeBindPublicKeyService(
+    typealias CacheLog = (LoggerAgentLevel, String, StaticString, UInt) -> ()
+    
+        static func makeBindPublicKeyService(
         loadSessionID: @escaping LoadSessionID,
         loadSessionKey: @escaping LoadSessionKey,
         processBindPublicKey: @escaping ProcessBindPublicKey,
         makeSecretJSON: @escaping MakeSecretJSON,
-        logger: LoggerAgentProtocol,
+        cacheLog: @escaping CacheLog,
         currentDate: @escaping () -> Date = Date.init,
         ephemeralLifespan: TimeInterval
     ) -> any BindPublicKeyService {
-        
-#warning("REPEATED")
-        let cacheLog = { logger.log(level: $0, category: .cache, message: $1, file: $2, line: $3) }
         
         let rsaKeyPairLoader = loggingLoader(
             store: InMemoryStore<RSADomain.KeyPair>()

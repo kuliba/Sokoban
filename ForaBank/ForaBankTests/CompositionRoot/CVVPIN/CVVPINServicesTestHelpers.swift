@@ -137,6 +137,14 @@ func anyFailure(
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }
 
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> BindPublicKeyWithEventIDService.Result {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
 func anySuccess(
     _ cvvValue: String = .init(UUID().uuidString.prefix(3))
 ) -> ShowCVVService.Result {

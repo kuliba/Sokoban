@@ -114,7 +114,7 @@ extension Services {
             loadSessionKey: sessionKeyLoader.load(completion:),
             processBindPublicKey: bindPublicKeyRemoteService.process,
             makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
-            logger: logger,
+            cacheLog: cacheLog,
             currentDate: currentDate,
             ephemeralLifespan: ephemeralLifespan
         )
