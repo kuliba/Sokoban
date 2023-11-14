@@ -595,29 +595,6 @@ private extension RemoteService where Input == Void {
     }
 }
 
-private extension CVVPINInitiateActivationService.GetCodeSuccess {
-    
-    init(_ response: GetProcessingSessionCodeService.Response) {
-        
-        self.init(
-            code: .init(codeValue: response.code),
-            phone: .init(phoneValue: response.phone)
-        )
-    }
-}
-
-private extension CVVPINInitiateActivationService.FormSessionKeySuccess {
-    
-    init(_ success: FormSessionKeyService.Success) {
-        
-        self.init(
-            sessionKey: .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
-            eventID: .init(eventIDValue: success.eventID.eventIDValue),
-            sessionTTL: success.sessionTTL
-        )
-    }
-}
-
 private extension CVVPINSessionCache {
     
     typealias _CacheSessionID = (SessionID, Date, @escaping CacheCompletion) -> Void
@@ -639,80 +616,5 @@ private extension CVVPINSessionCache {
             },
             currentDate: currentDate
         )
-    }
-}
-
-// MARK: - Error Mappers
-
-private extension ShowCVVService.AuthenticateError {
-    
-    init(_ error: Services.AuthError) {
-        
-        switch error {
-        case .activationFailure:
-            self = .activationFailure
-            
-        case .authenticationFailure:
-            self = .authenticationFailure
-        }
-    }
-}
-
-private extension ChangePINService.AuthenticateError {
-    
-    init(_ error: Services.AuthError) {
-        
-        switch error {
-        case .activationFailure:
-            self = .activationFailure
-            
-        case .authenticationFailure:
-            self = .authenticationFailure
-        }
-    }
-}
-
-private extension CVVPINInitiateActivationService.GetCodeResponseError {
-    
-    init(_ error: GetProcessingSessionCodeService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode: statusCode, data: data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .server(statusCode: statusCode, errorMessage: errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-        }
-    }
-}
-
-private extension CVVPINInitiateActivationService.FormSessionKeyError {
-    
-    init(_ error: FormSessionKeyService.Error) {
-        
-        switch error {
-        case let .invalid(statusCode: statusCode, data: data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .server(statusCode: statusCode, errorMessage: errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceError:
-            self = .serviceFailure
-        }
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.ConfirmError {
-    
-    init(_ error: BindPublicKeyWithEventIDService.Error) {
-        
-        fatalError()
     }
 }
