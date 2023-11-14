@@ -142,7 +142,7 @@ extension BusinessLogic {
                 return .success(.operation(operation))
             
             case .openBranch:
-                return .success(.operation(operation))
+                return .success(.branches)
                 
             case let .chevronTapped(select):
                 switch select.state {
@@ -232,6 +232,8 @@ extension BusinessLogic {
                                 break
                             }
                         case .result(let operationResult):
+                            return
+                        case .branches:
                             return
                         }
                     case let .failure(error):

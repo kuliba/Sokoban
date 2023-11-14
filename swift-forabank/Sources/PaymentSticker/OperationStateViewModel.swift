@@ -68,6 +68,7 @@ extension OperationStateViewModel {
     //TODO: extract from operation state view model
     public enum State {
         
+        case branches
         case operation(Operation)
         case result(OperationResult)
     }

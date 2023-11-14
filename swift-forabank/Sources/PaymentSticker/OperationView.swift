@@ -66,6 +66,10 @@ public struct OperationView: View {
                     print("details")
                 }
             }
+        case .branches:
+            
+            Color.red.opacity(0.3)
+                .frame(width: 200, height: 200, alignment: .center)
         }
     }
 }
