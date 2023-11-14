@@ -28,7 +28,17 @@ class PlacesViewModel: ObservableObject {
     private var referenceLocation: ReferenceLocation
     private var bindings = Set<AnyCancellable>()
 
-    init(control: PlacesControlViewModel, mapViewModel: PlacesMapViewModel = .emptyMock, listViewModel: PlacesListViewModel? = nil, filter: AtmFilter = .initial, atmList: [AtmData] = [], atmMetroStations: [AtmMetroStationData]? = nil, atmServices: [AtmServiceData]? = nil, model: Model = .emptyMock, referenceLocation: ReferenceLocation = .user(.init(latitude: 0, longitude: 0))) {
+    init(
+        control: PlacesControlViewModel,
+        mapViewModel: PlacesMapViewModel = .emptyMock,
+        listViewModel: PlacesListViewModel? = nil,
+        filter: AtmFilter = .initial,
+        atmList: [AtmData] = [],
+        atmMetroStations: [AtmMetroStationData]? = nil,
+        atmServices: [AtmServiceData]? = nil,
+        model: Model = .emptyMock,
+        referenceLocation: ReferenceLocation = .user(.init(latitude: 0, longitude: 0))
+    ) {
         
         self.control = control
         self.map = mapViewModel
