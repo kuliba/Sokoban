@@ -25,7 +25,6 @@ extension Services {
     typealias CacheFormSessionKey = (FormSessionKeyService.Success) -> Void
     
     static func makeFormSessionKeyService(
-        loadSessionCode: @escaping LoadSessionCode,
         processFormSessionKey: @escaping ProcessFormSessionKey,
         makeSecretRequestJSON: @escaping FormSessionKeyService.MakeSecretRequestJSON,
         makeSessionKey: @escaping FormSessionKeyService.MakeSessionKey,
@@ -33,7 +32,6 @@ extension Services {
     ) -> any CachingFormSessionKeyService {
         
         let formSessionKeyService = FormSessionKeyService(
-            loadCode: loadCode(completion:),
             makeSecretRequestJSON: makeSecretRequestJSON,
             process: process(payload:completion:),
             makeSessionKey: makeSessionKey
@@ -47,19 +45,6 @@ extension Services {
         return cachingFormSessionKeyService
         
         // MARK: - FormSessionKey Adapters
-        
-        func loadCode(
-            completion: @escaping FormSessionKeyService.LoadCodeCompletion
-        ) {
-            loadSessionCode { result in
-                
-                completion(
-                    result
-                        .map(\.sessionCodeValue)
-                        .map(FormSessionKeyService.Code.init)
-                )
-            }
-        }
         
         func process(
             payload: FormSessionKeyService.ProcessPayload,

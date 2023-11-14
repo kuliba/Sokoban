@@ -17,7 +17,7 @@ public final class CVVPINInitiateActivationService {
     
     public typealias FormSessionKeyResult = Result<FormSessionKeySuccess, FormSessionKeyError>
     public typealias FormSessionKeyCompletion = (FormSessionKeyResult) -> Void
-    public typealias FormSessionKey = (@escaping FormSessionKeyCompletion) -> Void
+    public typealias FormSessionKey = (Code, @escaping FormSessionKeyCompletion) -> Void
     
     private let getCode: GetCode
     private let formSessionKey: FormSessionKey
@@ -89,16 +89,16 @@ extension CVVPINInitiateActivationService {
     public struct ActivateSuccess {
         
         // GetCodeSuccess
-        public let code: GetCodeSuccess.Code
-        public let phone: GetCodeSuccess.Phone
+        public let code: Code
+        public let phone: Phone
         // FormSessionKeySuccess
         public let sessionKey: FormSessionKeySuccess.SessionKey
         public let eventID: FormSessionKeySuccess.EventID
         public let sessionTTL: FormSessionKeySuccess.SessionTTL
         
         public init(
-            code: GetCodeSuccess.Code,
-            phone: GetCodeSuccess.Phone,
+            code: Code,
+            phone: Phone,
             sessionKey: FormSessionKeySuccess.SessionKey,
             eventID: FormSessionKeySuccess.EventID,
             sessionTTL: FormSessionKeySuccess.SessionTTL
@@ -173,25 +173,25 @@ extension CVVPINInitiateActivationService {
             self.code = code
             self.phone = phone
         }
+    }
+    
+    public struct Code {
         
-        public struct Code {
+        public let codeValue: String
+        
+        public init(codeValue: String) {
             
-            public let codeValue: String
-            
-            public init(codeValue: String) {
-                
-                self.codeValue = codeValue
-            }
+            self.codeValue = codeValue
         }
+    }
+    
+    public struct Phone {
         
-        public struct Phone {
+        public let phoneValue: String
+        
+        public init(phoneValue: String) {
             
-            public let phoneValue: String
-            
-            public init(phoneValue: String) {
-                
-                self.phoneValue = phoneValue
-            }
+            self.phoneValue = phoneValue
         }
     }
 }
@@ -202,7 +202,7 @@ private extension CVVPINInitiateActivationService {
         _ getCodeSuccess: GetCodeSuccess,
         _ completion: @escaping ActivateCompletion
     ) {
-        formSessionKey { [weak self] result in
+        formSessionKey(getCodeSuccess.code) { [weak self] result in
             
             guard self != nil else { return }
             

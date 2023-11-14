@@ -130,21 +130,23 @@ extension Services {
         )
         
         let formSessionKeyService = FormSessionKeyService(
-            loadCode: loadCode(completion:),
             makeSecretRequestJSON: _makeSecretRequestJSON,
             process: process(payload:completion:),
             makeSessionKey: makeSessionKey
         )
         
         let adaptedFormSessionKeyService = FetchAdapter(
-            formSessionKeyService.formSessionKey(completion:),
+            fetch: formSessionKeyService.formSessionKey(_:completion:),
             map: CVVPINInitiateActivationService.FormSessionKeySuccess.init,
             mapError: CVVPINInitiateActivationService.FormSessionKeyError.init
         )
         
         return CVVPINInitiateActivationService(
             getCode: adaptedGetCodeService.fetch,
-            formSessionKey: adaptedFormSessionKeyService.fetch
+            formSessionKey: { code, completion in
+                
+                adaptedFormSessionKeyService.fetch(.init(codeValue: code.codeValue), completion: completion)
+            }
         )
         
         // MARK: - Helpers
@@ -187,19 +189,6 @@ extension Services {
         }
         
         // MARK: - FormSessionKey Adapters
-        
-        func loadCode(
-            completion: @escaping FormSessionKeyService.LoadCodeCompletion
-        ) {
-            sessionCodeLoader.load { result in
-                
-                completion(
-                    result
-                        .map(\.sessionCodeValue)
-                        .map(FormSessionKeyService.Code.init)
-                )
-            }
-        }
         
         func process(
             payload: FormSessionKeyService.ProcessPayload,
@@ -297,7 +286,7 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         expect(sut, toDeliver: [.failure(.network)], on: {
             
             processGetCodeSpy.complete(with: anySuccess())
-            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
+//            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
             processFormSessionKeySpy.complete(with: .failure(.createRequest(anyError())))
         })
     }
@@ -311,7 +300,7 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         expect(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
             processGetCodeSpy.complete(with: anySuccess())
-            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
+//            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
             processFormSessionKeySpy.complete(with: anySuccess())
         })
     }

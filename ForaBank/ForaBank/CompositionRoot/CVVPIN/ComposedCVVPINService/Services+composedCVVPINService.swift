@@ -90,7 +90,6 @@ extension Services {
         )
         
         let formSessionKeyService = makeFormSessionKeyService(
-            loadSessionCode: sessionCodeLoader.load(completion:),
             processFormSessionKey: formSessionKeyRemoteService.process,
             makeSecretRequestJSON: makeSecretRequestJSON,
             makeSessionKey: makeSessionKey(string:completion:),
@@ -124,14 +123,17 @@ extension Services {
         )
         
         let adaptedFormSessionKeyService = FetchAdapter(
-            formSessionKeyService.fetch,
+            fetch: formSessionKeyService.fetch,
             map: CVVPINInitiateActivationService.FormSessionKeySuccess.init,
             mapError: CVVPINInitiateActivationService.FormSessionKeyError.init
         )
         
         let initiateActivationService = CVVPINInitiateActivationService(
             getCode: adaptedGetCodeService.fetch,
-            formSessionKey: adaptedFormSessionKeyService.fetch
+            formSessionKey: { code, completion in
+                
+                adaptedFormSessionKeyService.fetch(.init(codeValue: code.codeValue), completion: completion)
+            }
         )
         
         let decoratedInitiateActivationService = FetchDecorator(

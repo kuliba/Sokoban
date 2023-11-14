@@ -260,7 +260,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
     
     private typealias SUT = CVVPINFunctionalityActivationService
     private typealias GetCodeSpy = Spy<Void, SUT.GetCodeSuccess, SUT.GetCodeResponseError>
-    private typealias FormSessionKeySpy = Spy<Void, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
+    private typealias FormSessionKeySpy = Spy<SUT.Code, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
     private typealias BindKeySpy = Spy<SUT.OTP, Void, SUT.BindPublicKeyError>
     
     private func makeSUT(
@@ -277,7 +277,7 @@ final class CVVPINFunctionalityActivationServiceTests: XCTestCase {
         let bindKeySpy = BindKeySpy()
         let sut = SUT(
             getCode: getCodeSpy.process(completion:),
-            formSessionKey: formSessionKeySpy.process(completion:),
+            formSessionKey: formSessionKeySpy.process(_:completion:),
             bindPublicKeyWithEventID: bindKeySpy.process(_:completion:)
         )
         

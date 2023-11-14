@@ -173,7 +173,7 @@ final class CVVPINInitiateActivationServiceTests: XCTestCase {
     
     private typealias SUT = CVVPINInitiateActivationService
     private typealias GetCodeSpy = Spy<Void, SUT.GetCodeSuccess, SUT.GetCodeResponseError>
-    private typealias FormSessionKeySpy = Spy<Void, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
+    private typealias FormSessionKeySpy = Spy<SUT.Code, SUT.FormSessionKeySuccess, SUT.FormSessionKeyError>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -187,7 +187,7 @@ final class CVVPINInitiateActivationServiceTests: XCTestCase {
         let formSessionKeySpy = FormSessionKeySpy()
         let sut = SUT(
             getCode: getCodeSpy.process(completion:),
-            formSessionKey: formSessionKeySpy.process(completion:)
+            formSessionKey: formSessionKeySpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
