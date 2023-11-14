@@ -7,6 +7,7 @@
 
 import Foundation
 import ServerAgent
+import PhoneNumberWrapper
 
 //MARK: - Actions
 
@@ -1512,8 +1513,9 @@ extension Model {
             let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
                 return nil
             }
-            
-            return .init(payeeName: recipientValue, phone: phoneValue, amount: "- \(amountValue)")
+
+            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue)
+            return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
             
         default:
             return nil
