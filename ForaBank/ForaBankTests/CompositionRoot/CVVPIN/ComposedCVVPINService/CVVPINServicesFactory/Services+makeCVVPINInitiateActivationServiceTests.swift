@@ -325,32 +325,6 @@ private func anySuccess(
     .success(.init(code: codeValue, phone: phoneValue))
 }
 
-//private func anySuccess(
-//    codeValue: String = UUID().uuidString,
-//    phoneValue: String = UUID().uuidString
-//) -> CVVPINInitiateActivationService.GetCodeResult {
-//
-//    .success(.init(
-//        code: .init(codeValue: codeValue),
-//        phone: .init(phoneValue: phoneValue)
-//    ))
-//}
-//
-//private func anySuccess(
-//    sessionKeyValue: Data = anyData(),
-//    eventIDValue: String = UUID().uuidString,
-//    sessionTTL: Int = 23
-//) -> CVVPINInitiateActivationService.FormSessionKeyResult {
-//
-//    .success(
-//        .init(
-//            sessionKey: .init(sessionKeyValue: sessionKeyValue),
-//            eventID: .init(eventIDValue: eventIDValue),
-//            sessionTTL: sessionTTL
-//        )
-//    )
-//}
-
 private func anySuccess(
     publicServerSessionKey: String = UUID().uuidString,
     eventIDValue: String = UUID().uuidString,
