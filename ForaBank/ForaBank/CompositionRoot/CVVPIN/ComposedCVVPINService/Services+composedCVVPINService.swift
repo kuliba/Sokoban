@@ -83,38 +83,6 @@ extension Services {
 #warning("hide echdKeyPair! expose only endpoints that use it")
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
-        // MARK: Configure CVV-PIN Activation Service
-        
-        let getCodeService = makeGetCodeService(
-            processGetCode: getCodeRemoteService.process,
-            cacheGetProcessingSessionCode: cache(response:completion:)
-        )
-        
-        let formSessionKeyService = makeFormSessionKeyService(
-            processFormSessionKey: formSessionKeyRemoteService.process,
-            makeSecretRequestJSON: makeSecretRequestJSON,
-            makeSessionKey: makeSessionKey(string:completion:),
-            cacheFormSessionKey: cache(success:)
-        )
-        
-        let bindPublicKeyService = makeBindPublicKeyService(
-            loadSessionID: sessionIDLoader.load(completion:),
-            processBindPublicKey: bindPublicKeyRemoteService.process,
-            makeSecretJSON: makeSecretJSON(otp:completion:)
-        )
-        
-        let decoratedBindPublicKeyService = FetcherDecorator(
-            decoratee: bindPublicKeyService,
-            onSuccess: persistRSAKeyPair,
-            onFailure: clearRSAKeyPairStoreOnError
-        )
-        
-        let activationService = makeActivationService(
-            getCode: getCodeService.fetch,
-            formSessionKey: formSessionKeyService.fetch,
-            bindPublicKeyWithEventID: decoratedBindPublicKeyService.fetch
-        )
-        
         // MARK: - Configure InitiateActivation
         
         let initiateActivationService = makeCVVPINInitiateActivationService(
@@ -138,6 +106,29 @@ extension Services {
                 sessionCache.handleActivateResult(result, completion: completion)
             }
         }
+        
+        // MARK: Configure BindPublicKey Service
+        
+        let bindPublicKeyService = makeBindPublicKeyService(
+            loadSessionID: sessionIDLoader.load(completion:),
+            loadSessionKey: sessionKeyLoader.load(completion:),
+            processBindPublicKey: bindPublicKeyRemoteService.process,
+            makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
+            logger: logger,
+            currentDate: currentDate,
+            ephemeralLifespan: ephemeralLifespan
+        )
+        
+        let decoratedBindPublicKeyService = FetcherDecorator(
+            decoratee: bindPublicKeyService,
+            onSuccess: persistRSAKeyPair,
+            onFailure: clearRSAKeyPairStoreOnError
+        )
+        
+        let bindPublicKeyConfirm = FetchAdapter(
+            fetch: decoratedBindPublicKeyService.fetch,
+            map: { _ in () }
+        )
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
         
@@ -171,7 +162,7 @@ extension Services {
             loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
             decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            makeShowCVVSecretJSON: cvvPINJSONMaker.makeShowCVVSecretJSON(with:and:rsaKeyPair:sessionKey:)
+            makeShowCVVSecretJSON: cvvPINJSONMaker.makeShowCVVSecretJSON
         )
         
         // MARK: - ComposedCVVPINService
@@ -179,9 +170,8 @@ extension Services {
         let cvvPINServicesClient = ComposedCVVPINService(
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
-            confirmActivation: activationService.confirmActivation,
+            confirmActivation: bindPublicKeyConfirm.fetch(_:completion:),
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
-            // initiateActivation: decoratedInitiateActivationService.fetch(completion:),
             initiateActivation: initiateActivation,
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
@@ -354,13 +344,18 @@ extension Services {
         }
         
         func persistRSAKeyPair(
-            _ success: BindPublicKeyWithEventIDService.Success,
+            _ rsaKeyPair: RSADomain.KeyPair,
             completion: @escaping () -> Void
         ) {
+            let validUntil = currentDate() + .init(cvvPINActivationLifespan)
             
-#warning("finish this: load key pair from ephemeral store and save to persistent store")
-            
-            completion()
+            rsaKeyPairLoader.save(
+                rsaKeyPair,
+                validUntil: validUntil
+            ) { result in
+                #warning("result is ignored")
+                completion()
+            }
         }
         
         func clearRSAKeyPairStoreOnError(
@@ -829,5 +824,13 @@ private extension CVVPINInitiateActivationService.FormSessionKeyError {
         case .serviceError:
             self = .serviceFailure
         }
+    }
+}
+
+private extension CVVPINFunctionalityActivationService.ConfirmError {
+    
+    init(_ error: BindPublicKeyWithEventIDService.Error) {
+        
+        fatalError()
     }
 }

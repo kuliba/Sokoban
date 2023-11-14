@@ -27,6 +27,17 @@ where Failure: Error,
     }
 }
 
+public extension FetchAdapter
+where NewSuccess == Success,
+      NewFailure == Failure {
+    
+    /// A wrapper for function.
+    convenience init(fetch: @escaping Fetch) {
+        
+        self.init(fetch: fetch, mapResult: { $0 })
+    }
+}
+
 public extension FetchAdapter {
     
     typealias Map = (Success) -> NewSuccess
@@ -89,6 +100,16 @@ where Payload == Void {
     
     convenience init(
         _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        mapResult: @escaping MapResult
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            mapResult: mapResult
+        )
+    }
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
         map: @escaping Map,
         mapError: @escaping MapError
     ) {
@@ -107,5 +128,21 @@ where Payload == Void {
             
             completion(mapResult(result))
         }
+    }
+}
+
+public extension FetchAdapter
+where Payload == Void,
+      NewFailure == Failure {
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        map: @escaping Map
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            map: map,
+            mapError: { $0 }
+        )
     }
 }
