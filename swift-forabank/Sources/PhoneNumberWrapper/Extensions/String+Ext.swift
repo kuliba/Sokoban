@@ -67,8 +67,8 @@ extension String {
     
     func changeCodeIfNeeded() -> String {
         
-        if self.hasPrefix("8") {
-            return "7" + self.dropFirst(1)
+        if self.hasPrefix("89") {
+            return "79" + self.dropFirst(2)
         }
         return self
     }

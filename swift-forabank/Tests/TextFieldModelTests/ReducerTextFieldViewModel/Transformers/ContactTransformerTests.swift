@@ -669,11 +669,11 @@ final class ContactTransformerTests: XCTestCase {
     func test_transform_shouldSubstituteStartingWithOnlyDigitOnNonEmptySubstitutions() throws {
         
         let state: TextState = .init("3$%^&HJK")
-        let transformer = makeSUT(substitutions: .armenian)
+        let transformer = makeSUT(substitutions: .russian)
         
         let result = transformer.transform(state)
         
-        try assertTextState(result, hasText: "~374", beforeCursor: "~374", afterCursor: "")
+        try assertTextState(result, hasText: "~3", beforeCursor: "~3", afterCursor: "")
     }
     
     func test_transform_shouldNotSubstituteMixStartingWithDigitOnEmptySubstitutions() throws {
@@ -689,7 +689,7 @@ final class ContactTransformerTests: XCTestCase {
     func test_transform_shouldNotSubstituteMixStartingWithDigitNonEmptySubstitutions() throws {
         
         let state: TextState = .init("3$-1-%^&HJK")
-        let transformer = makeSUT(substitutions: .armenian)
+        let transformer = makeSUT(substitutions: .russian)
         
         let result = transformer.transform(state)
         
@@ -699,17 +699,17 @@ final class ContactTransformerTests: XCTestCase {
     func test_transform_shouldSubstituteOnMatch() throws {
         
         let state: TextState = .init("3")
-        let transformer = makeSUT(substitutions: .armenian)
+        let transformer = makeSUT(substitutions: .russian)
         
         let result = transformer.transform(state)
         
-        try assertTextState(result, hasText: "~374", beforeCursor: "~374", afterCursor: "")
+        try assertTextState(result, hasText: "~3", beforeCursor: "~3", afterCursor: "")
     }
     
     func test_transform_shouldNotSubstituteOnPartialMatch() throws {
         
         let state: TextState = .init("37")
-        let transformer = makeSUT(substitutions: .armenian)
+        let transformer = makeSUT(substitutions: .russian)
         
         let result = transformer.transform(state)
         

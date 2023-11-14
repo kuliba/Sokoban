@@ -248,21 +248,9 @@ extension TextFieldFactory {
 
 extension Array where Element == CountryCodeSubstitution {
     
-    static let preview: Self = .armenian + .russian + .turkey
-    
-    static let armenian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-    ]
+    static let preview: Self = .russian
     
     static let russian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "9", to: "7 9"),
-    ]
-    
-    static let turkey: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-        .init(from: "9", to: "90"),
+        .init(from: "89", to: "79"),
     ]
 }
