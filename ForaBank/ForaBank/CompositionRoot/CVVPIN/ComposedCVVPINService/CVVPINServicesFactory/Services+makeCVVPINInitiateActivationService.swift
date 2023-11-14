@@ -15,10 +15,10 @@ extension Services {
     typealias ExtractSharedSecret = (String) throws -> Data
     
     static func makeCVVPINInitiateActivationService(
-        processGetCode: @escaping Services.ProcessGetCode,
-        processFormSessionKey: @escaping Services.ProcessFormSessionKey,
         extractSharedSecret: @escaping ExtractSharedSecret,
-        makeSecretRequestJSON: @escaping MakeSecretRequestJSON
+        makeSecretRequestJSON: @escaping MakeSecretRequestJSON,
+        processGetCode: @escaping Services.ProcessGetCode,
+        processFormSessionKey: @escaping Services.ProcessFormSessionKey
     ) -> CVVPINInitiateActivationService {
         
         // MARK: - Configure Sub-Services

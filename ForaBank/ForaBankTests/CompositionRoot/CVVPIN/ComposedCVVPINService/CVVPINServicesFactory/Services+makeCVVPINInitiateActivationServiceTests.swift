@@ -213,10 +213,10 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         let processFormSessionKeySpy = ProcessFormSessionKeySpy()
         
         let sut = Services.makeCVVPINInitiateActivationService(
-            processGetCode: processGetCodeSpy.process,
-            processFormSessionKey: processFormSessionKeySpy.process,
             extractSharedSecret: { _ in try extractSharedSecretResult.get() },
-            makeSecretRequestJSON: makeSecretRequestJSONResult.get
+            makeSecretRequestJSON: makeSecretRequestJSONResult.get,
+            processGetCode: processGetCodeSpy.process,
+            processFormSessionKey: processFormSessionKeySpy.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
