@@ -23,7 +23,7 @@ struct SelectView: View {
             case .idle:
                 IdleView(
                     viewModel: viewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
                 .padding(.vertical, 24)
@@ -32,7 +32,7 @@ struct SelectView: View {
                 SelectedOptionView(
                     icon: viewModel.icon,
                     viewModel: selectedOptionViewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
                 .padding(.vertical, 15)
@@ -42,7 +42,7 @@ struct SelectView: View {
                     icon: viewModel.icon,
                     viewModel: optionsListViewModel,
                     config: config,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     selected: viewModel.select
                 )
                 .padding(.vertical, 15)
@@ -59,7 +59,7 @@ extension SelectView {
     struct IdleView: View {
         
         let viewModel: SelectViewModel
-        let chevronButtonTapped: () -> Void
+        let tapAction: SelectViewModel.TapAction
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -84,7 +84,16 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: {
+                
+                switch tapAction {
+                case let .chevronButtonTapped(chevronButtonTapped):
+                    chevronButtonTapped()
+                    
+                case let .openBranch(openBranch):
+                    openBranch()
+                }
+            })
         }
     }
     
@@ -92,7 +101,7 @@ extension SelectView {
         
         let icon: Image
         let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
-        let chevronButtonTapped: () -> Void
+        let tapAction: SelectViewModel.TapAction
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -124,7 +133,16 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: {
+                
+                switch tapAction {
+                case let .chevronButtonTapped(chevronButtonTapped):
+                    chevronButtonTapped()
+                    
+                case let .openBranch(openBranch):
+                    openBranch()
+                }
+            })
         }
     }
     
@@ -133,7 +151,7 @@ extension SelectView {
         let icon: Image
         let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
         let config: SelectViewConfiguration
-        let chevronButtonTapped: () -> Void
+        let tapAction: SelectViewModel.TapAction
         let selected: (SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel.ID) -> Void
         
         var body: some View {
@@ -272,7 +290,11 @@ struct ParameterSelectView_Previews: PreviewProvider {
                     .init(id: "option1", name: "option1", iconName: ""),
                     .init(id: "option2", name: "option2", iconName: "")
                 ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))), icon: .init(""), chevronButtonTapped: {}, select: { id in }),
+                state: .idle(.init(iconName: "", title: "Выберите значение"))),
+                             icon: .init(""),
+                             tapAction: .openBranch({}),
+                             select: { id in }
+            ),
             config: .default
         )
     }

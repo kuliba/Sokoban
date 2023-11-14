@@ -15,19 +15,25 @@ public struct SelectViewModel {
     
     let parameter: Parameter
     let icon: Image
-    let chevronButtonTapped: () -> Void
+    let tapAction: TapAction
     let select: (OptionID) -> Void
     
     public init(
         parameter: SelectViewModel.Parameter,
         icon: Image,
-        chevronButtonTapped: @escaping () -> Void,
+        tapAction: TapAction,
         select: @escaping (SelectViewModel.OptionID) -> Void
     ) {
         self.parameter = parameter
         self.icon = icon
-        self.chevronButtonTapped = chevronButtonTapped
+        self.tapAction = tapAction
         self.select = select
+    }
+    
+    public enum TapAction {
+        
+        case chevronButtonTapped(() -> Void)
+        case openBranch(() -> Void)
     }
 }
 
