@@ -47,23 +47,18 @@ extension Services {
             store: rsaKeyPairStore
         )
         
-        // MARK: Ephemeral Stores & Loaders
-        
-#warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
-#warning("move into `loggingLoader` to hide stores")
-        let sessionKeyStore = InMemoryStore<SessionKey>()
-        let sessionIDStore = InMemoryStore<SessionID>()
+        // MARK: Loaders for Ephemeral Stores
         
         let otpEventIDLoader = loggingLoader(
             store: InMemoryStore<ChangePINService.OTPEventID>()
         )
         
         let sessionKeyLoader = loggingLoader(
-            store: sessionKeyStore
+            store: InMemoryStore<SessionKey>()
         )
         
         let sessionIDLoader = loggingLoader(
-            store: sessionIDStore
+            store: InMemoryStore<SessionID>()
         )
         
         // MARK: Configure Remote Services
@@ -311,32 +306,7 @@ extension Services {
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
-        
-        func makeSecretJSON(
-            otp: BindPublicKeyWithEventIDService.OTP,
-            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                do {
-                    let sessionKey = try result.get()
-                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp.otpValue,
-                        sessionKey: sessionKey
-                    )
-                    
-                    rsaKeyPairLoader.save(
-                        rsaKeyPair,
-                        validUntil: currentDate().addingTimeInterval(cvvPINActivationLifespan)
-                    ) {
-                        completion($0.map { _ in data })
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }
-        
+
         func persistRSAKeyPair(
             _ rsaKeyPair: RSADomain.KeyPair,
             completion: @escaping () -> Void
@@ -472,72 +442,6 @@ extension Services {
                     )))
                 }
             }
-        }
-        
-        // MARK: - FormSessionKey Adapters
-        
-        func makeSecretRequestJSON(
-            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
-        ) {
-            completion(.init {
-                
-                try cvvPINJSONMaker.makeSecretRequestJSON(
-                    publicKey: echdKeyPair.publicKey
-                )
-            })
-        }
-        
-        func makeSessionKey(
-            string: String,
-            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
-        ) {
-            completion(.init {
-                
-                try .init(
-                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
-                        from: string,
-                        using: echdKeyPair.privateKey
-                    )
-                )
-            })
-        }
-        
-        typealias FormSessionKeySuccess = FormSessionKeyService.Success
-        typealias FormSessionKeyCacheCompletion = (Swift.Result<Void, Error>) -> Void
-        
-        func cache(success: FormSessionKeySuccess) {
-            
-            let sessionIDPayload = (success.eventID, success.sessionTTL)
-            cacheSessionID(payload: sessionIDPayload) { _ in }
-            
-            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
-            cacheSessionKey(payload: sessionKeyPayload) { _ in }
-        }
-        
-        typealias FormSessionKeyCacheSessionIDPayload = (FormSessionKeySuccess.EventID, FormSessionKeySuccess.SessionTTL)
-        
-        func cacheSessionID(
-            payload: FormSessionKeyCacheSessionIDPayload,
-            completion: @escaping FormSessionKeyCacheCompletion
-        ) {
-            sessionIDLoader.save(
-                .init(sessionIDValue: payload.0.eventIDValue),
-                validUntil: currentDate() + .init(payload.1),
-                completion: completion
-            )
-        }
-        
-        typealias FormSessionKeyCacheSessionKeyPayload = (FormSessionKeyService.SessionKey, FormSessionKeySuccess.SessionTTL)
-        
-        func cacheSessionKey(
-            payload: FormSessionKeyCacheSessionKeyPayload,
-            completion: @escaping FormSessionKeyCacheCompletion
-        ) {
-            sessionKeyLoader.save(
-                .init(sessionKeyValue: payload.0.sessionKeyValue),
-                validUntil: currentDate() + .init(payload.1),
-                completion: completion
-            )
         }
         
         // MARK: - InitiateActivation Adapters
