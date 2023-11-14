@@ -62,6 +62,32 @@ class ContactsAgent: ContactsAgentProtocol {
                                   avatar: avatar(for: contact))
     }
     
+    func fetchContacts(_ contacts: [CNContact]) -> [AddressBookContact] {
+        
+        return contacts.flatMap { contact in
+            
+            contact
+                .phoneNumbers
+                .map(\.value)
+                .compactMap { $0.value(forKey: "digits") as? String }
+                .map{
+                    if $0.count == 10 {
+                        return phoneNumberFormatter.format("7\($0)")
+                    }
+                    return phoneNumberFormatter.format($0)
+                }
+                .map {
+                    .init(
+                        phone: $0,
+                        firstName: contact.givenName,
+                        middleName: contact.middleName,
+                        lastName: contact.familyName,
+                        avatar: avatar(for: contact)
+                    )
+                }
+        }
+    }
+    
     func fetchContactsList() throws -> [AddressBookContact] {
         
         var contacts = [CNContact]()
@@ -83,23 +109,7 @@ class ContactsAgent: ContactsAgentProtocol {
             contacts.append(contact)
         }
         
-        return contacts.flatMap { contact in
-            
-            contact
-                .phoneNumbers
-                .map(\.value)
-                .compactMap { $0.value(forKey: "digits") as? String }
-                .map(phoneNumberFormatter.format)
-                .map {
-                    .init(
-                        phone: $0,
-                        firstName: contact.givenName,
-                        middleName: contact.middleName,
-                        lastName: contact.familyName,
-                        avatar: avatar(for: contact)
-                    )
-                }
-        }
+        return fetchContacts(contacts)
     }
     
     private func avatar(for contact: CNContact) -> ImageData? {
