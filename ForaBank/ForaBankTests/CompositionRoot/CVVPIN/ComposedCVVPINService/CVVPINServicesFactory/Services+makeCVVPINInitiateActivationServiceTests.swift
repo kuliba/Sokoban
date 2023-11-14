@@ -94,7 +94,6 @@ private extension FormSessionKeyService.APIError {
 
 extension Services {
     
-    typealias CacheLog = (LoggerAgentLevel, String, StaticString, UInt) -> Void
     typealias MakeSecretRequestJSON = () throws -> Data
     typealias ExtractSharedSecret = (String) throws -> Data
     
@@ -102,29 +101,13 @@ extension Services {
         processGetCode: @escaping Services.ProcessGetCode,
         processFormSessionKey: @escaping Services.ProcessFormSessionKey,
         extractSharedSecret: @escaping ExtractSharedSecret,
-        makeSecretRequestJSON: @escaping MakeSecretRequestJSON,
-        cacheLog: @escaping CacheLog,
-        currentDate: @escaping () -> Date = Date.init,
-        ephemeralLifespan: TimeInterval
+        makeSecretRequestJSON: @escaping MakeSecretRequestJSON
     ) -> CVVPINInitiateActivationService {
-        
-        // MARK: Ephemeral Stores & Loaders
-        
-        let sessionCodeStore = InMemoryStore<SessionCode>()
-        
-        let sessionCodeLoader = loggingLoader(
-            store: sessionCodeStore
-        )
         
         // MARK: - Configure Sub-Services
         
-        let cachingGetCodeService = FetchDecorator(
-            processGetCode,
-            handleResult: cacheSessionCode
-        )
-        
         let adaptedGetCodeService = FetchAdapter(
-            cachingGetCodeService.fetch(completion:),
+            processGetCode,
             map: CVVPINInitiateActivationService.GetCodeSuccess.init,
             mapError: CVVPINInitiateActivationService.GetCodeResponseError.init
         )
@@ -148,45 +131,6 @@ extension Services {
                 adaptedFormSessionKeyService.fetch(.init(codeValue: code.codeValue), completion: completion)
             }
         )
-        
-        // MARK: - Helpers
-        
-        func loggingLoader<T>(
-            store: any Store<T>
-        ) -> any Loader<T> {
-            
-            LoggingLoaderDecorator(
-                decoratee: GenericLoaderOf(
-                    store: store,
-                    currentDate: currentDate
-                ),
-                log: cacheLog
-            )
-        }
-        
-        // MARK: - GetProcessingSessionCode Adapters
-        
-        func cacheSessionCode(
-            from result: Services.ProcessGetCodeResult,
-            completion: @escaping () -> Void
-        ) {
-            switch result {
-            case let .failure(_):
-#warning("error not handled!!")
-                completion()
-                
-            case let .success(success):
-                
-                // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-                let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
-                
-                sessionCodeLoader.save(
-                    .init(sessionCodeValue: success.code),
-                    validUntil: validUntil,
-                    completion: { _ in completion() }
-                )
-            }
-        }
         
         // MARK: - FormSessionKey Adapters
         
@@ -253,24 +197,46 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         })
     }
     
-#warning("add mapResponse tests")
+    func test_activate_shouldDeliverErrorOnProcessGetCodeMapResponseInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, processGetCodeSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.invalid(statusCode: statusCode, data: invalidData))], on: {
+            
+            processGetCodeSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessGetCodeMapResponseNetworkFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, processGetCodeSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            processGetCodeSpy.complete(with: .failure(.mapResponse(.network)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessGetCodeMapResponseServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Remote Failure"
+        let (sut, processGetCodeSpy, _) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            processGetCodeSpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
+        })
+    }
     
     func test_activate_shouldDeliverErrorOnMakeSecretRequestJSONFailure() {
         
         let (sut, processGetCodeSpy, _) = makeSUT(
             makeSecretRequestJSONResult: .failure(anyError())
-        )
-        
-        expect(sut, toDeliver: [.failure(.serviceFailure)], on: {
-            
-            processGetCodeSpy.complete(with: anySuccess())
-        })
-    }
-    
-    func test_activate_shouldDeliverError_____Failure() {
-        
-        let (sut, processGetCodeSpy, _) = makeSUT(
-            ephemeralLifespan: 0
         )
         
         expect(sut, toDeliver: [.failure(.serviceFailure)], on: {
@@ -286,8 +252,55 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         expect(sut, toDeliver: [.failure(.network)], on: {
             
             processGetCodeSpy.complete(with: anySuccess())
-//            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
             processFormSessionKeySpy.complete(with: .failure(.createRequest(anyError())))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessFormSessionKeyPerformRequestFailure() {
+        
+        let (sut, processGetCodeSpy, processFormSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            processGetCodeSpy.complete(with: anySuccess())
+            processFormSessionKeySpy.complete(with: .failure(.performRequest(anyError())))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessFormSessionKeyMapResponseInvalidFailure() {
+        
+        let statusCode = 500
+        let invalidData = anyData()
+        let (sut, processGetCodeSpy, processFormSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.invalid(statusCode: statusCode, data: invalidData))], on: {
+            
+            processGetCodeSpy.complete(with: anySuccess())
+            processFormSessionKeySpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessFormSessionKeyMapResponseNetworkFailure() {
+        
+        let (sut, processGetCodeSpy, processFormSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.network)], on: {
+            
+            processGetCodeSpy.complete(with: anySuccess())
+            processFormSessionKeySpy.complete(with: .failure(.mapResponse(.network)))
+        })
+    }
+    
+    func test_activate_shouldDeliverErrorOnProcessFormSessionKeyMapResponseServerFailure() {
+        
+        let statusCode = 500
+        let errorMessage = "Remote Failure"
+        let (sut, processGetCodeSpy, processFormSessionKeySpy) = makeSUT()
+        
+        expect(sut, toDeliver: [.failure(.server(statusCode: statusCode, errorMessage: errorMessage))], on: {
+            
+            processGetCodeSpy.complete(with: anySuccess())
+            processFormSessionKeySpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
         })
     }
     
@@ -300,12 +313,9 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
         expect(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
             processGetCodeSpy.complete(with: anySuccess())
-//            _ = XCTWaiter().wait(for: [.init()], timeout: 0.02)
             processFormSessionKeySpy.complete(with: anySuccess())
         })
     }
-    
-#warning("add more processFormSessionKeySpy failure tests")
     
     func test_activate_shouldDeliverValueOnSuccess() {
         
@@ -334,7 +344,6 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
                     code: codeValue,
                     phone: phoneValue
                 )))
-                _ = XCTWaiter().wait(for: [.init()], timeout: 0.03)
                 processFormSessionKeySpy.complete(with: .success(.init(
                     publicServerSessionKey: UUID().uuidString,
                     eventID: eventIDValue,
@@ -353,8 +362,6 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
     private func makeSUT(
         extractSharedSecretResult: Result<Data, Error> = .success(anyData()),
         makeSecretRequestJSONResult: Result<Data, Error> = .success(anyData()),
-        currentDate: @escaping () -> Date = Date.init,
-        ephemeralLifespan: TimeInterval = 15,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -369,15 +376,12 @@ final class Services_makeCVVPINInitiateActivationServiceTests: XCTestCase {
             processGetCode: processGetCodeSpy.process,
             processFormSessionKey: processFormSessionKeySpy.process,
             extractSharedSecret: { _ in try extractSharedSecretResult.get() },
-            makeSecretRequestJSON: makeSecretRequestJSONResult.get,
-            cacheLog: { _, message ,_,_ in print(message) },
-            currentDate: currentDate,
-            ephemeralLifespan: ephemeralLifespan
+            makeSecretRequestJSON: makeSecretRequestJSONResult.get
         )
         
-        //        trackForMemoryLeaks(sut, file: file, line: line)
-        //        trackForMemoryLeaks(processGetCodeSpy, file: file, line: line)
-        //        trackForMemoryLeaks(processFormSessionKeySpy, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(processGetCodeSpy, file: file, line: line)
+        trackForMemoryLeaks(processFormSessionKeySpy, file: file, line: line)
         
         return (sut, processGetCodeSpy, processFormSessionKeySpy)
     }
@@ -481,31 +485,31 @@ private func anySuccess(
     .success(.init(code: codeValue, phone: phoneValue))
 }
 
-private func anySuccess(
-    codeValue: String = UUID().uuidString,
-    phoneValue: String = UUID().uuidString
-) -> CVVPINInitiateActivationService.GetCodeResult {
-    
-    .success(.init(
-        code: .init(codeValue: codeValue),
-        phone: .init(phoneValue: phoneValue)
-    ))
-}
-
-private func anySuccess(
-    sessionKeyValue: Data = anyData(),
-    eventIDValue: String = UUID().uuidString,
-    sessionTTL: Int = 23
-) -> CVVPINInitiateActivationService.FormSessionKeyResult {
-    
-    .success(
-        .init(
-            sessionKey: .init(sessionKeyValue: sessionKeyValue),
-            eventID: .init(eventIDValue: eventIDValue),
-            sessionTTL: sessionTTL
-        )
-    )
-}
+//private func anySuccess(
+//    codeValue: String = UUID().uuidString,
+//    phoneValue: String = UUID().uuidString
+//) -> CVVPINInitiateActivationService.GetCodeResult {
+//
+//    .success(.init(
+//        code: .init(codeValue: codeValue),
+//        phone: .init(phoneValue: phoneValue)
+//    ))
+//}
+//
+//private func anySuccess(
+//    sessionKeyValue: Data = anyData(),
+//    eventIDValue: String = UUID().uuidString,
+//    sessionTTL: Int = 23
+//) -> CVVPINInitiateActivationService.FormSessionKeyResult {
+//
+//    .success(
+//        .init(
+//            sessionKey: .init(sessionKeyValue: sessionKeyValue),
+//            eventID: .init(eventIDValue: eventIDValue),
+//            sessionTTL: sessionTTL
+//        )
+//    )
+//}
 
 private func anySuccess(
     publicServerSessionKey: String = UUID().uuidString,
