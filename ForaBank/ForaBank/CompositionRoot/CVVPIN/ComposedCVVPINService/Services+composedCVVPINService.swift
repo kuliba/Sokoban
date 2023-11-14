@@ -50,6 +50,7 @@ extension Services {
         // MARK: Ephemeral Stores & Loaders
         
 #warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
+        #warning("move into `loggingLoader` to hide stores")
         let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
         let sessionCodeStore = InMemoryStore<SessionCode>()
         let sessionKeyStore = InMemoryStore<SessionKey>()
@@ -79,7 +80,7 @@ extension Services {
         )
         
         // MARK: - ECHD Key Pair
-        
+        #warning("hide echdKeyPair! expose only endpoints that use it")
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
         // MARK: Configure CVV-PIN Activation Service
@@ -114,35 +115,18 @@ extension Services {
             bindPublicKeyWithEventID: decoratedBindPublicKeyService.fetch
         )
         
-        // MARK: - alt
+        // MARK: - Configure InitiateActivation
         
-        let adaptedGetCodeService = FetchAdapter(
-            getCodeService.fetch,
-            map: CVVPINInitiateActivationService.GetCodeSuccess.init,
-            mapError: CVVPINInitiateActivationService.GetCodeResponseError.init
-        )
-        
-        let adaptedFormSessionKeyService = FetchAdapter(
-            fetch: formSessionKeyService.fetch,
-            map: CVVPINInitiateActivationService.FormSessionKeySuccess.init,
-            mapError: CVVPINInitiateActivationService.FormSessionKeyError.init
-        )
-        
-        let initiateActivationService = CVVPINInitiateActivationService(
-            getCode: adaptedGetCodeService.fetch,
-            formSessionKey: { code, completion in
-                
-                adaptedFormSessionKeyService.fetch(.init(codeValue: code.codeValue), completion: completion)
-            }
+        let initiateActivationService = makeCVVPINInitiateActivationService(
+            extractSharedSecret: extractSharedSecret,
+            makeSecretRequestJSON: makeSecretRequestJSON,
+            processGetCode: getCodeRemoteService.process,
+            processFormSessionKey: formSessionKeyRemoteService.process
         )
         
         let decoratedInitiateActivationService = FetchDecorator(
             initiateActivationService.activate(completion:),
-            handleResult: { result, completion in
-                
-#warning("store result")
-                completion()
-            }
+            handleResult: handleActivateResult
         )
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
@@ -570,6 +554,50 @@ extension Services {
                 validUntil: validUntil,
                 completion: completion
             )
+        }
+        
+        // MARK: - InitiateActivation Adapters
+        
+        func extractSharedSecret(from string: String) throws -> Data {
+            
+            try cvvPINCrypto.extractSharedSecret(
+                from: string,
+                using: echdKeyPair.privateKey
+            )
+        }
+        
+        func makeSecretRequestJSON() throws -> Data {
+            
+            try cvvPINJSONMaker.makeSecretRequestJSON(
+                publicKey: echdKeyPair.publicKey
+            )
+        }
+        
+        func handleActivateResult(
+            result: CVVPINInitiateActivationService.ActivateResult,
+            completion: @escaping () -> Void
+        ) {
+            switch result {
+            case let .failure(error):
+#warning("error is not handled")
+                
+            case let .success(success):
+                let validUntil = currentDate() + .init(success.sessionTTL)
+                
+                sessionIDLoader.save(
+                    .init(sessionIDValue: success.eventID.eventIDValue),
+                    validUntil: validUntil
+                ) { _ in // ignoring result
+                    
+                    sessionKeyLoader.save(
+                        .init(sessionKeyValue: success.sessionKey.sessionKeyValue),
+                        validUntil: validUntil
+                    ) { _ in // ignoring result
+                        
+                        completion()
+                    }
+                }
+            }
         }
         
         // MARK: - ShowCVV Adapters
