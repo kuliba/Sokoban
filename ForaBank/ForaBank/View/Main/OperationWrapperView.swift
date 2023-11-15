@@ -14,7 +14,7 @@ final class OperationWrapperViewModel: ObservableObject {
     
     @ObservedObject var model: OperationStateViewModel
     @ObservedObject var placesViewModel: PlacesListViewModel
-    @Published var isLinkActive: Bool = true
+    @Published var isLinkActive: Bool = false
     
     private var bindings = Set<AnyCancellable>()
     
