@@ -111,8 +111,7 @@ extension Model {
             switch parameter.id {
             case Payments.Parameter.Identifier.sfpPhone.rawValue:
                 let filterredValue = String(parameterValue.unicodeScalars.filter(CharacterSet.decimalDigits.contains))
-                let updatedValue = String(filterredValue.dropFirst(1))
-                additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: updatedValue))
+                additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: filterredValue))
                 
             default:
                 additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
