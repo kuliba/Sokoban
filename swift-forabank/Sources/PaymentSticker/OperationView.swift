@@ -15,19 +15,22 @@ public struct ConfigurationOperationView {
     let selectViewConfig: SelectViewConfiguration
     let productViewConfig: ProductView.Appearance
     let inputViewConfig: InputView.InputConfiguration
+    let amountViewConfig: AmountViewConfiguration
     
     public init(
         tipViewConfig: TipViewConfiguration,
         stickerViewConfig: StickerViewConfiguration,
         selectViewConfig: SelectViewConfiguration,
         productViewConfig: ProductView.Appearance,
-        inputViewConfig: InputView.InputConfiguration
+        inputViewConfig: InputView.InputConfiguration,
+        amountViewConfig: AmountViewConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
         self.selectViewConfig = selectViewConfig
         self.productViewConfig = productViewConfig
         self.inputViewConfig = inputViewConfig
+        self.amountViewConfig = amountViewConfig
     }
 }
 
