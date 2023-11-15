@@ -34,20 +34,17 @@ public struct ConfigurationOperationView {
     }
 }
 
-public struct OperationView<BranchesView: View>: View {
+public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
     let configuration: ConfigurationOperationView
-    let branchesView: BranchesView
     
     public init(
         model: OperationStateViewModel,
-        configuration: ConfigurationOperationView,
-        branchesView: BranchesView
+        configuration: ConfigurationOperationView
     ) {
         self.model = model
         self.configuration = configuration
-        self.branchesView = branchesView
     }
     
     public var body: some View {
@@ -72,9 +69,6 @@ public struct OperationView<BranchesView: View>: View {
                     print("details")
                 }
             }
-        case .branches:
-            
-            branchesView
         }
     }
 }
