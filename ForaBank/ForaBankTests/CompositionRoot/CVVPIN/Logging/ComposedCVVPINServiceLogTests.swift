@@ -221,7 +221,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         activateResult: CVVPINActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
-        confirmActivationResult: CVVPINConfirmResult = .success(()),
+        confirmActivationResult: BindPublicKeyWithEventIDService.Result = .success(()),
         getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
@@ -261,8 +261,15 @@ private extension ComposedCVVPINService {
     }
     
     func confirmActivation(
-        completion: @escaping CVVPINFunctionalityActivationService.ConfirmCompletion
+        completion: @escaping BindPublicKeyWithEventIDService.Completion
     ) {
         confirmActivation(anyOTP(), completion)
     }
+}
+
+private func anyOTP(
+    otpValue: String = UUID().uuidString
+) -> BindPublicKeyWithEventIDService.OTP {
+    
+    .init(otpValue: otpValue)
 }

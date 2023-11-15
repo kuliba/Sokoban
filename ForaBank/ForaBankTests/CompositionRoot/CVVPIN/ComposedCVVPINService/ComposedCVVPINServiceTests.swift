@@ -106,10 +106,19 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         expectConfirmWith(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)))
     }
     
-    func test_confirmWith_shouldDeliverServiceErrorOnConfirmServiceFailure() {
+    func test_confirmWith_shouldDeliverServiceErrorOnConfirmMakeJSONFailure() {
         
         let sut = makeSUT(
-            confirmActivationResult: .failure(.serviceFailure)
+            confirmActivationResult: .failure(.serviceError(.makeJSONFailure))
+        )
+        
+        expectConfirmWith(sut, toDeliver: .failure(.serviceFailure))
+    }
+    
+    func test_confirmWith_shouldDeliverServiceErrorOnConfirmMissingEventIDFailure() {
+        
+        let sut = makeSUT(
+            confirmActivationResult: .failure(.serviceError(.missingEventID))
         )
         
         expectConfirmWith(sut, toDeliver: .failure(.serviceFailure))
@@ -403,7 +412,7 @@ final class ComposedCVVPINServiceTests: XCTestCase {
         activateResult: CVVPINActivateResult = anySuccess(),
         changePINResult: ChangePINResult = anySuccess(),
         checkActivationResult: Result<Void, Error> = .success(()),
-        confirmActivationResult: CVVPINConfirmResult = .success(()),
+        confirmActivationResult: BindPublicKeyWithEventIDService.Result = .success(()),
         getPINConfirmationCodeResult: GetPINConfirmationCodeResult = anySuccess(),
         showCVVResult: ShowCVVService.Result = anySuccess(),
         file: StaticString = #file,
