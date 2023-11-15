@@ -376,6 +376,11 @@ extension ProductView {
             
             return ""
         }
+        
+        func resetToFront() {
+            
+            cardInfo.state = .showFront
+        }
     }
 }
 
@@ -711,7 +716,11 @@ private extension View {
 
 struct ProductView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
+    
+    init(viewModel: ViewModel) {
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         
