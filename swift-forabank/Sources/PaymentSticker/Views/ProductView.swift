@@ -32,7 +32,7 @@ public struct ProductView: View {
                 )
             }
         }
-        .background(background())
+        .background(appearance.background.color)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
@@ -49,10 +49,16 @@ public struct ProductView: View {
                     
                     VStack(spacing: 8) {
                      
-                        Text(product.footer.description)
-                            .font(optionConfig.numberFont)
-                            .foregroundColor(optionConfig.numberColor)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack {
+                            
+                            Color.clear
+                                .frame(width: 20, height: 20, alignment: .center)
+                            
+                            Text(product.footer.description)
+                                .font(optionConfig.numberFont)
+                                .foregroundColor(optionConfig.numberColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                      
                         VStack(spacing: 4) {
                             
@@ -72,7 +78,7 @@ public struct ProductView: View {
                         }
                     }
                     .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
-                    .background(Color.gray.opacity(0.4))
+                    .background(background(product))
                     .frame(width: 112, height: 71)
                     .cornerRadius(8)
                 }
@@ -111,7 +117,7 @@ public struct ProductView: View {
             }
         }
         .frame(width: 112, height: 72)
-        .background(background())
+        .background(background(product))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {
             
@@ -124,9 +130,12 @@ public struct ProductView: View {
         
         HStack(spacing: 12) {
             
-            Image(productViewModel.main.cardLogo)
-                .resizable()
-                .frame(width: 32, height: 22, alignment: .center)
+            if let cardLogo = productViewModel.main.cardLogo.uiImage {
+                
+                Image(uiImage: cardLogo)
+                    .resizable()
+                    .frame(width: 32, height: 32, alignment: .center)
+            }
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -155,9 +164,9 @@ public struct ProductView: View {
             
             HStack(alignment: .center, spacing: 8) {
                 
-                if let imageName = viewModel.main.paymentSystem {
+                if let paymentSystemImage = viewModel.main.paymentSystem?.uiImage {
                     
-                    Image(imageName)
+                    Image(uiImage: paymentSystemImage)
                 }
                 
                 Text(viewModel.main.name)
@@ -183,17 +192,19 @@ public struct ProductView: View {
     }
     
     @ViewBuilder
-    private func background() -> some View {
+    private func background(
+        _ product: ProductViewModel
+    ) -> some View {
         
-        if let backgroundImage = appearance.background.image {
+        if let backgroundUIImage = product.main.backgroundImage?.uiImage {
             
-            backgroundImage
+            Image(uiImage: backgroundUIImage)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
         } else {
             
-            appearance.background.color
+            product.main.backgroundColor
         }
     }
 }
@@ -345,10 +356,12 @@ struct ProductView_Previews: PreviewProvider {
                 state: .selected(.init(
                     header: .init(title: "Счет списания"),
                     main: .init(
-                        cardLogo: .init(""),
+                        cardLogo: .empty,
                         paymentSystem: nil,
                         name: "Gold",
-                        balance: "625 193 Р"
+                        balance: "625 193 Р",
+                        backgroundImage: .empty,
+                        backgroundColor: .red
                     ),
                     footer: .init(description: "description")
                 )),
