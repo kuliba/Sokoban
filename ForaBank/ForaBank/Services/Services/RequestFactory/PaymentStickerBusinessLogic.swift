@@ -99,37 +99,44 @@ extension BusinessLogic {
                     parameter: parameter
                 )
                  
-                if id == "typeDeliveryOffice" {
-                 
-                    dictionaryService.process(.stickerOrderDeliveryOffice) { result in
-                        
-                        switch result {
-                        case let .success(dictionaryResponse):
-                            completion(.success(self.dictionaryStickerReduce(
-                                operation,
-                                dictionaryResponse
-                            )))
+                switch parameter.id {
+                case .transferTypeSticker:
+                    
+                    if id == "typeDeliveryOffice" {
+                     
+                        dictionaryService.process(.stickerOrderDeliveryOffice) { result in
                             
-                        case let .failure(error):
-                           return
+                            switch result {
+                            case let .success(dictionaryResponse):
+                                completion(.success(self.dictionaryStickerReduce(
+                                    operation,
+                                    dictionaryResponse
+                                )))
+                                
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
+                        }
+                        
+                    } else {
+                        
+                        dictionaryService.process(.stickerOrderDeliveryCourier) { result in
+                            
+                            switch result {
+                            case let .success(dictionaryResponse):
+                                completion(.success(self.dictionaryStickerReduce(
+                                    operation,
+                                    dictionaryResponse
+                                )))
+                                
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
                         }
                     }
                     
-                } else {
-                    
-                    dictionaryService.process(.stickerOrderDeliveryCourier) { result in
-                        
-                        switch result {
-                        case let .success(dictionaryResponse):
-                            completion(.success(self.dictionaryStickerReduce(
-                                operation,
-                                dictionaryResponse
-                            )))
-                            
-                        case let .failure(error):
-                           return
-                        }
-                    }
+                default:
+                    break
                 }
                 
                 return .success(.operation(operation))
@@ -215,7 +222,7 @@ extension BusinessLogic {
                                             completion(.success(state))
                                             
                                         case let .failure(error):
-                                            return
+                                            completion(.failure(error))
                                         }
                                     }
                                     
@@ -224,13 +231,13 @@ extension BusinessLogic {
                             default:
                                 break
                             }
-                        case .result(let operationResult):
+                        case .result:
                             return
                         case .branches:
                             return
                         }
                     case let .failure(error):
-                        return
+                        completion(.failure(error))
                     }
                 }
                 
@@ -253,7 +260,7 @@ extension BusinessLogic {
                             ))))
 
                         case let .failure(error):
-                            return
+                            completion(.failure(error))
                         }
                     }
                     return .success(.operation(operation))
@@ -278,16 +285,24 @@ extension BusinessLogic {
                         switch result {
                         case .success:
                             
-                            completion(.success(.operation(operation.updateOperation(
-                                operation: operation,
+                            var newOperation = operation
+                            newOperation = newOperation.updateOperation(
+                                operation: newOperation,
                                 newParameter: .input(.init(
                                     value: "",
                                     title: "Введите код из смс"
                                 ))
-                            ))))
+                            )
+                            
+                            newOperation = newOperation.updateOperation(
+                                operation: newOperation,
+                                newParameter: .amount(.init(value: "790 ₽"))
+                            )
+                            
+                            completion(.success(.operation(newOperation)))
 
                         case let .failure(error):
-                            return
+                            completion(.failure(error))
                         }
                     }
                 
@@ -296,9 +311,6 @@ extension BusinessLogic {
             
         case let .product(productEvents):
             return reduceProductEvent(productEvents, operation)
-            
-        default:
-            return .success(.operation(operation))
         }
     }
     
@@ -535,7 +547,7 @@ extension BusinessLogic {
                 }
                 
             case let .failure(error):
-                return
+                completion(.failure(error))
             }
         }
     }
