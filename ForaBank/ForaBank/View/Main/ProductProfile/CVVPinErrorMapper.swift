@@ -68,7 +68,7 @@ extension String {
     
     static let simpleCode: Self = "Введенный PIN-код слишком простой.\nНеобходимо изменить его для\nповышения уровня безопасности"
     
-    static let cvvNotReceived: Self = "Не удалось получить CVV."
+    static let cvvNotReceived: Self = "Не удалось получить CVV"
 
     static let tryLater: Self = "Попробуйте позже."
 }
