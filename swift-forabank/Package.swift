@@ -456,6 +456,9 @@ private extension Target {
         name: .sberQRTests,
         dependencies: [
             .sberQR,
+        ],
+        resources: [
+            .copy("Resources/QRPaymentType.json"),
         ]
     )
     
