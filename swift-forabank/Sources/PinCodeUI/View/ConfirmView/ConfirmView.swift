@@ -57,16 +57,16 @@ public struct ConfirmView: View {
         }
         .alert(isPresented: $viewModel.showAlert) {
             if let buttonTitle = viewModel.buttonTitle {
-                .init(
+                Alert(
                     title: Text("Ошибка"),
                     message: Text(viewModel.alertMessage),
-                    primaryButton: .default(Text("Отмена")),
-                    secondaryButton: .default(Text(buttonTitle), action: {
+                    primaryButton: Alert.Button.default(Text("Отмена")),
+                    secondaryButton: Alert.Button.default(Text(buttonTitle), action: {
                         viewModel.restartChangePin()
                     })
                 )
             } else {
-                .init(
+                Alert(
                     title: Text("Ошибка"),
                     message: Text(viewModel.alertMessage)
                 )
