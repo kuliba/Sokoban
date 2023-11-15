@@ -14,9 +14,9 @@ public extension Operation.Parameter {
         public let allProducts: [Option]
         
         public init(
-            state: Operation.Parameter.Product.State,
-            selectedProduct: Operation.Parameter.Product.Option,
-            allProducts: [Operation.Parameter.Product.Option]
+            state: State,
+            selectedProduct: Option,
+            allProducts: [Option]
         ) {
             self.state = state
             self.selectedProduct = selectedProduct
@@ -25,27 +25,33 @@ public extension Operation.Parameter {
         
         public struct Option: Hashable {
             
-            let paymentSystem: String
-            let background: String
             let title: String
             let nameProduct: String
             let balance: String
             let description: String
+            let cardImage: ImageData
+            let paymentSystem: ImageData
+            let backgroundImage: ImageData?
+            let backgroundColor: String
             
             public init(
-                paymentSystem: String,
-                background: String,
                 title: String,
                 nameProduct: String,
                 balance: String,
-                description: String
+                description: String,
+                cardImage: ImageData,
+                paymentSystem: ImageData,
+                backgroundImage: ImageData?,
+                backgroundColor: String
             ) {
-                self.paymentSystem = paymentSystem
-                self.background = background
                 self.title = title
                 self.nameProduct = nameProduct
                 self.balance = balance
                 self.description = description
+                self.cardImage = cardImage
+                self.paymentSystem = paymentSystem
+                self.backgroundImage = backgroundImage
+                self.backgroundColor = backgroundColor
             }
         }
         
@@ -66,9 +72,8 @@ extension Operation.Parameter.Product {
             return .selected(.mapper(self.selectedProduct))
         case .list:
             return .list(
-                .mapper(
-                    self.selectedProduct),
-                    self.allProducts.map({ ProductViewModel.mapper($0) })
+                .mapper(self.selectedProduct),
+                self.allProducts.map({ ProductViewModel.mapper($0) })
             )
         }
     }

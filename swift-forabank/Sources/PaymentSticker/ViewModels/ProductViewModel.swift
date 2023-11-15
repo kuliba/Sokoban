@@ -45,10 +45,12 @@ extension ProductViewModel {
     
     public struct MainViewModel: Hashable {
     
-        let cardLogo: String
-        let paymentSystem: String?
+        let cardLogo: ImageData
+        let paymentSystem: ImageData?
         let name: String
         let balance: String
+        let backgroundImage: ImageData?
+        let backgroundColor: Color
     }
     
     public struct HeaderViewModel: Hashable {
@@ -68,10 +70,12 @@ extension ProductViewModel {
         .init(
             header: .init(title: product.title),
             main: .init(
-                cardLogo: .init(""),
-                paymentSystem: nil,
+                cardLogo: product.cardImage,
+                paymentSystem: product.paymentSystem,
                 name: product.nameProduct,
-                balance: product.balance
+                balance: product.balance,
+                backgroundImage: product.backgroundImage,
+                backgroundColor: Color(product.backgroundColor)
             ),
             footer: .init(description: product.description)
         )
