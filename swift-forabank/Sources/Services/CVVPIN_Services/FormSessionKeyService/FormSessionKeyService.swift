@@ -12,10 +12,6 @@ import Foundation
 ///
 public final class FormSessionKeyService {
     
-    public typealias LoadCodeResult = Swift.Result<Code, Swift.Error>
-    public typealias LoadCodeCompletion = (LoadCodeResult) -> Void
-    public typealias LoadCode = (@escaping LoadCodeCompletion) -> Void
-    
     public typealias SecretRequestJSONResult = Swift.Result<Data, Swift.Error>
     public typealias SecretRequestJSONCompletion = (SecretRequestJSONResult) -> Void
     public typealias MakeSecretRequestJSON = (@escaping SecretRequestJSONCompletion) -> Void
@@ -28,18 +24,15 @@ public final class FormSessionKeyService {
     public typealias MakeSessionKeyCompletion = (MakeSessionKeyResult) -> Void
     public typealias MakeSessionKey = (String, @escaping MakeSessionKeyCompletion) -> Void
     
-    private let loadCode: LoadCode
     private let makeSecretRequestJSON: MakeSecretRequestJSON
     private let process: Process
     private let makeSessionKey: MakeSessionKey
     
     public init(
-        loadCode: @escaping LoadCode,
         makeSecretRequestJSON: @escaping MakeSecretRequestJSON,
         process: @escaping Process,
         makeSessionKey: @escaping MakeSessionKey
     ) {
-        self.loadCode = loadCode
         self.makeSecretRequestJSON = makeSecretRequestJSON
         self.process = process
         self.makeSessionKey = makeSessionKey
@@ -52,9 +45,10 @@ public extension FormSessionKeyService {
     typealias Completion = (Result) -> Void
     
     func formSessionKey(
+        _ code: Code,
         completion: @escaping Completion
     ) {
-        loadCode(completion)
+        makeSecretRequestJSON(code, completion)
     }
     
     enum Error: Swift.Error {
@@ -164,23 +158,6 @@ extension FormSessionKeyService {
 }
 
 private extension FormSessionKeyService {
-    
-    func loadCode(
-        _ completion: @escaping Completion
-    ) {
-        loadCode { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                completion(.failure(.serviceError(.missingCode)))
-                
-            case let .success(code):
-                makeSecretRequestJSON(code, completion)
-            }
-        }
-    }
     
     func makeSecretRequestJSON(
         _ code: Code,

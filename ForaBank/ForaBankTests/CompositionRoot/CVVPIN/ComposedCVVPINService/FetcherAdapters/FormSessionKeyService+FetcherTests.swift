@@ -14,15 +14,6 @@ fileprivate typealias SUT = FormSessionKeyService
 
 final class FormSessionKeyService_FetcherTests: XCTestCase {
     
-    func test_fetch_shouldDeliverErrorOnLoadCodeFailure() {
-        
-        let sut = makeSUT(
-            loadCodeResult: .failure(anyError())
-        )
-        
-        expect(sut, toDeliver: .failure(.serviceError(.missingCode)))
-    }
-    
     func test_fetch_shouldDeliverErrorOnMakeSecretRequestJSONFailure() {
         
         let sut = makeSUT(
@@ -98,7 +89,6 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        loadCodeResult: SUT.LoadCodeResult = anySuccess(),
         makeSecretRequestJSONResult: SUT.SecretRequestJSONResult = anySuccess(),
         processResult: SUT.ProcessResult = anySuccess(),
         makeSessionKeyResult: SUT.MakeSessionKeyResult = anySuccess(),
@@ -107,10 +97,6 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     ) -> SUT {
         
         let sut = SUT(
-            loadCode: { completion in
-                
-                completion(loadCodeResult)
-            },
             makeSecretRequestJSON: { completion in
                 
                 completion(makeSecretRequestJSONResult)
@@ -132,6 +118,7 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     
     private func expect(
         _ sut: SUT,
+        with code: SUT.Code = anyCode(),
         toDeliver expectedResult: SUT.FetchResult,
         on action: @escaping () -> Void = {},
         file: StaticString = #file,
@@ -139,7 +126,7 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.fetch { receivedResult in
+        sut.fetch(code) { receivedResult in
             
             switch (expectedResult, receivedResult) {
             case let (
@@ -199,13 +186,6 @@ final class FormSessionKeyService_FetcherTests: XCTestCase {
 }
 
 private func anySuccess(
-    codeValue: String = UUID().uuidString
-) -> SUT.LoadCodeResult {
-    
-    .success(.init(codeValue: codeValue))
-}
-
-private func anySuccess(
     data: Data = anyData()
 ) -> SUT.SecretRequestJSONResult {
     
@@ -250,4 +230,11 @@ private extension FormSessionKeyService.Success {
         public let sessionTTL: Int
 
     }
+}
+
+private func anyCode(
+    codeValue: String = UUID().uuidString
+) -> FormSessionKeyService.Code {
+    
+    .init(codeValue: codeValue)
 }

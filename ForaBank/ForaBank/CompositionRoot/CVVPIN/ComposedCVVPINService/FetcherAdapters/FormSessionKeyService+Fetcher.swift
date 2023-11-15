@@ -11,13 +11,13 @@ import Foundation
 
 extension FormSessionKeyService: Fetcher {
 
-    public typealias Payload = Void
+    public typealias Payload = Code
     public typealias Failure = Error
     
     public func fetch(
         _ payload: Payload,
         completion: @escaping FetchCompletion
     ) {
-        formSessionKey(completion: completion)
+        formSessionKey(payload, completion: completion)
     }
 }

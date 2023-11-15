@@ -128,13 +128,23 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         })
     }
     
-    func test_confirmWith_shouldDeliverServiceFailureOnServiceFailure() {
+    func test_confirmWith_shouldDeliverServiceFailureOnServiceMakeJSONFailure() {
         
         let (sut, _, confirmSpy, _,_,_,_) = makeSUT()
         
         expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
             
-            confirmSpy.complete(with: .failure(.serviceFailure))
+            confirmSpy.complete(with: .failure(.serviceError(.makeJSONFailure)))
+        })
+    }
+    
+    func test_confirmWith_shouldDeliverServiceFailureOnServiceMissingEventIDFailure() {
+        
+        let (sut, _, confirmSpy, _,_,_,_) = makeSUT()
+        
+        expectConfirm(sut, toDeliver: [.failure(.serviceFailure)], on: {
+            
+            confirmSpy.complete(with: .failure(.serviceError(.missingEventID)))
         })
     }
     
@@ -500,8 +510,8 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = ComposedCVVPINService
-    private typealias ActivateSpy = Spy<Void, CVVPINFunctionalityActivationService.ActivateSuccess, CVVPINFunctionalityActivationService.ActivateError>
-    private typealias ConfirmSpy = Spy<Void, Void, CVVPINFunctionalityActivationService.ConfirmError>
+    private typealias ActivateSpy = Spy<Void, CVVPINInitiateActivationService.ActivateSuccess, CVVPINInitiateActivationService.ActivateError>
+    private typealias ConfirmSpy = Spy<Void, Void, BindPublicKeyWithEventIDService.Error>
     private typealias CheckSpy = Spy<Void, Void, Error>
     private typealias GetPINConfirmationCodeSpy = Spy<Void, ChangePINService.ConfirmResponse, ChangePINService.GetPINConfirmationCodeError>
     private typealias ChangePINSpy = Spy<Void, Void, ChangePINService.ChangePINError>
@@ -519,7 +529,6 @@ final class ComposedCVVPINService_CVVPINServicesClient_Tests: XCTestCase {
         changePINSpy: ChangePINSpy,
         showCVVSpy: ShowCVVSpy
     ) {
-        
         let activateSpy = ActivateSpy()
         let confirmSpy = ConfirmSpy()
         let checkSpy = CheckSpy()
@@ -716,10 +725,17 @@ private extension ComposedCVVPINService {
     }
     
     func confirmActivation(
-        completion: @escaping CVVPINFunctionalityActivationService.ConfirmCompletion
+        completion: @escaping BindPublicKeyWithEventIDService.Completion
     ) {
         confirmActivation(anyOTP(), completion)
     }
+}
+
+private func anyOTP(
+    otpValue: String = UUID().uuidString
+) -> BindPublicKeyWithEventIDService.OTP {
+    
+    .init(otpValue: otpValue)
 }
 
 private extension Array where Element == ActivateCVVPINClient.ActivateResult {

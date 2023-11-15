@@ -7,6 +7,7 @@
 
 import CVVPIN_Services
 @testable import ForaBank
+import ForaCrypto
 import XCTest
 
 @available(iOS 16.0.0, *)
@@ -14,15 +15,16 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, sessionIDLoader, processSpy) = makeSUT()
+        let (_, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         XCTAssertEqual(sessionIDLoader.callCount, 0)
+        XCTAssertEqual(sessionKeyLoader.callCount, 0)
         XCTAssertEqual(processSpy.callCount, 0)
     }
     
     func test_handleFailure_shouldReceiveFailureOnLoadSessionIDFailure() {
         
-        let (sut, sessionIDLoader, _) = makeSUT()
+        let (sut, sessionIDLoader, _, _) = makeSUT()
         
         expect(sut, toDeliver: .failure(.serviceError(.missingEventID)), on: {
             
@@ -30,36 +32,52 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         })
     }
     
+    func test_handleFailure_shouldReceiveFailureOnLoadSessionKeyFailure() {
+        
+        let (sut, sessionIDLoader, sessionKeyLoader, _) = makeSUT()
+        
+        expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
+            
+            sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: .failure(anyError()))
+        })
+    }
+    
     func test_handleFailure_shouldReceiveFailureOnMakeSecretJSONFailure() {
         
-        let (sut, sessionIDLoader, _) = makeSUT(
+        let (sut, sessionIDLoader, sessionKeyLoader, _) = makeSUT(
             makeSecretJSONResult: .failure(anyError())
         )
         
         expect(sut, toDeliver: .failure(.serviceError(.makeJSONFailure)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
         })
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessCreateRequestFailure() {
         
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.createRequest(anyError())))
         })
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessPerformRequestFailure() {
         
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.performRequest(anyError())))
         })
     }
@@ -68,22 +86,26 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         
         let statusCode = 500
         let invalidData = anyData()
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.invalid(statusCode: statusCode, data: invalidData)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: statusCode, data: invalidData))))
         })
     }
     
     func test_handleFailure_shouldReceiveFailureOnProcessMapResponseNetworkFailure() {
         
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.network), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.mapResponse(.network)))
         })
     }
@@ -93,11 +115,13 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         let statusCode = 500
         let errorMessage = "Retry failure"
         let retryAttempts = 2
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.mapResponse(.retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts))))
         })
     }
@@ -106,22 +130,29 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
         
         let statusCode = 500
         let errorMessage = "Server failure"
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT()
         
         expect(sut, toDeliver: .failure(.server(statusCode: statusCode, errorMessage: errorMessage)), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .failure(.mapResponse(.server(statusCode: statusCode, errorMessage: errorMessage))))
         })
     }
     
-    func test_handleFailure_shouldNotReceiveFailureOnSuccess() {
+    func test_handleFailure_shouldNotReceiveFailureOnSuccess() throws {
         
-        let (sut, sessionIDLoader, processSpy) = makeSUT()
+        let keyPair = try anyRSAKeyPair()
+        let (sut, sessionIDLoader, sessionKeyLoader, processSpy) = makeSUT(
+            makeSecretJSONResult: .success((anyData(), keyPair))
+        )
         
-        expect(sut, toDeliver: .success(()), on: {
+        expect(sut, toDeliver: .success(keyPair), on: {
             
             sessionIDLoader.completeLoad(with: anySuccess())
+            sessionKeyLoader.completeLoad(with: anySuccess())
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
             processSpy.complete(with: .success(()))
         })
     }
@@ -130,38 +161,46 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
     
     private typealias SUT = Services.BindPublicKeyService
     private typealias SessionIDLoader = LoaderSpy<SessionID>
+    private typealias SessionKeyLoader = LoaderSpy<SessionKey>
     private typealias ProcessSpy = Spy<BindPublicKeyWithEventIDService.ProcessPayload, Void, Services.ProcessBindPublicKeyError>
     
     private func makeSUT(
-        makeSecretJSONResult: Result<Data, Error> = anySuccess(),
+        makeSecretJSONResult: Result<(Data, RSADomain.KeyPair), Error> = anySuccess(),
+        ephemeralLifespan: TimeInterval = 15,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: any SUT,
         sessionIDLoader: SessionIDLoader,
+        sessionKeyLoader: SessionKeyLoader,
         processSpy: ProcessSpy
     ) {
         let sessionIDLoader = SessionIDLoader()
+        let sessionKeyLoader = SessionKeyLoader()
         let processSpy = ProcessSpy()
         let sut = Services.makeBindPublicKeyService(
             loadSessionID: sessionIDLoader.load(completion:),
+            loadSessionKey: sessionKeyLoader.load(completion:),
             processBindPublicKey: processSpy.process,
-            makeSecretJSON: { _, completion in
+            makeSecretJSON: { _,_ in
                 
-                completion(makeSecretJSONResult)
-            }
+                try makeSecretJSONResult.get()
+            },
+            cacheLog: { _,_,_,_ in },
+            ephemeralLifespan: ephemeralLifespan
         )
         
         trackForMemoryLeaks(sessionIDLoader, file: file, line: line)
+        trackForMemoryLeaks(sessionKeyLoader, file: file, line: line)
         trackForMemoryLeaks(processSpy, file: file, line: line)
         
-        return (sut, sessionIDLoader, processSpy)
+        return (sut, sessionIDLoader, sessionKeyLoader, processSpy)
     }
     
     private func expect(
         _ sut: any SUT,
         with otp: BindPublicKeyWithEventIDService.OTP? = nil,
-        toDeliver expectedResult: Result<(), BindPublicKeyWithEventIDService.Error>,
+        toDeliver expectedResult: Result<RSADomain.KeyPair, BindPublicKeyWithEventIDService.Error>,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -208,8 +247,9 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
             ):
                 break
                 
-            case (.success(()), .success(())):
-                break
+            case let (.success(received), .success(expected)):
+                XCTAssertNoDiff(received.privateKey.key, expected.privateKey.key)
+                XCTAssertNoDiff(received.publicKey.key, expected.publicKey.key)
                 
             default:
                 XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
@@ -226,9 +266,14 @@ final class Services_makeBindPublicKeyServiceTests: XCTestCase {
 
 private func anySuccess(
     _ data: Data = anyData()
-) -> Result<Data, Error> {
+) -> Result<(Data, RSADomain.KeyPair), Error> {
     
-    .success(data)
+    .init {
+        
+        let keyPair = try anyRSAKeyPair()
+        
+        return (data, keyPair)
+    }
 }
 
 private func anySuccess(
@@ -236,6 +281,13 @@ private func anySuccess(
 ) -> Result<SessionID, Error> {
     
     .success(.init(sessionIDValue: value))
+}
+
+private func anySuccess(
+    _ sessionKeyValue: Data = anyData()
+) -> Result<SessionKey, Error> {
+    
+    .success(.init(sessionKeyValue: sessionKeyValue))
 }
 
 private func anyOTP(

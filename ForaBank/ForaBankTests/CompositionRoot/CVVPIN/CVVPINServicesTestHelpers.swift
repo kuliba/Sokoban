@@ -64,7 +64,7 @@ func anySessionID(
     .init(sessionIDValue: sessionIDValue)
 }
 
-typealias CVVPINActivateResult = CVVPINFunctionalityActivationService.ActivateResult
+typealias CVVPINActivateResult = CVVPINInitiateActivationService.ActivateResult
 
 func anySuccess(
     codeValue: String = UUID().uuidString,
@@ -133,6 +133,14 @@ func anyFailure(
     _ statusCode: Int,
     _ errorMessage: String = UUID().uuidString
 ) -> GetPINConfirmationCodeResult {
+    
+    .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
+}
+
+func anyFailure(
+    _ statusCode: Int,
+    _ errorMessage: String = UUID().uuidString
+) -> BindPublicKeyWithEventIDService.Result {
     
     .failure(.server(statusCode: statusCode, errorMessage: errorMessage))
 }

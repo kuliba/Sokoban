@@ -47,28 +47,18 @@ extension Services {
             store: rsaKeyPairStore
         )
         
-        // MARK: Ephemeral Stores & Loaders
-        
-#warning("decouple otpEventIDStore from ChangePINService with local `OTPEventID` type")
-        let otpEventIDStore = InMemoryStore<ChangePINService.OTPEventID>()
-        let sessionCodeStore = InMemoryStore<SessionCode>()
-        let sessionKeyStore = InMemoryStore<SessionKey>()
-        let sessionIDStore = InMemoryStore<SessionID>()
+        // MARK: Loaders for Ephemeral Stores
         
         let otpEventIDLoader = loggingLoader(
-            store: otpEventIDStore
-        )
-        
-        let sessionCodeLoader = loggingLoader(
-            store: sessionCodeStore
+            store: InMemoryStore<ChangePINService.OTPEventID>()
         )
         
         let sessionKeyLoader = loggingLoader(
-            store: sessionKeyStore
+            store: InMemoryStore<SessionKey>()
         )
         
         let sessionIDLoader = loggingLoader(
-            store: sessionIDStore
+            store: InMemoryStore<SessionID>()
         )
         
         // MARK: Configure Remote Services
@@ -79,28 +69,43 @@ extension Services {
         )
         
         // MARK: - ECHD Key Pair
-        
+#warning("hide echdKeyPair! expose only endpoints that use it")
         let echdKeyPair = cvvPINCrypto.generateECDHKeyPair()
         
-        // MARK: Configure CVV-PIN Activation Service
+        // MARK: - Configure InitiateActivation
         
-        let getCodeService = makeGetCodeService(
-            processGetCodeService: getCodeRemoteService.process,
-            cacheGetProcessingSessionCode: cache(response:)
-        )
-        
-        let formSessionKeyService = makeFormSessionKeyService(
-            loadSessionCode: sessionCodeLoader.load(completion:),
-            processFormSessionKey: formSessionKeyRemoteService.process,
+        let initiateActivationService = makeCVVPINInitiateActivationService(
+            extractSharedSecret: extractSharedSecret,
             makeSecretRequestJSON: makeSecretRequestJSON,
-            makeSessionKey: makeSessionKey(string:completion:),
-            cacheFormSessionKey: cache(success:)
+            processGetCode: getCodeRemoteService.process,
+            processFormSessionKey: formSessionKeyRemoteService.process
         )
+        
+        let sessionCache = CVVPINSessionCache(
+            _cacheSessionID: sessionIDLoader.save,
+            _cacheSessionKey: sessionKeyLoader.save
+        )
+        
+        typealias InitiateActivation = ComposedCVVPINService.InitiateActivation
+        
+        let initiateActivation: InitiateActivation = { completion in
+            
+            initiateActivationService.activate { result in
+                
+                sessionCache.handleActivateResult(result, completion: completion)
+            }
+        }
+        
+        // MARK: Configure BindPublicKey Service
         
         let bindPublicKeyService = makeBindPublicKeyService(
             loadSessionID: sessionIDLoader.load(completion:),
+            loadSessionKey: sessionKeyLoader.load(completion:),
             processBindPublicKey: bindPublicKeyRemoteService.process,
-            makeSecretJSON: makeSecretJSON(otp:completion:)
+            makeSecretJSON: cvvPINJSONMaker.makeSecretJSON,
+            cacheLog: cacheLog,
+            currentDate: currentDate,
+            ephemeralLifespan: ephemeralLifespan
         )
         
         let decoratedBindPublicKeyService = FetcherDecorator(
@@ -109,10 +114,9 @@ extension Services {
             onFailure: clearRSAKeyPairStoreOnError
         )
         
-        let activationService = makeActivationService(
-            getCode: getCodeService.fetch,
-            formSessionKey: formSessionKeyService.fetch,
-            bindPublicKeyWithEventID: decoratedBindPublicKeyService.fetch
+        let bindPublicKeyConfirm = FetchAdapter(
+            fetch: decoratedBindPublicKeyService.fetch,
+            map: { _ in () }
         )
         
         // MARK: Configure CVV-PIN AuthenticateWithPublicKey Service
@@ -147,7 +151,7 @@ extension Services {
             loadSession: loadShowCVVSession(completion:),
             showCVVRemoteService: showCVVRemoteService,
             decryptString: cvvPINCrypto.rsaDecrypt(_:withPrivateKey:),
-            makeShowCVVSecretJSON: cvvPINJSONMaker.makeShowCVVSecretJSON(with:and:rsaKeyPair:sessionKey:)
+            makeShowCVVSecretJSON: cvvPINJSONMaker.makeShowCVVSecretJSON
         )
         
         // MARK: - ComposedCVVPINService
@@ -155,9 +159,9 @@ extension Services {
         let cvvPINServicesClient = ComposedCVVPINService(
             changePIN: changePINService.changePIN(for:to:otp:completion:),
             checkActivation: checkActivation(completion:),
-            confirmActivation: activationService.confirmActivation,
+            confirmActivation: bindPublicKeyConfirm.fetch(_:completion:),
             getPINConfirmationCode: cachingChangePINService.fetch(completion:),
-            initiateActivation: activationService.activate(completion:),
+            initiateActivation: initiateActivation,
             showCVV: showCVVService.showCVV(cardID:completion:),
             // TODO: add category `CVV-PIN`
             log: logger.log
@@ -302,40 +306,20 @@ extension Services {
         }
         
         // MARK: - BindPublicKeyWithEventID Adapters
-        
-        func makeSecretJSON(
-            otp: BindPublicKeyWithEventIDService.OTP,
-            completion: @escaping BindPublicKeyWithEventIDService.SecretJSONCompletion
-        ) {
-            sessionKeyLoader.load { result in
-                
-                do {
-                    let sessionKey = try result.get()
-                    let (data, rsaKeyPair) = try cvvPINJSONMaker.makeSecretJSON(
-                        otp: otp.otpValue,
-                        sessionKey: sessionKey
-                    )
-                    
-                    rsaKeyPairLoader.save(
-                        rsaKeyPair,
-                        validUntil: currentDate().addingTimeInterval(cvvPINActivationLifespan)
-                    ) {
-                        completion($0.map { _ in data })
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
-            }
-        }
-        
+
         func persistRSAKeyPair(
-            _ success: BindPublicKeyWithEventIDService.Success,
+            _ rsaKeyPair: RSADomain.KeyPair,
             completion: @escaping () -> Void
         ) {
+            let validUntil = currentDate() + .init(cvvPINActivationLifespan)
             
-#warning("finish this: load key pair from ephemeral store and save to persistent store")
-    
-            completion()
+            rsaKeyPairLoader.save(
+                rsaKeyPair,
+                validUntil: validUntil
+            ) { result in
+                #warning("result is ignored")
+                completion()
+            }
         }
         
         func clearRSAKeyPairStoreOnError(
@@ -349,7 +333,7 @@ extension Services {
                 rsaKeyPairStore.deleteCache { _ in completion() }
             }
         }
-
+        
         // MARK: - ChangePIN Adapters
         
         func cache(response: ChangePINService.ConfirmResponse) {
@@ -388,7 +372,7 @@ extension Services {
                 }
             }
         }
-
+        
         func loadChangePINSession(
             completion: @escaping LoadChangePinSessionCompletion
         ) {
@@ -460,84 +444,20 @@ extension Services {
             }
         }
         
-        // MARK: - FormSessionKey Adapters
+        // MARK: - InitiateActivation Adapters
         
-        func makeSecretRequestJSON(
-            completion: @escaping FormSessionKeyService.SecretRequestJSONCompletion
-        ) {
-            completion(.init {
-                
-                try cvvPINJSONMaker.makeSecretRequestJSON(
-                    publicKey: echdKeyPair.publicKey
-                )
-            })
-        }
-        
-        func makeSessionKey(
-            string: String,
-            completion: @escaping FormSessionKeyService.MakeSessionKeyCompletion
-        ) {
-            completion(.init {
-                
-                try .init(
-                    sessionKeyValue: cvvPINCrypto.extractSharedSecret(
-                        from: string,
-                        using: echdKeyPair.privateKey
-                    )
-                )
-            })
-        }
-        
-        typealias FormSessionKeySuccess = FormSessionKeyService.Success
-        typealias FormSessionKeyCacheCompletion = (Swift.Result<Void, Error>) -> Void
-        
-        func cache(success: FormSessionKeySuccess) {
+        func extractSharedSecret(from string: String) throws -> Data {
             
-            let sessionIDPayload = (success.eventID, success.sessionTTL)
-            cacheSessionID(payload: sessionIDPayload) { _ in }
-            
-            let sessionKeyPayload = (success.sessionKey, success.sessionTTL)
-            cacheSessionKey(payload: sessionKeyPayload) { _ in }
-        }
-        
-        typealias FormSessionKeyCacheSessionIDPayload = (FormSessionKeySuccess.EventID, FormSessionKeySuccess.SessionTTL)
-        
-        func cacheSessionID(
-            payload: FormSessionKeyCacheSessionIDPayload,
-            completion: @escaping FormSessionKeyCacheCompletion
-        ) {
-            sessionIDLoader.save(
-                .init(sessionIDValue: payload.0.eventIDValue),
-                validUntil: currentDate() + .init(payload.1),
-                completion: completion
+            try cvvPINCrypto.extractSharedSecret(
+                from: string,
+                using: echdKeyPair.privateKey
             )
         }
         
-        typealias FormSessionKeyCacheSessionKeyPayload = (FormSessionKeyService.SessionKey, FormSessionKeySuccess.SessionTTL)
-        
-        func cacheSessionKey(
-            payload: FormSessionKeyCacheSessionKeyPayload,
-            completion: @escaping FormSessionKeyCacheCompletion
-        ) {
-            sessionKeyLoader.save(
-                .init(sessionKeyValue: payload.0.sessionKeyValue),
-                validUntil: currentDate() + .init(payload.1),
-                completion: completion
-            )
-        }
-        
-        // MARK: - GetProcessingSessionCode
-        
-        func cache(
-            response: GetProcessingSessionCodeService.Response
-        ) {
-            // Добавляем в базу данных Redis с индексом 1, запись (пару ключ-значение ) с коротким TTL (например 15 секунд), у которой ключом является session:code:to-process:<code>, где <code> - сгенерированный короткоживущий токен CODE, а значением является JSON (BSON) содержащий параметры необходимые для формирования связки клиента с его открытым ключом
-            let validUntil = currentDate().addingTimeInterval(ephemeralLifespan)
+        func makeSecretRequestJSON() throws -> Data {
             
-            sessionCodeLoader.save(
-                .init(sessionCodeValue: response.code),
-                validUntil: validUntil,
-                completion: { _ in }
+            try cvvPINJSONMaker.makeSecretRequestJSON(
+                publicKey: echdKeyPair.publicKey
             )
         }
         
@@ -675,32 +595,26 @@ private extension RemoteService where Input == Void {
     }
 }
 
-// MARK: - Error Mappers
-
-private extension ShowCVVService.AuthenticateError {
+private extension CVVPINSessionCache {
     
-    init(_ error: Services.AuthError) {
-        
-        switch error {
-        case .activationFailure:
-            self = .activationFailure
-            
-        case .authenticationFailure:
-            self = .authenticationFailure
-        }
-    }
-}
-
-private extension ChangePINService.AuthenticateError {
+    typealias _CacheSessionID = (SessionID, Date, @escaping CacheCompletion) -> Void
+    typealias _CacheSessionKey = (SessionKey, Date, @escaping CacheCompletion) -> Void
     
-    init(_ error: Services.AuthError) {
-        
-        switch error {
-        case .activationFailure:
-            self = .activationFailure
-            
-        case .authenticationFailure:
-            self = .authenticationFailure
-        }
+    convenience init(
+        _cacheSessionID: @escaping _CacheSessionID,
+        _cacheSessionKey: @escaping _CacheSessionKey,
+        currentDate: @escaping CurrentDate = Date.init
+    ) {
+        self.init(
+            cacheSessionID: { payload, completion in
+                
+                _cacheSessionID(payload.0, payload.1, completion)
+            },
+            cacheSessionKey: { payload, completion in
+                
+                _cacheSessionKey(payload.0, payload.1, completion)
+            },
+            currentDate: currentDate
+        )
     }
 }

@@ -11,9 +11,9 @@ public final class ComposedCVVPINService {
     
     public typealias ChangePIN = (ChangePINService.CardID, ChangePINService.PIN, ChangePINService.OTP, @escaping ChangePINService.ChangePINCompletion) -> Void
     public typealias CheckActivation = (@escaping (Result<Void, Error>) -> Void) -> Void
-    public typealias ConfirmActivation = (CVVPINFunctionalityActivationService.OTP, @escaping CVVPINFunctionalityActivationService.ConfirmCompletion) -> Void
+    public typealias ConfirmActivation = (BindPublicKeyWithEventIDService.OTP, @escaping BindPublicKeyWithEventIDService.Completion) -> Void
     public typealias GetPINConfirmationCode = (@escaping ChangePINService.GetPINConfirmationCodeCompletion) -> Void
-    public typealias InitiateActivation = (@escaping CVVPINFunctionalityActivationService.ActivateCompletion) -> Void
+    public typealias InitiateActivation = (@escaping CVVPINInitiateActivationService.ActivateCompletion) -> Void
     public typealias ShowCVV = (ShowCVVService.CardID, @escaping ShowCVVService.Completion) -> Void
 
     public let changePIN: ChangePIN

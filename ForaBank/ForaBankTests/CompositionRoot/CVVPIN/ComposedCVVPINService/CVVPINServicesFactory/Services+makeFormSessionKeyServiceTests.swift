@@ -14,44 +14,28 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (_, handleSuccessSpy, processSpy) = makeSUT()
         
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
-        XCTAssertEqual(sessionCodeLoader.callCount, 0)
         XCTAssertEqual(processSpy.callCount, 0)
-    }
-    
-    func test_init_shouldNotCacheOnLoadCodeFailure() {
-        
-        let (sut, handleSuccessSpy, sessionCodeLoader, _) = makeSUT()
-        
-        expectFailure(sut, on: {
-            
-            sessionCodeLoader.completeLoad(with: .failure(anyError()))
-        })
-        XCTAssertEqual(handleSuccessSpy.callCount, 0)
     }
     
     func test_init_shouldNotCacheOnMakeSecretRequestJSONFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, _) = makeSUT(
+        let (sut, handleSuccessSpy, _) = makeSUT(
             makeSecretRequestJSONResult: .failure(anyNSError())
         )
         
-        expectFailure(sut, on: {
-            
-            sessionCodeLoader.completeLoad(with: anySuccess())
-        })
+        expectFailure(sut, on: {})
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
     }
     
     func test_init_shouldNotCacheOnProcessCreateRequestFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.createRequest(anyError())))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -59,11 +43,10 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCacheOnProcessPerformRequestFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.performRequest(anyError())))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -71,11 +54,10 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCacheOnProcessMapResponseInvalidFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.mapResponse(.invalid(statusCode: 500, data: anyData()))))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -83,11 +65,10 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCacheOnProcessMapResponseNetworkFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.mapResponse(.network)))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -95,11 +76,10 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCacheOnProcessMapResponseServerFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: .failure(.mapResponse(.server(statusCode: 500, errorMessage: "Server Failure"))))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -107,13 +87,12 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldNotCacheOnMakeSessionKeyFailure() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT(
+        let (sut, handleSuccessSpy, processSpy) = makeSUT(
             makeSessionKeyResult: .failure(anyError())
         )
         
         expectFailure(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: anySuccess())
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 0)
@@ -121,11 +100,10 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     func test_init_shouldCacheOnSuccess() {
         
-        let (sut, handleSuccessSpy, sessionCodeLoader, processSpy) = makeSUT()
+        let (sut, handleSuccessSpy, processSpy) = makeSUT()
         
         expectSuccess(sut, on: {
             
-            sessionCodeLoader.completeLoad(with: anySuccess())
             processSpy.complete(with: anySuccess())
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 1)
@@ -134,7 +112,6 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = Services.CachingFormSessionKeyService
-    private typealias SessionCodeLoader = LoaderSpy<SessionCode>
     private typealias MakeSecretRequestJSONResult = FormSessionKeyService.SecretRequestJSONResult
     private typealias MakeSessionKeyResult = FormSessionKeyService.MakeSessionKeyResult
     private typealias ProcessSpy = Spy<FormSessionKeyService.ProcessPayload, FormSessionKeyService.Response, Services.ProcessFormSessionKeyError>
@@ -147,14 +124,11 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     ) -> (
         sut: any SUT,
         handleSuccessSpy: HandleSuccessSpy,
-        sessionCodeLoader: SessionCodeLoader,
         processSpy: ProcessSpy
     ) {
-        let sessionCodeLoader = SessionCodeLoader()
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeFormSessionKeyService(
-            loadSessionCode: sessionCodeLoader.load(completion:),
             processFormSessionKey: processSpy.process,
             makeSecretRequestJSON: { $0(makeSecretRequestJSONResult) },
             makeSessionKey: { _, completion in completion(makeSessionKeyResult) },
@@ -162,21 +136,21 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
         )
         
         trackForMemoryLeaks(handleSuccessSpy, file: file, line: line)
-        trackForMemoryLeaks(sessionCodeLoader, file: file, line: line)
         trackForMemoryLeaks(processSpy, file: file, line: line)
         
-        return (sut, handleSuccessSpy, sessionCodeLoader, processSpy)
+        return (sut, handleSuccessSpy, processSpy)
     }
     
     private func expectSuccess(
         _ sut: any SUT,
+        with code: FormSessionKeyService.Code = anyCode(),
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.fetch { receivedResult in
+        sut.fetch(code) { receivedResult in
             
             switch receivedResult {
             case .failure:
@@ -196,13 +170,14 @@ final class Services_makeFormSessionKeyServiceTests: XCTestCase {
     
     private func expectFailure(
         _ sut: any SUT,
+        with code: FormSessionKeyService.Code = anyCode(),
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "wait for completion")
         
-        sut.fetch { receivedResult in
+        sut.fetch(code) { receivedResult in
             
             switch receivedResult {
             case .failure:
@@ -267,4 +242,11 @@ private func anySuccess(
         eventID: eventID,
         sessionTTL: sessionTTL
     ))
+}
+
+private func anyCode(
+    codeValue: String = UUID().uuidString
+) -> FormSessionKeyService.Code {
+    
+    .init(codeValue: codeValue)
 }

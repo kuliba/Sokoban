@@ -42,7 +42,7 @@ extension ComposedCVVPINService: ActivateCVVPINClient {
 
 private extension ActivateCVVPINError {
     
-    init(_ error: CVVPINFunctionalityActivationService.ActivateError) {
+    init(_ error: CVVPINInitiateActivationService.ActivateError) {
         
         switch error {
         case .invalid:
@@ -62,11 +62,11 @@ private extension ActivateCVVPINError {
 
 private extension ConfirmationCodeError {
     
-    init(_ error: CVVPINFunctionalityActivationService.ConfirmError) {
+    init(_ error: BindPublicKeyWithEventIDService.Error) {
         
         switch error {
             
-        case .invalid, .network, .serviceFailure:
+        case .invalid, .network, .serviceError:
             self = .serviceFailure
             
         case let .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts):

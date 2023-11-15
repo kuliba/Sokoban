@@ -20,10 +20,10 @@ extension Services {
     typealias ProcessGetCodeCompletion = (ProcessGetCodeResult) -> Void
     typealias ProcessGetCode = (@escaping ProcessGetCodeCompletion) -> Void
     
-    typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response) -> Void
+    typealias CacheGetProcessingSessionCode = (GetProcessingSessionCodeService.Response, @escaping (Result<Void, Error>) -> Void) -> Void
     
     static func makeGetCodeService(
-        processGetCodeService: @escaping ProcessGetCode,
+        processGetCode: @escaping ProcessGetCode,
         cacheGetProcessingSessionCode: @escaping CacheGetProcessingSessionCode
     ) -> any GetCodeService {
         
@@ -33,7 +33,10 @@ extension Services {
         
         let cachingGetCodeService = FetcherDecorator(
             decoratee: getCodeService,
-            handleSuccess: cacheGetProcessingSessionCode
+            onSuccess: { success, completion in
+                
+                cacheGetProcessingSessionCode(success) { _ in completion() }
+            }
         )
         
         return cachingGetCodeService
@@ -43,7 +46,7 @@ extension Services {
         func process(
             completion: @escaping GetProcessingSessionCodeService.ProcessCompletion
         ) {
-            processGetCodeService {
+            processGetCode {
                 
                 completion($0.mapError { .init($0) })
             }
