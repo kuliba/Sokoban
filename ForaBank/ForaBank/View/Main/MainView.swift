@@ -404,6 +404,16 @@ extension MainView {
                 titleFont: .textBodyMR14180(),
                 titleColor: .textPlaceholder,
                 iconColor: .iconGray
+            ),
+            amountViewConfig: .init(
+                amountFont: .textH2Sb20282(),
+                amountColor: .textWhite,
+                buttonTextFont: .buttonMediumM14160(),
+                buttonTextColor: .textWhite,
+                buttonColor: .mainColorsRed,
+                hintFont: .textBodySR12160(),
+                hintColor: .textPlaceholder,
+                background: .mainColorsBlackMedium
             )
         )
     }

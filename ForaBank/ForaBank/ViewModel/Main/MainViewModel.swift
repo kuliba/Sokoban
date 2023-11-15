@@ -388,13 +388,15 @@ class MainViewModel: ObservableObject, Resetable {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         let allProducts = model.allProducts.map({ BusinessLogic.Product(
-                            paymentSystem: "",
-                            background: $0.mediumDesign.description,
                             title: "Счет списания",
                             nameProduct: $0.displayName,
                             balance: $0.balanceValue.description,
-                            description: $0.displayNumber ?? "")
-                        })
+                            description: $0.displayNumber ?? "",
+                            cardImage: PaymentSticker.ImageData(data: $0.smallDesign.uiImage?.pngData() ?? Data()),
+                            paymentSystem: PaymentSticker.ImageData(data: $0.paymentSystem.debugDescription.data),
+                            backgroundImage: PaymentSticker.ImageData(data: $0.largeDesign.uiImage?.pngData() ?? Data()),
+                            backgroundColor: $0.backgroundColor.description
+                        )})
                         let cities = model.localAgent.load(type: [AtmCityData].self)
                         
                         self.link = .paymentSticker(makeOperationStateViewModel(
