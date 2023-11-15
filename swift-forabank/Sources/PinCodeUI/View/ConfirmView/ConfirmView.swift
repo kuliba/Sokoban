@@ -57,7 +57,7 @@ public struct ConfirmView: View {
         }
         .alert(isPresented: $viewModel.showAlert) {
             if let buttonTitle = viewModel.buttonTitle {
-                Alert(
+                return Alert(
                     title: Text("Ошибка"),
                     message: Text(viewModel.alertMessage),
                     primaryButton: Alert.Button.default(Text("Отмена")),
@@ -66,7 +66,7 @@ public struct ConfirmView: View {
                     })
                 )
             } else {
-                Alert(
+                return Alert(
                     title: Text("Ошибка"),
                     message: Text(viewModel.alertMessage)
                 )
