@@ -62,7 +62,7 @@ class PlacesListViewModel: ObservableObject {
                 currentLocation: referenceLocation,
                 action: { [weak self] in
                 
-                self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))
+                    self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id, name: atmItem.name))
             })
             
             items.append(item)
@@ -125,6 +125,7 @@ enum PlacesListViewModelAction {
     struct ItemDidSelected: Action {
         
         let itemId: AtmData.ID
+        let name: String
     }
 }
 
