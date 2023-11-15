@@ -70,11 +70,8 @@ class ContactsAgent: ContactsAgentProtocol {
                 .phoneNumbers
                 .map(\.value)
                 .compactMap { $0.value(forKey: "digits") as? String }
-                .map{
-                    if $0.count == 10 {
-                        return phoneNumberFormatter.format("7\($0)")
-                    }
-                    return phoneNumberFormatter.format($0)
+                .map {
+                    return phoneNumberFormatter.format( $0.count == 10 ? "7\($0)" : $0)
                 }
                 .map {
                     .init(

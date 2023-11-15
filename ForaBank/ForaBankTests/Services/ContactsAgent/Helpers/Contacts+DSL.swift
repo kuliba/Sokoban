@@ -17,16 +17,7 @@ extension XCTestCase {
         line: UInt = #line
     ) {
         XCTAssertNoDiff(
-            contacts.map {
-                AddressBookContact.EquatableAddressBookContact
-                    .init(
-                        phone: $0.phone,
-                        firstName: $0.firstName,
-                        middleName: $0.middleName,
-                        lastName: $0.lastName,
-                        avatar: $0.avatar
-                    )
-            },
+            contacts.map(\.equatable),
             equatableContacts,
             file: file, line: line
         )
