@@ -19,16 +19,11 @@ final class BusinessLogic {
     typealias Completion = (OperationResult) -> Void
     typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     
-    typealias TransferResult = Result<TransferResponse, TransferError>
-    typealias TransferCompletion = (TransferResult) -> Void
-    typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
-    
     //TODO: replace remoteService to closure or protocol
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
     let makeTransferService: RemoteService<String, MakeTransferResponse>
     let imageLoaderService: RemoteService<[String], [ImageData]>
-    let transfer: Transfer
     let products: [Product]
     let cityList: [City]
     
@@ -37,7 +32,6 @@ final class BusinessLogic {
         transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
         makeTransferService: RemoteService<String, MakeTransferResponse>,
         imageLoaderService: RemoteService<[String], [ImageData]>,
-        transfer: @escaping Transfer,
         products: [Product],
         cityList: [City]
     ) {
@@ -45,7 +39,6 @@ final class BusinessLogic {
         self.transferService = transferService
         self.makeTransferService = makeTransferService
         self.imageLoaderService = imageLoaderService
-        self.transfer = transfer
         self.products = products
         self.cityList = cityList
     }
@@ -556,53 +549,5 @@ extension BusinessLogic {
         
         let id: String
         let name: String
-    }
-    
-    typealias TransferPayload = TransferEvent
-    
-    public enum TransferResponse {
-        
-        case deliveryOffice(DeliveryOffice)
-    }
-    
-    public struct DeliveryOffice {
-        
-        let main: [Main]
-        
-        public struct Main {
-            
-            let type: TypeSelector
-            let data: Data
-            
-            public enum TypeSelector: String {
-            
-                case separatorStartOperation = "SeparatorStartOperation"
-                case citySelector = "CitySelector"
-                case separatorEndOperation = "SeparatorEndOperation"
-            }
-            
-            public struct Data {
-                
-                let title: String
-                let subtitle: String
-                let isCityList: Bool
-                let md5hash: String
-                let color: String
-            }
-        }
-    }
-    
-    public enum TransferError: Error {}
-    
-    public enum TransferEvent {
-    
-        case operation(PaymentSticker.Operation)
-        case requestOTP
-    }
-    
-    public enum State {
-        
-        case local(OperationResult)
-        case remote(OperationResult)
     }
 }

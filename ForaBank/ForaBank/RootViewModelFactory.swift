@@ -29,9 +29,6 @@ enum RootViewModelFactory {
                 ),
                 makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
-                transfer: { event, completion in
-                    
-                },
                 products: $0,
                 cityList: $1
             ))
