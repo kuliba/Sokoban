@@ -587,6 +587,7 @@ extension ProductView.ViewModel {
 
         enum State: Equatable {
             
+            case awaitingCVV
             case fullNumberMaskedCVV
             case maskedNumberCVV(CVV)
             case maskedNumberMaskedCVV
@@ -630,7 +631,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .maskedNumberCVV, .maskedNumberMaskedCVV:
+        case .maskedNumberCVV, .maskedNumberMaskedCVV, .awaitingCVV:
             return numberMasked.value
             
         case .fullNumberMaskedCVV, .showFront:
@@ -642,7 +643,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront:
+        case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront, .awaitingCVV:
             return cvvTitle.value
             
         case let .maskedNumberCVV(value):
@@ -1153,10 +1154,14 @@ extension ProductView.ViewModel {
     
     func showCVVButtonTap() {
         let cardId = CardDomain.CardId.init(self.id)
-        showCvv?(cardId) {
-            if let cvv = $0 {
-                Task { @MainActor in
-                    self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+        cardInfo.state = .awaitingCVV
+        showCvv?(cardId) { cvv in
+            
+            Task { @MainActor [weak self] in
+                if let cvv {
+                    self?.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+                } else {
+                    self?.cardInfo.state = .fullNumberMaskedCVV
                 }
             }
         }
