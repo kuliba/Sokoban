@@ -13,21 +13,45 @@ where Failure: Error,
     public typealias FetchCompletion = (FetchResult) -> Void
     public typealias Fetch = (Payload, @escaping FetchCompletion) -> Void
     
-    public typealias Map = (Success) -> NewSuccess
-    public typealias MapError = (Failure) -> NewFailure
+    public typealias MapResult = (Result<Success, Failure>) -> Result<NewSuccess, NewFailure>
     
     private let _fetch: Fetch
-    private let map: Map
-    private let mapError: MapError
-    
+    private let mapResult: MapResult
+
     public init(
+        fetch: @escaping Fetch,
+        mapResult: @escaping MapResult
+    ) {
+        self._fetch = fetch
+        self.mapResult = mapResult
+    }
+}
+
+public extension FetchAdapter
+where NewSuccess == Success,
+      NewFailure == Failure {
+    
+    /// A wrapper for function.
+    convenience init(fetch: @escaping Fetch) {
+        
+        self.init(fetch: fetch, mapResult: { $0 })
+    }
+}
+
+public extension FetchAdapter {
+    
+    typealias Map = (Success) -> NewSuccess
+    typealias MapError = (Failure) -> NewFailure
+    
+    convenience init(
         fetch: @escaping Fetch,
         map: @escaping Map,
         mapError: @escaping MapError
     ) {
-        self._fetch = fetch
-        self.map = map
-        self.mapError = mapError
+        self.init(
+            fetch: fetch,
+            mapResult: { $0.map(map).mapError(mapError) }
+        )
     }
 }
 
@@ -44,7 +68,7 @@ extension FetchAdapter: Fetcher {
             
             guard let self else { return }
             
-            completion(result.map(map).mapError(mapError))
+            completion(mapResult(result))
         }
     }
 }
@@ -68,5 +92,57 @@ where NewSuccess == Success {
         mapError: @escaping MapError
     ) {
         self.init(fetch: fetch, map: { $0 }, mapError: mapError)
+    }
+}
+
+public extension FetchAdapter
+where Payload == Void {
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        mapResult: @escaping MapResult
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            mapResult: mapResult
+        )
+    }
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        map: @escaping Map,
+        mapError: @escaping MapError
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            map: map,
+            mapError: mapError
+        )
+    }
+    
+    func fetch(completion: @escaping NewFetchCompletion) {
+        
+        _fetch(()) { [weak self] result in
+            
+            guard let self else { return }
+            
+            completion(mapResult(result))
+        }
+    }
+}
+
+public extension FetchAdapter
+where Payload == Void,
+      NewFailure == Failure {
+    
+    convenience init(
+        _ fetch: @escaping (@escaping FetchCompletion) -> Void,
+        map: @escaping Map
+    ) {
+        self.init(
+            fetch: { _, completion in fetch(completion) },
+            map: map,
+            mapError: { $0 }
+        )
     }
 }

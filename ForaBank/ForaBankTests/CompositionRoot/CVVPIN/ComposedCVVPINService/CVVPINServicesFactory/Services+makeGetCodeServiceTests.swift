@@ -82,6 +82,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         expectSuccess(sut, on: {
 
             processSpy.complete(with: .success(.init(code: UUID().uuidString, phone: UUID().uuidString)))
+            handleSuccessSpy.complete(with: .success(()))
         })
         XCTAssertEqual(handleSuccessSpy.callCount, 1)
     }
@@ -90,6 +91,7 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
     
     private typealias SUT = Services.GetCodeService
     private typealias ProcessSpy = Spy<Void, Services.ProcessGetCodeSuccess, Services.ProcessGetCodeError>
+    private typealias HandleSuccessSpy = Spy<GetProcessingSessionCodeService.Response, Void, Error>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -102,8 +104,8 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         let processSpy = ProcessSpy()
         let handleSuccessSpy = HandleSuccessSpy()
         let sut = Services.makeGetCodeService(
-            processGetCodeService: processSpy.process(completion:),
-            cacheGetProcessingSessionCode: handleSuccessSpy.handle
+            processGetCode: processSpy.process(completion:),
+            cacheGetProcessingSessionCode: handleSuccessSpy.process(_:completion:)
         )
         
         trackForMemoryLeaks(handleSuccessSpy, file: file, line: line)
@@ -162,19 +164,5 @@ final class Services_makeGetCodeServiceTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private final class HandleSuccessSpy {
-        
-        typealias Success = GetProcessingSessionCodeService.Response
-        
-        private(set) var successes = [Success]()
-        
-        var callCount: Int { successes.count }
-        
-        func handle(_ success: Success) {
-            
-            successes.append(success)
-        }
     }
 }

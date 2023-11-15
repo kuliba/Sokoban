@@ -1,5 +1,5 @@
 //
-//  CVVPINFunctionalityActivationService.swift
+//  CVVPINInitiateActivationService.swift
 //  
 //
 //  Created by Igor Malyarov on 20.10.2023.
@@ -9,7 +9,7 @@ import Foundation
 
 /// - Note: `SessionKey` is `SymmetricKey` is `SharedSecret`
 ///
-public final class CVVPINFunctionalityActivationService {
+public final class CVVPINInitiateActivationService {
     
     public typealias GetCodeResult = Result<GetCodeSuccess, GetCodeResponseError>
     public typealias GetCodeCompletion = (GetCodeResult) -> Void
@@ -19,28 +19,19 @@ public final class CVVPINFunctionalityActivationService {
     public typealias FormSessionKeyCompletion = (FormSessionKeyResult) -> Void
     public typealias FormSessionKey = (Code, @escaping FormSessionKeyCompletion) -> Void
     
-    public typealias BindPublicKeyWithEventIDResult = Result<Void, BindPublicKeyError>
-    public typealias BindPublicKeyWithEventIDCompletion = (BindPublicKeyWithEventIDResult) -> Void
-    public typealias BindPublicKeyWithEventID = (OTP, @escaping BindPublicKeyWithEventIDCompletion) -> Void
-    
     private let getCode: GetCode
     private let formSessionKey: FormSessionKey
-    private let bindPublicKeyWithEventID: BindPublicKeyWithEventID
     
     public init(
         getCode: @escaping GetCode,
-        formSessionKey: @escaping FormSessionKey,
-        bindPublicKeyWithEventID: @escaping BindPublicKeyWithEventID
+        formSessionKey: @escaping FormSessionKey
     ) {
         self.getCode = getCode
         self.formSessionKey = formSessionKey
-        self.bindPublicKeyWithEventID = bindPublicKeyWithEventID
     }
 }
 
-// MARK: - Activate
-
-public extension CVVPINFunctionalityActivationService {
+public extension CVVPINInitiateActivationService {
     
     typealias ActivateResult = Result<ActivateSuccess, ActivateError>
     typealias ActivateCompletion = (ActivateResult) -> Void
@@ -71,38 +62,9 @@ public extension CVVPINFunctionalityActivationService {
     }
 }
 
-// MARK: - Confirm
-
-public extension CVVPINFunctionalityActivationService {
-    
-    typealias ConfirmResult = Result<Void, ConfirmError>
-    typealias ConfirmCompletion = (ConfirmResult) -> Void
-    
-    func confirmActivation(
-        withOTP otp: OTP,
-        completion: @escaping ConfirmCompletion
-    ) {
-        bindPublicKeyWithEventID(otp) { [weak self] result in
-            
-            guard self != nil else { return }
-            
-            completion(result.mapError(ConfirmError.init))
-        }
-    }
-    
-    enum ConfirmError: Error {
-        
-        case invalid(statusCode: Int, data: Data)
-        case network
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case serviceFailure
-    }
-}
-
 // MARK: - Errors
 
-public extension CVVPINFunctionalityActivationService {
+public extension CVVPINInitiateActivationService {
     
     enum GetCodeResponseError: Error {
         
@@ -118,20 +80,11 @@ public extension CVVPINFunctionalityActivationService {
         case server(statusCode: Int, errorMessage: String)
         case serviceFailure
     }
-    
-    enum BindPublicKeyError: Error {
-        
-        case invalid(statusCode: Int, data: Data)
-        case network
-        case retry(statusCode: Int, errorMessage: String, retryAttempts: Int)
-        case server(statusCode: Int, errorMessage: String)
-        case serviceFailure
-    }
 }
 
 // MARK: - Types
 
-extension CVVPINFunctionalityActivationService {
+extension CVVPINInitiateActivationService {
     
     public struct ActivateSuccess {
         
@@ -210,8 +163,8 @@ extension CVVPINFunctionalityActivationService {
     
     public struct GetCodeSuccess {
         
-        let code: Code
-        let phone: Phone
+        public let code: Code
+        public let phone: Phone
         
         public init(
             code: Code,
@@ -241,19 +194,9 @@ extension CVVPINFunctionalityActivationService {
             self.phoneValue = phoneValue
         }
     }
-    
-    public struct OTP {
-        
-        public let otpValue: String
-        
-        public init(otpValue: String) {
-            
-            self.otpValue = otpValue
-        }
-    }
 }
 
-private extension CVVPINFunctionalityActivationService {
+private extension CVVPINInitiateActivationService {
     
     func _formSessionKey(
         _ getCodeSuccess: GetCodeSuccess,
@@ -280,9 +223,9 @@ private extension CVVPINFunctionalityActivationService {
 
 // MARK: - Error Mapping
 
-private extension CVVPINFunctionalityActivationService.ActivateError {
+private extension CVVPINInitiateActivationService.ActivateError {
     
-    init(_ error: CVVPINFunctionalityActivationService.GetCodeResponseError) {
+    init(_ error: CVVPINInitiateActivationService.GetCodeResponseError) {
         
         switch error {
         case let .invalid(statusCode, data):
@@ -296,7 +239,7 @@ private extension CVVPINFunctionalityActivationService.ActivateError {
         }
     }
     
-    init(_ error: CVVPINFunctionalityActivationService.FormSessionKeyError) {
+    init(_ error: CVVPINInitiateActivationService.FormSessionKeyError) {
         
         switch error {
         case let .invalid(statusCode, data):
@@ -304,29 +247,6 @@ private extension CVVPINFunctionalityActivationService.ActivateError {
             
         case .network:
             self = .network
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-            
-        case .serviceFailure:
-            self = .serviceFailure
-        }
-    }
-}
-
-private extension CVVPINFunctionalityActivationService.ConfirmError {
-    
-    init(_ error: CVVPINFunctionalityActivationService.BindPublicKeyError) {
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .network:
-            self = .network
-            
-        case let .retry(statusCode, errorMessage, retryAttempts):
-            self = .retry(statusCode: statusCode, errorMessage: errorMessage, retryAttempts: retryAttempts)
             
         case let .server(statusCode, errorMessage):
             self = .server(statusCode: statusCode, errorMessage: errorMessage)

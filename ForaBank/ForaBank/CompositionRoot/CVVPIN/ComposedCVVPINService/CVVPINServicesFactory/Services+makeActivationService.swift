@@ -13,7 +13,7 @@ import GenericRemoteService
 extension Services {
     
     typealias GetCode = (@escaping GetProcessingSessionCodeService.Completion) -> Void
-    typealias FormSessionKey = (@escaping FormSessionKeyService.Completion) -> Void
+    typealias FormSessionKey = (FormSessionKeyService.Code, @escaping FormSessionKeyService.Completion) -> Void
     typealias BindPublicKeyWithEventID = (BindPublicKeyWithEventIDService.OTP, @escaping BindPublicKeyWithEventIDService.Completion) -> Void
     
     static func makeActivationService(
@@ -24,7 +24,7 @@ extension Services {
         
         let activationService = CVVPINFunctionalityActivationService(
             getCode: _getCode(completion:),
-            formSessionKey: _formSessionKey(completion:),
+            formSessionKey: _formSessionKey(_:completion:),
             bindPublicKeyWithEventID: _bindPublicKeyWithEventID
         )
         
@@ -46,9 +46,10 @@ extension Services {
         }
         
         func _formSessionKey(
+            _ code: CVVPINFunctionalityActivationService.Code,
             completion: @escaping CVVPINFunctionalityActivationService.FormSessionKeyCompletion
         ) {
-            formSessionKey { result in
+            formSessionKey(.init(codeValue: code.codeValue)) { result in
                 
                 completion(
                     result
