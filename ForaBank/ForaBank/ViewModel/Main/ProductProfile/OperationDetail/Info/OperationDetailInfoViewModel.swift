@@ -1860,7 +1860,7 @@ extension OperationDetailInfoViewModel {
                 //TODO: remove after backend will be send number with country code
                 if operation.transferEnum == .sfp {
                     
-                    let formattedPhone = phoneFormatter.format("7\(payeePhone)")
+                    let formattedPhone = phoneFormatter.format(payeePhone.count == 10 ? "7\(payeePhone)" : payeePhone)
                     return .init(title: "Номер телефона получателя",
                                  iconType: IconType.phone.icon,
                                  value: formattedPhone)

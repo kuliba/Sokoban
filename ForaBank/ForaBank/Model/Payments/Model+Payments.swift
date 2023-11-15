@@ -1213,7 +1213,7 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = PhoneNumberKitFormater().format(paymentData.phoneNumber)
+                let phoneNumber = PhoneNumberKitFormater().format( paymentData.phoneNumber.count == 10 ? "7\(paymentData.phoneNumber)" : paymentData.phoneNumber) 
                 let bankId = paymentData.bankId
                 return paymentsProcessSourceReducerSFP(phone: phoneNumber,
                                                        bankId: bankId,
