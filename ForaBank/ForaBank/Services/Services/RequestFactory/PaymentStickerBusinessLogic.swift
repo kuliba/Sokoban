@@ -11,13 +11,6 @@ import GenericRemoteService
 import PaymentSticker
 import SVGKit
 
-struct Location {}
-struct Office {
-    
-    let id: String
-    let name: String
-}
-
 final class BusinessLogic {
     
     typealias Product = PaymentSticker.Operation.Parameter.Product.Option
@@ -31,7 +24,6 @@ final class BusinessLogic {
     let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
     let makeTransferService: RemoteService<String, MakeTransferResponse>
     let imageLoaderService: RemoteService<[String], [ImageData]>
-    private let selectOffice: (Location, @escaping (Office?) -> Void) -> Void
     let products: [Product]
     let cityList: [City]
     
@@ -40,7 +32,6 @@ final class BusinessLogic {
         transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
         makeTransferService: RemoteService<String, MakeTransferResponse>,
         imageLoaderService: RemoteService<[String], [ImageData]>,
-        selectOffice: (Location, @escaping (Office?) -> Void) -> Void,
         products: [Product],
         cityList: [City]
     ) {
@@ -48,7 +39,6 @@ final class BusinessLogic {
         self.transferService = transferService
         self.makeTransferService = makeTransferService
         self.imageLoaderService = imageLoaderService
-        self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
     }
@@ -109,6 +99,14 @@ extension BusinessLogic {
                     parameter: parameter
                 )
                  
+                if parameter.id == .officeSelector {
+                
+                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(parameter))
+                    completion(.success(.operation(newOperation)))
+                    return .success(.operation(newOperation))
+
+                }
+                
                 switch parameter.id {
                 case .transferTypeSticker:
                     
@@ -151,25 +149,8 @@ extension BusinessLogic {
                 
                 return .success(.operation(operation))
             
-            case let .openBranch(location):
-                
-                selectOffice(location) { office in
-                    
-                    guard let office else {
-                        return
-                    }
-                    
-                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(.init(
-                        id: .officeSelector,
-                        value: "",
-                        title: "",
-                        placeholder: "",
-                        options: [],
-                        state: .idle(.init(iconName: "", title: ""))
-                    )))
-                    
-                    return .success(.operation(newOperation))
-                }
+            case .openBranch:
+                return .success(.operation(operation))
                 
             case let .chevronTapped(select):
                 switch select.state {
@@ -259,8 +240,6 @@ extension BusinessLogic {
                                 break
                             }
                         case .result:
-                            return
-                        case .branches:
                             return
                         }
                     case let .failure(error):
