@@ -74,7 +74,7 @@ public extension ModelToViewModelMapper {
                     
                     action(.select(.chevronTapped(parameter)))
                 })
-                icon = .init("ic16ArrowDownCircle")
+                icon = .init("ic24ArrowDownCircle")
             }
                         
             return .select(
