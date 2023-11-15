@@ -14,31 +14,26 @@ struct CVVPinErrorMapper {
         _ error: ChangePINError
     ) -> ErrorDomain  {
         
-        if case let .server(statusCode, _) = error, statusCode != 7051 {
-            return .errorScreen
-        }
-        
-        let errorMessage: String = {
+        switch error {
             
-            switch error {
-            case .activationFailure:
-                return .technicalError
-                
-            case let .retry(_, _, retryAttempts):
-                return retryAttempts > 0 ? .incorrectСode : .technicalError
-                
-            case let .server(_, message):
-                return message
-
-            case .serviceFailure:
-                return .technicalError
-
-            case .weakPIN:
-                return .simpleCode
-            }
-        }()
-        
-        return .errorForAlert(.init(errorMessage))
+        case .activationFailure:
+            return .errorForAlert(.init(.technicalError))
+            
+        case let .retry(_, _, retryAttempts):
+            return .errorForAlert(.init(retryAttempts > 0 ? .incorrectСode : .technicalError))
+            
+        case let .server(statusCode, _) where statusCode != 7051:
+            return .errorScreen
+            
+        case let .server(_, message):
+            return .errorForAlert(.init(message))
+            
+        case .serviceFailure:
+            return .errorForAlert(.init(.technicalError))
+            
+        case .weakPIN:
+            return .weakPinAlert( .init(String.simpleCode), .init("Изменить"))
+        }
     }
     
     static func map(
