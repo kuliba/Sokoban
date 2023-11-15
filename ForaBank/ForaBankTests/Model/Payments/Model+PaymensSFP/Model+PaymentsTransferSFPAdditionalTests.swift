@@ -32,6 +32,17 @@ final class Model_PaymentsTransferSFPAdditionalTests: XCTestCase {
         XCTAssertNoDiff(result, .additionals)
     }
     
+    func test_paymentsTransferSFPAdditional_withoutMessage_shouldReturnAdditionalsWithoutMessage() throws {
+        
+        let sut = makeSUT()
+        
+        let result = try sut.paymentsTransferSFPAdditional(
+            [paramPhone, paramRecipient],
+            allParameters: [])
+        
+        XCTAssertNoDiff(result, .additionalsWithoutMessage)
+    }
+    
     // MARK: - Helpers
     
     let paramSfpMessage = Payments.ParameterMock(
@@ -98,5 +109,10 @@ private extension Array where Element == TransferAnywayData.Additional {
         .recipientId,
         .recipientNm,
         .message
+    ]
+    
+    static let additionalsWithoutMessage: Self = [
+        .recipientId,
+        .recipientNm
     ]
 }
