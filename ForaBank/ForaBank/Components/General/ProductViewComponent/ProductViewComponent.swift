@@ -590,7 +590,6 @@ extension ProductView.ViewModel {
             case awaitingCVV
             case fullNumberMaskedCVV
             case maskedNumberCVV(CVV)
-            case maskedNumberMaskedCVV
             case showFront
         }
         
@@ -631,7 +630,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .maskedNumberCVV, .maskedNumberMaskedCVV, .awaitingCVV:
+        case .maskedNumberCVV, .awaitingCVV:
             return numberMasked.value
             
         case .fullNumberMaskedCVV, .showFront:
@@ -643,7 +642,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront, .awaitingCVV:
+        case .fullNumberMaskedCVV, .showFront, .awaitingCVV:
             return cvvTitle.value
             
         case let .maskedNumberCVV(value):
