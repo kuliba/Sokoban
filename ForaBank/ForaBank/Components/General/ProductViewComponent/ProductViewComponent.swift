@@ -381,6 +381,13 @@ extension ProductView {
             
             cardInfo.state = .showFront
         }
+        
+        func resetToFrontIfNotAwaiting() {
+            
+            if cardInfo.state != .awaitingCVV {
+                resetToFront()
+            }
+        }
     }
 }
 
@@ -754,14 +761,12 @@ struct ProductView: View {
             value: viewModel.cardInfo.cardWiggle
         )
         .onAppear {
+            
             viewModel.animationAtFisrtShowCard()
         }
         .onDisappear {
             
-            /*if viewModel.cardInfo.isShowingCardBack {
-                
-                viewModel.productDidTapped()
-            }*/
+            viewModel.resetToFrontIfNotAwaiting()
         }
         
         ProductBackView(
