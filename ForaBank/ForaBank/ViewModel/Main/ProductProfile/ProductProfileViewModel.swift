@@ -152,6 +152,12 @@ extension ProductProfileViewModel {
         actionType: ConfirmViewModel.CVVPinAction
     ) {
         switch actionType {
+            
+        case .restartChangePin:
+            guard let productCard = model.product(productId: cardId.rawValue) as? ProductCardData else { return }
+            
+            checkCertificate(.init(cardId.rawValue), certificate: self.cvvPINServicesClient, productCard)
+            
         case let .changePin(displayNumber):
             
             // TODO: переделать DispatchQueue.main -> combine

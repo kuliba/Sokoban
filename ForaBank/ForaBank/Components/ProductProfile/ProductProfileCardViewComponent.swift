@@ -272,8 +272,14 @@ extension ProductProfileCardView {
                         selector.selected = active
                     }
                     
+                    products.forEach { product in
+                        
+                        guard product.id != active else { return }
+                        
+                        product.resetToFront()
+                    }
+                    
                 }.store(in: &bindings)
-            
         }
         
         private func bind(_ product: ProductView.ViewModel) {
