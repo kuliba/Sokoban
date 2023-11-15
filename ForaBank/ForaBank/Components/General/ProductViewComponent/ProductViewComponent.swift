@@ -376,6 +376,18 @@ extension ProductView {
             
             return ""
         }
+        
+        func resetToFront() {
+            
+            cardInfo.state = .showFront
+        }
+        
+        func resetToFrontIfNotAwaiting() {
+            
+            if cardInfo.state != .awaitingCVV {
+                resetToFront()
+            }
+        }
     }
 }
 
@@ -582,9 +594,9 @@ extension ProductView.ViewModel {
 
         enum State: Equatable {
             
+            case awaitingCVV
             case fullNumberMaskedCVV
             case maskedNumberCVV(CVV)
-            case maskedNumberMaskedCVV
             case showFront
         }
         
@@ -625,7 +637,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .maskedNumberCVV, .maskedNumberMaskedCVV:
+        case .maskedNumberCVV, .awaitingCVV:
             return numberMasked.value
             
         case .fullNumberMaskedCVV, .showFront:
@@ -637,7 +649,7 @@ extension ProductView.ViewModel.CardInfo {
         
         switch state {
             
-        case .fullNumberMaskedCVV, .maskedNumberMaskedCVV, .showFront:
+        case .fullNumberMaskedCVV, .showFront, .awaitingCVV:
             return cvvTitle.value
             
         case let .maskedNumberCVV(value):
@@ -711,7 +723,11 @@ private extension View {
 
 struct ProductView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
+    
+    init(viewModel: ViewModel) {
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         
@@ -745,14 +761,12 @@ struct ProductView: View {
             value: viewModel.cardInfo.cardWiggle
         )
         .onAppear {
+            
             viewModel.animationAtFisrtShowCard()
         }
         .onDisappear {
             
-            /*if viewModel.cardInfo.isShowingCardBack {
-                
-                viewModel.productDidTapped()
-            }*/
+            viewModel.resetToFrontIfNotAwaiting()
         }
         
         ProductBackView(
@@ -1144,10 +1158,14 @@ extension ProductView.ViewModel {
     
     func showCVVButtonTap() {
         let cardId = CardDomain.CardId.init(self.id)
-        showCvv?(cardId) {
-            if let cvv = $0 {
-                Task { @MainActor in
-                    self.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+        cardInfo.state = .awaitingCVV
+        showCvv?(cardId) { cvv in
+            
+            Task { @MainActor [weak self] in
+                if let cvv {
+                    self?.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+                } else {
+                    self?.cardInfo.state = .fullNumberMaskedCVV
                 }
             }
         }

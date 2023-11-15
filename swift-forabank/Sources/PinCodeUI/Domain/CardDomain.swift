@@ -45,8 +45,12 @@ public enum ErrorDomain: Equatable {
     public typealias ErrorMessage = Tagged<_ErrorMessage, String>
     public enum _ErrorMessage {}
 
+    public typealias ButtonTitle = Tagged<_ButtonTitle, String>
+    public enum _ButtonTitle {}
+
     case errorForAlert(ErrorMessage)
     case errorScreen
+    case weakPinAlert(ErrorMessage, ButtonTitle)
     
     public var message: ErrorMessage? {
         switch self {
@@ -55,6 +59,19 @@ public enum ErrorDomain: Equatable {
             return errorMessage
         case .errorScreen:
             return nil
+        case let .weakPinAlert(errorMessage, _):
+            return errorMessage
+        }
+    }
+    
+    public var buttonTitle: ButtonTitle? {
+        switch self {
+            
+        case .errorForAlert, .errorScreen:
+            return nil
+            
+        case let .weakPinAlert(_, buttonTitle):
+            return buttonTitle
         }
     }
 }

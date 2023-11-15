@@ -56,10 +56,21 @@ public struct ConfirmView: View {
             .frame(maxHeight: .infinity)
         }
         .alert(isPresented: $viewModel.showAlert) {
-            .init(
-                title: Text("Ошибка"),
-                message: Text(viewModel.alertMessage)
-            )
+            if let buttonTitle = viewModel.buttonTitle {
+                return Alert(
+                    title: Text("Ошибка"),
+                    message: Text(viewModel.alertMessage),
+                    primaryButton: Alert.Button.default(Text("Отмена")),
+                    secondaryButton: Alert.Button.default(Text(buttonTitle), action: {
+                        viewModel.restartChangePin()
+                    })
+                )
+            } else {
+                return Alert(
+                    title: Text("Ошибка"),
+                    message: Text(viewModel.alertMessage)
+                )
+            }
         }
         .onReceive(viewModel.action) { action in
             switch action {

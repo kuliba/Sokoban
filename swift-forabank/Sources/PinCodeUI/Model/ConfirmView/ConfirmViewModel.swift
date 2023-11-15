@@ -32,7 +32,8 @@ public class ConfirmViewModel: ObservableObject {
     let showSpinner: () -> Void
     let resendRequestAfterClose: (CardDomain.CardId, CVVPinAction) -> Void
     var alertMessage: String = ""
-    
+    var buttonTitle: String?
+
     public init(
         phoneNumber: PhoneDomain.Phone,
         cardId: CardDomain.CardId,
@@ -74,33 +75,40 @@ public class ConfirmViewModel: ObservableObject {
                     cardId: cardId,
                     newPin: newPin,
                     otp: otp)
-               handlerChangePin(changePin) { [weak self] result in
-                   
-                   guard let self else { return }
-                   
-                   if let result {
-                       if let message = result.message {
-                           DispatchQueue.main.async { [weak self] in
-                               
-                               guard let self else { return }
-                               
-                               self.isDisabled = false
-                               self.otp = ""
-                               self.alertMessage = message.rawValue
-                               self.showAlert = true
-                           }
-                       } else {
-                           self.resendRequestAfterClose(self.cardId, .changePinResult(.errorScreen))
-                           DispatchQueue.main.async { [unowned self] in
-                               self.action.send(ConfirmViewModelAction.Close.SelfView())
-                           }
-                       }
-                   } else {
-                       self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
-                       DispatchQueue.main.async { [unowned self] in
-                           self.action.send(ConfirmViewModelAction.Close.SelfView())
-                       }
-                   }
+                handlerChangePin(changePin) { result in
+                    
+                    DispatchQueue.main.async { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        switch result {
+                            
+                        case .none:
+                            self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
+                            self.action.send(ConfirmViewModelAction.Close.SelfView())
+                            
+                        case let .some(error):
+                            switch error {
+                                
+                            case let .errorForAlert(message):
+                                self.isDisabled = false
+                                self.otp = ""
+                                self.alertMessage = message.rawValue
+                                self.showAlert = true
+                                
+                            case .errorScreen:
+                                self.resendRequestAfterClose(self.cardId, .changePinResult(.errorScreen))
+                                self.action.send(ConfirmViewModelAction.Close.SelfView())
+                                
+                            case let .weakPinAlert(message, buttonTitle):
+                                self.isDisabled = false
+                                self.otp = ""
+                                self.alertMessage = message.rawValue
+                                self.buttonTitle = buttonTitle.rawValue
+                                self.showAlert = true
+                            }
+                        }
+                    }
                }
             }
             else {
@@ -144,6 +152,16 @@ public class ConfirmViewModel: ObservableObject {
         
         return self.otp.digits[index].numberString
     }
+    
+    func restartChangePin() {
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            self.resendRequestAfterClose(self.cardId, .restartChangePin)
+            self.action.send(ConfirmViewModelAction.Close.SelfView())
+        }
+    }
 }
 
 private extension String {
@@ -179,6 +197,7 @@ public extension ConfirmViewModel {
         case changePin(PhoneDomain.Phone)
         case showCvv
         case changePinResult(ChangePinResult)
+        case restartChangePin
     }
     
     enum ChangePinResult {
