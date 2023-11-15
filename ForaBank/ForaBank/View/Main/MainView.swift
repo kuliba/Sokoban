@@ -174,17 +174,14 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .paymentSticker(viewModel):
-            OperationView(
+            OperationWrapperView(operationWrapperViewModel: .init(
                 model: viewModel,
-                configuration: MainView.configurationOperationView(),
-                branchesView: PlacesListView(viewModel: .init(
+                placesViewModel: .init(
                     atmList: model.dictionaryAtmList() ?? [],
                     metroStationsList: model.dictionaryAtmMetroStations(),
                     referenceLocation: .init(latitude: 0, longitude: 0)
-                ))
-            )
-            .navigationBarTitle("Оформление заявки", displayMode: .inline)
-            .edgesIgnoringSafeArea(.bottom)
+                )
+            ))
         }
     }
     
