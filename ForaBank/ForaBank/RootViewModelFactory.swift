@@ -68,4 +68,22 @@ extension Model {
             signRequest: signRequest
         )
     }
+    
+    func productsMapper(
+        model: Model
+    ) -> [BusinessLogic.Product] {
+        
+        let allProducts = model.allProducts.map({ BusinessLogic.Product(
+            title: "Счет списания",
+            nameProduct: $0.displayName,
+            balance: $0.balanceValue.description,
+            description: $0.displayNumber ?? "",
+            cardImage: PaymentSticker.ImageData(data: $0.smallDesign.uiImage?.pngData() ?? Data()),
+            paymentSystem: PaymentSticker.ImageData(data: $0.paymentSystem.debugDescription.data),
+            backgroundImage: PaymentSticker.ImageData(data: $0.largeDesign.uiImage?.pngData() ?? Data()),
+            backgroundColor: $0.backgroundColor.description
+        )})
+        
+        return allProducts
+    }
 }
