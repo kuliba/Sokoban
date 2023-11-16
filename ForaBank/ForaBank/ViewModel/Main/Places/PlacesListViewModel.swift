@@ -59,11 +59,8 @@ class PlacesListViewModel: ObservableObject {
             let item = ItemViewModel(
                 atmItem: atmItem,
                 metroStationsList: metroStationsList,
-                currentLocation: referenceLocation,
-                action: { [weak self] in
-                
-                    self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id, name: atmItem.name))
-            })
+                currentLocation: referenceLocation
+            )
             
             items.append(item)
         }
@@ -82,9 +79,8 @@ extension PlacesListViewModel {
         let metro: [MetroStationViewModel]?
         let schedule: String
         let distance: String?
-        let action: () -> Void
         
-        internal init(id: AtmData.ID, name: String, address: String, metro: [MetroStationViewModel]?, schedule: String, distance: String?, action: @escaping () -> Void) {
+        internal init(id: AtmData.ID, name: String, address: String, metro: [MetroStationViewModel]?, schedule: String, distance: String?) {
             
             self.id = id
             self.name = name
@@ -92,10 +88,9 @@ extension PlacesListViewModel {
             self.metro = metro
             self.schedule = schedule
             self.distance = distance
-            self.action = action
         }
         
-        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?, action: @escaping () -> Void) {
+        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?) {
             
             let metroStations = metroStationsList?.filter({ atmItem.metroStationList.contains($0.id) }).map({ MetroStationViewModel(id: $0.id, name: $0.name, color: $0.color.color)})
             
@@ -104,8 +99,7 @@ extension PlacesListViewModel {
                       address: atmItem.address,
                       metro: metroStations,
                       schedule: atmItem.schedule,
-                      distance: atmItem.distanceFormatted(to: currentLocation),
-                      action: action)
+                      distance: atmItem.distanceFormatted(to: currentLocation))
             
         }
         
