@@ -182,7 +182,7 @@ struct ProductProfileView: View {
                         confirm: viewModel.confirmShowCVV,
                         confirmChangePin: viewModel.confirmChangePin,
                         showSpinner: {},
-                        resendRequest: {},
+                        resendRequest: $0.request,
                         resendRequestAfterClose: viewModel.closeLinkAndResendRequest
                     ).transition(.move(edge: .leading))
                 }
