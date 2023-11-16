@@ -21,6 +21,13 @@ final class Composer {
 
 extension Composer {
     
+    func makeAlertView(
+        _ alert: Navigation.Alert
+    ) -> SwiftUI.Alert {
+        
+        .init(title: Text(alert.message))
+    }
+    
     @ViewBuilder
     func makeDestinationView(
         _ destination: Navigation.Destination
@@ -55,11 +62,20 @@ extension Composer {
         
         switch qrResult {
         case let .sberQR(url):
-            navigationModel.setSheet(to: .sberQRPayment(url))
+            navigationModel.resetNavigation()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                
+                self?.navigationModel.setSheet(to: .sberQRPayment(url))
+            }
             
         case let .error(text):
-            // navigationModel.setAlert(text)
             navigationModel.resetNavigation()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                
+                self?.navigationModel.setAlert(to: .init(message: text))
+            }
         }
     }
     

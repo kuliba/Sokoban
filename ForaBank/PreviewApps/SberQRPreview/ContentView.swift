@@ -22,6 +22,10 @@ struct ContentView: View {
     var body: some View {
         
         composer.makeMainView()
+            .alert(
+                item: navigationModel.alertBinding,
+                content: composer.makeAlertView
+            )
             .fullScreenCover(
                 item: navigationModel.fullScreenCoverBinding,
                 content: composer.makeFullScreenCoverView
@@ -39,13 +43,13 @@ struct ContentView: View {
 
 private extension NavigationModel {
     
-    var fullScreenCoverBinding: Binding<Navigation.FullScreenCover?> {
+    var alertBinding: Binding<Navigation.Alert?> {
         
         .init(
-            get: { [weak self] in self?.navigation?.fullScreenCover },
+            get: { [weak self] in self?.navigation?.alert },
             set: { [weak self] in
                 
-                if $0 == nil { self?.resetFullScreenCover() }
+                if $0 == nil { self?.resetAlert() }
             }
         )
     }
@@ -57,6 +61,17 @@ private extension NavigationModel {
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetDestination() }
+            }
+        )
+    }
+    
+    var fullScreenCoverBinding: Binding<Navigation.FullScreenCover?> {
+        
+        .init(
+            get: { [weak self] in self?.navigation?.fullScreenCover },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetFullScreenCover() }
             }
         )
     }

@@ -17,6 +17,22 @@ extension NavigationModel {
         setNavigation(to: nil)
     }
     
+    // MARK: - Alert
+    
+    func resetAlert() {
+        
+        if navigation?.destination != nil {
+            
+            resetNavigation()
+        }
+    }
+    
+    func setAlert(
+        to alert: Navigation.Alert
+    ) {
+        setNavigation(to: .alert(alert))
+    }
+    
     // MARK: - Destination
     
     func resetDestination() {

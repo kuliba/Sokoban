@@ -9,11 +9,19 @@ import Foundation
 
 enum Navigation: Hashable & Identifiable {
     
+    case alert(Alert)
     case destination(Destination)
     case fullScreenCover(FullScreenCover)
     case sheet(Sheet)
     
     var id: Self { self }
+    
+    struct Alert: Hashable & Identifiable {
+        
+        let message: String
+        
+        var id: Self { self }
+    }
     
     enum Destination: Hashable & Identifiable {
         
@@ -38,6 +46,14 @@ enum Navigation: Hashable & Identifiable {
 }
 
 extension Navigation {
+    
+    var alert: Alert? {
+        
+        guard case let .alert(alert) = self
+        else { return nil }
+        
+        return alert
+    }
     
     var destination: Destination? {
         
