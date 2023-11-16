@@ -173,15 +173,12 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .paymentSticker(viewModel):
-            OperationWrapperView(operationWrapperViewModel: .init(
-                model: viewModel,
-                placesViewModel: .init(
-                    atmList: model.dictionaryAtmList() ?? [],
-                    metroStationsList: model.dictionaryAtmMetroStations(),
-                    referenceLocation: .init(latitude: 0, longitude: 0)
-                )
-            ))
+        case let .paymentSticker(makeOperation):
+            NavigationOperationViewFactory.makeNavigationOperationView(
+                makeOperation: makeOperation,
+                atmData: model.dictionaryAtmList() ?? [],
+                atmMetroStationData: model.dictionaryAtmMetroStations()
+            )
         }
     }
     
