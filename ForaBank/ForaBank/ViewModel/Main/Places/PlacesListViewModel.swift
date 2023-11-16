@@ -28,6 +28,14 @@ class PlacesListViewModel: ObservableObject {
         update(with: atmList, metroStationsList: metroStationsList, referenceLocation: referenceLocation)
     }
         
+    func selectItem(atmItem: PlacesListViewModel.ItemViewModel) {
+        
+        action.send(PlacesListViewModelAction.ItemDidSelected(
+            itemId: atmItem.id,
+            name: atmItem.name
+        ))
+    }
+    
     static func atmItemsSorted(atmList: [AtmData], referenceLocation: CLLocationCoordinate2D) -> [AtmData] {
         
         let atmItemsWithDistances: [(item: AtmData, distance: CLLocationDistance)] = atmList.compactMap { atmItem in
