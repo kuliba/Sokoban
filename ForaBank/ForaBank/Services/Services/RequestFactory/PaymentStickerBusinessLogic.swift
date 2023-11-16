@@ -19,11 +19,16 @@ final class BusinessLogic {
     typealias Completion = (OperationResult) -> Void
     typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     
+    typealias ChangeNavigationState = (NavigationViewModel.NavigationState) -> Void
+    typealias SelectAtmOption = (PaymentSticker.Operation, PlacesListViewModel.ItemViewModel) -> Void
+    
     //TODO: replace remoteService to closure or protocol
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
     let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
     let makeTransferService: RemoteService<String, MakeTransferResponse>
     let imageLoaderService: RemoteService<[String], [ImageData]>
+    let changeNavigationState: ChangeNavigationState
+    let selectAtmOption: SelectAtmOption
     let products: [Product]
     let cityList: [City]
     
@@ -32,6 +37,8 @@ final class BusinessLogic {
         transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
         makeTransferService: RemoteService<String, MakeTransferResponse>,
         imageLoaderService: RemoteService<[String], [ImageData]>,
+        changeNavigationState: @escaping ChangeNavigationState,
+        selectAtmOption: @escaping SelectAtmOption,
         products: [Product],
         cityList: [City]
     ) {
@@ -39,6 +46,8 @@ final class BusinessLogic {
         self.transferService = transferService
         self.makeTransferService = makeTransferService
         self.imageLoaderService = imageLoaderService
+        self.changeNavigationState = changeNavigationState
+        self.selectAtmOption = selectAtmOption
         self.products = products
         self.cityList = cityList
     }
@@ -80,6 +89,30 @@ extension BusinessLogic {
 }
 
 extension BusinessLogic {
+    
+    func selectAtmOption(
+        operation: PaymentSticker.Operation,
+        atm: PlacesListViewModel.ItemViewModel
+    ) -> OperationResult {
+        
+        let newOperation = operation.updateOperation(
+            operation: operation,
+            newParameter: .select(.init(
+                id: .officeSelector,
+                value: atm.id,
+                title: "",
+                placeholder: "",
+                options: [],
+                state: .selected(.init(
+                    title: "",
+                    placeholder: "",
+                    name: atm.name,
+                    iconName: ""
+                ))))
+        )
+        
+        return .success(.operation(newOperation))
+    }
     
     func process(
         operation: PaymentSticker.Operation,
@@ -150,6 +183,7 @@ extension BusinessLogic {
                 return .success(.operation(operation))
             
             case .openBranch:
+                changeNavigationState(.location)
                 return .success(.operation(operation))
                 
             case let .chevronTapped(select):
