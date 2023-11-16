@@ -112,23 +112,21 @@ public class ConfirmViewModel: ObservableObject {
                }
             }
             else {
-                handler(otp) { [weak self] result in
+                handler(otp) { result in
                     
-                    guard let self else { return }
-                    
-                    if let result {
-                        DispatchQueue.main.async { [weak self] in
-                            
-                            guard let self else { return }
-                            
+                    DispatchQueue.main.async { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        if let result {
+                                                        
                             self.isDisabled = false
                             self.otp = ""
                             self.alertMessage = result.message?.rawValue ?? ""
                             self.showAlert = true
-                        }
-                    } else {
-                        self.resendRequestAfterClose(self.cardId, self.actionType)
-                        DispatchQueue.main.async { [unowned self] in
+                            
+                        } else {
+                            self.resendRequestAfterClose(self.cardId, self.actionType)
                             self.action.send(ConfirmViewModelAction.Close.SelfView())
                         }
                     }
