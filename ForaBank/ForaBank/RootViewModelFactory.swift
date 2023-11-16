@@ -29,8 +29,10 @@ enum RootViewModelFactory {
                 ),
                 makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
-                products: $0,
-                cityList: $1
+                changeNavigationState: $0,
+                selectAtmOption: $1,
+                products: model.productsMapper(model: model),
+                cityList: model.citiesMapper(model: model)
             ))
         }
         
@@ -85,5 +87,13 @@ extension Model {
         )})
         
         return allProducts
+    }
+    
+    func citiesMapper(
+        model: Model
+    ) -> [BusinessLogic.City] {
+        
+        let cities = model.localAgent.load(type: [AtmCityData].self)
+        return (cities?.compactMap{ $0 }.map({ BusinessLogic.City(id: $0.id.description, name: $0.name) })) ?? []
     }
 }
