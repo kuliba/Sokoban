@@ -63,16 +63,8 @@ extension SearchFactory {
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
-            let type: ContactsViewModel.PaymentsType = {
-                switch mode {
-                case .abroad:
-                    return .abroad
-                default:
-                    return .other
-                }
-            }()
-            let input = type == .abroad ? "+\($0)" : $0
-            return PhoneNumberKitWrapper.formatPartial(for: type, input)
+            
+            return PhoneNumberKitWrapper.formatPartial($0)
         }
         
         let contactsTextField = TextFieldFactory.contactTextField(
