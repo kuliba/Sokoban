@@ -10,13 +10,6 @@ import SwiftUI
 @main
 struct SberQRPreviewApp: App {
     
-    private let composer: Composer
-    
-    init() {
-        
-        self.composer = .init(navigation: .fullScreenCover(.qrReader))
-    }
-    
     var body: some Scene {
         
         WindowGroup {
@@ -24,10 +17,7 @@ struct SberQRPreviewApp: App {
             NavigationView {
                 
                 ContentView(
-                    navigationModel: composer.navigationModel,
-                    mainView: composer.makeMainView,
-                    destinationView: composer.makeDestinationView,
-                    fullScreenCoverView: composer.makeFullScreenCoverView
+                    navigation: .fullScreenCover(.qrReader)
                 )
             }
         }
