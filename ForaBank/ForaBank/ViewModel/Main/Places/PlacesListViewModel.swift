@@ -135,12 +135,28 @@ enum PlacesListViewModelAction {
 
 extension PlacesListViewModel.ItemViewModel {
     
-    static let sampleOne = PlacesListViewModel.ItemViewModel(id: UUID().uuidString, name: "Автозаводская (офис)", address: "Рублевское ш., дом 62, ТЦ «ЕвроПарк»", metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62")), .init(id: 2, name: "Автозаводская", color: Color(hex: "7ABA62")), .init(id: 3, name: "Автозаводская", color: Color(hex: "7ABA62"))], schedule: "Открыто до 20:00", distance: "128 м", action: {})
+    static let sampleOne = PlacesListViewModel.ItemViewModel(
+        id: UUID().uuidString,
+        name: "Автозаводская (офис)",
+        address: "Рублевское ш., дом 62, ТЦ «ЕвроПарк»",
+        metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62")),
+                .init(id: 2, name: "Автозаводская", color: Color(hex: "7ABA62")),
+                .init(id: 3, name: "Автозаводская", color: Color(hex: "7ABA62"))],
+        schedule: "Открыто до 20:00",
+        distance: "128 м"
+    )
     
-    static let sampleTwo = PlacesListViewModel.ItemViewModel(id: UUID().uuidString, name: "Автозаводская (банкомат)", address: "Аминьевское шоссе, дом 6", metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62"))], schedule: "Открыто до 20:00", distance: "434 м", action: {})
+    static let sampleTwo = PlacesListViewModel.ItemViewModel(
+        id: UUID().uuidString,
+        name: "Автозаводская (банкомат)",
+        address: "Аминьевское шоссе, дом 6",
+        metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62"))],
+        schedule: "Открыто до 20:00",
+        distance: "434 м"
+    )
 }
 
 extension PlacesListViewModel {
-    
+
     static let sample = PlacesListViewModel(items: [.sampleOne, .sampleTwo])
 }
