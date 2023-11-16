@@ -68,7 +68,7 @@ extension Model {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            return PhoneNumberKitFormater().format(phone.count == 10 ? "7\(phone)" : phone)
+            return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
