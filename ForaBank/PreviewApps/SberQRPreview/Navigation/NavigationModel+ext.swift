@@ -15,6 +15,12 @@ extension NavigationModel {
         setNavigation(to: nil)
     }
     
+    func setDestination(
+        to destination: Navigation.Destination
+    ) {
+        setNavigation(to: .destination(destination))
+    }
+    
     func setFullScreenCover(
         to fullScreenCover: Navigation.FullScreenCover
     ) {

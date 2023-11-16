@@ -22,6 +22,17 @@ final class Composer {
     }
     
     @ViewBuilder
+    func makeDestinationView(
+        _ destination: Navigation.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .sberQRPayment(url):
+            SberQRPaymentView(url: url)
+        }
+    }
+    
+    @ViewBuilder
     func makeFullScreenCoverView(
         _ fullScreenCover: Navigation.FullScreenCover
     ) -> some View {
@@ -40,7 +51,7 @@ final class Composer {
         
         switch qrResult {
         case let .sberQR(url):
-            navigationModel.resetNavigation()
+            navigationModel.setDestination(to: .sberQRPayment(url))
             
         case let .error(text):
             // navigationModel.setAlert(text)

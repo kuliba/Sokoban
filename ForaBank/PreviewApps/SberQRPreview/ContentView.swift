@@ -7,15 +7,27 @@
 
 import SwiftUI
 
-struct ContentView<MainView: View, FullScreenCoverView: View>: View {
+struct ContentView<MainView, DestinationView, FullScreenCoverView>: View
+where MainView: View,
+      DestinationView: View,
+      FullScreenCoverView: View{
     
     @ObservedObject var navigationModel: NavigationModel
+    
     let mainView: () -> MainView
+    let destinationView: (Navigation.Destination) -> DestinationView
     let fullScreenCoverView: (Navigation.FullScreenCover) -> FullScreenCoverView
     
     var body: some View {
         
         mainView()
+            .navigationDestination(
+                item: .init(
+                    get: { navigationModel.navigation?.destination },
+                    set: { if $0 == nil { navigationModel.resetNavigation() }}
+                ),
+                content: destinationView
+            )
             .fullScreenCover(
                 item: .init(
                     get: { navigationModel.navigation?.fullScreenCover },
@@ -27,10 +39,13 @@ struct ContentView<MainView: View, FullScreenCoverView: View>: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
+        
         ContentView(
             navigationModel: .init(),
             mainView: { Text("Main View") },
+            destinationView: { _ in Text("Destination View") },
             fullScreenCoverView: { _ in Text("Full Screen Cover View") }
         )
     }

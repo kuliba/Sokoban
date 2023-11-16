@@ -23,11 +23,15 @@ struct SberQRPreviewApp: App {
         
         WindowGroup {
             
-            ContentView(
-                navigationModel: composer.navigationModel,
-                mainView: composer.makeMainView,
-                fullScreenCoverView: composer.makeFullScreenCoverView
-            )
+            NavigationView {
+                
+                ContentView(
+                    navigationModel: composer.navigationModel,
+                    mainView: composer.makeMainView,
+                    destinationView: composer.makeDestinationView,
+                    fullScreenCoverView: composer.makeFullScreenCoverView
+                )
+            }
         }
     }
 }
