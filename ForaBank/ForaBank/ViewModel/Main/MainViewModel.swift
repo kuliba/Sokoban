@@ -12,7 +12,9 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias MakeOperationStateViewModel = ([BusinessLogic.Product], [BusinessLogic.City]) -> OperationStateViewModel
+    typealias ChangeNavigationState = BusinessLogic.ChangeNavigationState
+    typealias SelectAtmOption = BusinessLogic.SelectAtmOption
+    typealias MakeOperationStateViewModel = (@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -387,22 +389,8 @@ class MainViewModel: ObservableObject, Resetable {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                        let allProducts = model.allProducts.map({ BusinessLogic.Product(
-                            title: "Счет списания",
-                            nameProduct: $0.displayName,
-                            balance: $0.balanceValue.description,
-                            description: $0.displayNumber ?? "",
-                            cardImage: PaymentSticker.ImageData(data: $0.smallDesign.uiImage?.pngData() ?? Data()),
-                            paymentSystem: PaymentSticker.ImageData(data: $0.paymentSystem.debugDescription.data),
-                            backgroundImage: PaymentSticker.ImageData(data: $0.largeDesign.uiImage?.pngData() ?? Data()),
-                            backgroundColor: $0.backgroundColor.description
-                        )})
-                        let cities = model.localAgent.load(type: [AtmCityData].self)
                         
-                        self.link = .paymentSticker(makeOperationStateViewModel(
-                            allProducts,
-                            (cities?.compactMap{ $0 } .map({ BusinessLogic.City(id: $0.id.description, name: $0.name)}))!
-                        ))
+                        self.link = .paymentSticker(makeOperationStateViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)
@@ -935,7 +923,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case paymentSticker(OperationStateViewModel)
+        case paymentSticker((@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel)
 
     }
     
