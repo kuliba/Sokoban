@@ -45,11 +45,8 @@ struct CVVPinErrorMapper {
         case let .retry(_, _, retryAttempts):
             return retryAttempts > 0 ? .errorForAlert(.init(String.incorrectСode)) : .noRetry(.init(String.technicalError), .init("Ок"))
             
-        case .serviceFailure:
-            return .errorForAlert(.init(String.technicalError))
-            
-        case let .server(_, message):
-            return .errorForAlert(.init(message))
+        case .serviceFailure, .server:
+            return .noRetry(.init(String.technicalError), .init("Ок"))
         }
     }
 }
