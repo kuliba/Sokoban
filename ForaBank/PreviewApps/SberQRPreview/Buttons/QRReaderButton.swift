@@ -14,7 +14,9 @@ struct QRReaderButton: View {
     var body: some View {
         
         Button(action: action) {
+            
             Image(systemName: "qrcode.viewfinder")
+                .imageScale(.large)
         }
     }
 }
