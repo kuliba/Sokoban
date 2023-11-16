@@ -21,16 +21,8 @@ enum PhoneNumberKitWrapper {
     }
     
     static func formatPartial(
-        for type: ContactsViewModel.PaymentsType,
         _ input: String
     ) -> String {
-   // удалить (или вернуть) после проверки тестровщиков!!!
-        /*switch type {
-        case .abroad:
-            return partialFormatter.formatPartial(input)
-        default:
-            return phoneNumberWrapper.format(input)
-        }*/
         return phoneNumberWrapper.format(input)
     }
 }
