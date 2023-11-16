@@ -22,7 +22,7 @@ final class PhoneKitTransformerTests: XCTestCase {
     
     func test_shouldReturnArmenianCode_on3() {
         
-        let transformed = transform(for: .abroad, .init("3"))
+        let transformed = transform(.init("3"))
         
         assertTextState(transformed, hasText: "+3", cursorAt: 2)
     }
@@ -50,7 +50,7 @@ final class PhoneKitTransformerTests: XCTestCase {
     
     func test_shouldReturnPartiallyFormatted_on3WithNonDigits() {
         
-        let transformed = transform(for: .abroad, .init("$%^3fghj"))
+        let transformed = transform(.init("$%^3fghj"))
         
         assertTextState(transformed, hasText: "+3", cursorAt: 2)
     }
@@ -86,14 +86,13 @@ final class PhoneKitTransformerTests: XCTestCase {
     // MARK: - Helpers
     
     private func transform(
-        for type: ContactsViewModel.PaymentsType = .other,
         _ state: TextState,
         file: StaticString = #file,
         line: UInt = #line
     ) -> TextState {
         
         return Transformers
-            .phoneKit(for: type, filterSymbols: [], substitutions: [])
+            .phoneKit(filterSymbols: [], substitutions: [])
             .transform(state)
     }
 }
