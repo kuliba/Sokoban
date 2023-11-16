@@ -15,11 +15,11 @@ final class Composer {
         
         self.navigationModel = .init(navigation: navigation)
     }
-    
-    func makeMainView() -> some View {
-        
-        makeQRReaderButton()
-    }
+}
+
+// MARK: - Navigation
+
+extension Composer {
     
     @ViewBuilder
     func makeDestinationView(
@@ -29,7 +29,7 @@ final class Composer {
         switch destination {
         case let .sberQRPayment(url):
             
-            SberQRPaymentView(
+            makeSberQRPaymentView(
                 url: url,
                 dismiss: navigationModel.resetNavigation
             )
@@ -44,14 +44,14 @@ final class Composer {
         switch fullScreenCover {
         case .qrReader:
             
-            QRReaderStub { [weak self] qrResult in
+            makeQRReader { [weak self] qrResult in
                 
                 self?.handleQRParsingResult(qrResult)
             }
             
         case let .sberQRPayment(url):
             
-            SberQRPaymentView(
+            makeSberQRPaymentView(
                 url: url,
                 dismiss: navigationModel.resetNavigation
             )
@@ -69,6 +69,16 @@ final class Composer {
             navigationModel.resetNavigation()
         }
     }
+}
+
+// MARK: - Compose Views
+
+extension Composer {
+    
+    func makeMainView() -> some View {
+        
+        makeQRReaderButton()
+    }
     
     func makeQRReaderButton() -> some View {
         
@@ -76,5 +86,23 @@ final class Composer {
             
             self?.navigationModel.setFullScreenCover(to: .qrReader)
         }
+    }
+    
+    func makeQRReader(
+        commit: @escaping (QRParsingResult) -> Void
+    ) -> some View {
+        
+        QRReaderStub(commit: commit)
+    }
+    
+    func makeSberQRPaymentView(
+        url: URL,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        SberQRPaymentView(
+            url: url,
+            dismiss: dismiss
+        )
     }
 }
