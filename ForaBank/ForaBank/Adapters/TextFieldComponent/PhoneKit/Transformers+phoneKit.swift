@@ -10,6 +10,7 @@ import TextFieldComponent
 extension Transformers {
     
     static func phoneKit(
+        for type: ContactsViewModel.PaymentsType,
         filterSymbols: [Character],
         substitutions: [CountryCodeSubstitution],
         limit: Int? = 18
@@ -22,7 +23,7 @@ extension Transformers {
                 
                 guard !$0.isEmpty else { return $0 }
                 
-                return PhoneNumberKitWrapper.formatPartial("+\($0)")
+                return PhoneNumberKitWrapper.formatPartial(for: type, !$0.hasPrefix("+") ? "+\($0)" : $0)
             },
             limit: limit
         )

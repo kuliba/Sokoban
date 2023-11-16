@@ -6,10 +6,12 @@
 //
 
 import PhoneNumberKit
+import Foundation
 
 public struct PhoneNumberWrapper {
     
     private let phoneNumberKit: PhoneNumberKit
+    private let defaultRegionCode = PhoneNumberKit.defaultRegionCode()
     
     public func isValidPhoneNumber(_ input: String) -> Bool {
         
@@ -25,42 +27,37 @@ public struct PhoneNumberWrapper {
     public func format(_ value: String) -> String {
         
         let phoneNumber = addCodeRuIfNeeded(value.onlyDigits().changeCodeIfNeeded())
-        guard phoneNumber.count > 10,
-              let phoneNumberParsed = try? phoneNumberKit.parse(
-                phoneNumber,
-                ignoreType: true
-              ) else { return phoneNumber.applyPatternOnPhoneNumber() }
+        let countryCode = phoneNumberKit.codeBy(phoneNumber)
+        let codeLength = countryCodeLength(by: countryCode)
+        let mask: String = mask(forCountry: countryCode)
         
+        guard let phoneNumberParsed = try? codeLength > 0 ?
+                phoneNumberKit.parse(
+                    String(phoneNumber.dropFirst(codeLength)),
+                    withRegion: countryCode ?? defaultRegionCode,
+                    ignoreType: true) :
+                    phoneNumberKit.parse(
+                        phoneNumber,
+                        ignoreType: true)
+                
+        else { return phoneNumber.applyPatternOnPhoneNumber(mask: mask) }
         return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
     
-    private func formatWithRegion(
-        _ phoneNumber: String
-    ) -> String {
-        
-        guard let region = regionByPhone(phoneNumber), let phoneNumbersCustomDefaultRegion = try? phoneNumberKit.parse(
-            phoneNumber,
-            withRegion: region,
-            ignoreType: true
-        ) else { return phoneNumber.applyPatternOnPhoneNumber() }
-        return phoneNumberKit.format(
-            phoneNumbersCustomDefaultRegion,
-            toType: .international)
-    }
-    
-    private func regionByPhone(_ input: String) -> String? {
-        
-        if (input.hasPrefix(.nationalDigitalCodeRu) &&
-            input.count == .phoneNumberWithCodeLengthRU) ||
-            input.count == .phoneNumberWithoutCodeLengthRU {
-            return .countryCodeRu
-        }
-        
-        return nil
-    }
-    
     private func addCodeRuIfNeeded(_ input: String) -> String {
-        return (!input.hasPrefix("79") && input.count == .phoneNumberWithoutCodeLengthRU) ? "7"+input : input
+        return input.hasPrefix("89") ? "79" + input.dropFirst(2) : input
+    }
+    
+    func countryCodeLength(by code: String?) -> Int {
+        guard let code else { return 0 }
+        return phoneNumberKit.countryCode(for: code)?.countDigits ?? 0
+    }
+    
+    private func mask(forCountry countryCode: String?) -> String {
+        countryCode.map {
+            phoneNumberKit.getFormattedExampleNumber(forCountry: $0)?.getMaskedNumber() ?? .defaultMask
+        }
+        ?? .defaultMask
     }
 }
 
@@ -72,4 +69,11 @@ private extension Int {
 private extension String {
     static let countryCodeRu: Self = "RU"
     static let nationalDigitalCodeRu: Self = "8"
+    static let defaultMask: Self = "+X XXX XXX-XX-XX"
+}
+
+extension UInt64 {
+    var countDigits: Int {
+        return String(describing: self).count
+    }
 }

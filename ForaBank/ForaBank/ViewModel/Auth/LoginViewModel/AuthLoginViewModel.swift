@@ -27,6 +27,7 @@ class AuthLoginViewModel: ObservableObject {
     private let eventPublishers: EventPublishers
     private let eventHandlers: EventHandlers
     private let factory: AuthLoginViewModelFactory
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     lazy var card: CardViewModel = CardViewModel(
@@ -55,6 +56,7 @@ class AuthLoginViewModel: ObservableObject {
         eventPublishers: EventPublishers,
         eventHandlers: EventHandlers,
         factory: AuthLoginViewModelFactory,
+        onRegister: @escaping () -> Void,
         buttons: [ButtonAuthView.ViewModel] = [],
         scheduler: AnySchedulerOf<DispatchQueue> = .makeMain()
     ) {
@@ -63,6 +65,7 @@ class AuthLoginViewModel: ObservableObject {
         self.eventPublishers = eventPublishers
         self.eventHandlers = eventHandlers
         self.factory = factory
+        self.onRegister = onRegister
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "initialized")
         
@@ -387,6 +390,7 @@ private extension AuthLoginViewModel {
             return CardViewModel.NextButtonViewModel(
                 action: { [weak self] in
                     
+                    self?.onRegister()
                     self?.action.send(.register(cardNumber: cardNumber))
                 })
             

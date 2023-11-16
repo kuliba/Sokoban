@@ -13,8 +13,6 @@
   },
   "testTargets" : [
     {
-      "enabled" : false,
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "WIPTests",
@@ -22,7 +20,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldModelTests",
@@ -30,7 +27,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldDomainTests",
@@ -38,7 +34,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldComponentTests",
@@ -46,7 +41,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "UserModelTests",
@@ -54,7 +48,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "PickerWithPreviewComponentTests",
@@ -62,7 +55,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "LoadableResourceComponentTests",
@@ -70,7 +62,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "TextFieldUITests",
@@ -78,7 +69,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "CvvPinTests",
@@ -86,7 +76,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "GetProcessingSessionCodeServiceTests",
@@ -112,13 +101,6 @@
         "containerPath" : "container:",
         "identifier" : "GenericRemoteServiceTests",
         "name" : "GenericRemoteServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
       }
     },
     {
@@ -165,7 +147,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "PaymentsComponentsTests",
         "name" : "PaymentsComponentsTests"
       }
@@ -175,6 +157,69 @@
         "containerPath" : "container:",
         "identifier" : "PaymentStickerTests",
         "name" : "PaymentStickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CVVPIN_ServicesTests",
+        "name" : "CVVPIN_ServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
       }
     }
   ],

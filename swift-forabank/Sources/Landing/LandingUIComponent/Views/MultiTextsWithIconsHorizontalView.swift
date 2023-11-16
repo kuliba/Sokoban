@@ -56,9 +56,11 @@ extension MultiTextsWithIconsHorizontalView {
                     Text(textItem)
                         .font(config.font)
                         .foregroundColor(config.color)
+                        .accessibilityIdentifier("MultiTextsWithIconsHorizontalItemText")
                 }
             }
             .padding(.vertical, config.padding.itemVertical)
+            .accessibilityIdentifier("MultiTextsWithIconsHorizontalItem")
         }
     }
 }

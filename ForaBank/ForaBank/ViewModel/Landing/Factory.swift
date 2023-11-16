@@ -172,7 +172,7 @@ private extension Model {
         let httpClient: HTTPClient = {
             switch abroadType {
             case .sticker:
-                return authorizedHTTPClient()
+                return self.authenticatedHTTPClient()
             default:
                 return HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
             }

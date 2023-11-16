@@ -9,47 +9,93 @@ import Foundation
 import UIKit
 import Combine
 import SwiftUI
+import Tagged
+import PinCodeUI
 
 class InfoProductViewModel: ObservableObject {
     
+    typealias ShowCVV = ProductView.ViewModel.ShowCVV
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var title: String
     @Published var list: [ItemViewModel]
-    @Published var additionalList: [ItemViewModel]?
+    @Published var listWithAction: [ItemViewModelForList]
+
+    @Published var additionalList: [ItemViewModelForList]?
     @Published var isShareViewPresented = false
+    @Published var accountInfoSelected = false
+    @Published var cardInfoSelected = false
     @Published var alert: Alert.ViewModel?
-    var shareButton: ButtonViewModel?
-    let product: ProductData
+    @Published var bottomSheet: BottomSheet?
+    @Published var spinner: SpinnerView.ViewModel?
     
+    private var needShowNumber = false
+    private var needShowCvv = false
+    var needShowCheckbox = false {
+        didSet {
+            if !self.needShowCheckbox {
+                self.accountInfoSelected = false
+                self.cardInfoSelected = false
+            }
+        }
+    }
+
+    var shareButton: ButtonViewModel?
+    var sendAllButtonVM: ButtonModel?
+    var sendSelectedButtonVM: ButtonModel?
+    
+    let product: ProductData
+    let showCvv: ShowCVV?
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(product: ProductData, title: String, list: [ItemViewModel], additionalList: [ItemViewModel]?, shareButton: ButtonViewModel?, model: Model) {
+    internal init(
+        product: ProductData,
+        title: String,
+        list: [ItemViewModel],
+        listWithAction: [ItemViewModelForList],
+        additionalList: [ItemViewModelForList]?,
+        shareButton: ButtonViewModel?,
+        model: Model,
+        showCvv: ShowCVV? = nil
+    ) {
         
         self.product = product
         self.title = title
         self.list = list
+        self.listWithAction = listWithAction
         self.additionalList = additionalList
         self.shareButton = shareButton
         self.model = model
+        self.showCvv = showCvv
     }
     
-    internal init(model: Model, product: ProductData, info: Bool = true) {
+    internal init(
+        model: Model,
+        product: ProductData,
+        info: Bool = true,
+        showCvv: ShowCVV? = nil
+    ) {
         
         self.model = model
         self.product = product
         self.title = ""
         self.list = []
+        self.listWithAction = []
+        self.showCvv = showCvv
         
         if let cardProductData = product as? ProductCardData {
             
-            self.additionalList = self.setupAdditionalList(for: cardProductData)
+            self.additionalList = self.setupAdditionalList(
+                for: cardProductData,
+                needShowNumber: needShowNumber,
+                needShowCvv: needShowCvv
+            )
         }
         
-        //TODO: refactor shareButton logic by removing isShareViewPresented
-        self.shareButton = .init(action: { [weak self] in self?.isShareViewPresented.toggle() })
-        
+        createShareButtons(isCard: product is ProductCardData)
         bind()
         setBasic(product: product, info: info)
     }
@@ -97,7 +143,7 @@ class InfoProductViewModel: ObservableObject {
         switch product.productType {
         case .card:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
-            self.title = "Реквизиты счета карты"
+            self.title = "Реквизиты счета и карты"
             
         case .account:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: .account, id: product.id))
@@ -121,54 +167,55 @@ class InfoProductViewModel: ObservableObject {
         }
     }
     
+    private func createShareButtons(isCard: Bool) {
+        
+        //TODO: refactor shareButton logic by removing isShareViewPresented
+        self.shareButton = .init(action: { [weak self] in
+            
+            guard let self = self else { return }
+            
+            if isCard {
+                
+                if self.needShowCheckbox {
+                    
+                    self.isShareViewPresented = true
+                } else {
+                    
+                    self.isShareViewPresented = false
+                    self.bottomSheet = .init(type: .share)
+                }
+            } else { self.isShareViewPresented = true }
+        })
+
+        self.sendAllButtonVM = .init(id: .sendAll, action: { [weak self] in
+            
+            self?.bottomSheet = nil
+            self?.isShareViewPresented = true
+        })
+        
+        self.sendSelectedButtonVM = .init(id: .sendSelected, action: { [weak self] in
+            
+            self?.bottomSheet = nil
+            self?.needShowCheckbox = true
+        })
+    }
+    
     private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
+                
                 switch action {
-                case let payload as InfoProductModelAction.ShowCardNumber:
                     
-                    var additionalList: [ItemViewModel] = []
+                case let payload as InfoProductModelAction.ToogleCardNumber:
                     
-                    if let holderName = payload.productCardData.holderName {
-                        
-                        additionalList.append(.init(title: "Держатель карты", subtitle: holderName))
-                    }
+                    cardNumberToggle(productCardData: payload.productCardData)
+                 
+                case let payload as InfoProductModelAction.ToogleCVV:
                     
-                    if let number = payload.productCardData.number {
-                        
-                        let mask = StringValueMask.card
-                        let maskedNumber = number.masked(mask: mask)
-                        
-                        UIPasteboard.general.string = maskedNumber
-                        additionalList.append(.init(title: "Номер карты", subtitle: maskedNumber, button: .init(icon: .ic24EyeOff, action: { [weak self] in
-                            
-                            self?.additionalList = self?.setupAdditionalList(for: payload.productCardData)
-                        })))
-                    }
-                    
-                    if let expireDate = payload.productCardData.expireDate {
-                        
-                        additionalList.append(.init(title: "Карта действует до", subtitle: expireDate))
-                    }
-                    
-                    withAnimation {
-                        
-                        self.additionalList = additionalList
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-                        
-                        withAnimation {
-                            
-                            self.additionalList = self.setupAdditionalList(for: payload.productCardData)
-                        }
-                    }
+                    cvvToogle(productCardData: payload.productCardData)
 
-                case let payload as InfoProductModelAction.Copy:
-                    UIPasteboard.general.string = payload.corrAccount
-                    
                 default:
                     break
                 }
@@ -238,21 +285,25 @@ class InfoProductViewModel: ObservableObject {
                     switch payload {
                     case .success(let data):
                         
-                        var list: [ItemViewModel] = []
+                        let documentListMultiple = Self.reduceMultiple(data: data)
                         
-                        list.append(.init(title: "Получатель", subtitle: data.payeeName))
-                        list.append(.init(title: "Номер счета", subtitle: data.accountNumber, button: .init(icon: .ic24Copy, action: { [weak self] in
-                            self?.action.send(InfoProductModelAction.Copy(corrAccount: data.accountNumber))
-                        })))
-                        list.append(.init(title: "БИК", subtitle: data.bic))
-                        list.append(.init(title: "Корреспондентский счет", subtitle: data.corrAccount))
-                        list.append(.init(title: "ИНН", subtitle: data.inn))
-                        list.append(.init(title: "КПП", subtitle: data.kpp))
+                        let listMultiple: ItemViewModelForList = Self.makeItemViewModelMultiple(
+                            from: documentListMultiple,
+                            with: copyValue(value:titleForInformer:)
+                        )
+
+                        let documentListSingle = Self.reduceSingle(data: data)
                         
-                        withAnimation {
+                        var list: [ItemViewModelForList] = documentListSingle.map {
                             
-                            self.list = list
+                            Self.makeItemViewModelSingle(
+                                from: $0,
+                                with: copyValue(value:titleForInformer:)
+                            )
                         }
+                        list.append(listMultiple)
+                        
+                        self.listWithAction = list
                         
                     case .failure(let error):
                         self.alert = .init(title: "Ошибка", message: error, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
@@ -263,62 +314,270 @@ class InfoProductViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    func setupAdditionalList(for productCardData: ProductCardData) -> [ItemViewModel] {
+    func setupAdditionalList(
+        for productCardData: ProductCardData,
+        needShowNumber: Bool,
+        needShowCvv: Bool
+    ) -> [ItemViewModelForList] {
         
-        var additionalList: [ItemViewModel] = []
+        let documentListMultiple = Self.reduceMultiple(
+            data: productCardData,
+            needShowCvv: needShowCvv
+        )
         
-        if let holderName = productCardData.holderName {
+        let listMultiple: ItemViewModelForList = .multiple(
+            documentListMultiple.map {
+                
+                switch $0.id {
+                    
+                case .cvv, .cvvMasked:
+                    return Self.makeItemViewModel(
+                        from: $0,
+                        with: {_,_ in },
+                        actionForIcon: {
+                            
+                            self.action.send(InfoProductModelAction.ToogleCVV(productCardData: productCardData))
+                        }
+                    )
+                    
+                default:
+                    return Self.makeItemViewModel(
+                        from: $0,
+                        with: copyValue(value:titleForInformer:)
+                    )
+                }
+            }
+        )
+
+        let documentListSingle = Self.reduceSingle(
+            data: productCardData,
+            needShowFullNumber: needShowNumber)
+        
+        var list: [ItemViewModelForList] = documentListSingle.map {
             
-            additionalList.append(.init(title: "Держатель карты", subtitle: holderName))
+            switch $0.id {
+                
+            case .number, .numberMasked:
+               return Self.makeItemViewModelSingle(
+                    from: $0,
+                    with: copyValue(value:titleForInformer:),
+                    actionForIcon: {
+                        
+                        self.action.send(InfoProductModelAction.ToogleCardNumber(productCardData: productCardData))
+                    }
+                )
+             
+            default:
+                return Self.makeItemViewModelSingle(
+                    from: $0,
+                    with: copyValue(value:titleForInformer:)
+                )
+            }
         }
-        
-        if let numberMasked = productCardData.numberMasked {
-            
-            additionalList.append(.init(title: "Номер карты", subtitle: numberMasked, button: .init(icon: .ic24Eye, action: { [weak self] in
-                self?.action.send(InfoProductModelAction.ShowCardNumber(productCardData: productCardData))
-            })))
+        list.append(listMultiple)
+        return list
+    }
+    
+    func updateAdditionalList(
+        oldList: [ItemViewModelForList]?,
+        newCvv: String
+    ) -> [ItemViewModelForList]? {
+        guard let oldList else { return nil}
+        let list = oldList.map { item in
+            switch item {
+            case .single:
+                return item
+            case let .multiple(items):
+              let newItems = items.map {
+                  switch $0.id {
+                      
+                  case .cvv:
+                      var newItem = $0
+                      newItem.subtitle = newCvv
+                      return newItem
+                      
+                  default:
+                      return $0
+                  }
+                }
+                return .multiple(newItems)
+            }
         }
+        return list
+    }
+    
+    func copyValue(value: String, titleForInformer: String) {
         
-        if let expireDate = productCardData.expireDate {
-            
-            additionalList.append(.init(title: "Карта действует до", subtitle: expireDate))
+        UIPasteboard.general.string = value
+        self.model.action.send(ModelAction.Informer.Show(
+            informer: .init(
+                message: "\(titleForInformer) скопирован",
+                icon: .copy,
+                type: .copyInfo
+            )
+        ))
+    }
+    
+    func hideCheckBox() {
+        
+        self.needShowCheckbox = false
+    }
+    
+    struct BottomSheet: Identifiable, BottomSheetCustomizable {
+
+        let id = UUID()
+        let type: BottomSheetType
+        
+        enum BottomSheetType {
+
+            case share
         }
-        
-        return additionalList
     }
 }
 
 struct InfoProductModelAction {
     
-    struct ShowCardNumber: Action {
+    struct ToogleCardNumber: Action {
         
         let productCardData: ProductCardData
     }
     
-    struct Copy: Action {
+    struct ToogleCVV: Action {
         
-        let corrAccount: String
+        let productCardData: ProductCardData
+    }
+    
+    struct ShowCVV: Action {
+        let cardId: CardDomain.CardId
+        let cvv: ProductView.ViewModel.CardInfo.CVV
+    }
+    
+    enum Spinner {
+        
+        struct Show: Action {}
+        struct Hide: Action {}
+    }
+    
+    struct Close: Action {}
+}
+
+extension InfoProductViewModel {
+    
+    var isDisableShareButton: Bool {
+        
+       return needShowCheckbox ? !(accountInfoSelected || cardInfoSelected) : false
+    }
+
+    var dataForShare: [Any] {
+        
+        var data: [Any] = []
+        
+        if !list.isEmpty {
+            
+            data.append(list)
+        }
+
+        if needShowCheckbox {
+            
+            if accountInfoSelected {
+                
+                data.append(listWithAction)
+            }
+            if cardInfoSelected, let additionalList = additionalList {
+                
+                data.append(additionalList)
+            }
+        } else {
+
+            data.append(listWithAction)
+            if let additionalList = additionalList {
+                
+                data.append(additionalList)
+            }
+        }
+        return data
     }
 }
 
-
-//TODO: rename ActivityViewController -> ActivityView an remove in from ViewModel
-struct ActivityViewController: UIViewControllerRepresentable {
+extension InfoProductViewModel {
     
-    var itemsToShare: [InfoProductViewModel.ItemViewModel]
-    var servicesToShareItem: [UIActivity]? = nil
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
+    func cardNumberToggle(productCardData: ProductCardData) {
         
-        var copyText: [Any] = []
+        needShowNumber.toggle()
         
-        for i in itemsToShare {
-            copyText.append(i.title + " : " + i.subtitle + "\n")
+        if needShowNumber, needShowCvv {
+            
+            needShowCvv.toggle()
         }
-        
-        let controller = UIActivityViewController(activityItems: copyText, applicationActivities: servicesToShareItem)
-        return controller
+        self.additionalList = self.setupAdditionalList(
+            for: productCardData,
+            needShowNumber: needShowNumber,
+            needShowCvv: needShowCvv
+        )
     }
     
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>){}
+    func cvvToogle(productCardData: ProductCardData) {
+        
+        needShowCvv.toggle()
+        
+        if self.needShowNumber, self.needShowCvv {
+            
+            self.needShowNumber.toggle()
+        }
+
+        self.additionalList = self.setupAdditionalList(
+            for: productCardData,
+            needShowNumber: needShowNumber,
+            needShowCvv: needShowCvv
+        )
+        
+        if needShowCvv {
+            self.showCvv?(.init(productCardData.id)) { [weak self] in
+                guard let self else { return }
+                
+                if let cvv = $0 {
+                    self.additionalList = self.updateAdditionalList(
+                        oldList: self.additionalList,
+                        newCvv: cvv.rawValue
+                    )
+                }
+            }
+        }
+    }
+    
+    func itemsToString(items: [Any]) -> String {
+        
+        var allValues: String = ""
+        
+        for item in items {
+            
+            if let list = item as? [InfoProductViewModel.ItemViewModel] {
+                
+                let copyTextString: String = list.map {
+                    
+                    return $0.title + " : " + $0.subtitle
+                }.joined(separator: "\n")
+                
+                
+                allValues = copyTextString + "\n\n"
+            }
+            else if let listNew = item as? [InfoProductViewModel.ItemViewModelForList] {
+                
+                let copyTextString: String = listNew.map {
+                    
+                    $0.currentValueString
+                }.joined(separator: "\n")
+                
+                allValues = allValues + "\n\n" + copyTextString
+            }
+        }
+        return allValues
+    }
+}
+
+extension InfoProductViewModel {
+    
+    func close() {
+        self.action.send(InfoProductModelAction.Close())
+    }
 }

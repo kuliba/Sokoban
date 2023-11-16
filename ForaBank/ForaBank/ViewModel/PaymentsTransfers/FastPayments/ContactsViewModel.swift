@@ -288,6 +288,15 @@ extension ContactsViewModel {
 
 extension ContactsViewModel {
     
+    enum PaymentsType: Equatable {
+        
+        case abroad
+        case other
+    }
+}
+
+extension ContactsViewModel {
+    
     enum Mode: Equatable {
         
         case fastPayments(Phase)
@@ -378,6 +387,15 @@ extension Model {
             
             model?.countriesList.value.first(where: { $0.id == bank.bankCountry })
         }
+        
+        let type: ContactsViewModel.PaymentsType = {
+            switch mode {
+            case .abroad:
+                return .abroad
+            default:
+                return .other
+            }
+        }()
         
         let searchFieldModel = SearchFactory.makeSearchFieldModel(
             for: mode,

@@ -1,5 +1,5 @@
 //
-//  Model+authorizedHTTPClient.swift
+//  Model+authenticatedHTTPClient.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 01.08.2023.
@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func authorizedHTTPClient(
+    func authenticatedHTTPClient(
         httpClient: HTTPClient = HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
     ) -> HTTPClient {
         

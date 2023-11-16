@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import PinCodeUI
 
 //MARK: - ViewModel
 
@@ -14,6 +15,9 @@ extension ProductProfileCardView {
     
     class ViewModel: ObservableObject {
         
+        typealias CardAction = CardDomain.CardAction
+        typealias ShowCVV = (CardDomain.CardId, @escaping (ProductView.ViewModel.CardInfo.CVV?) -> Void) -> Void
+
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var selector: SelectorViewModel
@@ -23,41 +27,57 @@ extension ProductProfileCardView {
         let productType: ProductType
         
         private let model: Model
+        private let cardAction: CardAction?
+        private let showCvv: ShowCVV?
+
         private var bindings = Set<AnyCancellable>()
         
-        init(selector: SelectorViewModel, products: [ProductView.ViewModel], activeProductId: ProductData.ID, productType: ProductType, model: Model = .emptyMock) {
- 
+        fileprivate init(
+            selector: SelectorViewModel,
+            products: [ProductView.ViewModel],
+            activeProductId: ProductData.ID,
+            productType: ProductType,
+            model: Model = .emptyMock,
+            cardAction: CardAction? = nil,
+            showCvv: ShowCVV? = nil
+        ) {
             self.selector = selector
             self.products = products
             self.activeProductId = activeProductId
             self.productType = productType
             self.model = model
+            self.cardAction = cardAction
+            self.showCvv = showCvv
         }
         
-        init?(_ model: Model, productData: ProductData) {
-            
+        init?(
+            _ model: Model,
+            productData: ProductData,
+            cardAction: CardAction? = nil,
+            showCvv: ShowCVV? = nil
+        ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
-                  productsForType.isEmpty == false,
-                  productsForType.contains(where: { $0.id == productData.id }) else {
-                
-                return nil
-            }
+                  !productsForType.isEmpty,
+                  productsForType.contains(where: { $0.id == productData.id })
+            else { return nil }
             
             // generate products view models
             let productsWithRelated = Self.reduce(products: productsForType, with: model.products.value)
             var productsViewModels = [ProductView.ViewModel]()
             for product in productsWithRelated {
                 
-                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
+                let productViewModel = ProductView.ViewModel(
+                    with: product,
+                    size: .large,
+                    style: .profile,
+                    model: model,
+                    cardAction: cardAction,
+                    showCvv: showCvv
+                )
                 productsViewModels.append(productViewModel)
             }
-            
-            // check if generated products view models list is not empty
-            guard productsViewModels.isEmpty == false else {
-                return nil
-            }
-            
+                        
             // filter products data with products view models
             let productsViewModelsIds = productsViewModels.map{ $0.id }
             let productsForTypeDisplayed = productsWithRelated.filter({ productsViewModelsIds.contains($0.id)})
@@ -67,7 +87,8 @@ extension ProductProfileCardView {
             self.activeProductId = productData.id
             self.productType = productData.productType
             self.model = model
-            
+            self.showCvv = showCvv
+            self.cardAction = cardAction
             bind()
             bind(selector)
             
@@ -79,44 +100,54 @@ extension ProductProfileCardView {
         
         static func reduce(products: [ProductData], with productsData: ProductsData) -> [ProductData] {
             
-            var result = [ProductData]()
-            
-            for product in products {
+            products.flatMap {
                 
-                switch product {
+                switch $0 {
                 case let accountProduct as ProductAccountData:
                     if let loansProducts = productsData[.loan] as? [ProductLoanData],
                         let relatedLoanProduct = loansProducts.first(where: { $0.settlementAccountId == accountProduct.id}) {
                         
-                        result.append(accountProduct)
-                        result.append(relatedLoanProduct)
+                        return [accountProduct, relatedLoanProduct]
                         
                     } else {
                         
-                        result.append(accountProduct)
+                        return [accountProduct]
                     }
                     
                 case let loanProduct as ProductLoanData:
                     if let accountProducts = productsData[.account] as? [ProductAccountData],
                        let relatedAccountProduct = accountProducts.first(where: { $0.id == loanProduct.settlementAccountId}) {
                         
-                        result.append(relatedAccountProduct)
-                        result.append(loanProduct)
+                        return [relatedAccountProduct, loanProduct]
                         
                     } else {
                         
-                        result.append(loanProduct)
+                        return [loanProduct]
                     }
                     
                 default:
-                    result.append(product)
+                    return [$0]
                 }
             }
-            
-            return result
         }
         
         private func bind() {
+            
+            // CVV
+
+            action
+                .compactMap { $0 as? ProductProfileCardView.ViewModel.CVVPinViewModelAction.ShowCVV }
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    let product = self.products.filter {
+                        $0.id == action.cardId.rawValue
+                    }.first
+                    
+                    product?.action.send(ProductViewModelAction.ShowCVV(cardId: .init(action.cardId.rawValue), cvv: action.cvv))
+                    
+                }.store(in: &bindings)
+
             
             model.products
                 .receive(on: DispatchQueue.main)
@@ -137,7 +168,13 @@ extension ProductProfileCardView {
                                 
                             } else {
                                 
-                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model)
+                                let productViewModel = ProductView.ViewModel(
+                                    with: product,
+                                    size: .large,
+                                    style: .profile,
+                                    model: model,
+                                    cardAction: cardAction,
+                                    showCvv: showCvv)
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
@@ -219,7 +256,7 @@ extension ProductProfileCardView {
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Failed())
                             self.action.send(ProductProfileCardViewModelAction.ShowAlert(title: "Ошибка", message: message))
                         }
-                        
+
                     default:
                         break
                     }
@@ -235,8 +272,14 @@ extension ProductProfileCardView {
                         selector.selected = active
                     }
                     
+                    products.forEach { product in
+                        
+                        guard product.id != active else { return }
+                        
+                        product.resetToFront()
+                    }
+                    
                 }.store(in: &bindings)
-            
         }
         
         private func bind(_ product: ProductView.ViewModel) {
@@ -257,7 +300,7 @@ extension ProductProfileCardView {
                             return
                         }
                         model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
-                        
+                    
                     default:
                         break
                     }
@@ -386,6 +429,14 @@ extension ProductProfileCardView.ViewModel {
         }
         
         struct MoreButtonTapped: Action {}
+    }
+    
+    enum CVVPinViewModelAction {
+        
+        struct ShowCVV: Action {
+            let cardId: CardDomain.CardId
+            let cvv: ProductView.ViewModel.CardInfo.CVV
+        }
     }
 }
 
@@ -558,7 +609,14 @@ struct ProductProfileCardView_Previews: PreviewProvider {
 
 extension ProductProfileCardView.ViewModel {
     
-    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], activeProductId: 4, productType: .account, model: .emptyMock)
+    static let sample = ProductProfileCardView.ViewModel(
+        selector: .sample,
+        products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile],
+        activeProductId: 4,
+        productType: .account,
+        model: .emptyMock,
+        cardAction: { _ in },
+        showCvv: nil)
 }
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {

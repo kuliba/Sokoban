@@ -35,25 +35,44 @@ extension SearchFactory {
     ) -> RegularFieldViewModel {
         
         let cleanup: (String) -> String = {
-            
-            guard $0.hasPrefix("8"),
-                  $0.count > 1
-            else { return $0 }
-            
-            return $0.shouldChangeTextIn(
-                range: .init(location: 0, length: 1),
-                with: "7"
-            )
+            switch mode {
+            case .abroad:
+                guard $0.hasPrefix("89"),
+                      $0.count > 1
+                else { return $0 }
+                
+                return $0.shouldChangeTextIn(
+                    range: .init(location: 0, length: 2),
+                    with: "79"
+                )
+            default:
+                return $0
+            }
         }
         
-        let substitutions = [CountryCodeReplace].russian
-            .map(\.substitution)
-        
+        let substitutions = {
+            switch mode {
+            case .abroad:
+                return [CountryCodeReplace].russian
+                    .map(\.substitution)
+            default:
+                return []
+            }
+        }()
+                
         let format: (String) -> String = {
             
             guard !$0.isEmpty else { return $0 }
-            
-            return PhoneNumberKitWrapper.formatPartial("+\($0)")
+            let type: ContactsViewModel.PaymentsType = {
+                switch mode {
+                case .abroad:
+                    return .abroad
+                default:
+                    return .other
+                }
+            }()
+            let input = type == .abroad ? "+\($0)" : $0
+            return PhoneNumberKitWrapper.formatPartial(for: type, input)
         }
         
         let contactsTextField = TextFieldFactory.contactTextField(

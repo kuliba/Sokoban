@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.08.2023.
 //
 
+import CryptoKit
 import Foundation
 
 /// A namespace.
@@ -12,30 +13,19 @@ enum Crypto {}
 
 extension Crypto {
     
-    static func rsaPKCS1Encrypt(
-        data: Data,
-        withPublicKey key: SecKey
-    ) throws -> Data {
+    enum CryptoError: Error {
         
-        var error: Unmanaged<CFError>? = nil
-        guard let encrypted = SecKeyCreateEncryptedData(key, .rsaEncryptionPKCS1, data as CFData, &error) as Data?
-        else {
-            throw EncryptionError.publicKeyEncryptionFailure(error?.takeRetainedValue())
-        }
-        
-        return encrypted
-    }
-    
-    enum EncryptionError: Error {
-        
-        case publicKeyEncryptionFailure(Error?)
+        case publicTransportKeyExternalRepresentationFailure
+        case base64StringDecodingFailure
+        case serverPublicKeyDataDecryptionFailure(Error?)
+        case serverPublicKeyCreationFromDataFailure(Error?)
     }
 }
 
 extension Crypto {
     
     // TODO: generalise with KeySizeInBits as a parameter (enum with fixed values)
-    static func generateRSA4096BitKeys() throws -> (
+    static func createRandomRSA4096BitKeys() throws -> (
         privateKey: SecKey,
         publicKey: SecKey
     ) {
@@ -57,7 +47,62 @@ extension Crypto {
     }
     
     enum KeyGenerationError: Error {
-        
+        // TODO: Generalise error too
         case rsa4096BitKeysGenerationFailure(Error?)
+    }
+}
+
+extension Crypto {
+    
+    static func serverPublicKey(
+        from serverPublicKeyEncryptedString: String,
+        using publicTransportKey: SecKey
+    ) throws -> SecKey {
+        
+        do {
+            guard let serverPublicKeyEncryptedData = Data(base64Encoded: serverPublicKeyEncryptedString, options: .ignoreUnknownCharacters)
+            else {
+                throw CryptoError.base64StringDecodingFailure
+            }
+            
+            var error: Unmanaged<CFError>? = nil
+            guard let publicTransportKeyData = SecKeyCopyExternalRepresentation(publicTransportKey, &error) as? Data
+            else {
+                throw CryptoError.publicTransportKeyExternalRepresentationFailure
+            }
+            
+            let symmetricKey = CryptoKit.SymmetricKey(data: publicTransportKeyData)
+            dump(symmetricKey)
+           // let sealedBox = try CryptoKit.AES.GCM.SealedBox(combined: serverPublicKeyEncryptedData)
+            let sealedBox = try CryptoKit.AES.GCM.SealedBox(
+                nonce: .init(data: "nonce".data),
+                ciphertext: serverPublicKeyEncryptedData,
+                tag: "tag".data
+            )
+            let serverPublicKeyDecryptedData = try CryptoKit.AES.GCM.open(sealedBox, using: symmetricKey)
+            
+            //        guard let serverPublicKeyDecryptedData = SecKeyCreateDecryptedData(publicTransportKey, .rsaEncryptionRaw,  serverPublicKeyEncryptedData as CFData, &error) as Data?
+            //        else {
+            //            throw CryptoError.serverPublicKeyDataDecryptionFailure(error?.takeRetainedValue())
+            //        }
+            
+            let parameters = [
+                kSecAttrKeyType as String: kSecAttrKeyTypeEC,
+                kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
+                kSecAttrKeySizeInBits as String: 384,
+                SecKeyKeyExchangeParameter.requestedSize.rawValue as String: 32
+            ] as [String : Any]
+            
+            //        let withoutDERHeader = serverPublicKeyDecryptedData.advanced(by: 159) as CFData
+            
+            guard let serverPublicKey = SecKeyCreateWithData(serverPublicKeyDecryptedData as CFData, parameters as CFDictionary, &error)
+            else {
+                throw CryptoError.serverPublicKeyCreationFromDataFailure(error?.takeRetainedValue())
+            }
+            
+            return serverPublicKey
+        } catch {
+            throw error
+        }
     }
 }

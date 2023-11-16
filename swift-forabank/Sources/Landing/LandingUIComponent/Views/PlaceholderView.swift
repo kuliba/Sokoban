@@ -87,6 +87,7 @@ public struct PlaceholderView: View {
         RoundedRectangle(cornerRadius: cornerRadiusValue)
             .fill(config.gradientColor.fromLeft)
             .shimmering()
+            .accessibilityIdentifier("LandingPlaceholderRoundedRectangle")
     }
     
     @ViewBuilder

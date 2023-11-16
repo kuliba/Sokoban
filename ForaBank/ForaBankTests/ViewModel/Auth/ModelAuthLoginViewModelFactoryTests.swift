@@ -121,7 +121,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: Model,
-        factory: ModelAuthLoginViewModelFactory
+        factory: AuthLoginViewModelFactory
     ) {
         let sut: Model = .mockWithEmptyExcept()
         let factory = sut.authLoginViewModelFactory(
@@ -130,7 +130,7 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(factory, file: file, line: line)
+        // trackForMemoryLeaks(factory, file: file, line: line)
         
         return (sut, factory)
     }

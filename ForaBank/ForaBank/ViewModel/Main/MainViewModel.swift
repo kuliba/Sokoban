@@ -12,6 +12,8 @@ import LandingUIComponent
 
 class MainViewModel: ObservableObject, Resetable {
     
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
@@ -29,27 +31,39 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel],
-         sections: [MainSectionViewModel],
-         model: Model = .emptyMock,
-         factory: ModelAuthLoginViewModelFactory) {
-        
+    init(
+        navButtonsRight: [NavigationBarButtonViewModel],
+        sections: [MainSectionViewModel],
+        model: Model = .emptyMock,
+        factory: ModelAuthLoginViewModelFactory,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        onRegister: @escaping () -> Void
+    ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.factory = factory
+        self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.onRegister = onRegister
     }
     
-    init(_ model: Model) {
-        
+    init(
+        _ model: Model,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        onRegister: @escaping () -> Void
+    ) {
         self.navButtonsRight = []
         self.sections = Self.getSections(model)
         
         self.model = model
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
+        self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.onRegister = onRegister
         
         self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
         
@@ -126,11 +140,10 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = ProductProfileViewModel(
-                            model,
-                            product: product,
-                            rootView: "\(type(of: self))",
-                            dismissAction: {[weak self] in self?.link = nil })
+                          let productProfileViewModel = makeProductProfileViewModel(
+                            product,
+                            "\(type(of: self))",
+                            { [weak self] in self?.link = nil })
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions
@@ -148,8 +161,16 @@ class MainViewModel: ObservableObject, Resetable {
                     }
 
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
-
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
+                                        
+                    // TODO: replace with injected factory
+                    link = .userAccount(.init(
+                        model: model,
+                        clientInfo: clientInfo,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(MainViewModelAction.Close.Link())
+                        }
+                    ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})
@@ -442,7 +463,10 @@ class MainViewModel: ObservableObject, Resetable {
                         handleLandingAction(.sticker)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(
+                            model,
+                            makeProductProfileViewModel: makeProductProfileViewModel
+                        )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                         

@@ -205,9 +205,25 @@ final class RootViewModelTests: XCTestCase {
             ["CFBundleShortVersionString": $0]
         }
         let sut = RootViewModel(
+            mainViewModel: .init(
+                model,
+                makeProductProfileViewModel: { _,_,_ in nil },
+                onRegister: {}
+            ),
+            paymentsViewModel: .init(
+                model: model,
+                makeProductProfileViewModel: { _,_,_ in nil }
+            ),
+            chatViewModel: .init(),
+            informerViewModel: .init(model),
+            infoDictionary: infoDictionary,
             model,
-            infoDictionary: infoDictionary ?? Bundle.main.infoDictionary
+            showLoginAction: { _ in
+            
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            }
         )
+        
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
 
@@ -226,7 +242,6 @@ final class RootViewModelTests: XCTestCase {
 // MARK: - DSL
 
 private extension RootViewModel {
-    
     
     func showUserProfile(
         timeout: TimeInterval = 0.05

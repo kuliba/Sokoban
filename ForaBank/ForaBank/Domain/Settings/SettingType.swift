@@ -41,6 +41,8 @@ enum SettingType: Equatable {
         case productsMoney
         case myProductsOnboarding
         case sticker
+        case profileOnboarding
+
     }
 }
 
