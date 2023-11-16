@@ -14,11 +14,31 @@ extension NavigationModel {
         
         setNavigation(to: nil)
     }
+
+    // MARK: - Destination
+    
+    func resetDestination() {
+        
+        if navigation?.destination != nil {
+            
+            resetNavigation()
+        }
+    }
     
     func setDestination(
         to destination: Navigation.Destination
     ) {
         setNavigation(to: .destination(destination))
+    }
+    
+    // MARK: - FullScreenCover
+    
+    func resetFullScreenCover() {
+        
+        if navigation?.fullScreenCover != nil {
+            
+            resetNavigation()
+        }
     }
     
     func setFullScreenCover(

@@ -25,14 +25,14 @@ struct ContentView: View {
             .navigationDestination(
                 item: .init(
                     get: { navigationModel.navigation?.destination },
-                    set: { if $0 == nil { navigationModel.resetNavigation() }}
+                    set: { if $0 == nil { navigationModel.resetDestination() }}
                 ),
                 content: composer.makeDestinationView
             )
             .fullScreenCover(
                 item: .init(
                     get: { navigationModel.navigation?.fullScreenCover },
-                    set: { if $0 == nil { navigationModel.resetNavigation() }}
+                    set: { if $0 == nil { navigationModel.resetFullScreenCover() }}
                 ),
                 content: composer.makeFullScreenCoverView
             )
