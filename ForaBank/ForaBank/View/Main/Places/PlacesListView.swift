@@ -145,14 +145,14 @@ extension PlacesListView {
 }
 
 struct PlacesListView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        
+
         Group {
-            
+
             PlacesListView(viewModel: .sample)
-            
-            PlacesListView.ItemView(viewModel: .sampleOne)
+
+            PlacesListView.ItemView(viewModel: .sampleOne, selectAction: { _ in })
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }
