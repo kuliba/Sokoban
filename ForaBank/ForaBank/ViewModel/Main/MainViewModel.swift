@@ -346,7 +346,9 @@ class MainViewModel: ObservableObject, Resetable {
                                     self.link = .openCard(authProductsViewModel)
                                 
                             default:
-                                break
+                                //MARK: Action for Sticker Product
+                                
+                                handleLandingAction(.sticker)
                             }
                             
                         default:
@@ -1030,27 +1032,27 @@ extension MainViewModel {
 
 extension MainViewModel {
     
-        func handleLandingAction(_ abroadType: AbroadType) {
-            
-            let viewModel = factory.makeStickerLandingViewModel(
-                abroadType,
-                config: .stickerDefault,
-                landingActions: landingAction
-            )
-            
-            UIApplication.shared.endEditing()
-            link = .landing(viewModel)
-        }
+    func handleLandingAction(_ abroadType: AbroadType) {
+        
+        let viewModel = factory.makeStickerLandingViewModel(
+            abroadType,
+            config: .stickerDefault,
+            landingActions: landingAction
+        )
+        
+        UIApplication.shared.endEditing()
+        link = .landing(viewModel)
+    }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
         
-            switch event {
-            case .goToMain:
-                return handleCloseLinkAction
-            case .order:
-                return orderSticker
-            }
-           }
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+        case .order:
+            return orderSticker
+        }
+    }
     
     private func handleCloseLinkAction() {
         
@@ -1085,18 +1087,10 @@ extension MainViewModel {
                     ))
         }
         
-        testHandleOrderSticker() // TODO: Me, link to OrderSticker here
-        
         /* TODO: v4 сейчас нет
          если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
          cardType: MAIN - главная карта. или cardType: REGULAR - обычная карта.
          */
-    }
-    
-    func testHandleOrderSticker() { // TODO: Delete
-        let viewModel = factory.makeStickerLandingViewModel(.sticker, config: .stickerDefault,landingActions: landingAction)
-        UIApplication.shared.endEditing()
-        link = .orderSticker(viewModel)
     }
 }
 

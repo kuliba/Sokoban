@@ -99,7 +99,7 @@ final class MainViewModelTests: XCTestCase {
           localAgent: localAgent
         )
         
-      let sut = MainViewModel(model)
+        let sut = MainViewModel(model, makeProductProfileViewModel: { _,_,_  in nil }, onRegister: {})
      
       sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
