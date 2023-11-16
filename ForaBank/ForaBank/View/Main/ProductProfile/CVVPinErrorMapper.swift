@@ -65,5 +65,5 @@ extension String {
     
     static let cvvNotReceived: Self = "Не удалось получить CVV"
 
-    static let tryLater: Self = "Попробуйте позже."
+    static let tryLater: Self = "Попробуйте позже"
 }

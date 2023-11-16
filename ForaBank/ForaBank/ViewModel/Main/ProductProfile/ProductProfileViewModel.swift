@@ -2218,11 +2218,11 @@ extension ProductProfileViewModel {
             
         case let .server(code, _):
             // show Alert with message
-            self.makeAlert("\(String.cvvNotReceived)\nКод ошибки \(code).")
+            self.makeAlert("\(String.cvvNotReceived).\nКод ошибки \(code).")
             
         case .serviceFailure:
             // show Alert
-            self.makeAlert("\(String.cvvNotReceived)\n\(String.tryLater).")
+            self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
         }
     }
 }
