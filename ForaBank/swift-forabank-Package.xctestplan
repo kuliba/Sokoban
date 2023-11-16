@@ -221,6 +221,13 @@
         "identifier" : "URLRequestFactoryTests",
         "name" : "URLRequestFactoryTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SberQRTests",
+        "name" : "SberQRTests"
+      }
     }
   ],
   "version" : 1

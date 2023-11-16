@@ -226,6 +226,13 @@
         "identifier" : "EDB14392265FDA430028EF5A",
         "name" : "ForaBankTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SberQRTests",
+        "name" : "SberQRTests"
+      }
     }
   ],
   "version" : 1
