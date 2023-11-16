@@ -8,76 +8,108 @@
 import Foundation
 import PaymentSticker
 import SwiftUI
-import Combine
+import LandingUIComponent
 
-final class OperationWrapperViewModel: ObservableObject {
+final class NavigationViewModel: ObservableObject {
     
-    @ObservedObject var model: OperationStateViewModel
-    @ObservedObject var placesViewModel: PlacesListViewModel
-    @Published var isLinkActive: Bool = false
+    @Published private(set) var state: NavigationState?
     
-    private var bindings = Set<AnyCancellable>()
-    
-    internal init(
-        model: OperationStateViewModel,
-        placesViewModel: PlacesListViewModel
-    ) {
-        self.model = model
-        self.placesViewModel = placesViewModel
-        
-        bind()
+    init(state: NavigationState? = nil) {
+        self.state = state
     }
     
-    private func bind() {
+    func setLocation() {
         
-        placesViewModel.action
-            .receive(on: DispatchQueue.main)
-            .compactMap { $0 as? PlacesListViewModelAction.ItemDidSelected }
-            .sink { payload in
-                
-                self.isLinkActive = false
-                self.model.event(.select(.selectOption("", .init(
-                    id: .officeSelector,
-                    value: payload.name,
-                    title: "Выберите отделение",
-                    placeholder: "Выберите отделение",
-                    options: [],
-                    state: .selected(.init(
-                        title: "Выберите отделение",
-                        placeholder: "",
-                        name: payload.name,
-                        iconName: "ic24Bank"
-                    ))))))
-                
-            }.store(in: &bindings)
+        navigationState(.location)
+    }
+    
+    func navigationState(_ state: NavigationState) {
+        
+        self.state = state
+    }
+    
+    func resetState() {
+        
+        self.state = nil
+    }
+    
+    enum NavigationState: Hashable, Identifiable {
+        
+        case location
+        
+        var id: Self { self }
     }
 }
 
-struct OperationWrapperView: View {
+struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
-    @ObservedObject var operationWrapperViewModel: OperationWrapperViewModel
+    typealias ShowAtmList = (NavigationViewModel.NavigationState) -> Void
+    typealias SelectOption = () -> Void
+    
+    @ObservedObject var navModel: NavigationViewModel
+    let operationView: (@escaping ShowAtmList) -> OperationView
+    let listView: (@escaping SelectOption) -> ListView
     
     var body: some View {
         
-        NavigationView {
-            
-            ZStack {
+        operationView(navModel.navigationState(_:))
+            .navigationDestination(
+                item: .init(
+                    get: { navModel.state },
+                    set: { if $0 == nil { navModel.resetState() } }
+                )
+            ) { state in
                 
-                VStack {
-                    
-                    OperationView(
-                        model: operationWrapperViewModel.model,
-                        configuration: MainView.configurationOperationView()
-                    )
-                    .navigationBarTitle("Оформление заявки", displayMode: .inline)
-                    .edgesIgnoringSafeArea(.bottom)
-                }
-                
-                NavigationLink("", isActive: $operationWrapperViewModel.isLinkActive) {
-                    
-                    PlacesListView(viewModel: operationWrapperViewModel.placesViewModel)
+                switch state {
+                case .location:
+                    listView(navModel.resetState)
                 }
             }
-        }
+    }
+}
+
+enum NavigationOperationViewFactory {}
+
+extension NavigationOperationViewFactory {
+    
+    typealias ChangeNavigationState = BusinessLogic.ChangeNavigationState
+    typealias SelectAtmOption = BusinessLogic.SelectAtmOption
+    typealias MakeOperationStateViewModel = (@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel
+    
+    static func makeNavigationOperationView(
+        makeOperation: @escaping MakeOperationStateViewModel,
+        atmData: [AtmData],
+        atmMetroStationData: [AtmMetroStationData]?
+    ) -> some View {
+        
+        let navView = NavigationOperationView(
+            navModel: .init(),
+            operationView: { showAction  in
+                
+                OperationView(
+                    model: makeOperation(showAction, { _,_  in }),
+                    configuration: MainView.configurationOperationView()
+                )
+            },
+            listView: { resetState in
+                
+                PlacesListInternalView(
+                    items: atmData.map { PlacesListViewModel.ItemViewModel(
+                        id: $0.id,
+                        name: $0.name,
+                        address: $0.address,
+                        metro: [],
+                        schedule: $0.schedule,
+                        distance: nil
+                    ) },
+                    selectItem: { item in
+                        
+                        resetState()
+                    }
+                )
+            }
+        )
+        
+        return navView
     }
 }
