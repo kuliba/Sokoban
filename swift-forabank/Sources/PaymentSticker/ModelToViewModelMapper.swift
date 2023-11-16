@@ -28,6 +28,7 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
+                    sticker: .init(""),
                     options: parameterSticker.options.map {
                         
                         .init(
@@ -43,7 +44,6 @@ public extension ModelToViewModelMapper {
         case let .tip(parameterHint):
             return .tip(
                 .init(
-                    imageName: "tipIcon",
                     text: parameterHint.title
                 )
             )
