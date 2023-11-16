@@ -48,13 +48,6 @@ extension Composer {
                 
                 self?.handleQRParsingResult(qrResult)
             }
-            
-        case let .sberQRPayment(url):
-            
-            makeSberQRPaymentView(
-                url: url,
-                dismiss: navigationModel.resetNavigation
-            )
         }
     }
     
@@ -62,11 +55,26 @@ extension Composer {
         
         switch qrResult {
         case let .sberQR(url):
-            navigationModel.setFullScreenCover(to: .sberQRPayment(url))
+            navigationModel.setSheet(to: .sberQRPayment(url))
             
         case let .error(text):
             // navigationModel.setAlert(text)
             navigationModel.resetNavigation()
+        }
+    }
+    
+    @ViewBuilder
+    func makeSheet(
+        _ sheet: Navigation.Sheet
+    ) -> some View {
+        
+        switch sheet {
+        case let .sberQRPayment(url):
+            
+            makeSberQRPaymentView(
+                url: url,
+                dismiss: navigationModel.resetNavigation
+            )
         }
     }
 }

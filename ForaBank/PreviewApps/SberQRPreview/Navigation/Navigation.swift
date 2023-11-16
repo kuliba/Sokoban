@@ -11,21 +11,28 @@ enum Navigation: Hashable & Identifiable {
     
     case destination(Destination)
     case fullScreenCover(FullScreenCover)
+    case sheet(Sheet)
     
     var id: Self { self }
     
     enum Destination: Hashable & Identifiable {
         
         case sberQRPayment(URL)
-
+        
         var id: Self { self }
     }
     
     enum FullScreenCover: Hashable & Identifiable {
         
         case qrReader
+        
+        var id: Self { self }
+    }
+    
+    enum Sheet: Hashable & Identifiable {
+        
         case sberQRPayment(URL)
-
+        
         var id: Self { self }
     }
 }
@@ -39,9 +46,6 @@ extension Navigation {
         
         return destination
     }
-}
-
-extension Navigation {
     
     var fullScreenCover: FullScreenCover? {
         
@@ -49,5 +53,13 @@ extension Navigation {
         else { return nil }
         
         return fullScreenCover
+    }
+    
+    var sheet: Sheet? {
+        
+        guard case let .sheet(sheet) = self
+        else { return nil }
+        
+        return sheet
     }
 }

@@ -22,8 +22,12 @@ final class NavigationModel: ObservableObject {
         self.navigation = navigation
         
         navigationSubject
+            .delay(for: 0.1, scheduler: scheduler)
             .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
+            .handleEvents(receiveOutput: {
+                print($0 as Any)
+            })
             .assign(to: &$navigation)
     }
 }

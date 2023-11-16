@@ -22,20 +22,54 @@ struct ContentView: View {
     var body: some View {
         
         composer.makeMainView()
-            .navigationDestination(
-                item: .init(
-                    get: { navigationModel.navigation?.destination },
-                    set: { if $0 == nil { navigationModel.resetDestination() }}
-                ),
-                content: composer.makeDestinationView
-            )
             .fullScreenCover(
-                item: .init(
-                    get: { navigationModel.navigation?.fullScreenCover },
-                    set: { if $0 == nil { navigationModel.resetFullScreenCover() }}
-                ),
+                item: navigationModel.fullScreenCoverBinding,
                 content: composer.makeFullScreenCoverView
             )
+            .navigationDestination(
+                item: navigationModel.destinationBinding,
+                content: composer.makeDestinationView
+            )
+            .sheet(
+                item: navigationModel.sheetBinding,
+                content: composer.makeSheet
+            )
+    }
+}
+
+private extension NavigationModel {
+    
+    var fullScreenCoverBinding: Binding<Navigation.FullScreenCover?> {
+        
+        .init(
+            get: { [weak self] in self?.navigation?.fullScreenCover },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetFullScreenCover() }
+            }
+        )
+    }
+    
+    var destinationBinding: Binding<Navigation.Destination?> {
+        
+        .init(
+            get: { [weak self] in self?.navigation?.destination },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetDestination() }
+            }
+        )
+    }
+    
+    var sheetBinding: Binding<Navigation.Sheet?> {
+        
+        .init(
+            get: { [weak self] in self?.navigation?.sheet },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetSheet() }
+            }
+        )
     }
 }
 

@@ -10,11 +10,13 @@
 
 extension NavigationModel {
     
+    // MARK: - Reset
+    
     func resetNavigation() {
         
         setNavigation(to: nil)
     }
-
+    
     // MARK: - Destination
     
     func resetDestination() {
@@ -45,5 +47,21 @@ extension NavigationModel {
         to fullScreenCover: Navigation.FullScreenCover
     ) {
         setNavigation(to: .fullScreenCover(fullScreenCover))
+    }
+    
+    // MARK: - Sheet
+    
+    func resetSheet() {
+        
+        if navigation?.sheet != nil {
+            
+            resetNavigation()
+        }
+    }
+    
+    func setSheet(
+        to sheet: Navigation.Sheet
+    ) {
+        setNavigation(to: .sheet(sheet))
     }
 }
