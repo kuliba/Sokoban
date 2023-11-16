@@ -29,7 +29,7 @@ extension TransferGeneralData {
     static func generalStub(
         payeeExternal: TransferGeneralData.PayeeExternal? = .stub,
         amount: Decimal? = 0,
-        phoneNumber: String? = "number",
+        phoneNumber: String? = "11111",
         cardId: Int = 1
     ) -> [TransferGeneralData] {
         
@@ -39,7 +39,7 @@ extension TransferGeneralData {
             accountNumber: "accountNumber",
             cardId: cardId,
             cardNumber: nil,
-            phoneNumber: "number"
+            phoneNumber: phoneNumber
         )
         
         let parameterList = [
@@ -55,7 +55,7 @@ extension TransferGeneralData {
                     accountNumber: nil,
                     cardId: 1,
                     cardNumber: "cardNumber",
-                    phoneNumber: "number",
+                    phoneNumber: phoneNumber,
                     productCustomName: "customName")
             )
         ]
@@ -105,7 +105,7 @@ extension Array where Element == TransferAnywayData.Additional {
                   fieldvalue: "AM"),
             .init(fieldid: 1,
                   fieldname: "RecipientID",
-                  fieldvalue: "number")
+                  fieldvalue: "123123")
         ]
     }
 }

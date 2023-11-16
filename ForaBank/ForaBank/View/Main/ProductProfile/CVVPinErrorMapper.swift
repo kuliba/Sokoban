@@ -40,19 +40,14 @@ struct CVVPinErrorMapper {
         _ error: ConfirmationCodeError
     ) -> ErrorDomain  {
         
-        let errorMessage: String = {
+        switch error {
             
-            switch error {
-                
-            case let .retry(_, _, retryAttempts):
-                return retryAttempts > 0 ? String.incorrectСode : String.technicalError
-            case .serviceFailure:
-                return String.technicalError
-            case let .server(_, message):
-                return message
-            }
-        }()
-        return .errorForAlert(.init(errorMessage))
+        case let .retry(_, _, retryAttempts):
+            return retryAttempts > 0 ? .errorForAlert(.init(String.incorrectСode)) : .noRetry(.init(String.technicalError), .init("Ок"))
+            
+        case .serviceFailure, .server:
+            return .noRetry(.init(String.technicalError), .init("Ок"))
+        }
     }
 }
 
@@ -65,5 +60,5 @@ extension String {
     
     static let cvvNotReceived: Self = "Не удалось получить CVV"
 
-    static let tryLater: Self = "Попробуйте позже."
+    static let tryLater: Self = "Попробуйте позже"
 }

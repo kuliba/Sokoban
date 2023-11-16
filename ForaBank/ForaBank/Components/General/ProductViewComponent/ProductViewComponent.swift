@@ -378,8 +378,10 @@ extension ProductView {
         }
         
         func resetToFront() {
-            
-            cardInfo.state = .showFront
+            Task { @MainActor [weak self] in
+                
+                self?.cardInfo.state = .showFront
+            }
         }
         
         func resetToFrontIfNotAwaiting() {

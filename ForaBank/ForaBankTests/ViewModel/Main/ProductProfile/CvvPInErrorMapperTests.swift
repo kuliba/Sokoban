@@ -75,10 +75,10 @@ final class CvvPInErrorMapperTests: XCTestCase {
         XCTAssertNoDiff(error.message?.rawValue, String.technicalError)
     }
     
-    func test_map_otpError_server_shouldReturnError() {
+    func test_map_otpError_server_shouldReturnTechnicalError() {
         
         let error = CVVPinErrorMapper.map(ConfirmationCodeError.server(statusCode: 45, errorMessage: "error"))
         
-        XCTAssertNoDiff(error.message?.rawValue, "error")
+        XCTAssertNoDiff(error.message?.rawValue, String.technicalError)
     }
 }

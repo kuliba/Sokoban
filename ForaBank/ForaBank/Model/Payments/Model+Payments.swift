@@ -1213,7 +1213,7 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = PhoneNumberKitFormater().format( paymentData.phoneNumber.count == 10 ? "7\(paymentData.phoneNumber)" : paymentData.phoneNumber) 
+                let phoneNumber = paymentData.phoneNumber
                 let bankId = paymentData.bankId
                 return paymentsProcessSourceReducerSFP(phone: phoneNumber,
                                                        bankId: bankId,
@@ -1337,7 +1337,7 @@ extension Model {
                     
                     if let phone = anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue {
                         
-                        return "7" + phone
+                        return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
                     }
                     
                     return nil
@@ -1514,7 +1514,7 @@ extension Model {
                 return nil
             }
 
-            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue)
+            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
             return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
             
         default:
