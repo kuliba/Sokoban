@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView<MainView, DestinationView, FullScreenCoverView>: View
 where MainView: View,
       DestinationView: View,
-      FullScreenCoverView: View{
+      FullScreenCoverView: View {
     
     @ObservedObject var navigationModel: NavigationModel
     

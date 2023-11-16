@@ -11,9 +11,9 @@ final class Composer {
     
     let navigationModel: NavigationModel
     
-    init(navigationModel: NavigationModel = .init()) {
+    init(navigation: Navigation? = nil) {
         
-        self.navigationModel = navigationModel
+        self.navigationModel = .init(navigation: navigation)
     }
     
     func makeMainView() -> some View {
@@ -48,15 +48,15 @@ final class Composer {
                 
                 self?.handleQRParsingResult(qrResult)
             }
-     
+            
         case let .sberQRPayment(url):
+            
             SberQRPaymentView(
                 url: url,
                 dismiss: navigationModel.resetNavigation
             )
         }
     }
-
     
     func handleQRParsingResult(_ qrResult: QRParsingResult) {
         

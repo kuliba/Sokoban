@@ -13,10 +13,8 @@ struct SberQRPreviewApp: App {
     private let composer: Composer
     
     init() {
-        let navigationModel = NavigationModel(
-            navigation: .fullScreenCover(.qrReader)
-        )
-        self.composer = .init(navigationModel: navigationModel)
+        
+        self.composer = .init(navigation: .fullScreenCover(.qrReader))
     }
     
     var body: some Scene {
