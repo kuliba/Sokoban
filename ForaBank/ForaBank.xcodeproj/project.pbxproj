@@ -384,6 +384,7 @@
 		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
 		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
 		2A20F8D62B05E1D100E3AE79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */; };
+		2A20F8E62B05E43000E3AE79 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A20F8E52B05E43000E3AE79 /* CombineSchedulers */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */; };
 		2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */; };
@@ -2551,6 +2552,7 @@
 		2A20F8D02B05E1D000E3AE79 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A20F8E42B05E41E00E3AE79 /* SberQRPreview-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "SberQRPreview-Info.plist"; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
 		2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymensSFPTests.swift"; sourceTree = "<group>"; };
@@ -4270,6 +4272,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A20F8E62B05E43000E3AE79 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11270,6 +11273,9 @@
 			dependencies = (
 			);
 			name = SberQRPreview;
+			packageProductDependencies = (
+				2A20F8E52B05E43000E3AE79 /* CombineSchedulers */,
+			);
 			productName = SberQRPreview;
 			productReference = 2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -15718,6 +15724,11 @@
 		2A1F08672A7951E600C5B11B /* GenericRemoteService */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GenericRemoteService;
+		};
+		2A20F8E52B05E43000E3AE79 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2A3011E52A6AB53B00560B98 /* CvvPin */ = {
 			isa = XCSwiftPackageProductDependency;
