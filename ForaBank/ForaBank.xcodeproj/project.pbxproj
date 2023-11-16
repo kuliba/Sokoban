@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1599,6 +1599,7 @@
 		834E3F6A2AC2C77600E49C2B /* QRDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F692AC2C77600E49C2B /* QRDataMapper.swift */; };
 		834E3F6C2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F6B2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift */; };
 		834E3F6F2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834E3F6E2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift */; };
+		83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83518DDB2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift */; };
 		835B402C2AB0686A0094EB5F /* LandingToUILanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */; };
 		8362FAFF29DEDCB70094457E /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */; };
 		8362FB0129DEDE450094457E /* PaymentsServicesOperatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0029DEDE450094457E /* PaymentsServicesOperatorsView.swift */; };
@@ -3747,6 +3748,7 @@
 		834E3F692AC2C77600E49C2B /* QRDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRDataMapper.swift; sourceTree = "<group>"; };
 		834E3F6B2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getScenarioQRData.swift"; sourceTree = "<group>"; };
 		834E3F6E2AC2CF6000E49C2B /* RequestFactory+getScenarioQRDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getScenarioQRDataTests.swift"; sourceTree = "<group>"; };
+		83518DDB2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsProcessSourceReducerSFPTests.swift"; sourceTree = "<group>"; };
 		835B402B2AB0686A0094EB5F /* LandingToUILanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingToUILanding.swift; sourceTree = "<group>"; };
 		835D7A962A61890A0076D371 /* PinCodeUITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PinCodeUITests.xctestplan; sourceTree = "<group>"; };
 		8362FAFE29DEDCB70094457E /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
@@ -5389,21 +5391,6 @@
 			path = PublicTransportKey;
 			sourceTree = "<group>";
 		};
-		2A20F8C32B05471100E3AE79 /* SberQR */ = {
-			isa = PBXGroup;
-			children = (
-				2A20F8C42B05477E00E3AE79 /* Resources */,
-			);
-			path = SberQR;
-			sourceTree = "<group>";
-		};
-		2A20F8C42B05477E00E3AE79 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		2A21E35E2AC2067700DB6456 /* Template */ = {
 			isa = PBXGroup;
 			children = (
@@ -5417,6 +5404,7 @@
 			children = (
 				2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */,
 				83B614872B04C168002EE299 /* Model+PaymentsTransferSFPAdditionalTests.swift */,
+				83518DDB2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift */,
 			);
 			path = "Model+PaymensSFP";
 			sourceTree = "<group>";
@@ -13519,6 +13507,7 @@
 				77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */,
 				7743781829F1797000C3D5B1 /* CreateInterestDepositTransferPayloadTests.swift in Sources */,
 				83660CF02AD940EC0001B786 /* CvvPInErrorMapperTests.swift in Sources */,
+				83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */,
 				2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */,
 				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,
 				2AEDAD5429A6355600017F73 /* ServerCommandsDictionaryControllerGetMobileListResponseHelpersTests.swift in Sources */,
