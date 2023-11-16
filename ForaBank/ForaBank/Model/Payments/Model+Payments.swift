@@ -1337,7 +1337,7 @@ extension Model {
                     
                     if let phone = anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue {
                         
-                        return "7" + phone
+                        return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
                     }
                     
                     return nil
