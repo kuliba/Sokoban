@@ -184,7 +184,7 @@ final class ModelSuccessTests: XCTestCase {
             parameters: [
                 Payments.ParameterMock(
                     id: "RecipientID",
-                    value: "number"
+                    value: "123123"
                 )
             ]
         )
@@ -201,7 +201,7 @@ final class ModelSuccessTests: XCTestCase {
             ),
             Payments.ParameterMock(
                 id: "RecipientID",
-                value: "number"
+                value: "123123"
             )
         ]
         
