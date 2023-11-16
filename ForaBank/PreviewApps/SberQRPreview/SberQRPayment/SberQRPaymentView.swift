@@ -10,17 +10,38 @@ import SwiftUI
 struct SberQRPaymentView: View {
     
     let url: URL
+    let dismiss: () -> Void
     
     var body: some View {
         
-        Text("SberQRPayment for \(url.absoluteString)")
+        VStack {
+            Text("SberQRPayment")
+                .font(.largeTitle.bold())
+            
+            Text("for \(url.absoluteString)")
+                .font(.caption)
+                .frame(maxHeight: .infinity)
+        }
+        .overlay(alignment: .topLeading, content: backButton)
+        .padding()
+    }
+    
+    private func backButton() -> some View {
+        
+        Button(action: dismiss) {
+            
+            Image(systemName: "chevron.left")
+        }
     }
 }
 
 struct SberQRPaymentView_Previews: PreviewProvider {
     
     static var previews: some View {
-    
-        SberQRPaymentView(url: .init(string: "http://any-url")!)
+        
+        SberQRPaymentView(
+            url: .init(string: "http://any-url")!,
+            dismiss: {}
+        )
     }
 }

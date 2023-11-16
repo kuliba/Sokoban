@@ -24,6 +24,7 @@ enum Navigation: Hashable & Identifiable {
     enum FullScreenCover: Hashable & Identifiable {
         
         case qrReader
+        case sberQRPayment(URL)
 
         var id: Self { self }
     }

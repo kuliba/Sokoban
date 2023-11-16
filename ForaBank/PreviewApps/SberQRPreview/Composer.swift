@@ -28,7 +28,11 @@ final class Composer {
         
         switch destination {
         case let .sberQRPayment(url):
-            SberQRPaymentView(url: url)
+            
+            SberQRPaymentView(
+                url: url,
+                dismiss: navigationModel.resetNavigation
+            )
         }
     }
     
@@ -44,14 +48,21 @@ final class Composer {
                 
                 self?.handleQRParsingResult(qrResult)
             }
+     
+        case let .sberQRPayment(url):
+            SberQRPaymentView(
+                url: url,
+                dismiss: navigationModel.resetNavigation
+            )
         }
     }
+
     
     func handleQRParsingResult(_ qrResult: QRParsingResult) {
         
         switch qrResult {
         case let .sberQR(url):
-            navigationModel.setDestination(to: .sberQRPayment(url))
+            navigationModel.setFullScreenCover(to: .sberQRPayment(url))
             
         case let .error(text):
             // navigationModel.setAlert(text)
