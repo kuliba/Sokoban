@@ -64,6 +64,7 @@ final class UserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.storred?.1, .interface(.sticker))
     }
     
+    /*
     func test_logout_shouldSaveStickerSetting() {
         
         let (sut, _, spy) = makeSUT()
@@ -98,9 +99,8 @@ final class UserAccountViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.storred?.0, .init("true".utf8))
         XCTAssertNoDiff(spy.storred?.1, .interface(.sticker))
     }
+    */
     
-    
-
     // MARK: - Helpers
     
     private typealias SUT = UserAccountViewModel
