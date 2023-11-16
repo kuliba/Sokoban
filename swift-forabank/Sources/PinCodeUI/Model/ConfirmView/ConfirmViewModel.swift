@@ -106,6 +106,9 @@ public class ConfirmViewModel: ObservableObject {
                                 self.alertMessage = message.rawValue
                                 self.buttonTitle = buttonTitle.rawValue
                                 self.showAlert = true
+                                
+                            case .noRetry:
+                                return
                             }
                         }
                     }
@@ -118,16 +121,34 @@ public class ConfirmViewModel: ObservableObject {
                         
                         guard let self else { return }
                         
-                        if let result {
-                                                        
-                            self.isDisabled = false
-                            self.otp = ""
-                            self.alertMessage = result.message?.rawValue ?? ""
-                            self.showAlert = true
+                        switch result {
                             
-                        } else {
+                        case .none:
                             self.resendRequestAfterClose(self.cardId, self.actionType)
                             self.action.send(ConfirmViewModelAction.Close.SelfView())
+
+                        case let .some(error):
+                            switch error {
+                                
+                            case let .errorForAlert(message):
+                                self.isDisabled = false
+                                self.otp = ""
+                                self.alertMessage = message.rawValue
+                                self.showAlert = true
+                                
+                            case let .noRetry(message, buttonTitle):
+                                self.isDisabled = false
+                                self.otp = ""
+                                self.alertMessage = message.rawValue
+                                // TODO: надо добавить action на alert
+                                // должен быть
+                                //self.action.send(ConfirmViewModelAction.Close.SelfView())
+                               // self.buttonTitle = buttonTitle.rawValue
+                                self.showAlert = true
+
+                            case .errorScreen, .weakPinAlert:
+                                return
+                            }
                         }
                     }
                 }

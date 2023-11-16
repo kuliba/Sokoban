@@ -51,7 +51,8 @@ public enum ErrorDomain: Equatable {
     case errorForAlert(ErrorMessage)
     case errorScreen
     case weakPinAlert(ErrorMessage, ButtonTitle)
-    
+    case noRetry(ErrorMessage, ButtonTitle)
+
     public var message: ErrorMessage? {
         switch self {
             
@@ -60,6 +61,8 @@ public enum ErrorDomain: Equatable {
         case .errorScreen:
             return nil
         case let .weakPinAlert(errorMessage, _):
+            return errorMessage
+        case let .noRetry(errorMessage, _):
             return errorMessage
         }
     }
@@ -71,6 +74,8 @@ public enum ErrorDomain: Equatable {
             return nil
             
         case let .weakPinAlert(_, buttonTitle):
+            return buttonTitle
+        case let .noRetry(_, buttonTitle):
             return buttonTitle
         }
     }
