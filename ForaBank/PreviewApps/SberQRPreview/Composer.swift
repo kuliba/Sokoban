@@ -21,12 +21,16 @@ final class Composer {
 
 extension Composer {
     
+    // MARK: - Alert
+    
     func makeAlertView(
         _ alert: Navigation.Alert
     ) -> SwiftUI.Alert {
         
         .init(title: Text(alert.message))
     }
+
+    // MARK: - Navigation
     
     @ViewBuilder
     func makeDestinationView(
@@ -43,6 +47,8 @@ extension Composer {
         }
     }
     
+    // MARK: - FullScreenCover
+    
     @ViewBuilder
     func makeFullScreenCoverView(
         _ fullScreenCover: Navigation.FullScreenCover
@@ -58,26 +64,7 @@ extension Composer {
         }
     }
     
-    func handleQRParsingResult(_ qrResult: QRParsingResult) {
-        
-        switch qrResult {
-        case let .sberQR(url):
-            navigationModel.resetNavigation()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                
-                self?.navigationModel.setSheet(to: .sberQRPayment(url))
-            }
-            
-        case let .error(text):
-            navigationModel.resetNavigation()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-                
-                self?.navigationModel.setAlert(to: .init(message: text))
-            }
-        }
-    }
+    // MARK: - FullScreenCover
     
     @ViewBuilder
     func makeSheet(
@@ -91,6 +78,33 @@ extension Composer {
                 url: url,
                 dismiss: navigationModel.resetNavigation
             )
+        }
+    }
+}
+
+private extension Composer {
+    
+    func handleQRParsingResult(_ qrResult: QRParsingResult) {
+        
+        switch qrResult {
+        case let .sberQR(url):
+            changeNavigation(to: .sheet(.sberQRPayment(url)))
+            
+        case let .error(text):
+            changeNavigation(to: .alert(.init(message: text)))
+        }
+    }
+}
+
+private extension Composer {
+    
+    func changeNavigation(to navigation: Navigation) {
+        
+        navigationModel.resetNavigation()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            
+            self?.navigationModel.setNavigation(to: navigation)
         }
     }
 }
