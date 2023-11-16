@@ -380,6 +380,10 @@
 		2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */; };
 		2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = 2A1F086D2A7A2EE400C5B11B /* public.crt */; };
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
+		2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
+		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
+		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
+		2A20F8D62B05E1D100E3AE79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */; };
 		2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */; };
@@ -2542,6 +2546,11 @@
 		2A1F086D2A7A2EE400C5B11B /* public.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = public.crt; sourceTree = "<group>"; };
 		2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTransportKeyDomain.swift; sourceTree = "<group>"; };
 		2A20F8C72B05498200E3AE79 /* SberQR.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SberQR.xctestplan; sourceTree = "<group>"; };
+		2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SberQRPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPreviewApp.swift; sourceTree = "<group>"; };
+		2A20F8D02B05E1D000E3AE79 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
 		2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymensSFPTests.swift"; sourceTree = "<group>"; };
@@ -4257,6 +4266,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2A20F8C92B05E1D000E3AE79 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2AE5972729F918C20083F138 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -5389,19 +5405,23 @@
 			path = PublicTransportKey;
 			sourceTree = "<group>";
 		};
-		2A20F8C32B05471100E3AE79 /* SberQR */ = {
+		2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */ = {
 			isa = PBXGroup;
 			children = (
-				2A20F8C42B05477E00E3AE79 /* Resources */,
+				2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */,
+				2A20F8D02B05E1D000E3AE79 /* ContentView.swift */,
+				2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */,
+				2A20F8D42B05E1D100E3AE79 /* Preview Content */,
 			);
-			path = SberQR;
+			path = SberQRPreview;
 			sourceTree = "<group>";
 		};
-		2A20F8C42B05477E00E3AE79 /* Resources */ = {
+		2A20F8D42B05E1D100E3AE79 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */,
 			);
-			path = Resources;
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		2A21E35E2AC2067700DB6456 /* Template */ = {
@@ -6397,8 +6417,9 @@
 				83378AB62AA0DFE10087F8B1 /* LandingPreview */,
 				C1A4D37C2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
-				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
+				2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */,
 				C1F346D42AE25C6000EE1E87 /* StickerPreview */,
+				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
 			);
 			path = PreviewApps;
 			sourceTree = "<group>";
@@ -10397,6 +10418,7 @@
 				83378AB52AA0DFE10087F8B1 /* LandingPreview.app */,
 				C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */,
 				C1F346D32AE25C6000EE1E87 /* StickerPreview.app */,
+				2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -11235,6 +11257,23 @@
 			productReference = 2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2A20F8CB2B05E1D000E3AE79 /* SberQRPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A20F8DB2B05E1D100E3AE79 /* Build configuration list for PBXNativeTarget "SberQRPreview" */;
+			buildPhases = (
+				2A20F8C82B05E1D000E3AE79 /* Sources */,
+				2A20F8C92B05E1D000E3AE79 /* Frameworks */,
+				2A20F8CA2B05E1D000E3AE79 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SberQRPreview;
+			productName = SberQRPreview;
+			productReference = 2A20F8CC2B05E1D000E3AE79 /* SberQRPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2AE5972929F918C20083F138 /* PhoneNumberTextViewPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2AE5973529F918C30083F138 /* Build configuration list for PBXNativeTarget "PhoneNumberTextViewPreview" */;
@@ -11487,6 +11526,9 @@
 					2A14A8512A2750440018511E = {
 						CreatedOnToolsVersion = 14.3;
 					};
+					2A20F8CB2B05E1D000E3AE79 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					2AE5972929F918C20083F138 = {
 						CreatedOnToolsVersion = 14.3;
 					};
@@ -11565,6 +11607,7 @@
 				83378AB42AA0DFE10087F8B1 /* LandingPreview */,
 				C1D6BB9C2AD613730006B151 /* PaymentsViewModelMapper */,
 				C1F346D22AE25C6000EE1E87 /* StickerPreview */,
+				2A20F8CB2B05E1D000E3AE79 /* SberQRPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -11576,6 +11619,15 @@
 			files = (
 				2A14A85C2A2750460018511E /* Preview Assets.xcassets in Resources */,
 				2A14A8592A2750460018511E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A20F8CA2B05E1D000E3AE79 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A20F8D62B05E1D100E3AE79 /* Preview Assets.xcassets in Resources */,
+				2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11996,6 +12048,15 @@
 			files = (
 				2A14A8572A2750450018511E /* ContentView.swift in Sources */,
 				2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A20F8C82B05E1D000E3AE79 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */,
+				2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -13933,6 +13994,130 @@
 			};
 			name = Release;
 		};
+		2A20F8D72B05E1D100E3AE79 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2A20F8D82B05E1D100E3AE79 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2A20F8D92B05E1D100E3AE79 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2A20F8DA2B05E1D100E3AE79 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/SberQRPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.SberQRPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2AC371842A2FD32A008F1994 /* Preprod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -15189,6 +15374,17 @@
 				2A14A85E2A2750460018511E /* Mock */,
 				2A14A85F2A2750460018511E /* Release */,
 				2AC371852A2FD32A008F1994 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2A20F8DB2B05E1D100E3AE79 /* Build configuration list for PBXNativeTarget "SberQRPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A20F8D72B05E1D100E3AE79 /* Debug */,
+				2A20F8D82B05E1D100E3AE79 /* Mock */,
+				2A20F8D92B05E1D100E3AE79 /* Release */,
+				2A20F8DA2B05E1D100E3AE79 /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
