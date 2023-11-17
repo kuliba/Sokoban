@@ -11,34 +11,44 @@ import GenericRemoteService
 import PaymentSticker
 import SVGKit
 
+struct Location {
+    
+    let id: String
+}
+
+struct Office {
+    
+    let id: String
+    let name: String
+}
+
 final class BusinessLogic {
     
-    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
-    typealias Option = PaymentSticker.Operation.Parameter.Select.Option
-    typealias OperationResult = Result<OperationStateViewModel.State, Error>
-    typealias Completion = (OperationResult) -> Void
-    typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
+    typealias DictionaryService = RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    typealias TransferService = RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias MakeTransferService = RemoteService<String, MakeTransferResponse>
+    typealias ImageLoaderService = RemoteService<[String], [ImageData]>
     
-    typealias ChangeNavigationState = (NavigationViewModel.NavigationState) -> Void
-    typealias SelectAtmOption = (PaymentSticker.Operation, PlacesListViewModel.ItemViewModel) -> Void
+    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
+    typealias OperationResult = Result<OperationStateViewModel.State, Error>
+    
+    typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
     
     //TODO: replace remoteService to closure or protocol
-    let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    let makeTransferService: RemoteService<String, MakeTransferResponse>
-    let imageLoaderService: RemoteService<[String], [ImageData]>
-    let changeNavigationState: ChangeNavigationState
-    let selectAtmOption: SelectAtmOption
+    let dictionaryService: DictionaryService
+    let transferService: TransferService
+    let makeTransferService: MakeTransferService
+    let imageLoaderService: ImageLoaderService
+    let selectOffice: SelectOffice
     let products: [Product]
     let cityList: [City]
     
     init(
-        dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
-        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
-        makeTransferService: RemoteService<String, MakeTransferResponse>,
-        imageLoaderService: RemoteService<[String], [ImageData]>,
-        changeNavigationState: @escaping ChangeNavigationState,
-        selectAtmOption: @escaping SelectAtmOption,
+        dictionaryService: DictionaryService,
+        transferService: TransferService,
+        makeTransferService: MakeTransferService,
+        imageLoaderService: ImageLoaderService,
+        selectOffice: @escaping SelectOffice,
         products: [Product],
         cityList: [City]
     ) {
@@ -46,8 +56,7 @@ final class BusinessLogic {
         self.transferService = transferService
         self.makeTransferService = makeTransferService
         self.imageLoaderService = imageLoaderService
-        self.changeNavigationState = changeNavigationState
-        self.selectAtmOption = selectAtmOption
+        self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
     }
@@ -89,30 +98,6 @@ extension BusinessLogic {
 }
 
 extension BusinessLogic {
-    
-    func selectAtmOption(
-        operation: PaymentSticker.Operation,
-        atm: PlacesListViewModel.ItemViewModel
-    ) -> OperationResult {
-        
-        let newOperation = operation.updateOperation(
-            operation: operation,
-            newParameter: .select(.init(
-                id: .officeSelector,
-                value: atm.id,
-                title: "",
-                placeholder: "",
-                options: [],
-                state: .selected(.init(
-                    title: "",
-                    placeholder: "",
-                    name: atm.name,
-                    iconName: ""
-                ))))
-        )
-        
-        return .success(.operation(newOperation))
-    }
     
     func process(
         operation: PaymentSticker.Operation,
