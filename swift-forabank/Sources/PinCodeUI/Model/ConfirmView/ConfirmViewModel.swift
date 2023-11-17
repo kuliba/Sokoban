@@ -1,6 +1,6 @@
 //
 //  ConfirmViewModel.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 18.07.2023.
 //
@@ -10,30 +10,34 @@ import Combine
 import Tagged
 
 public class ConfirmViewModel: ObservableObject {
-   
+    
     public typealias ChangePinHandler = (ChangePinStruct, @escaping (ErrorDomain?) -> Void) -> Void
     public typealias OtpHandler =  (OtpDomain.Otp, @escaping (ErrorDomain?) -> Void) -> Void
     let maxDigits: Int
     
     @Published var otp: OtpDomain.Otp
     @Published var isDisabled: Bool
-    @Published var showAlert: Bool 
-
+    @Published var showAlert: Bool
+    
     let action: PassthroughSubject<ComfirmViewAction, Never> = .init()
-
+    
     let phoneNumber: PhoneDomain.Phone
     let cardId: CardDomain.CardId
     let actionType: CVVPinAction
     var newPin: PinDomain.NewPin = ""
-
+    
     let handler: OtpHandler
     let handlerChangePin: ChangePinHandler?
-
+    
     let showSpinner: () -> Void
     let resendRequestAfterClose: (CardDomain.CardId, CVVPinAction) -> Void
-    var alertMessage: String = ""
-    var buttonTitle: String?
-
+    var infoForAllert: (
+        alertMessage: String,
+        buttonTitle: String?,
+        oneButton: Bool,
+        action: () -> Void
+    ) = ("", nil, true, {})
+    
     public init(
         phoneNumber: PhoneDomain.Phone,
         cardId: CardDomain.CardId,
@@ -61,7 +65,7 @@ public class ConfirmViewModel: ObservableObject {
         self.showSpinner = showSpinner
         self.resendRequestAfterClose = resendRequestAfterClose
     }
-
+    
     func submitOtp() {
         
         guard !otp.isEmpty else { return }
@@ -92,21 +96,24 @@ public class ConfirmViewModel: ObservableObject {
                             case let .pinError(error):
                                 switch error {
                                 case let .errorForAlert(message):
-                                     self.isDisabled = false
-                                     self.otp = ""
-                                     self.alertMessage = message.rawValue
-                                     self.showAlert = true
-                                     
-                                 case .errorScreen:
-                                     self.resendRequestAfterClose(self.cardId, .changePinResult(.errorScreen))
-                                     self.action.send(ConfirmViewModelAction.Close.SelfView())
-                                     
-                                 case let .weakPinAlert(message, buttonTitle):
-                                     self.isDisabled = false
-                                     self.otp = ""
-                                     self.alertMessage = message.rawValue
-                                     self.buttonTitle = buttonTitle.rawValue
-                                     self.showAlert = true
+                                    self.isDisabled = false
+                                    self.otp = ""
+                                    self.infoForAllert.alertMessage = message.rawValue
+                                    self.infoForAllert.oneButton = true
+                                    self.showAlert = true
+                                    
+                                case .errorScreen:
+                                    self.resendRequestAfterClose(self.cardId, .changePinResult(.errorScreen))
+                                    self.action.send(ConfirmViewModelAction.Close.SelfView())
+                                    
+                                case let .weakPinAlert(message, buttonTitle):
+                                    self.isDisabled = false
+                                    self.otp = ""
+                                    self.infoForAllert.alertMessage = message.rawValue
+                                    self.infoForAllert.buttonTitle = buttonTitle.rawValue
+                                    self.infoForAllert.oneButton = false
+                                    self.infoForAllert.action = self.restartChangePin
+                                    self.showAlert = true
                                 }
                                 
                             case .cvvError:
@@ -114,7 +121,7 @@ public class ConfirmViewModel: ObservableObject {
                             }
                         }
                     }
-               }
+                }
             }
             else {
                 handler(otp) { result in
@@ -128,7 +135,7 @@ public class ConfirmViewModel: ObservableObject {
                         case .none:
                             self.resendRequestAfterClose(self.cardId, self.actionType)
                             self.action.send(ConfirmViewModelAction.Close.SelfView())
-
+                            
                         case let .some(error):
                             switch error {
                             case .pinError:
@@ -137,20 +144,22 @@ public class ConfirmViewModel: ObservableObject {
                             case let .cvvError(error):
                                 switch error {
                                 case let .errorForAlert(message):
-                                     self.isDisabled = false
-                                     self.otp = ""
-                                     self.alertMessage = message.rawValue
-                                     self.showAlert = true
-                                     
-                                 case let .noRetry(message, buttonTitle):
-                                     self.isDisabled = false
-                                     self.otp = ""
-                                     self.alertMessage = message.rawValue
-                                     // TODO: надо добавить action на alert
-                                     // должен быть
-                                     //self.action.send(ConfirmViewModelAction.Close.SelfView())
-                                    // self.buttonTitle = buttonTitle.rawValue
-                                     self.showAlert = true
+                                    self.isDisabled = false
+                                    self.otp = ""
+                                    self.infoForAllert.alertMessage = message.rawValue
+                                    self.infoForAllert.oneButton = true
+                                    self.showAlert = true
+                                    
+                                case let .noRetry(message, buttonTitle):
+                                    self.isDisabled = false
+                                    self.otp = ""
+                                    self.infoForAllert.alertMessage = message.rawValue
+                                    self.infoForAllert.buttonTitle = buttonTitle.rawValue
+                                    self.infoForAllert.oneButton = true
+                                    self.infoForAllert.action = {
+                                        self.action.send(ConfirmViewModelAction.Close.SelfView())
+                                    }
+                                    self.showAlert = true
                                 }
                             }
                         }
@@ -162,7 +171,7 @@ public class ConfirmViewModel: ObservableObject {
         if otp.count > maxDigits {
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-
+                
                 self.otp = .init(String(self.otp.rawValue.prefix(self.maxDigits)))
             }
             submitOtp()
