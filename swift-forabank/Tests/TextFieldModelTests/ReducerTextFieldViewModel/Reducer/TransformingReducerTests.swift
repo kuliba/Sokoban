@@ -506,7 +506,7 @@ final class TransformingReducerTests: XCTestCase {
         assertReduce(
             reducer,
             state: .editing(.init("12345", cursorAt: 5)),
-            with: .changeText("ABC", in:.init(location: 5, length: 0)),
+            with: .changeText("ABC", in: .init(location: 5, length: 0)),
             returns: .editing(.init("12345", cursorAt: 5))
         )
     }
@@ -518,7 +518,7 @@ final class TransformingReducerTests: XCTestCase {
         assertReduce(
             reducer,
             state: .editing(.init("12345", cursorAt: 5)),
-            with: .changeText("ABC", in:.init(location: 5, length: 0)),
+            with: .changeText("ABC", in: .init(location: 5, length: 0)),
             returns: .editing(.init("12345A", cursorAt: 6))
         )
     }
