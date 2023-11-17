@@ -31,7 +31,7 @@ struct StickerView: View {
                 
                 HStack(alignment: .top, spacing: 20) {
                     
-                    viewModel.sticker
+                    Image(data: viewModel.sticker.data)
                         .resizable()
                         .frame(width: 112, height: 72, alignment: .center)
                     
@@ -101,9 +101,12 @@ extension StickerView {
                 
                 HStack {
                     
-                    viewModel.icon
-                        .renderingMode(.template)
-                        .foregroundColor(config.iconColor)
+                    if let name = viewModel.icon.name {
+                        
+                        Image(name)
+                            .renderingMode(.template)
+                            .foregroundColor(config.iconColor)
+                    }
                     
                     Text(viewModel.description)
                         .font(config.optionFont)
@@ -198,12 +201,12 @@ struct ParameterStickerView_Previews: PreviewProvider {
                     title: "header",
                     detailTitle: "detailTitle"
                 ),
-                sticker: .init(""),
+                sticker: .data(.empty),
                 options: [.init(
                     title: "option title",
-                    icon: .init("Arrow Circle"),
+                    icon: .data(.empty),
                     description: "description",
-                    iconColor: .green
+                    iconColor: ""
                 )]),
             config: .init(
                 rectangleColor: .black,
@@ -223,5 +226,15 @@ struct ParameterStickerView_Previews: PreviewProvider {
                     optionColor: .black
                 ))
         )
+    }
+}
+
+// TODO: extract to file
+extension Image {
+    
+    init(data: Data?, fallback: UIImage = .checkmark) {
+        
+        let uiImage: UIImage = data.map { .init(data: $0) ?? fallback } ?? fallback
+        self = .init(uiImage: uiImage)
     }
 }

@@ -437,7 +437,7 @@ extension BusinessLogic {
                     return Operation.Parameter.sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
-                        image: PaymentSticker.ImageData(data: Data()),
+                        image: PaymentSticker.ImageData.named(""),
                         options: banner.txtConditionList.map({
                             
                             Operation.Parameter.Sticker.PriceOption(
@@ -566,27 +566,24 @@ extension BusinessLogic {
             
             switch result {
             case let .success(images):
-                if let uiImage = SVGKImage(data: images.first?.data).uiImage,
-                   let image = PaymentSticker.ImageData(with: uiImage) {
                     
-                    let newOperation = operation.updateOperation(
-                        operation: operation,
-                        newParameter: .sticker(.init(
-                            title: banner.title,
-                            description: banner.subtitle,
-                            image: image,
-                            options: banner.txtConditionList.map { item in
-                                
-                                    .init(
-                                        title: item.name,
-                                        description: "\(item.value.description.dropLast(2)) ₽"
-                                    )
-                            }
-                        ))
-                    )
-                    
-                    completion(.success(.operation(newOperation)))
-                }
+                let newOperation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .sticker(.init(
+                        title: banner.title,
+                        description: banner.subtitle,
+                        image: .data(images.first?.data),
+                        options: banner.txtConditionList.map { item in
+                            
+                                .init(
+                                    title: item.name,
+                                    description: "\(item.value.description.dropLast(2)) ₽"
+                                )
+                        }
+                    ))
+                )
+                
+                completion(.success(.operation(newOperation)))
                 
             case let .failure(error):
                 completion(.failure(error))

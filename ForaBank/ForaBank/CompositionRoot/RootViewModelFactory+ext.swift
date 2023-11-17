@@ -178,9 +178,9 @@ private extension Model {
             nameProduct: $0.displayName,
             balance: $0.balanceValue.description,
             description: $0.displayNumber ?? "",
-            cardImage: PaymentSticker.ImageData(data: $0.smallDesign.uiImage?.pngData() ?? Data()),
-            paymentSystem: PaymentSticker.ImageData(data: $0.paymentSystem.debugDescription.data),
-            backgroundImage: PaymentSticker.ImageData(data: $0.largeDesign.uiImage?.pngData() ?? Data()),
+            cardImage: PaymentSticker.ImageData.data($0.smallDesign.uiImage?.pngData()),
+            paymentSystem: PaymentSticker.ImageData.data($0.paymentSystemData),
+            backgroundImage: PaymentSticker.ImageData.data($0.largeDesign.uiImage?.pngData()),
             backgroundColor: $0.backgroundColor.description
         )})
         

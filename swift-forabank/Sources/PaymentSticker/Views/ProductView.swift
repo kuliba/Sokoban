@@ -130,12 +130,10 @@ public struct ProductView: View {
         
         HStack(spacing: 12) {
             
-            if let cardLogo = productViewModel.main.cardLogo.uiImage {
-                
-                Image(uiImage: cardLogo)
-                    .resizable()
-                    .frame(width: 32, height: 32, alignment: .center)
-            }
+            // FIXME: create extension for data to image
+            Image(data: productViewModel.main.cardLogo.data)
+                .resizable()
+                .frame(width: 32, height: 32, alignment: .center)
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -163,10 +161,11 @@ public struct ProductView: View {
         VStack(alignment: .leading, spacing: 4) {
             
             HStack(alignment: .center, spacing: 8) {
-                
-                if let paymentSystemImage = viewModel.main.paymentSystem?.uiImage {
+
+                // FIXME: create extension for data to image AGAIN
+                if let paymentSystemImage = viewModel.main.paymentSystem {
                     
-                    Image(uiImage: paymentSystemImage)
+                    Image(data: paymentSystemImage.data)
                 }
                 
                 Text(viewModel.main.name)
@@ -196,9 +195,10 @@ public struct ProductView: View {
         _ product: ProductViewModel
     ) -> some View {
         
-        if let backgroundUIImage = product.main.backgroundImage?.uiImage {
+        if let backgroundUIImage = product.main.backgroundImage {
             
-            Image(uiImage: backgroundUIImage)
+            // FIXME: create extension for data to image AGAIN
+            Image(data: backgroundUIImage.data)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
@@ -356,11 +356,11 @@ struct ProductView_Previews: PreviewProvider {
                 state: .selected(.init(
                     header: .init(title: "Счет списания"),
                     main: .init(
-                        cardLogo: .empty,
+                        cardLogo: .data(.empty),
                         paymentSystem: nil,
                         name: "Gold",
                         balance: "625 193 Р",
-                        backgroundImage: .empty,
+                        backgroundImage: .data(.empty),
                         backgroundColor: .red
                     ),
                     footer: .init(description: "description")

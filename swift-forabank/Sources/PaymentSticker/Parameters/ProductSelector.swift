@@ -30,9 +30,9 @@ public extension Operation.Parameter {
             let nameProduct: String
             let balance: String
             let description: String
-            let cardImage: Data
-            let paymentSystem: Data
-            let backgroundImage: Data?
+            let cardImage: ImageData
+            let paymentSystem: ImageData
+            let backgroundImage: ImageData?
             let backgroundColor: String
             
             public init(
@@ -40,9 +40,9 @@ public extension Operation.Parameter {
                 nameProduct: String,
                 balance: String,
                 description: String,
-                cardImage: Data,
-                paymentSystem: Data,
-                backgroundImage: Data?,
+                cardImage: ImageData,
+                paymentSystem: ImageData,
+                backgroundImage: ImageData?,
                 backgroundColor: String
             ) {
                 self.title = title
