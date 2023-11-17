@@ -15,6 +15,7 @@ struct SberQRPaymentView: View {
     var body: some View {
         
         VStack {
+            
             Text("SberQRPayment")
                 .font(.largeTitle.bold())
             
@@ -22,6 +23,7 @@ struct SberQRPaymentView: View {
                 .font(.caption)
                 .frame(maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity)
         .overlay(alignment: .topLeading, content: backButton)
         .padding()
     }
@@ -40,7 +42,7 @@ struct SberQRPaymentView_Previews: PreviewProvider {
     static var previews: some View {
         
         SberQRPaymentView(
-            url: .init(string: "http://any-url")!,
+            url: .init(string: "https://platiqr.ru/?uuid=3001638371&amount=27.50&trxid=2023072420443097822")!,
             dismiss: {}
         )
     }
