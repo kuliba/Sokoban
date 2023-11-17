@@ -80,7 +80,6 @@ struct MainView: View {
                 viewModel.link.map {
                     
                     destinationView(
-                        model: viewModel.model,
                         link: $0
                     )
                 }
@@ -113,7 +112,6 @@ struct MainView: View {
     
     @ViewBuilder
     private func destinationView(
-        model: Model,
         link: MainViewModel.Link
     ) -> some View {
         
@@ -180,8 +178,8 @@ struct MainView: View {
         case let .paymentSticker(makeOperation):
             NavigationOperationViewFactory.makeNavigationOperationView(
                 makeOperation: makeOperation,
-                atmData: model.dictionaryAtmList() ?? [],
-                atmMetroStationData: model.dictionaryAtmMetroStations()
+                atmData: viewModel.dictionaryAtmList(),
+                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
             )
         }
     }

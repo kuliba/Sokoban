@@ -32,7 +32,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     var rootActions: RootViewModel.RootActions?
     
-    let model: Model
+    private let model: Model
     private let makeOperationStateViewModel: MakeOperationStateViewModel
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let onRegister: () -> Void
@@ -876,6 +876,21 @@ class MainViewModel: ObservableObject, Resetable {
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+    }
+}
+
+// MARK: Helpers
+
+extension MainViewModel {
+
+    func dictionaryAtmList() -> [AtmData] {
+        
+        model.dictionaryAtmList() ?? []
+    }
+    
+    func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
+        
+        model.dictionaryAtmMetroStations() ?? []
     }
 }
 
