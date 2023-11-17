@@ -44,6 +44,7 @@ extension Operation.Parameter {
             
             public let id: String
             let name: String
+            //TODO: setup ImageData 
             public let iconName: String
             
             public init(

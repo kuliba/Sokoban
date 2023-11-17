@@ -10,18 +10,18 @@ import SwiftUI
 
 public struct SelectViewModel {
     
-    public typealias Parameter = Operation.Parameter.Select
-    public typealias OptionID = Parameter.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias ParameterSelect = Operation.Parameter.Select
+    public typealias OptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
     
-    let parameter: Parameter
+    let parameter: ParameterSelect
     let icon: Image
-    let tapAction: TapAction
+    let tapAction: () -> Void
     let select: (OptionID) -> Void
     
     public init(
-        parameter: SelectViewModel.Parameter,
+        parameter: SelectViewModel.ParameterSelect,
         icon: Image,
-        tapAction: TapAction,
+        tapAction: @escaping () -> Void,
         select: @escaping (SelectViewModel.OptionID) -> Void
     ) {
         self.parameter = parameter
@@ -32,8 +32,8 @@ public struct SelectViewModel {
     
     public enum TapAction {
         
-        case chevronButtonTapped(() -> Void)
-        case openBranch(() -> Void)
+        case chevronButtonTapped
+        case openBranch
     }
 }
 

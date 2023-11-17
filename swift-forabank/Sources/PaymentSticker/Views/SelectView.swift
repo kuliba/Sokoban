@@ -42,7 +42,6 @@ struct SelectView: View {
                     icon: viewModel.icon,
                     viewModel: optionsListViewModel,
                     config: config,
-                    tapAction: viewModel.tapAction,
                     selected: viewModel.select
                 )
                 .padding(.vertical, 15)
@@ -59,7 +58,7 @@ extension SelectView {
     struct IdleView: View {
         
         let viewModel: SelectViewModel
-        let tapAction: SelectViewModel.TapAction
+        let tapAction: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -84,24 +83,15 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: {
-                
-                switch tapAction {
-                case let .chevronButtonTapped(chevronButtonTapped):
-                    chevronButtonTapped()
-                    
-                case let .openBranch(openBranch):
-                    openBranch()
-                }
-            })
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct SelectedOptionView: View {
         
         let icon: Image
-        let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
-        let tapAction: SelectViewModel.TapAction
+        let viewModel: SelectViewModel.ParameterSelect.State.SelectedOptionViewModel
+        let tapAction: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -133,26 +123,16 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: {
-                
-                switch tapAction {
-                case let .chevronButtonTapped(chevronButtonTapped):
-                    chevronButtonTapped()
-                    
-                case let .openBranch(openBranch):
-                    openBranch()
-                }
-            })
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct OptionsListView: View {
         
         let icon: Image
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel
         let config: SelectViewConfiguration
-        let tapAction: SelectViewModel.TapAction
-        let selected: (SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel.ID) -> Void
+        let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID) -> Void
         
         var body: some View {
             
@@ -173,7 +153,8 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func select(_ option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel?) -> some View {
+        private func select(_ option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel?
+        ) -> some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
@@ -204,7 +185,9 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func option(option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel) -> some View {
+        private func option(
+            option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
+        ) -> some View {
             
             SelectView.OptionView(
                 viewModel: option,
@@ -227,7 +210,7 @@ extension SelectView {
     
     struct OptionView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
         let select: () -> Void
         let config: SelectViewConfiguration.OptionConfig
         
@@ -292,7 +275,7 @@ struct ParameterSelectView_Previews: PreviewProvider {
                 ],
                 state: .idle(.init(iconName: "", title: "Выберите значение"))),
                              icon: .init(""),
-                             tapAction: .openBranch({}),
+                             tapAction: { },
                              select: { id in }
             ),
             config: .default

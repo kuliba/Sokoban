@@ -51,33 +51,23 @@ public extension ModelToViewModelMapper {
             
         case let .select(parameter):
             
-            var icon: Image
-            var tapAction: SelectViewModel.TapAction
-
-            if parameter.id == .citySelector {
-                
-                tapAction = .chevronButtonTapped({
-                    
-                    action(.select(.chevronTapped(parameter)))
-                })
+            let icon: Image
+            let tapAction: () -> Void
+            
+            switch parameter.id {
+            case .citySelector:
+                tapAction = { action(.select(.chevronTapped(parameter))) }
                 icon = .init("ic24MapPin")
                 
-            } else if parameter.id == .officeSelector {
-                
-                tapAction = .openBranch({
-                    
-                    action(.select(.openBranch(.init(id: ""))))
-                })
+            case .officeSelector:
+                tapAction = { action(.select(.openBranch(.init(id: "")))) }
                 icon = .init("ic24Bank")
                 
-            } else {
-                tapAction = .chevronButtonTapped({
-                    
-                    action(.select(.chevronTapped(parameter)))
-                })
+            default:
+                tapAction = { action(.select(.chevronTapped(parameter))) }
                 icon = .init("ic24ArrowDownCircle")
             }
-                        
+            
             return .select(
                 .init(
                     parameter: parameter,
