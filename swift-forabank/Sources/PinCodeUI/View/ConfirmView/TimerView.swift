@@ -36,6 +36,7 @@ struct TimerView: View {
                 Text("Код отправлен на \(viewModel.phoneNumber.rawValue)\nЗапросить повторно можно через")
                     .font(config.descFont)
                     .foregroundColor(config.descForegroundColor)
+                    .lineLimit(2)
                     .multilineTextAlignment(.center)
                 
                 Text(viewModel.value)

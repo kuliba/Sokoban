@@ -12,7 +12,7 @@ public struct ConfirmView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     let config: ConfirmView.Config
-    @ObservedObject var viewModel: ConfirmViewModel
+    @StateObject var viewModel: ConfirmViewModel
     private var timerViewModel: ConfirmViewModel.TimerViewModel
     
     public init(
@@ -21,7 +21,7 @@ public struct ConfirmView: View {
         resendRequest: @escaping () -> Void
     ) {
         self.config = config
-        self.viewModel = viewModel
+        self._viewModel = .init(wrappedValue: viewModel)
         self.timerViewModel = .init(
             delay: 60,
             phoneNumber: viewModel.phoneNumber,
