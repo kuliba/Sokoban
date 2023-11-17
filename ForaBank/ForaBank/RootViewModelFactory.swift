@@ -29,8 +29,7 @@ enum RootViewModelFactory {
                 ),
                 makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
-                changeNavigationState: $0,
-                selectAtmOption: $1,
+                selectOffice: $0,
                 products: model.productsMapper(model: model),
                 cityList: model.citiesMapper(model: model)
             ))
