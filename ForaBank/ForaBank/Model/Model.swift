@@ -27,7 +27,7 @@ class Model {
     let fcmToken: CurrentValueSubject<String?, Never>
 
     //MARK: Pre-Auth
-    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never> 
+    let transferLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     let orderCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
 
     //MARK: Products
@@ -445,7 +445,9 @@ class Model {
         
         action
             .receive(on: queue)
-            .sink {[unowned self] action in
+            .sink { [weak self] action in
+                
+                guard let self else { return }
                 
                 switch action {
                     
@@ -644,13 +646,17 @@ class Model {
                     //MARK: - Payments
                     
                 case let payload as ModelAction.Payment.Process.Request:
-                    Task {
+                    Task { [weak self] in
+                        
+                        guard let self else { return }
                         
                         await handlePaymentsProcessRequest(payload)
                     }
                     
                 case let payload as ModelAction.Payment.Subscription.Request:
-                    Task {
+                    Task { [weak self] in
+                        
+                        guard let self else { return }
                         
                         await handlePaymentSubscriptionRequest(payload)
                     }

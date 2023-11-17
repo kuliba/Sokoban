@@ -9,7 +9,7 @@ import Foundation
 
 public enum GetProcessingSessionCodeMapper {
     
-    public typealias Result = GetProcessingSessionCodeService.Result
+    public typealias Result = SessionCodeDomain.Result
     
     public static func mapResponse(
         _ data: Data,
@@ -56,7 +56,7 @@ public enum GetProcessingSessionCodeMapper {
         let code: String
         let phone: String
         
-        var sessionCode: GetProcessingSessionCode {
+        var sessionCode: SessionCodeDomain.GetProcessingSessionCode {
             
             .init(code: code, phone: phone)
         }

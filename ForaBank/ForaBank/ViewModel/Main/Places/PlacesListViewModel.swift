@@ -28,6 +28,14 @@ class PlacesListViewModel: ObservableObject {
         update(with: atmList, metroStationsList: metroStationsList, referenceLocation: referenceLocation)
     }
         
+    func selectItem(atmItem: PlacesListViewModel.ItemViewModel) {
+        
+        action.send(PlacesListViewModelAction.ItemDidSelected(
+            itemId: atmItem.id,
+            name: atmItem.name
+        ))
+    }
+    
     static func atmItemsSorted(atmList: [AtmData], referenceLocation: CLLocationCoordinate2D) -> [AtmData] {
         
         let atmItemsWithDistances: [(item: AtmData, distance: CLLocationDistance)] = atmList.compactMap { atmItem in
@@ -42,14 +50,26 @@ class PlacesListViewModel: ObservableObject {
         return atmItemsWithDistances.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
     }
     
-    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLocation: CLLocationCoordinate2D) {
+    func update(
+        with atmList: [AtmData],
+        metroStationsList: [AtmMetroStationData]?,
+        referenceLocation: CLLocationCoordinate2D
+    ) {
         
-        let atmListSorted = Self.atmItemsSorted(atmList: atmList, referenceLocation: referenceLocation)
+        let atmListSorted = Self.atmItemsSorted(
+            atmList: atmList,
+            referenceLocation: referenceLocation
+        )
         
         var items = [ItemViewModel]()
         for atmItem in atmListSorted {
             
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLocation: referenceLocation, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
+            let item = ItemViewModel(
+                atmItem: atmItem,
+                metroStationsList: metroStationsList,
+                currentLocation: referenceLocation
+            )
+            
             items.append(item)
         }
         
@@ -67,9 +87,8 @@ extension PlacesListViewModel {
         let metro: [MetroStationViewModel]?
         let schedule: String
         let distance: String?
-        let action: () -> Void
         
-        internal init(id: AtmData.ID, name: String, address: String, metro: [MetroStationViewModel]?, schedule: String, distance: String?, action: @escaping () -> Void) {
+        internal init(id: AtmData.ID, name: String, address: String, metro: [MetroStationViewModel]?, schedule: String, distance: String?) {
             
             self.id = id
             self.name = name
@@ -77,10 +96,9 @@ extension PlacesListViewModel {
             self.metro = metro
             self.schedule = schedule
             self.distance = distance
-            self.action = action
         }
         
-        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?, action: @escaping () -> Void) {
+        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?) {
             
             let metroStations = metroStationsList?.filter({ atmItem.metroStationList.contains($0.id) }).map({ MetroStationViewModel(id: $0.id, name: $0.name, color: $0.color.color)})
             
@@ -89,8 +107,7 @@ extension PlacesListViewModel {
                       address: atmItem.address,
                       metro: metroStations,
                       schedule: atmItem.schedule,
-                      distance: atmItem.distanceFormatted(to: currentLocation),
-                      action: action)
+                      distance: atmItem.distanceFormatted(to: currentLocation))
             
         }
         
@@ -110,6 +127,7 @@ enum PlacesListViewModelAction {
     struct ItemDidSelected: Action {
         
         let itemId: AtmData.ID
+        let name: String
     }
 }
 
@@ -117,12 +135,28 @@ enum PlacesListViewModelAction {
 
 extension PlacesListViewModel.ItemViewModel {
     
-    static let sampleOne = PlacesListViewModel.ItemViewModel(id: UUID().uuidString, name: "Автозаводская (офис)", address: "Рублевское ш., дом 62, ТЦ «ЕвроПарк»", metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62")), .init(id: 2, name: "Автозаводская", color: Color(hex: "7ABA62")), .init(id: 3, name: "Автозаводская", color: Color(hex: "7ABA62"))], schedule: "Открыто до 20:00", distance: "128 м", action: {})
+    static let sampleOne = PlacesListViewModel.ItemViewModel(
+        id: UUID().uuidString,
+        name: "Автозаводская (офис)",
+        address: "Рублевское ш., дом 62, ТЦ «ЕвроПарк»",
+        metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62")),
+                .init(id: 2, name: "Автозаводская", color: Color(hex: "7ABA62")),
+                .init(id: 3, name: "Автозаводская", color: Color(hex: "7ABA62"))],
+        schedule: "Открыто до 20:00",
+        distance: "128 м"
+    )
     
-    static let sampleTwo = PlacesListViewModel.ItemViewModel(id: UUID().uuidString, name: "Автозаводская (банкомат)", address: "Аминьевское шоссе, дом 6", metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62"))], schedule: "Открыто до 20:00", distance: "434 м", action: {})
+    static let sampleTwo = PlacesListViewModel.ItemViewModel(
+        id: UUID().uuidString,
+        name: "Автозаводская (банкомат)",
+        address: "Аминьевское шоссе, дом 6",
+        metro: [.init(id: 1, name: "Автозаводская", color: Color(hex: "7ABA62"))],
+        schedule: "Открыто до 20:00",
+        distance: "434 м"
+    )
 }
 
 extension PlacesListViewModel {
-    
+
     static let sample = PlacesListViewModel(items: [.sampleOne, .sampleTwo])
 }

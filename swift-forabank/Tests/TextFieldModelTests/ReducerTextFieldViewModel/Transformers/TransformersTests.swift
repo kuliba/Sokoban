@@ -15,9 +15,7 @@ final class TransformersTests: XCTestCase {
     
     private let substitutions: [CountryCodeSubstitution] = [
         
-        .init(from: "3", to: "+374"),
-        .init(from: "8", to: "+7"),
-        .init(from: "9", to: "+7 9"),
+        .init(from: "89", to: "+79"),
     ]
     
     func test_replace_shouldNotChangeState_onSubstitutionMismatch() {
@@ -47,17 +45,17 @@ final class TransformersTests: XCTestCase {
         
         let changed = transformer.transform(state)
         
-        assertTextState(changed, hasText: "+374", cursorAt: 4)
+        assertTextState(changed, hasText: "3", cursorAt: 1)
     }
     
     func test_replace_shouldChangeState_onSubstitutionMatch2() {
         
         let transformer = Transformers.countryCodeSubstitute(substitutions)
-        let state = TextState("8", cursorPosition: 1)
+        let state = TextState("89", cursorPosition: 2)
         
         let changed = transformer.transform(state)
         
-        assertTextState(changed, hasText: "+7", cursorAt: 2)
+        assertTextState(changed, hasText: "+79", cursorAt: 3)
     }
     
     func test_replace_shouldChangeState_onSubstitutionMatch3() {
@@ -67,7 +65,7 @@ final class TransformersTests: XCTestCase {
         
         let changed = transformer.transform(state)
         
-        assertTextState(changed, hasText: "+7 9", cursorAt: 4)
+        assertTextState(changed, hasText: "9", cursorAt: 1)
     }
     
     // MARK: - filtering
@@ -404,7 +402,7 @@ final class TransformersTests: XCTestCase {
         
         let result = phoneTransformer.transform(state)
         
-        assertTextState(result, hasText: "+374", cursorAt: 4)
+        assertTextState(result, hasText: "+3", cursorAt: 2)
     }
     
     func test_phone_partialMatchShouldNotBeSubstituted() {
@@ -431,7 +429,7 @@ final class TransformersTests: XCTestCase {
         
         let result = filteringPhoneTransformer.transform(state)
         
-        assertTextState(result, hasText: "+374", cursorAt: 4)
+        assertTextState(result, hasText: "+3", cursorAt: 2)
     }
     
     func test_phone_partialFormattedMatchShouldNotBeSubstituted3() {
@@ -473,20 +471,16 @@ final class TransformersTests: XCTestCase {
             { $0.insertAtCursor("49") },
             { try $0.deleteBeforeCursor() },
             { try $0.deleteBeforeCursor() },
-            { try $0.deleteBeforeCursor() },
-            { try $0.deleteBeforeCursor() },
             { try $0.deleteBeforeCursor() }
         )
         
         XCTAssertNoDiff(result.map { View($0.text, $0.cursorPosition) }, [
             .init("", 0),
-            .init("+374", 4),
-            .init("+37449", 6),
-            .init("+3744", 5),
-            .init("+374", 4),
-            .init("+37", 3),
-            .init("+374", 4),
-            .init("+37", 3),
+            .init("+3", 2),
+            .init("+349", 4),
+            .init("+34", 3),
+            .init("+3", 2),
+            .init("", 0)
         ])
     }
     
@@ -500,20 +494,16 @@ final class TransformersTests: XCTestCase {
             { $0.insertAtCursor("49") },
             { try $0.deleteBeforeCursor() },
             { try $0.deleteBeforeCursor() },
-            { try $0.deleteBeforeCursor() },
-            { try $0.deleteBeforeCursor() },
             { try $0.deleteBeforeCursor() }
         )
         
         XCTAssertNoDiff(result.map { View($0.text, $0.cursorPosition) }, [
             .init("", 0),
-            .init("+374", 4),
-            .init("+37449", 6),
-            .init("+3744", 5),
-            .init("+374", 4),
-            .init("+37", 3),
             .init("+3", 2),
-            .init("", 0),
+            .init("+349", 4),
+            .init("+34", 3),
+            .init("+3", 2),
+            .init("", 0)
         ])
     }
     
@@ -589,7 +579,7 @@ final class TransformersTests: XCTestCase {
         
         let result = phoneNoFormatTransformer.transform(state)
         
-        assertTextState(result, hasText: "374", cursorAt: 3)
+        assertTextState(result, hasText: "3", cursorAt: 1)
     }
     
     func test_phoneNoFormatTransformer_partialMatchShouldNotBeSubstituted() {

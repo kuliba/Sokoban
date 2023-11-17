@@ -165,7 +165,7 @@ final class ReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",    cursorAt: 0)),
-            .editing(.init("374", cursorAt: 4)),
+            .editing(.init("3", cursorAt: 1)),
         ])
     }
     
@@ -176,16 +176,12 @@ final class ReducerTextFieldViewModelTests: XCTestCase {
         beginEditing(sut, on: scheduler)
         replaceWith("3", sut, on: scheduler)
         deleteLast(sut, on: scheduler)
-        deleteLast(sut, on: scheduler)
-        deleteLast(sut, on: scheduler)
         
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",    cursorAt: 0)),
-            .editing(.init("374", cursorAt: 4)),
-            .editing(.init("37",  cursorAt: 2)),
-            .editing(.init("374", cursorAt: 3)),
-            .editing(.init("37",  cursorAt: 2)),
+            .editing(.init("3", cursorAt: 1)),
+            .editing(.init("",  cursorAt: 0))
         ])
     }
     

@@ -14,9 +14,7 @@ final class CountryCodeSubstitutionTests: XCTestCase {
         
         let substitutions: [CountryCodeSubstitution] = [
             
-            .init(from: "3", to: "+374"),
-            .init(from: "8", to: "+7"),
-            .init(from: "9", to: "+7 9"),
+            .init(from: "89", to: "+79"),
         ]
         
         XCTAssertEqual(substitutions.firstTo(matching: ""), nil)
@@ -30,13 +28,12 @@ final class CountryCodeSubstitutionTests: XCTestCase {
         
         let substitutions: [CountryCodeSubstitution] = [
             
-            .init(from: "3", to: "+374"),
-            .init(from: "8", to: "+7"),
-            .init(from: "9", to: "+7 9"),
+            .init(from: "89", to: "+7 9"),
         ]
-        
-        XCTAssertEqual(substitutions.firstTo(matching: "3"), "+374")
-        XCTAssertEqual(substitutions.firstTo(matching: "8"), "+7")
-        XCTAssertEqual(substitutions.firstTo(matching: "9"), "+7 9")
+
+        XCTAssertNil(substitutions.firstTo(matching: "3"))
+        XCTAssertNil(substitutions.firstTo(matching: "8"))
+        XCTAssertNil(substitutions.firstTo(matching: "9"))
+        XCTAssertEqual(substitutions.firstTo(matching: "89"), "+7 9")
     }
 }

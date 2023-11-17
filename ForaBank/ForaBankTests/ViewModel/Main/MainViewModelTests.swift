@@ -66,7 +66,7 @@ final class MainViewModelTests: XCTestCase {
             )
         )
     }
-    
+
     // MARK: - Helpers
     
     private func makeSUT(
@@ -79,8 +79,10 @@ final class MainViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         let sut = MainViewModel(
             model,
-            sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _,_   in .preview }
+            sections: makeMainSections(model),
+            makeOperationStateViewModel: { _ in .preview },
+            makeProductProfileViewModel: { _,_,_ in nil },
+            onRegister: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -88,6 +90,20 @@ final class MainViewModelTests: XCTestCase {
         // trackForMemoryLeaks(model, file: file, line: line)
         
         return (sut, model)
+    }
+    
+    private func makeMainSections(
+        _ model: Model
+    ) -> [MainSectionViewModel] {
+        
+        [
+            MainSectionProductsView.ViewModel(model),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
     }
     
     private func makeModelWithServerAgentStub(
@@ -110,10 +126,12 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _,_   in .preview }
+            sections: [],
+            makeOperationStateViewModel: { _ in .preview },
+            makeProductProfileViewModel: { _,_,_ in nil },
+            onRegister: {}
         )
-        
+
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)

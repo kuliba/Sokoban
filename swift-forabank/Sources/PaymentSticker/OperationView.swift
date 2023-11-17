@@ -1,6 +1,6 @@
 //
 //  OperationView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -15,19 +15,22 @@ public struct ConfigurationOperationView {
     let selectViewConfig: SelectViewConfiguration
     let productViewConfig: ProductView.Appearance
     let inputViewConfig: InputView.InputConfiguration
+    let amountViewConfig: AmountViewConfiguration
     
     public init(
         tipViewConfig: TipViewConfiguration,
         stickerViewConfig: StickerViewConfiguration,
         selectViewConfig: SelectViewConfiguration,
         productViewConfig: ProductView.Appearance,
-        inputViewConfig: InputView.InputConfiguration
+        inputViewConfig: InputView.InputConfiguration,
+        amountViewConfig: AmountViewConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
         self.selectViewConfig = selectViewConfig
         self.productViewConfig = productViewConfig
         self.inputViewConfig = inputViewConfig
+        self.amountViewConfig = amountViewConfig
     }
 }
 
@@ -66,10 +69,6 @@ public struct OperationView: View {
                     print("details")
                 }
             }
-        case .branches:
-            
-            Color.red.opacity(0.3)
-                .frame(width: 200, height: 200, alignment: .center)
         }
     }
 }
@@ -222,7 +221,7 @@ extension Operation.Parameter: Identifiable {
             default:
                 return .branches
             }
-        case .product: return .product
+        case .productSelector: return .productSelector
         case .amount: return .amount
         case .input: return .input
         }
@@ -235,7 +234,7 @@ extension Operation.Parameter: Identifiable {
         case city
         case transferType
         case branches
-        case product
+        case productSelector
         case amount
         case input
     }

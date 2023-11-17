@@ -1,6 +1,6 @@
 //
 //  OperationStateViewModel.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -45,7 +45,7 @@ final public class OperationStateViewModel: ObservableObject {
             case let .failure(error):
                 self.handleAPIError(error)
                 
-            case let .success(state):    
+            case let .success(state):
                 self.state = state
 
             }
@@ -68,7 +68,6 @@ extension OperationStateViewModel {
     //TODO: extract from operation state view model
     public enum State {
         
-        case branches
         case operation(Operation)
         case result(OperationResult)
     }

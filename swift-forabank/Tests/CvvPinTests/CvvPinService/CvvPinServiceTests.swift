@@ -5,279 +5,204 @@
 //  Created by Igor Malyarov on 16.07.2023.
 //
 
+import CryptoKit
 import CvvPin
 import XCTest
 
-final class CvvPinServiceTests: XCTestCase {
+final class CvvPinServiceTests: CvvPinServiceTestHelpers {
     
     // MARK: - init
     
-    func test_init_shouldNotSendMessagesToSessionCodeLoader() {
+    func test_init_shouldNotSendMessagesToGetProcessingSessionCode() {
         
-        let sessionCodeLoader = makeSUT().sessionCodeLoader
+        let sessionCodeSpy = makeSUT().sessionCodeSpy
         
-        XCTAssertEqual(sessionCodeLoader.messages, [])
+        XCTAssertEqual(sessionCodeSpy.messages, [])
     }
     
-    func test_init_shouldNotSendMessagesToSymmetricCrypto() {
+    func test_init_shouldNotSendMessagesToExchangeKey() {
         
-        let symmetricKeyService = makeSUT().symmetricKeyService
+        let keyExchangeSpy = makeSUT().keyExchangeSpy
         
-        XCTAssertEqual(symmetricKeyService.messages, [])
+        XCTAssertEqual(keyExchangeSpy.messages, [])
     }
     
-    func test_init_shouldNotSendMessagesToPublicKeyAPIClient() {
+    func test_init_shouldNotSendMessagesToTransferKey() {
         
-        let bindPublicKeySpy = makeSUT().bindPublicKeySpy
+        let transferKeySpy = makeSUT().transferKeySpy
         
-        XCTAssertEqual(bindPublicKeySpy.messages, [])
+        XCTAssertEqual(transferKeySpy.messages, [])
     }
     
-    // MARK: - auth
+    // MARK: - exchangeKey - public
     
-    func test_auth_shouldDeliverErrorOnSessionCodeLoaderError() {
+    func test_exchangeKey_shouldDeliverErrorOnSessionCodeError() {
         
-        let (sut, sessionCodeLoader, _, _) = makeSUT()
+        let sessionCodeError = anyNSError(domain: "session code error")
+        let (sut, sessionCodeSpy, _, _) = makeSUT()
         
-        expect(sut, toAuthWith: [.failure(anyNSError(domain: "session"))]) {
-            
-            sessionCodeLoader.complete(with: .failure(anyNSError(domain: "session")))
-        }
-    }
-    
-    func test_auth_shouldDeliverErrorOnMakeSymmetricKeyError() {
-        
-        let (sut, sessionCodeLoader, symmetricKeyService, _) = makeSUT()
-        
-        expect(sut, toAuthWith: [.failure(anyNSError(domain: "symmetric key"))]) {
-            
-            sessionCodeLoader.complete(with: .success(uniqueSessionCode()))
-            symmetricKeyService.complete(with: .failure(anyNSError(domain: "symmetric key")))
-        }
-    }
-    
-    func test_auth_shouldDeliverErrorOnBindPublicKeyError() {
-        
-        let (sut, sessionCodeLoader, symmetricKeyService, bindPublicKeySpy) = makeSUT()
-        
-        expect(sut, toAuthWith: [.failure(anyNSError(domain: "public key"))]) {
-            
-            sessionCodeLoader.complete(with: .success(uniqueSessionCode()))
-            symmetricKeyService.complete(with: .success(uniqueSymmetricKey()))
-            bindPublicKeySpy.complete(with: .failure(anyNSError(domain: "public key")))
-        }
-    }
-    
-    func test_auth_shouldDeliverAuthOnSuccess() {
-        
-        let (sut, sessionCodeLoader, symmetricKeyService, bindPublicKeySpy) = makeSUT()
-        let sessionID = uniqueSessionID()
-        let symmetricKey = uniqueSymmetricKey()
-        let auth = CvvPinService.Auth(
-            sessionID: sessionID,
-            symmetricKey: symmetricKey
+        expect(
+            sut,
+            toExchangeKeyWith: [.failure(sessionCodeError)],
+            on: {
+                sessionCodeSpy.complete(with: .failure(sessionCodeError))
+            }
         )
+    }
+    
+    func test_exchangeKey_shouldDeliverErrorOnKeyExchangeError() {
         
-        expect(sut, toAuthWith: [.success(auth)]) {
+        let keyExchangeError = anyNSError(domain: "key exchange error")
+        let (sut, sessionCodeSpy, keyExchangeSpy, _) = makeSUT()
+        
+        expect(
+            sut,
+            toExchangeKeyWith: [.failure(keyExchangeError)],
+            on: {
+                sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
+                keyExchangeSpy.complete(with: .failure(keyExchangeError))
+            }
+        )
+    }
+    
+    func test_exchangeKey_shouldDeliverSuccessOnSuccess() {
+        
+        let (sut, sessionCodeSpy, keyExchangeSpy, _) = makeSUT()
+        let keyExchange = uniqueKeyExchange()
+        
+        expect(sut, toExchangeKeyWith: [.success(())]) {
             
-            sessionCodeLoader.complete(with: .success(uniqueSessionCode()))
-            symmetricKeyService.complete(with: .success(uniqueSymmetricKey()))
-            bindPublicKeySpy.complete(with: .success((sessionID, symmetricKey.apiSymmetricKey)))
+            sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
+            keyExchangeSpy.complete(with: .success(keyExchange))
         }
     }
     
-    func test_auth_shouldNotReceiveSessionCodeResultAfterSUTInstanceHasBeenDeallocated() {
+    func test_exchangeKey_shouldNotReceiveSessionCodeResultAfterSUTInstanceHasBeenDeallocated() {
         
-        let sessionCodeLoader = SessionCodeLoaderSpy()
-        let symmetricKeyService = SymmetricKeyServiceSpy()
-        let bindPublicKeySpy = BindPublicKeySpy()
+        let sessionCodeSpy = SessionCodeLoaderSpy()
+        let keyExchangeSpy = KeyExchangeServiceSpy()
+        let transferKeySpy = TransferKeySpy()
         var sut: CvvPinService? = .init(
-            getProcessingSessionCode: sessionCodeLoader.load,
-            symmetricKeyService: symmetricKeyService,
-            bindPublicKey: bindPublicKeySpy.perform
+            getProcessingSessionCode: sessionCodeSpy.load,
+            exchangeKey: keyExchangeSpy.exchangeKey,
+            transferPublicKey: transferKeySpy.bind
         )
-        var authResults = [CvvPinService.AuthResult]()
+        var exchangeKeyResults = [Result<Void, Error>]()
         
-        sut?.auth { authResults.append($0) }
+        sut?.exchangeKey { exchangeKeyResults.append($0) }
         sut = nil
-        sessionCodeLoader.complete(with: .failure(anyNSError()))
+        sessionCodeSpy.complete(with: .failure(anyNSError()))
         
-        XCTAssertTrue(authResults.isEmpty)
+        XCTAssertTrue(exchangeKeyResults.isEmpty)
     }
     
-    func test_auth_shouldNotReceiveSymmetricKeyResultAfterSUTInstanceHasBeenDeallocated() {
+    func test_exchangeKey_shouldNotReceiveSymmetricKeyResultAfterSUTInstanceHasBeenDeallocated() {
         
-        let sessionCodeLoader = SessionCodeLoaderSpy()
-        let symmetricKeyService = SymmetricKeyServiceSpy()
-        let bindPublicKeySpy = BindPublicKeySpy()
+        let sessionCodeSpy = SessionCodeLoaderSpy()
+        let keyExchangeSpy = KeyExchangeServiceSpy()
+        let transferKeySpy = TransferKeySpy()
         var sut: CvvPinService? = .init(
-            getProcessingSessionCode: sessionCodeLoader.load,
-            symmetricKeyService: symmetricKeyService,
-            bindPublicKey: bindPublicKeySpy.perform
+            getProcessingSessionCode: sessionCodeSpy.load,
+            exchangeKey: keyExchangeSpy.exchangeKey,
+            transferPublicKey: transferKeySpy.bind
         )
-        var authResults = [CvvPinService.AuthResult]()
+        var exchangeKeyResults = [Result<Void, Error>]()
         
-        sut?.auth { authResults.append($0) }
-        sessionCodeLoader.complete(with: .success(uniqueSessionCode()))
+        sut?.exchangeKey { exchangeKeyResults.append($0) }
+        sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
         sut = nil
-        symmetricKeyService.complete(with: .failure(anyNSError()))
+        keyExchangeSpy.complete(with: .failure(anyNSError()))
         
-        XCTAssertTrue(authResults.isEmpty)
+        XCTAssertTrue(exchangeKeyResults.isEmpty)
     }
     
-    func test_auth_shouldNotReceivePublicKeyResultAfterSUTInstanceHasBeenDeallocated() {
+    // MARK: - confirmExchange - public
+    
+    func test_confirmExchange_shouldDeliverExchangeStateErrorOnMissingExchangeKey() {
         
-        let sessionCodeLoader = SessionCodeLoaderSpy()
-        let symmetricKeyService = SymmetricKeyServiceSpy()
-        let bindPublicKeySpy = BindPublicKeySpy()
-        var sut: CvvPinService? = .init(
-            getProcessingSessionCode: sessionCodeLoader.load,
-            symmetricKeyService: symmetricKeyService,
-            bindPublicKey: bindPublicKeySpy.perform
+        let (sut, _, _, _) = makeSUT()
+        
+        expect(sut, toConfirmExchangeWith: [
+            .failure(CvvPinService.ExchangeStateError())
+        ], on: {})
+    }
+    
+    func test_confirmExchange_shouldDeliverErrorOnTransferKeyError() {
+        
+        let transferKeyError = anyNSError(domain: "key transfer error")
+        let (sut, sessionCodeSpy, keyExchangeSpy, transferKeySpy) = makeSUT()
+        
+        expect(sut, toExchangeKeyWith: [.success(())]) {
+            
+            sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
+            keyExchangeSpy.complete(with: .success(uniqueKeyExchange()))
+        }
+        
+        expect(
+            sut,
+            toConfirmExchangeWith: [.failure(transferKeyError)],
+            on: {
+                transferKeySpy.complete(with: .failure(transferKeyError))
+            }
         )
-        var authResults = [CvvPinService.AuthResult]()
+    }
+    
+    func test_confirmExchange_shouldDeliverVoidOnBindPublicKeySuccess() {
         
-        sut?.auth { authResults.append($0) }
-        sessionCodeLoader.complete(with: .success(uniqueSessionCode()))
-        symmetricKeyService.complete(with: .success(uniqueSymmetricKey()))
+        let (sut, sessionCodeSpy, keyExchangeSpy, transferKeySpy) = makeSUT()
+        
+        expect(sut, toExchangeKeyWith: [.success(())]) {
+            
+            sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
+            keyExchangeSpy.complete(with: .success(uniqueKeyExchange()))
+        }
+        
+        expect(sut, toConfirmExchangeWith: [
+            .success(uniqueKeyExchange())
+        ]) {
+            transferKeySpy.complete(with: .success(()))
+        }
+    }
+    
+    func test_confirmExchange_shouldNotReceiveBindPublicKeyResultAfterSUTInstanceHasBeenDeallocated() {
+        
+        let sessionCodeSpy = SessionCodeLoaderSpy()
+        let keyExchangeSpy = KeyExchangeServiceSpy()
+        let transferKeySpy = TransferKeySpy()
+        var sut: CvvPinService? = .init(
+            getProcessingSessionCode: sessionCodeSpy.load,
+            exchangeKey: keyExchangeSpy.exchangeKey,
+            transferPublicKey: transferKeySpy.bind
+        )
+        var confirmExchangeResults = [CvvPinService.ConfirmExchangeResult]()
+        sut?.exchangeKey { (_: Result<Void, Error>) in }
+        sessionCodeSpy.complete(with: .success(uniqueSessionCode()))
+        keyExchangeSpy.complete(with: .success(uniqueKeyExchange()))
+        
+        
+        sut?.confirmExchange(withOTP: uniqueOTP()) {
+            confirmExchangeResults.append($0)
+        }
         sut = nil
-        bindPublicKeySpy.complete(with: .failure(anyNSError()))
+        transferKeySpy.complete(with: .failure(anyNSError()))
         
-        XCTAssertTrue(authResults.isEmpty)
+        XCTAssertTrue(confirmExchangeResults.isEmpty)
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> (
-        sut: CvvPinService,
-        sessionCodeLoader: SessionCodeLoaderSpy,
-        symmetricKeyService: SymmetricKeyServiceSpy,
-        bindPublicKeySpy: BindPublicKeySpy
-    ) {
-        let sessionCodeLoader = SessionCodeLoaderSpy()
-        let symmetricKeyService = SymmetricKeyServiceSpy()
-        let bindPublicKeySpy = BindPublicKeySpy()
-        let sut = CvvPinService(
-            getProcessingSessionCode: sessionCodeLoader.load,
-            symmetricKeyService: symmetricKeyService,
-            bindPublicKey: bindPublicKeySpy.perform
-        )
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(sessionCodeLoader, file: file, line: line)
-        trackForMemoryLeaks(symmetricKeyService, file: file, line: line)
-        trackForMemoryLeaks(bindPublicKeySpy, file: file, line: line)
-        
-        return (sut, sessionCodeLoader, symmetricKeyService, bindPublicKeySpy)
-    }
-    
-    private final class SessionCodeLoaderSpy: SessionCodeLoader {
-        
-        func load(completion: @escaping LoadCompletion) {
-            
-            messages.append(.load)
-            loadSessionCodeCompletions.append(completion)
-        }
-        
-        private(set) var messages = [Message]()
-        
-        private(set) var loadSessionCodeCompletions = [LoadCompletion]()
-        
-        func complete(
-            with result: SessionCodeLoader.Result,
-            at index: Int = 0
-        ) {
-            loadSessionCodeCompletions[index](result)
-        }
-        
-        enum Message: Equatable {
-            
-            case load
-        }
-    }
-    
-    private final class SymmetricKeyServiceSpy: SymmetricKeyService {
-        
-        func makeSymmetricKey(
-            with sessionCode: CryptoSessionCode,
-            completion: @escaping SymmetricKeyCompletion
-        ) {
-            messages.append(.makeSymmetricKey)
-            makeSymmetricKeyCompletions.append(completion)
-        }
-        
-        private(set) var messages = [Message]()
-        
-        private(set) var makeSymmetricKeyCompletions = [SymmetricKeyCompletion]()
-        
-        func complete(
-            with result: SymmetricCrypto.Result,
-            at index: Int = 0
-        ) {
-            makeSymmetricKeyCompletions[index](result)
-        }
-        
-        enum Message: Equatable {
-            
-            case makeSymmetricKey
-        }
-    }
-    
-    private final class BindPublicKeySpy {
-        
-        typealias Request = APISymmetricKey
-        typealias Response = (SessionID, APISymmetricKey)
-        typealias Result = Swift.Result<Response, Error>
-        typealias Completion = (Result) -> Void
-        
-        func perform(
-            _ request: Request,
-            completion: @escaping Completion
-        ) {
-            messages.append(.sendPublicKey)
-            sendPublicKeyCompletions.append(completion)
-        }
-        
-        private(set) var messages = [Message]()
-        
-        private(set) var sendPublicKeyCompletions = [Completion]()
-        
-        func complete(with result: Result, at index: Int = 0) {
-            
-            sendPublicKeyCompletions[index](result)
-        }
-        
-        enum Message: Equatable {
-            
-            case sendPublicKey
-        }
-    }
-    
-    private func uniqueSymmetricKey() -> SymmetricKey {
-        
-        .init(value: UUID().uuidString)
-    }
-    
-    private func uniqueSessionID() -> SessionID {
-        
-        .init(value: UUID().uuidString)
-    }
-    
     private func expect(
         _ sut: CvvPinService,
-        toAuthWith expectedResults: [CvvPinService.AuthResult],
+        toExchangeKeyWith expectedResults: [Result<Void, Error>],
         on action: () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var authResults = [CvvPinService.AuthResult]()
-        let exp = expectation(description: "wait for auth")
+        var exchangeKeyResults = [Result<Void, Error>]()
+        let exp = expectation(description: "wait for key exchange")
         
-        sut.auth {
-            authResults.append($0)
+        sut.exchangeKey {
+            exchangeKeyResults.append($0)
             exp.fulfill()
         }
         
@@ -285,16 +210,53 @@ final class CvvPinServiceTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         
-        XCTAssertNoDiff(authResults.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(authResults.count) instead.", file: file, line: line)
+        XCTAssertNoDiff(exchangeKeyResults.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(exchangeKeyResults.count) instead.", file: file, line: line)
         
-        zip(authResults, expectedResults).enumerated().forEach { index, element in
+        zip(exchangeKeyResults, expectedResults).enumerated().forEach { index, element in
             
             switch element {
             case let (.failure(received as NSError?), .failure(expected as NSError?)):
                 XCTAssertNoDiff(received, expected, file: file, line: line)
                 
-            case let (.success(received), .success(expected)):
+            case (.success, .success):
+                break
+                
+            default:
+                XCTFail("Expected \(element.1), got \(element.0) instead.", file: file, line: line)
+            }
+        }
+    }
+    
+    private func expect(
+        _ sut: CvvPinService,
+        toConfirmExchangeWith expectedResults: [KeyExchangeDomain.Result],
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        var exchangeKeyResults = [CvvPinService.ConfirmExchangeResult]()
+        let exp = expectation(description: "wait for key exchange")
+        
+        sut.confirmExchange(withOTP: uniqueOTP()) {
+            
+            exchangeKeyResults.append($0)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(exchangeKeyResults.count, expectedResults.count, "Expected \(expectedResults.count) results, got \(exchangeKeyResults.count) instead.", file: file, line: line)
+        
+        zip(exchangeKeyResults, expectedResults).enumerated().forEach { index, element in
+            
+            switch element {
+            case let (.failure(received as NSError?), .failure(expected as NSError?)):
                 XCTAssertNoDiff(received, expected, file: file, line: line)
+                
+            case (.success(()), .success):
+                break
                 
             default:
                 XCTFail("Expected \(element.1), got \(element.0) instead.", file: file, line: line)

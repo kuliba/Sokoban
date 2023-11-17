@@ -315,40 +315,48 @@ extension TemplatesListViewModel {
     
     func getPhoneNumber(for data: PaymentTemplateData) -> String? {
         
-        switch data.type {
-        case .mobile:
-         
-            guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
-            else { return nil }
-            
-            return "+7" + phoneField.fieldvalue
-            
-        case .sfp:
-            
-            guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RecipientID" })
-            else { return nil }
-            
-            return "+7" + phoneField.fieldvalue
-            
-        case .byPhone:
-            
-            guard let transfer = data.parameterList.first as? TransferGeneralData,
-                  let phoneNumber = transfer.payeeInternal?.phoneNumber
-            else { return nil }
-            
-            return "+" + phoneNumber
+        let phone: String? = {
+            switch data.type {
+            case .mobile:
+                
+                guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
+                else { return nil }
+                
+                return phoneField.fieldvalue
+                
+            case .sfp:
+                
+                guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "RecipientID" })
+                else { return nil }
+                
+                return phoneField.fieldvalue
+                
+            case .byPhone:
+                
+                guard let transfer = data.parameterList.first as? TransferGeneralData,
+                      let phoneNumber = transfer.payeeInternal?.phoneNumber
+                else { return nil }
+                
+                return phoneNumber
+                
+            case .direct, .newDirect:
+                
+                guard let parameterList = data.parameterList.first as? TransferAnywayData,
+                      let phoneField = parameterList.additional.first(where: { $0.fieldname == "RECP" })
+                else { return nil }
+                
+                return phoneField.fieldvalue
+                
+            default: return nil
+            }
+        }()
         
-        case .direct, .newDirect:
-            
-            guard let parameterList = data.parameterList.first as? TransferAnywayData,
-                  let phoneField = parameterList.additional.first(where: { $0.fieldname == "RECP" })
-            else { return nil }
-            
-            return "+" + phoneField.fieldvalue
-            
-        default: return nil
+        if let phone {
+            return PhoneNumberKitFormater().format( phone.count == 10 ? "7\(phone)" : phone)
+        } else {
+            return nil
         }
     }
     
