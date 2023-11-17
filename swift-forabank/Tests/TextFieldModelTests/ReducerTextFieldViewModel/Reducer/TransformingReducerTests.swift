@@ -523,6 +523,18 @@ final class TransformingReducerTests: XCTestCase {
         )
     }
     
+    // MARK: - identity reducer
+    
+    func test_identityReducer_shouldSetCursorAtInsertionTextEnd () {
+        
+        assertReduce(
+            makeIdentityReducer(),
+            state: .editing(.init("12345")),
+            with: .insert("abc", at: 2),
+            returns: .editing(.init("12abc345", cursorAt: 5))
+        )
+    }
+    
     // MARK: - Helpers
     
     private func makeLimitReducer(limit: Int) -> Reducer {
@@ -530,6 +542,13 @@ final class TransformingReducerTests: XCTestCase {
         TransformingReducer(
             placeholderText: "A placeholder text",
             transformer: Transformers.Limiting(limit)
+        )
+    }
+    
+    private func makeIdentityReducer() -> Reducer {
+        
+        TransformingReducer(
+            placeholderText: "A placeholder text"
         )
     }
     
@@ -555,5 +574,16 @@ final class TransformingReducerTests: XCTestCase {
             expectedState,
             file: file, line: line
         )
+    }
+}
+
+private extension TextFieldAction {
+    
+    static func insert(
+        _ text: String,
+        at cursorPosition: Int
+    ) -> Self {
+        
+        .changeText(text, in: .init(location: cursorPosition, length: 0))
     }
 }
