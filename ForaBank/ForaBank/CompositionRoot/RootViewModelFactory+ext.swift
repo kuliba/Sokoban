@@ -48,8 +48,7 @@ extension RootViewModelFactory {
                 ),
                 makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
-                changeNavigationState: $0,
-                selectAtmOption: $1,
+                selectOffice: $0,
                 products: model.productsMapper(model: model),
                 cityList: model.citiesMapper(model: model)
             ))
@@ -101,7 +100,7 @@ private extension RootViewModelFactory {
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
     
-    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.ChangeNavigationState, @escaping BusinessLogic.SelectAtmOption) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
@@ -115,7 +114,7 @@ private extension RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            sections: [],
+            sections: makeMainSections(model: model),
             makeOperationStateViewModel: makeOperationStateViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             onRegister: onRegister
@@ -151,6 +150,20 @@ private extension RootViewModelFactory {
             model,
             showLoginAction: showLoginAction
         )
+    }
+    
+    static func makeMainSections(
+        model: Model
+    ) -> [MainSectionViewModel] {
+        
+        return [
+            MainSectionProductsView.ViewModel(model),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
     }
 }
 

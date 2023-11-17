@@ -24,10 +24,10 @@ struct Office {
 
 final class BusinessLogic {
     
-    typealias DictionaryService = RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    typealias TransferService = RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    typealias MakeTransferService = RemoteService<String, MakeTransferResponse>
-    typealias ImageLoaderService = RemoteService<[String], [ImageData]>
+    typealias DictionaryService = RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    typealias TransferService = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias MakeTransferService = RemoteServiceOf<String, MakeTransferResponse>
+    typealias ImageLoaderService = RemoteServiceOf<[String], [ImageData]>
     
     typealias Product = PaymentSticker.Operation.Parameter.Product.Option
     typealias OperationResult = Result<OperationStateViewModel.State, Error>

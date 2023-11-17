@@ -352,7 +352,7 @@ extension MainView {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _,_ in .preview },
+        makeOperationStateViewModel: { _ in .preview },
         makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
@@ -369,13 +369,13 @@ extension MainView {
     static let sampleProducts = MainViewModel(
         .emptyMock,
         sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionProductsView.ViewModel.sample,
             MainSectionFastOperationView.ViewModel.sample,
             MainSectionPromoView.ViewModel.sample,
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _,_ in .preview },
+        makeOperationStateViewModel: { _ in .preview },
         makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
@@ -398,7 +398,7 @@ extension MainView {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _,_ in .preview },
+        makeOperationStateViewModel: { _ in .preview },
         makeProductProfileViewModel: { product, rootView, dismissAction in
             
             ProductProfileViewModel(
