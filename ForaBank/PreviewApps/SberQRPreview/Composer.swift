@@ -138,9 +138,16 @@ extension Composer {
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        SberQRPaymentView(
+        // remote service
+        let process: SberQRPaymentView.AsyncGet = { _, completion in
+            
+            completion("Some text")
+        }
+        
+        return SberQRPaymentView(
             url: url,
-            dismiss: dismiss
+            dismiss: dismiss,
+            asyncGet: process
         )
     }
 }
