@@ -156,12 +156,18 @@ struct RootView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        RootView(viewModel: .init(
-            mainViewModel: .sample,
-            paymentsViewModel: .sample,
-            chatViewModel: .init(),
-            informerViewModel: .init(.emptyMock),
-            .emptyMock
-        ))
+        RootView(
+            viewModel: .init(
+                mainViewModel: .sample,
+                paymentsViewModel: .sample,
+                chatViewModel: .init(),
+                informerViewModel: .init(.emptyMock),
+                .emptyMock,
+                showLoginAction: { _ in
+                
+                        .init(viewModel: .init(authLoginViewModel: .preview))
+                }
+            )
+        )
     }
 }

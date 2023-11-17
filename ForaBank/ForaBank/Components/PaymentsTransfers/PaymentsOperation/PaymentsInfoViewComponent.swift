@@ -42,7 +42,9 @@ extension PaymentsInfoView {
             
             model.images
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] images in
+                .sink { [weak self] images in
+                    
+                    guard let self else { return }
                     
                     guard case .shimmer(let imageId) = icon else {
                         return
@@ -56,7 +58,7 @@ extension PaymentsInfoView {
                         
                         withAnimation {
                             
-                            icon = .remote(image)
+                            self.icon = .remote(image)
                         }
 
                     } else {

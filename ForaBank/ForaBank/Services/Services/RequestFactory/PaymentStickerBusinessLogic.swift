@@ -23,20 +23,20 @@ final class BusinessLogic {
     typealias SelectAtmOption = (PaymentSticker.Operation, PlacesListViewModel.ItemViewModel) -> Void
     
     //TODO: replace remoteService to closure or protocol
-    let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    let makeTransferService: RemoteService<String, MakeTransferResponse>
-    let imageLoaderService: RemoteService<[String], [ImageData]>
+    let dictionaryService: RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    let transferService: RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    let makeTransferService: RemoteServiceOf<String, MakeTransferResponse>
+    let imageLoaderService: RemoteServiceOf<[String], [ImageData]>
     let changeNavigationState: ChangeNavigationState
     let selectAtmOption: SelectAtmOption
     let products: [Product]
     let cityList: [City]
     
     init(
-        dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
-        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
-        makeTransferService: RemoteService<String, MakeTransferResponse>,
-        imageLoaderService: RemoteService<[String], [ImageData]>,
+        dictionaryService: RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
+        transferService: RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
+        makeTransferService: RemoteServiceOf<String, MakeTransferResponse>,
+        imageLoaderService: RemoteServiceOf<[String], [ImageData]>,
         changeNavigationState: @escaping ChangeNavigationState,
         selectAtmOption: @escaping SelectAtmOption,
         products: [Product],

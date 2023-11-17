@@ -41,17 +41,20 @@ struct MultiTypeButtonsView: View {
                     .font(config.fonts.into)
                     .foregroundColor(config.textColor(model.data.backgroundColor))
                     .multilineTextAlignment(.leading)
+                    .accessibilityIdentifier("MultiTypeButtonsText")
             }
             Button(action: { model.handler(for: model.data) }) {
                 Text(model.data.buttonText)
                     .font(config.fonts.button)
                     .multilineTextAlignment(.center)
                     .foregroundColor(config.colors.buttonText)
+                    .accessibilityIdentifier("MultiTypeButtonsButtonText")
             }
             .frame(height: config.sizes.heightButton)
             .frame(maxWidth: .infinity)
             .background(config.colors.button)
             .cornerRadius(config.cornerRadius)
+            .accessibilityIdentifier("MultiTypeButtonsButton")
         }
         .padding(.top, config.paddings.top)
         .padding(.bottom, config.paddings.bottom)

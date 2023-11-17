@@ -39,7 +39,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
         
         XCTAssertEqual(
             insideByPhonePhoneNumber,
-            "number")
+            "11111")
     }
     
     func test_paymentsTemplate_insideByPhoneBankId() throws {
@@ -93,7 +93,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             .init(
                 fieldid: 1,
                 fieldname: "RecipientID",
-                fieldvalue: "number"
+                fieldvalue: "123123"
             )
         ])
     }

@@ -9,29 +9,35 @@
 import Combine
 import UIKit
 import SwiftUI
+import PinCodeUI
 
 class MyProductsViewModel: ObservableObject {
+    
+    typealias CardAction = (CardDomain.CardEvent) -> Void
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
 
     let action: PassthroughSubject<Action, Never> = .init()
-
+    
     @Published var sections: [MyProductsSectionViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var editModeState: EditMode
     @Published var showOnboarding: [Onboarding: Bool]
-
+    
     var navigationBar: NavigationBarView.ViewModel
     let totalMoneyVM: MyProductsMoneyViewModel
     let openProductVM: MyProductsOpenProductView.ViewModel
     var refreshingIndicator: RefreshingIndicatorView.ViewModel
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
-
-    private  lazy var settingsOnboarding = model.settingsMyProductsOnboarding
+    
+    private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
+    private let cardAction: CardAction?
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
     private var bindings = Set<AnyCancellable>()
-   
+    
     
     init(navigationBar: NavigationBarView.ViewModel,
          totalMoney: MyProductsMoneyViewModel,
@@ -39,10 +45,14 @@ class MyProductsViewModel: ObservableObject {
          openProductVM: MyProductsOpenProductView.ViewModel,
          editModeState: EditMode = .inactive,
          model: Model = .emptyMock,
+         cardAction: CardAction? = nil,
+         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
-         showOnboarding: [Onboarding: Bool] = [:]) {
-
+         showOnboarding: [Onboarding: Bool] = [:]
+    ) {
         self.model = model
+        self.cardAction = cardAction
+        self.makeProductProfileViewModel = makeProductProfileViewModel
         self.editModeState = editModeState
         self.navigationBar = navigationBar
         self.totalMoneyVM = totalMoney
@@ -51,31 +61,38 @@ class MyProductsViewModel: ObservableObject {
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
     }
-
-    convenience init(_ model: Model) {
-
-        self.init(navigationBar: .init(background: .mainColorsWhite),
-                  totalMoney: .init(model: model),
-                  productSections: [],
-                  openProductVM: .init(model),
-                  editModeState: .inactive,
-                  model: model,
-                  refreshingIndicator: .init(isActive: false),
-                  showOnboarding: [:])
+    
+    convenience init(
+        _ model: Model,
+        cardAction: CardAction? = nil,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel
+    ) {
+        self.init(
+            navigationBar: .init(background: .mainColorsWhite),
+            totalMoney: .init(model: model),
+            productSections: [],
+            openProductVM: .init(model),
+            editModeState: .inactive,
+            model: model,
+            cardAction: cardAction,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            refreshingIndicator: .init(isActive: false),
+            showOnboarding: [:]
+        )
         
         updateNavBar(state: .normal)
         bind()
         bind(openProductVM)
     }
-
+    
     private func bind() {
-
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                
+                    
                 case _ as MyProductsViewModelAction.Close.Link:
                     self.link = nil
                     
@@ -88,7 +105,7 @@ class MyProductsViewModel: ObservableObject {
                         }
                     case .disabled, .enabled: break
                     }
-                 
+                    
                 case _ as MyProductsViewModelAction.PullToRefresh:
                     guard editModeState != .active else { return }
                     
@@ -97,6 +114,7 @@ class MyProductsViewModel: ObservableObject {
                     
                 case _ as MyProductsViewModelAction.StartIndicator:
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) { [unowned self] in
+                        
                         self.refreshingIndicator.isActive = !self.model.productsUpdating.value.isEmpty
                     }
                     
@@ -104,7 +122,7 @@ class MyProductsViewModel: ObservableObject {
                     
                     guard editModeState != .transient else { return }
                     
-                    if  editModeState == .active  { //finished ordered mode
+                    if editModeState == .active  { //finished ordered mode
                         
                         self.editModeState = .inactive
                         updateNavBar(state: .normal)
@@ -116,8 +134,9 @@ class MyProductsViewModel: ObservableObject {
                         }
                         
                         if payload.needSave { //change Orders in Sections
-                           
+                            
                             let newOrders = sections.reduce(into: [ProductType: [ProductData.ID]]()) { dict, sectionVM in
+                                
                                 if let productType = ProductType(rawValue: sectionVM.id) {
                                     dict[productType] = sectionVM.items.compactMap { $0.itemVM?.id }
                                 }
@@ -125,14 +144,17 @@ class MyProductsViewModel: ObservableObject {
                             
                             guard !newOrders.isEmpty else { return }
                             model.action.send(ModelAction.Products.UpdateOrders(orders: newOrders))
-                        
+                            
                         } else { //rollback ordered
                             
-                            let updatedSections = Self.updateViewModel(with: model.products.value,
-                                                                       sections: self.sections,
-                                                                       productsOpening: model.productsOpening.value,
-                                                                       settingsProductsSections: model.settingsProductsSections,
-                                                                       model: model)
+                            let updatedSections = Self.updateViewModel(
+                                with: model.products.value,
+                                sections: self.sections,
+                                productsOpening: model.productsOpening.value,
+                                settingsProductsSections: model.settingsProductsSections,
+                                model: model
+                            )
+                            
                             withAnimation {
                                 sections = updatedSections
                             }
@@ -143,9 +165,9 @@ class MyProductsViewModel: ObservableObject {
                     } else { //start ordered mode
                         
                         sections.flatMap { $0.items }
-                                .compactMap { $0.itemVM }
-                                .filter { $0.sideButton != nil }
-                                .forEach { $0.sideButton = nil }
+                            .compactMap { $0.itemVM }
+                            .filter { $0.sideButton != nil }
+                            .forEach { $0.sideButton = nil }
                         
                         self.editModeState = .active
                         sections.forEach { $0.idList = UUID() }
@@ -154,7 +176,7 @@ class MyProductsViewModel: ObservableObject {
                             self.settingsOnboarding.isOpenedReorder = true
                             self.model.settingsMyProductsOnboardingUpdate(self.settingsOnboarding)
                         }
-                       
+                        
                         if let isShow = showOnboarding[.ordered], isShow {
                             withAnimation { showOnboarding[.ordered] = false }
                         }
@@ -168,22 +190,25 @@ class MyProductsViewModel: ObservableObject {
                 default:
                     break
                 }
-        }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.products
             .combineLatest(model.productsOpening)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] products, productsOpening in
                 
-                let updatedSections = Self.updateViewModel(with: products,
-                                                           sections: self.sections,
-                                                           productsOpening: productsOpening,
-                                                           settingsProductsSections: model.settingsProductsSections,
-                                                           model: model)
+                let updatedSections = Self.updateViewModel(
+                    with: products,
+                    sections: self.sections,
+                    productsOpening: productsOpening,
+                    settingsProductsSections: model.settingsProductsSections,
+                    model: model
+                )
                 bind(updatedSections)
                 self.sections = updatedSections
-                
-        }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.productsUpdating
             .receive(on: DispatchQueue.main)
@@ -193,22 +218,21 @@ class MyProductsViewModel: ObservableObject {
                     
                     self.refreshingIndicator.isActive = false
                 }
-                
-        }.store(in: &bindings)
-    
+            }
+            .store(in: &bindings)
+        
         model.productsOrdersUpdating
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isOrdersUpdating in
-               
+                
                 if isOrdersUpdating {
                     updateNavBar(state: .ordersModeDisable)
                     
                 } else {
                     updateNavBar(state: .normal)
                 }
-            
-        }.store(in: &bindings)
-        
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ sections: [MyProductsSectionViewModel]) {
@@ -228,14 +252,12 @@ class MyProductsViewModel: ObservableObject {
                         
                         guard self.editModeState != .active,
                               let product = model.products.value.values
-                                                .flatMap({ $0 })
-                                                .first(where: { $0.id == payload.productId })
+                            .flatMap({ $0 })
+                            .first(where: { $0.id == payload.productId })
                         else { return }
                         
-                        guard let productProfileViewModel = ProductProfileViewModel
-                            .init(model,
-                                  product: product,
-                                  rootView: "\(type(of: self))", dismissAction: {[weak self] in self?.link = nil })
+                        guard let productProfileViewModel = makeProductProfileViewModel(product, "\(type(of: self))", { [weak self] in self?.link = nil }
+                        )
                         else { return }
                         
                         productProfileViewModel.rootActions = rootActions
@@ -243,8 +265,8 @@ class MyProductsViewModel: ObservableObject {
                         
                     default: break
                     }
-           
-            }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         } //for
     }
     
@@ -267,18 +289,21 @@ class MyProductsViewModel: ObservableObject {
                             
                             guard let openAccountViewModel: OpenAccountViewModel = .init(self.model, products: accountProductsList)
                             else { return }
-
+                            
                             self.bottomSheet = .init(type: .openAccount(openAccountViewModel))
                         }
                         
                     case .deposit:
                         bottomSheet = nil
-                       
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            let openDepositViewModel = OpenDepositViewModel(self.model,
-                                                                            catalogType: .deposit,
-                                                                            dismissAction: {[weak self] in
-                                self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                            
+                            let openDepositViewModel = OpenDepositViewModel(
+                                self.model,
+                                catalogType: .deposit,
+                                dismissAction: {[weak self] in
+                                    
+                                    self?.action.send(MyProductsViewModelAction.Close.Link()) })
                             
                             self.link = .openDeposit(openDepositViewModel)
                         }
@@ -287,10 +312,14 @@ class MyProductsViewModel: ObservableObject {
                         bottomSheet = nil
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                            let authProductsViewModel = AuthProductsViewModel(self.model,
-                                                                              products: self.model.catalogProducts.value,
-                                                                              dismissAction: { [weak self] in
-                                self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                            
+                            let authProductsViewModel = AuthProductsViewModel(
+                                self.model,
+                                products: self.model.catalogProducts.value,
+                                dismissAction: { [weak self] in
+                                    
+                                    self?.action.send(MyProductsViewModelAction.Close.Link()) }
+                            )
                             
                             self.link = .openCard(authProductsViewModel)
                         }
@@ -300,15 +329,17 @@ class MyProductsViewModel: ObservableObject {
                     
                 default: break
                 }
-                
-        }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
-    static func updateViewModel(with products: ProductsData,
-                                sections: [MyProductsSectionViewModel],
-                                productsOpening: Set<ProductType>,
-                                settingsProductsSections: ProductsSectionsSettings,
-                                model: Model) -> [MyProductsSectionViewModel]  {
+    static func updateViewModel(
+        with products: ProductsData,
+        sections: [MyProductsSectionViewModel],
+        productsOpening: Set<ProductType>,
+        settingsProductsSections: ProductsSectionsSettings,
+        model: Model
+    ) -> [MyProductsSectionViewModel]  {
         
         var updatedSections = [MyProductsSectionViewModel]()
         
@@ -319,17 +350,19 @@ class MyProductsViewModel: ObservableObject {
             if let section = sections.first(where: { $0.id == productType.rawValue }) {
                 
                 section.update(with: productsForType, productsOpening: productsOpening)
-                    
+                
                 guard !section.items.isEmpty else { continue }
                 updatedSections.append(section)
                 
             } else {
                 
-                guard let section = MyProductsSectionViewModel(productType: productType,
-                                                               products: productsForType,
-                                                               settings: settingsProductsSections,
-                                                               model: model)
+                guard let section = MyProductsSectionViewModel(
+                    productType: productType,
+                    products: productsForType,
+                    settings: settingsProductsSections,
+                    model: model)
                 else { continue }
+                
                 updatedSections.append(section)
             }
         }
@@ -350,7 +383,7 @@ class MyProductsViewModel: ObservableObject {
                 model.settingsMyProductsOnboardingUpdate(settingsOnboarding)
                 
                 try await Task.sleep(nanoseconds: .seconds(5))
-
+                
                 if let isShow = showOnboarding[.ordered], isShow  {
                     withAnimation { showOnboarding[.ordered] = false }
                     updateNavBar(state: .normal)
@@ -359,21 +392,20 @@ class MyProductsViewModel: ObservableObject {
                 if editModeState != .active {
                     updateNavBar(state: .normal)
                 }
-
+                
                 try await Task.sleep(nanoseconds: .seconds(2))
                 playHideOnboarding()
             }
-  
+            
         } else {
             
             playHideOnboarding()
         }
-        
     }
     
     @MainActor
     private func playHideOnboarding() {
-       
+        
         guard !settingsOnboarding.isHideOnboardingShown && editModeState != .active
         else { return }
         
@@ -388,7 +420,6 @@ class MyProductsViewModel: ObservableObject {
             
             withAnimation { showOnboarding[.hide] = false }
         }
-
     }
     
     func updateNavBar(state: NavBarState) {
@@ -401,47 +432,75 @@ class MyProductsViewModel: ObservableObject {
         case .normal:
             
             title = "Мои продукты"
-            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
-            rightButton =  .init(icon: .ic24BarInOrder, isDisabled: false,
-                                 action: { [weak self] in
-                                            self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
-        
+            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(
+                icon: .ic24ChevronLeft,
+                action: {}
+            )
+            rightButton = .init(
+                icon: .ic24BarInOrder,
+                isDisabled: false,
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) }
+            )
+            
         case .ordersModeDisable:
             
             title = "Мои продукты"
-            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})
-            rightButton =  .init(icon: .ic24BarInOrder, isDisabled: true,
-                                 action: { [weak self] in
-                                            self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
+            leftButton = NavigationBarView.ViewModel.BackButtonItemViewModel(
+                icon: .ic24ChevronLeft,
+                action: {}
+            )
+            rightButton =  .init(
+                icon: .ic24BarInOrder,
+                isDisabled: true,
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) }
+            )
             
         case .orderedNotMove:
             
             title = "Последовательность"
-            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel
-                .init(icon: .ic24Close, action: { [weak self] in
-                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) })
-
-            rightButton =  .init(icon: .ic24Check, isDisabled: true,
-                                 action: { [weak self] in
-                                            self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
+            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel(
+                icon: .ic24Close,
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) }
+            )
+            
+            rightButton = .init(
+                icon: .ic24Check,
+                isDisabled: true,
+                
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) }
+            )
             
         case .orderedMoved:
             
             title = "Последовательность"
-            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel
-                .init(icon: .ic24Close, action: { [weak self] in
-                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) })
-
-            rightButton =  .init(icon: .ic24Check,
-                                 isDisabled: false,
-                                 action: { [weak self] in
-                                            self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) })
+            leftButton = NavigationBarView.ViewModel.ButtonItemViewModel(
+                icon: .ic24Close,
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: false)) }
+            )
+            
+            rightButton = .init(
+                icon: .ic24Check,
+                isDisabled: false,
+                action: { [weak self] in
+                    
+                    self?.action.send(MyProductsViewModelAction.Tapped.EditMode(needSave: true)) }
+            )
         }
         
         if !settingsOnboarding.isOpenedView {
-        
-            rightButton.markedDot = .init(isBlinking: true) 
-        
+            
+            rightButton.markedDot = .init(isBlinking: true)
+            
         } else {
             
             if !settingsOnboarding.isOpenedReorder {
@@ -456,7 +515,6 @@ class MyProductsViewModel: ObservableObject {
         self.navigationBar.rightItems = [ rightButton ]
         self.navigationBar.leftItems = [ leftButton ]
     }
-    
 }
 
 extension MyProductsViewModel {
@@ -464,7 +522,7 @@ extension MyProductsViewModel {
     enum Onboarding: Int {
         case ordered
         case hide
-
+        
         var playerVM: OnboardingPlayerView.ViewModel? {
             switch self {
             case .ordered: return .init(onboardingName: "MyProductsOrdered3x")
@@ -488,12 +546,12 @@ extension MyProductsViewModel {
     }
     
     struct BottomSheet: BottomSheetCustomizable {
-
+        
         let id = UUID()
         let type: BottomSheetType
-
+        
         enum BottomSheetType {
-
+            
             case openAccount(OpenAccountViewModel)
             case newProductLauncher(MyProductsOpenProductView.ViewModel)
         }
@@ -503,7 +561,7 @@ extension MyProductsViewModel {
 enum MyProductsViewModelAction {
     
     enum Tapped {
-    
+        
         struct Product: Action {
             let productId: ProductData.ID
         }
@@ -524,7 +582,7 @@ enum MyProductsViewModelAction {
     }
     
     enum Close {
-     
+        
         struct Link: Action {}
     }
     
@@ -535,32 +593,3 @@ enum MyProductsViewModelAction {
     struct StartOnboarding: Action {}
     
 }
-
-extension MyProductsViewModel {
-    
-    static let sample = MyProductsViewModel(
-            navigationBar: .init(
-            title: "Мои продукты",
-            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24BarInOrder, action: {})],
-            background: .mainColorsWhite),
-            totalMoney: .sampleBalance,
-            productSections: [.sample2, .sample3],
-            openProductVM: .previewSample,
-            refreshingIndicator: .init(isActive: true)
-    )
-    
-    static let sampleOpenProduct = MyProductsViewModel(
-            navigationBar: .init(
-            title: "Мои продукты",
-            leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: {})],
-            rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel(icon: .ic24Edit, action: { })],
-            background: .mainColorsWhite),
-            totalMoney: .sampleBalance,
-            productSections: [.sample2, .sample3],
-            openProductVM: .previewSample,
-            refreshingIndicator: .init(isActive: true),
-            showOnboarding: [.hide: true, .ordered: false]
-    )
-}
-

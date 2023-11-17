@@ -556,7 +556,8 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         let sut = AuthLoginViewModel(
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
-            factory: factory
+            factory: factory,
+            onRegister: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

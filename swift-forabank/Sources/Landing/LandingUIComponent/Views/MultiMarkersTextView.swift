@@ -37,11 +37,13 @@ struct MultiMarkersTextView: View {
                 .padding(.horizontal, config.getDoubleHorizontalPaddingForCornersView(model.style))
                 .background(config.backgroundColor(model.backgroundColor))
                 .cornerRadius(config.getCornerRadius(model.style))
+                .accessibilityIdentifier("MultiMarkersTextBodyImage")
             }
             .padding(.leading, config.getLeadingPadding(model.style))
             .padding(.trailing, config.getTrailingPadding(model.style))
             .padding(.vertical, config.vstack.padding.vertical)
             .background(config.backgroundColor(model.style, model.backgroundColor))
+            .accessibilityIdentifier("MultiMarkersTextBody")
         }
     }
 }
@@ -60,9 +62,11 @@ extension MultiMarkersTextView {
                 Text(Image(systemName: "circle.fill")) // static
                     .font(.system(size: 4))
                     .offset(y: 6)
+                    .accessibilityIdentifier("MultiMarkersTextItemImage")
                 
                 Text(item.rawValue)
                     .font(config.internalContent.textFont)
+                    .accessibilityIdentifier("MultiMarkersTextItemText")
                 
                 Spacer(minLength: 0)
             }

@@ -38,7 +38,7 @@ final class CountryCodeSubstitutionTransformerTests: XCTestCase {
         
         let changed = transformer.transform(state)
         
-        XCTAssertNoDiff(changed.view, .init("374", cursorAt: 3))
+        XCTAssertNoDiff(changed.view, .init("3", cursorAt: 1))
     }
     
     func test_replace_shouldChangeState_onSubstitutionMatch2() {
@@ -48,17 +48,17 @@ final class CountryCodeSubstitutionTransformerTests: XCTestCase {
         
         let changed = transformer.transform(state)
         
-        XCTAssertNoDiff(changed.view, .init("7", cursorAt: 1))
+        XCTAssertNoDiff(changed.view, .init("8", cursorAt: 1))
     }
     
     func test_replace_shouldChangeState_onSubstitutionMatch3() {
         
         let transformer = Transformers.countryCodeSubstitute(.test)
-        let state = TextState("9", cursorPosition: 1)
+        let state = TextState("89", cursorPosition: 2)
         
         let changed = transformer.transform(state)
         
-        XCTAssertNoDiff(changed.view, .init("7 9", cursorAt: 3))
+        XCTAssertNoDiff(changed.view, .init("79", cursorAt: 2))
     }
     
     // MARK: - Simple tests for text
@@ -79,30 +79,30 @@ final class CountryCodeSubstitutionTransformerTests: XCTestCase {
     
     func test_shouldReplace_armenian_on3() {
         
-        let transformed = makeSUT(source: "3", substitutions: .armenian)
+        let transformed = makeSUT(source: "3", substitutions: .russian)
         
-        XCTAssertNoDiff(transformed, .init("374"))
+        XCTAssertNoDiff(transformed, .init("3"))
     }
     
     func test_shouldNotReplace_armenian_on33() {
         
-        let transformed = makeSUT(source: "33", substitutions: .armenian)
+        let transformed = makeSUT(source: "33", substitutions: .russian)
         
         XCTAssertNoDiff(transformed, .init("33"))
     }
     
     func test_shouldNotReplace_armenian_on372() {
         
-        let transformed = makeSUT(source: "372", substitutions: .armenian)
+        let transformed = makeSUT(source: "372", substitutions: .russian)
         
         XCTAssertNoDiff(transformed, .init("372"))
     }
     
-    func test_shouldReplace8To7_eightToSeven_on8() {
+    func test_shouldReplace8To7_eightToSeven_on89() {
         
-        let transformed = makeSUT(source: "8", substitutions: .russian)
+        let transformed = makeSUT(source: "89", substitutions: .russian)
         
-        XCTAssertNoDiff(transformed, .init("7"))
+        XCTAssertNoDiff(transformed, .init("79"))
     }
     
     func test_shouldNotReplace8To7_eightToSeven_on82() {
@@ -123,7 +123,7 @@ final class CountryCodeSubstitutionTransformerTests: XCTestCase {
         
         let transformed = makeSUT(source: "9", substitutions: .russian)
         
-        XCTAssertNoDiff(transformed, .init("7 9"))
+        XCTAssertNoDiff(transformed, .init("9"))
     }
     
     func test_shouldNotReplace9ToPlus7_nineToPlusSeven_on92() {
@@ -156,21 +156,9 @@ final class CountryCodeSubstitutionTransformerTests: XCTestCase {
 
 extension Array where Element == CountryCodeSubstitution {
     
-    static let test: Self = .armenian + .russian + .turkey
-    
-    static let armenian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-    ]
-    
+    static let test: Self = .russian
+        
     static let russian: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "9", to: "7 9"),
-    ]
-    
-    static let turkey: Self = [
-        .init(from: "8", to: "7"),
-        .init(from: "3", to: "374"),
-        .init(from: "9", to: "90"),
+        .init(from: "89", to: "79"),
     ]
 }
