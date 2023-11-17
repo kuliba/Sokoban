@@ -9,7 +9,7 @@ import Foundation
 
 extension RequestFactory {
     
-    static func getStickerDictionary(
+    static func makeGetStickerDictionaryRequest(
         _ type: GetJsonAbroadType
     ) throws -> URLRequest {
         
@@ -29,7 +29,7 @@ extension RequestFactory {
         return request
     }
     
-    static func createCommissionProductTransfer(
+    static func makeCommissionProductTransferRequest(
         _ input: StickerPayment
     ) throws -> URLRequest {
 
@@ -45,7 +45,7 @@ extension RequestFactory {
         return request
     }
     
-    static func makeTransfer(
+    static func makeTransferRequest(
         _ verificationCode: String
     ) throws -> URLRequest {
 
@@ -61,7 +61,7 @@ extension RequestFactory {
         return request
     }
     
-    static func getImageList(
+    static func makeImageListRequest(
         _ imageIds: [String]
     ) throws -> URLRequest {
 

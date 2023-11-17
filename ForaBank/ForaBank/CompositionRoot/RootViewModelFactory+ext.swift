@@ -38,16 +38,14 @@ extension RootViewModelFactory {
         let makeOperationStateViewModel: MakeOperationStateViewModel = {
             
             OperationStateViewModel(businessLogic: .init(
-                dictionaryService: Services.stickerDictRequest(
-                    input: .stickerOrderForm,
+                dictionaryService: Services.makeGetStickerDictService(
                     httpClient: httpClient
                 ),
-                transferService: Services.createCommissionProductTransferRequest(
-                    input: .init(parameters: []),
+                transferService: Services.makeCommissionProductTransferService(
                     httpClient: httpClient
                 ),
-                makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
-                imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
+                makeTransferService: Services.makeTransferService(httpClient: httpClient),
+                imageLoaderService: Services.makeImageListService(httpClient: httpClient),
                 selectOffice: $0,
                 products: model.productsMapper(model: model),
                 cityList: model.citiesMapper(model: model)

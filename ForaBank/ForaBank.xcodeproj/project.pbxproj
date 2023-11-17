@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1804,7 +1804,6 @@
 		C19738E42AF2B5A800101B1B /* StickerDeliveryOffice.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */; };
 		C19738E72AF3970100101B1B /* _StickerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E62AF3970100101B1B /* _StickerDictionary.swift */; };
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
-		C19738EB2AF4094B00101B1B /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738EA2AF4094B00101B1B /* RootViewModelFactory.swift */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
 		C1A290B02AF4DCFD00CBEBA8 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C1A290AF2AF4DCFD00CBEBA8 /* PaymentSticker */; };
 		C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */; };
@@ -1828,6 +1827,7 @@
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
 		C1CCFC3A29828EF30059212C /* Model+Abroad.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3929828EF20059212C /* Model+Abroad.swift */; };
+		C1D66EEA2B07AAA2009E50B1 /* RemoteService+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D66EE92B07AAA2009E50B1 /* RemoteService+Extension.swift */; };
 		C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */; };
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
@@ -3968,7 +3968,6 @@
 		C19738E32AF2B5A800101B1B /* StickerDeliveryOffice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerDeliveryOffice.json; sourceTree = "<group>"; };
 		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
 		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
-		C19738EA2AF4094B00101B1B /* RootViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationWrapperView.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3988,6 +3987,7 @@
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
 		C1CCFC3929828EF20059212C /* Model+Abroad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Abroad.swift"; sourceTree = "<group>"; };
+		C1D66EE92B07AAA2009E50B1 /* RemoteService+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+Extension.swift"; sourceTree = "<group>"; };
 		C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaymentsViewModelMapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1DE21122914158600ED0F8D /* PaymentsCodeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponent.swift; sourceTree = "<group>"; };
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
@@ -8578,6 +8578,7 @@
 				77925573279AF3AA00A85723 /* Encryption */,
 				7757DB562A712F9500745EFF /* Helpers */,
 				77577BAB29929EE800D6BD66 /* Mock */,
+				C1D66EE92B07AAA2009E50B1 /* RemoteService+Extension.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -12462,6 +12463,7 @@
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
 				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
+				C1D66EEA2B07AAA2009E50B1 /* RemoteService+Extension.swift in Sources */,
 				0B2B29252808E833001C6380 /* DocumentInfoViewController.swift in Sources */,
 				77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
@@ -14433,7 +14435,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -14786,7 +14787,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -15347,7 +15347,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -15383,7 +15382,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
 				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
