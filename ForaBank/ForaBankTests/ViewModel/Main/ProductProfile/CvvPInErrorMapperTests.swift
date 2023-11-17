@@ -15,7 +15,7 @@ final class CvvPInErrorMapperTests: XCTestCase {
 
        let error = CVVPinErrorMapper.map(ChangePINError.server(statusCode: 4, errorMessage: "error"))
 
-        XCTAssertNoDiff(error, .errorScreen)
+       XCTAssertNoDiff(error, .pinError(.errorScreen))
     }
     
     func test_map_changePinError_server_statusCode7051_shouldError() {

@@ -79,11 +79,11 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertEqual(sut.otp, "123456")
     }
     
-    func test_submint_errorCode_shouldSetPinEmptyIsDisableFalse() {
+    func test_submint_errorCode_shouldSetOtpEmptyIsDisableFalse() {
         
         let sut = makeSUT(maxDigits: 6) { _, completionHandler in
             
-            completionHandler(.errorForAlert(.init("error")))
+            completionHandler(.cvvError(.errorForAlert(.init("error"))))
         }
         
         sut.otp = "123456"

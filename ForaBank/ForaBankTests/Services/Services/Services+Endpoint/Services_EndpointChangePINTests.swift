@@ -20,6 +20,7 @@ final class Services_EndpointChangePINTests: XCTestCase {
         )
     }
     
+    
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .changePIN
