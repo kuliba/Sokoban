@@ -4,34 +4,35 @@
 //
 //  Created by Igor Malyarov on 19.10.2023.
 //
+import Foundation
 
 public extension Operation.Parameter {
     
-    struct Product: Hashable {
+    struct ProductSelector: Hashable {
         
         public let state: State
-        public let selectedProduct: Option
-        public let allProducts: [Option]
+        public let selectedProduct: Product
+        public let allProducts: [Product]
         
         public init(
             state: State,
-            selectedProduct: Option,
-            allProducts: [Option]
+            selectedProduct: Product,
+            allProducts: [Product]
         ) {
             self.state = state
             self.selectedProduct = selectedProduct
             self.allProducts = allProducts
         }
         
-        public struct Option: Hashable {
+        public struct Product: Hashable {
             
             let title: String
             let nameProduct: String
             let balance: String
             let description: String
-            let cardImage: ImageData
-            let paymentSystem: ImageData
-            let backgroundImage: ImageData?
+            let cardImage: Data
+            let paymentSystem: Data
+            let backgroundImage: Data?
             let backgroundColor: String
             
             public init(
@@ -39,9 +40,9 @@ public extension Operation.Parameter {
                 nameProduct: String,
                 balance: String,
                 description: String,
-                cardImage: ImageData,
-                paymentSystem: ImageData,
-                backgroundImage: ImageData?,
+                cardImage: Data,
+                paymentSystem: Data,
+                backgroundImage: Data?,
                 backgroundColor: String
             ) {
                 self.title = title
@@ -63,7 +64,7 @@ public extension Operation.Parameter {
     }
 }
 
-extension Operation.Parameter.Product {
+extension Operation.Parameter.ProductSelector {
     
     var parameterState: ProductStateViewModel.State {
         
