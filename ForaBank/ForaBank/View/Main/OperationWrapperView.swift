@@ -48,23 +48,30 @@ struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
     @ObservedObject var navModel: NavigationViewModel
     let operationView: (@escaping ShowAtmList) -> OperationView
-    let listView: (@escaping SelectOption) -> ListView
+    let listView: (@escaping SelectOption, @escaping (String) -> Void) -> ListView
     
     var body: some View {
         
-        operationView(navModel.navigationState(_:))
-            .navigationDestination(
-                item: .init(
-                    get: { navModel.state },
-                    set: { if $0 == nil { navModel.resetState() } }
-                )
-            ) { state in
-                
-                switch state {
-                case .location:
-                    listView(navModel.resetState)
+        NavigationView {
+         
+            operationView(navModel.navigationState(_:))
+                .navigationDestination(
+                    item: .init(
+                        get: { navModel.state },
+                        set: { if $0 == nil { navModel.resetState() }}
+                    )
+                ) { state in
+                    
+                    switch state {
+                    case .location:
+                        
+                        listView(navModel.resetState) { name in
+                            print("completion list view")
+                            navModel.resetState()
+                        }
+                    }
                 }
-            }
+        }
     }
 }
 
@@ -72,9 +79,8 @@ enum NavigationOperationViewFactory {}
 
 extension NavigationOperationViewFactory {
     
-    typealias ChangeNavigationState = BusinessLogic.ChangeNavigationState
-    typealias SelectAtmOption = BusinessLogic.SelectAtmOption
-    typealias MakeOperationStateViewModel = (@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel
+    typealias SelectAtmOption = BusinessLogic.SelectOffice
+    typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     
     static func makeNavigationOperationView(
         makeOperation: @escaping MakeOperationStateViewModel,
@@ -84,14 +90,17 @@ extension NavigationOperationViewFactory {
         
         let navView = NavigationOperationView(
             navModel: .init(),
-            operationView: { showAction  in
+            operationView: { selectAtm in
                 
                 OperationView(
-                    model: makeOperation(showAction, { _,_  in }),
+                    model: makeOperation({ location, completion in
+                        
+                        selectAtm(.location)
+                    }),
                     configuration: MainView.configurationOperationView()
                 )
             },
-            listView: { resetState in
+            listView: { resetState, completion  in
                 
                 PlacesListInternalView(
                     items: atmData.map { PlacesListViewModel.ItemViewModel(
@@ -102,9 +111,10 @@ extension NavigationOperationViewFactory {
                         schedule: $0.schedule,
                         distance: nil
                     ) },
-                    selectItem: { item in
+                    selectItem: { _ in
                         
                         resetState()
+                        completion(.init())
                     }
                 )
             }
