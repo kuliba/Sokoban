@@ -167,10 +167,27 @@ extension BusinessLogic {
                 
                 return .success(.operation(operation))
             
-            case .openBranch:
-                changeNavigationState(.location)
-                return .success(.operation(operation))
+            case let .openBranch(location):
                 
+                let location = Location(id: location.id)
+                selectOffice(location) { result in
+                    
+                    switch result {
+                    case let .some(office):
+                        
+                        let newOperation = operation.updateOperation(
+                            operation: operation,
+                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "", placeholder: "", options: [], state: .selected(.init(title: "", placeholder: "", name: office.name, iconName: "")))))
+                        
+                        completion(.success(.operation(newOperation)))
+                        
+                    case .none:
+                        completion(.success(.operation(operation)))
+                    }
+                }
+                
+                return .success(.operation(operation))
+
             case let .chevronTapped(select):
                 switch select.state {
                 case let .idle(idleViewModel):

@@ -12,9 +12,8 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias ChangeNavigationState = BusinessLogic.ChangeNavigationState
-    typealias SelectAtmOption = BusinessLogic.SelectAtmOption
-    typealias MakeOperationStateViewModel = (@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel
+    typealias SelectAtmOption = BusinessLogic.SelectOffice
+    typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -923,7 +922,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case paymentSticker((@escaping ChangeNavigationState, @escaping SelectAtmOption) -> OperationStateViewModel)
+        case paymentSticker(MakeOperationStateViewModel)
 
     }
     
