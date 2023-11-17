@@ -48,7 +48,6 @@ final class SearchFactoryRegularFieldViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = RegularFieldViewModel
-//    private typealias TextFieldState = TextFieldState
     
     private func makeSUT(
         _ mode: ContactsViewModel.Mode,
