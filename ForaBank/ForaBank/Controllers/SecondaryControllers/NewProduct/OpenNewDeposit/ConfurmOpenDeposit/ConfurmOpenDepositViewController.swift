@@ -87,7 +87,7 @@
         
         var nameField = ForaInput(
             viewModel: ForaInputModel(
-                title: "Наименования вклада",
+                title: "Наименование вклада",
                 image: UIImage(named: "depositIcon")!,
                 isEditable: false))
         

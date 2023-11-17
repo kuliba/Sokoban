@@ -55,7 +55,7 @@ extension OperationStateViewModel {
             case let .chevronTapped(product, state):
                 let operation = operation.updateOperation(
                     operation: operation,
-                    newParameter: .product(.init(
+                    newParameter: .productSelector(.init(
                         state: state,
                         selectedProduct: product.selectedProduct,
                         allProducts: product.allProducts
@@ -67,7 +67,7 @@ extension OperationStateViewModel {
                 
                 let operation = operation.updateOperation(
                     operation: operation,
-                    newParameter: .product(.init(
+                    newParameter: .productSelector(.init(
                         state: .select,
                         selectedProduct: option,
                         allProducts: []))
@@ -176,7 +176,7 @@ extension OperationStateViewModel {
                 newParameter: .select(updateParameter)
             )
 
-        case .openBranch:
+        case let .openBranch(location):
             //TODO: send Branch View
             return nil
         case .chevronTapped(_):
@@ -369,7 +369,7 @@ extension Array where Element == Operation.Parameter {
                     description: "1500 Р")
             ]
         )),
-        .product(.init(
+        .productSelector(.init(
             state: .select,
             selectedProduct: .init(
                 title: "Счет списания",

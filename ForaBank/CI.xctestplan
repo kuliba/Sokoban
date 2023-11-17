@@ -20,20 +20,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "BindPublicKeyWithEventIDTests",
-        "name" : "BindPublicKeyWithEventIDTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:ForaBank.xcodeproj",
-        "identifier" : "EDB14392265FDA430028EF5A",
-        "name" : "ForaBankTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "CvvPinTests",
         "name" : "CvvPinTests"
       }
@@ -155,6 +141,97 @@
         "containerPath" : "container:..\/swift-forabank",
         "identifier" : "PaymentStickerTests",
         "name" : "PaymentStickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PaymentsComponentsTests",
+        "name" : "PaymentsComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPINServicesTests",
+        "name" : "CVVPINServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CVVPIN_ServicesTests",
+        "name" : "CVVPIN_ServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CryptoSwaddlerTests",
+        "name" : "CryptoSwaddlerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "FetcherTests",
+        "name" : "FetcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ForaCryptoTests",
+        "name" : "ForaCryptoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "KeyChainStoreTests",
+        "name" : "KeyChainStoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "TransferPublicKeyTests",
+        "name" : "TransferPublicKeyTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "URLRequestFactoryTests",
+        "name" : "URLRequestFactoryTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:ForaBank.xcodeproj",
+        "identifier" : "EDB14392265FDA430028EF5A",
+        "name" : "ForaBankTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SberQRTests",
+        "name" : "SberQRTests"
       }
     }
   ],

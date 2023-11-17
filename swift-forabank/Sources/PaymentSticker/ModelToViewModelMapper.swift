@@ -28,14 +28,15 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
-                    sticker: Image(uiImage: parameterSticker.image.uiImage ?? .checkmark),
+                    //TODO: extract to extension Image
+                    sticker: parameterSticker.image,
                     options: parameterSticker.options.map {
                         
                         .init(
                             title: $0.title,
-                            icon: .init("Arrow Circle"),
+                            icon: ImageData.named("Arrow Circle"),
                             description: "\($0.description.dropLast(2)) ₽",
-                            iconColor: .green
+                            iconColor: ""
                         )
                     }
                 )
@@ -65,7 +66,7 @@ public extension ModelToViewModelMapper {
                 
                 tapAction = .openBranch({
                     
-                    action(.select(.openBranch))
+                    action(.select(.openBranch(.init(id: ""))))
                 })
                 icon = .init("ic24Bank")
                 
@@ -89,7 +90,7 @@ public extension ModelToViewModelMapper {
                 )
             )
             
-        case let .product(parameterProduct):
+        case let .productSelector(parameterProduct):
             return .product(
                 .init(
                     state: parameterProduct.parameterState,

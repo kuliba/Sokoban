@@ -77,7 +77,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         ])
     }
     
-    func test_insertingMatch_shouldChangeState_withSubstitution() {
+    func test_insertingMatch_shouldChangeState_withSubstitution_typeAbroad() {
         
         let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
@@ -87,11 +87,25 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",     cursorAt: 0)),
-            .editing(.init("+374", cursorAt: 4)),
+            .editing(.init("+3", cursorAt: 2)),
         ])
     }
     
-    func test_deleteLast_shouldChangeState() {
+    func test_insertingMatch_shouldChangeState_withSubstitution_typeOther() {
+        
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
+        
+        startEditing(sut, on: scheduler)
+        insertAtCursor("3", sut, on: scheduler)
+        
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter phone number"),
+            .editing(.init("",     cursorAt: 0)),
+            .editing(.init("+3", cursorAt: 2)),
+        ])
+    }
+    
+    func test_deleteLast_shouldChangeState_testAbroad() {
         
         let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
@@ -104,14 +118,30 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",     cursorAt: 0)),
-            .editing(.init("+374", cursorAt: 4)),
-            .editing(.init("+37",  cursorAt: 3)),
-            .editing(.init("+(3",  cursorAt: 3)),
+            .editing(.init("+3", cursorAt: 2)),
             .editing(.init("",     cursorAt: 0)),
         ])
     }
     
-    func test_actionSeries_shouldChangeState() {
+    func test_deleteLast_shouldChangeState_testOther() {
+        
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
+        
+        startEditing(sut, on: scheduler)
+        insertAtCursor("3", sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter phone number"),
+            .editing(.init("",   cursorAt: 0)),
+            .editing(.init("+3", cursorAt: 2)),
+            .editing(.init("",   cursorAt: 0)),
+        ])
+    }
+    
+    func test_actionSeries_shouldChangeState_typeAbroad() {
         
         let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
@@ -129,17 +159,44 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             .placeholder("Enter phone number"),
             .editing(.init("",       cursorAt: 0)),
-            .editing(.init("+374",   cursorAt: 4)),
-            .editing(.init("+37",    cursorAt: 3)),
-            .noFocus("+37"),
-            .editing(.init("+37",    cursorAt: 3)),
-            .editing(.init("+379-9", cursorAt: 6)),
-            .editing(.init("+379",   cursorAt: 4)),
-            .editing(.init("+37",    cursorAt: 3)),
-            .editing(.init("+(3",    cursorAt: 3)),
+            .editing(.init("+3",   cursorAt: 2)),
+            .editing(.init("",    cursorAt: 0)),
+            .placeholder("Enter phone number"),
+            .editing(.init("",    cursorAt: 0)),
+            .editing(.init("+9 9", cursorAt: 4)),
+            .editing(.init("+9",   cursorAt: 2)),
+            .editing(.init("",    cursorAt: 0)),
+        ])
+    }
+    
+    func test_actionSeries_shouldChangeState_typeOther() {
+        
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
+        
+        startEditing(sut, on: scheduler)
+        insertAtCursor("3", sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        finishEditing(sut, on: scheduler)
+        startEditing(sut, on: scheduler)
+        insertAtCursor("99", sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        deleteLast(sut, on: scheduler)
+        
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter phone number"),
+            .editing(.init("",       cursorAt: 0)),
+            .editing(.init("+3",   cursorAt: 2)),
+            .editing(.init("",    cursorAt: 0)),
+            .placeholder("Enter phone number"),
+            .editing(.init("",    cursorAt: 0)),
+            .editing(.init("+9 9", cursorAt: 4)),
+            .editing(.init("+9",   cursorAt: 2)),
             .editing(.init("",       cursorAt: 0)),
         ])
     }
+
     
     // MARK: - Config
     

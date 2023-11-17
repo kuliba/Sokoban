@@ -22,7 +22,7 @@ struct LandingButtonsView: View {
             
             VStack(spacing: 8) {
                 
-                ForEach(viewModel.buttons, content: ButtonAuthView.init) 
+                ForEach(viewModel.buttons, content: ButtonAuthView.init)
             }
             .bottomSheet(item: $viewModel.bottomSheet) { sheet in
                 

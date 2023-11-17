@@ -408,7 +408,7 @@ class ContactConfurmViewController: UIViewController {
             smsCodeField.isHidden = true
             
             phoneField.isHidden = false
-            phoneField.viewModel.title = "Наименования вклада"
+            phoneField.viewModel.title = "Наименование вклада"
             phoneField.viewModel.image = UIImage(named: "depositIcon")!
             phoneField.text = model.fullName ?? ""
             

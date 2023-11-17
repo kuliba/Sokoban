@@ -74,7 +74,7 @@ extension BusinessLogic {
             
                 return .success(.operation(operation))
                 
-            case .openBranch:
+            case let .openBranch(location):
                 return .success(.operation(operation))
             
             case .chevronTapped(_):

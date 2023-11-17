@@ -17,9 +17,11 @@ extension Services {
     ) -> GetProcessingSessionCode {
         
         let endpoint = Services.Endpoint.getProcessingSessionCode
-        let url = try! endpoint.url(withBase: Config.serverAgentEnvironment.baseURL)
+        let url = try! endpoint.url(
+            withBase: Config.serverAgentEnvironment.baseURL
+        )
         
-        return GetProcessingSessionCodeService(
+        return GetProcessingSessionCode(
             url: url,
             performRequest: httpClient.performRequest(_:completion:)
         )
@@ -32,18 +34,19 @@ extension Services.GetProcessingSessionCode: SessionCodeLoader {
         
         process { result in
             
-            completion(.init{
-                
-                try result.map(SessionCodeMapper.map).get()
-            })
+            completion(
+                result
+                    .map(SessionCodeMapper.map)
+                    .mapError { $0 }
+            )
         }
     }
     
     private enum SessionCodeMapper {
         
         static func map(
-            _ code: GetProcessingSessionCode
-        ) -> SessionCode {
+            _ code: SessionCodeDomain.GetProcessingSessionCode
+        ) -> GetProcessingSessionCodeDomain.SessionCode {
             
             .init(value: code.code)
         }

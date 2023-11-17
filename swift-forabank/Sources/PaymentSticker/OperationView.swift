@@ -1,6 +1,6 @@
 //
 //  OperationView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -34,20 +34,17 @@ public struct ConfigurationOperationView {
     }
 }
 
-public struct OperationView<BranchesView: View>: View {
+public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
     let configuration: ConfigurationOperationView
-    let branchesView: BranchesView
     
     public init(
         model: OperationStateViewModel,
-        configuration: ConfigurationOperationView,
-        branchesView: BranchesView
+        configuration: ConfigurationOperationView
     ) {
         self.model = model
         self.configuration = configuration
-        self.branchesView = branchesView
     }
     
     public var body: some View {
@@ -72,9 +69,6 @@ public struct OperationView<BranchesView: View>: View {
                     print("details")
                 }
             }
-        case .branches:
-            
-            branchesView
         }
     }
 }
@@ -227,7 +221,7 @@ extension Operation.Parameter: Identifiable {
             default:
                 return .branches
             }
-        case .product: return .product
+        case .productSelector: return .productSelector
         case .amount: return .amount
         case .input: return .input
         }
@@ -240,7 +234,7 @@ extension Operation.Parameter: Identifiable {
         case city
         case transferType
         case branches
-        case product
+        case productSelector
         case amount
         case input
     }

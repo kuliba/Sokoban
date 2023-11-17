@@ -77,9 +77,12 @@ struct MainView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                viewModel.link.map({
-                    destinationView(model: viewModel.model, link: $0)
-                })
+                viewModel.link.map {
+                    
+                    destinationView(
+                        link: $0
+                    )
+                }
             }
             
             Color.clear
@@ -109,7 +112,6 @@ struct MainView: View {
     
     @ViewBuilder
     private func destinationView(
-        model: Model,
         link: MainViewModel.Link
     ) -> some View {
         
@@ -173,18 +175,12 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .paymentSticker(viewModel):
-            OperationView(
-                model: viewModel,
-                configuration: MainView.configurationOperationView(),
-                branchesView: PlacesListView(viewModel: .init(
-                    atmList: model.dictionaryAtmList() ?? [],
-                    metroStationsList: model.dictionaryAtmMetroStations(),
-                    referenceLocation: .init(latitude: 0, longitude: 0)
-                ))
+        case let .paymentSticker(makeOperation):
+            NavigationOperationViewFactory.makeNavigationOperationView(
+                makeOperation: makeOperation,
+                atmData: viewModel.dictionaryAtmList(),
+                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
             )
-            .navigationBarTitle("Оформление заявки", displayMode: .inline)
-            .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -345,8 +341,77 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainView {
     
+    static let sample = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
+    static let sampleProducts = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
+    static let sampleOldCurrency = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
     static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
-     
+        
         PaymentSticker.ConfigurationOperationView(
             tipViewConfig: .init(
                 titleFont: .textBodyMR14200(),

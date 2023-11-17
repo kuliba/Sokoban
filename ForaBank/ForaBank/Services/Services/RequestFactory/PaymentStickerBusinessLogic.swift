@@ -11,27 +11,44 @@ import GenericRemoteService
 import PaymentSticker
 import SVGKit
 
+struct Location {
+    
+    let id: String
+}
+
+struct Office {
+    
+    let id: String
+    let name: String
+}
+
 final class BusinessLogic {
     
-    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
-    typealias Option = PaymentSticker.Operation.Parameter.Select.Option
+    typealias DictionaryService = RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    typealias TransferService = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias MakeTransferService = RemoteServiceOf<String, MakeTransferResponse>
+    typealias ImageLoaderService = RemoteServiceOf<[String], [ImageData]>
+    
+    typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
-    typealias Completion = (OperationResult) -> Void
-    typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
+    
+    typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
     
     //TODO: replace remoteService to closure or protocol
-    let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    let makeTransferService: RemoteService<String, MakeTransferResponse>
-    let imageLoaderService: RemoteService<[String], [ImageData]>
+    let dictionaryService: DictionaryService
+    let transferService: TransferService
+    let makeTransferService: MakeTransferService
+    let imageLoaderService: ImageLoaderService
+    let selectOffice: SelectOffice
     let products: [Product]
     let cityList: [City]
     
     init(
-        dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
-        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
-        makeTransferService: RemoteService<String, MakeTransferResponse>,
-        imageLoaderService: RemoteService<[String], [ImageData]>,
+        dictionaryService: DictionaryService,
+        transferService: TransferService,
+        makeTransferService: MakeTransferService,
+        imageLoaderService: ImageLoaderService,
+        selectOffice: @escaping SelectOffice,
         products: [Product],
         cityList: [City]
     ) {
@@ -39,6 +56,7 @@ final class BusinessLogic {
         self.transferService = transferService
         self.makeTransferService = makeTransferService
         self.imageLoaderService = imageLoaderService
+        self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
     }
@@ -99,6 +117,14 @@ extension BusinessLogic {
                     parameter: parameter
                 )
                  
+                if parameter.id == .officeSelector {
+                
+                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(parameter))
+                    completion(.success(.operation(newOperation)))
+                    return .success(.operation(newOperation))
+
+                }
+                
                 switch parameter.id {
                 case .transferTypeSticker:
                     
@@ -141,9 +167,27 @@ extension BusinessLogic {
                 
                 return .success(.operation(operation))
             
-            case .openBranch:
-                return .success(.branches)
+            case let .openBranch(location):
                 
+                let location = Location(id: location.id)
+                selectOffice(location) { result in
+                    
+                    switch result {
+                    case let .some(office):
+                        
+                        let newOperation = operation.updateOperation(
+                            operation: operation,
+                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "", placeholder: "", options: [], state: .selected(.init(title: "", placeholder: "", name: office.name, iconName: "")))))
+                        
+                        completion(.success(.operation(newOperation)))
+                        
+                    case .none:
+                        completion(.success(.operation(operation)))
+                    }
+                }
+                
+                return .success(.operation(operation))
+
             case let .chevronTapped(select):
                 switch select.state {
                 case let .idle(idleViewModel):
@@ -233,8 +277,6 @@ extension BusinessLogic {
                             }
                         case .result:
                             return
-                        case .branches:
-                            return
                         }
                     case let .failure(error):
                         completion(.failure(error))
@@ -323,7 +365,7 @@ extension BusinessLogic {
         case let .chevronTapped(product, state):
             let newOperation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: state,
                     selectedProduct: product.selectedProduct,
                     allProducts: product.allProducts
@@ -335,7 +377,7 @@ extension BusinessLogic {
             
             let operation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: .select,
                     selectedProduct: option,
                     allProducts: product.allProducts))
@@ -395,10 +437,10 @@ extension BusinessLogic {
                     return Operation.Parameter.sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
-                        image: PaymentSticker.ImageData(data: Data()),
+                        image: PaymentSticker.ImageData.named(""),
                         options: banner.txtConditionList.map({
                             
-                            Operation.Parameter.Sticker.Option(
+                            Operation.Parameter.Sticker.PriceOption(
                                 title: $0.name,
                                 description: "\($0.description) \($0.value)")
                         })
@@ -417,7 +459,7 @@ extension BusinessLogic {
                 case .product:
                     if let product = self.products.first {
                         
-                        return Operation.Parameter.product(.init(
+                        return Operation.Parameter.productSelector(.init(
                             state: .select,
                             selectedProduct: product,
                             allProducts: self.products
@@ -524,27 +566,24 @@ extension BusinessLogic {
             
             switch result {
             case let .success(images):
-                if let uiImage = SVGKImage(data: images.first?.data).uiImage,
-                   let image = PaymentSticker.ImageData(with: uiImage) {
                     
-                    let newOperation = operation.updateOperation(
-                        operation: operation,
-                        newParameter: .sticker(.init(
-                            title: banner.title,
-                            description: banner.subtitle,
-                            image: image,
-                            options: banner.txtConditionList.map { item in
-                                
-                                    .init(
-                                        title: item.name,
-                                        description: "\(item.value.description.dropLast(2)) ₽"
-                                    )
-                            }
-                        ))
-                    )
-                    
-                    completion(.success(.operation(newOperation)))
-                }
+                let newOperation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .sticker(.init(
+                        title: banner.title,
+                        description: banner.subtitle,
+                        image: .data(images.first?.data),
+                        options: banner.txtConditionList.map { item in
+                            
+                                .init(
+                                    title: item.name,
+                                    description: "\(item.value.description.dropLast(2)) ₽"
+                                )
+                        }
+                    ))
+                )
+                
+                completion(.success(.operation(newOperation)))
                 
             case let .failure(error):
                 completion(.failure(error))
