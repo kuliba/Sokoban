@@ -14,6 +14,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     typealias SelectAtmOption = BusinessLogic.SelectOffice
     typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -28,23 +29,28 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var bottomSheet: BottomSheet?
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
-    let makeOperationStateViewModel: MakeOperationStateViewModel
     
     var rootActions: RootViewModel.RootActions?
     
     let model: Model
+    private let makeOperationStateViewModel: MakeOperationStateViewModel
+    private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
     init(
         _ model: Model,
         sections: [MainSectionViewModel],
-        makeOperationStateViewModel: @escaping MakeOperationStateViewModel
+        makeOperationStateViewModel: @escaping MakeOperationStateViewModel,
+        makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        onRegister: @escaping () -> Void
     ) {
-        
         self.model = model
         self.navButtonsRight = []
         self.sections = sections
         self.makeOperationStateViewModel = makeOperationStateViewModel
+        self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.onRegister = onRegister
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -79,11 +85,10 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                 case let payload as MainViewModelAction.Show.ProductProfile:
                     guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = ProductProfileViewModel(
-                            model,
-                            product: product,
-                            rootView: "\(type(of: self))",
-                            dismissAction: {[weak self] in self?.link = nil })
+                          let productProfileViewModel = makeProductProfileViewModel(
+                            product,
+                            "\(type(of: self))",
+                            { [weak self] in self?.link = nil })
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions
@@ -101,8 +106,16 @@ class MainViewModel: ObservableObject, Resetable {
                     }
 
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
-
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())}))
+                                        
+                    // TODO: replace with injected factory
+                    link = .userAccount(.init(
+                        model: model,
+                        clientInfo: clientInfo,
+                        dismissAction: { [weak self] in
+                            
+                            self?.action.send(MainViewModelAction.Close.Link())
+                        }
+                    ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})
@@ -392,7 +405,10 @@ class MainViewModel: ObservableObject, Resetable {
                         self.link = .paymentSticker(makeOperationStateViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
-                        let myProductsViewModel = MyProductsViewModel(model)
+                        let myProductsViewModel = MyProductsViewModel(
+                            model,
+                            makeProductProfileViewModel: makeProductProfileViewModel
+                        )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
                         

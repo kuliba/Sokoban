@@ -108,6 +108,7 @@ struct ButtonAuthView: View {
                 
             }.frame(height: 108)
         }
+        .accessibilityIdentifier("LandingButton")
     }
 }
 

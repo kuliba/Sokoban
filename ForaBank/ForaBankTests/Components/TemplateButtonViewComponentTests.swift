@@ -165,6 +165,30 @@ extension TemplateButtonViewComponentTests {
         
         XCTAssertEqual(sut.testState, .idle)
     }
+    
+//    func test_templateButton_init_shouldSetRefreshState_withOperationAbroad_paymentTemplateIdNil() throws {
+//        
+//        let sut = TemplateButtonView.ViewModel(
+//            model: model,
+//            state: .refresh,
+//            operation: paymentOperationStub(service: .abroad),
+//            operationDetail: .stub(paymentTemplateId: nil)
+//        )
+//        
+//        XCTAssertEqual(sut.testState, .refresh)
+//    }
+//    
+//    func test_templateButton_init_shouldSetCompleteState_withOperationAbroad_paymentTemplateIdNil() throws {
+//        
+//        let sut = TemplateButtonView.ViewModel(
+//            model: model,
+//            state: .complete,
+//            operation: paymentOperationStub(service: .abroad),
+//            operationDetail: .stub(paymentTemplateId: nil)
+//        )
+//        
+//        XCTAssertEqual(sut.testState, .complete)
+//    }
 }
 
 // MARK: Computed property tests

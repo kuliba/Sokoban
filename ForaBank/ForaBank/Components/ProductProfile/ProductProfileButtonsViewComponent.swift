@@ -82,17 +82,7 @@ extension ProductProfileButtonsView {
                 }
                 
             case .bottomRight:
-                switch product {
-        
-                case let cardProduct as ProductCardData:
-                    if cardProduct.isBlocked {
-                        return cardProduct.isCanBeUnblocked
-                    } else {
-                        return true
-                    }
-
-                default: return true
-                }
+                return true
             }
         }
 
@@ -115,9 +105,7 @@ extension ProductProfileButtonsView {
                 
             case .bottomRight:
                 switch product {
-                case let cardProduct as ProductCardData:
-                    return cardProduct.isBlocked ? "Разблокировать" : "Блокировать"
-                    
+                case _ as ProductCardData: return "Управление"
                 case _ as ProductAccountData: return "Закрыть"
                 case _ as ProductDepositData: return "Управление"
                 default: return "Погасить досрочно"
@@ -144,8 +132,7 @@ extension ProductProfileButtonsView {
                 
             case .bottomRight:
                 switch product {
-                case let cardProduct as ProductCardData:
-                    return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
+                case _ as ProductCardData: return .ic24Server
                 case _ as ProductAccountData: return .ic24Close
                 case _ as ProductDepositData: return .ic24Server
                 default: return .ic24Clock

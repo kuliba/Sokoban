@@ -41,7 +41,7 @@ final class ContactReducerTests: XCTestCase {
     
     func test_reduce_seriesOfActions_withSubstitutions() throws {
         
-        let (state, sut) = makeSUT(substitutions: .armenian + .russian)
+        let (state, sut) = makeSUT(substitutions: .russian)
         
         let result = try sut.reduce(
             state,
@@ -65,12 +65,12 @@ final class ContactReducerTests: XCTestCase {
         XCTAssertNoDiff(result, [
             .placeholder("Enter contact name or phone"),
             .editing(.empty),
-            .editing(.init("~374",        cursorAt: 4)),
-            .editing(.init("~374456789",  cursorAt: 10)),
-            .editing(.init("~7",          cursorAt: 2)),
-            .editing(.init("~73",         cursorAt: 3)),
-            .editing(.init("~73123456",   cursorAt: 9)),
-            .editing(.init("~7 9",        cursorAt: 4)),
+            .editing(.init("~3",        cursorAt: 2)),
+            .editing(.init("~3456789",  cursorAt: 8)),
+            .editing(.init("~8",          cursorAt: 2)),
+            .editing(.init("~83",         cursorAt: 3)),
+            .editing(.init("~83123456",   cursorAt: 9)),
+            .editing(.init("~9",        cursorAt: 2)),
             .editing(.init("~8916",       cursorAt: 5)),
             .editing(.init("Abc def 123", cursorAt: 11)),
             .editing(.init("+-Abc 123",   cursorAt: 9)),
@@ -84,7 +84,7 @@ final class ContactReducerTests: XCTestCase {
     
     func test_reduce_nonDigitInputShouldBeIgnoredIfFirstNonSymbolIsDigit_akaPhoneMode_paste() throws {
         
-        let (state, sut) = makeSUT(substitutions: .armenian + .russian)
+        let (state, sut) = makeSUT(substitutions: .russian)
         
         let result = try sut.reduce(
             state,
@@ -94,7 +94,7 @@ final class ContactReducerTests: XCTestCase {
             { try $0.paste("3") },
             { try $0.insert("Abc456 78") },
             { try $0.insert("9cdf") },
-            { try $0.replace(from: 2, count: 7, with: "EF-&G1")}
+            { try $0.replace(from: 2, count: 6, with: "EF-&G1")}
         )
         
         XCTAssertNoDiff(result, [
@@ -102,16 +102,16 @@ final class ContactReducerTests: XCTestCase {
             .editing(.empty),
             .editing(.init("$",          cursorAt: 1)),
             .editing(.init("-",          cursorAt: 1)),
-            .editing(.init("~374",       cursorAt: 4)),
-            .editing(.init("~37445678",  cursorAt: 9)),
-            .editing(.init("~374456789", cursorAt: 10)),
-            .editing(.init("~319",       cursorAt: 6)),
+            .editing(.init("~3",       cursorAt: 2)),
+            .editing(.init("~345678",  cursorAt: 7)),
+            .editing(.init("~3456789", cursorAt: 8)),
+            .editing(.init("~31",       cursorAt: 3)),
         ])
     }
     
     func test_reduce_nonDigitInputShouldBeIgnoredIfFirstNonSymbolIsDigit_akaPhoneMode_insert() throws {
         
-        let (state, sut) = makeSUT(substitutions: .armenian + .russian)
+        let (state, sut) = makeSUT(substitutions: .russian)
         
         let result = try sut.reduce(
             state,
@@ -121,7 +121,7 @@ final class ContactReducerTests: XCTestCase {
             { try $0.insert("3") },
             { try $0.insert("Abc456 78") },
             { try $0.insert("9cdf") },
-            { try $0.replace(from: 2, count: 7, with: "EF-&G1")}
+            { try $0.replace(from: 2, count: 6, with: "EF-&G1")}
         )
         
         XCTAssertNoDiff(result, [
@@ -129,16 +129,16 @@ final class ContactReducerTests: XCTestCase {
             .editing(.empty),
             .editing(.init("$",          cursorAt: 1)),
             .editing(.init("$-",         cursorAt: 2)),
-            .editing(.init("~374",       cursorAt: 4)),
-            .editing(.init("~37445678",  cursorAt: 9)),
-            .editing(.init("~374456789", cursorAt: 10)),
-            .editing(.init("~319",       cursorAt: 4)),
+            .editing(.init("~3",       cursorAt: 2)),
+            .editing(.init("~345678",  cursorAt: 7)),
+            .editing(.init("~3456789", cursorAt: 8)),
+            .editing(.init("~31",       cursorAt: 3)),
         ])
     }
     
     func test_reduce_anyInputShouldBeAddedIfFirstNonSymbolIsLetter_akaNameMode_paste() throws {
         
-        let (state, sut) = makeSUT(substitutions: .armenian + .russian)
+        let (state, sut) = makeSUT(substitutions: .russian)
         
         let result = try sut.reduce(
             state,
@@ -165,7 +165,7 @@ final class ContactReducerTests: XCTestCase {
     
     func test_reduce_anyInputShouldBeAddedIfFirstNonSymbolIsLetter_akaNameMode_insert() throws {
         
-        let (state, sut) = makeSUT(substitutions: .armenian + .russian)
+        let (state, sut) = makeSUT(substitutions: .russian)
         
         let result = try sut.reduce(
             state,

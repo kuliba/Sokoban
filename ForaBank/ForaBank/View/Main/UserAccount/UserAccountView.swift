@@ -222,11 +222,12 @@ extension UserAccountViewModel {
             icon: .ic24LogOut,
             content: "Выход из приложения",
             action: {
-            //TODO: set action
+                //TODO: set action
             }),
         deleteAccountButton: .init(
             icon: .ic24UserX, content: "Удалить учетную запись",
             infoButton: .init(icon: .ic24Info, action: { }),
-            action: { })
+            action: {}
+        )
     )
 }

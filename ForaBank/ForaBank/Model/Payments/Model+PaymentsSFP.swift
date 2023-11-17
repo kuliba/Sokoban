@@ -68,15 +68,7 @@ extension Model {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            //FIXME: fix on server for latest operations and remove this
-            if phone.digits.prefix(1) != "7" {
-                
-                return "+7\(phone.digits)"
-                
-            } else {
-                
-                return "+\(phone.digits)"
-            }
+            return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId

@@ -66,7 +66,7 @@ final class MainViewModelTests: XCTestCase {
             )
         )
     }
-    
+
     // MARK: - Helpers
     
     private func makeSUT(
@@ -80,7 +80,9 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _,_   in .preview }
+            makeOperationStateViewModel: { _,_   in .preview },
+            makeProductProfileViewModel: { _,_,_ in nil },
+            onRegister: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -111,9 +113,11 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: MainSectionViewModel.makeMainSection(model),
-            makeOperationStateViewModel: { _,_   in .preview }
+            makeOperationStateViewModel: { _,_   in .preview },
+            makeProductProfileViewModel: { _,_,_ in nil },
+            onRegister: {}
         )
-        
+
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)

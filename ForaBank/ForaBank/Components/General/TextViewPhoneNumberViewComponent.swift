@@ -385,7 +385,7 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
         var phone = updatedValue.digits
         
         if let countryCodeReplaces = countryCodeReplaces,
-           phone.count <= 1,
+           phone.count <= 2,
            (!update.isEmpty || inRange == NSRange(location: 0, length: 0)) {
             
             phone = replaceDigits(phone: updatedValue.digits, countryCodeReplaces: countryCodeReplaces)
@@ -400,19 +400,17 @@ struct TextViewPhoneNumberView: UIViewRepresentable {
     
     static func replaceDigits(phone: String, countryCodeReplaces: [CountryCodeReplace]) -> String {
         
-        var phone = phone
+        var phone = phone.digits
         
         for replace in countryCodeReplaces {
             
             let from = replace.from.description
             
             if phone.hasPrefix(from),
-               !phone.hasPrefix(replace.to) {
-                
-                phone.replaceSubrange(
-                    from.startIndex..<from.endIndex,
-                    with: String(repeating: replace.to, count: 1)
-                )
+               !phone.hasPrefix(replace.to),
+               let range = phone.range(of: from)
+            {
+                phone.replaceSubrange(range, with: replace.to)
             }
         }
         
