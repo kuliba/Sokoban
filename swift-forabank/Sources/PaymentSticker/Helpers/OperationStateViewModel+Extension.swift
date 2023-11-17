@@ -176,7 +176,7 @@ extension OperationStateViewModel {
                 newParameter: .select(updateParameter)
             )
 
-        case .openBranch:
+        case let .openBranch(location):
             //TODO: send Branch View
             return nil
         case .chevronTapped(_):

@@ -44,6 +44,11 @@ public enum Event {
         
         case selectOption(SelectOptionID, ParameterSelect)
         case chevronTapped(ParameterSelect)
-        case openBranch
+        case openBranch(Location)
+    }
+    
+    public struct Location {
+        
+        public let id: String
     }
 }

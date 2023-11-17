@@ -65,7 +65,7 @@ public extension ModelToViewModelMapper {
                 
                 tapAction = .openBranch({
                     
-                    action(.select(.openBranch))
+                    action(.select(.openBranch(.init(id: ""))))
                 })
                 icon = .init("ic24Bank")
                 
