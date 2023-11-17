@@ -29,7 +29,7 @@ final class BusinessLogic {
     typealias MakeTransferService = RemoteServiceOf<String, MakeTransferResponse>
     typealias ImageLoaderService = RemoteServiceOf<[String], [ImageData]>
     
-    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
+    typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
     
     typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
@@ -365,7 +365,7 @@ extension BusinessLogic {
         case let .chevronTapped(product, state):
             let newOperation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: state,
                     selectedProduct: product.selectedProduct,
                     allProducts: product.allProducts
@@ -377,7 +377,7 @@ extension BusinessLogic {
             
             let operation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: .select,
                     selectedProduct: option,
                     allProducts: product.allProducts))
@@ -440,7 +440,7 @@ extension BusinessLogic {
                         image: PaymentSticker.ImageData(data: Data()),
                         options: banner.txtConditionList.map({
                             
-                            Operation.Parameter.Sticker.Option(
+                            Operation.Parameter.Sticker.PriceOption(
                                 title: $0.name,
                                 description: "\($0.description) \($0.value)")
                         })
@@ -459,7 +459,7 @@ extension BusinessLogic {
                 case .product:
                     if let product = self.products.first {
                         
-                        return Operation.Parameter.product(.init(
+                        return Operation.Parameter.productSelector(.init(
                             state: .select,
                             selectedProduct: product,
                             allProducts: self.products

@@ -89,7 +89,7 @@ public extension ModelToViewModelMapper {
                 )
             )
             
-        case let .product(parameterProduct):
+        case let .productSelector(parameterProduct):
             return .product(
                 .init(
                     state: parameterProduct.parameterState,

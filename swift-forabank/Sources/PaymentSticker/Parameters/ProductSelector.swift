@@ -1,5 +1,5 @@
 //
-//  Product.swift
+//  ProductSelector.swift
 //  StickerPreview
 //
 //  Created by Igor Malyarov on 19.10.2023.

@@ -221,7 +221,7 @@ extension Operation.Parameter: Identifiable {
             default:
                 return .branches
             }
-        case .product: return .product
+        case .productSelector: return .productSelector
         case .amount: return .amount
         case .input: return .input
         }
@@ -234,7 +234,7 @@ extension Operation.Parameter: Identifiable {
         case city
         case transferType
         case branches
-        case product
+        case productSelector
         case amount
         case input
     }

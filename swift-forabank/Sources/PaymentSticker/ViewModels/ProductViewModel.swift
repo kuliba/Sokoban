@@ -12,12 +12,12 @@ public struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
-    let selectOption: (Operation.Parameter.Product.Option) -> Void
+    let selectOption: (Operation.Parameter.ProductSelector.Product) -> Void
     
     public init(
         state: ProductStateViewModel.State,
         chevronTapped: @escaping () -> Void,
-        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+        selectOption: @escaping (Operation.Parameter.ProductSelector.Product) -> Void
     ) {
         self.state = state
         self.chevronTapped = chevronTapped
@@ -64,7 +64,7 @@ extension ProductViewModel {
     }
     
     static func mapper(
-        _ product: Operation.Parameter.Product.Option
+        _ product: Operation.Parameter.ProductSelector.Product
     ) -> ProductViewModel {
         
         .init(

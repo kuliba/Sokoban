@@ -25,7 +25,7 @@ public extension Operation {
         case tip(Tip)
         case sticker(Sticker)
         case select(Select)
-        case product(Product)
+        case productSelector(ProductSelector)
         case amount(Amount)
         case input(Input)
     }
