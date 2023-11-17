@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -380,8 +380,6 @@
 		2A1F086A2A7A2E1A00C5B11B /* PublicTransportKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F08692A7A2E1A00C5B11B /* PublicTransportKeyTests.swift */; };
 		2A1F086E2A7A2EE400C5B11B /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = 2A1F086D2A7A2EE400C5B11B /* public.crt */; };
 		2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F086F2A7A31C000C5B11B /* PublicTransportKeyDomain.swift */; };
-		2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
-		2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
 		2A20F8D32B05E1D100E3AE79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */; };
 		2A20F8D62B05E1D100E3AE79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */; };
 		2A20F8E62B05E43000E3AE79 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A20F8E52B05E43000E3AE79 /* CombineSchedulers */; };
@@ -429,16 +427,6 @@
 		2A3599B02ADA816800820369 /* KeyChainStore in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3599AF2ADA816800820369 /* KeyChainStore */; };
 		2A3599B22ADA8ECC00820369 /* PublicSecKeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599B12ADA8ECC00820369 /* PublicSecKeyChainStoreTests.swift */; };
 		2A3599B42ADA916800820369 /* PrivateSecKeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599B32ADA916800820369 /* PrivateSecKeyChainStoreTests.swift */; };
-		2A390B482B05E99900ECA2C2 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */; };
-		2A390B492B05E99900ECA2C2 /* NavigationModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */; };
-		2A390B4A2B05E99900ECA2C2 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */; };
-		2A390B4B2B05E9A200ECA2C2 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBD792B05E89B008386DA /* Composer.swift */; };
-		2A390B4C2B05E9B100ECA2C2 /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8E82B05E53B00E3AE79 /* AnySchedulerOfDispatchQueue.swift */; };
-		2A390B4D2B05EA6800ECA2C2 /* QRReaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */; };
-		2A390B512B05F19E00ECA2C2 /* QRReaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B4F2B05EE8100ECA2C2 /* QRReaderStub.swift */; };
-		2A390B532B05F75600ECA2C2 /* QRParsingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B522B05F75600ECA2C2 /* QRParsingResult.swift */; };
-		2A390B562B05F7B500ECA2C2 /* SberQRPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B552B05F7B500ECA2C2 /* SberQRPaymentView.swift */; };
-		2A390B582B05F88600ECA2C2 /* View+NavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B572B05F88600ECA2C2 /* View+NavigationDestination.swift */; };
 		2A3947182A19E84500EB9757 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3947172A19E84500EB9757 /* TextFieldComponent */; };
 		2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */; };
 		2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B3F642A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift */; };
@@ -479,6 +467,19 @@
 		2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190402A7E7DD60014B0B7 /* TestHelpers.swift */; };
 		2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */; };
 		2A5190452A7EAC890014B0B7 /* PublicKeyWithEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */; };
+		2A53156E2B07467500963A22 /* TextPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53156B2B07439B00963A22 /* TextPickerView.swift */; };
+		2A53156F2B07467500963A22 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */; };
+		2A5315702B07467500963A22 /* SberQRPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B552B05F7B500ECA2C2 /* SberQRPaymentView.swift */; };
+		2A5315712B07467500963A22 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBD792B05E89B008386DA /* Composer.swift */; };
+		2A5315722B07467500963A22 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
+		2A5315732B07467500963A22 /* NavigationModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */; };
+		2A5315742B07467500963A22 /* View+NavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B572B05F88600ECA2C2 /* View+NavigationDestination.swift */; };
+		2A5315752B07467500963A22 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
+		2A5315762B07467500963A22 /* QRReaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */; };
+		2A5315772B07467500963A22 /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8E82B05E53B00E3AE79 /* AnySchedulerOfDispatchQueue.swift */; };
+		2A5315782B07467500963A22 /* QRReaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B4F2B05EE8100ECA2C2 /* QRReaderStub.swift */; };
+		2A5315792B07467500963A22 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */; };
+		2A53157A2B07467500963A22 /* QRParsingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B522B05F75600ECA2C2 /* QRParsingResult.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
 		2A53F8E72B00CCCA00CF2843 /* LogSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */; };
 		2A53FB812AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */; };
@@ -2655,6 +2656,7 @@
 		2A5190402A7E7DD60014B0B7 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveInactiveSessionAgent.swift; sourceTree = "<group>"; };
 		2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeyWithEventID.swift; sourceTree = "<group>"; };
+		2A53156B2B07439B00963A22 /* TextPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPickerView.swift; sourceTree = "<group>"; };
 		2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldView+ext.swift"; sourceTree = "<group>"; };
 		2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSpy.swift; sourceTree = "<group>"; };
 		2A53FB802AFD578F0045F3B0 /* Services+makeActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeActivationServiceTests.swift"; sourceTree = "<group>"; };
@@ -5437,6 +5439,7 @@
 				2A0DBD792B05E89B008386DA /* Composer.swift */,
 				2A20F8EA2B05E56800E3AE79 /* Navigation */,
 				2A390B542B05F7A500ECA2C2 /* SberQRPayment */,
+				2A53156A2B07438100963A22 /* TextPicker */,
 				2A20F8F12B05E75E00E3AE79 /* Buttons */,
 				2A390B4E2B05EE6700ECA2C2 /* QRReader */,
 				2A20F8E72B05E52F00E3AE79 /* ThirdPartyDependencies */,
@@ -5960,6 +5963,14 @@
 				2A5190402A7E7DD60014B0B7 /* TestHelpers.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		2A53156A2B07438100963A22 /* TextPicker */ = {
+			isa = PBXGroup;
+			children = (
+				2A53156B2B07439B00963A22 /* TextPickerView.swift */,
+			);
+			path = TextPicker;
 			sourceTree = "<group>";
 		};
 		2A53F2782A1B99B9001131EF /* TextFieldView */ = {
@@ -12133,18 +12144,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A20F8D12B05E1D000E3AE79 /* ContentView.swift in Sources */,
-				2A390B4D2B05EA6800ECA2C2 /* QRReaderButton.swift in Sources */,
-				2A390B582B05F88600ECA2C2 /* View+NavigationDestination.swift in Sources */,
-				2A390B532B05F75600ECA2C2 /* QRParsingResult.swift in Sources */,
-				2A390B482B05E99900ECA2C2 /* NavigationModel.swift in Sources */,
-				2A390B492B05E99900ECA2C2 /* NavigationModel+ext.swift in Sources */,
-				2A390B512B05F19E00ECA2C2 /* QRReaderStub.swift in Sources */,
-				2A390B4A2B05E99900ECA2C2 /* Navigation.swift in Sources */,
-				2A390B562B05F7B500ECA2C2 /* SberQRPaymentView.swift in Sources */,
-				2A20F8CF2B05E1D000E3AE79 /* SberQRPreviewApp.swift in Sources */,
-				2A390B4B2B05E9A200ECA2C2 /* Composer.swift in Sources */,
-				2A390B4C2B05E9B100ECA2C2 /* AnySchedulerOfDispatchQueue.swift in Sources */,
+				2A5315702B07467500963A22 /* SberQRPaymentView.swift in Sources */,
+				2A53157A2B07467500963A22 /* QRParsingResult.swift in Sources */,
+				2A5315722B07467500963A22 /* ContentView.swift in Sources */,
+				2A5315742B07467500963A22 /* View+NavigationDestination.swift in Sources */,
+				2A5315782B07467500963A22 /* QRReaderStub.swift in Sources */,
+				2A5315762B07467500963A22 /* QRReaderButton.swift in Sources */,
+				2A5315792B07467500963A22 /* NavigationModel.swift in Sources */,
+				2A5315752B07467500963A22 /* SberQRPreviewApp.swift in Sources */,
+				2A5315712B07467500963A22 /* Composer.swift in Sources */,
+				2A5315732B07467500963A22 /* NavigationModel+ext.swift in Sources */,
+				2A53156E2B07467500963A22 /* TextPickerView.swift in Sources */,
+				2A53156F2B07467500963A22 /* Navigation.swift in Sources */,
+				2A5315772B07467500963A22 /* AnySchedulerOfDispatchQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
