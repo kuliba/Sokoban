@@ -321,8 +321,9 @@ private extension ProductProfileViewModel {
                 changePin = .init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
-                    model: self.createPinCodeViewModel(displayNumber: payload.phone))
-                
+                    model: self.createPinCodeViewModel(displayNumber: payload.phone), 
+                    request: self.resendOtpForPin
+                )
             }
             .store(in: &bindings)
         
@@ -1858,6 +1859,7 @@ extension ProductProfileViewModel {
             let cardId: CardDomain.CardId
             let displayNumber: PhoneDomain.Phone
             let model: PinCodeViewModel
+            let request: ResendRequest
         }
     }
     
@@ -2030,7 +2032,27 @@ extension ProductProfileViewModel {
             changePin = .init(
                 cardId: cardId,
                 displayNumber: displayNumber,
-                model: self.createPinCodeViewModel(displayNumber: displayNumber))
+                model: self.createPinCodeViewModel(displayNumber: displayNumber), 
+                request: self.resendOtpForPin)
+        }
+    }
+    
+    func resendOtpForPin() {
+        
+        cvvPINServicesClient.getPINConfirmationCode { [weak self] result in
+            
+            guard let self else { return }
+            
+            Task { @MainActor in
+                if case let .failure(error) = result {
+                    switch error {
+                    case let .server(_, errorMessage):
+                        self.makeAlert(errorMessage)
+                    case .serviceFailure, .activationFailure:
+                        self.makeAlert("Техническая ошибка.")
+                    }
+                }
+            }
         }
     }
     
@@ -2218,11 +2240,11 @@ extension ProductProfileViewModel {
             
         case let .server(code, _):
             // show Alert with message
-            self.makeAlert("\(String.cvvNotReceived)\nКод ошибки \(code).")
+            self.makeAlert("\(String.cvvNotReceived).\nКод ошибки \(code).")
             
         case .serviceFailure:
             // show Alert
-            self.makeAlert("\(String.cvvNotReceived)\n\(String.tryLater).")
+            self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
         }
     }
 }

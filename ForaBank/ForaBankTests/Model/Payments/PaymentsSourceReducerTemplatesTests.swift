@@ -163,7 +163,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(value, "7number")
+        XCTAssertEqual(value, "+1 231-23")
     }
     
     func test_updateParameter_withGeneral_sfpPhoneParameter_shouldReturnNumber() throws {
@@ -186,7 +186,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(value, "number")
+        XCTAssertEqual(value, "11111")
     }
     
     func test_updateParameter_withGeneral_sfpBankParameter_shouldReturnId() throws {

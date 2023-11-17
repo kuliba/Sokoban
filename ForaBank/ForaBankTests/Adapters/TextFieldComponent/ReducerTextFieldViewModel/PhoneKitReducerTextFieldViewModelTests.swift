@@ -79,7 +79,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_insertingMatch_shouldChangeState_withSubstitution_typeAbroad() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .abroad, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -93,7 +93,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_insertingMatch_shouldChangeState_withSubstitution_typeOther() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .other, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -107,7 +107,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_deleteLast_shouldChangeState_testAbroad() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .abroad, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -125,7 +125,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_deleteLast_shouldChangeState_testOther() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .other, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -143,7 +143,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_actionSeries_shouldChangeState_typeAbroad() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .abroad, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -171,7 +171,7 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     
     func test_actionSeries_shouldChangeState_typeOther() {
         
-        let (sut, spy, scheduler) = makeSUT(for: .other, initialValue: nil, countryCodeReplaces: .test)
+        let (sut, spy, scheduler) = makeSUT(initialValue: nil, countryCodeReplaces: .test)
         
         startEditing(sut, on: scheduler)
         insertAtCursor("3", sut, on: scheduler)
@@ -222,7 +222,6 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        for type: ContactsViewModel.PaymentsType = .other,
         initialValue: String?,
         countryCodeReplaces: [CountryCodeReplace] = [],
         file: StaticString = #file,
@@ -234,7 +233,6 @@ final class PhoneKitReducerTextFieldViewModelTests: XCTestCase {
     ) {
         let scheduler = DispatchQueue.test
         let sut = TextFieldFactory.makePhoneKitTextField(
-            for: type,
             initialPhoneNumber: initialValue,
             placeholderText: "Enter phone number",
             filterSymbols: [],

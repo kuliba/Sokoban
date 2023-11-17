@@ -19,7 +19,7 @@ extension ConfirmViewModel {
 
         @Published var value: String
         
-        @Published var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .common)
+        @Published var timer: Timer.TimerPublisher = Timer.publish(every: 1, on: .main, in: .default)
         @Published var connectedTimer: Cancellable? = nil
         @Published var needRepeatButton: Bool = false
 
@@ -43,6 +43,7 @@ extension ConfirmViewModel {
             self.resendRequest = resendRequest
 
             value = formatter.string(from: delay) ?? "0 :\(delay)"
+            self.instantiateTimer()
         }
                 
         func updateValue(
@@ -71,7 +72,7 @@ extension ConfirmViewModel {
             self.needRepeatButton = false
             self.value = formatter.string(from: delay) ?? "0 :\(delay)"
             self.startTime = Date.timeIntervalSinceReferenceDate
-            self.timer = Timer.publish(every: 1, on: .main, in: .common)
+            self.timer = Timer.publish(every: 1, on: .main, in: .default)
             self.connectedTimer = self.timer.connect()
             return
         }
