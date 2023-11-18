@@ -341,75 +341,6 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainView {
     
-    static let sample = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel.sample,
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyMetallView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { _ in .preview },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        onRegister: {}
-    )
-    
-    static let sampleProducts = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel.sample,
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { _ in .preview },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        onRegister: {}
-    )
-    
-    static let sampleOldCurrency = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { _ in .preview },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        onRegister: {}
-    )
-    
     static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
         
         PaymentSticker.ConfigurationOperationView(
@@ -483,4 +414,22 @@ extension MainView {
             )
         )
     }
+}
+
+extension OperationStateViewModel {
+
+    static let empty = OperationStateViewModel(businessLogic: .empty)
+}
+
+private extension BusinessLogic {
+    
+    static let empty = BusinessLogic(
+        processDictionaryService: { _,_ in },
+        processTransferService: { _,_ in },
+        processMakeTransferService: { _,_ in },
+        processImageLoaderService: { _,_ in },
+        selectOffice: { _,_ in },
+        products: [],
+        cityList: []
+    )
 }
