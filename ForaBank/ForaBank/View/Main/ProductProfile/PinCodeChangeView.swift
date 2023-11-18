@@ -74,6 +74,7 @@ struct PinCodeChangeView<ConfirmationView: View>: View {
                             .init(value: phoneNumber.value),
                             .init(viewModel.state.code)
                         )
+                        .navigationBarHidden(true)
                     }
                 }
             )
