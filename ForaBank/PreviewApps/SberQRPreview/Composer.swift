@@ -29,7 +29,7 @@ extension Composer {
         
         .init(title: Text(alert.message))
     }
-
+    
     // MARK: - Navigation
     
     @ViewBuilder
@@ -100,12 +100,7 @@ private extension Composer {
     
     func changeNavigation(to navigation: Navigation) {
         
-        navigationModel.resetNavigation()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
-            
-            self?.navigationModel.setNavigation(to: navigation)
-        }
+        navigationModel.changeNavigation(to: navigation)
     }
 }
 

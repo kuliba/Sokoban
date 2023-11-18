@@ -22,7 +22,7 @@ final class NavigationModel: ObservableObject {
         self.navigation = navigation
         
         navigationSubject
-            .delay(for: 0.1, scheduler: scheduler)
+            // .debounce(for: 0.2, scheduler: scheduler)
             .removeDuplicates()
             .receive(on: scheduler)
             .handleEvents(receiveOutput: {
@@ -37,5 +37,17 @@ extension NavigationModel {
     func setNavigation(to navigation: Navigation?) {
         
         navigationSubject.send(navigation)
+    }
+    
+    func changeNavigation(to navigation: Navigation) {
+        
+        resetNavigation()
+        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.2
+        ) { [weak self] in
+            
+            self?.setNavigation(to: navigation)
+        }
     }
 }
