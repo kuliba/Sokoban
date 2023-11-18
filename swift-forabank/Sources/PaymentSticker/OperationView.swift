@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct ConfigurationOperationView {
+public struct OperationViewConfiguration {
 
     let tipViewConfig: TipViewConfiguration
     let stickerViewConfig: StickerViewConfiguration
@@ -37,11 +37,11 @@ public struct ConfigurationOperationView {
 public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
-    let configuration: ConfigurationOperationView
+    let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) {
         self.model = model
         self.configuration = configuration
@@ -131,7 +131,7 @@ struct OperationResultView<ButtonsView: View>: View {
 struct OperationProcessView: View {
     
     @ObservedObject var model: OperationStateViewModel
-    let configuration: ConfigurationOperationView
+    let configuration: OperationViewConfiguration
     
     var body: some View {
         
@@ -159,7 +159,7 @@ struct OperationProcessView: View {
     
     @ViewBuilder
     private func continueButton(
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) -> some View {
         
         if let amount = model.amountParameter {
@@ -189,7 +189,7 @@ struct OperationProcessView: View {
     @ViewBuilder
     private func parameterView(
         parameter: Operation.Parameter,
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)

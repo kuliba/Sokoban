@@ -341,9 +341,9 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainView {
     
-    static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
+    static func makeOperationViewConfiguration() -> PaymentSticker.OperationViewConfiguration {
         
-        PaymentSticker.ConfigurationOperationView(
+        PaymentSticker.OperationViewConfiguration(
             tipViewConfig: .init(
                 titleFont: .textBodyMR14200(),
                 titleForeground: .textSecondary,

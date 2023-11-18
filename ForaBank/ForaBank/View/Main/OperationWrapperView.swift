@@ -97,7 +97,7 @@ extension NavigationOperationViewFactory {
                         
                         selectAtm(.location)
                     }),
-                    configuration: MainView.configurationOperationView()
+                    configuration: MainView.makeOperationViewConfiguration()
                 )
             },
             listView: { resetState, completion  in

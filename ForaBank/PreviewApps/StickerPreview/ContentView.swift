@@ -32,7 +32,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-extension ConfigurationOperationView {
+extension OperationViewConfiguration {
     
     static let preview: Self = .init(
         tipViewConfig: .preview,

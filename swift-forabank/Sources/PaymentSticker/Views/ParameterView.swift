@@ -10,12 +10,12 @@ import SwiftUI
 struct ParameterView: View {
     
     let viewModel: ParameterViewModel
-    let configuration: ConfigurationOperationView
+    let configuration: OperationViewConfiguration
     let event: (Event.InputEvent) -> Void
     
     init(
         viewModel: ParameterViewModel,
-        configuration: ConfigurationOperationView,
+        configuration: OperationViewConfiguration,
         event: @escaping (Event.InputEvent) -> Void
     ) {
         self.viewModel = viewModel
