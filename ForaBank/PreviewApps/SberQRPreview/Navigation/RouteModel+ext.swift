@@ -10,13 +10,6 @@
 
 extension RouteModel {
     
-    // MARK: - Reset
-    
-    func resetRoute() {
-        
-        setRoute(to: nil)
-    }
-    
     // MARK: - Alert
     
     func resetAlert() {

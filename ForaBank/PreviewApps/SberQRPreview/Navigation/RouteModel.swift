@@ -22,7 +22,7 @@ final class RouteModel: ObservableObject {
         self.route = route
         
         routeSubject
-            // .debounce(for: 0.2, scheduler: scheduler)
+        // .debounce(for: 0.2, scheduler: scheduler)
             .removeDuplicates()
             .receive(on: scheduler)
             .handleEvents(receiveOutput: {
@@ -33,6 +33,11 @@ final class RouteModel: ObservableObject {
 }
 
 extension RouteModel {
+    
+    func resetRoute() {
+        
+        setRoute(to: nil)
+    }
     
     func setRoute(to route: Route?) {
         
