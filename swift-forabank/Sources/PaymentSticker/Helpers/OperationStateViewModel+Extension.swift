@@ -407,6 +407,8 @@ extension Array where Element == Operation.Parameter {
                 .init(id: "Получить в офисе", name: "Получить в офисе", iconName: ""),
                 .init(id: "Доставка курьером", name: "Доставка курьером", iconName: "")
             ],
-            state: .idle(.init(iconName: "", title: "Выберите способ доставки"))))
+            state: .idle(.init(iconName: "", title: "Выберите способ доставки")))
+        ),
+        .input(.init(value: "", title: "Введите код из СМС"))
     ]
 }
