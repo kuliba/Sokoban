@@ -9,7 +9,7 @@ import Foundation
 
 public struct Operation {
     
-    var parameters: [Parameter]
+    public var parameters: [Parameter]
     
     public init(
         parameters: [Operation.Parameter]
@@ -32,8 +32,36 @@ public extension Operation {
 }
 
 //MARK: Helpers
+extension Operation {
+
+    public func containedParameter(_ parameter: Operation.Parameter) -> Bool {
+        
+        self.parameters.contains(where: { $0.id.rawValue == parameter.id.rawValue })
+    }
+}
 
 extension [Operation.Parameter] {
+    
+    public func updateInput(
+        text: String
+    ) -> Operation {
+    
+        guard let index = self.firstIndex(where: { $0.id == .input }) else {
+            return .init(parameters: self)
+        }
+        
+        let input = self[index]
+        switch input {
+        case var .input(input):
+            
+            input.value = text
+            
+            return .init(parameters: self).updateOperation(operation: .init(parameters: self), newParameter: .input(input))
+            
+        default:
+            return .init(parameters: self)
+        }
+    }
     
     func getParameterTransferType() -> Operation.Parameter.Select? {
     
@@ -50,7 +78,9 @@ extension [Operation.Parameter] {
         return self.firstIndex(where: { $0.id.rawValue == id })
     }
     
-    func replaceParameter(newParameter: Operation.Parameter) -> [Operation.Parameter] {
+    public func replaceParameter(
+        newParameter: Operation.Parameter
+    ) -> [Operation.Parameter] {
         
         guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
         else { return self }
@@ -60,11 +90,11 @@ extension [Operation.Parameter] {
         return parameters
     }
     
-    func replaceParameterOptions(
+    public func replaceParameterOptions(
         newParameter: Operation.Parameter.Select
     ) -> [Operation.Parameter] {
         
-        guard let index = self.getParameterIndex(with: newParameter.id)
+        guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
         else { return self }
         
         var parameters = self
@@ -81,9 +111,15 @@ public extension Operation {
     ) -> Operation {
         
         var operation = operation
-        operation.parameters = operation.parameters.replaceParameter(
-            newParameter: newParameter
-        )
+        if containedParameter(newParameter) {
+            
+            operation.parameters = operation.parameters.replaceParameter(
+                newParameter: newParameter
+            )
+            
+        } else {
+            operation.parameters.append(newParameter)
+        }
         
         return operation
     }
@@ -105,7 +141,12 @@ public extension Operation.Parameter.Select {
             title: parameter.title,
             placeholder: parameter.placeholder,
             options: parameter.options,
-            state: parameter.state
+            state: .selected(.init(
+                title: parameter.title,
+                placeholder: option.name,
+                name: option.name,
+                iconName: option.iconName
+            ))
         )
     }
 }

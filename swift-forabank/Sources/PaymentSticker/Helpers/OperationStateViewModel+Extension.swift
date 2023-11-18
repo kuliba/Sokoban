@@ -120,6 +120,44 @@ extension OperationStateViewModel {
     ) -> Operation? {
         
         switch event {
+        case let .chevronTapped(parameter):
+            switch parameter.state {
+            case let .idle(idleViewModel):
+                
+                let updateSelect = parameter.updateSelect(
+                    parameter: parameter,
+                    idleViewModel: idleViewModel
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(updateSelect)
+                )
+                
+            case let .selected(selectedViewModel):
+                
+                let parameter = parameter.updateState(
+                    iconName: selectedViewModel.iconName
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
+                
+            case let .list(listViewModel):
+                
+                let parameter = parameter.updateState(
+                    iconName: listViewModel.iconName,
+                    title: listViewModel.title
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
+            }
+            
         case let .selectOption(id, parameter):
             
             // TODO: repeated pattern - extract to settable subscript
@@ -141,6 +179,8 @@ extension OperationStateViewModel {
         case .openBranch:
             //TODO: send Branch View
             return nil
+        case .chevronTapped(_):
+            return nil
         }
     }
     
@@ -151,7 +191,7 @@ extension OperationStateViewModel {
         var operation = operation
         operation.parameters.append(
             .select(.init(
-                id: "city",
+                id: .citySelector,
                 value: "Выберите город",
                 title: "Выберите город",
                 placeholder: "Выберите значение",
@@ -188,7 +228,7 @@ extension OperationStateViewModel {
         
         var operation = operation
         operation.parameters.append(.select(.init(
-            id: "branches",
+            id: .officeSelector,
             value: "",
             title: "Выберите отделение",
             placeholder: "Выберите отделение",
@@ -210,7 +250,7 @@ extension OperationStateViewModel {
             operation.parameters.remove(at: indexAmountParameter)
         }
         
-        operation.parameters.append(.input(.init(value: "", title: "Введите код", icon: "system name")))
+        operation.parameters.append(.input(.init(value: "", title: "Введите код")))
         
         return operation
     }
@@ -248,7 +288,7 @@ extension OperationStateViewModel {
 
 extension Operation.Parameter.Select {
     
-    func updateState(
+    public func updateState(
         iconName: String
     ) -> Self {
         
@@ -269,7 +309,7 @@ extension Operation.Parameter.Select {
         )
     }
     
-    func updateState(
+    public func updateState(
         iconName: String,
         title: String
     ) -> Self {
@@ -334,7 +374,7 @@ extension Array where Element == Operation.Parameter {
             allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
         ),
         .select(.init(
-            id: "transferType",
+            id: .transferTypeSticker,
             value: "",
             title: "Выберите способ доставки",
             placeholder: "Выберите значение",

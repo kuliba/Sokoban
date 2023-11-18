@@ -13,38 +13,42 @@ import SwiftUI
 struct SelectView: View {
     
     let viewModel: SelectViewModel
-    let config: PaymentSelectViewConfig.PaymentSelectConfig
+    let config: SelectViewConfiguration
     
     var body: some View {
         
         VStack(spacing: 0) {
             
             switch viewModel.parameter.state {
-            case let .idle(idleViewModel):
+            case .idle:
                 IdleView(
-                    viewModel: idleViewModel,
+                    viewModel: viewModel,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 24)
                 
             case let .selected(selectedOptionViewModel):
                 SelectedOptionView(
+                    icon: viewModel.icon,
                     viewModel: selectedOptionViewModel,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 15)
                 
             case let .list(optionsListViewModel):
                 OptionsListView(
+                    icon: viewModel.icon,
                     viewModel: optionsListViewModel,
                     config: config,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     selected: viewModel.select
                 )
+                .padding(.vertical, 15)
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 24)
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
     }
@@ -54,29 +58,29 @@ extension SelectView {
     
     struct IdleView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.IdleViewModel
+        let viewModel: SelectViewModel
         let chevronButtonTapped: () -> Void
-        let config: PaymentSelectViewConfig.SelectedOptionConfig
+        let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                viewModel.icon
                     .resizable()
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
-                Text(viewModel.title)
+                Text(viewModel.parameter.title)
                     .lineLimit(1)
-                    .font(config.titleFont)
-                    .foregroundColor(config.titleForeground)
+                    .font(config.placeholderFont)
+                    .foregroundColor(config.placeholderForeground)
                     .padding(.vertical, 7)
                 
                 Spacer()
                 
                 Image(systemName: "chevron.down")
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
@@ -86,24 +90,26 @@ extension SelectView {
     
     struct SelectedOptionView: View {
         
+        let icon: Image
         let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
         let chevronButtonTapped: () -> Void
-        let config: PaymentSelectViewConfig.SelectedOptionConfig
+        let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 7) {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleForeground)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray.opacity(0.6))
                     
                     Text(viewModel.name)
                         .lineLimit(1)
@@ -124,8 +130,9 @@ extension SelectView {
     
     struct OptionsListView: View {
         
+        let icon: Image
         let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
-        let config: PaymentSelectViewConfig.PaymentSelectConfig
+        let config: SelectViewConfiguration
         let chevronButtonTapped: () -> Void
         let selected: (SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel.ID) -> Void
         
@@ -152,9 +159,9 @@ extension SelectView {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -204,7 +211,7 @@ extension SelectView {
         
         let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel
         let select: () -> Void
-        let config: PaymentSelectViewConfig.OptionConfig
+        let config: SelectViewConfiguration.OptionConfig
         
         var body: some View {
             
@@ -257,7 +264,7 @@ struct ParameterSelectView_Previews: PreviewProvider {
         
         SelectView(
             viewModel: .init(parameter: .init(
-                id: "id",
+                id: .transferTypeSticker,
                 value: "value",
                 title: "Выберите способ доставки",
                 placeholder: "Выберите значение",
@@ -265,43 +272,78 @@ struct ParameterSelectView_Previews: PreviewProvider {
                     .init(id: "option1", name: "option1", iconName: ""),
                     .init(id: "option2", name: "option2", iconName: "")
                 ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))), chevronButtonTapped: {}, select: { id in }),
+                state: .idle(.init(iconName: "", title: "Выберите значение"))), icon: .init(""), chevronButtonTapped: {}, select: { id in }),
             config: .default
         )
     }
 }
-
-struct PaymentSelectViewConfig {
     
-    struct PaymentSelectConfig {
-        
-        let selectOptionConfig: SelectedOptionConfig
-        let optionsListConfig: OptionsListConfig
-        let optionConfig: OptionConfig
+public struct SelectViewConfiguration {
+    
+    let selectOptionConfig: SelectedOptionConfig
+    let optionsListConfig: OptionsListConfig
+    let optionConfig: OptionConfig
+    
+    public init(
+        selectOptionConfig: SelectedOptionConfig,
+        optionsListConfig: OptionsListConfig,
+        optionConfig: OptionConfig
+    ) {
+        self.selectOptionConfig = selectOptionConfig
+        self.optionsListConfig = optionsListConfig
+        self.optionConfig = optionConfig
     }
     
-    struct SelectedOptionConfig {
+    public struct SelectedOptionConfig {
         
         let titleFont: Font
         let titleForeground: Color
         let placeholderForeground: Color
         let placeholderFont: Font
+        
+        public init(
+            titleFont: Font,
+            titleForeground: Color,
+            placeholderForeground: Color,
+            placeholderFont: Font
+        ) {
+            self.titleFont = titleFont
+            self.titleForeground = titleForeground
+            self.placeholderForeground = placeholderForeground
+            self.placeholderFont = placeholderFont
+        }
     }
     
-    struct OptionsListConfig {
+    public struct OptionsListConfig {
         
         let titleFont: Font
         let titleForeground: Color
+        
+        public init(
+            titleFont: Font,
+            titleForeground: Color
+        ) {
+            self.titleFont = titleFont
+            self.titleForeground = titleForeground
+        }
     }
     
-    struct OptionConfig {
+    public struct OptionConfig {
         
         let nameFont: Font
         let nameForeground: Color
+        
+        public init(
+            nameFont: Font,
+            nameForeground: Color
+        ) {
+            self.nameFont = nameFont
+            self.nameForeground = nameForeground
+        }
     }
 }
 
-extension PaymentSelectViewConfig.PaymentSelectConfig {
+extension SelectViewConfiguration {
     
     static let `default`: Self = .init(
         selectOptionConfig: .init(

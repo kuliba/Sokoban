@@ -10,29 +10,29 @@ import SwiftUI
 public struct ParameterView: View {
     
     let viewModel: ParameterViewModel
+    let configuration: ConfigurationOperationView
     
     public init(
-        viewModel: ParameterViewModel
+        viewModel: ParameterViewModel,
+        configuration: ConfigurationOperationView
     ) {
         self.viewModel = viewModel
+        self.configuration = configuration
     }
     
     public var body: some View {
         
         switch viewModel {
         case let .tip(tipViewModel):
-            TipView(viewModel: tipViewModel)
+            TipView(
+                viewModel: tipViewModel,
+                configuration: configuration.tipViewConfig
+            )
             
         case let .sticker(stickerViewModel):
             StickerView(
                 viewModel: stickerViewModel,
-                openAccountCardView: {
-                    
-                    Color.red
-                        .frame(width: 120)
-                    
-                },
-                config: .default
+                config: configuration.stickerViewConfig
             )
             
         case let .select(selectViewModel):
@@ -43,7 +43,7 @@ public struct ParameterView: View {
             
         case let .product(productViewModel):
             ProductView(
-                appearance: .default,
+                appearance: configuration.productViewConfig,
                 viewModel: productViewModel
             )
             
@@ -59,7 +59,10 @@ public struct ParameterView: View {
             )
         
         case let .input(inputViewModel):
-            InputView(model: inputViewModel)
+            InputView(
+                model: inputViewModel,
+                configuration: configuration.inputViewConfig
+            )
         }
     }
 }

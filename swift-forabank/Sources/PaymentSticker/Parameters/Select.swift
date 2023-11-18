@@ -9,15 +9,23 @@ extension Operation.Parameter {
     
     public struct Select: Hashable, Identifiable {
         
-        public let id: String
+        public let id: ParameterID
         let value: String
-        let title: String
+        public let title: String
         let placeholder: String
         public let options: [Option]
-        let state: State
+        public let state: State
+        
+        public enum ParameterID: String {
+        
+            case selector
+            case transferTypeSticker
+            case citySelector
+            case officeSelector
+        }
         
         public init(
-            id: String,
+            id: ParameterID,
             value: String,
             title: String,
             placeholder: String,
@@ -36,7 +44,7 @@ extension Operation.Parameter {
             
             public let id: String
             let name: String
-            let iconName: String
+            public let iconName: String
             
             public init(
                 id: String,
@@ -57,8 +65,8 @@ extension Operation.Parameter {
             
             public struct IdleViewModel: Hashable {
                 
-                let iconName: String
-                let title: String
+                public let iconName: String
+                public let title: String
                 
                 public init(
                     iconName: String,
@@ -71,10 +79,10 @@ extension Operation.Parameter {
             
             public struct SelectedOptionViewModel: Hashable {
                 
-                let title: String
+                public let title: String
                 let placeholder: String
-                let name: String
-                let iconName: String
+                public let name: String
+                public let iconName: String
                 
                 public init(
                     title: String,
@@ -91,8 +99,8 @@ extension Operation.Parameter {
             
             public struct OptionsListViewModel: Hashable {
                 
-                let iconName: String
-                let title: String
+                public let iconName: String
+                public let title: String
                 let placeholder: String
                 let options: [OptionViewModel]
                 
@@ -133,9 +141,9 @@ extension Operation.Parameter {
 
 extension Operation.Parameter.Select {
 
-    typealias IdleViewModel = Operation.Parameter.Select.State.IdleViewModel
+    public typealias IdleViewModel = Operation.Parameter.Select.State.IdleViewModel
     
-    func updateSelect(
+    public func updateSelect(
         parameter: Operation.Parameter.Select,
         idleViewModel: IdleViewModel
     ) -> Operation.Parameter.Select {

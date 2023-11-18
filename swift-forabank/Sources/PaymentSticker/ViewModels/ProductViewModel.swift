@@ -61,17 +61,19 @@ extension ProductViewModel {
         let description: String
     }
     
-    static func mapper(_ product: Operation.Parameter.Product) -> ProductViewModel {
+    static func mapper(
+        _ product: Operation.Parameter.Product.Option
+    ) -> ProductViewModel {
         
         .init(
-            header: .init(title: product.selectedProduct.title),
+            header: .init(title: product.title),
             main: .init(
                 cardLogo: .init(""),
                 paymentSystem: nil,
-                name: product.selectedProduct.nameProduct,
-                balance: product.selectedProduct.balance
+                name: product.nameProduct,
+                balance: product.balance
             ),
-            footer: .init(description: product.selectedProduct.description)
+            footer: .init(description: product.description)
         )
     }
 }

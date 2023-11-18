@@ -10,14 +10,14 @@ import SwiftUI
 
 //MARK: - View
 
-struct ProductView: View {
+public struct ProductView: View {
     
     let appearance: Appearance
     let viewModel: ProductStateViewModel
     
-    var body: some View {
+    public var body: some View {
         
-        VStack {
+        VStack(spacing: 10) {
             
             switch viewModel.state {
             case let .selected(productViewModel):
@@ -36,13 +36,13 @@ struct ProductView: View {
     private func optionsList(
         _ productList: [ProductViewModel]
     ) -> some View {
-    
-        HStack(spacing: 10) {
         
-            ScrollView {
-             
+        ScrollView(.horizontal) {
+            
+            HStack(spacing: 10) {
+                
                 ForEach(productList, id: \.self) { product in
-                        
+                    
                     productOption(
                         product: product,
                         header: product.header
@@ -50,6 +50,7 @@ struct ProductView: View {
                 }
             }
         }
+        .padding(10)
     }
     
     private func productOption(
@@ -61,7 +62,7 @@ struct ProductView: View {
             
             ProductView.HeaderView(
                 viewModel: header,
-                appearance: .default
+                appearance: appearance
             )
             .padding(.leading, 10)
             .padding(.top, 4)
@@ -77,10 +78,11 @@ struct ProductView: View {
                 
                 ProductView.FooterView(
                     viewModel: product.footer,
-                    appearance: .default
+                    appearance: appearance
                 )
             }
         }
+        .frame(width: 112, height: 72)
         .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {
@@ -133,14 +135,12 @@ struct ProductView: View {
                 Text(viewModel.main.name)
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
-                    .opacity(0.5)
-                
+
                 Spacer()
                 
                 Text(viewModel.main.balance)
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
-                    .opacity(0.5)
                 
                 Image(systemName: "chevron.down")
                     .onTapGesture(perform: chevronTapped)
@@ -182,8 +182,8 @@ extension ProductView {
         var body: some View {
             
             Text(viewModel.title)
-                .font(appearance.textFont)
-                .foregroundColor(appearance.textColor)
+                .font(appearance.headerTextFont)
+                .foregroundColor(appearance.headerTextColor)
         }
     }
     
@@ -195,9 +195,8 @@ extension ProductView {
         var body: some View {
             
             Text(viewModel.description)
-                .font(appearance.textFont)
-                .fontWeight(.semibold)
-                .foregroundColor(appearance.textColor)
+                .font(appearance.headerTextFont)
+                .foregroundColor(appearance.headerTextColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         
@@ -221,16 +220,41 @@ extension ProductView {
 
 extension ProductView {
     
-    struct Appearance {
+    public struct Appearance {
         
+        let headerTextColor: Color
+        let headerTextFont: Font
         let textColor: Color
         let textFont: Font
         let background: Background
         
-        struct Background {
+        public init(
+            headerTextColor: Color,
+            headerTextFont: Font,
+            textColor: Color,
+            textFont: Font,
+            background: Background
+        ) {
+            self.headerTextColor = headerTextColor
+            self.headerTextFont = headerTextFont
+            self.textColor = textColor
+            self.textFont = textFont
+            self.background = background
+        }
+        
+        public struct Background {
             
             let color: Color
             let image: Image?
+            
+            public init(
+                color: Color,
+                image: Image? = nil
+            ) {
+                self.color = color
+                self.image = image
+            }
+
         }
     }
 }
@@ -238,6 +262,8 @@ extension ProductView {
 extension ProductView.Appearance {
     
     static let `default`: Self = .init(
+        headerTextColor: .accentColor,
+        headerTextFont: .body,
         textColor: .accentColor,
         textFont: .body,
         background: .init(color: .yellow, image: nil)

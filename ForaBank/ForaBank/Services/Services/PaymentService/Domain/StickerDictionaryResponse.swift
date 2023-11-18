@@ -122,9 +122,14 @@ extension StickerDictionaryResponse {
                     currencyCode: banner.currencyCode,
                     currency: banner.currency,
                     md5hash: banner.md5hash,
-                    txtConditionList: banner.txtConditionList.map({Banner.Condition(
-                        name: $0.name, description: $0.description, value: $0.value
-                    )}))
+                    txtConditionList: banner.txtConditionList.map({
+                        
+                        Banner.Condition(
+                            name: $0.name,
+                            description: $0.description,
+                            value: $0.value
+                        )  
+                    }))
                 )
                 
             case let .citySelector(citySelector):

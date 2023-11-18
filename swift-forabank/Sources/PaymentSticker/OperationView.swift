@@ -8,21 +8,50 @@
 import Foundation
 import SwiftUI
 
+public struct ConfigurationOperationView {
+
+    let tipViewConfig: TipViewConfiguration
+    let stickerViewConfig: StickerViewConfiguration
+    let selectViewConfig: SelectViewConfiguration
+    let productViewConfig: ProductView.Appearance
+    let inputViewConfig: InputView.InputConfiguration
+    
+    public init(
+        tipViewConfig: TipViewConfiguration,
+        stickerViewConfig: StickerViewConfiguration,
+        selectViewConfig: SelectViewConfiguration,
+        productViewConfig: ProductView.Appearance,
+        inputViewConfig: InputView.InputConfiguration
+    ) {
+        self.tipViewConfig = tipViewConfig
+        self.stickerViewConfig = stickerViewConfig
+        self.selectViewConfig = selectViewConfig
+        self.productViewConfig = productViewConfig
+        self.inputViewConfig = inputViewConfig
+    }
+}
+
 public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
+    let configuration: ConfigurationOperationView
     
     public init(
-        model: OperationStateViewModel
+        model: OperationStateViewModel,
+        configuration: ConfigurationOperationView
     ) {
         self.model = model
+        self.configuration = configuration
     }
     
     public var body: some View {
 
         switch model.state {
         case .operation:
-            OperationProcessView(model: model)
+            OperationProcessView(
+                model: model,
+                configuration: configuration
+            )
         
         case let .result(result):
             OperationResultView(
@@ -98,6 +127,7 @@ struct OperationResultView<ButtonsView: View>: View {
 struct OperationProcessView: View {
     
     @ObservedObject var model: OperationStateViewModel
+    let configuration: ConfigurationOperationView
     
     var body: some View {
         
@@ -107,26 +137,38 @@ struct OperationProcessView: View {
                 
                 VStack(spacing: 32) {
                     
-                    ForEach(model.scrollParameters, content: parameterView)
+                    ForEach(model.scrollParameters) { parameter in
+                        
+                        parameterView(
+                            parameter: parameter,
+                            configuration: configuration
+                        )
+                    }
                 }
             }
             .padding(.horizontal)
+            .padding(.vertical, 16)
             
-            continueButton()
+            continueButton(configuration: configuration)
         }
     }
     
     @ViewBuilder
-    private func continueButton() -> some View {
+    private func continueButton(
+        configuration: ConfigurationOperationView
+    ) -> some View {
         
         if let amount = model.amountParameter {
             
-            parameterView(parameter: amount)
+            parameterView(
+                parameter: amount,
+                configuration: configuration
+            )
             
         } else {
             
             Button {
-                model.event(.continueButtonTapped)
+                model.event(.continueButtonTapped(.continue))
             } label: {
                 
                 Text("Продолжить")
@@ -142,13 +184,17 @@ struct OperationProcessView: View {
     
     @ViewBuilder
     private func parameterView(
-        parameter: Operation.Parameter
+        parameter: Operation.Parameter,
+        configuration: ConfigurationOperationView
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
         let viewModel = mapper.map(parameter)
         
-        ParameterView(viewModel: viewModel)
+        ParameterView(
+            viewModel: viewModel,
+            configuration: configuration
+        )
     }
 }
 
@@ -162,11 +208,12 @@ extension Operation.Parameter: Identifiable {
         case let .select(select):
             
             switch select.id {
-            case "city":
+            case .citySelector:
                 return .city
-            case "transferType":
+                
+            case .transferTypeSticker:
                 return .transferType
-            
+        
             default:
                 return .branches
             }

@@ -31,6 +31,22 @@ public extension Operation.Parameter {
             let nameProduct: String
             let balance: String
             let description: String
+            
+            public init(
+                paymentSystem: String,
+                background: String,
+                title: String,
+                nameProduct: String,
+                balance: String,
+                description: String
+            ) {
+                self.paymentSystem = paymentSystem
+                self.background = background
+                self.title = title
+                self.nameProduct = nameProduct
+                self.balance = balance
+                self.description = description
+            }
         }
         
         public enum State {
@@ -47,9 +63,13 @@ extension Operation.Parameter.Product {
         
         switch self.state {
         case .select:
-            return .selected(.mapper(self))
+            return .selected(.mapper(self.selectedProduct))
         case .list:
-            return .list(.mapper(self),[ProductViewModel(header: .init(title: "123"), main: .init(cardLogo: .init(""), paymentSystem: nil, name: "123", balance: "123"), footer: .init(description: "1234"))])
+            return .list(
+                .mapper(
+                    self.selectedProduct),
+                    self.allProducts.map({ ProductViewModel.mapper($0) })
+            )
         }
     }
 }

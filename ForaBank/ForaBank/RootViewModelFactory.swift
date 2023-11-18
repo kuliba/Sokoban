@@ -9,21 +9,11 @@ import Foundation
 import GenericRemoteService
 import PaymentSticker
 
-func unimplemented<T>(
-    _ message: String = "",
-    file: StaticString = #file,
-    line: UInt = #line
-) -> T {
-    
-    fatalError("Unimplemented: \(message)", file: file, line: line)
-}
-
 enum RootViewModelFactory {
     
     static func make(
         with model: Model
     ) -> RootViewModel {
-        
         let httpClient = model.authenticatedHTTPClient()
         
         let operationStateViewModelFactory = {
@@ -33,9 +23,16 @@ enum RootViewModelFactory {
                     input: .stickerOrderForm,
                     httpClient: httpClient
                 ),
+                transferService: Services.createCommissionProductTransferRequest(
+                    input: .init(parameters: []),
+                    httpClient: httpClient
+                ),
+                makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
                 transfer: { event, completion in
                     
-                }
+                },
+                products: $0,
+                cityList: $1
             ))
         }
         

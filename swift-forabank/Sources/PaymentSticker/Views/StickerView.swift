@@ -10,11 +10,10 @@ import SwiftUI
 
 // MARK: - View
 
-struct StickerView<OpenAccountCardView: View>: View {
+struct StickerView: View {
     
     let viewModel: StickerViewModel
-    let openAccountCardView: () -> OpenAccountCardView
-    let config: ParameterStickerViewConfig
+    let config: StickerViewConfiguration
     
     var body: some View {
         
@@ -23,7 +22,7 @@ struct StickerView<OpenAccountCardView: View>: View {
             RoundedRectangle(cornerRadius: 12)
                 .foregroundColor(config.rectangleColor)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
                 
                 HeaderView(
                     viewModel: viewModel.header,
@@ -32,7 +31,8 @@ struct StickerView<OpenAccountCardView: View>: View {
                 
                 HStack(alignment: .top, spacing: 20) {
                     
-                    openAccountCardView()
+                    viewModel.sticker
+                        .frame(width: 112, height: 72, alignment: .center)
                     
                     VStack {
                         
@@ -61,7 +61,7 @@ extension StickerView {
     struct HeaderView: View {
         
         let viewModel: StickerViewModel.HeaderViewModel
-        let config: ParameterStickerViewConfig.Header
+        let config: StickerViewConfiguration.Header
         
         var body: some View {
             
@@ -89,7 +89,7 @@ extension StickerView {
     struct OptionView: View {
         
         let viewModel: StickerViewModel.OptionViewModel
-        let config: ParameterStickerViewConfig.Option
+        let config: StickerViewConfiguration.Option
         
         var body: some View {
             
@@ -106,29 +106,51 @@ extension StickerView {
                         .foregroundColor(config.iconColor)
                     
                     Text(viewModel.description)
-                        .font(config.descriptionFont)
-                        .foregroundColor(config.descriptionColor)
+                        .font(config.optionFont)
+                        .foregroundColor(config.optionColor)
                 }
             }
         }
     }
 }
 
-struct ParameterStickerViewConfig {
+public struct StickerViewConfiguration {
     
     let rectangleColor: Color
     let configHeader: Header
     let configOption: Option
     
-    struct Header {
+    public init(
+        rectangleColor: Color,
+        configHeader: Header,
+        configOption: Option
+    ) {
+        self.rectangleColor = rectangleColor
+        self.configHeader = configHeader
+        self.configOption = configOption
+    }
+    
+    public struct Header {
         
         let titleFont: Font
         let titleColor: Color
         let descriptionFont: Font
         let descriptionColor: Color
+        
+        public init(
+            titleFont: Font,
+            titleColor: Color,
+            descriptionFont: Font,
+            descriptionColor: Color
+        ) {
+            self.titleFont = titleFont
+            self.titleColor = titleColor
+            self.descriptionFont = descriptionFont
+            self.descriptionColor = descriptionColor
+        }
     }
     
-    struct Option {
+    public struct Option {
         
         let titleFont: Font
         let titleColor: Color
@@ -137,6 +159,27 @@ struct ParameterStickerViewConfig {
         
         let descriptionFont: Font
         let descriptionColor: Color
+        
+        let optionFont: Font
+        let optionColor: Color
+        
+        public init(
+            titleFont: Font,
+            titleColor: Color,
+            iconColor: Color,
+            descriptionFont: Font,
+            descriptionColor: Color,
+            optionFont: Font,
+            optionColor: Color
+        ) {
+            self.titleFont = titleFont
+            self.titleColor = titleColor
+            self.iconColor = iconColor
+            self.descriptionFont = descriptionFont
+            self.descriptionColor = descriptionColor
+            self.optionColor = optionColor
+            self.optionFont = optionFont
+        }
     }
 }
 
@@ -145,25 +188,6 @@ extension Operation.Parameter.Sticker: Identifiable {
     public var id: Self { self }
 }
 
-extension ParameterStickerViewConfig {
-    
-    static let `default`: Self = .init(
-        rectangleColor: .gray,
-        configHeader: .init(
-            titleFont: .body,
-            titleColor: .accentColor,
-            descriptionFont: .body,
-            descriptionColor: .accentColor
-        ),
-        configOption: .init(
-            titleFont: .body,
-            titleColor: .accentColor,
-            iconColor: .accentColor,
-            descriptionFont: .body,
-            descriptionColor: .accentColor
-        )
-    )
-}
 struct ParameterStickerView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -173,16 +197,31 @@ struct ParameterStickerView_Previews: PreviewProvider {
                 header: .init(
                     title: "header",
                     detailTitle: "detailTitle"
-            ),
+                ),
+                sticker: .init(""),
                 options: [.init(
                     title: "option title",
                     icon: .init("Arrow Circle"),
                     description: "description",
                     iconColor: .green
                 )]),
-            openAccountCardView: {
-                Color.red.frame(width: 120)
-            },                 
-            config: .default)
+            config: .init(
+                rectangleColor: .black,
+                configHeader: .init(
+                    titleFont: .body,
+                    titleColor: .blue,
+                    descriptionFont: .body,
+                    descriptionColor: .accentColor
+                ),
+                configOption: .init(
+                    titleFont: .body,
+                    titleColor: .black,
+                    iconColor: .blue,
+                    descriptionFont: .body,
+                    descriptionColor: .accentColor,
+                    optionFont: .body,
+                    optionColor: .black
+                ))
+        )
     }
 }

@@ -12,7 +12,7 @@ extension Services {
     struct Endpoint {
         
         let pathPrefix: PathPrefix
-        let version: Version
+        let version: Version?
         let serviceName: ServiceName
         
         enum PathPrefix: String {
@@ -38,6 +38,8 @@ extension Services {
             case getScenarioQRData
             case getStickerPayment
             case createStickerPayment
+            case createCommissionProductTransfer
+            case makeTransfer
         }
     }
 }
@@ -46,7 +48,13 @@ extension Services.Endpoint {
     
     private var path: String {
         
-        "/\(pathPrefix.rawValue)/\(version.rawValue)/\(serviceName.rawValue)"
+        if let version {
+            return "/\(pathPrefix.rawValue)/\(version.rawValue)/\(serviceName.rawValue)"
+            
+        } else {
+            
+            return "/\(pathPrefix.rawValue)/\(serviceName.rawValue)"
+        }
     }
     
     func url(withBase base: String) throws -> URL {
@@ -114,13 +122,19 @@ extension Services.Endpoint {
     static let getStickerPaymentRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
-        serviceName: .getStickerPayment
+        serviceName: .getJsonAbroad
     )
     
-    static let createStickerPayment: Self = .init(
-        pathPrefix: .binding,
-        version: .v1,
-        serviceName: .createStickerPayment
+    static let createCommissionProductTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .createCommissionProductTransfer
+    )
+    
+    static let makeTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: nil,
+        serviceName: .makeTransfer
     )
 }
 

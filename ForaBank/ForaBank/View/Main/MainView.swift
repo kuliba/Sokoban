@@ -171,7 +171,11 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .paymentSticker(viewModel):
-            OperationView(model: viewModel)
+            OperationView(
+                model: viewModel,
+                configuration: MainView.configurationOperationView()
+            )
+            .navigationBarTitle("Оформление заявки", displayMode: .inline)
         }
     }
     
@@ -330,41 +334,60 @@ struct MainView_Previews: PreviewProvider {
     }
 }
 
-extension MainViewModel {
+extension MainView {
     
-    static let sample = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel.sample,
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyMetallView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { .preview }
-    )
-    
-    static let sampleProducts = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { .preview }
-    )
-    
-    static let sampleOldCurrency = MainViewModel(
-        .emptyMock,
-        sections: [
-            MainSectionProductsView.ViewModel(.productsMock),
-            MainSectionFastOperationView.ViewModel.sample,
-            MainSectionPromoView.ViewModel.sample,
-            MainSectionCurrencyView.ViewModel.sample,
-            MainSectionOpenProductView.ViewModel.sample
-        ],
-        makeOperationStateViewModel: { .preview }
-    )
+    static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
+     
+        PaymentSticker.ConfigurationOperationView(
+            tipViewConfig: .init(
+                titleFont: .textBodyMR14200(),
+                titleForeground: .textSecondary,
+                backgroundView: .mainColorsGrayLightest
+            ), stickerViewConfig: .init(
+                rectangleColor: .mainColorsGrayLightest,
+                configHeader: .init(
+                    titleFont: .textH3Sb18240(),
+                    titleColor: .mainColorsBlack,
+                    descriptionFont: .textBodySR12160(),
+                    descriptionColor: .textPlaceholder
+                ),
+                configOption: .init(
+                    titleFont: .textBodySR12160(),
+                    titleColor: .textPlaceholder,
+                    iconColor: .systemColorActive,
+                    descriptionFont: .textH4M16240(),
+                    descriptionColor: .secondary,
+                    optionFont: .textH4M16240(),
+                    optionColor: .textSecondary
+                )),
+            selectViewConfig: .init(
+                selectOptionConfig: .init(
+                    titleFont: .textBodyMR14180(),
+                    titleForeground: .textPlaceholder,
+                    placeholderForeground: .textTertiary,
+                    placeholderFont: .textBodyMR14180()
+                ),
+                optionsListConfig: .init(
+                    titleFont: .textH4M16240(),
+                    titleForeground: .textSecondary
+                ),
+                optionConfig: .init(
+                    nameFont: .textH4M16240(),
+                    nameForeground: .textSecondary
+                )
+            ),
+            productViewConfig: .init(
+                headerTextColor: .textPlaceholder,
+                headerTextFont: .textBodyMR14180(),
+                textColor: .textSecondary,
+                textFont: .textH4M16240(),
+                background: .init(color: .mainColorsGrayLightest)
+            ),
+            inputViewConfig: .init(
+                titleFont: .textBodyMR14180(),
+                titleColor: .textPlaceholder,
+                iconColor: .iconGray
+            )
+        )
+    }
 }

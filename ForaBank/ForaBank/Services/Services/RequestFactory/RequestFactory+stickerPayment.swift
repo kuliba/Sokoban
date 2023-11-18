@@ -14,6 +14,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
+            ("serial", "1"),
             ("type", type.rawValue)
         ]
         let endpoint = Services.Endpoint.getStickerPaymentRequest
@@ -28,18 +29,35 @@ extension RequestFactory {
         return request
     }
     
-    static func stickerCreatePayment(
+    static func createCommissionProductTransfer(
         _ input: StickerPayment
     ) throws -> URLRequest {
 
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.createStickerPayment
+        let endpoint = Services.Endpoint.createCommissionProductTransfer
         let url = try! endpoint.url(withBase: base)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = input.json
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
+        return request
+    }
+    
+    static func makeTransfer(
+        _ verificationCode: String
+    ) throws -> URLRequest {
+
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.makeTransfer
+        let url = try! endpoint.url(withBase: base)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["verificationCode": verificationCode] as [String: Any])
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
         return request
     }
 }
@@ -49,14 +67,14 @@ extension RequestFactory {
     enum GetJsonAbroadType: String {
         
         case stickerOrderForm
-        case stickerDeliveryOffice
+        case stickerOrderDeliveryOffice
         case stickerOrderDeliveryCourier
     }
     
     struct StickerPayment {
         
         let currencyAmount: String
-        let amount: String
+        let amount: Decimal
         let check: Bool
         let payer: Payer
         let productToOrderInfo: Order
@@ -92,7 +110,7 @@ private extension RequestFactory.StickerPayment {
                 "type": productToOrderInfo.type,
                 "deliverToOffice": productToOrderInfo.deliverToOffice,
                 "officeId": productToOrderInfo.officeId
-            ]
+            ] as [String : Any]
         ] as [String: Any])
     }
 }
