@@ -10,10 +10,9 @@ import SwiftUI
 
 // MARK: - View
 
-struct StickerView<OpenAccountCardView: View>: View {
+struct StickerView: View {
     
     let viewModel: StickerViewModel
-    let openAccountCardView: () -> OpenAccountCardView
     let config: StickerViewConfiguration
     
     var body: some View {
@@ -23,7 +22,7 @@ struct StickerView<OpenAccountCardView: View>: View {
             RoundedRectangle(cornerRadius: 12)
                 .foregroundColor(config.rectangleColor)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
                 
                 HeaderView(
                     viewModel: viewModel.header,
@@ -32,7 +31,8 @@ struct StickerView<OpenAccountCardView: View>: View {
                 
                 HStack(alignment: .top, spacing: 20) {
                     
-                    openAccountCardView()
+                    viewModel.sticker
+                        .frame(width: 112, height: 72, alignment: .center)
                     
                     VStack {
                         
@@ -106,8 +106,8 @@ extension StickerView {
                         .foregroundColor(config.iconColor)
                     
                     Text(viewModel.description)
-                        .font(config.descriptionFont)
-                        .foregroundColor(config.descriptionColor)
+                        .font(config.optionFont)
+                        .foregroundColor(config.optionColor)
                 }
             }
         }
@@ -160,18 +160,25 @@ public struct StickerViewConfiguration {
         let descriptionFont: Font
         let descriptionColor: Color
         
+        let optionFont: Font
+        let optionColor: Color
+        
         public init(
             titleFont: Font,
             titleColor: Color,
             iconColor: Color,
             descriptionFont: Font,
-            descriptionColor: Color
+            descriptionColor: Color,
+            optionFont: Font,
+            optionColor: Color
         ) {
             self.titleFont = titleFont
             self.titleColor = titleColor
             self.iconColor = iconColor
             self.descriptionFont = descriptionFont
             self.descriptionColor = descriptionColor
+            self.optionColor = optionColor
+            self.optionFont = optionFont
         }
     }
 }
@@ -190,16 +197,14 @@ struct ParameterStickerView_Previews: PreviewProvider {
                 header: .init(
                     title: "header",
                     detailTitle: "detailTitle"
-            ),
+                ),
+                sticker: .init(""),
                 options: [.init(
                     title: "option title",
                     icon: .init("Arrow Circle"),
                     description: "description",
                     iconColor: .green
                 )]),
-            openAccountCardView: {
-                Color.red.frame(width: 120)
-            },                 
             config: .init(
                 rectangleColor: .black,
                 configHeader: .init(
@@ -213,7 +218,9 @@ struct ParameterStickerView_Previews: PreviewProvider {
                     titleColor: .black,
                     iconColor: .blue,
                     descriptionFont: .body,
-                    descriptionColor: .accentColor
+                    descriptionColor: .accentColor,
+                    optionFont: .body,
+                    optionColor: .black
                 ))
         )
     }

@@ -32,8 +32,36 @@ public extension Operation {
 }
 
 //MARK: Helpers
+extension Operation {
+
+    public func containedParameter(_ parameter: Operation.Parameter) -> Bool {
+        
+        self.parameters.contains(where: { $0.id.rawValue == parameter.id.rawValue })
+    }
+}
 
 extension [Operation.Parameter] {
+    
+    public func updateInput(
+        text: String
+    ) -> Operation {
+    
+        guard let index = self.firstIndex(where: { $0.id == .input }) else {
+            return .init(parameters: self)
+        }
+        
+        let input = self[index]
+        switch input {
+        case var .input(input):
+            
+            input.value = text
+            
+            return .init(parameters: self).updateOperation(operation: .init(parameters: self), newParameter: .input(input))
+            
+        default:
+            return .init(parameters: self)
+        }
+    }
     
     func getParameterTransferType() -> Operation.Parameter.Select? {
     
@@ -83,9 +111,15 @@ public extension Operation {
     ) -> Operation {
         
         var operation = operation
-        operation.parameters = operation.parameters.replaceParameter(
-            newParameter: newParameter
-        )
+        if containedParameter(newParameter) {
+            
+            operation.parameters = operation.parameters.replaceParameter(
+                newParameter: newParameter
+            )
+            
+        } else {
+            operation.parameters.append(newParameter)
+        }
         
         return operation
     }

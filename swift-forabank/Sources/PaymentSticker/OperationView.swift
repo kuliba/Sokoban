@@ -13,15 +13,21 @@ public struct ConfigurationOperationView {
     let tipViewConfig: TipViewConfiguration
     let stickerViewConfig: StickerViewConfiguration
     let selectViewConfig: SelectViewConfiguration
+    let productViewConfig: ProductView.Appearance
+    let inputViewConfig: InputView.InputConfiguration
     
     public init(
         tipViewConfig: TipViewConfiguration,
         stickerViewConfig: StickerViewConfiguration,
-        selectViewConfig: SelectViewConfiguration
+        selectViewConfig: SelectViewConfiguration,
+        productViewConfig: ProductView.Appearance,
+        inputViewConfig: InputView.InputConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
         self.selectViewConfig = selectViewConfig
+        self.productViewConfig = productViewConfig
+        self.inputViewConfig = inputViewConfig
     }
 }
 
@@ -141,6 +147,7 @@ struct OperationProcessView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.vertical, 16)
             
             continueButton(configuration: configuration)
         }
@@ -161,7 +168,7 @@ struct OperationProcessView: View {
         } else {
             
             Button {
-                model.event(.continueButtonTapped)
+                model.event(.continueButtonTapped(.continue))
             } label: {
                 
                 Text("Продолжить")

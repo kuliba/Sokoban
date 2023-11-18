@@ -11,13 +11,16 @@ import SwiftUI
 public struct StickerViewModel {
     
     let header: HeaderViewModel
+    let sticker: Image
     let options: [OptionViewModel]
     
     public init(
         header: HeaderViewModel,
+        sticker: Image,
         options: [OptionViewModel]
     ) {
         self.header = header
+        self.sticker = sticker
         self.options = options
     }
 }

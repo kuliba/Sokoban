@@ -95,7 +95,7 @@ extension BusinessLogic {
                         else { return }
                         
                         let newParameter: PaymentSticker.Operation.Parameter = .select(.init(
-                            id: "deliveryOffice",
+                            id: .officeSelector,
                             value: "",
                             title: deliveryOfficeParameter.data.title,
                             placeholder: deliveryOfficeParameter.data.subtitle,

@@ -177,25 +177,94 @@ extension BusinessLogic {
                     )))
                 }
             }
-            
-        case .continueButtonTapped:
+        
+        case let .input(events):
+            switch events {
+            case .getOtpCode:
+                return .success(.operation(operation))
+
+            case let .valueUpdate(input):
                 
-            dictionaryService.process(.stickerOrderForm) { result in
-                
-                switch result {
-                case let .success(dictionaryResponse):
-                    completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
-                    
-                case let .failure(error):
-                   return
-                }
+                let parametersUpdate = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .input(input)
+                )
+                return .success(.operation(parametersUpdate))
             }
             
-            return .success(.operation(operation))
-            
-            transferService.process(.init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))) { result in
-            
+        case .continueButtonTapped:
+           
+            if operation.parameters.count == 0 {
                 
+                dictionaryService.process(.stickerOrderForm) { result in
+                    
+                    switch result {
+                    case let .success(dictionaryResponse):
+                        completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
+                        
+                    case let .failure(error):
+                        return
+                    }
+                }
+                
+                return .success(.operation(operation))
+                
+            } else if let input = operation.parameters.first(where: { $0.id == .input }) {
+                
+                switch input {
+                case let .input(input):
+                    
+                    makeTransferService.process(input.value) { result in
+                       
+                        switch result {
+                        case let .success(makeTransfer):
+                            completion(.success(.result(OperationStateViewModel.OperationResult(
+                                result: .success,
+                                title: "Успешная заявка",
+                                description: makeTransfer.data.productOrderingResponseMessage,
+                                amount: "100"
+                            ))))
+
+                        case let .failure(error):
+                            return
+                        }
+                    }
+                    return .success(.operation(operation))
+
+                default:
+                    return .success(.operation(operation))
+                }
+                
+            } else {
+             
+                transferService.process(.init(
+                    currencyAmount: "RUB",
+                    amount: 790,
+                    check: false,
+                    payer: .init(cardId: "10000114306"),
+                    productToOrderInfo: .init(
+                        type: "STICKER",
+                        deliverToOffice: true,
+                        officeId: "1112"
+                    ))) { result in
+                        
+                        switch result {
+                        case .success:
+                            
+                            completion(.success(.operation(operation.updateOperation(
+                                operation: operation,
+                                newParameter: .input(.init(
+                                    value: "",
+                                    title: "Введите код из смс"
+                                ))
+                            ))))
+
+                        case let .failure(error):
+                            return
+                        }
+                    }
+                
+                return .success(.operation(operation))
             }
             
         case let .product(productEvents):

@@ -41,6 +41,7 @@ extension RequestFactory {
         request.httpMethod = "POST"
         request.httpBody = input.json
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
         return request
     }
     
@@ -54,8 +55,9 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.httpBody = try? JSONSerialization.data(withJSONObject: ["verificationCode: \(verificationCode)"])
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["verificationCode": verificationCode] as [String: Any])
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
         return request
     }
 }
@@ -72,7 +74,7 @@ extension RequestFactory {
     struct StickerPayment {
         
         let currencyAmount: String
-        let amount: String
+        let amount: Decimal
         let check: Bool
         let payer: Payer
         let productToOrderInfo: Order
@@ -108,7 +110,7 @@ private extension RequestFactory.StickerPayment {
                 "type": productToOrderInfo.type,
                 "deliverToOffice": productToOrderInfo.deliverToOffice,
                 "officeId": productToOrderInfo.officeId
-            ]
+            ] as [String : Any]
         ] as [String: Any])
     }
 }

@@ -28,6 +28,7 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
+                    sticker: .init(""),
                     options: parameterSticker.options.map {
                         
                         .init(
@@ -43,15 +44,28 @@ public extension ModelToViewModelMapper {
         case let .tip(parameterHint):
             return .tip(
                 .init(
-                    imageName: "message",
                     text: parameterHint.title
                 )
             )
             
         case let .select(parameter):
+            
+            var icon: Image
+            if parameter.id == .citySelector {
+                
+                icon = .init("ic24MapPin")
+            } else if parameter.id == .officeSelector {
+                
+                icon = .init("ic24Bank")
+            } else {
+                
+                icon = .init("ic16ArrowDownCircle")
+            }
+            
             return .select(
                 .init(
                     parameter: parameter,
+                    icon: icon,
                     chevronButtonTapped: {
                         
                         action(.select(.chevronTapped(parameter)))
@@ -82,12 +96,20 @@ public extension ModelToViewModelMapper {
                 .init(
                     parameter: amountViewModel,
                     continueButtonTapped: {
-                        action(.continueButtonTapped)
+                        action(.continueButtonTapped(.getOTPCode))
                     }
                 ))
             
         case let .input(input):
-            return .input(.init(parameter: input))
+            return .input(.init(
+                parameter: input,
+                icon: .init("ic24SmsCode"),
+                updateValue: { text in
+                    
+                    action(.input(.valueUpdate(.init(value: text, title: input.title))))
+                    
+                }
+            ))
         }
     }
 }

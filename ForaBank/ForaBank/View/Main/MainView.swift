@@ -175,6 +175,7 @@ struct MainView: View {
                 model: viewModel,
                 configuration: MainView.configurationOperationView()
             )
+            .navigationBarTitle("Оформление заявки", displayMode: .inline)
         }
     }
     
@@ -355,7 +356,9 @@ extension MainView {
                     titleColor: .textPlaceholder,
                     iconColor: .systemColorActive,
                     descriptionFont: .textH4M16240(),
-                    descriptionColor: .secondary
+                    descriptionColor: .secondary,
+                    optionFont: .textH4M16240(),
+                    optionColor: .textSecondary
                 )),
             selectViewConfig: .init(
                 selectOptionConfig: .init(
@@ -372,6 +375,18 @@ extension MainView {
                     nameFont: .textH4M16240(),
                     nameForeground: .textSecondary
                 )
+            ),
+            productViewConfig: .init(
+                headerTextColor: .textPlaceholder,
+                headerTextFont: .textBodyMR14180(),
+                textColor: .textSecondary,
+                textFont: .textH4M16240(),
+                background: .init(color: .mainColorsGrayLightest)
+            ),
+            inputViewConfig: .init(
+                titleFont: .textBodyMR14180(),
+                titleColor: .textPlaceholder,
+                iconColor: .iconGray
             )
         )
     }

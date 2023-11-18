@@ -9,7 +9,14 @@ import Foundation
 
 struct MakeTransferResponse: Decodable {
     
-    let paymentOperationDetailId: Int
-    let documentStatus: String
-    let productOrderingResponseMessage: String
+    let statusCode: Int
+    let errorMessage: String?
+    let data: Data
+
+    struct Data: Decodable {
+        
+        let paymentOperationDetailId: Int
+        let documentStatus: String
+        let productOrderingResponseMessage: String
+    }
 }
