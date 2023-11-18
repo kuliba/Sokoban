@@ -11,6 +11,7 @@ public enum ImageData: Hashable {
     
     case data(Data?)
     case named(String)
+    case systemName(String)
 }
 
 extension ImageData {

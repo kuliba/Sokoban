@@ -62,7 +62,8 @@ public struct InputView: View {
     @ViewBuilder
     private var iconView: some View {
         
-        model.icon
+        // TODO: check fallback icon in design
+        Image(imageData: model.icon, fallback: .checkmark)
             .resizable()
             .frame(width: 24, height: 24, alignment: .center)
             .foregroundColor(configuration.iconColor)
@@ -121,7 +122,7 @@ struct InputView_Previews: PreviewProvider {
                 value: "123456",
                 title: "Введите код"
             ),
-            icon: .init(systemName: "photo.fill"),
+            icon: .systemName("photo.fill"),
             updateValue: { _ in }),
             configuration: .init(
                 titleFont: .body,

@@ -6,20 +6,19 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct InputViewModel {
     
     public typealias Parameter = Operation.Parameter.Input
     
     public let parameter: Parameter
-    public let icon: Image
+    public let icon: ImageData
     
     let updateValue: (String) -> Void
     
     public init(
         parameter: InputViewModel.Parameter,
-        icon: Image,
+        icon: ImageData,
         updateValue: @escaping (String) -> Void
     ) {
         self.parameter = parameter

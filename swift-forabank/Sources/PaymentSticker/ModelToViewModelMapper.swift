@@ -105,7 +105,7 @@ public extension ModelToViewModelMapper {
         case let .input(input):
             return .input(.init(
                 parameter: input,
-                icon: .init("ic24SmsCode"),
+                icon: .named("ic24SmsCode"),
                 updateValue: { text in
                     
                     action(.input(.valueUpdate(.init(value: text, title: input.title))))
