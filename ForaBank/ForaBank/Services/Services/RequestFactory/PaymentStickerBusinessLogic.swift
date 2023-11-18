@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import GenericRemoteService
 import PaymentSticker
-import SVGKit
 
 struct Location {
     

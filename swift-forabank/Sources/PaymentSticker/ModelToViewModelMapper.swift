@@ -56,8 +56,6 @@ public extension ModelToViewModelMapper {
             switch parameter.id {
             case .citySelector:
                 tapAction = { action(.select(.chevronTapped(parameter))) }
-                
-                // TODO: extract name icons to configuration view
                 icon = .named("ic24MapPin")
                 
             case .officeSelector:
