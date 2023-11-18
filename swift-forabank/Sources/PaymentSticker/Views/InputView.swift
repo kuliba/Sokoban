@@ -9,23 +9,23 @@ import SwiftUI
 
 // MARK: - View
 
-public struct InputView: View {
+enum Symbols {
+
+    case digits
+}
+
+enum Keyboard {
     
-    @State private var text: String = ""
-    let model: InputViewModel
+    case numberPad
+}
+
+public struct InputView<TextField: View>: View {
+    
+    let title: String
     let configuration: InputConfiguration
+    let makeTextField: (Symbols, Keyboard) -> TextField
     
     public var body: some View {
-    
-        let binding = Binding<String>(get: {
-            
-            model.updateValue(self.text)
-            return self.text
-            
-        }, set: {
-            
-            self.text = $0
-        })
         
         HStack(alignment: .top, spacing: 16) {
 
@@ -55,7 +55,7 @@ public struct InputView: View {
             
             titleView
             
-            textFiled
+            makeTextField(.digits, .numberPad)
         }
     }
     
@@ -63,7 +63,7 @@ public struct InputView: View {
     private var iconView: some View {
         
         // TODO: check fallback icon in design
-        Image(imageData: model.icon, fallback: .checkmark)
+        Image(imageData: .named(configuration.iconName), fallback: .checkmark)
             .resizable()
             .frame(width: 24, height: 24, alignment: .center)
             .foregroundColor(configuration.iconColor)
@@ -72,7 +72,7 @@ public struct InputView: View {
     @ViewBuilder
     private var titleView: some View {
         
-        Text(model.parameter.title)
+        Text(title)
             .font(configuration.titleFont)
             .foregroundColor(configuration.titleColor)
             .transition(
@@ -81,15 +81,6 @@ public struct InputView: View {
                     removal: .opacity
                 )
             )
-    }
-    
-    @ViewBuilder
-    private var textFiled: some View {
-            
-        TextField(
-            model.parameter.title,
-            text: $text
-        )
     }
 }
 
@@ -117,17 +108,17 @@ struct InputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        InputView(model: .init(
-            parameter: .init(
-                value: "123456",
-                title: "Введите код"
-            ),
-            icon: .systemName("photo.fill"),
-            updateValue: { _ in }),
+        InputView(
+            title: "Введите код",
             configuration: .init(
                 titleFont: .body,
                 titleColor: .black,
-                iconColor: .black
-            ))
+                iconColor: .black,
+                iconName: "photo.fill"
+            ),
+            makeTextField: { _,_ in
+                Text("TextField")
+            }
+        )
     }
 }
