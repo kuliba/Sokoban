@@ -93,23 +93,23 @@ public struct InputView: View {
     }
 }
 
-public extension InputView {
-    
-    struct InputConfiguration {
+public struct InputConfiguration {
 
-        let titleFont: Font
-        let titleColor: Color
-        let iconColor: Color
-        
-        public init(
-            titleFont: Font,
-            titleColor: Color,
-            iconColor: Color
-        ) {
-            self.titleFont = titleFont
-            self.titleColor = titleColor
-            self.iconColor = iconColor
-        }
+    let titleFont: Font
+    let titleColor: Color
+    let iconColor: Color
+    let iconName: String
+    
+    public init(
+        titleFont: Font,
+        titleColor: Color,
+        iconColor: Color,
+        iconName: String
+    ) {
+        self.titleFont = titleFont
+        self.titleColor = titleColor
+        self.iconColor = iconColor
+        self.iconName = iconName
     }
 }
 
