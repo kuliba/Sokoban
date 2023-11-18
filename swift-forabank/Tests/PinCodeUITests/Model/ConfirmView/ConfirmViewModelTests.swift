@@ -79,11 +79,11 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertEqual(sut.otp, "123456")
     }
     
-    func test_submint_errorCode_shouldSetPinEmptyIsDisableFalse() {
+    func test_submint_errorCode_shouldSetOtpEmptyIsDisableFalse() {
         
         let sut = makeSUT(maxDigits: 6) { _, completionHandler in
             
-            completionHandler(.errorForAlert(.init("error")))
+            completionHandler(.cvvError(.errorForAlert(.init("error"))))
         }
         
         sut.otp = "123456"
@@ -97,7 +97,26 @@ final class ConfirmViewModelTests: XCTestCase {
         XCTAssertEqual(sut.otp, "")
         XCTAssertFalse(sut.isDisabled)
     }
+    
+    func test_submint_noRetry_shouldSetOtpEmptyIsDisableFalse() {
+        
+        let sut = makeSUT(maxDigits: 6) { _, completionHandler in
+            
+            completionHandler(.cvvError(.noRetry(.init("error"), .init("ok"))))
+        }
+        
+        sut.otp = "123456"
+        
+        XCTAssertEqual(sut.otp, "123456")
+        XCTAssertFalse(sut.isDisabled)
 
+        sut.submitOtp()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertEqual(sut.otp, "")
+        XCTAssertFalse(sut.isDisabled)
+    }
+    
     func test_submint_correctCode_shouldSetIsDisableTrue() async {
         
         let sut = makeSUT(maxDigits: 6)
@@ -111,6 +130,63 @@ final class ConfirmViewModelTests: XCTestCase {
         
         XCTAssertEqual(sut.otp, "123456")
         XCTAssertTrue(sut.isDisabled)
+    }
+    
+    func test_changePin_error_shouldSetOtpEmptyIsDisableFalse() {
+        
+        let sut = makeSUT(actionType: .changePin("1222"), handler: {_,_ in }) {_, completionHandler in
+                
+                completionHandler(.pinError(.errorForAlert(.init("error"))))
+        }
+
+        sut.otp = "123456"
+        
+        XCTAssertEqual(sut.otp, "123456")
+        XCTAssertFalse(sut.isDisabled)
+
+        sut.submitOtp()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertEqual(sut.otp, "")
+        XCTAssertFalse(sut.isDisabled)
+    }
+    
+    func test_changePin_weakPin_shouldSetOtpEmptyIsDisableFalse() {
+        
+        let sut = makeSUT(actionType: .changePin("1222"), handler: {_,_ in }) {_, completionHandler in
+                
+            completionHandler(.pinError(.weakPinAlert(.init("error"), .init("ok"))))
+        }
+
+        sut.otp = "123456"
+        
+        XCTAssertEqual(sut.otp, "123456")
+        XCTAssertFalse(sut.isDisabled)
+
+        sut.submitOtp()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertEqual(sut.otp, "")
+        XCTAssertFalse(sut.isDisabled)
+    }
+
+    func test_changePin_errorScreen_shouldSetOtpEmptyIsDisableFalse() {
+        
+        let sut = makeSUT(actionType: .changePin("1222"), handler: {_,_ in }) {_, completionHandler in
+                
+                completionHandler(.pinError(.errorScreen))
+        }
+
+        sut.otp = "123456"
+        
+        XCTAssertEqual(sut.otp, "123456")
+        XCTAssertFalse(sut.isDisabled)
+
+        sut.submitOtp()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertEqual(sut.otp, "")
+        XCTAssertFalse(sut.isDisabled)
     }
     
     //MARK: - test getDigit
@@ -142,6 +218,7 @@ final class ConfirmViewModelTests: XCTestCase {
         otp: OtpDomain.Otp = "",
         maxDigits: Int = 6,
         handler: @escaping (OtpDomain.Otp, (ErrorDomain?) -> Void) -> Void = { _, _ in },
+        handlerChangePin: ConfirmViewModel.ChangePinHandler? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ConfirmViewModel {
@@ -153,6 +230,7 @@ final class ConfirmViewModelTests: XCTestCase {
             maxDigits: maxDigits,
             otp: otp,
             handler: handler,
+            handlerChangePin: handlerChangePin,
             showSpinner: {},
             resendRequestAfterClose: { _,_  in }
         )

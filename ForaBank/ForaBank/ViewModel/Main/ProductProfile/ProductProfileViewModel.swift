@@ -172,7 +172,7 @@ extension ProductProfileViewModel {
             }
             
         case .showCvv:
-            DispatchQueue.global().async { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 
                 self?.showCVV(cardId: cardId)
             }
