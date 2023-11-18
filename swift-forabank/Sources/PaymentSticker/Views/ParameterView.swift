@@ -65,8 +65,8 @@ struct ParameterView: View {
         case let .input(title):
             InputView(
                 title: title,
-                configuration: configuration.inputViewConfig,
-                commit: { event(.valueUpdate($0)) }
+                commit: { event(.valueUpdate($0)) },
+                configuration: configuration.inputViewConfig
             )
         }
     }
