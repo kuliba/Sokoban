@@ -23,13 +23,13 @@ struct CommissionProductTransferResponse: Decodable {
         let payeeCardNumber: String?
         let payeeAccountNumber: String?
         let payeeName: String
-        let amount: Double
-        let debitAmount: Double
+        let amount: Decimal
+        let debitAmount: Decimal
         let currencyAmount: String
         let currencyPayer: String
         let currencyPayee: String
         let currencyRate: String?
-        let creditAmount: Double?
+        let creditAmount: Decimal?
         let documentStatus: String?
     }
 }
