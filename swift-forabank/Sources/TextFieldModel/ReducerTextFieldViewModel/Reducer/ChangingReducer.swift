@@ -87,6 +87,7 @@ extension ChangingReducer: Reducer {
             }
             
         case let .setTextTo(.some(text)):
+            #warning("add test to play `setText()` from `PaymentsInputViewComponent.swift:96` - check text - if same do no change")
             let temp = try change(.empty, text, .zero)
             
             switch state {
@@ -121,7 +122,9 @@ extension ChangingReducer {
                 with: replacementText
             )
             
-            return transform(temp)
+            let transformed = transform(temp)
+            
+            return transformed
         }
     }
 }
