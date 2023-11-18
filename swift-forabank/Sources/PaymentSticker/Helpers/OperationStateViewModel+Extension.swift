@@ -161,7 +161,7 @@ extension OperationStateViewModel {
         case let .selectOption(id, parameter):
             
             // TODO: repeated pattern - extract to settable subscript
-            guard let option = parameter.options.first(where: { $0.id == id })
+            guard let option = parameter.options.first(where: { $0.id == id.rawValue })
             else { return nil }
             
             let parameter = parameter.updateValue(

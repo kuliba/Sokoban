@@ -111,14 +111,17 @@ extension BusinessLogic {
             case let .selectOption(id, parameter):
                 
                 let operation = selectOption(
-                    id: id,
+                    id: id.rawValue,
                     operation: operation,
                     parameter: parameter
                 )
                  
                 if parameter.id == .officeSelector {
                 
-                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(parameter))
+                    let newOperation = operation.updateOperation(
+                        operation: operation,
+                        newParameter: .select(parameter)
+                    )
                     completion(.success(.operation(newOperation)))
                     return .success(.operation(newOperation))
 
@@ -127,8 +130,8 @@ extension BusinessLogic {
                 switch parameter.id {
                 case .transferTypeSticker:
                     
-                    if id == "typeDeliveryOffice" {
-                     
+                    switch id {
+                    case .typeDeliveryOffice:
                         processDictionaryService(.stickerOrderDeliveryOffice) { result in
                             
                             switch result {
@@ -143,8 +146,7 @@ extension BusinessLogic {
                             }
                         }
                         
-                    } else {
-                        
+                    case .stickerOrderDeliveryCourier:
                         processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
                             switch result {
@@ -158,6 +160,8 @@ extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
+                    case .option:
+                        break
                     }
                     
                 default:
