@@ -74,7 +74,7 @@ extension RequestFactory {
     struct StickerPayment {
         
         let currencyAmount: String
-        let amount: Double
+        let amount: Decimal
         let check: Bool
         let payer: Payer
         let productToOrderInfo: Order

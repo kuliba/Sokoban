@@ -250,7 +250,7 @@ extension OperationStateViewModel {
             operation.parameters.remove(at: indexAmountParameter)
         }
         
-        operation.parameters.append(.input(.init(value: "", title: "Введите код", icon: "system name")))
+        operation.parameters.append(.input(.init(value: "", title: "Введите код")))
         
         return operation
     }

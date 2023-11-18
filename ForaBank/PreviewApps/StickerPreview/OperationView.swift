@@ -164,7 +164,9 @@ struct OperationProcessView: View {
                     titleColor: .cyan,
                     iconColor: .blue,
                     descriptionFont: .body,
-                    descriptionColor: .cyan
+                    descriptionColor: .cyan,
+                    optionFont: .body,
+                    optionColor: .black
                 )),
             selectViewConfig: .init(
                 selectOptionConfig: .init(
@@ -180,7 +182,14 @@ struct OperationProcessView: View {
                 optionConfig: .init(
                     nameFont: .body,
                     nameForeground: .cyan
-                ))
+                )),
+                productViewConfig: .init(
+                    headerTextColor: .accentColor,
+                    headerTextFont: .body,
+                    textColor: .accentColor,
+                    textFont: .body,
+                    background: .init(color: .black)
+                )
         ))
     }
 }

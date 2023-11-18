@@ -34,7 +34,7 @@ struct TipView: View {
         
         HStack(spacing: 12) {
             
-            icon(with: viewModel.imageName)
+            icon()
             title(configuration: configuration)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,7 +44,7 @@ struct TipView: View {
         .cornerRadius(90)
     }
     
-    private func icon(with imageName: String) -> some View {
+    private func icon() -> some View {
         
         ZStack {
             
@@ -52,9 +52,7 @@ struct TipView: View {
                 .foregroundColor(.white)
                 .frame(width: 32, height: 32)
             
-            Image(imageName)
-                .resizable()
-                .frame(width: 24, height: 24)
+            Text("💬")
         }
     }
     
@@ -77,7 +75,6 @@ struct PaymentHintView_Previews: PreviewProvider {
         
         TipView(
             viewModel: .init(
-                imageName: "ellipsis.message",
                 text: "Выберите счет карты, к которому будет привязан стикер"
             ),
             configuration: .init(

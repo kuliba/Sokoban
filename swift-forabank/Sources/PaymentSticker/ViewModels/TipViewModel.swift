@@ -10,14 +10,12 @@ import SwiftUI
 
 public struct TipViewModel {
     
-    let imageName: String
     let text: String
     
     public init(
-        imageName: String,
         text: String
     ) {
-        self.imageName = imageName
+        
         self.text = text
     }
 }

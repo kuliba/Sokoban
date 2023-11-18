@@ -20,31 +20,35 @@ struct SelectView: View {
         VStack(spacing: 0) {
             
             switch viewModel.parameter.state {
-            case let .idle(idleViewModel):
+            case .idle:
                 IdleView(
-                    viewModel: idleViewModel,
+                    viewModel: viewModel,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 24)
                 
             case let .selected(selectedOptionViewModel):
                 SelectedOptionView(
+                    icon: viewModel.icon,
                     viewModel: selectedOptionViewModel,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     config: config.selectOptionConfig
                 )
+                .padding(.vertical, 15)
                 
             case let .list(optionsListViewModel):
                 OptionsListView(
+                    icon: viewModel.icon,
                     viewModel: optionsListViewModel,
                     config: config,
                     chevronButtonTapped: viewModel.chevronButtonTapped,
                     selected: viewModel.select
                 )
+                .padding(.vertical, 15)
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 24)
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
     }
@@ -54,7 +58,7 @@ extension SelectView {
     
     struct IdleView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.IdleViewModel
+        let viewModel: SelectViewModel
         let chevronButtonTapped: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
         
@@ -62,12 +66,12 @@ extension SelectView {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                viewModel.icon
                     .resizable()
                     .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
-                Text(viewModel.title)
+                Text(viewModel.parameter.title)
                     .lineLimit(1)
                     .font(config.placeholderFont)
                     .foregroundColor(config.placeholderForeground)
@@ -86,6 +90,7 @@ extension SelectView {
     
     struct SelectedOptionView: View {
         
+        let icon: Image
         let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
         let chevronButtonTapped: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
@@ -94,16 +99,17 @@ extension SelectView {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
+                    .foregroundColor(config.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 7) {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleForeground)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray.opacity(0.6))
                     
                     Text(viewModel.name)
                         .lineLimit(1)
@@ -124,6 +130,7 @@ extension SelectView {
     
     struct OptionsListView: View {
         
+        let icon: Image
         let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
         let config: SelectViewConfiguration
         let chevronButtonTapped: () -> Void
@@ -152,9 +159,9 @@ extension SelectView {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                Image(viewModel.iconName)
+                icon
                     .resizable()
-                    .foregroundColor(.gray)
+                    .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -265,7 +272,7 @@ struct ParameterSelectView_Previews: PreviewProvider {
                     .init(id: "option1", name: "option1", iconName: ""),
                     .init(id: "option2", name: "option2", iconName: "")
                 ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))), chevronButtonTapped: {}, select: { id in }),
+                state: .idle(.init(iconName: "", title: "Выберите значение"))), icon: .init(""), chevronButtonTapped: {}, select: { id in }),
             config: .default
         )
     }

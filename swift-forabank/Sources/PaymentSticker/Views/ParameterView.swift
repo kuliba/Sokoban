@@ -32,12 +32,6 @@ public struct ParameterView: View {
         case let .sticker(stickerViewModel):
             StickerView(
                 viewModel: stickerViewModel,
-                openAccountCardView: {
-                    
-                    Color.red
-                        .frame(width: 120)
-                    
-                },
                 config: configuration.stickerViewConfig
             )
             
@@ -49,7 +43,7 @@ public struct ParameterView: View {
             
         case let .product(productViewModel):
             ProductView(
-                appearance: .default,
+                appearance: configuration.productViewConfig,
                 viewModel: productViewModel
             )
             
@@ -65,7 +59,10 @@ public struct ParameterView: View {
             )
         
         case let .input(inputViewModel):
-            InputView(model: inputViewModel)
+            InputView(
+                model: inputViewModel,
+                configuration: configuration.inputViewConfig
+            )
         }
     }
 }
