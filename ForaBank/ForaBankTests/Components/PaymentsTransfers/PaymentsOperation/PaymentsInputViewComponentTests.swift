@@ -264,6 +264,43 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [hintTitle])
     }
     
+    func test_textField_editing_shouldSetCursorAtExpectedPosition() {
+        
+        let sut = makeSUT(initialValue: nil)
+        let spy = ValueSpy(sut.textField.$state)
+        
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+        ])
+        
+        sut.textField.startEditing()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+        ])
+        
+        sut.textField.insert("abcdf", atCursor: 0)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+            .editing(.init("abcdf", cursorAt: 5)),
+        ])
+
+        sut.textField.insert("-", atCursor: 3)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+            .editing(.init("abcdf", cursorAt: 5)),
+            .editing(.init("abc-df", cursorAt: 4)),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
