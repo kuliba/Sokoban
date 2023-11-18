@@ -34,7 +34,7 @@ public extension Operation {
 //MARK: Helpers
 extension Operation {
 
-    public func containedParameter(_ parameter: Operation.Parameter) -> Bool {
+    func containsParameter(_ parameter: Operation.Parameter) -> Bool {
         
         self.parameters.contains(where: { $0.id.rawValue == parameter.id.rawValue })
     }
@@ -57,7 +57,7 @@ extension [Operation.Parameter] {
         return self.firstIndex(where: { $0.id.rawValue == id })
     }
     
-    public func replaceParameter(
+    func replaceParameter(
         newParameter: Operation.Parameter
     ) -> [Operation.Parameter] {
         
@@ -69,7 +69,7 @@ extension [Operation.Parameter] {
         return parameters
     }
     
-    public func replaceParameterOptions(
+    func replaceParameterOptions(
         newParameter: Operation.Parameter.Select
     ) -> [Operation.Parameter] {
         
@@ -90,7 +90,7 @@ public extension Operation {
     ) -> Operation {
         
         var operation = operation
-        if containedParameter(newParameter) {
+        if containsParameter(newParameter) {
             
             operation.parameters = operation.parameters.replaceParameter(
                 newParameter: newParameter
