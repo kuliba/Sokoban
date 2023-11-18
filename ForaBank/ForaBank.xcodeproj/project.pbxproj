@@ -1568,6 +1568,7 @@
 		C139D9122AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */; };
 		C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */; };
 		C139D9162AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */; };
+		C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = C139D9172AFCB175008B5F5E /* MainViewModelSamples.swift */; };
 		C14093F92A43D30000B82E1F /* OperationDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */; };
 		C140F14A2AE8CE5100623E1D /* ContentPreviewForBuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = C140F1492AE8CE5100623E1D /* ContentPreviewForBuild.swift */; };
 		C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F02A84259000FAD5AA /* AccountCellViewModelTests.swift */; };
@@ -3550,6 +3551,7 @@
 		C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+CommissionProductTransfer.swift"; sourceTree = "<group>"; };
 		C139D9132AFC40B9008B5F5E /* MakeTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeTransferResponse.swift; sourceTree = "<group>"; };
 		C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+MakeTransfer.swift"; sourceTree = "<group>"; };
+		C139D9172AFCB175008B5F5E /* MainViewModelSamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelSamples.swift; sourceTree = "<group>"; };
 		C14093F82A43D30000B82E1F /* OperationDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelTests.swift; sourceTree = "<group>"; };
 		C140F1492AE8CE5100623E1D /* ContentPreviewForBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPreviewForBuild.swift; sourceTree = "<group>"; };
 		C140F14B2AEA719600623E1D /* PaymentSticker.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PaymentSticker.xctestplan; sourceTree = "<group>"; };
@@ -4831,6 +4833,7 @@
 			isa = PBXGroup;
 			children = (
 				0C78331B287DC201003ADC73 /* MainSectionCurrencyMetalComponentMock.swift */,
+				C139D9172AFCB175008B5F5E /* MainViewModelSamples.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -11400,6 +11403,7 @@
 				ED9C1A032756809200AF9DFF /* OpenNewDepositViewControllerFlowLayout.swift in Sources */,
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */,
+				C139D9182AFCB175008B5F5E /* MainViewModelSamples.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
 				68A07C43281AAE0000797A54 /* DepositProductsHostingViewController.swift in Sources */,
 				68EACA55289142E100B27B50 /* DeepLinkType.swift in Sources */,

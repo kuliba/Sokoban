@@ -257,7 +257,7 @@ struct ParameterSelectView_Previews: PreviewProvider {
         
         SelectView(
             viewModel: .init(parameter: .init(
-                id: "id",
+                id: .transferTypeSticker,
                 value: "value",
                 title: "Выберите способ доставки",
                 placeholder: "Выберите значение",

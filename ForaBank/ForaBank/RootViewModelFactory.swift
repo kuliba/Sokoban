@@ -9,15 +9,6 @@ import Foundation
 import GenericRemoteService
 import PaymentSticker
 
-func unimplemented<T>(
-    _ message: String = "",
-    file: StaticString = #file,
-    line: UInt = #line
-) -> T {
-    
-    fatalError("Unimplemented: \(message)", file: file, line: line)
-}
-
 enum RootViewModelFactory {
     
     static func make(

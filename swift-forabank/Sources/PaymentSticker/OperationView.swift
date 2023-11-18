@@ -201,12 +201,12 @@ extension Operation.Parameter: Identifiable {
         case let .select(select):
             
             switch select.id {
-            case "city":
+            case .citySelector:
                 return .city
                 
-            case "transferType":
+            case .transferTypeSticker:
                 return .transferType
-            
+        
             default:
                 return .branches
             }
