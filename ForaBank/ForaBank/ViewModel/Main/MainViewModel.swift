@@ -12,7 +12,7 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias MakeOperationStateViewModel = ([BusinessLogic.Product]) -> OperationStateViewModel
+    typealias MakeOperationStateViewModel = ([BusinessLogic.Product], [BusinessLogic.City]) -> OperationStateViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -395,7 +395,12 @@ class MainViewModel: ObservableObject, Resetable {
                             balance: $0.balanceValue.description,
                             description: $0.displayNumber ?? "")
                         })
-                        self.link = .paymentSticker(makeOperationStateViewModel(allProducts))
+                        let cities = model.localAgent.load(type: [AtmCityData].self)
+                        
+                        self.link = .paymentSticker(makeOperationStateViewModel(
+                            allProducts,
+                            (cities?.compactMap{ $0 } .map({ BusinessLogic.City(id: $0.id.description, name: $0.name)}))!
+                        ))
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(model)

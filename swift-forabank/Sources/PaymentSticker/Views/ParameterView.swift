@@ -10,18 +10,24 @@ import SwiftUI
 public struct ParameterView: View {
     
     let viewModel: ParameterViewModel
+    let configuration: ConfigurationOperationView
     
     public init(
-        viewModel: ParameterViewModel
+        viewModel: ParameterViewModel,
+        configuration: ConfigurationOperationView
     ) {
         self.viewModel = viewModel
+        self.configuration = configuration
     }
     
     public var body: some View {
         
         switch viewModel {
         case let .tip(tipViewModel):
-            TipView(viewModel: tipViewModel)
+            TipView(
+                viewModel: tipViewModel,
+                configuration: configuration.tipViewConfig
+            )
             
         case let .sticker(stickerViewModel):
             StickerView(
@@ -32,7 +38,7 @@ public struct ParameterView: View {
                         .frame(width: 120)
                     
                 },
-                config: .default
+                config: configuration.stickerViewConfig
             )
             
         case let .select(selectViewModel):

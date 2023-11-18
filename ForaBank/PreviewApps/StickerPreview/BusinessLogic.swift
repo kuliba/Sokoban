@@ -76,6 +76,9 @@ extension BusinessLogic {
                 
             case .openBranch:
                 return .success(.operation(operation))
+            
+            case .chevronTapped(_):
+                return .success(.operation(operation))
             }
             
         case .continueButtonTapped:

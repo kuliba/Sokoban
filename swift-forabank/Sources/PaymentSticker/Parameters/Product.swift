@@ -63,9 +63,13 @@ extension Operation.Parameter.Product {
         
         switch self.state {
         case .select:
-            return .selected(.mapper(self))
+            return .selected(.mapper(self.selectedProduct))
         case .list:
-            return .list(.mapper(self),[ProductViewModel(header: .init(title: "123"), main: .init(cardLogo: .init(""), paymentSystem: nil, name: "123", balance: "123"), footer: .init(description: "1234"))])
+            return .list(
+                .mapper(
+                    self.selectedProduct),
+                    self.allProducts.map({ ProductViewModel.mapper($0) })
+            )
         }
     }
 }

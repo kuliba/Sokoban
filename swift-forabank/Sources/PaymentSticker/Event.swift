@@ -36,6 +36,7 @@ public enum Event {
     public enum SelectEvent {
         
         case selectOption(SelectOptionID, ParameterSelect)
+        case chevronTapped(ParameterSelect)
         case openBranch
     }
 }

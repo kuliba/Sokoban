@@ -120,6 +120,44 @@ extension OperationStateViewModel {
     ) -> Operation? {
         
         switch event {
+        case let .chevronTapped(parameter):
+            switch parameter.state {
+            case let .idle(idleViewModel):
+                
+                let updateSelect = parameter.updateSelect(
+                    parameter: parameter,
+                    idleViewModel: idleViewModel
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(updateSelect)
+                )
+                
+            case let .selected(selectedViewModel):
+                
+                let parameter = parameter.updateState(
+                    iconName: selectedViewModel.iconName
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
+                
+            case let .list(listViewModel):
+                
+                let parameter = parameter.updateState(
+                    iconName: listViewModel.iconName,
+                    title: listViewModel.title
+                )
+                
+                return operation.updateOperation(
+                    operation: operation,
+                    newParameter: .select(parameter)
+                )
+            }
+            
         case let .selectOption(id, parameter):
             
             // TODO: repeated pattern - extract to settable subscript
@@ -140,6 +178,8 @@ extension OperationStateViewModel {
 
         case .openBranch:
             //TODO: send Branch View
+            return nil
+        case .chevronTapped(_):
             return nil
         }
     }
@@ -248,7 +288,7 @@ extension OperationStateViewModel {
 
 extension Operation.Parameter.Select {
     
-    func updateState(
+    public func updateState(
         iconName: String
     ) -> Self {
         
@@ -269,7 +309,7 @@ extension Operation.Parameter.Select {
         )
     }
     
-    func updateState(
+    public func updateState(
         iconName: String,
         title: String
     ) -> Self {
