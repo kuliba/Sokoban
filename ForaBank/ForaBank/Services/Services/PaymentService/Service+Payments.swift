@@ -28,6 +28,39 @@ extension Services {
             }
         )
     }
+    
+    typealias CommissionProductTransfer = RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    
+    static func createCommissionProductTransferRequest(
+        input: PaymentSticker.Operation,
+        httpClient: HTTPClient
+    ) -> CommissionProductTransfer {
+        
+        return .init(
+            createRequest: RequestFactory.createCommissionProductTransfer,
+            performRequest: httpClient.performRequest,
+            mapResponse: {
+                
+                return try ResponseMapper.mapCommissionProductTransferResponse($0, $1).get()
+            }
+        )
+    }
+    
+    typealias MakeTransfer = RemoteService<String, MakeTransferResponse>
+    
+    static func makeTransferRequest(
+        httpClient: HTTPClient
+    ) -> MakeTransfer {
+        
+        return .init(
+            createRequest: RequestFactory.makeTransfer,
+            performRequest: httpClient.performRequest,
+            mapResponse: {
+                
+                return try ResponseMapper.mapMakeTransferResponse($0, $1).get()
+            }
+        )
+    }
 }
 
 struct StickerPayment {

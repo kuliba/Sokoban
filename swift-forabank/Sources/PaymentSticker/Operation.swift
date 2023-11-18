@@ -66,7 +66,7 @@ extension [Operation.Parameter] {
         newParameter: Operation.Parameter.Select
     ) -> [Operation.Parameter] {
         
-        guard let index = self.getParameterIndex(with: newParameter.id)
+        guard let index = self.getParameterIndex(with: newParameter.id.rawValue)
         else { return self }
         
         var parameters = self

@@ -29,17 +29,32 @@ extension RequestFactory {
         return request
     }
     
-    static func stickerCreatePayment(
+    static func createCommissionProductTransfer(
         _ input: StickerPayment
     ) throws -> URLRequest {
 
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.createStickerPayment
+        let endpoint = Services.Endpoint.createCommissionProductTransfer
         let url = try! endpoint.url(withBase: base)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = input.json
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        return request
+    }
+    
+    static func makeTransfer(
+        _ verificationCode: String
+    ) throws -> URLRequest {
+
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.makeTransfer
+        let url = try! endpoint.url(withBase: base)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["verificationCode: \(verificationCode)"])
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
     }

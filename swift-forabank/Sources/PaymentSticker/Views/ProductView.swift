@@ -17,7 +17,7 @@ struct ProductView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 10) {
             
             switch viewModel.state {
             case let .selected(productViewModel):
@@ -36,13 +36,13 @@ struct ProductView: View {
     private func optionsList(
         _ productList: [ProductViewModel]
     ) -> some View {
-    
-        HStack(spacing: 10) {
         
-            ScrollView {
-             
+        ScrollView(.horizontal) {
+            
+            HStack(spacing: 10) {
+                
                 ForEach(productList, id: \.self) { product in
-                        
+                    
                     productOption(
                         product: product,
                         header: product.header
@@ -50,6 +50,7 @@ struct ProductView: View {
                 }
             }
         }
+        .padding(10)
     }
     
     private func productOption(
@@ -81,6 +82,7 @@ struct ProductView: View {
                 )
             }
         }
+        .frame(width: 112, height: 72)
         .background(background())
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {

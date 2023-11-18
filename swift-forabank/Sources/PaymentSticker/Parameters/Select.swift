@@ -9,15 +9,23 @@ extension Operation.Parameter {
     
     public struct Select: Hashable, Identifiable {
         
-        public let id: String
+        public let id: ParameterID
         let value: String
         public let title: String
         let placeholder: String
         public let options: [Option]
         public let state: State
         
+        public enum ParameterID: String {
+        
+            case selector
+            case transferTypeSticker
+            case citySelector
+            case officeSelector
+        }
+        
         public init(
-            id: String,
+            id: ParameterID,
             value: String,
             title: String,
             placeholder: String,

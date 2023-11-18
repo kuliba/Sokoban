@@ -191,7 +191,7 @@ extension OperationStateViewModel {
         var operation = operation
         operation.parameters.append(
             .select(.init(
-                id: "city",
+                id: .citySelector,
                 value: "Выберите город",
                 title: "Выберите город",
                 placeholder: "Выберите значение",
@@ -228,7 +228,7 @@ extension OperationStateViewModel {
         
         var operation = operation
         operation.parameters.append(.select(.init(
-            id: "branches",
+            id: .officeSelector,
             value: "",
             title: "Выберите отделение",
             placeholder: "Выберите отделение",
@@ -374,7 +374,7 @@ extension Array where Element == Operation.Parameter {
             allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
         ),
         .select(.init(
-            id: "transferType",
+            id: .transferTypeSticker,
             value: "",
             title: "Выберите способ доставки",
             placeholder: "Выберите значение",

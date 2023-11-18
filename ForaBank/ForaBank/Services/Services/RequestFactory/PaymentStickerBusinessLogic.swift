@@ -23,17 +23,23 @@ final class BusinessLogic {
     typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
     
     let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    let makeTransferService: RemoteService<String, MakeTransferResponse>
     let transfer: Transfer
     let products: [Product]
     let cityList: [City]
     
     init(
         dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
+        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
+        makeTransferService: RemoteService<String, MakeTransferResponse>,
         transfer: @escaping Transfer,
         products: [Product],
         cityList: [City]
     ) {
         self.dictionaryService = dictionaryService
+        self.transferService = transferService
+        self.makeTransferService = makeTransferService
         self.transfer = transfer
         self.products = products
         self.cityList = cityList
@@ -65,7 +71,7 @@ extension BusinessLogic {
         completion: @escaping (OperationResult) -> Void
     ) {
         
-        let result: OperationResult = reduce(
+        let result: OperationResult = process(
             operation: operation,
             event: event,
             completion: completion
@@ -77,8 +83,7 @@ extension BusinessLogic {
 
 extension BusinessLogic {
     
-    //TODO: rename process
-    func reduce(
+    func process(
         operation: PaymentSticker.Operation,
         event: Event,
         completion: @escaping (OperationResult) -> Void
@@ -188,38 +193,51 @@ extension BusinessLogic {
             
             return .success(.operation(operation))
             
-        case let .product(productEvents):
+            transferService.process(.init(currencyAmount: "", amount: "", check: true, payer: .init(cardId: ""), productToOrderInfo: .init(type: "", deliverToOffice: true, officeId: ""))) { result in
             
-            switch productEvents {
-            case let .chevronTapped(product, state):
-                let newOperation = operation.updateOperation(
-                    operation: operation,
-                    newParameter: .product(.init(
-                        state: state,
-                        selectedProduct: product.selectedProduct,
-                        allProducts: product.allProducts
-                    ))
-                )
-                return .success(.operation(newOperation))
                 
-            case let .selectProduct(option, product):
-                
-                let operation = operation.updateOperation(
-                    operation: operation,
-                    newParameter: .product(.init(
-                        state: .select,
-                        selectedProduct: option,
-                        allProducts: product.allProducts))
-                )
-                
-                return .success(.operation(operation))
             }
+            
+        case let .product(productEvents):
+            return reduceProductEvent(productEvents, operation)
+            
         default:
             return .success(.operation(operation))
         }
     }
     
-    func selectOption(
+    fileprivate func reduceProductEvent(
+        _ productEvents: (Event.ProductEvent),
+        _ operation: PaymentSticker.Operation
+    ) -> BusinessLogic.OperationResult {
+        
+        switch productEvents {
+        case let .chevronTapped(product, state):
+            let newOperation = operation.updateOperation(
+                operation: operation,
+                newParameter: .product(.init(
+                    state: state,
+                    selectedProduct: product.selectedProduct,
+                    allProducts: product.allProducts
+                ))
+            )
+            return .success(.operation(newOperation))
+            
+        case let .selectProduct(option, product):
+            
+            let operation = operation.updateOperation(
+                operation: operation,
+                newParameter: .product(.init(
+                    state: .select,
+                    selectedProduct: option,
+                    allProducts: product.allProducts))
+            )
+            
+            return .success(.operation(operation))
+        }
+    }
+    
+    fileprivate func selectOption(
         id: String,
         operation: PaymentSticker.Operation,
         parameter: PaymentSticker.Operation.Parameter.Select
@@ -257,7 +275,7 @@ extension BusinessLogic {
                 switch main.data {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
-                        id: "city",
+                        id: .citySelector,
                         value: "",
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
@@ -271,13 +289,15 @@ extension BusinessLogic {
                         description: banner.subtitle,
                         options: banner.txtConditionList.map({
                             
-                            Operation.Parameter.Sticker.Option.init(title: $0.name, description: $0.description)
+                            Operation.Parameter.Sticker.Option(
+                                title: $0.name,
+                                description: "\($0.description) \($0.value)")
                         })
                     ))
                       
                 case let .officeSelector(officeSelector):
                     return Operation.Parameter.select(.init(
-                        id: "officeSelector",
+                        id: .officeSelector,
                         value: "",
                         title: officeSelector.title,
                         placeholder: officeSelector.subtitle,
@@ -300,7 +320,7 @@ extension BusinessLogic {
                 
                 case let .selector(selector):
                     return Operation.Parameter.select(.init(
-                        id: "transferType",
+                        id: .transferTypeSticker,
                         value: "",
                         title: selector.title,
                         placeholder: selector.subtitle,
@@ -344,7 +364,7 @@ extension BusinessLogic {
                 switch main.data {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
-                        id: "city",
+                        id: .citySelector,
                         value: "",
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
@@ -358,7 +378,7 @@ extension BusinessLogic {
                     
               case let .officeSelector(officeSelector):
                   return Operation.Parameter.select(.init(
-                      id: "officeSelector",
+                    id: .officeSelector,
                       value: "",
                       title: officeSelector.title,
                       placeholder: officeSelector.subtitle,

@@ -38,6 +38,7 @@ extension Services {
             case getScenarioQRData
             case getStickerPayment
             case createStickerPayment
+            case makeTransfer
         }
     }
 }
@@ -117,10 +118,16 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
-    static let createStickerPayment: Self = .init(
-        pathPrefix: .binding,
+    static let createCommissionProductTransfer: Self = .init(
+        pathPrefix: .transfer,
         version: .v1,
         serviceName: .createStickerPayment
+    )
+    
+    static let makeTransfer: Self = .init(
+        pathPrefix: .transfer,
+        version: .v1,
+        serviceName: .makeTransfer
     )
 }
 
