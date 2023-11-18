@@ -7,20 +7,23 @@
 
 import SwiftUI
 
-public struct ParameterView: View {
+struct ParameterView: View {
     
     let viewModel: ParameterViewModel
     let configuration: ConfigurationOperationView
+    let event: (Event.InputEvent) -> Void
     
-    public init(
+    init(
         viewModel: ParameterViewModel,
-        configuration: ConfigurationOperationView
+        configuration: ConfigurationOperationView,
+        event: @escaping (Event.InputEvent) -> Void
     ) {
         self.viewModel = viewModel
         self.configuration = configuration
+        self.event = event
     }
     
-    public var body: some View {
+    var body: some View {
         
         switch viewModel {
         case let .tip(tipViewModel):
@@ -59,14 +62,34 @@ public struct ParameterView: View {
                 text: amountViewModel.parameter.value
             )
         
-        case let .input(inputViewModel):
-            InputView(
-                model: inputViewModel,
-                configuration: configuration.inputViewConfig
+        case let .input(title):
+            InputViewWrapper(
+                title: title,
+                configuration: configuration.inputViewConfig,
+                commit: { event(.valueUpdate($0)) }
             )
         }
     }
 }
+
+struct InputViewWrapper: View {
+    
+    let title: String
+    let configuration: InputConfiguration
+    let commit: (String) -> Void
+    
+    var body: some View {
+        
+        let textField = TextField(title, text: .constant(""))
+        
+        InputView(
+            title: title,
+            configuration: configuration,
+            makeTextField: { _,_ in textField }
+        )
+    }
+}
+
 
 struct ParameterView_Previews: PreviewProvider {
     static var previews: some View {

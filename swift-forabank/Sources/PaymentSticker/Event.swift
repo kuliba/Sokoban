@@ -30,7 +30,7 @@ public enum Event {
     
     public enum InputEvent {
         
-        case valueUpdate(ParameterInput)
+        case valueUpdate(String)
         case getOtpCode
     }
     

@@ -197,7 +197,11 @@ struct OperationProcessView: View {
         
         ParameterView(
             viewModel: viewModel,
-            configuration: configuration
+            configuration: configuration,
+            event: { inputEvent in
+                
+                model.event(.input(inputEvent))
+            }
         )
     }
 }

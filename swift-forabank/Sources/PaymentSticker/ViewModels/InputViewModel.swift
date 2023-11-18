@@ -7,22 +7,19 @@
 
 import Foundation
 
-public struct InputViewModel {
-    
-    public typealias Parameter = Operation.Parameter.Input
-    
-    public let parameter: Parameter
-    public let icon: ImageData
-    
-    let updateValue: (String) -> Void
-    
-    public init(
-        parameter: InputViewModel.Parameter,
-        icon: ImageData,
-        updateValue: @escaping (String) -> Void
-    ) {
-        self.parameter = parameter
-        self.icon = icon
-        self.updateValue = updateValue
-    }
-}
+//public struct InputViewModel {
+//    
+//    public let title: String
+//    
+//    public init(
+//        title: String
+//    ) {
+//        self.title = title
+//    }
+//    
+//    public init(
+//        parameter: Operation.Parameter.Input
+//    ) {
+//        self.title = parameter.title
+//    }
+//}

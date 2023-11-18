@@ -98,6 +98,9 @@ extension OperationStateViewModel {
         with event: Event.InputEvent
     ) -> Operation {
         
+        guard let inputTitle = operation.parameters.inputTitle
+        else { return operation }
+        
         switch event {
         case .getOtpCode:
             
@@ -109,7 +112,10 @@ extension OperationStateViewModel {
             
             return operation.updateOperation(
                 operation: operation,
-                newParameter: .input(input)
+                newParameter: .input(.init(
+                    value: input,
+                    title: inputTitle
+                ))
             )
         }
     }
