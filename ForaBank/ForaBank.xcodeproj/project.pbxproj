@@ -417,7 +417,7 @@
 		2A3039322A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039302A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift */; };
 		2A3039362A17D48C0008701D /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3039352A17D48B0008701D /* CustomDump */; };
 		2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30393D2A17D5C80008701D /* TextFieldStateTests.swift */; };
-		2A3039422A17D6440008701D /* Reducer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039412A17D6440008701D /* Reducer+ext.swift */; };
+		2A3039422A17D6440008701D /* TransformingReducer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039412A17D6440008701D /* TransformingReducer+ext.swift */; };
 		2A3039452A17D6970008701D /* TextFieldState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039442A17D6970008701D /* TextFieldState+ext.swift */; };
 		2A3039482A17D7790008701D /* ReducerTextFieldViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039472A17D7790008701D /* ReducerTextFieldViewModel+ext.swift */; };
 		2A30394A2A17D8B50008701D /* ReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039492A17D8B50008701D /* ReducerTextFieldViewModelTests.swift */; };
@@ -608,6 +608,7 @@
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */; };
+		2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */; };
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
 		2AB5FEA829E6833E0055BE57 /* UIImage+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */; };
@@ -2601,7 +2602,7 @@
 		2A30392F2A17D2AC0008701D /* XCTAssertNoDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTAssertNoDiff.swift; sourceTree = "<group>"; };
 		2A3039302A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
 		2A30393D2A17D5C80008701D /* TextFieldStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldStateTests.swift; sourceTree = "<group>"; };
-		2A3039412A17D6440008701D /* Reducer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reducer+ext.swift"; sourceTree = "<group>"; };
+		2A3039412A17D6440008701D /* TransformingReducer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransformingReducer+ext.swift"; sourceTree = "<group>"; };
 		2A3039442A17D6970008701D /* TextFieldState+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldState+ext.swift"; sourceTree = "<group>"; };
 		2A3039472A17D7790008701D /* ReducerTextFieldViewModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+ext.swift"; sourceTree = "<group>"; };
 		2A3039492A17D8B50008701D /* ReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
@@ -2784,6 +2785,7 @@
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
 		2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+log.swift"; sourceTree = "<group>"; };
+		2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformingReducerTests.swift; sourceTree = "<group>"; };
 		2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingServiceTests.swift"; sourceTree = "<group>"; };
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
 		2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -5597,6 +5599,7 @@
 		2A30393B2A17D5920008701D /* TextFieldComponent */ = {
 			isa = PBXGroup;
 			children = (
+				2AB35DCA2B07F19C0001EC5D /* Reducer */,
 				2A93385C2A17CA3700397C88 /* PhoneKit */,
 				2A30393C2A17D5B30008701D /* TextFieldState */,
 				2A9338642A17D05800397C88 /* ReducerTextFieldViewModel */,
@@ -6011,7 +6014,7 @@
 		2A6481FC2A1CA047005CC17A /* Reducer */ = {
 			isa = PBXGroup;
 			children = (
-				2A3039412A17D6440008701D /* Reducer+ext.swift */,
+				2A3039412A17D6440008701D /* TransformingReducer+ext.swift */,
 			);
 			path = Reducer;
 			sourceTree = "<group>";
@@ -6390,6 +6393,14 @@
 				2AB5FEA729E6833E0055BE57 /* UIImage+TestHelpers.swift */,
 			);
 			path = TestHelpers;
+			sourceTree = "<group>";
+		};
+		2AB35DCA2B07F19C0001EC5D /* Reducer */ = {
+			isa = PBXGroup;
+			children = (
+				2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */,
+			);
+			path = Reducer;
 			sourceTree = "<group>";
 		};
 		2AB3E78E2AAB33B9006A0D53 /* GetLandingService */ = {
@@ -13449,7 +13460,7 @@
 				505592FE2941F77F002A102E /* OrderProductViewComponent.swift in Sources */,
 				682092BB27AC170B003DCAFD /* DaDataPhoneData.swift in Sources */,
 				83802B992A010FF100257D8C /* ProductBackViewComponent.swift in Sources */,
-				2A3039422A17D6440008701D /* Reducer+ext.swift in Sources */,
+				2A3039422A17D6440008701D /* TransformingReducer+ext.swift in Sources */,
 				686A1C9627ED5726002972F0 /* PersonsCreditData.swift in Sources */,
 				C1097D8E2942FC16002459F6 /* Model+Requisites.swift in Sources */,
 				2A1F084E2A7904D200C5B11B /* Services+Endpoint.swift in Sources */,
@@ -13701,6 +13712,7 @@
 				77B243DE2A2F663D00CDCEC6 /* ModelPreferredProductTests.swift in Sources */,
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
+				2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */,
 				2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */,
 				77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */,
 				2A58FAB22AD71F3600BD1967 /* anyData.swift in Sources */,
