@@ -14,7 +14,7 @@ import CodableLanding
 extension Services {
     
     typealias GetLanding = (serial: String, abroadType: AbroadType)    
-    typealias GetLandingService = RemoteService<GetLanding, UILanding>
+    typealias GetLandingService = RemoteService<GetLanding, UILanding, Error, Error, Error>
     typealias Cache = (CodableLanding) -> Void
     
     static func getLandingService(

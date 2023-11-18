@@ -110,8 +110,8 @@ extension Array where Element == TransferAnywayData.Additional {
         
         guard let phone = value(forIdentifier: .sfpPhone)
         else { return nil }
-        
-        return "7" + phone
+
+        return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
     }
     
     var sfpBank: String? {

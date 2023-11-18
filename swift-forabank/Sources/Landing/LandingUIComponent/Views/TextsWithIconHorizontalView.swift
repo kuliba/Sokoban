@@ -18,6 +18,7 @@ struct TextsWithIconHorizontalView: View {
             
             RoundedRectangle(cornerRadius: config.cornerRadius)
                 .foregroundColor(config.backgroundColor)
+                .accessibilityIdentifier("TextsWithIconHorizontalBody")
             
             HStack(spacing: config.spacing) {
                 
@@ -26,6 +27,7 @@ struct TextsWithIconHorizontalView: View {
                     Circle()
                         .foregroundColor(.white)
                         .frame(width: config.circleSize, height: config.circleSize)
+                        .accessibilityIdentifier("TextsWithIconHorizontalCircle")
                     
                     switch model.image(byMd5Hash: model.data.md5hash) {
                     case .none:
@@ -44,6 +46,7 @@ struct TextsWithIconHorizontalView: View {
                     .font(config.text.font)
                     .foregroundColor(config.text.color)
                     .padding(.trailing)
+                    .accessibilityIdentifier("TextsWithIconHorizontalText")
             }
             .padding(.leading, config.icon.padding.leading)
         }

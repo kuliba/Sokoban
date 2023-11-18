@@ -23,7 +23,7 @@ struct SelectView: View {
             case .idle:
                 IdleView(
                     viewModel: viewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
                 .padding(.vertical, 24)
@@ -32,7 +32,7 @@ struct SelectView: View {
                 SelectedOptionView(
                     icon: viewModel.icon,
                     viewModel: selectedOptionViewModel,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
+                    tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
                 )
                 .padding(.vertical, 15)
@@ -42,7 +42,6 @@ struct SelectView: View {
                     icon: viewModel.icon,
                     viewModel: optionsListViewModel,
                     config: config,
-                    chevronButtonTapped: viewModel.chevronButtonTapped,
                     selected: viewModel.select
                 )
                 .padding(.vertical, 15)
@@ -59,7 +58,7 @@ extension SelectView {
     struct IdleView: View {
         
         let viewModel: SelectViewModel
-        let chevronButtonTapped: () -> Void
+        let tapAction: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -84,15 +83,15 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct SelectedOptionView: View {
         
         let icon: Image
-        let viewModel: SelectViewModel.Parameter.State.SelectedOptionViewModel
-        let chevronButtonTapped: () -> Void
+        let viewModel: SelectViewModel.ParameterSelect.State.SelectedOptionViewModel
+        let tapAction: () -> Void
         let config: SelectViewConfiguration.SelectedOptionConfig
         
         var body: some View {
@@ -124,17 +123,16 @@ extension SelectView {
                     .frame(width: 24, height: 24, alignment: .center)
             }
             .contentShape(Rectangle())
-            .onTapGesture(perform: chevronButtonTapped)
+            .onTapGesture(perform: tapAction)
         }
     }
     
     struct OptionsListView: View {
         
         let icon: Image
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel
         let config: SelectViewConfiguration
-        let chevronButtonTapped: () -> Void
-        let selected: (SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel.ID) -> Void
+        let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID) -> Void
         
         var body: some View {
             
@@ -155,7 +153,8 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func select(_ option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel?) -> some View {
+        private func select(_ option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel?
+        ) -> some View {
             
             HStack(alignment: .center, spacing: 16) {
                 
@@ -168,8 +167,8 @@ extension SelectView {
                     
                     Text(viewModel.title)
                         .lineLimit(1)
-                        .font(config.selectOptionConfig.titleFont)
-                        .foregroundColor(config.selectOptionConfig.titleForeground)
+                        .font(config.selectOptionConfig.placeholderFont)
+                        .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     
                     Text(viewModel.placeholder)
                         .lineLimit(1)
@@ -186,7 +185,9 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func option(option: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel) -> some View {
+        private func option(
+            option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
+        ) -> some View {
             
             SelectView.OptionView(
                 viewModel: option,
@@ -209,7 +210,7 @@ extension SelectView {
     
     struct OptionView: View {
         
-        let viewModel: SelectViewModel.Parameter.State.OptionsListViewModel.OptionViewModel
+        let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
         let select: () -> Void
         let config: SelectViewConfiguration.OptionConfig
         
@@ -272,7 +273,11 @@ struct ParameterSelectView_Previews: PreviewProvider {
                     .init(id: "option1", name: "option1", iconName: ""),
                     .init(id: "option2", name: "option2", iconName: "")
                 ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))), icon: .init(""), chevronButtonTapped: {}, select: { id in }),
+                state: .idle(.init(iconName: "", title: "Выберите значение"))),
+                             icon: .init(""),
+                             tapAction: { },
+                             select: { id in }
+            ),
             config: .default
         )
     }

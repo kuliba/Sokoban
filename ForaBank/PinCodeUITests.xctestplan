@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "57530BA5-B6D4-4824-80F1-599D53847E75",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PinCodeUITests",
+        "name" : "PinCodeUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

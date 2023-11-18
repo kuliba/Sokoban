@@ -55,6 +55,7 @@ public struct ParameterView: View {
                     ),
                     continueButtonTapped: amountViewModel.continueButtonTapped
                 ),
+                configuration: configuration.amountViewConfig,
                 text: amountViewModel.parameter.value
             )
         

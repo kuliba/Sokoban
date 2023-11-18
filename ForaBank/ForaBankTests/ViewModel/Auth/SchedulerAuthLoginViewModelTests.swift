@@ -562,6 +562,7 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
             eventPublishers: eventPublishers,
             eventHandlers: eventHandlers,
             factory: factory,
+            onRegister: {},
             scheduler: scheduler.eraseToAnyScheduler()
         )
         

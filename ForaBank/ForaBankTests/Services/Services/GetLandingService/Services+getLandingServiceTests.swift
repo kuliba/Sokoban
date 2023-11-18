@@ -5,19 +5,22 @@
 //  Created by Igor Malyarov on 08.09.2023.
 //
 
-@testable import ForaBank
-import LandingUIComponent
 import CodableLanding
+@testable import ForaBank
+import GenericRemoteService
+import LandingUIComponent
 import XCTest
 
 final class Services_getLandingServiceTests: XCTestCase {
+    
+    private typealias RemoteError = RemoteServiceError<Error, Error, Error>
     
     func test_orderCard() {
         
         let abroadType: AbroadType = .orderCard
         let (sut, spy) = makeSUT()
         
-        var results = [Result<UILanding, Error>]()
+        var results = [Result<UILanding, RemoteError>]()
         let exp = expectation(description: "wait for completion")
         
         sut.process((serial: "111", abroadType: abroadType)) { result in

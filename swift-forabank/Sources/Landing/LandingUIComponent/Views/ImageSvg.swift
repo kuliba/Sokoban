@@ -30,6 +30,7 @@ struct ImageSvg: View {
                     .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
                     .padding(.horizontal, config.paddings.horizontal)
                     .padding(.vertical, config.paddings.vertical)
+                    .accessibilityIdentifier("ImageSvg")
             }
         }
         .background(config.backgroundColor(model.data.backgroundColor.rawValue, defaultColor: config.background.defaultColor))

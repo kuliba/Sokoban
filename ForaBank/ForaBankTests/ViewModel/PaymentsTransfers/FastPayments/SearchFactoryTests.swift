@@ -130,9 +130,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "8")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.text, "+8")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+8"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
@@ -150,7 +150,7 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
-    func test_shouldNotReplacePrefix2_fastPayments_contacts() {
+    func test_shouldNotReplacePrefix2_fastPayments_contacts_typeOther() {
        
         let (sut, scheduler, textSpy, stateSpy) = makeSUT(.fastPayments(.contacts))
         scheduler.advance()
@@ -174,9 +174,9 @@ final class SearchFactoryTests: XCTestCase {
         sut.setText(to: "8")
         scheduler.advance()
 
-        XCTAssertNoDiff(sut.text, "+7")
+        XCTAssertNoDiff(sut.text, "+8")
         XCTAssertNoDiff(sut.phoneNumberState, .selected)
-        XCTAssertNoDiff(textSpy.values, [nil, "+7"])
+        XCTAssertNoDiff(textSpy.values, [nil, "+8"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
 
@@ -207,7 +207,7 @@ final class SearchFactoryTests: XCTestCase {
         XCTAssertNoDiff(textSpy.values, [nil, "+291 6"])
         XCTAssertNoDiff(stateSpy.values, [.idle, .selected])
     }
-
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -222,7 +222,7 @@ final class SearchFactoryTests: XCTestCase {
     ) {
         let scheduler = DispatchQueue.test
         let sut = SearchFactory.makeSearchFieldModel(
-            for: mode,
+            for: mode, 
             scheduler: scheduler.eraseToAnyScheduler()
         )
         

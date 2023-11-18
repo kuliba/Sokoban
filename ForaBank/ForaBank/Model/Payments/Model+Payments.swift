@@ -7,6 +7,7 @@
 
 import Foundation
 import ServerAgent
+import PhoneNumberWrapper
 
 //MARK: - Actions
 
@@ -1212,7 +1213,7 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = paymentData.phoneNumberRu
+                let phoneNumber = paymentData.phoneNumber
                 let bankId = paymentData.bankId
                 return paymentsProcessSourceReducerSFP(phone: phoneNumber,
                                                        bankId: bankId,
@@ -1336,7 +1337,7 @@ extension Model {
                     
                     if let phone = anywayDataList.last?.additional.first(where: { $0.fieldname == operatorId })?.fieldvalue {
                         
-                        return "7" + phone
+                        return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
                     }
                     
                     return nil
@@ -1512,8 +1513,9 @@ extension Model {
             let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
                 return nil
             }
-            
-            return .init(payeeName: recipientValue, phone: phoneValue, amount: "- \(amountValue)")
+
+            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
+            return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
             
         default:
             return nil

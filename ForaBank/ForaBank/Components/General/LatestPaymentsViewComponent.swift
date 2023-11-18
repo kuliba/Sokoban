@@ -200,7 +200,7 @@ extension LatestPaymentsView.ViewModel {
 }
 
 //MARK: LatestPaymentButtonVM init
-
+// TODO: добавить тесты!!!
 extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, mode: LatestPaymentsView.ViewModel.Mode? = .regular, action: @escaping () -> Void) {
@@ -231,12 +231,15 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            let phoneNumberRu = paymentData.phoneNumberRu
-            
-            self.avatar = model.avatar(for: phoneNumberRu) ?? icon
+            let phoneNumbers = [
+                paymentData.phoneNumber.addCodeRuIfNeeded(),
+                paymentData.phoneNumber.add8IfNeeded(),
+                paymentData.phoneNumber.replace7To8IfNeeded()
+            ]
+
+            self.avatar = Self.avatar(model: model, for: phoneNumbers) ?? icon
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
-            self.description = model.fullName(for: phoneNumberRu)
-            
+            self.description = Self.fullName(model: model, for: phoneNumbers)
             
         case (.outside, let paymentData as PaymentServiceData):
             
@@ -278,12 +281,9 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
             if let phoneNumber = paymentData.additionalList.first?.fieldValue,
                !phoneNumber.isEmpty {
-                
-                let phoneNumberRu = "+7" + phoneNumber
-                let phoneFormatter = PhoneNumberKitFormater()
-                
-                self.avatar = model.avatar(for: phoneNumberRu) ?? icon
-                self.description = model.fullName(for: phoneNumberRu)
+                                
+                self.avatar = Self.avatar(model: model, for: [phoneNumber]) ?? icon
+                self.description = Self.fullName(model: model, for: [phoneNumber])
                 
             } else {
                 
@@ -309,44 +309,66 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
 
 //MARK: Model Helpers
 
-extension Model {
-    
-    func fullName(for phoneNumber: String) -> String {
+extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+        
+    static func fullName(
+        model: Model,
+        for phoneNumbers: [String]
+    ) -> String {
 
         let phoneFormatter = PhoneNumberKitFormater()
         
-        if case .available = self.contactsPermissionStatus,
-           let contact = self.contact(for: phoneNumber) {
+        let names = phoneNumbers.compactMap {
+            if case .available = model.contactsPermissionStatus,
+               let contact = model.contact(for: $0) {
+                return contact.fullName
+            }
+            return nil
+        }
+        
+        if !names.isEmpty, let name = names.first {
             
-            return contact.fullName ?? phoneFormatter.partialFormatter(phoneNumber)
+            return name
 
         } else {
             
-            return phoneFormatter.partialFormatter(phoneNumber)
+            if let phoneNumber = phoneNumbers.first {
+                
+                return phoneFormatter.format(phoneNumber)
+            }
         }
+        return ""
     }
-    
-    typealias Avatar = LatestPaymentsView.ViewModel.LatestPaymentButtonVM.Avatar
-    
-    func avatar(for phoneNumber: String) -> Avatar? {
+            
+    static func avatar(
+        model: Model,
+        for phoneNumbers: [String]
+    ) -> Avatar? {
         
-        guard case .available = self.contactsPermissionStatus,
-              let contact = self.contact(for: phoneNumber)
+        guard case .available = model.contactsPermissionStatus
         else { return nil }
         
-        if let avatar = contact.avatar,
-           let avatarImg = Image(data: avatar.data) {
+        let avatars = phoneNumbers.compactMap {
             
-            return .image(avatarImg)
-            
-        } else if let initials = contact.initials {
-            
-            return .text(initials)
-            
-        } else {
-            
+            if let contact = model.contact(for: $0) {
+                
+                if let avatar = contact.avatar,
+                   let avatarImg = Image(data: avatar.data) {
+                    
+                    return Avatar.image(avatarImg)
+                    
+                } else if let initials = contact.initials {
+                    
+                    return Avatar.text(initials)
+                }
+            }
             return nil
         }
+        
+        if let avatar = avatars.first {
+            return avatar
+        }
+        return nil
     }
 }
 
@@ -379,7 +401,7 @@ extension LatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         
         if let phone = additionalList.first(where: { $0.isPhone })?.fieldValue {
             
-            return (model.avatar(for: phone), model.fullName(for: phone), topIcon)
+            return (Self.avatar(model: model, for: [phone]), Self.fullName(model: model, for: [phone]), topIcon)
             
         } else if let fullName = additionalList.fullName {
             

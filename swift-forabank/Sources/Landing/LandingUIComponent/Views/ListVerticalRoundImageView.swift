@@ -60,14 +60,17 @@ struct ListVerticalRoundImageView: View {
                     Circle()
                         .frame(width: config.item.imageWidthHeight, height: config.item.imageWidthHeight)
                         .foregroundColor(.white)
+                        .accessibilityIdentifier("VerticalRoundbuttonShowAllCircle")
                     
                     Image(systemName: "ellipsis")
                         .foregroundColor(config.buttonSettings.ellipsisForegroundColor)
+                        .accessibilityIdentifier("VerticalRoundbuttonShowAllImage")
                 }
                 
                 Text(showAll ? model.data.dropButtonCloseTitle ?? "" : model.data.dropButtonOpenTitle ?? "")
                     .font(config.buttonSettings.text.font)
                     .foregroundColor(config.buttonSettings.text.color)
+                    .accessibilityIdentifier("VerticalRoundbuttonShowAllText")
                 
                 Spacer()
             }
@@ -90,6 +93,7 @@ struct ListVerticalRoundImageView: View {
                     .foregroundColor(config.title.color)
                     .padding(.horizontal, config.title.paddingHorizontal)
                     .padding(.top, config.title.paddingTop)
+                    .accessibilityIdentifier("VerticalRoundHeader")
                 
                 config.divider
                     .frame(height: 0.5)
@@ -113,17 +117,17 @@ struct ListVerticalRoundImageView: View {
                     ImageView(image: image, config: config.item)
                     
                     VStack(alignment: .leading, spacing: config.spacings.itemVStackBetweenTitleSubtitle) {
-                        
                         if let subInfo = item.subInfo, !subInfo.isEmpty {
                             
                             TitleView(item: item, config: config)
+                                .accessibilityIdentifier("VerticalRoundItemTitle")
 
                             Text(subInfo)
                                 .font(config.item.font.subtitle)
                                 .foregroundColor(config.item.color.subtitle)
                                 .multilineTextAlignment(.leading)
+                                .accessibilityIdentifier("VerticalRoundItemText")
                         } else {
-                            
                             TitleView(item: item, config: config)
                         }
                     }
@@ -165,12 +169,14 @@ struct ListVerticalRoundImageView: View {
                     .cornerRadius(config.imageWidthHeight/2)
                     .frame(width: config.imageWidthHeight, height: config.imageWidthHeight)
                     .shimmering()
+                    .accessibilityIdentifier("VerticalRoundItemIcon")
                 
             case let .some(image):
                 image
                     .resizable()
                     .cornerRadius(config.imageWidthHeight/2)
                     .frame(width: config.imageWidthHeight, height: config.imageWidthHeight)
+                    .accessibilityIdentifier("VerticalRoundItemImage")
             }
         }
     }

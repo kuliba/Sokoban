@@ -540,7 +540,7 @@ extension Model {
                 if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
                     
                     // TODO: Create Model mock for testing
-                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .armenian)
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .russian)
                     return phoneParameter
                     
                 } else {
@@ -554,7 +554,7 @@ extension Model {
                 let phoneId = Payments.Parameter.Identifier.countrybPhone.rawValue
                 if case let .direct(phone: phone, countryId: _, serviceData: _) = operation.source {
                     
-                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .turkey)
+                    let phoneParameter = Payments.ParameterInputPhone(.init(id: phoneId, value: phone), title: parameterData.title, placeholder: parameterData.subTitle, countryCode: .russian)
                     return phoneParameter
                     
                 } else {

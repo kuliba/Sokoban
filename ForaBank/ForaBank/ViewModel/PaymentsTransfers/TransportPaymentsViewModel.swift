@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CvvPin
 import Foundation
 import SwiftUI
 
@@ -65,7 +66,7 @@ extension TransportPaymentsViewModel {
             let link = try destination(for: track)
             
             DispatchQueue.main.async { [weak self] in
-             
+                
                 self?.destination = link
             }
         } catch {

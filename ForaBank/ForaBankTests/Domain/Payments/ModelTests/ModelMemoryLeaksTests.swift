@@ -31,8 +31,8 @@ final class ModelMemoryLeaksTests: XCTestCase {
         let sut: Model = .stubbed(
             serverAgent: serverAgent
         )
-        sut.products.value = makeProductsData(counts)
-        sut.currencyList.value = currencies
+        sut.products.sessionIDValue = makeProductsData(counts)
+        sut.currencyList.sessionIDValue = currencies
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(serverAgent, file: file, line: line)

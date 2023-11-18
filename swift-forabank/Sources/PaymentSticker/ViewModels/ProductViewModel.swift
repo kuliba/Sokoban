@@ -12,12 +12,12 @@ public struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
-    let selectOption: (Operation.Parameter.Product.Option) -> Void
+    let selectOption: (Operation.Parameter.ProductSelector.Product) -> Void
     
     public init(
         state: ProductStateViewModel.State,
         chevronTapped: @escaping () -> Void,
-        selectOption: @escaping (Operation.Parameter.Product.Option) -> Void
+        selectOption: @escaping (Operation.Parameter.ProductSelector.Product) -> Void
     ) {
         self.state = state
         self.chevronTapped = chevronTapped
@@ -45,10 +45,12 @@ extension ProductViewModel {
     
     public struct MainViewModel: Hashable {
     
-        let cardLogo: String
-        let paymentSystem: String?
+        let cardLogo: ImageData
+        let paymentSystem: ImageData?
         let name: String
         let balance: String
+        let backgroundImage: ImageData?
+        let backgroundColor: Color
     }
     
     public struct HeaderViewModel: Hashable {
@@ -62,16 +64,18 @@ extension ProductViewModel {
     }
     
     static func mapper(
-        _ product: Operation.Parameter.Product.Option
+        _ product: Operation.Parameter.ProductSelector.Product
     ) -> ProductViewModel {
         
         .init(
             header: .init(title: product.title),
             main: .init(
-                cardLogo: .init(""),
-                paymentSystem: nil,
+                cardLogo: product.cardImage,
+                paymentSystem: product.paymentSystem,
                 name: product.nameProduct,
-                balance: product.balance
+                balance: product.balance,
+                backgroundImage: product.backgroundImage,
+                backgroundColor: Color(product.backgroundColor)
             ),
             footer: .init(description: product.description)
         )

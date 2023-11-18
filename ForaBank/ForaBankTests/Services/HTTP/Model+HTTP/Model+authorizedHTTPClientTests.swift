@@ -65,7 +65,7 @@ final class Model_authorizedHTTPClientTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept(
             sessionAgent: sessionAgent
         )
-        let sut = model.authorizedHTTPClient(
+        let sut = model.authenticatedHTTPClient(
             httpClient: spy
         )
         
