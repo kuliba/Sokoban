@@ -9,11 +9,11 @@ import SwiftUI
 
 final class Composer {
     
-    let navigationModel: NavigationModel
+    let routeModel: RouteModel
     
-    init(navigation: Navigation? = nil) {
+    init(route: Route? = nil) {
         
-        self.navigationModel = .init(navigation: navigation)
+        self.routeModel = .init(route: route)
     }
 }
 
@@ -24,7 +24,7 @@ extension Composer {
     // MARK: - Alert
     
     func makeAlertView(
-        _ alert: Navigation.Alert
+        _ alert: Route.Alert
     ) -> SwiftUI.Alert {
         
         .init(title: Text(alert.message))
@@ -34,7 +34,7 @@ extension Composer {
     
     @ViewBuilder
     func makeDestinationView(
-        _ destination: Navigation.Destination
+        _ destination: Route.Destination
     ) -> some View {
         
         switch destination {
@@ -42,7 +42,7 @@ extension Composer {
             
             makeSberQRPaymentView(
                 url: url,
-                dismiss: navigationModel.resetNavigation
+                dismiss: routeModel.resetRoute
             )
         }
     }
@@ -51,7 +51,7 @@ extension Composer {
     
     @ViewBuilder
     func makeFullScreenCoverView(
-        _ fullScreenCover: Navigation.FullScreenCover
+        _ fullScreenCover: Route.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -68,7 +68,7 @@ extension Composer {
     
     @ViewBuilder
     func makeSheet(
-        _ sheet: Navigation.Sheet
+        _ sheet: Route.Sheet
     ) -> some View {
         
         switch sheet {
@@ -76,7 +76,7 @@ extension Composer {
             
             makeSberQRPaymentView(
                 url: url,
-                dismiss: navigationModel.resetNavigation
+                dismiss: routeModel.resetRoute
             )
         }
     }
@@ -88,19 +88,19 @@ private extension Composer {
         
         switch qrResult {
         case let .sberQR(url):
-            changeNavigation(to: .sheet(.sberQRPayment(url)))
+            changeRoute(to: .sheet(.sberQRPayment(url)))
             
         case let .error(text):
-            changeNavigation(to: .alert(.init(message: text)))
+            changeRoute(to: .alert(.init(message: text)))
         }
     }
 }
 
 private extension Composer {
     
-    func changeNavigation(to navigation: Navigation) {
+    func changeRoute(to route: Route) {
         
-        navigationModel.changeNavigation(to: navigation)
+        routeModel.changeRoute(to: route)
     }
 }
 
@@ -117,7 +117,7 @@ extension Composer {
         
         QRReaderButton { [weak self] in
             
-            self?.navigationModel.setFullScreenCover(to: .qrReader)
+            self?.routeModel.setFullScreenCover(to: .qrReader)
         }
     }
     

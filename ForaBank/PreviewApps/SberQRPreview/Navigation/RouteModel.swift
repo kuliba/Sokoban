@@ -1,5 +1,5 @@
 //
-//  NavigationModel.swift
+//  RouteModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.11.2023.
@@ -9,45 +9,45 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-final class NavigationModel: ObservableObject {
+final class RouteModel: ObservableObject {
     
-    @Published private(set) var navigation: Navigation?
+    @Published private(set) var route: Route?
     
-    private let navigationSubject = PassthroughSubject<Navigation?, Never>()
+    private let routeSubject = PassthroughSubject<Route?, Never>()
     
     init(
-        navigation: Navigation? = nil,
+        route: Route? = nil,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.navigation = navigation
+        self.route = route
         
-        navigationSubject
+        routeSubject
             // .debounce(for: 0.2, scheduler: scheduler)
             .removeDuplicates()
             .receive(on: scheduler)
             .handleEvents(receiveOutput: {
                 print($0 as Any)
             })
-            .assign(to: &$navigation)
+            .assign(to: &$route)
     }
 }
 
-extension NavigationModel {
+extension RouteModel {
     
-    func setNavigation(to navigation: Navigation?) {
+    func setRoute(to route: Route?) {
         
-        navigationSubject.send(navigation)
+        routeSubject.send(route)
     }
     
-    func changeNavigation(to navigation: Navigation) {
+    func changeRoute(to route: Route) {
         
-        resetNavigation()
+        resetRoute()
         
         DispatchQueue.main.asyncAfter(
             deadline: .now() + 0.2
         ) { [weak self] in
             
-            self?.setNavigation(to: navigation)
+            self?.setRoute(to: route)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Navigation.swift
+//  Route.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 16.11.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Navigation: Hashable & Identifiable {
+enum Route: Hashable & Identifiable {
     
     case alert(Alert)
     case destination(Destination)
@@ -45,7 +45,7 @@ enum Navigation: Hashable & Identifiable {
     }
 }
 
-extension Navigation {
+extension Route {
     
     var alert: Alert? {
         

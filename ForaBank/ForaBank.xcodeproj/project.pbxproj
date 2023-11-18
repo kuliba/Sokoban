@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -468,17 +468,17 @@
 		2A5190432A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190422A7E86CC0014B0B7 /* ActiveInactiveSessionAgent.swift */; };
 		2A5190452A7EAC890014B0B7 /* PublicKeyWithEventID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5190442A7EAC890014B0B7 /* PublicKeyWithEventID.swift */; };
 		2A53156E2B07467500963A22 /* TextPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53156B2B07439B00963A22 /* TextPickerView.swift */; };
-		2A53156F2B07467500963A22 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */; };
+		2A53156F2B07467500963A22 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Route.swift */; };
 		2A5315702B07467500963A22 /* SberQRPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B552B05F7B500ECA2C2 /* SberQRPaymentView.swift */; };
 		2A5315712B07467500963A22 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBD792B05E89B008386DA /* Composer.swift */; };
 		2A5315722B07467500963A22 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8D02B05E1D000E3AE79 /* ContentView.swift */; };
-		2A5315732B07467500963A22 /* NavigationModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */; };
+		2A5315732B07467500963A22 /* RouteModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* RouteModel+ext.swift */; };
 		2A5315742B07467500963A22 /* View+NavigationDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B572B05F88600ECA2C2 /* View+NavigationDestination.swift */; };
 		2A5315752B07467500963A22 /* SberQRPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */; };
 		2A5315762B07467500963A22 /* QRReaderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */; };
 		2A5315772B07467500963A22 /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8E82B05E53B00E3AE79 /* AnySchedulerOfDispatchQueue.swift */; };
 		2A5315782B07467500963A22 /* QRReaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B4F2B05EE8100ECA2C2 /* QRReaderStub.swift */; };
-		2A5315792B07467500963A22 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */; };
+		2A5315792B07467500963A22 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* RouteModel.swift */; };
 		2A53157A2B07467500963A22 /* QRParsingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A390B522B05F75600ECA2C2 /* QRParsingResult.swift */; };
 		2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */; };
 		2A53F8E72B00CCCA00CF2843 /* LogSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A53F8E62B00CCCA00CF2843 /* LogSpy.swift */; };
@@ -2566,9 +2566,9 @@
 		2A20F8D22B05E1D100E3AE79 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A20F8E82B05E53B00E3AE79 /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
-		2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
-		2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
-		2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationModel+ext.swift"; sourceTree = "<group>"; };
+		2A20F8EB2B05E56F00E3AE79 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		2A20F8ED2B05E58700E3AE79 /* RouteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModel.swift; sourceTree = "<group>"; };
+		2A20F8EF2B05E61B00E3AE79 /* RouteModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteModel+ext.swift"; sourceTree = "<group>"; };
 		2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderButton.swift; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
@@ -5468,9 +5468,9 @@
 		2A20F8EA2B05E56800E3AE79 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
-				2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */,
-				2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */,
-				2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */,
+				2A20F8EB2B05E56F00E3AE79 /* Route.swift */,
+				2A20F8ED2B05E58700E3AE79 /* RouteModel.swift */,
+				2A20F8EF2B05E61B00E3AE79 /* RouteModel+ext.swift */,
 				2A390B572B05F88600ECA2C2 /* View+NavigationDestination.swift */,
 			);
 			path = Navigation;
@@ -12150,12 +12150,12 @@
 				2A5315742B07467500963A22 /* View+NavigationDestination.swift in Sources */,
 				2A5315782B07467500963A22 /* QRReaderStub.swift in Sources */,
 				2A5315762B07467500963A22 /* QRReaderButton.swift in Sources */,
-				2A5315792B07467500963A22 /* NavigationModel.swift in Sources */,
+				2A5315792B07467500963A22 /* RouteModel.swift in Sources */,
 				2A5315752B07467500963A22 /* SberQRPreviewApp.swift in Sources */,
 				2A5315712B07467500963A22 /* Composer.swift in Sources */,
-				2A5315732B07467500963A22 /* NavigationModel+ext.swift in Sources */,
+				2A5315732B07467500963A22 /* RouteModel+ext.swift in Sources */,
 				2A53156E2B07467500963A22 /* TextPickerView.swift in Sources */,
-				2A53156F2B07467500963A22 /* Navigation.swift in Sources */,
+				2A53156F2B07467500963A22 /* Route.swift in Sources */,
 				2A5315772B07467500963A22 /* AnySchedulerOfDispatchQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
