@@ -50,7 +50,7 @@ extension RequestFactory {
     enum GetJsonAbroadType: String {
         
         case stickerOrderForm
-        case stickerDeliveryOffice
+        case stickerOrderDeliveryOffice
         case stickerOrderDeliveryCourier
     }
     

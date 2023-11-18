@@ -15,7 +15,9 @@ public struct ModelToViewModelMapper {
 
 public extension ModelToViewModelMapper {
     
-    func map(_ parameter: Operation.Parameter) -> ParameterViewModel {
+    func map(
+        _ parameter: Operation.Parameter
+    ) -> ParameterViewModel {
         
         switch parameter {
         case let .sticker(parameterSticker):
@@ -52,7 +54,7 @@ public extension ModelToViewModelMapper {
                     parameter: parameter,
                     chevronButtonTapped: {
                         
-//                        action(.select(.chevronTapped(parameter)))
+                        action(.select(.chevronTapped(parameter)))
                     },
                     select: { option in
                         
