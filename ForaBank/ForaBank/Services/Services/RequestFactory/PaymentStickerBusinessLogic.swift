@@ -24,40 +24,37 @@ struct Office {
 
 final class BusinessLogic {
     
-    typealias MappingRemoteService<Input, Output, MapResponseError: Error> = RemoteService<Input, Output, Error, Error, MapResponseError>
-    
-    typealias DictionaryService = MappingRemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse, ResponseMapper.StickerDictionaryError>
-    typealias TransferService = MappingRemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse, ResponseMapper.CommissionProductTransferError>
-    typealias MakeTransferService = MappingRemoteService<String, MakeTransferResponse, ResponseMapper.MakeTransferError>
-    typealias ImageLoaderService = MappingRemoteService<[String], [ImageData], ResponseMapper.GetImageListError>
+    typealias ProcessDictionaryService = (RequestFactory.GetJsonAbroadType, @escaping (Result<StickerDictionaryResponse, RemoteServiceError<Error, Error, ResponseMapper.StickerDictionaryError>>) -> Void) -> ()
+    typealias ProcessTransferService = (RequestFactory.StickerPayment, @escaping (Result<CommissionProductTransferResponse, RemoteServiceError<Error, Error, ResponseMapper.CommissionProductTransferError>>) -> Void) -> ()
+    typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, RemoteServiceError<Error, Error, ResponseMapper.MakeTransferError>>) -> Void) -> ()
+    typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], RemoteServiceError<Error, Error, ResponseMapper.GetImageListError>>) -> Void) -> ()
     
     typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
     
     typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
     
-    //TODO: replace remoteService to closure or protocol
-    let dictionaryService: DictionaryService
-    let transferService: TransferService
-    let makeTransferService: MakeTransferService
-    let imageLoaderService: ImageLoaderService
+    let processDictionaryService: ProcessDictionaryService
+    let processTransferService: ProcessTransferService
+    let processMakeTransferService: ProcessMakeTransferService
+    let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
     let products: [Product]
     let cityList: [City]
     
     init(
-        dictionaryService: DictionaryService,
-        transferService: TransferService,
-        makeTransferService: MakeTransferService,
-        imageLoaderService: ImageLoaderService,
+        processDictionaryService: @escaping ProcessDictionaryService,
+        processTransferService: @escaping ProcessTransferService,
+        processMakeTransferService: @escaping ProcessMakeTransferService,
+        processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
         products: [Product],
         cityList: [City]
     ) {
-        self.dictionaryService = dictionaryService
-        self.transferService = transferService
-        self.makeTransferService = makeTransferService
-        self.imageLoaderService = imageLoaderService
+        self.processDictionaryService = processDictionaryService
+        self.processTransferService = processTransferService
+        self.processMakeTransferService = processMakeTransferService
+        self.processImageLoaderService = processImageLoaderService
         self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
@@ -132,7 +129,7 @@ extension BusinessLogic {
                     
                     if id == "typeDeliveryOffice" {
                      
-                        dictionaryService.process(.stickerOrderDeliveryOffice) { result in
+                        processDictionaryService(.stickerOrderDeliveryOffice) { result in
                             
                             switch result {
                             case let .success(dictionaryResponse):
@@ -148,7 +145,7 @@ extension BusinessLogic {
                         
                     } else {
                         
-                        dictionaryService.process(.stickerOrderDeliveryCourier) { result in
+                        processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
                             switch result {
                             case let .success(dictionaryResponse):
@@ -247,7 +244,7 @@ extension BusinessLogic {
            
             if operation.parameters.count == 0 {
                 
-                dictionaryService.process(.stickerOrderForm) { result in
+                processDictionaryService(.stickerOrderForm) { result in
                     
                     switch result {
                     case let .success(dictionaryResponse):
@@ -292,7 +289,7 @@ extension BusinessLogic {
                 switch input {
                 case let .input(input):
                     
-                    makeTransferService.process(input.value) { result in
+                    processMakeTransferService(input.value) { result in
                        
                         switch result {
                         case let .success(makeTransfer):
@@ -315,7 +312,7 @@ extension BusinessLogic {
                 
             } else {
              
-                transferService.process(.init(
+                processTransferService(.init(
                     currencyAmount: "RUB",
                     amount: 790,
                     check: false,
@@ -563,8 +560,7 @@ extension BusinessLogic {
         banner: StickerDictionaryResponse.Banner,
         completion: @escaping (OperationResult) -> Void
     ) {
-        
-        self.imageLoaderService.process([banner.md5hash]) { result in
+        processImageLoaderService([banner.md5hash]) { result in
             
             switch result {
             case let .success(images):

@@ -37,15 +37,27 @@ extension RootViewModelFactory {
         
         let makeOperationStateViewModel: MakeOperationStateViewModel = {
             
-            OperationStateViewModel(businessLogic: .init(
-                dictionaryService: Services.makeGetStickerDictService(
-                    httpClient: httpClient
-                ),
-                transferService: Services.makeCommissionProductTransferService(
-                    httpClient: httpClient
-                ),
-                makeTransferService: Services.makeTransferService(httpClient: httpClient),
-                imageLoaderService: Services.makeImageListService(httpClient: httpClient),
+            let dictionaryService = Services.makeGetStickerDictService(
+                httpClient: httpClient
+            )
+            let transferService = Services.makeCommissionProductTransferService(
+                httpClient: httpClient
+            )
+            let makeTransferService = Services.makeTransferService(
+                httpClient: httpClient
+            )
+            let makeImageLoaderService = Services.makeImageListService(
+                httpClient: httpClient
+            )
+            let processImageLoader = Services.makeImageListService(
+                httpClient: httpClient
+            )
+            
+            return OperationStateViewModel(businessLogic: .init(
+                processDictionaryService: dictionaryService.process,
+                processTransferService: transferService.process,
+                processMakeTransferService: makeTransferService.process,
+                processImageLoaderService: makeImageLoaderService.process,
                 selectOffice: $0,
                 products: model.productsMapper(model: model),
                 cityList: model.citiesMapper(model: model)
