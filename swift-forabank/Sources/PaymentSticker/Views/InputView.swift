@@ -11,19 +11,22 @@ import SwiftUI
 
 struct InputView: View {
     
+    @State private var text = ""
+    
     let title: String
-    let configuration: InputConfiguration
     let commit: (String) -> Void
+    let configuration: InputConfiguration
     
     var body: some View {
         
-        let textField = TextField(title, text: .constant(""))
+        let textField = TextField(title, text: $text)
         
         LabeledView(
             title: title,
             configuration: configuration,
             makeLabel: { textField }
         )
+        .onChange(of: text, perform: commit)
     }
 }
 
