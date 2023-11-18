@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct ModelToViewModelMapper {
     
@@ -51,7 +50,7 @@ public extension ModelToViewModelMapper {
             
         case let .select(parameter):
             
-            let icon: Image
+            let icon: ImageData
             let tapAction: () -> Void
             
             switch parameter.id {
@@ -59,15 +58,15 @@ public extension ModelToViewModelMapper {
                 tapAction = { action(.select(.chevronTapped(parameter))) }
                 
                 // TODO: extract name icons to configuration view
-                icon = .init("ic24MapPin")
+                icon = .named("ic24MapPin")
                 
             case .officeSelector:
                 tapAction = { action(.select(.openBranch(.init(id: "")))) }
-                icon = .init("ic24Bank")
+                icon = .named("ic24Bank")
                 
             default:
                 tapAction = { action(.select(.chevronTapped(parameter))) }
-                icon = .init("ic24ArrowDownCircle")
+                icon = .named("ic24ArrowDownCircle")
             }
             
             return .select(
