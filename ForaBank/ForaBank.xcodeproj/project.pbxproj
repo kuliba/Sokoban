@@ -1820,7 +1820,6 @@
 		C1BA23E52ACD543B00425B10 /* Service+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E42ACD543B00425B10 /* Service+Payments.swift */; };
 		C1BA23E72ACD583300425B10 /* RequestFactory+stickerPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */; };
 		C1BC73E52AE277CE0022D849 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C1BC73E42AE277CE0022D849 /* TextFieldComponent */; };
-		C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC73E62AE2781C0022D849 /* PreviewContent.swift */; };
 		C1BF79512A315FF9008CD818 /* TemplateButtonViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */; };
 		C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */; };
 		C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */; };
@@ -3977,7 +3976,6 @@
 		C1BA23DE2AC701EC00425B10 /* StickersStyleConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersStyleConfiguration.swift; sourceTree = "<group>"; };
 		C1BA23E42ACD543B00425B10 /* Service+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+Payments.swift"; sourceTree = "<group>"; };
 		C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+stickerPayment.swift"; sourceTree = "<group>"; };
-		C1BC73E62AE2781C0022D849 /* PreviewContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
 		C1BF79502A315FF9008CD818 /* TemplateButtonViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponentTests.swift; sourceTree = "<group>"; };
 		C1C7DAA229EF0214000DBCA1 /* DelayWrappedAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayWrappedAction.swift; sourceTree = "<group>"; };
 		C1CCFC3729816B8F0059212C /* ToolbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarViewModel.swift; sourceTree = "<group>"; };
@@ -9722,7 +9720,6 @@
 		C1F346DB2AE25C6100EE1E87 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				C1BC73E62AE2781C0022D849 /* PreviewContent.swift */,
 				C1F346DC2AE25C6100EE1E87 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -12228,7 +12225,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1BC73E72AE2781C0022D849 /* PreviewContent.swift in Sources */,
 				C1F346D62AE25C6000EE1E87 /* StickerPreviewApp.swift in Sources */,
 				C1F346D82AE25C6000EE1E87 /* ContentView.swift in Sources */,
 			);
