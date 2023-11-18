@@ -468,7 +468,8 @@ extension MainView {
             inputViewConfig: .init(
                 titleFont: .textBodyMR14180(),
                 titleColor: .textPlaceholder,
-                iconColor: .iconGray
+                iconColor: .iconGray,
+                iconName: "ic24SmsCode"
             ),
             amountViewConfig: .init(
                 amountFont: .textH2Sb20282(),
