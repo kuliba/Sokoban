@@ -14,8 +14,7 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         
         let title = UUID().uuidString
         let sut = makeSUT(title: title)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
+        
         let textField = try textField(sut)
         let spy = ValueSpy(textField.$state)
         
@@ -28,34 +27,30 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         
         let title = UUID().uuidString
         let sut = makeSUT(title: title)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-
+        
         let textField = try textField(sut)
         let spy = ValueSpy(textField.$state)
         
         XCTAssertNoDiff(spy.values, [
             .placeholder(title),
         ])
-
-        textField.startEditing()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        textField.startEditingAndWait()
         
         XCTAssertNoDiff(spy.values, [
             .placeholder(title),
             .editing(.empty),
         ])
-
-        textField.insertAtCursor("abcd")
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        textField.insertAtCursorAndWait("abcd")
         
         XCTAssertNoDiff(spy.values, [
             .placeholder(title),
             .editing(.empty),
             .editing(.init("abcd", cursorAt: 4)),
         ])
-
-        textField.insert("-", atCursor: 2)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        textField.insertAndWait("-", atCursor: 2)
         
         XCTAssertNoDiff(spy.values, [
             .placeholder(title),
@@ -86,6 +81,8 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         return sut
     }
@@ -153,5 +150,32 @@ private extension PaymentsOperationViewModel {
     var inputTextField: RegularFieldViewModel? {
         
         inputViewModel?.textField
+    }
+}
+
+private extension RegularFieldViewModel {
+    
+    func startEditingAndWait(
+        timeout: TimeInterval = 0.3
+    ) {
+        startEditing()
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func insertAtCursorAndWait(
+        _ text: String,
+        timeout: TimeInterval = 0.3
+    ) {
+        insertAtCursor(text)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func insertAndWait(
+        _ text: String,
+        atCursor cursor: Int,
+        timeout: TimeInterval = 0.3
+    ) {
+        insert(text, atCursor: cursor)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
