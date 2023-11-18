@@ -42,27 +42,6 @@ extension Operation {
 
 extension [Operation.Parameter] {
     
-    public func updateInput(
-        text: String
-    ) -> Operation {
-    
-        guard let index = self.firstIndex(where: { $0.id == .input }) else {
-            return .init(parameters: self)
-        }
-        
-        let input = self[index]
-        switch input {
-        case var .input(input):
-            
-            input.value = text
-            
-            return .init(parameters: self).updateOperation(operation: .init(parameters: self), newParameter: .input(input))
-            
-        default:
-            return .init(parameters: self)
-        }
-    }
-    
     func getParameterTransferType() -> Operation.Parameter.Select? {
     
         switch self.first(where: { $0.id == .transferType }) {
