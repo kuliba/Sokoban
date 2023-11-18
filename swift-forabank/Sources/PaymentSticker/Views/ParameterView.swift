@@ -63,7 +63,7 @@ struct ParameterView: View {
             )
         
         case let .input(title):
-            InputViewWrapper(
+            InputView(
                 title: title,
                 configuration: configuration.inputViewConfig,
                 commit: { event(.valueUpdate($0)) }
@@ -71,25 +71,6 @@ struct ParameterView: View {
         }
     }
 }
-
-struct InputViewWrapper: View {
-    
-    let title: String
-    let configuration: InputConfiguration
-    let commit: (String) -> Void
-    
-    var body: some View {
-        
-        let textField = TextField(title, text: .constant(""))
-        
-        InputView(
-            title: title,
-            configuration: configuration,
-            makeTextField: { _,_ in textField }
-        )
-    }
-}
-
 
 struct ParameterView_Previews: PreviewProvider {
     static var previews: some View {

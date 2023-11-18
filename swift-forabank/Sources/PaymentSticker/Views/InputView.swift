@@ -9,21 +9,31 @@ import SwiftUI
 
 // MARK: - View
 
-enum Symbols {
-
-    case digits
-}
-
-enum Keyboard {
-    
-    case numberPad
-}
-
-public struct InputView<TextField: View>: View {
+struct InputView: View {
     
     let title: String
     let configuration: InputConfiguration
-    let makeTextField: (Symbols, Keyboard) -> TextField
+    let commit: (String) -> Void
+    
+    var body: some View {
+        
+        let textField = TextField(title, text: .constant(""))
+        
+        LabeledView(
+            title: title,
+            configuration: configuration,
+            makeLabel: { textField }
+        )
+    }
+}
+
+public struct LabeledView<Label: View>: View {
+    
+    typealias MakeLabel = () -> Label
+    
+    let title: String
+    let configuration: InputConfiguration
+    let makeLabel: MakeLabel
     
     public var body: some View {
         
@@ -55,7 +65,7 @@ public struct InputView<TextField: View>: View {
             
             titleView
             
-            makeTextField(.digits, .numberPad)
+            makeLabel()
         }
     }
     
@@ -108,7 +118,7 @@ struct InputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        InputView(
+        LabeledView(
             title: "Введите код",
             configuration: .init(
                 titleFont: .body,
@@ -116,9 +126,7 @@ struct InputView_Previews: PreviewProvider {
                 iconColor: .black,
                 iconName: "photo.fill"
             ),
-            makeTextField: { _,_ in
-                Text("TextField")
-            }
+            makeLabel: { Text("TextField") }
         )
     }
 }
