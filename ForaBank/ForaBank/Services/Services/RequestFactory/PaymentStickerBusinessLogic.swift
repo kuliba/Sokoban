@@ -206,7 +206,7 @@ extension BusinessLogic {
                     
                 case let .selected(selectedViewModel):
                     
-                    let parameter = select.updateState(
+                    let parameter = select.updatedState(
                         iconName: selectedViewModel.iconName
                     )
                     
@@ -217,7 +217,7 @@ extension BusinessLogic {
                     
                 case let .list(listViewModel):
                     
-                    let parameter = select.updateState(
+                    let parameter = select.updatedState(
                         iconName: listViewModel.iconName,
                         title: listViewModel.title
                     )
@@ -235,10 +235,18 @@ extension BusinessLogic {
                 return .success(.operation(operation))
 
             case let .valueUpdate(input):
+                guard let title = operation.parameters.inputTitle else {
+                    // TODO: error missing input
+                    struct MissingInputError: Error {}
+                    return .failure(MissingInputError())
+                }
                 
                 let parametersUpdate = operation.updateOperation(
                     operation: operation,
-                    newParameter: .input(input)
+                    newParameter: .input(.init(
+                        value: input,
+                        title: title
+                    ))
                 )
                 return .success(.operation(parametersUpdate))
             }
@@ -603,3 +611,38 @@ extension BusinessLogic {
         let name: String
     }
 }
+
+// MARK: Helpers
+
+extension PaymentSticker.ParameterViewModel {
+    
+    var inputTitle: String? {
+        
+        guard case let .input(title) = self else {
+            return nil
+        }
+        
+        return title
+    }
+}
+
+extension PaymentSticker.Operation.Parameter {
+
+    var inputTitle: String? {
+        
+        guard case let .input(input) = self else {
+            return nil
+        }
+        
+        return input.title
+    }
+}
+
+extension Array where Element == PaymentSticker.Operation.Parameter {
+    
+    var inputTitle: String? {
+        
+        first(where: { $0.id == .input })?.inputTitle
+    }
+}
+
