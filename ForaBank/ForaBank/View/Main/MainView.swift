@@ -418,18 +418,5 @@ extension MainView {
 
 extension OperationStateViewModel {
 
-    static let empty = OperationStateViewModel(businessLogic: .empty)
-}
-
-private extension BusinessLogic {
-    
-    static let empty = BusinessLogic(
-        processDictionaryService: { _,_ in },
-        processTransferService: { _,_ in },
-        processMakeTransferService: { _,_ in },
-        processImageLoaderService: { _,_ in },
-        selectOffice: { _,_ in },
-        products: [],
-        cityList: []
-    )
+    static let empty = OperationStateViewModel { _,_ in }
 }
