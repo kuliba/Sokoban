@@ -10,7 +10,7 @@ extension Operation.Parameter {
     public struct Select: Hashable, Identifiable {
         
         public let id: ParameterID
-        let value: String
+        let value: String?
         public let title: String
         let placeholder: String
         public let options: [Option]
@@ -26,7 +26,7 @@ extension Operation.Parameter {
         
         public init(
             id: ParameterID,
-            value: String,
+            value: String?,
             title: String,
             placeholder: String,
             options: [Operation.Parameter.Select.Option],
