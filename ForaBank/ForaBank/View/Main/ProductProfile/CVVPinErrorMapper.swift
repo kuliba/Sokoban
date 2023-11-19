@@ -17,22 +17,22 @@ struct CVVPinErrorMapper {
         switch error {
             
         case .activationFailure:
-            return .errorForAlert(.init(.technicalError))
+            return .pinError(.errorForAlert(.init(.technicalError)))
             
         case let .retry(_, _, retryAttempts):
-            return .errorForAlert(.init(retryAttempts > 0 ? .incorrectСode : .technicalError))
+            return .pinError(.errorForAlert(.init(retryAttempts > 0 ? .incorrectСode : .technicalError)))
             
         case let .server(statusCode, _) where statusCode != 7051:
-            return .errorScreen
+            return .pinError(.errorScreen)
             
         case let .server(_, message):
-            return .errorForAlert(.init(message))
+            return .pinError(.errorForAlert(.init(message)))
             
         case .serviceFailure:
-            return .errorForAlert(.init(.technicalError))
+            return .pinError(.errorForAlert(.init(.technicalError)))
             
         case .weakPIN:
-            return .weakPinAlert( .init(String.simpleCode), .init("Изменить"))
+            return .pinError(.weakPinAlert( .init(String.simpleCode), .init("Изменить")))
         }
     }
     
@@ -43,10 +43,10 @@ struct CVVPinErrorMapper {
         switch error {
             
         case let .retry(_, _, retryAttempts):
-            return retryAttempts > 0 ? .errorForAlert(.init(String.incorrectСode)) : .noRetry(.init(String.technicalError), .init("Ок"))
+            return retryAttempts > 0 ? .cvvError(.errorForAlert(.init(String.incorrectСode))) : .cvvError(.noRetry(.init(String.technicalError), .init("Ок")))
             
         case .serviceFailure, .server:
-            return .noRetry(.init(String.technicalError), .init("Ок"))
+            return .cvvError(.noRetry(.init(String.technicalError), .init("Ок")))
         }
     }
 }

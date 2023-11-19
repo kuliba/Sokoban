@@ -1058,7 +1058,7 @@ extension NavigationBarView.ViewModel {
             ],
             rightItems: [
                 NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: .ic40Qr,
+                    icon: Image("qr_Icon"),
                     action: navTrailingAction
                 )
             ]
@@ -1081,7 +1081,7 @@ extension NavigationBarView.ViewModel {
             ],
             rightItems: [
                 NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: .ic40Qr,
+                    icon: Image("qr_Icon"),
                     action: navTrailingAction
                 )
             ]
