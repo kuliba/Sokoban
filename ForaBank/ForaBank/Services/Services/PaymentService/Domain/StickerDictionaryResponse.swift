@@ -16,19 +16,35 @@ enum StickerDictionaryResponse: Equatable {
 
 extension StickerDictionaryResponse {
     
-    struct DeliveryOffice: Equatable {
+    public struct DeliveryOffice: Equatable {
         
         let main: [Main]
         let serial: String
+        
+        public init(
+            main: [Main],
+            serial: String
+        ) {
+            self.main = main
+            self.serial = serial
+        }
     }
     
-    struct DeliveryCourier: Equatable {
+    public struct DeliveryCourier: Equatable {
         
         let main: [Main]
         let serial: String
+        
+        public init(
+            main: [Main],
+            serial: String
+        ) {
+            self.main = main
+            self.serial = serial
+        }
     }
     
-    struct StickerOrderForm: Equatable {
+    public struct StickerOrderForm: Equatable {
         
         let header: [Header]
         let main: [Main]
@@ -46,7 +62,35 @@ extension StickerDictionaryResponse {
                 
                 let title: String
                 let isFixed: Bool
+                
+                public init(
+                    title: String,
+                    isFixed: Bool
+                ) {
+                    self.title = title
+                    self.isFixed = isFixed
+                }
             }
+            
+            public init(
+                type: ComponentType,
+                data: Data
+            ) {
+                self.type = type
+                self.data = data
+            }
+        }
+        
+        public init(
+            header: [Header],
+            main: [Main],
+            footer: [Footer],
+            serial: String
+        ) {
+            self.header = header
+            self.main = main
+            self.footer = footer
+            self.serial = serial
         }
     }
     

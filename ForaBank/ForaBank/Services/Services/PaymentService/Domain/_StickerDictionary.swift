@@ -53,7 +53,7 @@ extension ResponseMapper._StickerDictionary {
         let serial: String
     }
     
-    struct StickerOrderForm: Decodable {
+    public struct StickerOrderForm: Decodable {
         
         let header: [Header]
         let main: [Main]
@@ -72,6 +72,18 @@ extension ResponseMapper._StickerDictionary {
                 let title: String
                 let isFixed: Bool
             }
+        }
+        
+        public init(
+            header: [Header],
+            main: [Main],
+            footer: [Footer],
+            serial: String
+        ) {
+            self.header = header
+            self.main = main
+            self.footer = footer
+            self.serial = serial
         }
     }
     
