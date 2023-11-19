@@ -25,7 +25,7 @@ final class BusinessLogic {
     
     typealias ProcessDictionaryService = (RequestFactory.GetJsonAbroadType, @escaping (Result<StickerDictionaryResponse, RemoteServiceError<Error, Error, ResponseMapper.StickerDictionaryError>>) -> Void) -> ()
     typealias ProcessTransferService = (RequestFactory.StickerPayment, @escaping (Result<CommissionProductTransfer, RemoteServiceError<Error, Error, ResponseMapper.CommissionProductTransferError>>) -> Void) -> ()
-    typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, RemoteServiceError<Error, Error, ResponseMapper.MakeTransferError>>) -> Void) -> ()
+    typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransfer, RemoteServiceError<Error, Error, ResponseMapper.MakeTransferError>>) -> Void) -> ()
     typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], RemoteServiceError<Error, Error, ResponseMapper.GetImageListError>>) -> Void) -> ()
     
     typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
@@ -307,7 +307,7 @@ extension BusinessLogic {
                             completion(.success(.result(OperationStateViewModel.OperationResult(
                                 result: .success,
                                 title: "Успешная заявка",
-                                description: makeTransfer.data.productOrderingResponseMessage,
+                                description: makeTransfer.productOrderingResponseMessage,
                                 amount: "100"
                             ))))
 
