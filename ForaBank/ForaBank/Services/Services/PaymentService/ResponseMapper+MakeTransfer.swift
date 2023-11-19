@@ -44,7 +44,7 @@ extension ResponseMapper {
         }
     }
     
-    enum MakeTransferError: Error , Equatable{
+    enum MakeTransferError: Error , Equatable {
         
         case error(
             statusCode: Int,

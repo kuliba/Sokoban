@@ -61,7 +61,7 @@ extension ResponseMapper {
         }
     }
     
-    enum GetImageListError: Error , Equatable{
+    enum GetImageListError: Error , Equatable {
         
         case error(
             statusCode: Int,

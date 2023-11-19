@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CommissionProductTransferError: Error , Equatable{
+public enum CommissionProductTransferError: Error, Equatable {
     
     case error(
         statusCode: Int,
