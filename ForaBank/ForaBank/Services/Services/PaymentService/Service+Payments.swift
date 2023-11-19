@@ -65,23 +65,3 @@ extension Services {
     }
 }
 
-struct StickerPayment {
-    
-    let currencyAmount: String
-    let amount: String
-    let check: Bool
-    let payer: Payer
-    let productToOrderInfo: Order
-    
-    struct Payer {
-        
-        let cardId: String
-    }
-    
-    struct Order {
-        
-        let type: String
-        let deliverToOffice: Bool
-        let officeId: String
-    }
-}   
