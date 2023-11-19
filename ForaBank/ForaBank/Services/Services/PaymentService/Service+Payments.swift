@@ -25,7 +25,7 @@ extension Services {
         )
     }
     
-    typealias CommissionProductTransferService = MappingRemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse, ResponseMapper.CommissionProductTransferError>
+    typealias CommissionProductTransferService = MappingRemoteService<RequestFactory.StickerPayment, CommissionProductTransfer, ResponseMapper.CommissionProductTransferError>
     
     static func makeCommissionProductTransferService(
         httpClient: HTTPClient

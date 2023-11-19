@@ -24,7 +24,7 @@ struct Office {
 final class BusinessLogic {
     
     typealias ProcessDictionaryService = (RequestFactory.GetJsonAbroadType, @escaping (Result<StickerDictionaryResponse, RemoteServiceError<Error, Error, ResponseMapper.StickerDictionaryError>>) -> Void) -> ()
-    typealias ProcessTransferService = (RequestFactory.StickerPayment, @escaping (Result<CommissionProductTransferResponse, RemoteServiceError<Error, Error, ResponseMapper.CommissionProductTransferError>>) -> Void) -> ()
+    typealias ProcessTransferService = (RequestFactory.StickerPayment, @escaping (Result<CommissionProductTransfer, RemoteServiceError<Error, Error, ResponseMapper.CommissionProductTransferError>>) -> Void) -> ()
     typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, RemoteServiceError<Error, Error, ResponseMapper.MakeTransferError>>) -> Void) -> ()
     typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], RemoteServiceError<Error, Error, ResponseMapper.GetImageListError>>) -> Void) -> ()
     

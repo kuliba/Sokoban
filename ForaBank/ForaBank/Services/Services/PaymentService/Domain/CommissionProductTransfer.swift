@@ -7,29 +7,22 @@
 
 import Foundation
 
-struct CommissionProductTransferResponse: Decodable {
+struct CommissionProductTransfer {
     
-    let statusCode: Int
-    let errorMessage: String?
-    let data: Data
-
-    struct Data: Decodable {
-        
-        let paymentOperationDetailId: Int
-        let payerCardId: Int?
-        let payerCardNumber: String?
-        let payerAccountId: String?
-        let payerAccountNumber: String?
-        let payeeCardNumber: String?
-        let payeeAccountNumber: String?
-        let payeeName: String
-        let amount: Decimal
-        let debitAmount: Decimal
-        let currencyAmount: String
-        let currencyPayer: String
-        let currencyPayee: String
-        let currencyRate: String?
-        let creditAmount: Decimal?
-        let documentStatus: String?
-    }
+    let paymentOperationDetailId: Int
+    let payerCardId: Int?
+    let payerCardNumber: String?
+    let payerAccountId: String?
+    let payerAccountNumber: String?
+    let payeeCardNumber: String?
+    let payeeAccountNumber: String?
+    let payeeName: String
+    let amount: Decimal
+    let debitAmount: Decimal
+    let currencyAmount: String
+    let currencyPayer: String
+    let currencyPayee: String
+    let currencyRate: String?
+    let creditAmount: Decimal?
+    let documentStatus: String?
 }
