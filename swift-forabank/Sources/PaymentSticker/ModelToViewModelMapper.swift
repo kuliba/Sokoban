@@ -28,7 +28,6 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
-                    //TODO: extract to extension Image
                     sticker: parameterSticker.image,
                     options: parameterSticker.options.map {
                         
