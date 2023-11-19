@@ -1763,7 +1763,6 @@
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
 		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
 		C14F85532AF537B000749534 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C14F85522AF537B000749534 /* PaymentSticker */; };
-		C14F85552AFA623100749534 /* PaymentStickerBusinessLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F85542AFA623100749534 /* PaymentStickerBusinessLogic.swift */; };
 		C1549866290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */; };
 		C1549868290756DC00D00670 /* ContactsBanksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */; };
 		C154986A2907570C00D00670 /* ContactsCountriesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */; };
@@ -3924,7 +3923,6 @@
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
 		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
-		C14F85542AFA623100749534 /* PaymentStickerBusinessLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerBusinessLogic.swift; sourceTree = "<group>"; };
 		C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionCollapsableViewModel.swift; sourceTree = "<group>"; };
 		C1549867290756DC00D00670 /* ContactsBanksSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionViewModel.swift; sourceTree = "<group>"; };
 		C15498692907570C00D00670 /* ContactsCountriesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsCountriesSectionViewModel.swift; sourceTree = "<group>"; };
@@ -5942,7 +5940,6 @@
 				2A45AF742AA729D500762DEE /* RequestFactory+createLandingRequest.swift */,
 				834E3F6B2AC2CB8D00E49C2B /* RequestFactory+getScenarioQRData.swift */,
 				C1BA23E62ACD583300425B10 /* RequestFactory+stickerPayment.swift */,
-				C14F85542AFA623100749534 /* PaymentStickerBusinessLogic.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -12599,7 +12596,6 @@
 				ED374C8F2861FBCE00A97219 /* ActivityViewComponent.swift in Sources */,
 				C1C7DAA329EF0214000DBCA1 /* DelayWrappedAction.swift in Sources */,
 				77EC58E9277237190054D75C /* ModelAction.swift in Sources */,
-				C14F85552AFA623100749534 /* PaymentStickerBusinessLogic.swift in Sources */,
 				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
 				2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */,
 				773E6839298B9FEC00B75482 /* Model+PaymentsC2B.swift in Sources */,
