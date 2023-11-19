@@ -26,27 +26,61 @@ public struct ProductView: View {
             case let .list(productViewModel, productList):
                 
                 selectProductView(productViewModel)
-                optionsList(productList)
+                optionsList(
+                    productList,
+                    optionConfig: appearance.optionConfig
+                )
             }
         }
-        .background(background())
+        .background(appearance.background.color)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
     }
     
     private func optionsList(
-        _ productList: [ProductViewModel]
+        _ productList: [ProductViewModel],
+        optionConfig: Appearance.OptionConfig
     ) -> some View {
         
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
             HStack(spacing: 10) {
                 
                 ForEach(productList, id: \.self) { product in
                     
-                    productOption(
-                        product: product,
-                        header: product.header
-                    )
+                    VStack(spacing: 8) {
+                     
+                        HStack {
+                            
+                            Color.clear
+                                .frame(width: 20, height: 20, alignment: .center)
+                            
+                            Text(product.footer.description)
+                                .font(optionConfig.numberFont)
+                                .foregroundColor(optionConfig.numberColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                     
+                        VStack(spacing: 4) {
+                            
+                            Text(product.main.name)
+                                .font(optionConfig.nameFont)
+                                .foregroundColor(optionConfig.nameColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            HStack {
+                                
+                                Text(product.main.balance)
+                                    .font(optionConfig.balanceFont)
+                                    .foregroundColor(optionConfig.balanceColor)
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+                    .background(background(product))
+                    .frame(width: 112, height: 71)
+                    .cornerRadius(8)
                 }
             }
         }
@@ -83,7 +117,7 @@ public struct ProductView: View {
             }
         }
         .frame(width: 112, height: 72)
-        .background(background())
+        .background(background(product))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
         .onTapGesture {
             
@@ -96,9 +130,10 @@ public struct ProductView: View {
         
         HStack(spacing: 12) {
             
-            Image(productViewModel.main.cardLogo)
+            // FIXME: create extension for data to image
+            Image(data: productViewModel.main.cardLogo.data)
                 .resizable()
-                .frame(width: 32, height: 22, alignment: .center)
+                .frame(width: 32, height: 32, alignment: .center)
             
             VStack(alignment: .leading, spacing: 0) {
                 
@@ -126,10 +161,11 @@ public struct ProductView: View {
         VStack(alignment: .leading, spacing: 4) {
             
             HStack(alignment: .center, spacing: 8) {
-                
-                if let imageName = viewModel.main.paymentSystem {
+
+                // FIXME: create extension for data to image AGAIN
+                if let paymentSystemImage = viewModel.main.paymentSystem {
                     
-                    Image(imageName)
+                    Image(data: paymentSystemImage.data)
                 }
                 
                 Text(viewModel.main.name)
@@ -155,17 +191,20 @@ public struct ProductView: View {
     }
     
     @ViewBuilder
-    private func background() -> some View {
+    private func background(
+        _ product: ProductViewModel
+    ) -> some View {
         
-        if let backgroundImage = appearance.background.image {
+        if let backgroundUIImage = product.main.backgroundImage {
             
-            backgroundImage
+            // FIXME: create extension for data to image AGAIN
+            Image(data: backgroundUIImage.data)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
         } else {
             
-            appearance.background.color
+            product.main.backgroundColor
         }
     }
 }
@@ -226,6 +265,7 @@ extension ProductView {
         let headerTextFont: Font
         let textColor: Color
         let textFont: Font
+        let optionConfig: OptionConfig
         let background: Background
         
         public init(
@@ -233,13 +273,41 @@ extension ProductView {
             headerTextFont: Font,
             textColor: Color,
             textFont: Font,
+            optionConfig: OptionConfig,
             background: Background
         ) {
             self.headerTextColor = headerTextColor
             self.headerTextFont = headerTextFont
             self.textColor = textColor
             self.textFont = textFont
+            self.optionConfig = optionConfig
             self.background = background
+        }
+        
+        public struct OptionConfig {
+            
+            let numberColor: Color
+            let numberFont: Font
+            let nameColor: Color
+            let nameFont: Font
+            let balanceColor: Color
+            let balanceFont: Font
+            
+            public init(
+                numberColor: Color,
+                numberFont: Font,
+                nameColor: Color,
+                nameFont: Font,
+                balanceColor: Color,
+                balanceFont: Font
+            ) {
+                self.numberColor = numberColor
+                self.numberFont = numberFont
+                self.nameColor = nameColor
+                self.nameFont = nameFont
+                self.balanceColor = balanceColor
+                self.balanceFont = balanceFont
+            }
         }
         
         public struct Background {
@@ -266,6 +334,14 @@ extension ProductView.Appearance {
         headerTextFont: .body,
         textColor: .accentColor,
         textFont: .body,
+        optionConfig: .init(
+            numberColor: .black,
+            numberFont: .body,
+            nameColor: .black,
+            nameFont: .body,
+            balanceColor: .black,
+            balanceFont: .body
+        ),
         background: .init(color: .yellow, image: nil)
     )
 }
@@ -280,10 +356,12 @@ struct ProductView_Previews: PreviewProvider {
                 state: .selected(.init(
                     header: .init(title: "Счет списания"),
                     main: .init(
-                        cardLogo: .init(""),
+                        cardLogo: .data(.empty),
                         paymentSystem: nil,
                         name: "Gold",
-                        balance: "625 193 Р"
+                        balance: "625 193 Р",
+                        backgroundImage: .data(.empty),
+                        backgroundColor: .red
                     ),
                     footer: .init(description: "description")
                 )),

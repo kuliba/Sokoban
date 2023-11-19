@@ -6,17 +6,16 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct StickerViewModel {
     
     let header: HeaderViewModel
-    let sticker: Image
+    let sticker: ImageData
     let options: [OptionViewModel]
     
     public init(
         header: HeaderViewModel,
-        sticker: Image,
+        sticker: ImageData,
         options: [OptionViewModel]
     ) {
         self.header = header
@@ -39,8 +38,8 @@ extension StickerViewModel {
 
         public var id: String { title }
         public let title: String
-        let icon: Image
-        let description: String
-        let iconColor: Color
+        public let icon: ImageData
+        public let description: String
+        public let iconColor: String
     }
 }

@@ -207,19 +207,28 @@ final class RootViewModelTests: XCTestCase {
         let sut = RootViewModel(
             mainViewModel: .init(
                 model,
-                sections: MainSectionViewModel.makeMainSection(model),
-                makeOperationStateViewModel: { _,_  in .preview }
+                sections: [],
+                makeOperationStateViewModel: { _ in .preview },
+                makeProductProfileViewModel: { _,_,_ in nil },
+                onRegister: {}
             ),
-            paymentsViewModel: .init(model: model),
+            paymentsViewModel: .init(
+                model: model,
+                makeProductProfileViewModel: { _,_,_ in nil }
+            ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
             infoDictionary: infoDictionary,
-            model
+            model,
+            showLoginAction: { _ in
+                
+                    .init(viewModel: .init(authLoginViewModel: .preview))
+            }
         )
         
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         let alertSpy = ValueSpy(sut.$alert.map(\.?.view))
-
+        
         trackForMemoryLeaks(sut, file: file, line: line)
         
         // TODO: restore model memory tracking after model fix

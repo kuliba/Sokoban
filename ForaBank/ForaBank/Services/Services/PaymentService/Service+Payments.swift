@@ -12,7 +12,7 @@ import PaymentSticker
 extension Services {
 
     typealias GetJsonAbroadType = RequestFactory.GetJsonAbroadType
-    typealias GetStickerDictionary = RemoteService<GetJsonAbroadType, StickerDictionaryResponse>
+    typealias GetStickerDictionary = RemoteServiceOf<GetJsonAbroadType, StickerDictionaryResponse>
 
     static func stickerDictRequest(
         input: RequestFactory.GetJsonAbroadType,
@@ -29,7 +29,7 @@ extension Services {
         )
     }
     
-    typealias CommissionProductTransfer = RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias CommissionProductTransfer = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
     
     static func createCommissionProductTransferRequest(
         input: PaymentSticker.Operation,
@@ -46,7 +46,7 @@ extension Services {
         )
     }
     
-    typealias MakeTransfer = RemoteService<String, MakeTransferResponse>
+    typealias MakeTransfer = RemoteServiceOf<String, MakeTransferResponse>
     
     static func makeTransferRequest(
         httpClient: HTTPClient
@@ -58,6 +58,22 @@ extension Services {
             mapResponse: {
                 
                 return try ResponseMapper.mapMakeTransferResponse($0, $1).get()
+            }
+        )
+    }
+    
+    typealias GetImageList = RemoteServiceOf<[String], [ImageData]>
+    
+    static func getImageListRequest(
+        httpClient: HTTPClient
+    ) -> GetImageList {
+        
+        return .init(
+            createRequest: RequestFactory.getImageList,
+            performRequest: httpClient.performRequest,
+            mapResponse: {
+                
+                return try ResponseMapper.getImageListResponse($0, $1).get()
             }
         )
     }

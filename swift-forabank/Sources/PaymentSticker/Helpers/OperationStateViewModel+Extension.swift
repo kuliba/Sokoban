@@ -55,7 +55,7 @@ extension OperationStateViewModel {
             case let .chevronTapped(product, state):
                 let operation = operation.updateOperation(
                     operation: operation,
-                    newParameter: .product(.init(
+                    newParameter: .productSelector(.init(
                         state: state,
                         selectedProduct: product.selectedProduct,
                         allProducts: product.allProducts
@@ -67,7 +67,7 @@ extension OperationStateViewModel {
                 
                 let operation = operation.updateOperation(
                     operation: operation,
-                    newParameter: .product(.init(
+                    newParameter: .productSelector(.init(
                         state: .select,
                         selectedProduct: option,
                         allProducts: []))
@@ -176,7 +176,7 @@ extension OperationStateViewModel {
                 newParameter: .select(updateParameter)
             )
 
-        case .openBranch:
+        case let .openBranch(location):
             //TODO: send Branch View
             return nil
         case .chevronTapped(_):
@@ -356,8 +356,9 @@ extension Array where Element == Operation.Parameter {
     static let preview: Self = [
         .tip(.init(title: "Выберите счет карты, к которому будет привязан стикер")),
         .sticker(.init(
-            title: "Платежный стике",
+            title: "Платежный стикер",
             description: "Стоимость обслуживания взимается единоразово за весь срок при заказе стикера",
+            image: .empty,
             options: [
                 .init(
                     title: "При получении в офисе",
@@ -368,10 +369,28 @@ extension Array where Element == Operation.Parameter {
                     description: "1500 Р")
             ]
         )),
-        .product(.init(
+        .productSelector(.init(
             state: .select,
-            selectedProduct: .init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено"),
-            allProducts: [.init(paymentSystem: "", background: "", title: "Счет списания", nameProduct: "Gold", balance: "654 367 ₽", description: "・3387・Все включено")])
+            selectedProduct: .init(
+                title: "Счет списания",
+                nameProduct: "Gold",
+                balance: "654 367 ₽",
+                description: "・3387・Все включено",
+                cardImage: .empty,
+                paymentSystem: .empty,
+                backgroundImage: .empty,
+                backgroundColor: ""
+            ),
+            allProducts: [.init(
+                title: "Счет списания",
+                nameProduct: "Gold",
+                balance: "654 367 ₽",
+                description: "・3387・Все включено",
+                cardImage: .empty,
+                paymentSystem: .empty,
+                backgroundImage: .empty,
+                backgroundColor: ""
+            )])
         ),
         .select(.init(
             id: .transferTypeSticker,

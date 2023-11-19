@@ -20,12 +20,4 @@ extension Array where Element == CountryCodeSubstitution {
     static let russian: Self = [CountryCodeReplace]
         .russian
         .map(\.substitution)
-    
-    static let armenian: Self = [CountryCodeReplace]
-        .armenian
-        .map(\.substitution)
-    
-    static let turkish: Self = [CountryCodeReplace]
-        .turkey
-        .map(\.substitution)
 }

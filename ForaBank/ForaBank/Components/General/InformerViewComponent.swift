@@ -164,6 +164,8 @@ extension InformerView {
                         switch type {
                         case .openAccount:
                             return false
+                        case .copyInfo:
+                            return false
                         }
                     }
                     
@@ -173,6 +175,8 @@ extension InformerView {
                         
                         switch type {
                         case .openAccount:
+                            return false
+                        case .copyInfo:
                             return false
                         }
                     }

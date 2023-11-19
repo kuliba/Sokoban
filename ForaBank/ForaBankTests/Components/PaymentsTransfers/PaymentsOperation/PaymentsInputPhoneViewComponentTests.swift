@@ -45,24 +45,24 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
 
         startEditingAndWait(sut.textView)
 
-        let input: Character = "3"
+        let input: String = "3"
         insertAtCursorAndWait(.init(input), sut.textView)
 
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+(3"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .editing(.init("+(3", cursorAt: 3)))
+        XCTAssertNoDiff(sut.textView.state, .editing(.init("+3", cursorAt: 2)))
         XCTAssertFalse(countryCodes.map(\.from).contains(input))
     }
     
     func test_textChange_shouldNotSubstituteOnCountryCodesMismatch_noSpy() {
         
-        let countryCodes: [CountryCodeReplace] = .armenian
+        let countryCodes: [CountryCodeReplace] = .russian
         let sut = makeSUT(countryCodes: countryCodes).sut
         
         startEditingAndWait(sut.textView)
         
-        let input: Character = "4"
+        let input: String = "4"
         insertAtCursorAndWait(.init(input), sut.textView)
         
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
@@ -74,19 +74,19 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
     
     func test_textChange_shouldSubstituteOnCountryCodesMatch_noSpy() {
         
-        let countryCodes: [CountryCodeReplace] = .armenian
+        let countryCodes: [CountryCodeReplace] = .russian
         let sut = makeSUT(countryCodes: countryCodes).sut
 
         startEditingAndWait(sut.textView)
         
-        let input: Character = "3"
+        let input: String = "3"
         insertAtCursorAndWait(.init(input), sut.textView)
 
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+374"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .editing(.init("+374", cursorAt: 4)))
-        XCTAssertTrue(countryCodes.map(\.from).contains(input))
+        XCTAssertNoDiff(sut.textView.state, .editing(.init("+3", cursorAt: 2)))
+        XCTAssertFalse(countryCodes.map(\.from).contains(input))
     }
     
     func test_endEditing_shouldChangeValues_noSpy_noCountryCodesMatch() {
@@ -98,27 +98,27 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
         finishEditingAndWait(sut.textView)
         
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+(3", current: "+(3"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+3", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .noFocus("+(3"))
+        XCTAssertNoDiff(sut.textView.state, .noFocus("+3"))
     }
     
-    func test_endEditing_shouldChangeValues_noSpy_countryCodeMatch() {
+    func test_endEditing_shouldNotChangeValues_noSpy_countryCodeMatch() {
         
-        let countryCodes: [CountryCodeReplace] = .armenian
+        let countryCodes: [CountryCodeReplace] = .russian
         let sut = makeSUT(countryCodes: countryCodes).sut
 
         startEditingAndWait(sut.textView)
         
-        let input: Character = "3"
+        let input: String = "3"
         insertAtCursorAndWait(.init(input), sut.textView)
         finishEditingAndWait(sut.textView)
         
         XCTAssertNoDiff(sut.icon, .ic24Smartphone)
-        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+374", current: "+374"))
+        XCTAssertNoDiff(sut.value, .init(id: "phoneInput", last: "+3", current: "+3"))
         XCTAssertNoDiff(sut.title, "Enter phone number")
-        XCTAssertNoDiff(sut.textView.state, .noFocus("+374"))
-        XCTAssertTrue(countryCodes.map(\.from).contains(input))
+        XCTAssertNoDiff(sut.textView.state, .noFocus("+3"))
+        XCTAssertFalse(countryCodes.map(\.from).contains(input))
     }
     
     // MARK: Using Spy
@@ -170,7 +170,7 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
     
     func test_textChange_shouldChangeValues() {
         
-        let (sut, valueSpy, titleSpy) = makeSUT(countryCodes: .armenian)
+        let (sut, valueSpy, titleSpy) = makeSUT(countryCodes: .russian)
                 
         startEditingAndWait(sut.textView)
         insertAtCursorAndWait("3", sut.textView)
@@ -180,7 +180,7 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
             .init(id: "phoneInput", last: nil, current: nil),
             .init(id: "phoneInput", last: nil, current: nil),
             .init(id: "phoneInput", last: nil, current: ""),
-            .init(id: "phoneInput", last: "",  current: "+374"),
+            .init(id: "phoneInput", last: "",  current: "+3"),
         ])
         XCTAssertNoDiff(titleSpy.values, [
             "Enter phone number",
@@ -188,12 +188,12 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
             "Enter phone number",
             "Enter phone number",
         ])
-        XCTAssertNoDiff(sut.textView.state, .editing(.init("+374", cursorAt: 4)))
+        XCTAssertNoDiff(sut.textView.state, .editing(.init("+3", cursorAt: 2)))
     }
     
     func test_endEditing_shouldChangeValues() {
         
-        let (sut, valueSpy, titleSpy) = makeSUT(countryCodes: .armenian)
+        let (sut, valueSpy, titleSpy) = makeSUT(countryCodes: .russian)
                 
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -206,8 +206,8 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
             .init(id: "phoneInput", last: nil, current: nil),
             .init(id: "phoneInput", last: nil, current: nil),
             .init(id: "phoneInput", last: nil, current: ""),
-            .init(id: "phoneInput", last: "",  current: "+374"),
-            .init(id: "phoneInput", last: "+374",  current: "+374"),
+            .init(id: "phoneInput", last: "",  current: "+3"),
+            .init(id: "phoneInput", last: "+3",  current: "+3"),
         ])
         XCTAssertNoDiff(titleSpy.values, [
             "Enter phone number",
@@ -216,7 +216,7 @@ final class PaymentsInputPhoneViewComponentTests: XCTestCase {
             "Enter phone number",
             "Enter phone number",
         ])
-        XCTAssertNoDiff(sut.textView.state, .noFocus("+374"))
+        XCTAssertNoDiff(sut.textView.state, .noFocus("+3"))
     }
     
     func test_actionButtonSpy_shouldNotChangeOnTextEditing() {

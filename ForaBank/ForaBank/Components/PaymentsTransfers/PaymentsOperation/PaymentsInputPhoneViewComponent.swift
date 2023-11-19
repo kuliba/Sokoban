@@ -58,7 +58,7 @@ extension PaymentsInputPhoneView {
             let phone = parameterInput.parameter.value
             let placeholder = parameterInput.placeholder ?? parameterInput.title
             let countryCodes: [CountryCodeReplace] = parameterInput.countryCode ?? []
-            
+
             let textView = TextFieldFactory.makePhoneKitTextField(
                 initialPhoneNumber: phone,
                 placeholderText: placeholder,

@@ -28,14 +28,14 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
-                    sticker: .init(""),
+                    sticker: parameterSticker.image,
                     options: parameterSticker.options.map {
                         
                         .init(
                             title: $0.title,
-                            icon: .init("Arrow Circle"),
-                            description: $0.description,
-                            iconColor: .green
+                            icon: ImageData.named("Arrow Circle"),
+                            description: "\($0.description.dropLast(2)) ₽",
+                            iconColor: ""
                         )
                     }
                 )
@@ -50,26 +50,30 @@ public extension ModelToViewModelMapper {
             
         case let .select(parameter):
             
-            var icon: Image
-            if parameter.id == .citySelector {
+            let icon: Image
+            let tapAction: () -> Void
+            
+            switch parameter.id {
+            case .citySelector:
+                tapAction = { action(.select(.chevronTapped(parameter))) }
                 
+                // TODO: extract name icons to configuration view
                 icon = .init("ic24MapPin")
-            } else if parameter.id == .officeSelector {
                 
+            case .officeSelector:
+                tapAction = { action(.select(.openBranch(.init(id: "")))) }
                 icon = .init("ic24Bank")
-            } else {
                 
-                icon = .init("ic16ArrowDownCircle")
+            default:
+                tapAction = { action(.select(.chevronTapped(parameter))) }
+                icon = .init("ic24ArrowDownCircle")
             }
             
             return .select(
                 .init(
                     parameter: parameter,
                     icon: icon,
-                    chevronButtonTapped: {
-                        
-                        action(.select(.chevronTapped(parameter)))
-                    },
+                    tapAction: tapAction,
                     select: { option in
                         
                         action(.select(.selectOption(option, parameter)))
@@ -77,7 +81,7 @@ public extension ModelToViewModelMapper {
                 )
             )
             
-        case let .product(parameterProduct):
+        case let .productSelector(parameterProduct):
             return .product(
                 .init(
                     state: parameterProduct.parameterState,

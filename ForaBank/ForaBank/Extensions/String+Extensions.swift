@@ -199,6 +199,23 @@ extension String {
         
         return copy
     }
+    
+    func formatted(
+        withChunkSize chunkSize: Int = 4,
+        withSeparator separator: String = " "
+    ) -> String {
+        var stringWithAddedSpaces = ""
+        
+        for i in Swift.stride(from: 0, to: self.count, by: 1) {
+            if i > 0 && (i % chunkSize) == 0 {
+                stringWithAddedSpaces.append(contentsOf: separator)
+            }
+            let characterToAdd = self[self.index(self.startIndex, offsetBy: i)]
+            stringWithAddedSpaces.append(characterToAdd)
+        }
+        
+        return stringWithAddedSpaces
+    }
 }
 
 enum StringHelperError: Error {
@@ -254,4 +271,24 @@ extension String {
         return unicodeScalars
             .allSatisfy(wanted.contains)
     }
+}
+
+extension String {
+    
+    func addCodeRuIfNeeded() -> String {
+        return (self.count == 10) ? "7" + self : self
+    }
+    
+    func add8IfNeeded() -> String {
+        return (self.count == 10) ? "8" + self : self
+    }
+    
+    func replace7To8IfNeeded() -> String {
+        return (self.count == 11 && self.hasPrefix("7")) ? "8" + self.dropFirst() : self
+    }
+}
+
+extension String {
+    
+    static let isNeedOnboardingShow = "isNeedOnboardingShow"
 }

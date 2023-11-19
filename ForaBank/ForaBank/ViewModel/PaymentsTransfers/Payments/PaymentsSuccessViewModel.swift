@@ -348,6 +348,9 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             amount: amount,
                             productId: productID)))
                     
+                case .close:
+                    self.action.send(PaymentsSuccessAction.Button.Ready())
+
                 default:
                     break
                 }
@@ -390,6 +393,9 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         let printFormViewModel = adapter.makePrintFormViewModel(type: .closeAccountEmpty(id: productId))
                         
                         self.sheet = .init(type: .printForm(printFormViewModel))
+                        
+                    case .changePin:
+                        return
                     }
                     
                 case .details:
@@ -504,6 +510,7 @@ extension PaymentsSuccessViewModel {
         case closeAccountEmpty(ProductData.ID, Currency, balance: Double, CloseProductTransferData)
         case makePaymentToDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
+        case changePin
     }
     
     struct FullScreenCover: Identifiable {
@@ -539,6 +546,7 @@ enum PaymentsSuccessAction {
         
         struct Close: Action {}
         struct Repeat: Action {}
+        struct Ready: Action {}
     }
     
     struct Payment: Action {

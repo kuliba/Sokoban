@@ -52,14 +52,14 @@ final class PhoneTransformerTests: XCTestCase {
         assertTextState(transformed, hasText: "00345", cursorAt: 5)
     }
     
-    func test_shouldReplace_onWholeMatchArmenian() {
+    func test_shouldNotReplace_onWholeMatchArmenian() {
         
         let transformed = transform(
             .init("3"),
-            substitutions: .armenian
+            substitutions: .russian
         )
         
-        assertTextState(transformed, hasText: "374", cursorAt: 3)
+        assertTextState(transformed, hasText: "3", cursorAt: 1)
     }
     
     func test_shouldLimit_onLimit() {
@@ -114,7 +114,7 @@ final class PhoneTransformerTests: XCTestCase {
             format: { "(\($0))" }
         )
         
-        assertTextState(transformed, hasText: "(374)", cursorAt: 5)
+        assertTextState(transformed, hasText: "(3)", cursorAt: 3)
     }
     
     // MARK: - Helpers

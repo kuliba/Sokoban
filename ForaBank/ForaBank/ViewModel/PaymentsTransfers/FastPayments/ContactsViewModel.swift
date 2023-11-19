@@ -378,7 +378,7 @@ extension Model {
             
             model?.countriesList.value.first(where: { $0.id == bank.bankCountry })
         }
-        
+                
         let searchFieldModel = SearchFactory.makeSearchFieldModel(
             for: mode,
             scheduler: scheduler

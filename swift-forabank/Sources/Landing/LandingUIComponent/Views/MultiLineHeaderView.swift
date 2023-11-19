@@ -50,6 +50,7 @@ struct MultiLineHeaderView: View {
             alignment: .leading
         )
         .background(config.backgroundColor(model.backgroundColor))
+        .accessibilityIdentifier("MultiLineHeaderBody")
     }
 }
 
@@ -66,6 +67,7 @@ extension MultiLineHeaderView{
             Text(text)
                 .font(font)
                 .foregroundColor(textColor)
+                .accessibilityIdentifier("MultiLineHeaderText")
         }
     }
 }

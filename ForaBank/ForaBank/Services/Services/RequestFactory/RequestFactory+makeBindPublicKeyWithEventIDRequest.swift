@@ -5,47 +5,48 @@
 //  Created by Igor Malyarov on 05.08.2023.
 //
 
+import CvvPin
 import Foundation
+import TransferPublicKey
+import URLRequestFactory
+
+typealias BindKeyExchangePayload = BindKeyDomain<KeyExchangeDomain.KeyExchange.EventID>.Payload
 
 extension RequestFactory {
     
-    static func createBindPublicKeyWithEventIDRequest(
-        with publicKeyWithEventID: PublicKeyWithEventID
+    static func makeBindPublicKeyWithEventIDRequest(
+        with payload: BindKeyExchangePayload
     ) throws -> URLRequest {
         
-        guard !publicKeyWithEventID.eventID.isEmpty else {
-            throw PublicKeyWithEventIDError.emptyEventID
-        }
-        
-        guard !publicKeyWithEventID.keyString.isEmpty else {
-            throw PublicKeyWithEventIDError.emptyKeyString
-        }
-        
-        let base = APIConfig.processingServerURL
-        let endpoint = Services.Endpoint.bindPublicKeyWithEventID
-        let url = try! endpoint.url(withBase: base)
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = publicKeyWithEventID.json
-        
-        return request
+        try makeBindPublicKeyWithEventIDRequest(
+            with: .init(payload)
+        )
     }
     
-    enum PublicKeyWithEventIDError: Error, Equatable {
+    static func makeBindPublicKeyWithEventIDRequest(
+        with payload: PublicKeyWithEventID
+    ) throws -> URLRequest {
         
-        case emptyEventID
-        case emptyKeyString
+        let factory = try factory(for: .bindPublicKeyWithEventID)
+        
+        return try factory.makeRequest(
+            for: .bindPublicKeyWithEventID(.init(
+                eventID: .init(value: payload.eventID.value),
+                key: .init(value: payload.key.keyData)
+            ))
+        )
     }
 }
 
+// MARK: - Adapters
+
 private extension PublicKeyWithEventID {
     
-    var json: Data? {
+    init(_ payload: BindKeyExchangePayload) {
         
-        try? JSONSerialization.data(withJSONObject: [
-            "eventId": eventID.value,
-            "data": keyString
-        ] as [String: Any])
+        self.init(
+            key: .init(keyData: payload.data),
+            eventID: .init(value: payload.eventID.value)
+        )
     }
 }

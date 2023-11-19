@@ -5,25 +5,30 @@
 //  Created by Igor Malyarov on 19.10.2023.
 //
 
+import Foundation
+
 extension Operation.Parameter {
     
     public struct Sticker: Hashable {
         
         let title: String
         let description: String
-        let options: [Option]
+        let image: ImageData
+        let options: [PriceOption]
         
         public init(
             title: String,
             description: String,
-            options: [Operation.Parameter.Sticker.Option]
+            image: ImageData,
+            options: [PriceOption]
         ) {
             self.title = title
             self.description = description
+            self.image = image
             self.options = options
         }
         
-        public struct Option: Hashable {
+        public struct PriceOption: Hashable {
             
             let title: String
             let description: String

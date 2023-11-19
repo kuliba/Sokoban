@@ -192,8 +192,9 @@ struct PaymentsTransfersView: View {
         transportPaymentsViewModel: TransportPaymentsViewModel
     ) -> some View {
         
-        TransportPaymentsView(viewModel: transportPaymentsViewModel) {
-            
+        TransportPaymentsView(
+            viewModel: transportPaymentsViewModel
+        ) {    
             MosParkingView(
                 viewModel: .init(
                     operation: viewModel.getMosParkingPickerData

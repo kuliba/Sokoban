@@ -32,6 +32,7 @@ struct MultiButtonsView: View {
         .padding(.horizontal, config.settings.padding.horiontal)
         .padding(.top, config.settings.padding.top)
         .padding(.bottom, config.settings.padding.bottom)
+        .accessibilityIdentifier("MultiButtonsBody")
     }
     
     private func itemView (
@@ -65,6 +66,7 @@ extension MultiButtonsView {
                     .background(config.backgroundColor(style: item.style))
                     .foregroundColor(config.textColor(style: item.style))
                     .cornerRadius(config.buttons.cornerRadius)
+                    .accessibilityIdentifier("MultiButtonsButton")
             }
             .frame(height: config.buttons.height)
         }

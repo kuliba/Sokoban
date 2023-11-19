@@ -60,6 +60,22 @@ extension RequestFactory {
         
         return request
     }
+    
+    static func getImageList(
+        _ imageIds: [String]
+    ) throws -> URLRequest {
+
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.getImageList
+        let url = try! endpoint.url(withBase: base)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["md5HashList": imageIds] as [String: Any])
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
+        return request
+    }
 }
 
 extension RequestFactory {

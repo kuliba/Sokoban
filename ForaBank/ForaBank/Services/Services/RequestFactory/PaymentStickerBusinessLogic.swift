@@ -9,38 +9,54 @@ import Foundation
 import Combine
 import GenericRemoteService
 import PaymentSticker
+import SVGKit
+
+struct Location {
+    
+    let id: String
+}
+
+struct Office {
+    
+    let id: String
+    let name: String
+}
 
 final class BusinessLogic {
     
-    typealias Product = PaymentSticker.Operation.Parameter.Product.Option
-    typealias Option = PaymentSticker.Operation.Parameter.Select.Option
+    typealias DictionaryService = RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
+    typealias TransferService = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias MakeTransferService = RemoteServiceOf<String, MakeTransferResponse>
+    typealias ImageLoaderService = RemoteServiceOf<[String], [ImageData]>
+    
+    typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
     typealias OperationResult = Result<OperationStateViewModel.State, Error>
-    typealias Completion = (OperationResult) -> Void
-    typealias Load = (PaymentSticker.Operation, Event, @escaping Completion) -> AnyPublisher<OperationResult, Never>
     
-    typealias TransferResult = Result<TransferResponse, TransferError>
-    typealias TransferCompletion = (TransferResult) -> Void
-    typealias Transfer = (TransferEvent, @escaping TransferCompletion) -> Void
+    typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
     
-    let dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    let transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    let makeTransferService: RemoteService<String, MakeTransferResponse>
-    let transfer: Transfer
+    //TODO: replace remoteService to closure or protocol
+    let dictionaryService: DictionaryService
+    let transferService: TransferService
+    let makeTransferService: MakeTransferService
+    let imageLoaderService: ImageLoaderService
+    let selectOffice: SelectOffice
     let products: [Product]
     let cityList: [City]
     
     init(
-        dictionaryService: RemoteService<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>,
-        transferService: RemoteService<RequestFactory.StickerPayment, CommissionProductTransferResponse>,
-        makeTransferService: RemoteService<String, MakeTransferResponse>,
-        transfer: @escaping Transfer,
+        dictionaryService: DictionaryService,
+        transferService: TransferService,
+        makeTransferService: MakeTransferService,
+        imageLoaderService: ImageLoaderService,
+        selectOffice: @escaping SelectOffice,
         products: [Product],
         cityList: [City]
     ) {
         self.dictionaryService = dictionaryService
         self.transferService = transferService
         self.makeTransferService = makeTransferService
-        self.transfer = transfer
+        self.imageLoaderService = imageLoaderService
+        self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
     }
@@ -101,44 +117,77 @@ extension BusinessLogic {
                     parameter: parameter
                 )
                  
-                if id == "typeDeliveryOffice" {
-                 
-                    dictionaryService.process(.stickerOrderDeliveryOffice) { result in
-                        
-                        switch result {
-                        case let .success(dictionaryResponse):
-                            completion(.success(self.dictionaryStickerReduce(
-                                operation,
-                                dictionaryResponse
-                            )))
+                if parameter.id == .officeSelector {
+                
+                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(parameter))
+                    completion(.success(.operation(newOperation)))
+                    return .success(.operation(newOperation))
+
+                }
+                
+                switch parameter.id {
+                case .transferTypeSticker:
+                    
+                    if id == "typeDeliveryOffice" {
+                     
+                        dictionaryService.process(.stickerOrderDeliveryOffice) { result in
                             
-                        case let .failure(error):
-                           return
+                            switch result {
+                            case let .success(dictionaryResponse):
+                                completion(.success(self.dictionaryStickerReduce(
+                                    operation,
+                                    dictionaryResponse
+                                )))
+                                
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
+                        }
+                        
+                    } else {
+                        
+                        dictionaryService.process(.stickerOrderDeliveryCourier) { result in
+                            
+                            switch result {
+                            case let .success(dictionaryResponse):
+                                completion(.success(self.dictionaryStickerReduce(
+                                    operation,
+                                    dictionaryResponse
+                                )))
+                                
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
                         }
                     }
                     
-                } else {
-                    
-                    dictionaryService.process(.stickerOrderDeliveryCourier) { result in
-                        
-                        switch result {
-                        case let .success(dictionaryResponse):
-                            completion(.success(self.dictionaryStickerReduce(
-                                operation,
-                                dictionaryResponse
-                            )))
-                            
-                        case let .failure(error):
-                           return
-                        }
-                    }
+                default:
+                    break
                 }
                 
                 return .success(.operation(operation))
             
-            case .openBranch:
-                return .success(.operation(operation))
+            case let .openBranch(location):
                 
+                let location = Location(id: location.id)
+                selectOffice(location) { result in
+                    
+                    switch result {
+                    case let .some(office):
+                        
+                        let newOperation = operation.updateOperation(
+                            operation: operation,
+                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "", placeholder: "", options: [], state: .selected(.init(title: "", placeholder: "", name: office.name, iconName: "")))))
+                        
+                        completion(.success(.operation(newOperation)))
+                        
+                    case .none:
+                        completion(.success(.operation(operation)))
+                    }
+                }
+                
+                return .success(.operation(operation))
+
             case let .chevronTapped(select):
                 switch select.state {
                 case let .idle(idleViewModel):
@@ -200,10 +249,37 @@ extension BusinessLogic {
                     
                     switch result {
                     case let .success(dictionaryResponse):
-                        completion(.success(self.dictionaryStickerReduce(operation, dictionaryResponse)))
                         
+                        let state = self.dictionaryStickerReduce(operation, dictionaryResponse)
+                        switch state {
+                        case let .operation(operation):
+                            switch dictionaryResponse {
+                            case let .orderForm(sticker):
+                                
+                                switch sticker.main.first(where: { $0.type == .productInfo })?.data {
+                                case let .banner(banner):
+                                    
+                                    self.imageLoader(operation: operation, banner: banner) { result in
+                                        
+                                        switch result {
+                                        case let .success(state):
+                                            completion(.success(state))
+                                            
+                                        case let .failure(error):
+                                            completion(.failure(error))
+                                        }
+                                    }
+                                    
+                                default: break
+                                }
+                            default:
+                                break
+                            }
+                        case .result:
+                            return
+                        }
                     case let .failure(error):
-                        return
+                        completion(.failure(error))
                     }
                 }
                 
@@ -226,7 +302,7 @@ extension BusinessLogic {
                             ))))
 
                         case let .failure(error):
-                            return
+                            completion(.failure(error))
                         }
                     }
                     return .success(.operation(operation))
@@ -251,16 +327,24 @@ extension BusinessLogic {
                         switch result {
                         case .success:
                             
-                            completion(.success(.operation(operation.updateOperation(
-                                operation: operation,
+                            var newOperation = operation
+                            newOperation = newOperation.updateOperation(
+                                operation: newOperation,
                                 newParameter: .input(.init(
                                     value: "",
                                     title: "Введите код из смс"
                                 ))
-                            ))))
+                            )
+                            
+                            newOperation = newOperation.updateOperation(
+                                operation: newOperation,
+                                newParameter: .amount(.init(value: "790 ₽"))
+                            )
+                            
+                            completion(.success(.operation(newOperation)))
 
                         case let .failure(error):
-                            return
+                            completion(.failure(error))
                         }
                     }
                 
@@ -269,9 +353,6 @@ extension BusinessLogic {
             
         case let .product(productEvents):
             return reduceProductEvent(productEvents, operation)
-            
-        default:
-            return .success(.operation(operation))
         }
     }
     
@@ -284,7 +365,7 @@ extension BusinessLogic {
         case let .chevronTapped(product, state):
             let newOperation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: state,
                     selectedProduct: product.selectedProduct,
                     allProducts: product.allProducts
@@ -296,7 +377,7 @@ extension BusinessLogic {
             
             let operation = operation.updateOperation(
                 operation: operation,
-                newParameter: .product(.init(
+                newParameter: .productSelector(.init(
                     state: .select,
                     selectedProduct: option,
                     allProducts: product.allProducts))
@@ -356,9 +437,10 @@ extension BusinessLogic {
                     return Operation.Parameter.sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
+                        image: PaymentSticker.ImageData.named(""),
                         options: banner.txtConditionList.map({
                             
-                            Operation.Parameter.Sticker.Option(
+                            Operation.Parameter.Sticker.PriceOption(
                                 title: $0.name,
                                 description: "\($0.description) \($0.value)")
                         })
@@ -377,7 +459,7 @@ extension BusinessLogic {
                 case .product:
                     if let product = self.products.first {
                         
-                        return Operation.Parameter.product(.init(
+                        return Operation.Parameter.productSelector(.init(
                             state: .select,
                             selectedProduct: product,
                             allProducts: self.products
@@ -473,6 +555,41 @@ extension BusinessLogic {
             return .operation(.init(parameters: newOperation))
         }
     }
+    
+    func imageLoader(
+        operation: PaymentSticker.Operation,
+        banner: StickerDictionaryResponse.Banner,
+        completion: @escaping (OperationResult) -> Void
+    ) {
+        
+        self.imageLoaderService.process([banner.md5hash]) { result in
+            
+            switch result {
+            case let .success(images):
+                    
+                let newOperation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .sticker(.init(
+                        title: banner.title,
+                        description: banner.subtitle,
+                        image: .data(images.first?.data),
+                        options: banner.txtConditionList.map { item in
+                            
+                                .init(
+                                    title: item.name,
+                                    description: "\(item.value.description.dropLast(2)) ₽"
+                                )
+                        }
+                    ))
+                )
+                
+                completion(.success(.operation(newOperation)))
+                
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
 
 // MARK: - Types
@@ -483,53 +600,5 @@ extension BusinessLogic {
         
         let id: String
         let name: String
-    }
-    
-    typealias TransferPayload = TransferEvent
-    
-    public enum TransferResponse {
-        
-        case deliveryOffice(DeliveryOffice)
-    }
-    
-    public struct DeliveryOffice {
-        
-        let main: [Main]
-        
-        public struct Main {
-            
-            let type: TypeSelector
-            let data: Data
-            
-            public enum TypeSelector: String {
-            
-                case separatorStartOperation = "SeparatorStartOperation"
-                case citySelector = "CitySelector"
-                case separatorEndOperation = "SeparatorEndOperation"
-            }
-            
-            public struct Data {
-                
-                let title: String
-                let subtitle: String
-                let isCityList: Bool
-                let md5hash: String
-                let color: String
-            }
-        }
-    }
-    
-    public enum TransferError: Error {}
-    
-    public enum TransferEvent {
-    
-        case operation(PaymentSticker.Operation)
-        case requestOTP
-    }
-    
-    public enum State {
-        
-        case local(OperationResult)
-        case remote(OperationResult)
     }
 }

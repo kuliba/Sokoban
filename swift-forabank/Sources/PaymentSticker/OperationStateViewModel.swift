@@ -1,6 +1,6 @@
 //
 //  OperationStateViewModel.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 10.10.2023.
 //
@@ -45,7 +45,7 @@ final public class OperationStateViewModel: ObservableObject {
             case let .failure(error):
                 self.handleAPIError(error)
                 
-            case let .success(state):    
+            case let .success(state):
                 self.state = state
 
             }

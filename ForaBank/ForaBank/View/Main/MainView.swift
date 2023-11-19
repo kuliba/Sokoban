@@ -77,7 +77,12 @@ struct MainView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                viewModel.link.map(destinationView)
+                viewModel.link.map {
+                    
+                    destinationView(
+                        link: $0
+                    )
+                }
             }
             
             Color.clear
@@ -170,12 +175,12 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .paymentSticker(viewModel):
-            OperationView(
-                model: viewModel,
-                configuration: MainView.configurationOperationView()
+        case let .paymentSticker(makeOperation):
+            NavigationOperationViewFactory.makeNavigationOperationView(
+                makeOperation: makeOperation,
+                atmData: viewModel.dictionaryAtmList(),
+                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
             )
-            .navigationBarTitle("Оформление заявки", displayMode: .inline)
         }
     }
     
@@ -336,8 +341,77 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainView {
     
+    static let sample = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyMetallView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
+    static let sampleProducts = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel.sample,
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
+    static let sampleOldCurrency = MainViewModel(
+        .emptyMock,
+        sections: [
+            MainSectionProductsView.ViewModel(.productsMock),
+            MainSectionFastOperationView.ViewModel.sample,
+            MainSectionPromoView.ViewModel.sample,
+            MainSectionCurrencyView.ViewModel.sample,
+            MainSectionOpenProductView.ViewModel.sample
+        ],
+        makeOperationStateViewModel: { _ in .preview },
+        makeProductProfileViewModel: { product, rootView, dismissAction in
+            
+            ProductProfileViewModel(
+                .emptyMock,
+                cvvPINServicesClient: HappyCVVPINServicesClient(),
+                product: product,
+                rootView: rootView,
+                dismissAction: dismissAction
+            )
+        },
+        onRegister: {}
+    )
+    
     static func configurationOperationView() -> PaymentSticker.ConfigurationOperationView {
-     
+        
         PaymentSticker.ConfigurationOperationView(
             tipViewConfig: .init(
                 titleFont: .textBodyMR14200(),
@@ -381,12 +455,30 @@ extension MainView {
                 headerTextFont: .textBodyMR14180(),
                 textColor: .textSecondary,
                 textFont: .textH4M16240(),
+                optionConfig: .init(
+                    numberColor: .textWhite,
+                    numberFont: .textBodyXsR11140(),
+                    nameColor: .textWhite.opacity(0.4),
+                    nameFont: .textBodyXsR11140(),
+                    balanceColor: .textWhite,
+                    balanceFont: .textBodyXsSb11140()
+                ),
                 background: .init(color: .mainColorsGrayLightest)
             ),
             inputViewConfig: .init(
                 titleFont: .textBodyMR14180(),
                 titleColor: .textPlaceholder,
                 iconColor: .iconGray
+            ),
+            amountViewConfig: .init(
+                amountFont: .textH2Sb20282(),
+                amountColor: .textWhite,
+                buttonTextFont: .buttonMediumM14160(),
+                buttonTextColor: .textWhite,
+                buttonColor: .mainColorsRed,
+                hintFont: .textBodySR12160(),
+                hintColor: .textPlaceholder,
+                background: .mainColorsBlackMedium
             )
         )
     }

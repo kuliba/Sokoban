@@ -189,7 +189,7 @@ extension StickerDictionaryResponse {
         }
     }
     
-    struct Main: Equatable {
+    public struct Main: Equatable {
         
         let type: ComponentType
         let data: DataType

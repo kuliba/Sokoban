@@ -9,8 +9,8 @@ import Foundation
 
 public enum Event {
     
-    public typealias ParameterProduct = Operation.Parameter.Product
-    public typealias ProductOption = ParameterProduct.Option
+    public typealias ParameterProduct = Operation.Parameter.ProductSelector
+    public typealias ProductOption = ParameterProduct.Product
     public typealias ParameterSelect = Operation.Parameter.Select
     public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
     public typealias ParameterInput = Operation.Parameter.Input
@@ -44,6 +44,11 @@ public enum Event {
         
         case selectOption(SelectOptionID, ParameterSelect)
         case chevronTapped(ParameterSelect)
-        case openBranch
+        case openBranch(Location)
+    }
+    
+    public struct Location {
+        
+        public let id: String
     }
 }

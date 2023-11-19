@@ -972,7 +972,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     func test_makePropertyViewModel_phone_notSfp_shouldReturnPhone() {
         
         let (detail, products) = makeStubs(
-            payeePhone: "+9998887766"
+            payeePhone: "+79998887766"
         )
         
         let (sut, _) =  makeSUT(
@@ -985,7 +985,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let cell = sut.makePropertyViewModel(productId: 123, operation: detail, iconType: .phone)
         
         XCTAssertNoDiff(cell?.title, "Номер телефона получателя")
-        XCTAssertNoDiff(cell?.value, "+1 999-888-7766")
+        XCTAssertNoDiff(cell?.value, "+7 999 888-77-66")
     }
     
     func test_makePropertyViewModel_phone_sfp_shouldReturnPhone() {
