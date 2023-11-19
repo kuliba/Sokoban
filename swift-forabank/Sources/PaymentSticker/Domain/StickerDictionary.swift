@@ -20,12 +20,28 @@ public extension StickerDictionary {
         
         let main: [Main]
         let serial: String
+        
+        public init(
+            main: [Main],
+            serial: String
+        ) {
+            self.main = main
+            self.serial = serial
+        }
     }
     
     struct DeliveryCourier: Equatable {
         
         let main: [Main]
         let serial: String
+        
+        public init(
+            main: [Main],
+            serial: String
+        ) {
+            self.main = main
+            self.serial = serial
+        }
     }
     
     struct StickerOrderForm: Equatable {
@@ -135,6 +151,8 @@ public extension StickerDictionary {
         case pageTitle(StickerOrderForm.Header.Data)
         case noValid(String)
         
+
+        
         init(dataType: _StickerDictionary.DataType) {
             
             switch dataType {
@@ -212,10 +230,18 @@ public extension StickerDictionary {
         }
     }
     
-    public struct Main: Equatable {
+    struct Main: Equatable {
         
         let type: ComponentType
         let data: DataType
+        
+        public init(
+            type: ComponentType,
+            data: DataType
+        ) {
+            self.type = type
+            self.data = data
+        }
     }
     
     struct Selector: Equatable {
@@ -225,7 +251,19 @@ public extension StickerDictionary {
         let md5hash: String
         let list: [Option]
         
-        struct Option: Equatable {
+        public init(
+            title: String,
+            subtitle: String,
+            md5hash: String,
+            list: [Option]
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.md5hash = md5hash
+            self.list = list
+        }
+        
+        public struct Option: Equatable {
             
             let type: OptionType
             let md5hash: String
@@ -233,7 +271,21 @@ public extension StickerDictionary {
             let backgroundColor: String
             let value: Double
             
-            enum OptionType: String, Equatable {
+            public init(
+                type: OptionType,
+                md5hash: String,
+                title: String,
+                backgroundColor: String,
+                value: Double
+            ) {
+                self.type = type
+                self.md5hash = md5hash
+                self.title = title
+                self.backgroundColor = backgroundColor
+                self.value = value
+            }
+            
+            public enum OptionType: String, Equatable {
                 
                 case typeDeliveryOffice
                 case typeDeliveryCourier
@@ -258,11 +310,23 @@ public extension StickerDictionary {
     struct Product: Equatable {
         
         let withoutPadding: Bool
+        
+        public init(
+            withoutPadding: Bool
+        ) {
+            self.withoutPadding = withoutPadding
+        }
     }
     
     struct Separator: Equatable {
         
         let color: String
+        
+        public init(
+            color: String
+        ) {
+            self.color = color
+        }
     }
     
     struct Banner: Equatable {
@@ -274,11 +338,37 @@ public extension StickerDictionary {
         let md5hash: String
         let txtConditionList: [Condition]
         
-        struct Condition: Equatable {
+        public init(
+            title: String,
+            subtitle: String,
+            currencyCode: Int,
+            currency: String,
+            md5hash: String,
+            txtConditionList: [Condition]
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.currencyCode = currencyCode
+            self.currency = currency
+            self.md5hash = md5hash
+            self.txtConditionList = txtConditionList
+        }
+        
+        public struct Condition: Equatable {
             
             let name: String
             let description: String
             let value: Double
+            
+            public init(
+                name: String,
+                description: String,
+                value: Double
+            ) {
+                self.name = name
+                self.description = description
+                self.value = value
+            }
         }
     }
     
@@ -287,6 +377,16 @@ public extension StickerDictionary {
         let title: String
         let md5hash: String
         let contentCenterAndPull: Bool
+        
+        public init(
+            title: String,
+            md5hash: String,
+            contentCenterAndPull: Bool
+        ) {
+            self.title = title
+            self.md5hash = md5hash
+            self.contentCenterAndPull = contentCenterAndPull
+        }
     }
     
     struct CitySelector: Equatable {
@@ -295,6 +395,18 @@ public extension StickerDictionary {
         let subtitle: String
         let isCityList: Bool
         let md5hash: String
+        
+        public init(
+            title: String,
+            subtitle: String,
+            isCityList: Bool,
+            md5hash: String
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.isCityList = isCityList
+            self.md5hash = md5hash
+        }
     }
     
     struct OfficeSelector: Equatable {
@@ -302,5 +414,15 @@ public extension StickerDictionary {
         let title: String
         let subtitle: String
         let md5hash: String
+        
+        public init(
+            title: String,
+            subtitle: String,
+            md5hash: String
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.md5hash = md5hash
+        }
     }
 }

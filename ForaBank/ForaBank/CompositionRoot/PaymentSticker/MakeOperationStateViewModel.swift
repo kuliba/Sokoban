@@ -59,7 +59,11 @@ private extension BusinessLogic {
         completion: @escaping (OperationResult) -> Void
     ) {
         
-        operationResult(operation: request.operation, event: request.event, completion: completion)
+        operationResult(
+            operation: request.operation,
+            event: request.event,
+            completion: completion
+        )
     }
 }
 
@@ -70,7 +74,9 @@ where Input == RequestFactory.GetJsonAbroadType,
       PerformRequestError == Error,
       MapResponseError == ResponseMapper.StickerDictionaryError {
     
-    typealias DictionaryServiceCompletion = (Result<StickerDictionary, StickerDictionaryError>) -> Void
+    typealias DictionaryResult = Result<StickerDictionary, StickerDictionaryError>
+    typealias DictionaryServiceCompletion = (DictionaryResult) -> Void
+    
     func process(
         input: GetJsonAbroadType,
         completion: @escaping DictionaryServiceCompletion
@@ -107,28 +113,148 @@ private extension RequestFactory.GetJsonAbroadType {
 private extension StickerDictionary {
     
     init(_ success: StickerDictionaryResponse) {
-        fatalError()
-//        switch success {
-//        case let .orderForm(stickerOrderForm):
-//            return .orderForm(.init(
-//                header: <#[StickerDictionary.StickerOrderForm.Header]#>,
-//                main: <#[StickerDictionary.Main]#>,
-//                serial: <#String#>
-//            ))
-//
-//        case let .deliveryOffice(deliveryOffice):
-//            completion(.success(.deliveryOffice(.init)))
-//
-//        case let .deliveryCourier(deliveryCourier):
-//            completion(.success(deliveryCourier))
-//        }
+        
+        switch success {
+        case let .orderForm(stickerOrderForm):
+            let header = stickerOrderForm.header.map {
+                StickerOrderForm.Header(
+                    type: .init(rawValue: $0.type.rawValue) ?? .pageTitle,
+                    data: .init(
+                        title: $0.data.title,
+                        isFixed: $0.data.isFixed
+                    ))
+            }
+            
+            let main = componentMapper(stickerOrderForm.main)
+            
+            self = .orderForm(.init(
+                header: header,
+                main: main,
+                serial: stickerOrderForm.serial
+            ))
+            
+        case let .deliveryOffice(deliveryOffice):
+            let main = componentMapper(deliveryOffice.main)
+            self = .deliveryOffice(.init(main: main, serial: deliveryOffice.serial))
+            
+        case let .deliveryCourier(deliveryCourier):
+            let main = componentMapper(deliveryCourier.main)
+            self = .deliveryCourier(.init(main: main, serial: deliveryCourier.serial))
+        }
+    }
+}
+
+private func componentMapper(
+    _ main: [StickerDictionaryResponse.Main]
+) -> [StickerDictionary.Main] {
+    
+    return main.map {
+        switch $0.data {
+        case let .banner(banner):
+            return StickerDictionary.Main(
+                type: .init(rawValue: $0.type.rawValue) ?? .pageTitle,
+                data: .banner(.init(
+                    title: banner.title,
+                    subtitle: banner.subtitle,
+                    currencyCode: banner.currencyCode,
+                    currency: banner.currency,
+                    md5hash: banner.md5hash,
+                    txtConditionList: banner.txtConditionList.map {
+                        StickerDictionary.Banner.Condition(
+                            name: $0.name,
+                            description: $0.description,
+                            value: $0.value
+                        )
+                    })
+                )
+            )
+        case let .hint(hint):
+            return .init(
+                type: .textsWithIconHorizontal,
+                data: .hint(.init(
+                    title: hint.title,
+                    md5hash: hint.md5hash,
+                    contentCenterAndPull: hint.contentCenterAndPull
+                )))
+        case let .product(product):
+            return .init(
+                type: .productSelect,
+                data: .product(.init(
+                    withoutPadding: product.withoutPadding
+                ))
+            )
+        case let .separator(separator):
+            return .init(
+                type: .separator,
+                data: .separator(.init(
+                    color: separator.color
+                ))
+            )
+        case .separatorGroup:
+            return .init(
+                type: .separatorSubGroup,
+                data: .separatorGroup
+            )
+        case let .selector(selector):
+            return .init(
+                type: .selector,
+                data: .selector(.init(
+                    title: selector.title,
+                    subtitle: selector.subtitle,
+                    md5hash: selector.md5hash,
+                    list: selector.list.map {
+                        StickerDictionary.Selector.Option(
+                            type: .init(rawValue: $0.type.rawValue) ?? .typeDeliveryCourier,
+                            md5hash: $0.md5hash,
+                            title: $0.title,
+                            backgroundColor: $0.backgroundColor,
+                            value: $0.value
+                        )
+                    })
+                )
+            )
+            
+        case let .citySelector(citySelector):
+            return .init(
+                type: .citySelector,
+                data: .citySelector(.init(
+                    title: citySelector.title,
+                    subtitle: citySelector.subtitle,
+                    isCityList: citySelector.isCityList,
+                    md5hash: citySelector.md5hash
+                ))
+            )
+            
+        case let .officeSelector(officeSelector):
+            return .init(
+                type: .officeSelector,
+                data: .officeSelector(.init(
+                    title: officeSelector.title,
+                    subtitle: officeSelector.subtitle,
+                    md5hash: officeSelector.md5hash
+                ))
+            )
+            
+        case let .pageTitle(pageTitle):
+            return .init(
+                type: .pageTitle,
+                data: .pageTitle(.init(
+                    title: pageTitle.title,
+                    isFixed: pageTitle.isFixed
+                ))
+            )
+            
+        case let .noValid(error):
+            break
+        }
     }
 }
 
 private extension StickerDictionaryError {
     
     init(_ error: MappingRemoteServiceError<ResponseMapper.StickerDictionaryError>) {
-        fatalError()
+        
+        self = .error(statusCode: error._code, errorMessage: error.localizedDescription)
     }
 }
 
