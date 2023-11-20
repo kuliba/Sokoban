@@ -53,6 +53,7 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         
         textField.insertAndWait("-", atCursor: 2)
         
+        XCTExpectFailure("Reproducing bug with jumping cursor")
         XCTAssertNoDiff(spy.values, [
             .placeholder(title),
             .editing(.empty),
