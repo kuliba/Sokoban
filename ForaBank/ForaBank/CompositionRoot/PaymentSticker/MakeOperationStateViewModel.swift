@@ -11,6 +11,24 @@ import GenericRemoteService
 
 extension RootViewModelFactory {
     
+    static func operationView(
+        makeBusinessLogic: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    ) -> OperationView {
+        
+        let vm = NavigationFeatureViewModel()
+        let makeBusinessLogic = makeBusinessLogic { payload, completion in
+            
+            vm.setSelection(location: payload, completion: completion)
+        }
+        
+        let view = OperationView(
+            model: makeBusinessLogic,
+            configuration: MainView.makeOperationViewConfiguration()
+        )
+        
+        return view
+    }
+            
     static func makeOperationStateViewModel(
         _ httpClient: HTTPClient,
         model: Model
