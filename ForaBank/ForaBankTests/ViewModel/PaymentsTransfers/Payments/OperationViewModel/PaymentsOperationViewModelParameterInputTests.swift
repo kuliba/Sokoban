@@ -108,7 +108,13 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
             icon: .empty,
             title: "Bank Title",
             options: [
-                .init(id: "1crt88888881", name: "Bank", subtitle: nil, icon: nil, searchValue: "Bank")
+                .init(
+                    id: "1crt88888881",
+                    name: "Bank",
+                    subtitle: nil,
+                    icon: nil,
+                    searchValue: "Bank"
+                )
             ],
             placeholder: "Bank Placeholder",
             keyboardType: .normal
