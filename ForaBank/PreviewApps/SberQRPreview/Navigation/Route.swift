@@ -39,9 +39,26 @@ enum Route: Hashable & Identifiable {
     
     enum Sheet: Hashable & Identifiable {
         
+        case picker(Wrapped)
         case sberQRPayment(URL)
         
         var id: Self { self }
+        
+        struct Wrapped: Identifiable & Hashable {
+            
+            let id = UUID()
+            let closure: (String) -> Void
+            
+            static func == (lhs: Self, rhs: Self) -> Bool {
+                
+                lhs.id == rhs.id
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                
+                hasher.combine(id)
+            }
+        }
     }
 }
 

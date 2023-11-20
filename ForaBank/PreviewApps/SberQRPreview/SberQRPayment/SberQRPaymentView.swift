@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SberQRPaymentView: View {
     
-    typealias AsyncGet = (URL, @escaping (String) -> Void) -> Void
+    typealias AsyncGet = (URL, @escaping (String?) -> Void) -> Void
     
     let url: URL
     let dismiss: () -> Void

@@ -78,6 +78,28 @@ extension Composer {
                 url: url,
                 dismiss: routeModel.resetRoute
             )
+            .sheet(
+                item: .init(
+                    get: {
+                        #warning("extract as property or helper")
+                        guard case let .sheet(.picker(wrapped)) = self.routeModel.route
+                        else { return nil }
+                        
+                        return wrapped
+                    },
+                    set: { _ in
+                        
+                        #warning("fix this empty setter")
+                    }
+                ),
+                content: { (wrapped: Route.Sheet.Wrapped) in
+                
+                    TextPickerView(commit: wrapped.closure)
+                }
+            )
+            
+        case let .picker(wrapped):
+            TextPickerView(commit: wrapped.closure)
         }
     }
 }
@@ -133,16 +155,9 @@ extension Composer {
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        // remote service
-        let process: SberQRPaymentView.AsyncGet = { _, completion in
-            
-            completion("Some text")
-        }
-        
-        return SberQRPaymentView(
+        SberQRFeatureView(
             url: url,
-            dismiss: dismiss,
-            asyncGet: process
+            dismiss: dismiss
         )
     }
 }

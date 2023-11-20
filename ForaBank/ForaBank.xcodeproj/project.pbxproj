@@ -690,6 +690,7 @@
 		2AF177572AC4B68200D100DD /* Services+makeKeyTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177562AC4B68200D100DD /* Services+makeKeyTransferService.swift */; };
 		2AF375912A1B7BC300B5B29E /* TextState+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF375902A1B7BC300B5B29E /* TextState+DSL.swift */; };
 		2AF3E1632A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */; };
+		2AF543252B0B374000A0C2E6 /* SberQRFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */; };
 		2AF5E28829BB3F46004D69F3 /* LocalAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A01BAF429A8A0820021833F /* LocalAgentStub.swift */; };
 		2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD4729A4EBB900017F73 /* ServerAgentStub.swift */; };
 		2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F2F4329AE338E0054B920 /* MCError.swift */; };
@@ -2869,6 +2870,7 @@
 		2AF177562AC4B68200D100DD /* Services+makeKeyTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeKeyTransferService.swift"; sourceTree = "<group>"; };
 		2AF375902A1B7BC300B5B29E /* TextState+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextState+DSL.swift"; sourceTree = "<group>"; };
 		2AF3E1622A810E3B00976EE1 /* Services+makePublicRSAKeySwaddler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makePublicRSAKeySwaddler.swift"; sourceTree = "<group>"; };
+		2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRFeatureView.swift; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
 		2AF99ADB2A155FB400CB5B08 /* WIPTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WIPTests.xctestplan; sourceTree = "<group>"; };
@@ -5437,6 +5439,7 @@
 				2A20F8CE2B05E1D000E3AE79 /* SberQRPreviewApp.swift */,
 				2A20F8D02B05E1D000E3AE79 /* ContentView.swift */,
 				2A0DBD792B05E89B008386DA /* Composer.swift */,
+				2AF543222B0A5BF000A0C2E6 /* SberQRFeature */,
 				2A20F8EA2B05E56800E3AE79 /* Navigation */,
 				2A390B542B05F7A500ECA2C2 /* SberQRPayment */,
 				2A53156A2B07438100963A22 /* TextPicker */,
@@ -6609,6 +6612,14 @@
 				2AF375902A1B7BC300B5B29E /* TextState+DSL.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		2AF543222B0A5BF000A0C2E6 /* SberQRFeature */ = {
+			isa = PBXGroup;
+			children = (
+				2AF543232B0A5C0000A0C2E6 /* SberQRFeatureView.swift */,
+			);
+			path = SberQRFeature;
 			sourceTree = "<group>";
 		};
 		501BCFC82936A23C003F81DF /* Promo */ = {
@@ -12152,6 +12163,7 @@
 				2A5315762B07467500963A22 /* QRReaderButton.swift in Sources */,
 				2A5315792B07467500963A22 /* RouteModel.swift in Sources */,
 				2A5315752B07467500963A22 /* SberQRPreviewApp.swift in Sources */,
+				2AF543252B0B374000A0C2E6 /* SberQRFeatureView.swift in Sources */,
 				2A5315712B07467500963A22 /* Composer.swift in Sources */,
 				2A5315732B07467500963A22 /* RouteModel+ext.swift in Sources */,
 				2A53156E2B07467500963A22 /* TextPickerView.swift in Sources */,
