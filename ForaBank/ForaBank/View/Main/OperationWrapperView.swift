@@ -10,42 +10,28 @@ import PaymentSticker
 import SwiftUI
 import LandingUIComponent
 
-final class NavigationViewModel: ObservableObject {
+final class NavigationFeatureViewModel: ObservableObject {
     
-    @Published private(set) var state: NavigationState?
+    @Published private(set) var selection: SelectionState?
     
-    init(state: NavigationState? = nil) {
-        self.state = state
+    typealias Completion = (Office?) -> Void
+    func setSelection(location: Location, completion: @escaping Completion) {
+        
+        self.selection = .init(location: location, completion: completion)
     }
     
-    func setLocation() {
+    func consumeSelection(office: Office?) {
         
-        navigationState(.location)
+        self.selection?.completion(office)
+        self.selection = nil
     }
     
-    func navigationState(_ state: NavigationState) {
+    func reset() {
         
-        self.state = state
+        self.selection = nil
     }
     
-    func resetState() {
-        
-        self.state = nil
-    }
-    
-    enum NavigationState: Hashable, Identifiable {
-        
-        case location
-        
-        var id: Self { self }
-    }
-}
-
-struct NavigationOperationView<OperationView: View, ListView: View>: View {
-    
-    @State private var state: SelectionState?
-    
-    private struct SelectionState: Hashable, Identifiable {
+    struct SelectionState: Hashable, Identifiable {
         
         let location: Location
         let completion: (Office?) -> Void
@@ -60,18 +46,29 @@ struct NavigationOperationView<OperationView: View, ListView: View>: View {
             hasher.combine(location)
         }
     }
+}
+
+struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
-    let operationView: () -> OperationView
+    @StateObject var viewModel: NavigationFeatureViewModel
+    
+    let operationView: (Location, @escaping (Office?) -> Void) -> OperationView
     let listView: (Location, @escaping (Office?) -> Void) -> ListView
     
     var body: some View {
         
         NavigationView {
             
-            operationView()
-                .navigationDestination(item: $state) { state in
+            operationView(viewModel.selection?.location ?? .init(id: ""), viewModel.consumeSelection)
+                .sheet(item: .init(
+                    get: { viewModel.selection },
+                    set: { if $0 == nil { viewModel.reset() }})
+                ) { selection in
                     
-                    listView(state.location, state.completion)
+                    NavigationView {
+                        
+                        listView(viewModel.selection?.location ?? .init(id: ""), viewModel.selection?.completion ?? { _ in })
+                    }
                 }
         }
     }
@@ -81,7 +78,7 @@ enum NavigationOperationViewFactory {}
 
 extension NavigationOperationViewFactory {
     
-    typealias SelectAtmOption = PaymentSticker.BusinessLogic.SelectOffice
+    typealias SelectAtmOption = BusinessLogic.SelectOffice
     typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     
     static func makeNavigationOperationView(
@@ -91,14 +88,10 @@ extension NavigationOperationViewFactory {
     ) -> some View {
         
         let navView = NavigationOperationView(
-            operationView: {
+            viewModel: .init(),
+            operationView: { location, completion in
                 
-                OperationView(
-                    model: makeOperation({ location, completion in
-                        
-                    }),
-                    configuration: MainView.makeOperationViewConfiguration()
-                )
+                RootViewModelFactory.operationView(makeBusinessLogic: makeOperation)
             },
             listView: { resetState, completion  in
                 
@@ -111,7 +104,10 @@ extension NavigationOperationViewFactory {
                         schedule: $0.schedule,
                         distance: nil
                     ) },
-                    selectItem: { _ in }
+                    selectItem: { item in
+                        
+                        completion(Office.init(id: item.id, name: item.name))
+                    }
                 )
             }
         )
