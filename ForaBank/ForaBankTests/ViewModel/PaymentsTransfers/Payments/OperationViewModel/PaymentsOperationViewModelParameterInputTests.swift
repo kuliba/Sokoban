@@ -14,6 +14,7 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         
         let title = UUID().uuidString
         let sut = makeSUT(title: title)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         let textField = try textField(sut)
         let spy = ValueSpy(textField.$state)
@@ -69,10 +70,9 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
-        let parameterInput = makeParameterInput(
-            title: title
+        let operation = makePaymentsOperation(
+            inputTitle: title
         )
-        let operation = makePaymentsOperation(with: parameterInput)
         let model: Model = .mockWithEmptyExcept()
         let sut = SUT(
             operation: operation,
@@ -87,45 +87,66 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
         return sut
     }
     
-    private func makeParameterInput(
-        id: String = UUID().uuidString,
-        title: String = UUID().uuidString
-    ) -> Payments.ParameterInput {
-        
-        .init(
-            .init(id: id, value: nil),
-            title: title,
-            validator: .anyValue
-        )
-    }
-    
     private func makePaymentsOperation(
-        service: Payments.Service = .abroad,
-        with parameter: PaymentsParameterRepresentable
+        inputTitle: String = UUID().uuidString
     ) -> Payments.Operation {
         
-        makePaymentsOperation(service: service, parameters: [parameter])
+        let parameterInput = Payments.ParameterInput(
+            .init(
+                id: Payments.Parameter.Identifier.sfpMessage.rawValue,
+                value: nil
+            ),
+            title: inputTitle,
+            validator: .anyValue
+        )
+        
+        let parameterBank = Payments.ParameterSelectBank(
+            .init(
+                id: Payments.Parameter.Identifier.sfpBank.rawValue,
+                value: "1crt88888881"
+            ),
+            icon: .empty,
+            title: "Bank Title",
+            options: [
+                .init(id: "1crt88888881", name: "Bank", subtitle: nil, icon: nil, searchValue: "Bank")
+            ],
+            placeholder: "Bank Placeholder",
+            keyboardType: .normal
+        )
+        
+        return makePaymentsOperation(
+            service: .sfp,
+            parameters: [parameterInput, parameterBank])
     }
     
     private func makePaymentsOperation(
-        service: Payments.Service = .abroad,
+        service: Payments.Service = .sfp,
         parameters: [PaymentsParameterRepresentable]
     ) -> Payments.Operation {
         
-        .init(
+        let parameterIDs = parameters.map(\.id)
+        
+        return .init(
             service: service,
-            source: nil,
+            source: .mock(.init(
+                service: service,
+                parameters: parameters.map(\.parameter)
+            )),
             steps: [
                 .init(
                     parameters: parameters,
                     front: .init(
-                        visible: parameters.map(\.id),
-                        isCompleted: true
+                        visible: parameterIDs,
+                        isCompleted: false
                     ),
-                    back: .empty()
+                    back: .init(
+                        stage: .remote(.start),
+                        required: parameterIDs,
+                        processed: nil
+                    )
                 )
             ],
-            visible: parameters.map(\.id)
+            visible: parameterIDs
         )
     }
     
