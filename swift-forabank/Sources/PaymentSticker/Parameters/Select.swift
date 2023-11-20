@@ -10,7 +10,7 @@ extension Operation.Parameter {
     public struct Select: Hashable, Identifiable {
         
         public let id: ParameterID
-        let value: String
+        let value: String?
         public let title: String
         let placeholder: String
         public let options: [Option]
@@ -26,7 +26,7 @@ extension Operation.Parameter {
         
         public init(
             id: ParameterID,
-            value: String,
+            value: String?,
             title: String,
             placeholder: String,
             options: [Operation.Parameter.Select.Option],
@@ -119,18 +119,25 @@ extension Operation.Parameter {
                 
                 public struct OptionViewModel: Hashable, Identifiable {
                     
-                    public let id: String
+                    public let id: OptionType
                     let iconName: String
                     let name: String
                     
                     public init(
-                        id: String,
+                        id: OptionType,
                         iconName: String,
                         name: String
                     ) {
                         self.id = id
                         self.iconName = iconName
                         self.name = name
+                    }
+                    
+                    public enum OptionType: String {
+                        
+                        case typeDeliveryOffice
+                        case stickerOrderDeliveryCourier
+                        case option
                     }
                 }
             }
@@ -190,8 +197,11 @@ extension Operation.Parameter.Select {
 
 extension Operation.Parameter.Select.Option {
     
+    typealias OptionType = Operation.Parameter.Select.State.OptionsListViewModel.OptionViewModel.OptionType
+    
     static func optionViewModelMapper(option: Select.Option) -> OptionViewModel {
         
-        return .init(id: option.id, iconName: option.iconName, name: option.name)
+        let id = OptionType(rawValue: option.id) ?? .option
+        return .init(id: id, iconName: option.iconName, name: option.name)
     }
 }

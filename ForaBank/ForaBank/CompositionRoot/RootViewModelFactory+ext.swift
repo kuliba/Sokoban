@@ -10,6 +10,8 @@ import PaymentSticker
 
 extension RootViewModelFactory {
     
+    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    
     static func make(
         model: Model,
         logger: LoggerAgentProtocol
@@ -35,25 +37,6 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let makeOperationStateViewModel: MakeOperationStateViewModel = {
-            
-            OperationStateViewModel(businessLogic: .init(
-                dictionaryService: Services.stickerDictRequest(
-                    input: .stickerOrderForm,
-                    httpClient: httpClient
-                ),
-                transferService: Services.createCommissionProductTransferRequest(
-                    input: .init(parameters: []),
-                    httpClient: httpClient
-                ),
-                makeTransferService: Services.makeTransferRequest(httpClient: httpClient),
-                imageLoaderService: Services.getImageListRequest(httpClient: httpClient),
-                selectOffice: $0,
-                products: model.productsMapper(model: model),
-                cityList: model.citiesMapper(model: model)
-            ))
-        }
-        
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
@@ -64,6 +47,11 @@ extension RootViewModelFactory {
                 dismissAction: $2
             )
         }
+        
+        let makeOperationStateViewModel = makeOperationStateViewModel(
+            httpClient,
+            model: model
+        )
         
         return make(
             model: model,
@@ -99,8 +87,6 @@ private extension RootViewModelFactory {
         
         return rsaKeyPairStore.deleteCacheIgnoringResult
     }
-    
-    typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
@@ -164,34 +150,5 @@ private extension RootViewModelFactory {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
-    }
-}
-
-private extension Model {
-    
-    func productsMapper(
-        model: Model
-    ) -> [BusinessLogic.Product] {
-        
-        let allProducts = model.allProducts.map({ BusinessLogic.Product(
-            title: "Счет списания",
-            nameProduct: $0.displayName,
-            balance: $0.balanceValue.description,
-            description: $0.displayNumber ?? "",
-            cardImage: PaymentSticker.ImageData.data($0.smallDesign.uiImage?.pngData()),
-            paymentSystem: PaymentSticker.ImageData.data($0.paymentSystemData),
-            backgroundImage: PaymentSticker.ImageData.data($0.largeDesign.uiImage?.pngData()),
-            backgroundColor: $0.backgroundColor.description
-        )})
-        
-        return allProducts
-    }
-    
-    func citiesMapper(
-        model: Model
-    ) -> [BusinessLogic.City] {
-        
-        let cities = model.localAgent.load(type: [AtmCityData].self)
-        return (cities?.compactMap{ $0 }.map({ BusinessLogic.City(id: $0.id.description, name: $0.name) })) ?? []
     }
 }

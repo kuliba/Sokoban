@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 public struct SelectViewModel {
     
@@ -14,13 +13,13 @@ public struct SelectViewModel {
     public typealias OptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
     
     let parameter: ParameterSelect
-    let icon: Image
+    let icon: ImageData
     let tapAction: () -> Void
     let select: (OptionID) -> Void
     
     public init(
         parameter: SelectViewModel.ParameterSelect,
-        icon: Image,
+        icon: ImageData,
         tapAction: @escaping () -> Void,
         select: @escaping (SelectViewModel.OptionID) -> Void
     ) {

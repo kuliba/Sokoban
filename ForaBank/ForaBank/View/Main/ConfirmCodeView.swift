@@ -59,6 +59,7 @@ struct ConfirmCodeView: View {
                 view
             }
         }
+        .frame(maxHeight: .infinity)
     }
 }
 

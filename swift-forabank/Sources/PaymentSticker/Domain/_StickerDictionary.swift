@@ -1,45 +1,51 @@
 //
-//  StickerDictionary.swift
-//  ForaBank
+//  _StickerDictionary.swift
+//  
 //
-//  Created by Дмитрий Савушкин on 02.11.2023.
+//  Created by Дмитрий Савушкин on 19.11.2023.
 //
 
 import Foundation
 
-extension ResponseMapper {
+public enum StickerDictionaryError: Error , Equatable {
     
-    enum _StickerDictionary: Decodable {
+    case error(
+        statusCode: Int,
+        errorMessage: String
+    )
+    case invalidData(statusCode: Int, data: Data)
+}
+
+enum _StickerDictionary: Decodable {
+    
+    case orderForm(StickerOrderForm)
+    case deliveryOffice(DeliveryOffice)
+    case deliveryCourier(DeliveryCourier)
+    
+    init(from decoder: Decoder) throws {
         
-        case orderForm(StickerOrderForm)
-        case deliveryOffice(DeliveryOffice)
-        case deliveryCourier(DeliveryCourier)
+        enum CodingKeys: CodingKey {
+            
+            case data
+        }
         
-        init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let data = try? container.decode(StickerOrderForm.self, forKey: .data) {
+            self = .orderForm(data)
             
-            enum CodingKeys: CodingKey {
-                
-                case data
-            }
+        } else if let data = try? container.decode(DeliveryOffice.self, forKey: .data) {
+            self = .deliveryOffice(data)
             
-            let container = try decoder.container(keyedBy: CodingKeys.self)
+        } else {
+            let data = try container.decode(DeliveryCourier.self, forKey: .data)
+            self = .deliveryCourier(data)
             
-            if let data = try? container.decode(StickerOrderForm.self, forKey: .data) {
-                self = .orderForm(data)
-                
-            } else if let data = try? container.decode(DeliveryOffice.self, forKey: .data) {
-                self = .deliveryOffice(data)
-                
-            } else {
-                let data = try container.decode(DeliveryCourier.self, forKey: .data)
-                self = .deliveryCourier(data)
-                
-            }
         }
     }
 }
 //MARK: StickerOrderForm
-extension ResponseMapper._StickerDictionary {
+extension _StickerDictionary {
     
     struct DeliveryOffice: Decodable {
         
@@ -53,7 +59,7 @@ extension ResponseMapper._StickerDictionary {
         let serial: String
     }
     
-    public struct StickerOrderForm: Decodable {
+    struct StickerOrderForm: Decodable {
         
         let header: [Header]
         let main: [Main]
@@ -72,18 +78,6 @@ extension ResponseMapper._StickerDictionary {
                 let title: String
                 let isFixed: Bool
             }
-        }
-        
-        public init(
-            header: [Header],
-            main: [Main],
-            footer: [Footer],
-            serial: String
-        ) {
-            self.header = header
-            self.main = main
-            self.footer = footer
-            self.serial = serial
         }
     }
     
@@ -117,7 +111,7 @@ extension ResponseMapper._StickerDictionary {
 }
 
 //MARK: Main
-extension ResponseMapper._StickerDictionary {
+extension _StickerDictionary {
     
     struct Main: Decodable {
         
@@ -189,7 +183,7 @@ extension ResponseMapper._StickerDictionary {
 
 //MARK: Component's
 
-extension ResponseMapper._StickerDictionary {
+extension _StickerDictionary {
     
     struct Selector: Decodable {
         

@@ -30,7 +30,7 @@ struct SelectView: View {
                 
             case let .selected(selectedOptionViewModel):
                 SelectedOptionView(
-                    icon: viewModel.icon,
+                    icon: .init(viewModel.icon.name ?? ""),
                     viewModel: selectedOptionViewModel,
                     tapAction: viewModel.tapAction,
                     config: config.selectOptionConfig
@@ -39,7 +39,7 @@ struct SelectView: View {
                 
             case let .list(optionsListViewModel):
                 OptionsListView(
-                    icon: viewModel.icon,
+                    icon: .init(viewModel.icon.name ?? ""),
                     viewModel: optionsListViewModel,
                     config: config,
                     selected: viewModel.select
@@ -65,10 +65,13 @@ extension SelectView {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                viewModel.icon
-                    .resizable()
-                    .foregroundColor(config.placeholderForeground)
-                    .frame(width: 24, height: 24)
+                if let iconName = viewModel.icon.name {
+                    
+                    Image(iconName)
+                        .resizable()
+                        .foregroundColor(config.placeholderForeground)
+                        .frame(width: 24, height: 24)
+                }
                 
                 Text(viewModel.parameter.title)
                     .lineLimit(1)
@@ -274,7 +277,7 @@ struct ParameterSelectView_Previews: PreviewProvider {
                     .init(id: "option2", name: "option2", iconName: "")
                 ],
                 state: .idle(.init(iconName: "", title: "Выберите значение"))),
-                             icon: .init(""),
+                             icon: .named(""),
                              tapAction: { },
                              select: { id in }
             ),

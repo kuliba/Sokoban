@@ -12,90 +12,56 @@ import PaymentSticker
 extension Services {
 
     typealias GetJsonAbroadType = RequestFactory.GetJsonAbroadType
-    typealias GetStickerDictionary = RemoteServiceOf<GetJsonAbroadType, StickerDictionaryResponse>
+    typealias GetStickerDictionaryService = MappingRemoteService<GetJsonAbroadType, StickerDictionaryResponse, ResponseMapper.StickerDictionaryError>
 
-    static func stickerDictRequest(
-        input: RequestFactory.GetJsonAbroadType,
+    static func makeGetStickerDictService(
         httpClient: HTTPClient
-    ) -> GetStickerDictionary {
+    ) -> GetStickerDictionaryService {
         
         return .init(
-            createRequest: RequestFactory.getStickerDictionary,
+            createRequest: RequestFactory.makeGetStickerDictionaryRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: {
-                
-                return try ResponseMapper.mapStickerDictionaryResponse($0, $1).get()
-            }
+            mapResponse: ResponseMapper.mapStickerDictionaryResponse
         )
     }
     
-    typealias CommissionProductTransfer = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
+    typealias CommissionProductTransferService = MappingRemoteService<RequestFactory.StickerPayment, CommissionProductTransfer, CommissionProductTransferError>
     
-    static func createCommissionProductTransferRequest(
-        input: PaymentSticker.Operation,
+    static func makeCommissionProductTransferService(
         httpClient: HTTPClient
-    ) -> CommissionProductTransfer {
+    ) -> CommissionProductTransferService {
         
         return .init(
-            createRequest: RequestFactory.createCommissionProductTransfer,
+            createRequest: RequestFactory.makeCommissionProductTransferRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: {
-                
-                return try ResponseMapper.mapCommissionProductTransferResponse($0, $1).get()
-            }
+            mapResponse: ResponseMapper.mapCommissionProductTransferResponse
         )
     }
     
-    typealias MakeTransfer = RemoteServiceOf<String, MakeTransferResponse>
+    typealias TransferService = MappingRemoteService<String, MakeTransfer, ResponseMapper.MakeTransferError>
     
-    static func makeTransferRequest(
+    static func makeTransferService(
         httpClient: HTTPClient
-    ) -> MakeTransfer {
+    ) -> TransferService {
         
         return .init(
-            createRequest: RequestFactory.makeTransfer,
+            createRequest: RequestFactory.makeTransferRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: {
-                
-                return try ResponseMapper.mapMakeTransferResponse($0, $1).get()
-            }
+            mapResponse: ResponseMapper.mapMakeTransferResponse
         )
     }
     
-    typealias GetImageList = RemoteServiceOf<[String], [ImageData]>
+    typealias ImageListService = MappingRemoteService<[String], [ImageData], GetImageListError>
     
-    static func getImageListRequest(
+    static func makeImageListService(
         httpClient: HTTPClient
-    ) -> GetImageList {
+    ) -> ImageListService {
         
         return .init(
-            createRequest: RequestFactory.getImageList,
+            createRequest: RequestFactory.makeImageListRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: {
-                
-                return try ResponseMapper.getImageListResponse($0, $1).get()
-            }
+            mapResponse: ResponseMapper.getImageListResponse
         )
     }
 }
 
-struct StickerPayment {
-    
-    let currencyAmount: String
-    let amount: String
-    let check: Bool
-    let payer: Payer
-    let productToOrderInfo: Order
-    
-    struct Payer {
-        
-        let cardId: String
-    }
-    
-    struct Order {
-        
-        let type: String
-        let deliverToOffice: Bool
-        let officeId: String
-    }
-}   

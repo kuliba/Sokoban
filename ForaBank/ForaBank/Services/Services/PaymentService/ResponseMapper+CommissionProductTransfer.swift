@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import PaymentSticker
 
 extension ResponseMapper {
     
-    typealias StickerCommissionProductResult = Result<CommissionProductTransferResponse, CommissionProductTransferError>
+    typealias StickerCommissionProductResult = Result<CommissionProductTransfer, CommissionProductTransferError>
     
     static func mapCommissionProductTransferResponse(
         _ data: Data,
@@ -22,7 +23,7 @@ extension ResponseMapper {
             case 200:
                     
                 let commissionProductTransfer = try JSONDecoder().decode(CommissionProductTransferResponse.self, from: data)
-                return .success(commissionProductTransfer)
+                return .success(commissionProductTransfer.response)
                 
             default:
                 
@@ -40,13 +41,56 @@ extension ResponseMapper {
             
         }
     }
+}
+
+extension ResponseMapper {
     
-    enum CommissionProductTransferError: Error , Equatable{
+    public struct CommissionProductTransferResponse: Decodable {
         
-        case error(
-            statusCode: Int,
-            errorMessage: String
-        )
-        case invalidData(statusCode: Int, data: Data)
+        let statusCode: Int
+        let errorMessage: String?
+        let data: Data
+
+        var response: CommissionProductTransfer {
+            
+            .init(
+                paymentOperationDetailId: data.paymentOperationDetailId,
+                payerCardId: data.payerCardId,
+                payerCardNumber: data.payerCardNumber,
+                payerAccountId: data.payerAccountId,
+                payerAccountNumber: data.payerAccountNumber,
+                payeeCardNumber: data.payeeCardNumber,
+                payeeAccountNumber: data.payeeAccountNumber,
+                payeeName: data.payeeName,
+                amount: data.amount,
+                debitAmount: data.debitAmount,
+                currencyAmount: data.currencyAmount,
+                currencyPayer: data.currencyPayer,
+                currencyPayee: data.currencyPayee,
+                currencyRate: data.currencyRate,
+                creditAmount: data.creditAmount,
+                documentStatus: data.documentStatus
+            )
+        }
+        
+        struct Data: Decodable {
+            
+            let paymentOperationDetailId: Int
+            let payerCardId: Int?
+            let payerCardNumber: String?
+            let payerAccountId: String?
+            let payerAccountNumber: String?
+            let payeeCardNumber: String?
+            let payeeAccountNumber: String?
+            let payeeName: String
+            let amount: Decimal
+            let debitAmount: Decimal
+            let currencyAmount: String
+            let currencyPayer: String
+            let currencyPayee: String
+            let currencyRate: String?
+            let creditAmount: Decimal?
+            let documentStatus: String?
+        }
     }
 }

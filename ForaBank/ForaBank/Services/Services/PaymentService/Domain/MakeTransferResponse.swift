@@ -7,16 +7,9 @@
 
 import Foundation
 
-struct MakeTransferResponse: Decodable {
+struct MakeTransfer: Decodable {
     
-    let statusCode: Int
-    let errorMessage: String?
-    let data: Data
-
-    struct Data: Decodable {
-        
-        let paymentOperationDetailId: Int
-        let documentStatus: String
-        let productOrderingResponseMessage: String
-    }
+    let paymentOperationDetailId: Int
+    let documentStatus: String
+    let productOrderingResponseMessage: String
 }

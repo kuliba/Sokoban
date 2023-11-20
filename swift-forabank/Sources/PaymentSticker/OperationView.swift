@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-public struct ConfigurationOperationView {
+public struct OperationViewConfiguration {
 
     let tipViewConfig: TipViewConfiguration
     let stickerViewConfig: StickerViewConfiguration
     let selectViewConfig: SelectViewConfiguration
     let productViewConfig: ProductView.Appearance
-    let inputViewConfig: InputView.InputConfiguration
+    let inputViewConfig: InputConfiguration
     let amountViewConfig: AmountViewConfiguration
     
     public init(
@@ -22,7 +22,7 @@ public struct ConfigurationOperationView {
         stickerViewConfig: StickerViewConfiguration,
         selectViewConfig: SelectViewConfiguration,
         productViewConfig: ProductView.Appearance,
-        inputViewConfig: InputView.InputConfiguration,
+        inputViewConfig: InputConfiguration,
         amountViewConfig: AmountViewConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
@@ -37,11 +37,11 @@ public struct ConfigurationOperationView {
 public struct OperationView: View {
     
     @ObservedObject var model: OperationStateViewModel
-    let configuration: ConfigurationOperationView
+    let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) {
         self.model = model
         self.configuration = configuration
@@ -131,7 +131,7 @@ struct OperationResultView<ButtonsView: View>: View {
 struct OperationProcessView: View {
     
     @ObservedObject var model: OperationStateViewModel
-    let configuration: ConfigurationOperationView
+    let configuration: OperationViewConfiguration
     
     var body: some View {
         
@@ -159,7 +159,7 @@ struct OperationProcessView: View {
     
     @ViewBuilder
     private func continueButton(
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) -> some View {
         
         if let amount = model.amountParameter {
@@ -189,7 +189,7 @@ struct OperationProcessView: View {
     @ViewBuilder
     private func parameterView(
         parameter: Operation.Parameter,
-        configuration: ConfigurationOperationView
+        configuration: OperationViewConfiguration
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
@@ -197,7 +197,11 @@ struct OperationProcessView: View {
         
         ParameterView(
             viewModel: viewModel,
-            configuration: configuration
+            configuration: configuration,
+            event: { inputEvent in
+                
+                model.event(.input(inputEvent))
+            }
         )
     }
 }

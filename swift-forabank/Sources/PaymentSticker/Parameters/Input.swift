@@ -23,19 +23,3 @@ public extension Operation.Parameter {
         }
     }
 }
-
-extension Operation.Parameter.Input {
-    
-    public func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(title)
-        hasher.combine(value)
-    }
-    
-    public static func == (
-        lhs: Operation.Parameter.Input,
-        rhs: Operation.Parameter.Input
-    ) -> Bool {
-        lhs.title == rhs.title && lhs.value == rhs.value
-    }
-}

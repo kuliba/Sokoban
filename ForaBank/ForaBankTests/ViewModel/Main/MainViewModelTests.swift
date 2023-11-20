@@ -80,7 +80,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: makeMainSections(model),
-            makeOperationStateViewModel: { _ in .preview },
+            makeOperationStateViewModel: { _ in .empty },
             makeProductProfileViewModel: { _,_,_ in nil },
             onRegister: {}
         )
@@ -127,7 +127,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             sections: [],
-            makeOperationStateViewModel: { _ in .preview },
+            makeOperationStateViewModel: { _ in .empty },
             makeProductProfileViewModel: { _,_,_ in nil },
             onRegister: {}
         )

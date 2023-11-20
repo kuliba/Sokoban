@@ -41,7 +41,7 @@ extension ResponseMapper {
         }
     }
     
-    enum StickerDictionaryError: Error , Equatable{
+    enum StickerDictionaryError: Error , Equatable {
         
         case error(
             statusCode: Int,

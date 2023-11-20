@@ -8,78 +8,76 @@
 import Foundation
 import Combine
 import GenericRemoteService
-import PaymentSticker
-import SVGKit
 
-struct Location {
+public struct Location: Hashable, Identifiable {
     
-    let id: String
+    public let id: String
 }
 
-struct Office {
+public struct Office {
     
     let id: String
     let name: String
 }
 
-final class BusinessLogic {
+final public class BusinessLogic {
     
-    typealias DictionaryService = RemoteServiceOf<RequestFactory.GetJsonAbroadType, StickerDictionaryResponse>
-    typealias TransferService = RemoteServiceOf<RequestFactory.StickerPayment, CommissionProductTransferResponse>
-    typealias MakeTransferService = RemoteServiceOf<String, MakeTransferResponse>
-    typealias ImageLoaderService = RemoteServiceOf<[String], [ImageData]>
+    // TODO: simplify remote services error
+    public typealias ProcessDictionaryService = (GetJsonAbroadType, @escaping (Result<StickerDictionary, StickerDictionaryError>) -> Void) -> ()
+    public typealias ProcessTransferService = (StickerPayment, @escaping (Result<CommissionProductTransfer, CommissionProductTransferError>) -> Void) -> ()
+    public typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, MakeTransferError>) -> Void) -> ()
+    public typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], GetImageListError>) -> Void) -> ()
     
-    typealias Product = PaymentSticker.Operation.Parameter.ProductSelector.Product
-    typealias OperationResult = Result<OperationStateViewModel.State, Error>
+    public typealias Product = Operation.Parameter.ProductSelector.Product
+    public typealias OperationResult = Result<OperationStateViewModel.State, Error>
     
-    typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
+    public typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
     
-    //TODO: replace remoteService to closure or protocol
-    let dictionaryService: DictionaryService
-    let transferService: TransferService
-    let makeTransferService: MakeTransferService
-    let imageLoaderService: ImageLoaderService
+    let processDictionaryService: ProcessDictionaryService
+    let processTransferService: ProcessTransferService
+    let processMakeTransferService: ProcessMakeTransferService
+    let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
     let products: [Product]
     let cityList: [City]
     
-    init(
-        dictionaryService: DictionaryService,
-        transferService: TransferService,
-        makeTransferService: MakeTransferService,
-        imageLoaderService: ImageLoaderService,
+    public init(
+        processDictionaryService: @escaping ProcessDictionaryService,
+        processTransferService: @escaping ProcessTransferService,
+        processMakeTransferService: @escaping ProcessMakeTransferService,
+        processImageLoaderService: @escaping ProcessImageLoaderService,
         selectOffice: @escaping SelectOffice,
         products: [Product],
         cityList: [City]
     ) {
-        self.dictionaryService = dictionaryService
-        self.transferService = transferService
-        self.makeTransferService = makeTransferService
-        self.imageLoaderService = imageLoaderService
+        self.processDictionaryService = processDictionaryService
+        self.processTransferService = processTransferService
+        self.processMakeTransferService = processMakeTransferService
+        self.processImageLoaderService = processImageLoaderService
         self.selectOffice = selectOffice
         self.products = products
         self.cityList = cityList
     }
 }
 
-extension OperationStateViewModel {
-    
-    convenience init(
-        businessLogic: BusinessLogic
-    ) {
-        self.init(blackBoxGet: { request, completion in
-            
-            let (operation, event) = request
-            businessLogic.operationResult(
-                operation: operation,
-                event: event,
-                completion: completion
-            )
-        })
-    }
-}
+//extension OperationStateViewModel {
+//
+//    public convenience init(
+//        businessLogic: BusinessLogic
+//    ) {
+//        self.init(blackBoxGet: { request, completion in
+//
+//            let (operation, event) = request
+//            businessLogic.operationResult(
+//                operation: operation,
+//                event: event,
+//                completion: completion
+//            )
+//        })
+//    }
+//}
 
-extension BusinessLogic {
+public extension BusinessLogic {
     
     func operationResult(
         operation: PaymentSticker.Operation,
@@ -112,14 +110,17 @@ extension BusinessLogic {
             case let .selectOption(id, parameter):
                 
                 let operation = selectOption(
-                    id: id,
+                    id: id.rawValue,
                     operation: operation,
                     parameter: parameter
                 )
                  
                 if parameter.id == .officeSelector {
                 
-                    let newOperation = operation.updateOperation(operation: operation, newParameter: .select(parameter))
+                    let newOperation = operation.updateOperation(
+                        operation: operation,
+                        newParameter: .select(parameter)
+                    )
                     completion(.success(.operation(newOperation)))
                     return .success(.operation(newOperation))
 
@@ -128,9 +129,9 @@ extension BusinessLogic {
                 switch parameter.id {
                 case .transferTypeSticker:
                     
-                    if id == "typeDeliveryOffice" {
-                     
-                        dictionaryService.process(.stickerOrderDeliveryOffice) { result in
+                    switch id {
+                    case .typeDeliveryOffice:
+                        processDictionaryService(.stickerOrderDeliveryOffice) { result in
                             
                             switch result {
                             case let .success(dictionaryResponse):
@@ -144,9 +145,8 @@ extension BusinessLogic {
                             }
                         }
                         
-                    } else {
-                        
-                        dictionaryService.process(.stickerOrderDeliveryCourier) { result in
+                    case .stickerOrderDeliveryCourier:
+                        processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
                             switch result {
                             case let .success(dictionaryResponse):
@@ -159,6 +159,8 @@ extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
+                    case .option:
+                        break
                     }
                     
                 default:
@@ -204,7 +206,7 @@ extension BusinessLogic {
                     
                 case let .selected(selectedViewModel):
                     
-                    let parameter = select.updateState(
+                    let parameter = select.updatedState(
                         iconName: selectedViewModel.iconName
                     )
                     
@@ -215,7 +217,7 @@ extension BusinessLogic {
                     
                 case let .list(listViewModel):
                     
-                    let parameter = select.updateState(
+                    let parameter = select.updatedState(
                         iconName: listViewModel.iconName,
                         title: listViewModel.title
                     )
@@ -233,10 +235,18 @@ extension BusinessLogic {
                 return .success(.operation(operation))
 
             case let .valueUpdate(input):
+                guard let title = operation.parameters.inputTitle else {
+                    // TODO: error missing input
+                    struct MissingInputError: Error {}
+                    return .failure(MissingInputError())
+                }
                 
                 let parametersUpdate = operation.updateOperation(
                     operation: operation,
-                    newParameter: .input(input)
+                    newParameter: .input(.init(
+                        value: input,
+                        title: title
+                    ))
                 )
                 return .success(.operation(parametersUpdate))
             }
@@ -245,7 +255,7 @@ extension BusinessLogic {
            
             if operation.parameters.count == 0 {
                 
-                dictionaryService.process(.stickerOrderForm) { result in
+                processDictionaryService(.stickerOrderForm) { result in
                     
                     switch result {
                     case let .success(dictionaryResponse):
@@ -290,14 +300,14 @@ extension BusinessLogic {
                 switch input {
                 case let .input(input):
                     
-                    makeTransferService.process(input.value) { result in
+                    processMakeTransferService(input.value) { result in
                        
                         switch result {
                         case let .success(makeTransfer):
                             completion(.success(.result(OperationStateViewModel.OperationResult(
                                 result: .success,
                                 title: "Успешная заявка",
-                                description: makeTransfer.data.productOrderingResponseMessage,
+                                description: makeTransfer.productOrderingResponseMessage,
                                 amount: "100"
                             ))))
 
@@ -313,7 +323,7 @@ extension BusinessLogic {
                 
             } else {
              
-                transferService.process(.init(
+                processTransferService(.init(
                     currencyAmount: "RUB",
                     amount: 790,
                     check: false,
@@ -414,7 +424,7 @@ extension BusinessLogic {
     
     func dictionaryStickerReduce(
         _ operation: PaymentSticker.Operation,
-        _ dictionaryResponse: StickerDictionaryResponse
+        _ dictionaryResponse: StickerDictionary
     ) -> OperationStateViewModel.State {
         
         switch dictionaryResponse {
@@ -472,7 +482,7 @@ extension BusinessLogic {
                 case let .selector(selector):
                     return Operation.Parameter.select(.init(
                         id: .transferTypeSticker,
-                        value: "",
+                        value: nil,
                         title: selector.title,
                         placeholder: selector.subtitle,
                         options: selector.list.map({
@@ -516,7 +526,7 @@ extension BusinessLogic {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
                         id: .citySelector,
-                        value: "",
+                        value: nil,
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
                         options: self.cityList.map({ Operation.Parameter.Select.Option(
@@ -528,14 +538,14 @@ extension BusinessLogic {
                     )
                     
               case let .officeSelector(officeSelector):
-                  return Operation.Parameter.select(.init(
-                    id: .officeSelector,
-                      value: "",
-                      title: officeSelector.title,
-                      placeholder: officeSelector.subtitle,
-                      options: [],
-                      state: .idle(.init(iconName: "", title: officeSelector.title)))
-                  )
+                    return Operation.Parameter.select(.init(
+                        id: .officeSelector,
+                        value: nil,
+                        title: officeSelector.title,
+                        placeholder: officeSelector.subtitle,
+                        options: [],
+                        state: .idle(.init(iconName: "", title: officeSelector.title)))
+                    )
                     
                 default:
                     return nil
@@ -558,11 +568,10 @@ extension BusinessLogic {
     
     func imageLoader(
         operation: PaymentSticker.Operation,
-        banner: StickerDictionaryResponse.Banner,
+        banner: StickerDictionary.Banner,
         completion: @escaping (OperationResult) -> Void
     ) {
-        
-        self.imageLoaderService.process([banner.md5hash]) { result in
+        processImageLoaderService([banner.md5hash]) { result in
             
             switch result {
             case let .success(images):
@@ -596,9 +605,49 @@ extension BusinessLogic {
 
 extension BusinessLogic {
     
-    struct City {
+    public struct City {
         
         let id: String
         let name: String
+        
+        public init(id: String, name: String) {
+            self.id = id
+            self.name = name
+        }
     }
 }
+
+// MARK: Helpers
+
+extension PaymentSticker.ParameterViewModel {
+    
+    var inputTitle: String? {
+        
+        guard case let .input(title) = self else {
+            return nil
+        }
+        
+        return title
+    }
+}
+
+extension PaymentSticker.Operation.Parameter {
+
+    var inputTitle: String? {
+        
+        guard case let .input(input) = self else {
+            return nil
+        }
+        
+        return input.title
+    }
+}
+
+extension Array where Element == PaymentSticker.Operation.Parameter {
+    
+    var inputTitle: String? {
+        
+        first(where: { $0.id == .input })?.inputTitle
+    }
+}
+

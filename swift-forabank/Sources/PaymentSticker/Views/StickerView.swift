@@ -228,13 +228,3 @@ struct ParameterStickerView_Previews: PreviewProvider {
         )
     }
 }
-
-// TODO: extract to file
-extension Image {
-    
-    init(data: Data?, fallback: UIImage = .checkmark) {
-        
-        let uiImage: UIImage = data.map { .init(data: $0) ?? fallback } ?? fallback
-        self = .init(uiImage: uiImage)
-    }
-}

@@ -1,22 +1,22 @@
 //
-//  StickerDictionaryResponse.swift
-//  ForaBank
+//  StickerDictionary.swift
+//  
 //
-//  Created by Дмитрий Савушкин on 02.11.2023.
+//  Created by Дмитрий Савушкин on 19.11.2023.
 //
 
 import Foundation
 
-enum StickerDictionaryResponse: Equatable {
+public enum StickerDictionary: Equatable {
     
     case orderForm(StickerOrderForm)
     case deliveryOffice(DeliveryOffice)
     case deliveryCourier(DeliveryCourier)
 }
 
-extension StickerDictionaryResponse {
+public extension StickerDictionary {
     
-    public struct DeliveryOffice: Equatable {
+    struct DeliveryOffice: Equatable {
         
         let main: [Main]
         let serial: String
@@ -30,7 +30,7 @@ extension StickerDictionaryResponse {
         }
     }
     
-    public struct DeliveryCourier: Equatable {
+    struct DeliveryCourier: Equatable {
         
         let main: [Main]
         let serial: String
@@ -44,21 +44,26 @@ extension StickerDictionaryResponse {
         }
     }
     
-    public struct StickerOrderForm: Equatable {
+    struct StickerOrderForm: Equatable {
         
         let header: [Header]
         let main: [Main]
-        let footer: [Footer]
         let serial: String
         
-        struct Footer: Equatable {}
-        
-        struct Header: Equatable {
+        public struct Header: Equatable {
             
             let type: ComponentType
             let data: Data
             
-            struct Data: Equatable {
+            public init(
+                type: ComponentType,
+                data: Data
+            ) {
+                self.type = type
+                self.data = data
+            }
+            
+            public struct Data: Equatable {
                 
                 let title: String
                 let isFixed: Bool
@@ -71,25 +76,15 @@ extension StickerDictionaryResponse {
                     self.isFixed = isFixed
                 }
             }
-            
-            public init(
-                type: ComponentType,
-                data: Data
-            ) {
-                self.type = type
-                self.data = data
-            }
         }
         
         public init(
             header: [Header],
             main: [Main],
-            footer: [Footer],
             serial: String
         ) {
             self.header = header
             self.main = main
-            self.footer = footer
             self.serial = serial
         }
     }
@@ -107,7 +102,7 @@ extension StickerDictionaryResponse {
         case endSeparator = "SEPARATOR_END_OPERATOR"
         case separatorSubGroup = "SEPARATOR_FIELD_SUB_GROUP"
         
-        init(componentType: ResponseMapper._StickerDictionary.ComponentType) {
+        init(componentType: _StickerDictionary.ComponentType) {
             
             switch componentType {
             case .citySelector:
@@ -156,7 +151,9 @@ extension StickerDictionaryResponse {
         case pageTitle(StickerOrderForm.Header.Data)
         case noValid(String)
         
-        init(dataType: ResponseMapper._StickerDictionary.DataType) {
+
+        
+        init(dataType: _StickerDictionary.DataType) {
             
             switch dataType {
             case let .banner(banner):
@@ -172,7 +169,7 @@ extension StickerDictionaryResponse {
                             name: $0.name,
                             description: $0.description,
                             value: $0.value
-                        )  
+                        )
                     }))
                 )
                 
@@ -216,7 +213,7 @@ extension StickerDictionaryResponse {
                     subtitle: selector.subtitle,
                     md5hash: selector.md5hash,
                     list: selector.list.map({
-                        StickerDictionaryResponse.Selector.Option(
+                        StickerDictionary.Selector.Option(
                             type: .init(responseType: $0.type),
                             md5hash: $0.md5hash,
                             title: $0.title,
@@ -233,10 +230,18 @@ extension StickerDictionaryResponse {
         }
     }
     
-    public struct Main: Equatable {
+    struct Main: Equatable {
         
         let type: ComponentType
         let data: DataType
+        
+        public init(
+            type: ComponentType,
+            data: DataType
+        ) {
+            self.type = type
+            self.data = data
+        }
     }
     
     struct Selector: Equatable {
@@ -246,7 +251,19 @@ extension StickerDictionaryResponse {
         let md5hash: String
         let list: [Option]
         
-        struct Option: Equatable {
+        public init(
+            title: String,
+            subtitle: String,
+            md5hash: String,
+            list: [Option]
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.md5hash = md5hash
+            self.list = list
+        }
+        
+        public struct Option: Equatable {
             
             let type: OptionType
             let md5hash: String
@@ -254,12 +271,26 @@ extension StickerDictionaryResponse {
             let backgroundColor: String
             let value: Double
             
-            enum OptionType: String, Equatable {
+            public init(
+                type: OptionType,
+                md5hash: String,
+                title: String,
+                backgroundColor: String,
+                value: Double
+            ) {
+                self.type = type
+                self.md5hash = md5hash
+                self.title = title
+                self.backgroundColor = backgroundColor
+                self.value = value
+            }
+            
+            public enum OptionType: String, Equatable {
                 
                 case typeDeliveryOffice
                 case typeDeliveryCourier
                 
-                typealias ResponseType = ResponseMapper._StickerDictionary.Selector.Option.OptionType
+                typealias ResponseType = _StickerDictionary.Selector.Option.OptionType
                 
                 init(responseType: ResponseType) {
                     
@@ -279,11 +310,23 @@ extension StickerDictionaryResponse {
     struct Product: Equatable {
         
         let withoutPadding: Bool
+        
+        public init(
+            withoutPadding: Bool
+        ) {
+            self.withoutPadding = withoutPadding
+        }
     }
     
     struct Separator: Equatable {
         
         let color: String
+        
+        public init(
+            color: String
+        ) {
+            self.color = color
+        }
     }
     
     struct Banner: Equatable {
@@ -295,11 +338,37 @@ extension StickerDictionaryResponse {
         let md5hash: String
         let txtConditionList: [Condition]
         
-        struct Condition: Equatable {
+        public init(
+            title: String,
+            subtitle: String,
+            currencyCode: Int,
+            currency: String,
+            md5hash: String,
+            txtConditionList: [Condition]
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.currencyCode = currencyCode
+            self.currency = currency
+            self.md5hash = md5hash
+            self.txtConditionList = txtConditionList
+        }
+        
+        public struct Condition: Equatable {
             
             let name: String
             let description: String
             let value: Double
+            
+            public init(
+                name: String,
+                description: String,
+                value: Double
+            ) {
+                self.name = name
+                self.description = description
+                self.value = value
+            }
         }
     }
     
@@ -308,6 +377,16 @@ extension StickerDictionaryResponse {
         let title: String
         let md5hash: String
         let contentCenterAndPull: Bool
+        
+        public init(
+            title: String,
+            md5hash: String,
+            contentCenterAndPull: Bool
+        ) {
+            self.title = title
+            self.md5hash = md5hash
+            self.contentCenterAndPull = contentCenterAndPull
+        }
     }
     
     struct CitySelector: Equatable {
@@ -316,6 +395,18 @@ extension StickerDictionaryResponse {
         let subtitle: String
         let isCityList: Bool
         let md5hash: String
+        
+        public init(
+            title: String,
+            subtitle: String,
+            isCityList: Bool,
+            md5hash: String
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.isCityList = isCityList
+            self.md5hash = md5hash
+        }
     }
     
     struct OfficeSelector: Equatable {
@@ -323,5 +414,15 @@ extension StickerDictionaryResponse {
         let title: String
         let subtitle: String
         let md5hash: String
+        
+        public init(
+            title: String,
+            subtitle: String,
+            md5hash: String
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.md5hash = md5hash
+        }
     }
 }
