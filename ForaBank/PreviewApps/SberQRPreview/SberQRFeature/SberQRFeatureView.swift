@@ -16,17 +16,17 @@ struct SberQRFeatureView: View {
     
     var body: some View {
         
-        SberQRPaymentView(
-            url: url,
-            dismiss: dismiss,
-            asyncGet: viewModel.setSelection
-        )
-        .sheet(item: .init(
-            get: { viewModel.selection },
-            set: { if $0 == nil { viewModel.resetSelection() }})
-        ) { selection in
+        NavigationView {
             
-            NavigationView {
+            SberQRPaymentView(
+                url: url,
+                dismiss: dismiss,
+                asyncGet: viewModel.setSelection
+            )
+            .navigationDestination(item: .init(
+                get: { viewModel.selection },
+                set: { if $0 == nil { viewModel.resetSelection() }})
+            ) { selection in
                 
                 TextPickerView(commit: viewModel.consumeSelection)
                     .navigationTitle("Select")
