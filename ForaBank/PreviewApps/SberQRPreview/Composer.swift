@@ -40,7 +40,7 @@ extension Composer {
         switch destination {
         case let .sberQRPayment(url):
             
-            makeSberQRPaymentView(
+            makeSberQRFeatureView(
                 url: url,
                 dismiss: routeModel.resetRoute
             )
@@ -74,14 +74,14 @@ extension Composer {
         switch sheet {
         case let .sberQRPayment(url):
             
-            makeSberQRPaymentView(
+            makeSberQRFeatureView(
                 url: url,
                 dismiss: routeModel.resetRoute
             )
             .sheet(
                 item: .init(
                     get: {
-                        #warning("extract as property or helper")
+#warning("extract as property or helper")
                         guard case let .sheet(.picker(wrapped)) = self.routeModel.route
                         else { return nil }
                         
@@ -89,11 +89,11 @@ extension Composer {
                     },
                     set: { _ in
                         
-                        #warning("fix this empty setter")
+#warning("fix this empty setter")
                     }
                 ),
                 content: { (wrapped: Route.Sheet.Wrapped) in
-                
+                    
                     TextPickerView(commit: wrapped.closure)
                 }
             )
@@ -150,12 +150,14 @@ extension Composer {
         QRReaderStub(commit: commit)
     }
     
-    func makeSberQRPaymentView(
+    func makeSberQRFeatureView(
+        selection: SberQRSelection? = nil,
         url: URL,
         dismiss: @escaping () -> Void
     ) -> some View {
         
         SberQRFeatureView(
+            viewModel: .init(selection: selection),
             url: url,
             dismiss: dismiss
         )

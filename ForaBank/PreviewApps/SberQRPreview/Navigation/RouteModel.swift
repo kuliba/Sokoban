@@ -25,9 +25,7 @@ final class RouteModel: ObservableObject {
         // .debounce(for: 0.2, scheduler: scheduler)
             .removeDuplicates()
             .receive(on: scheduler)
-            .handleEvents(receiveOutput: {
-                print($0 as Any)
-            })
+            .handleEvents(receiveOutput: { print($0 as Any) })
             .assign(to: &$route)
     }
 }

@@ -9,57 +9,35 @@ import SwiftUI
 
 struct SberQRFeatureView: View {
     
+    @StateObject var viewModel: SberQRFeatureViewModel
+    
     let url: URL
     let dismiss: () -> Void
-    
-    @State private var selection: Selection?
     
     var body: some View {
         
         SberQRPaymentView(
             url: url,
-            dismiss: dismiss
-        ) { url, completion in
-            
-            selection = .init(url: url, completion: completion)
-        }
-        .sheet(item: $selection) { selection in
+            dismiss: dismiss,
+            asyncGet: viewModel.setSelection
+        )
+        .sheet(item: .init(
+            get: { viewModel.selection },
+            set: { if $0 == nil { viewModel.resetSelection() }})
+        ) { selection in
             
             NavigationView {
                 
-                TextPickerView(
-                    commit: { text in
-                        
-                        self.selection = nil
-                        selection.completion(text)
-                    }
-                )
-                .navigationTitle("Select")
+                TextPickerView(commit: viewModel.consumeSelection)
+                    .navigationTitle("Select")
             }
-        }
-    }
-    
-    private struct Selection: Hashable, Identifiable {
-        
-        let id = UUID()
-        let url: URL
-        let completion: (String?) -> Void
-        
-        static func == (lhs: Selection, rhs: Selection) -> Bool {
-            
-            lhs.id == rhs.id && lhs.url == rhs.url
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            
-            hasher.combine(id)
-            hasher.combine(url)
         }
     }
 }
 
 #Preview {
     SberQRFeatureView(
+        viewModel: .init(),
         url: .init(string: "https://platiqr.ru/?uuid=3001638371&amount=27.50&trxid=2023072420443097822")!,
         dismiss: {}
     )
