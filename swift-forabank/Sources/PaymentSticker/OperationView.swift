@@ -36,14 +36,15 @@ public struct OperationViewConfiguration {
 
 public struct OperationView: View {
     
-    @ObservedObject var model: OperationStateViewModel
+    @StateObject var model: OperationStateViewModel
     let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
         configuration: OperationViewConfiguration
     ) {
-        self.model = model
+        
+        self._model = .init(wrappedValue: model)
         self.configuration = configuration
     }
     
