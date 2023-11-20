@@ -25,7 +25,7 @@ final public class BusinessLogic {
     // TODO: simplify remote services error
     public typealias ProcessDictionaryService = (GetJsonAbroadType, @escaping (Result<StickerDictionary, StickerDictionaryError>) -> Void) -> ()
     public typealias ProcessTransferService = (StickerPayment, @escaping (Result<CommissionProductTransfer, CommissionProductTransferError>) -> Void) -> ()
-    public typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransfer, MakeTransferError>) -> Void) -> ()
+    public typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, MakeTransferError>) -> Void) -> ()
     public typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], GetImageListError>) -> Void) -> ()
     
     public typealias Product = Operation.Parameter.ProductSelector.Product

@@ -16,9 +16,19 @@ public enum MakeTransferError: Error , Equatable {
     case invalidData(statusCode: Int, data: Data)
 }
 
-public struct MakeTransfer: Decodable {
+public struct MakeTransferResponse: Decodable {
     
     let paymentOperationDetailId: Int
     let documentStatus: String
     let productOrderingResponseMessage: String
+    
+    public init(
+        paymentOperationDetailId: Int,
+        documentStatus: String,
+        productOrderingResponseMessage: String
+    ) {
+        self.paymentOperationDetailId = paymentOperationDetailId
+        self.documentStatus = documentStatus
+        self.productOrderingResponseMessage = productOrderingResponseMessage
+    }
 }

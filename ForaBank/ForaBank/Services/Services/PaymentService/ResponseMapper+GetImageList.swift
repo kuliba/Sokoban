@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PaymentSticker
 
 struct ImageListResponse: Decodable {
     
@@ -61,7 +62,7 @@ extension ResponseMapper {
         }
     }
     
-    enum GetImageListError: Error , Equatable {
+    enum GetImageListErrorResponse: Error , Equatable {
         
         case error(
             statusCode: Int,

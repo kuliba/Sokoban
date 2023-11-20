@@ -34,4 +34,40 @@ public struct CommissionProductTransfer {
     let currencyRate: String?
     let creditAmount: Decimal?
     let documentStatus: String?
+    
+    public init(
+        paymentOperationDetailId: Int,
+        payerCardId: Int?,
+        payerCardNumber: String?,
+        payerAccountId: String?,
+        payerAccountNumber: String?,
+        payeeCardNumber: String?,
+        payeeAccountNumber: String?,
+        payeeName: String,
+        amount: Decimal,
+        debitAmount: Decimal,
+        currencyAmount: String,
+        currencyPayer: String,
+        currencyPayee: String,
+        currencyRate: String?,
+        creditAmount: Decimal?,
+        documentStatus: String?
+    ) {
+        self.paymentOperationDetailId = paymentOperationDetailId
+        self.payerCardId = payerCardId
+        self.payerCardNumber = payerCardNumber
+        self.payerAccountId = payerAccountId
+        self.payerAccountNumber = payerAccountNumber
+        self.payeeCardNumber = payeeCardNumber
+        self.payeeAccountNumber = payeeAccountNumber
+        self.payeeName = payeeName
+        self.amount = amount
+        self.debitAmount = debitAmount
+        self.currencyAmount = currencyAmount
+        self.currencyPayer = currencyPayer
+        self.currencyPayee = currencyPayee
+        self.currencyRate = currencyRate
+        self.creditAmount = creditAmount
+        self.documentStatus = documentStatus
+    }
 }

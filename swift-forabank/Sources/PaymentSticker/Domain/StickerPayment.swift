@@ -9,21 +9,21 @@ import Foundation
 
 public struct StickerPayment {
     
-    let currencyAmount: String
-    let amount: Decimal
-    let check: Bool
-    let payer: Payer
-    let productToOrderInfo: Order
+    public let currencyAmount: String
+    public let amount: Decimal
+    public let check: Bool
+    public let payer: Payer
+    public let productToOrderInfo: Order
     
-    struct Payer {
+    public struct Payer {
         
-        let cardId: String
+        public let cardId: String
     }
     
-    struct Order {
+    public struct Order {
         
-        let type: String
-        let deliverToOffice: Bool
-        let officeId: String
+        public let type: String
+        public let deliverToOffice: Bool
+        public let officeId: String
     }
 }

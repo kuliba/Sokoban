@@ -43,33 +43,35 @@ final class NavigationViewModel: ObservableObject {
 
 struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
-    typealias ShowAtmList = (NavigationViewModel.NavigationState) -> Void
-    typealias SelectOption = () -> Void
+    @State private var state: SelectionState?
     
-    @ObservedObject var navModel: NavigationViewModel
-    let operationView: (@escaping ShowAtmList) -> OperationView
-    let listView: (@escaping SelectOption, @escaping (String) -> Void) -> ListView
+    private struct SelectionState: Hashable, Identifiable {
+        
+        let location: Location
+        let completion: (Office?) -> Void
+        
+        var id: Location { location }
+        
+        static func == (lhs: SelectionState, rhs: SelectionState) -> Bool {
+            lhs.location == rhs.location
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(location)
+        }
+    }
+    
+    let operationView: () -> OperationView
+    let listView: (Location, @escaping (Office?) -> Void) -> ListView
     
     var body: some View {
         
         NavigationView {
-         
-            operationView(navModel.navigationState(_:))
-                .navigationDestination(
-                    item: .init(
-                        get: { navModel.state },
-                        set: { if $0 == nil { navModel.resetState() }}
-                    )
-                ) { state in
+            
+            operationView()
+                .navigationDestination(item: $state) { state in
                     
-                    switch state {
-                    case .location:
-                        
-                        listView(navModel.resetState) { name in
-                            print("completion list view")
-                            navModel.resetState()
-                        }
-                    }
+                    listView(state.location, state.completion)
                 }
         }
     }
@@ -79,7 +81,7 @@ enum NavigationOperationViewFactory {}
 
 extension NavigationOperationViewFactory {
     
-    typealias SelectAtmOption = BusinessLogic.SelectOffice
+    typealias SelectAtmOption = PaymentSticker.BusinessLogic.SelectOffice
     typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     
     static func makeNavigationOperationView(
@@ -89,13 +91,11 @@ extension NavigationOperationViewFactory {
     ) -> some View {
         
         let navView = NavigationOperationView(
-            navModel: .init(),
-            operationView: { selectAtm in
+            operationView: {
                 
                 OperationView(
                     model: makeOperation({ location, completion in
                         
-                        selectAtm(.location)
                     }),
                     configuration: MainView.makeOperationViewConfiguration()
                 )
@@ -111,11 +111,7 @@ extension NavigationOperationViewFactory {
                         schedule: $0.schedule,
                         distance: nil
                     ) },
-                    selectItem: { _ in
-                        
-                        resetState()
-                        completion(.init())
-                    }
+                    selectItem: { _ in }
                 )
             }
         )

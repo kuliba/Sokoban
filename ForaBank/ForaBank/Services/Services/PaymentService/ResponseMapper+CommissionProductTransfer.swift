@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PaymentSticker
 
 extension ResponseMapper {
     
@@ -40,20 +41,11 @@ extension ResponseMapper {
             
         }
     }
-    
-    enum CommissionProductTransferError: Error , Equatable{
-        
-        case error(
-            statusCode: Int,
-            errorMessage: String
-        )
-        case invalidData(statusCode: Int, data: Data)
-    }
 }
 
 extension ResponseMapper {
     
-    private struct CommissionProductTransferResponse: Decodable {
+    public struct CommissionProductTransferResponse: Decodable {
         
         let statusCode: Int
         let errorMessage: String?

@@ -27,18 +27,15 @@ extension RootViewModelFactory {
             let makeTransferService = Services.makeTransferService(
                 httpClient: httpClient
             )
-            let makeImageLoaderService = Services.makeImageListService(
-                httpClient: httpClient
-            )
-            let processImageLoader = Services.makeImageListService(
+            let imageLoaderService = Services.makeImageListService(
                 httpClient: httpClient
             )
             
             let businessLogic = BusinessLogic(
-                processDictionaryService: dictionaryService.process,
-                processTransferService: {_,_ in fatalError()},
-                processMakeTransferService: {_,_ in fatalError()},
-                processImageLoaderService: {_,_ in fatalError()},
+                processDictionaryService: dictionaryService.dictionaryProcess,
+                processTransferService: transferService.transferProcess,
+                processMakeTransferService: makeTransferService.makeTransferProcess,
+                processImageLoaderService: imageLoaderService.imageProcess,
                 selectOffice: $0,
                 products: model.productsMapper(model: model),
                 cityList: model.citiesMapper(model: model)
@@ -68,6 +65,133 @@ private extension BusinessLogic {
 }
 
 private extension RemoteService
+where Input == [String],
+      Output == [ImageData],
+      CreateRequestError == Error,
+      PerformRequestError == Error,
+      MapResponseError == GetImageListError {
+    
+    typealias ImagesResult = Result<[PaymentSticker.ImageData], GetImageListError>
+    typealias ImageServiceCompletion = (ImagesResult) -> Void
+    
+    func imageProcess(
+        input: [String],
+        completion: @escaping ImageServiceCompletion
+    ) {
+        process(
+            input
+        ) { result in
+
+            switch result {
+            case let .failure(error):
+                completion(.failure(.init(error)))
+                
+            case let .success(success):
+                completion(.success(success.map{
+                    
+                    PaymentSticker.ImageData.data($0.data)
+                }))
+            }
+        }
+    }
+}
+
+private extension GetImageListError {
+    
+    init(_ error: MappingRemoteServiceError<GetImageListError>) {
+        
+        self = .error(statusCode: error._code, errorMessage: error.localizedDescription)
+    }
+}
+
+private extension RemoteService
+where Input == String,
+      Output == MakeTransfer,
+      CreateRequestError == Error,
+      PerformRequestError == Error,
+      MapResponseError == ResponseMapper.MakeTransferError {
+    
+    typealias MakeTransferResult = Result<MakeTransferResponse, MakeTransferError>
+    typealias MakeTransferServiceCompletion = (MakeTransferResult) -> Void
+    
+    func makeTransferProcess(
+        input: String,
+        completion: @escaping MakeTransferServiceCompletion
+    ) {
+        process(
+            input
+        ) { result in
+
+            switch result {
+            case let .failure(error):
+                completion(.failure(.init(error)))
+                
+            case let .success(success):
+                completion(.success(.init(
+                    paymentOperationDetailId: success.paymentOperationDetailId,
+                    documentStatus: success.documentStatus,
+                    productOrderingResponseMessage: success.productOrderingResponseMessage
+                )))
+            }
+        }
+    }
+}
+
+private extension MakeTransferError {
+    
+    init(_ error: MappingRemoteServiceError<ResponseMapper.MakeTransferError>) {
+        
+        self = .error(statusCode: error._code, errorMessage: error.localizedDescription)
+    }
+}
+
+private extension RemoteService
+where Input == RequestFactory.StickerPayment,
+      Output == CommissionProductTransfer,
+      CreateRequestError == Error,
+      PerformRequestError == Error,
+      MapResponseError == CommissionProductTransferError {
+    
+    typealias TransferResult = Result<CommissionProductTransfer, CommissionProductTransferError>
+    typealias TransferServiceCompletion = (TransferResult) -> Void
+    
+    func transferProcess(
+        input: StickerPayment,
+        completion: @escaping TransferServiceCompletion
+    ) {
+        process(
+            .init(
+                currencyAmount: input.currencyAmount,
+                amount: input.amount,
+                check: input.check,
+                payer: .init(cardId: input.payer.cardId),
+                productToOrderInfo: .init(
+                    type: input.productToOrderInfo.type,
+                    deliverToOffice: input.productToOrderInfo.deliverToOffice,
+                    officeId: input.productToOrderInfo.officeId
+                ))
+        ) { result in
+
+            switch result {
+            case let .failure(error):
+                completion(.failure(.init(error)))
+                
+            case let .success(success):
+                completion(.success(success))
+            }
+        }
+    }
+}
+
+private extension CommissionProductTransferError {
+    
+    init(_ error: MappingRemoteServiceError<CommissionProductTransferError>) {
+        
+        self = .error(statusCode: error._code, errorMessage: error.localizedDescription)
+    }
+}
+
+private extension RemoteService
 where Input == RequestFactory.GetJsonAbroadType,
       Output == StickerDictionaryResponse,
       CreateRequestError == Error,
@@ -77,7 +201,7 @@ where Input == RequestFactory.GetJsonAbroadType,
     typealias DictionaryResult = Result<StickerDictionary, StickerDictionaryError>
     typealias DictionaryServiceCompletion = (DictionaryResult) -> Void
     
-    func process(
+    func dictionaryProcess(
         input: GetJsonAbroadType,
         completion: @escaping DictionaryServiceCompletion
     ) {
@@ -245,7 +369,7 @@ private func componentMapper(
             )
             
         case let .noValid(error):
-            break
+            return .init(type: .separator, data: .separatorGroup)
         }
     }
 }
