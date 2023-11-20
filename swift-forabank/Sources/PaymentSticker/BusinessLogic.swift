@@ -12,12 +12,21 @@ import GenericRemoteService
 public struct Location: Hashable, Identifiable {
     
     public let id: String
+    
+    public init(id: String) {
+        self.id = id
+    }
 }
 
 public struct Office {
     
     let id: String
     let name: String
+    
+    public init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
 }
 
 final public class BusinessLogic {
@@ -59,23 +68,6 @@ final public class BusinessLogic {
         self.cityList = cityList
     }
 }
-
-//extension OperationStateViewModel {
-//
-//    public convenience init(
-//        businessLogic: BusinessLogic
-//    ) {
-//        self.init(blackBoxGet: { request, completion in
-//
-//            let (operation, event) = request
-//            businessLogic.operationResult(
-//                operation: operation,
-//                event: event,
-//                completion: completion
-//            )
-//        })
-//    }
-//}
 
 public extension BusinessLogic {
     
@@ -181,10 +173,12 @@ extension BusinessLogic {
                             operation: operation,
                             newParameter: .select(.init(id: .officeSelector, value: office.id, title: "", placeholder: "", options: [], state: .selected(.init(title: "", placeholder: "", name: office.name, iconName: "")))))
                         
-                        completion(.success(.operation(newOperation)))
+                        print("DEBUG: \(office.name)")
+//                        completion(.success(.operation(newOperation)))
                         
                     case .none:
-                        completion(.success(.operation(operation)))
+                        break
+//                        completion(.success(.operation(operation)))
                     }
                 }
                 
