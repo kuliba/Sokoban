@@ -233,20 +233,6 @@
         "identifier" : "SberQRTests",
         "name" : "SberQRTests"
       }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ButtonWithSheetTests",
-        "name" : "ButtonWithSheetTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ButtonWithSheetTests",
-        "name" : "ButtonWithSheetTests"
-      }
     }
   ],
   "version" : 1

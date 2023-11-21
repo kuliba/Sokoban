@@ -113,7 +113,6 @@ let package = Package(
         .urlRequestFactoryTests,
         // UI
         .buttonWithSheet,
-        .buttonWithSheetTests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -785,17 +784,6 @@ private extension Target {
         path: "Sources/UI/\(String.buttonWithSheet)"
     )
     
-    static let buttonWithSheetTests = testTarget(
-        name: .buttonWithSheetTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .buttonWithSheet,
-        ],
-        path: "Tests/UI/\(String.buttonWithSheetTests)"
-    )
-    
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -1110,7 +1098,6 @@ private extension String {
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
-    static let buttonWithSheetTests = "ButtonWithSheetTests"
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
