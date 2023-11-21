@@ -641,6 +641,7 @@
 		2AD54D362B03868100481463 /* CVVPINSessionCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD54D352B03868100481463 /* CVVPINSessionCacheTests.swift */; };
 		2AD5E2282A42FF94007D7196 /* MosParkingPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E2272A42FF94007D7196 /* MosParkingPicker.swift */; };
 		2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5E22B2A42FFFD007D7196 /* MosParkingDataMapperTests.swift */; };
+		2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
@@ -4390,6 +4391,7 @@
 				0B67728E277CCD7500DCCECD /* PhoneNumberKit-Static in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
+				2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */,
 				C14F85532AF537B000749534 /* PaymentSticker in Frameworks */,
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
@@ -11574,6 +11576,7 @@
 				2A4630082AC454E400020B73 /* ServerAgent */,
 				C14F85522AF537B000749534 /* PaymentSticker */,
 				83B2B8832AE7A90500DAD486 /* PhoneNumberWrapper */,
+				2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -15932,6 +15935,10 @@
 		2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaCrypto;
+		};
+		2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ButtonWithSheet;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;
