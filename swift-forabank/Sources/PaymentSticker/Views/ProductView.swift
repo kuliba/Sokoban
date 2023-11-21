@@ -169,6 +169,7 @@ public struct ProductView: View {
                 }
                 
                 Text(viewModel.main.name)
+                    .lineLimit(1)
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
 
