@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A1A21350-D225-414F-B7D9-35E8A7EF499C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ButtonWithSheetTests",
+        "name" : "ButtonWithSheetTests"
+      }
+    }
+  ],
+  "version" : 1
+}
