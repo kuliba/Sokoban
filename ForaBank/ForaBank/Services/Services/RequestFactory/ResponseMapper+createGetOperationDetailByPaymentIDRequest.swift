@@ -8,9 +8,6 @@
 import Foundation
 import Tagged
 
-typealias DocumentID = Tagged<_DocumentID, String>
-enum _DocumentID {}
-
 extension RequestFactory {
     
     static func createGetOperationDetailByPaymentIDRequest(
