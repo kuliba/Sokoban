@@ -108,48 +108,51 @@ private extension ButtonWithSheet {
     }
 }
 
-#Preview {
+struct ButtonWithSheet_Previews: PreviewProvider {
     
-    VStack(spacing: 32) {
+    static var previews: some View {
         
-        Group {
+        VStack(spacing: 32) {
             
-            buttonWithSheet(
-                title: "sync",
-                systemName: "flag.2.crossed",
-                getSheetState: { completion in
-                    
-                    completion(.success(Item.preview))
-                }
-            )
-            
-            buttonWithSheet(
-                title: "sync error",
-                systemName: "exclamationmark.triangle.fill",
-                getSheetState: { completion in
-                    
-                    struct SomeError: Error {}
-                    completion(.failure(SomeError()))
-                }
-            )
-            .foregroundColor(.red)
-            
-            buttonWithSheet(
-                title: "async",
-                systemName: "flag.2.crossed.circle",
-                getSheetState: { completion in
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            Group {
+                
+                buttonWithSheet(
+                    title: "sync",
+                    systemName: "flag.2.crossed",
+                    getSheetState: { completion in
                         
                         completion(.success(Item.preview))
                     }
-                }
-            )
+                )
+                
+                buttonWithSheet(
+                    title: "sync error",
+                    systemName: "exclamationmark.triangle.fill",
+                    getSheetState: { completion in
+                        
+                        struct SomeError: Error {}
+                        completion(.failure(SomeError()))
+                    }
+                )
+                .foregroundColor(.red)
+                
+                buttonWithSheet(
+                    title: "async",
+                    systemName: "flag.2.crossed.circle",
+                    getSheetState: { completion in
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            
+                            completion(.success(Item.preview))
+                        }
+                    }
+                )
+            }
+            .imageScale(.large)
+            .padding()
+            .background(Color.gray.opacity(0.2))
+            .clipShape(Capsule())
         }
-        .imageScale(.large)
-        .padding()
-        .background(Color.gray.opacity(0.2))
-        .clipShape(Capsule())
     }
 }
 
