@@ -21,16 +21,16 @@ where ButtonLabel: View,
     
     private let label: MakeButtonLabel
     private let getSheetState: GetSheetState
-    private let sheetStateView: MakeSheetStateView
+    private let makeSheetStateView: MakeSheetStateView
     
     public init(
         label: @escaping MakeButtonLabel,
         getSheetState: @escaping GetSheetState,
-        @ViewBuilder sheetStateView: @escaping MakeSheetStateView
+        @ViewBuilder makeSheetStateView: @escaping MakeSheetStateView
     ) {
         self.label = label
         self.getSheetState = getSheetState
-        self.sheetStateView = sheetStateView
+        self.makeSheetStateView = makeSheetStateView
     }
     
     public var body: some View {
@@ -46,7 +46,7 @@ where ButtonLabel: View,
     
     private func sheet(sheetState: SheetState) -> some View {
         
-        sheetStateView(sheetState) { self.sheetState = nil }
+        makeSheetStateView(sheetState) { self.sheetState = nil }
     }
 }
 
@@ -93,7 +93,7 @@ private func buttonWithSheet(
     ButtonWithSheet(
         label: { Label(title, systemImage: systemName) },
         getSheetState: getSheetState,
-        sheetStateView: { item, dismiss in
+        makeSheetStateView: { item, dismiss in
             
             ZStack(alignment: .topLeading) {
                 
