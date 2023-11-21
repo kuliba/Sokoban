@@ -15,7 +15,6 @@ public enum Event {
     public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
     public typealias ParameterInput = Operation.Parameter.Input
 
-    
     case product(ProductEvent)
     case select(SelectEvent)
     case continueButtonTapped(ContinueEvent)
