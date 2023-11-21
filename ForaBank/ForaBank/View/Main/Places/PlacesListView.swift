@@ -42,7 +42,6 @@ struct PlacesListInternalView: View {
                     }
                 }
             }
-            .padding(.top, 80)
             .padding(.horizontal, 20)
         }
     }
