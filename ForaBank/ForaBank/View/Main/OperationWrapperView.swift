@@ -15,15 +15,25 @@ final class NavigationFeatureViewModel: ObservableObject {
     @Published private(set) var selection: SelectionState?
     
     typealias Completion = (Office?) -> Void
-    func setSelection(location: Location, completion: @escaping Completion) {
+    func setSelection(
+        location: Location,
+        completion: @escaping Completion
+    ) {
         
-        self.selection = .init(location: location, completion: completion)
+        self.selection = .init(
+            location: location,
+            completion: { office in
+
+                completion(office)
+                self.consumeSelection(office: office)
+            }
+        )
     }
     
     func consumeSelection(office: Office?) {
         
-        self.selection?.completion(office)
         self.selection = nil
+        self.selection?.completion(office)
     }
     
     func reset() {
@@ -50,27 +60,26 @@ final class NavigationFeatureViewModel: ObservableObject {
 
 struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
+    // MARK: inject location
+    let location: Location = .init(id: "location")
     @StateObject var viewModel: NavigationFeatureViewModel
     
-    let operationView: (Location, @escaping (Office?) -> Void) -> OperationView
+    typealias Completion = NavigationFeatureViewModel.Completion
+    typealias SetSelection = (Location, @escaping Completion) -> Void
+    
+    let operationView: (@escaping SetSelection) -> OperationView
     let listView: (Location, @escaping (Office?) -> Void) -> ListView
     
     var body: some View {
         
-        NavigationView {
-            
-            operationView(viewModel.selection?.location ?? .init(id: ""), viewModel.consumeSelection)
-                .sheet(item: .init(
-                    get: { viewModel.selection },
-                    set: { if $0 == nil { viewModel.reset() }})
-                ) { selection in
-                    
-                    NavigationView {
-                        
-                        listView(viewModel.selection?.location ?? .init(id: ""), viewModel.selection?.completion ?? { _ in })
-                    }
-                }
-        }
+        operationView(viewModel.setSelection)
+            .sheet(item: .init(
+                get: { viewModel.selection },
+                set: { if $0 == nil { viewModel.reset() }})
+            ) { selection in
+                
+                listView(selection.location, selection.completion)
+            }
     }
 }
 
@@ -89,9 +98,14 @@ extension NavigationOperationViewFactory {
         
         let navView = NavigationOperationView(
             viewModel: .init(),
-            operationView: { location, completion in
+            operationView: { setSelection in
+               
+                let viewModel = makeOperation(setSelection)
                 
-                RootViewModelFactory.operationView(makeBusinessLogic: makeOperation)
+                return OperationView(
+                    model: viewModel,
+                    configuration: MainView.makeOperationViewConfiguration()
+                )
             },
             listView: { resetState, completion  in
                 
@@ -100,13 +114,19 @@ extension NavigationOperationViewFactory {
                         id: $0.id,
                         name: $0.name,
                         address: $0.address,
-                        metro: [],
+                        metro: atmMetroStationData?.compactMap {
+                            
+                            PlacesListViewModel.ItemViewModel.MetroStationViewModel(
+                                id: $0.id, name: $0.name, color: $0.color.color
+                            )
+                            
+                        },
                         schedule: $0.schedule,
                         distance: nil
                     ) },
                     selectItem: { item in
                         
-                        completion(Office.init(id: item.id, name: item.name))
+                        completion(Office(id: item.id, name: item.name))
                     }
                 )
             }
