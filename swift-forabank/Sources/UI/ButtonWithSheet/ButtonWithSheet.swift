@@ -26,7 +26,7 @@ where ButtonLabel: View,
     public init(
         label: @escaping MakeButtonLabel,
         getSheetState: @escaping GetSheetState,
-        sheetStateView: @escaping MakeSheetStateView
+        @ViewBuilder sheetStateView: @escaping MakeSheetStateView
     ) {
         self.label = label
         self.getSheetState = getSheetState
