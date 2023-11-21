@@ -40,7 +40,7 @@ final public class BusinessLogic {
     public typealias Product = Operation.Parameter.ProductSelector.Product
     public typealias OperationResult = Result<OperationStateViewModel.State, Error>
     
-    public typealias SelectOffice = (Location, _ completion: @escaping (Office?) -> Void) -> Void
+    public typealias SelectOffice = (Location, @escaping (Office?) -> Void) -> Void
     
     let processDictionaryService: ProcessDictionaryService
     let processTransferService: ProcessTransferService
@@ -171,14 +171,12 @@ extension BusinessLogic {
                         
                         let newOperation = operation.updateOperation(
                             operation: operation,
-                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "", placeholder: "", options: [], state: .selected(.init(title: "", placeholder: "", name: office.name, iconName: "")))))
+                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "Выберите отделение", placeholder: "", options: [], state: .selected(.init(title: "Выберите отделение", placeholder: "", name: office.name, iconName: "")))))
                         
-                        print("DEBUG: \(office.name)")
-//                        completion(.success(.operation(newOperation)))
+                        completion(.success(.operation(newOperation)))
                         
                     case .none:
-                        break
-//                        completion(.success(.operation(operation)))
+                        completion(.success(.operation(operation)))
                     }
                 }
                 
