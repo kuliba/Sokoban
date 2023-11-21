@@ -14,7 +14,8 @@ where ButtonLabel: View,
     
     public typealias GetSheetState = (@escaping (SheetState) -> Void) -> Void
     public typealias MakeButtonLabel = () -> ButtonLabel
-    public typealias MakeSheetStateView = (SheetState) -> SheetStateView
+    public typealias Dismiss = () -> Void
+    public typealias MakeSheetStateView = (SheetState, @escaping Dismiss) -> SheetStateView
     
     @State private var sheetState: SheetState?
     
@@ -35,12 +36,17 @@ where ButtonLabel: View,
     public var body: some View {
         
         Button(action: updateState, label: label)
-            .sheet(item: $sheetState, content: sheetStateView)
+            .sheet(item: $sheetState, content: sheet)
     }
     
     private func updateState() {
         
-        getSheetState { sheetState = $0 }
+        getSheetState { self.sheetState = $0 }
+    }
+    
+    private func sheet(sheetState: SheetState) -> some View {
+        
+        sheetStateView(sheetState) { self.sheetState = nil }
     }
 }
 
@@ -87,15 +93,22 @@ private func buttonWithSheet(
     ButtonWithSheet(
         label: { Label(title, systemImage: systemName) },
         getSheetState: getSheetState,
-        sheetStateView: { item in
+        sheetStateView: { item, dismiss in
             
-            VStack(spacing: 48) {
+            ZStack(alignment: .topLeading) {
                 
-                Text(item.title)
-                    .font(.title.bold())
+                VStack(spacing: 48) {
+                    
+                    Text(item.title)
+                        .font(.title.bold())
+                    
+                    Text(item.subtitle)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                Text(item.subtitle)
-                    .foregroundColor(.secondary)
+                Button("close", action: dismiss)
+                    .padding()
             }
         }
     )
