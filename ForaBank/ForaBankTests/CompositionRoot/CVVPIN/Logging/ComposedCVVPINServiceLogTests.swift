@@ -31,7 +31,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.error, .crypto, "Activation failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
+            .init(.error, .crypto, "Initiate Activation failure: server(statusCode: \(statusCode), errorMessage: \"\(errorMessage)\").")
         ])
     }
     
@@ -47,7 +47,7 @@ final class ComposedCVVPINServiceLogTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.info, .crypto, "Activation success: \(phoneValue).")
+            .init(.info, .crypto, "Initiate Activation success: \(phoneValue).")
         ])
     }
     
