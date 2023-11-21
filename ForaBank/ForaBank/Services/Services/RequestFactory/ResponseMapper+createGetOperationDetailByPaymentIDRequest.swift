@@ -1,0 +1,44 @@
+//
+//  ResponseMapper+createGetOperationDetailByPaymentIDRequest.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 21.11.2023.
+//
+
+import Foundation
+import Tagged
+
+typealias DocumentID = Tagged<_DocumentID, String>
+enum _DocumentID {}
+
+extension RequestFactory {
+    
+    static func createGetOperationDetailByPaymentIDRequest(
+        documentID: DocumentID
+    ) throws -> URLRequest {
+
+        guard !documentID.isEmpty
+        else {
+            throw GetOperationDetailByPaymentIDError.invalidDocumentID
+        }
+        
+        let endpoint = Services.Endpoint.getOperationDetailByPaymentID
+        let url = try! endpoint.url(
+            withBase: Config.serverAgentEnvironment.baseURL
+        )
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "documentId": documentID.rawValue
+        ] as [String: String])
+        
+        return request
+    }
+    
+    enum GetOperationDetailByPaymentIDError: Error {
+        
+        case invalidDocumentID
+    }
+}
+
