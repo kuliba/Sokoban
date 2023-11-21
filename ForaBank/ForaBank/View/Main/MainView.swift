@@ -176,13 +176,12 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .paymentSticker(makeOperation):
-            RootViewModelFactory.operationView(makeBusinessLogic: makeOperation)
-            
-//            NavigationOperationViewFactory.makeNavigationOperationView(
-//                makeOperation: makeOperation,
-//                atmData: viewModel.dictionaryAtmList(),
-//                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
-//            )
+
+            NavigationOperationViewFactory.makeNavigationOperationView(
+                makeOperation: makeOperation,
+                atmData: viewModel.dictionaryAtmList(),
+                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
+            )
         }
     }
     

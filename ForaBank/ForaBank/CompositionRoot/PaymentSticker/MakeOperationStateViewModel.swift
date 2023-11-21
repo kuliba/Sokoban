@@ -12,17 +12,20 @@ import GenericRemoteService
 extension RootViewModelFactory {
     
     static func operationView(
-        makeBusinessLogic: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+        makeViewModel: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
     ) -> OperationView {
         
         let vm = NavigationFeatureViewModel()
-        let makeBusinessLogic = makeBusinessLogic { payload, completion in
+        let operationStateViewModel = makeViewModel { location, completion in
             
-            vm.setSelection(location: payload, completion: completion)
+            vm.setSelection(
+                location: location,
+                completion: completion
+            )
         }
         
         let view = OperationView(
-            model: makeBusinessLogic,
+            model: operationStateViewModel,
             configuration: MainView.makeOperationViewConfiguration()
         )
         
@@ -425,6 +428,9 @@ private extension Model {
     ) -> [BusinessLogic.City] {
         
         let cities = model.localAgent.load(type: [AtmCityData].self)
-        return (cities?.compactMap{ $0 }.map({ BusinessLogic.City(id: $0.id.description, name: $0.name) })) ?? []
+        return (cities?.compactMap{ $0 }.map({
+            
+            BusinessLogic.City(id: $0.id.description, name: $0.name)
+        })) ?? []
     }
 }
