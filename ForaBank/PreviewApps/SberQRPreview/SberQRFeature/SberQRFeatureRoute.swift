@@ -1,5 +1,5 @@
 //
-//  SberQRSelection.swift
+//  SberQRFeatureRoute.swift
 //  SberQRPreview
 //
 //  Created by Igor Malyarov on 20.11.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SberQRSelection: Hashable, Identifiable {
+struct SberQRFeatureRoute: Hashable, Identifiable {
     
     typealias Completion = (String?) -> Void
     

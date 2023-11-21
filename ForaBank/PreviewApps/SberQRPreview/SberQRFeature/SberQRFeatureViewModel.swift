@@ -11,41 +11,41 @@ import Foundation
 #warning("has the same shape as RouteModel - make RouteModel generic")
 final class SberQRFeatureViewModel: ObservableObject {
     
-    @Published private(set) var selection: SberQRSelection?
+    @Published private(set) var route: SberQRFeatureRoute?
     
-    private let selectionSubject = PassthroughSubject<SberQRSelection?, Never>()
+    private let routeSubject = PassthroughSubject<SberQRFeatureRoute?, Never>()
     
     init(
-        selection: SberQRSelection? = nil,
+        route: SberQRFeatureRoute? = nil,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.selection = selection
+        self.route = route
         
-        selectionSubject
+        routeSubject
             .removeDuplicates()
             .receive(on: scheduler)
             .handleEvents(receiveOutput: { print($0 as Any) })
-            .assign(to: &$selection)
+            .assign(to: &$route)
     }
 }
 
 extension SberQRFeatureViewModel {
     
-    func resetSelection() {
+    func resetRoute() {
         
-        selectionSubject.send(nil)
+        routeSubject.send(nil)
     }
     
-    func setSelection(
+    func setRoute(
         url: URL,
-        completion: @escaping SberQRSelection.Completion
+        completion: @escaping SberQRFeatureRoute.Completion
     ) {
-        selectionSubject.send(.init(url: url, completion: completion))
+        routeSubject.send(.init(url: url, completion: completion))
     }
     
-    func consumeSelection(text: String) {
+    func consumeRoute(text: String) {
         
-        self.selection?.completion(text)
-        resetSelection()
+        self.route?.completion(text)
+        resetRoute()
     }
 }

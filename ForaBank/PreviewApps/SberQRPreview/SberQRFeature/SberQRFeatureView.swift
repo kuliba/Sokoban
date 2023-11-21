@@ -21,14 +21,14 @@ struct SberQRFeatureView: View {
             SberQRPaymentView(
                 url: url,
                 dismiss: dismiss,
-                asyncGet: viewModel.setSelection
+                asyncGet: viewModel.setRoute
             )
             .navigationDestination(item: .init(
-                get: { viewModel.selection },
-                set: { if $0 == nil { viewModel.resetSelection() }})
+                get: { viewModel.route },
+                set: { if $0 == nil { viewModel.resetRoute() }})
             ) { selection in
                 
-                TextPickerView(commit: viewModel.consumeSelection)
+                TextPickerView(commit: viewModel.consumeRoute)
                     .navigationTitle("Select")
             }
         }

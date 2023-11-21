@@ -151,13 +151,13 @@ extension Composer {
     }
     
     func makeSberQRFeatureView(
-        selection: SberQRSelection? = nil,
+        route: SberQRFeatureRoute? = nil,
         url: URL,
         dismiss: @escaping () -> Void
     ) -> some View {
         
         SberQRFeatureView(
-            viewModel: .init(selection: selection),
+            viewModel: .init(route: route),
             url: url,
             dismiss: dismiss
         )
