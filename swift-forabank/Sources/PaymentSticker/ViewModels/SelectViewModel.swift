@@ -10,7 +10,7 @@ import Foundation
 public struct SelectViewModel {
     
     public typealias ParameterSelect = Operation.Parameter.Select
-    public typealias OptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias OptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel
     
     let parameter: ParameterSelect
     let icon: ImageData

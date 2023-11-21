@@ -109,7 +109,7 @@ extension Operation.Parameter {
                     iconName: String,
                     title: String,
                     placeholder: String,
-                    options: [Operation.Parameter.Select.State.OptionsListViewModel.OptionViewModel]
+                    options: [OptionViewModel]
                 ) {
                     self.iconName = iconName
                     self.title = title
@@ -119,25 +119,16 @@ extension Operation.Parameter {
                 
                 public struct OptionViewModel: Hashable, Identifiable {
                     
-                    public let id: OptionType
+                    public var id: Self { self }
                     let iconName: String
                     let name: String
                     
                     public init(
-                        id: OptionType,
                         iconName: String,
                         name: String
                     ) {
-                        self.id = id
                         self.iconName = iconName
                         self.name = name
-                    }
-                    
-                    public enum OptionType: String {
-                        
-                        case typeDeliveryOffice
-                        case stickerOrderDeliveryCourier
-                        case option
                     }
                 }
             }
@@ -197,11 +188,8 @@ extension Operation.Parameter.Select {
 
 extension Operation.Parameter.Select.Option {
     
-    typealias OptionType = Operation.Parameter.Select.State.OptionsListViewModel.OptionViewModel.OptionType
-    
     static func optionViewModelMapper(option: Select.Option) -> OptionViewModel {
         
-        let id = OptionType(rawValue: option.id) ?? .option
-        return .init(id: id, iconName: option.iconName, name: option.name)
+        return .init(iconName: option.iconName, name: option.name)
     }
 }

@@ -12,7 +12,7 @@ public enum Event {
     public typealias ParameterProduct = Operation.Parameter.ProductSelector
     public typealias ProductOption = ParameterProduct.Product
     public typealias ParameterSelect = Operation.Parameter.Select
-    public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID
+    public typealias SelectOptionID = ParameterSelect.State.OptionsListViewModel.OptionViewModel
     public typealias ParameterInput = Operation.Parameter.Input
 
     case product(ProductEvent)

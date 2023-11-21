@@ -135,7 +135,7 @@ extension SelectView {
         let icon: Image
         let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel
         let config: SelectViewConfiguration
-        let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel.ID) -> Void
+        let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel) -> Void
         
         var body: some View {
             
@@ -196,7 +196,7 @@ extension SelectView {
                 viewModel: option,
                 select: {
                     
-                    selected(option.id)
+                    selected(option)
                     
                 },
                 config: config.optionConfig

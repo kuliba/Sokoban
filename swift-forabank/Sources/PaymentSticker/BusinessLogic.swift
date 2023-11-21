@@ -102,7 +102,7 @@ extension BusinessLogic {
             case let .selectOption(id, parameter):
                 
                 let operation = selectOption(
-                    id: id.rawValue,
+                    id: id.name,
                     operation: operation,
                     parameter: parameter
                 )
@@ -121,8 +121,8 @@ extension BusinessLogic {
                 switch parameter.id {
                 case .transferTypeSticker:
                     
-                    switch id {
-                    case .typeDeliveryOffice:
+                    switch id.name {
+                    case "Получить в офисе":
                         processDictionaryService(.stickerOrderDeliveryOffice) { result in
                             
                             switch result {
@@ -137,7 +137,7 @@ extension BusinessLogic {
                             }
                         }
                         
-                    case .stickerOrderDeliveryCourier:
+                    case "Доставка курьером":
                         processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
                             switch result {
@@ -151,7 +151,7 @@ extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
-                    case .option:
+                    default:
                         break
                     }
                     
@@ -395,7 +395,7 @@ extension BusinessLogic {
         parameter: PaymentSticker.Operation.Parameter.Select
     ) -> PaymentSticker.Operation {
         
-        guard let option = parameter.options.first(where: { $0.id == id })
+        guard let option = parameter.options.first(where: { $0.name == id })
         else { return operation }
         
         let parameter = parameter.updateValue(
