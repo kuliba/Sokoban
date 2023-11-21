@@ -410,6 +410,7 @@ private extension Model {
     ) -> [BusinessLogic.Product] {
         
         let allProducts = model.allProducts.map({ BusinessLogic.Product(
+            id: $0.id,
             title: "Счет списания",
             nameProduct: $0.displayName,
             balance: $0.balanceValue.description,

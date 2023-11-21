@@ -26,6 +26,7 @@ public extension Operation.Parameter {
         
         public struct Product: Hashable {
             
+            let id: Int
             let title: String
             let nameProduct: String
             let balance: String
@@ -36,6 +37,7 @@ public extension Operation.Parameter {
             let backgroundColor: String
             
             public init(
+                id: Int,
                 title: String,
                 nameProduct: String,
                 balance: String,
@@ -45,6 +47,7 @@ public extension Operation.Parameter {
                 backgroundImage: ImageData?,
                 backgroundColor: String
             ) {
+                self.id = id
                 self.title = title
                 self.nameProduct = nameProduct
                 self.balance = balance
