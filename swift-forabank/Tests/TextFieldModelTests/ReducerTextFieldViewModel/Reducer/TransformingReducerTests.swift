@@ -207,6 +207,61 @@ final class TransformingReducerTests: XCTestCase {
         )
     }
     
+    func test_reduce_setText_shouldNotChangeEditingState_onSameEmptyText() throws {
+        
+        let emptyText = ""
+        let textState = TextState(emptyText, cursorPosition: 0)
+        
+        assertReduce(
+            reducer,
+            state: .editing(textState),
+            with: .setTextTo(emptyText),
+            returns: .editing(textState)
+        )
+    }
+    
+    func test_reduce_setText_shouldNotChangeEditingState_onSameText_cursorAtStart() throws {
+        
+        let nonEmptyText = "non empty"
+        let textState = TextState(nonEmptyText, cursorPosition: 0)
+        
+        assertReduce(
+            reducer,
+            state: .editing(textState),
+            with: .setTextTo(nonEmptyText),
+            returns: .editing(textState)
+        )
+    }
+    
+    func test_reduce_setText_shouldNotChangeEditingState_onSameText_cursorInside() throws {
+        
+        let nonEmptyText = "non empty"
+        let textState = TextState(nonEmptyText, cursorPosition: 4)
+        
+        assertReduce(
+            reducer,
+            state: .editing(textState),
+            with: .setTextTo(nonEmptyText),
+            returns: .editing(textState)
+        )
+    }
+    
+    func test_reduce_setText_shouldNotChangeEditingState_onSameText_cursorAtEnd() throws {
+        
+        let nonEmptyText = "non empty"
+        let textState = TextState(
+            nonEmptyText,
+            cursorPosition: nonEmptyText.count
+        )
+        
+        assertReduce(
+            reducer,
+            state: .editing(textState),
+            with: .setTextTo(nonEmptyText),
+            returns: .editing(textState)
+        )
+    }
+    
     func test_reduce_withLimitingTransform_shouldChangeFromTextToPlaceholder_onEmpty() {
         
         let reducer = makeLimitReducer(limit: 6)
@@ -506,7 +561,7 @@ final class TransformingReducerTests: XCTestCase {
         assertReduce(
             reducer,
             state: .editing(.init("12345", cursorAt: 5)),
-            with: .changeText("ABC", in:.init(location: 5, length: 0)),
+            with: .changeText("ABC", in: .init(location: 5, length: 0)),
             returns: .editing(.init("12345", cursorAt: 5))
         )
     }
@@ -518,8 +573,20 @@ final class TransformingReducerTests: XCTestCase {
         assertReduce(
             reducer,
             state: .editing(.init("12345", cursorAt: 5)),
-            with: .changeText("ABC", in:.init(location: 5, length: 0)),
+            with: .changeText("ABC", in: .init(location: 5, length: 0)),
             returns: .editing(.init("12345A", cursorAt: 6))
+        )
+    }
+    
+    // MARK: - identity reducer
+    
+    func test_identityReducer_shouldSetCursorAtInsertionTextEnd () {
+        
+        assertReduce(
+            makeIdentityReducer(),
+            state: .editing(.init("12345")),
+            with: .insert("abc", at: 2),
+            returns: .editing(.init("12abc345", cursorAt: 5))
         )
     }
     
@@ -530,6 +597,13 @@ final class TransformingReducerTests: XCTestCase {
         TransformingReducer(
             placeholderText: "A placeholder text",
             transformer: Transformers.Limiting(limit)
+        )
+    }
+    
+    private func makeIdentityReducer() -> Reducer {
+        
+        TransformingReducer(
+            placeholderText: "A placeholder text"
         )
     }
     
@@ -555,5 +629,16 @@ final class TransformingReducerTests: XCTestCase {
             expectedState,
             file: file, line: line
         )
+    }
+}
+
+private extension TextFieldAction {
+    
+    static func insert(
+        _ text: String,
+        at cursorPosition: Int
+    ) -> Self {
+        
+        .changeText(text, in: .init(location: cursorPosition, length: 0))
     }
 }
