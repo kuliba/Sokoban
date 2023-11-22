@@ -208,7 +208,6 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 sections: [],
-                makeOperationStateViewModel: { _ in .empty },
                 makeProductProfileViewModel: { _,_,_ in nil },
                 onRegister: {}
             ),

@@ -12,7 +12,7 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
     
     func test_makeRequest_shouldThrowOnEmptyDocumentID() throws {
         
-        let documentID = makeDocumentID("")
+        let documentID = makePaymentID("")
         
         try XCTAssertThrowsAsNSError(
             makeRequest(documentID),
@@ -39,7 +39,7 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
     
     func test_makeRequest_shouldSetRequestBody() throws {
         
-        let documentID = makeDocumentID()
+        let documentID = makePaymentID()
         let request = try makeRequest(documentID)
         
         let httpBody = try XCTUnwrap(request.httpBody)
@@ -48,21 +48,21 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
             from: httpBody
         )
         
-        XCTAssertNoDiff(decodedRequest.documentId, documentID.rawValue)
+        XCTAssertNoDiff(decodedRequest.paymentOperationDetailId, documentID.rawValue)
     }
     
     // MARK: - Helpers
     
     private func makeRequest(
-        _ documentID: PaymentID? = nil
+        _ paymentID: PaymentID? = nil
     ) throws -> URLRequest {
         
         try RequestFactory.createGetOperationDetailByPaymentIDRequest(
-            documentID: documentID ?? makeDocumentID()
+            paymentID: paymentID ?? makePaymentID()
         )
     }
     
-    private func makeDocumentID(
+    private func makePaymentID(
         _ documentIDValue: String = UUID().uuidString
     ) -> PaymentID {
         
@@ -71,6 +71,6 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
     
     private struct DecodableRequest: Decodable {
         
-        let documentId: String
+        let paymentOperationDetailId: String
     }
 }
