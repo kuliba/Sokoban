@@ -16,6 +16,8 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> OperationDetailByPaymentIDResult {
         
+        typealias Response = ResponseMapper.ServerResponse<OperationDetailData>
+        
         do {
             switch httpURLResponse.statusCode {
             case 200:
@@ -40,12 +42,5 @@ extension ResponseMapper {
         
         case invalidData(statusCode: Int, data: Data)
         case server(statusCode: Int, errorMessage: String)
-    }
-    
-    private struct Response: Decodable {
-        
-        let statusCode: Int
-        let errorMessage: String?
-        let data: OperationDetailData?
     }
 }
