@@ -160,15 +160,7 @@ struct ProductProfileView: View {
             item: $viewModel.fullScreenCoverState,
             content: fullScreenCoverContent
         )
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            case let .placesMap(placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-            }
-        })
+        .sheet(item: $viewModel.sheet, content: sheetContent)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
@@ -336,6 +328,20 @@ struct ProductProfileView: View {
             showSpinner: showSpinner,
             resendRequestAfterClose: resendRequestAfterClose
         )
+    }
+    
+    @ViewBuilder
+    private func sheetContent(
+        sheet: ProductProfileViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .printForm(viewModel):
+            PrintFormView(viewModel: viewModel)
+            
+        case let .placesMap(viewModel):
+            PlacesView(viewModel: viewModel)
+        }
     }
 }
 
