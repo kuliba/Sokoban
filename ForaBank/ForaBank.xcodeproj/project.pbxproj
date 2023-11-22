@@ -340,6 +340,7 @@
 		2A0D9B812B0E27EC00F1DFD1 /* ResponseMapper+mapGetPrintFormResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B802B0E27EC00F1DFD1 /* ResponseMapper+mapGetPrintFormResponse.swift */; };
 		2A0D9B842B0E2A1E00F1DFD1 /* ResponseMapper+ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */; };
 		2A0D9B862B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */; };
+		2A0D9B882B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */; };
 		2A118E1F2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */; };
 		2A118E212AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E202AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift */; };
 		2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */; };
@@ -2528,6 +2529,7 @@
 		2A0D9B802B0E27EC00F1DFD1 /* ResponseMapper+mapGetPrintFormResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetPrintFormResponse.swift"; sourceTree = "<group>"; };
 		2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+ServerResponse.swift"; sourceTree = "<group>"; };
 		2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeDocumentButton.swift"; sourceTree = "<group>"; };
+		2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeButtonLabel.swift"; sourceTree = "<group>"; };
 		2A0DBD792B05E89B008386DA /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 		2A0F2F4329AE338E0054B920 /* MCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCError.swift; sourceTree = "<group>"; };
 		2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iFora_515A3_10rub_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = createAnywayTransfer_iFora_515A3_10rub_response.json; sourceTree = "<group>"; };
@@ -6534,6 +6536,7 @@
 			children = (
 				2AD7EBDC2B0CB233009FDCAB /* RootViewModelFactory+makeDetailButton.swift */,
 				2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */,
+				2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -12755,6 +12758,7 @@
 				77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */,
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
 				776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */,
+				2A0D9B882B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
 				C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */,
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
