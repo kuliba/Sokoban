@@ -38,7 +38,6 @@ class ProductProfileViewModel: ObservableObject {
     @Published var spinner: SpinnerView.ViewModel?
     @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var successChangePin: PaymentsSuccessViewModel?
     @Published var confirmOtpView: FullCover.ConfirmCode?
     @Published var changePin: FullCover.ChangePin?
     
@@ -473,7 +472,6 @@ private extension ProductProfileViewModel {
                 case _ as ProductProfileViewModelAction.Close.Success:
                     fullScreenCoverState = nil
                     success = nil
-                    successChangePin = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
                     closeAccountSpinner = nil
@@ -1437,7 +1435,7 @@ private extension ProductProfileViewModel {
                     self.rootActions?.switchTab(.main)
                     
                 case _ as PaymentsSuccessAction.Button.Ready:
-                    successChangePin = nil
+                    self.fullScreenCoverState = nil
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
@@ -1872,11 +1870,15 @@ extension ProductProfileViewModel {
 
     enum FullScreenCoverState: Hashable & Identifiable {
         
+        case successChangePin(PaymentsSuccessViewModel)
         case successZeroAccount(ZeroAccount)
         
         var id: Case {
             
             switch self {
+            case .successChangePin:
+                return .successChangePin
+                
             case .successZeroAccount:
                 return .successZeroAccount
             }
@@ -1884,6 +1886,7 @@ extension ProductProfileViewModel {
         
         enum Case: Hashable {
             
+            case successChangePin
             case successZeroAccount
         }
         
@@ -2213,7 +2216,7 @@ extension ProductProfileViewModel {
         )
         
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-        self.successChangePin = successViewModel
+        self.fullScreenCoverState = .successChangePin(successViewModel)
         bind(successViewModel)
     }
     
@@ -2227,7 +2230,7 @@ extension ProductProfileViewModel {
         )
         
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-        self.successChangePin = successViewModel
+        self.fullScreenCoverState = .successChangePin(successViewModel)
         bind(successViewModel)
     }
 }

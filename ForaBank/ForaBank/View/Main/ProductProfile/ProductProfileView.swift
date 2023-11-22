@@ -149,14 +149,6 @@ struct ProductProfileView: View {
                 )
             
             Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.successChangePin) { successViewModel in
-                    PaymentsSuccessView(viewModel: successViewModel)
-                    
-                }.transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
-            
-            Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.confirmOtpView) {
                     confirmCodeView(
                         phoneNumber: $0.phone,
@@ -252,6 +244,12 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch state {
+        case let .successChangePin(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
         case let .successZeroAccount(zeroAccount):
             PaymentsSuccessView(viewModel: zeroAccount.viewModel)
                 .transaction { transaction in
