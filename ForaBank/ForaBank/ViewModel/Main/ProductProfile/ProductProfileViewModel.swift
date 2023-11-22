@@ -311,7 +311,7 @@ private extension ProductProfileViewModel {
             .sink { [weak self] payload in
                 
                 guard let self else { return }
-                #warning("optimise pipeline with assign")
+
                 self.fullScreenCoverState = .changePin(.init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
@@ -1828,12 +1828,6 @@ extension ProductProfileViewModel {
         }
     }
     
-    struct ZeroAccount: Identifiable {
-        
-        let id = UUID()
-        let viewModel: PaymentsSuccessViewModel
-    }
-
     enum FullScreenCoverState: Hashable & Identifiable {
         
         case changePin(ChangePin)
