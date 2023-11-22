@@ -27,7 +27,7 @@ extension RequestFactory {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "documentId": documentID.rawValue
+            "paymentOperationDetailId": documentID.rawValue
         ] as [String: String])
         
         return request
