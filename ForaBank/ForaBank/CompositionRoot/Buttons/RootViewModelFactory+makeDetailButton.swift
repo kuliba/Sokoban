@@ -75,7 +75,7 @@ extension RootViewModelFactory {
         }
     }
     
-    #warning("finish with DetailError and extension below")
+#warning("finish with DetailError and extension below")
     fileprivate struct DetailError: Error {}
 }
 

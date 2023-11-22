@@ -9,7 +9,6 @@ import Foundation
 
 extension ResponseMapper {
     
-#warning("PDF???")
     typealias GetPrintFormResult = Result<Data, GetPrintFormError>
     
     // TODO: has the same shape as mapOperationDetailByPaymentIDResponse - make generic
@@ -19,7 +18,7 @@ extension ResponseMapper {
     ) -> GetPrintFormResult {
         
         typealias Response = ResponseMapper.ServerResponse<Data>
-
+        
         do {
             switch httpURLResponse.statusCode {
             case 200:
