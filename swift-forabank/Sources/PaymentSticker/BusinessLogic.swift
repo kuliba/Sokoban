@@ -289,6 +289,8 @@ extension BusinessLogic {
                 
             } else if let input = operation.parameters.first(where: { $0.id == .input }) {
                 
+                let amount = operation.parameters.amountSticker
+                
                 switch input {
                 case let .input(input):
                     
@@ -300,14 +302,20 @@ extension BusinessLogic {
                                 result: .success,
                                 title: "Успешная заявка",
                                 description: makeTransfer.productOrderingResponseMessage,
-                                amount: "100"
+                                amount: amount ?? ""
                             ))))
 
                         case let .failure(error):
                             completion(.failure(error))
                         }
                     }
-                    return .success(.operation(operation))
+                    
+                    return .success(.result(OperationStateViewModel.OperationResult(
+                        result: .success,
+                        title: "Успешная заявка",
+                        description: "",
+                        amount: amount ?? ""
+                    )))
 
                 default:
                     return .success(.operation(operation))
@@ -377,15 +385,21 @@ extension BusinessLogic {
             
         case let .selectProduct(option, product):
             
-            let operation = operation.updateOperation(
-                operation: operation,
-                newParameter: .productSelector(.init(
-                    state: .select,
-                    selectedProduct: option,
-                    allProducts: product.allProducts))
-            )
+            if let option {
+                let operation = operation.updateOperation(
+                    operation: operation,
+                    newParameter: .productSelector(.init(
+                        state: .select,
+                        selectedProduct: option,
+                        allProducts: product.allProducts))
+                )
+                
+                return .success(.operation(operation))
+            } else {
+                
+                return .success(.operation(operation))
+            }
             
-            return .success(.operation(operation))
         }
     }
     

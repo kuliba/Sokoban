@@ -32,6 +32,26 @@ public extension Operation {
 }
 
 //MARK: Helpers
+
+extension [Operation.Parameter] {
+
+    var amountSticker: String? {
+        
+        var amount: String?
+        
+        switch self.first(where: {$0.id == .amount}) {
+        case let .amount(amount):
+            
+            return amount.value
+            
+        default:
+            break
+        }
+        
+        return amount
+    }
+}
+
 extension Operation {
 
     func containsParameter(_ parameter: Operation.Parameter) -> Bool {
