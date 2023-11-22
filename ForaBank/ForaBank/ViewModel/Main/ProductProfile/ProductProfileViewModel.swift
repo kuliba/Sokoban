@@ -38,7 +38,6 @@ class ProductProfileViewModel: ObservableObject {
     @Published var spinner: SpinnerView.ViewModel?
     @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var confirmOtpView: FullCover.ConfirmCode?
     @Published var changePin: FullCover.ChangePin?
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
@@ -348,14 +347,17 @@ private extension ProductProfileViewModel {
         action
             .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ConfirmShow }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                self.alert = nil
-                self.confirmOtpView = .init(
+            .sink { [weak self] action in
+                
+                self?.alert = nil
+                self?.fullScreenCoverState = .confirmOTP(.init(
                     cardId: action.cardId,
                     action: action.actionType,
                     phone: action.phone,
-                    request: action.resendOtp)
-            }.store(in: &bindings)
+                    request: action.resendOtp
+                ))
+            }
+            .store(in: &bindings)
         
         // Show Spinner
         action
@@ -1870,12 +1872,16 @@ extension ProductProfileViewModel {
 
     enum FullScreenCoverState: Hashable & Identifiable {
         
+        case confirmOTP(FullCover.ConfirmCode)
         case successChangePin(PaymentsSuccessViewModel)
         case successZeroAccount(ZeroAccount)
         
         var id: Case {
             
             switch self {
+            case .confirmOTP:
+                return .confirmOTP
+                
             case .successChangePin:
                 return .successChangePin
                 
@@ -1886,6 +1892,7 @@ extension ProductProfileViewModel {
         
         enum Case: Hashable {
             
+            case confirmOTP
             case successChangePin
             case successZeroAccount
         }

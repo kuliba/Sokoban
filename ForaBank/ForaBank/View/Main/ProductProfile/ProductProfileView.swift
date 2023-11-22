@@ -149,21 +149,6 @@ struct ProductProfileView: View {
                 )
             
             Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.confirmOtpView) {
-                    confirmCodeView(
-                        phoneNumber: $0.phone,
-                        cardId: $0.cardId,
-                        actionType: $0.action,
-                        reset: {
-                            viewModel.confirmOtpView = nil
-                        },
-                        showSpinner: {},
-                        resendRequest: $0.request,
-                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-                    ).transition(.move(edge: .leading))
-                }
-            
-            Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.changePin) {
                     changePinCodeView(
                         cardId: $0.cardId,
@@ -244,6 +229,17 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch state {
+        case let .confirmOTP(confirm):
+            confirmCodeView(
+                phoneNumber: confirm.phone,
+                cardId: confirm.cardId,
+                actionType: confirm.action,
+                reset: { viewModel.fullScreenCoverState = nil },
+                showSpinner: {},
+                resendRequest: confirm.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
         case let .successChangePin(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
                 .transaction { transaction in
