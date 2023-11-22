@@ -29,7 +29,7 @@ final class RequestFactory_createGetPrintFormRequestTests: XCTestCase {
     
     func test_makeRequest_shouldSetRequestBody() throws {
         
-        let documentID = makeDetailID()
+        let documentID = makeDocumentID()
         let request = try makeRequest(documentID)
         
         let httpBody = try XCTUnwrap(request.httpBody)
@@ -45,17 +45,17 @@ final class RequestFactory_createGetPrintFormRequestTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeRequest(
-        _ detailID: DetailID? = nil
+        _ documentID: DocumentID? = nil
     ) throws -> URLRequest {
         
         try RequestFactory.createGetPrintFormRequest(
-            detailID: detailID ?? makeDetailID()
+            documentID: documentID ?? makeDocumentID()
         )
     }
     
-    private func makeDetailID(
+    private func makeDocumentID(
         _ documentIDValue: Int = 1234567
-    ) -> DetailID {
+    ) -> DocumentID {
         
         .init(documentIDValue)
     }

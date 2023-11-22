@@ -8,13 +8,10 @@
 import Foundation
 import Tagged
 
-typealias DetailID = Tagged<_DetailID, Int>
-enum _DetailID {}
-
 extension RequestFactory {
     
     static func createGetPrintFormRequest(
-        detailID: DetailID
+        documentID: DocumentID
     ) throws -> URLRequest {
         
         let endpoint = Services.Endpoint.getPrintForm
@@ -25,7 +22,7 @@ extension RequestFactory {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "paymentOperationDetailId": "\(detailID.rawValue)",
+            "paymentOperationDetailId": "\(documentID.rawValue)",
             "printFormType": "sticker"
         ] as [String: String])
         
