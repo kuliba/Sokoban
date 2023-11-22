@@ -152,6 +152,10 @@ struct ProductProfileView: View {
             default: break
             }
         }
+        .bottomSheet(
+            item: $viewModel.bottomSheet,
+            content: bottomSheetContent
+        )
         .fullScreenCover(
             item: $viewModel.fullScreenCoverState,
             content: fullScreenCoverContent
@@ -165,56 +169,9 @@ struct ProductProfileView: View {
                 PlacesView(viewModel: placesViewModel)
             }
         })
-        .bottomSheet(
-            item: $viewModel.bottomSheet,
-            content: bottomSheetContent
-        )
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-    }
-    
-    @ViewBuilder
-    private func fullScreenCoverContent(
-        state: ProductProfileViewModel.FullScreenCoverState
-    ) -> some View {
-        
-        switch state {
-        case let .changePin(changePIN):
-            changePinCodeView(
-                cardId: changePIN.cardId,
-                actionType: .changePin(changePIN.displayNumber),
-                changePIN.model,
-                confirm: viewModel.confirmShowCVV,
-                confirmChangePin: viewModel.confirmChangePin,
-                showSpinner: {},
-                resendRequest: changePIN.request,
-                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-            ).transition(.move(edge: .leading))
-            
-        case let .confirmOTP(confirm):
-            confirmCodeView(
-                phoneNumber: confirm.phone,
-                cardId: confirm.cardId,
-                actionType: confirm.action,
-                reset: { viewModel.fullScreenCoverState = nil },
-                showSpinner: {},
-                resendRequest: confirm.request,
-                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-            ).transition(.move(edge: .leading))
-            
-        case let .successChangePin(viewModel):
-            PaymentsSuccessView(viewModel: viewModel)
-                .transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
-            
-        case let .successZeroAccount(zeroAccount):
-            PaymentsSuccessView(viewModel: zeroAccount.viewModel)
-                .transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
-        }
     }
     
     @ViewBuilder
@@ -257,6 +214,49 @@ struct ProductProfileView: View {
             OperationDetailInfoView(
                 viewModel: viewModel
             )
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverContent(
+        state: ProductProfileViewModel.FullScreenCoverState
+    ) -> some View {
+        
+        switch state {
+        case let .changePin(changePIN):
+            changePinCodeView(
+                cardId: changePIN.cardId,
+                actionType: .changePin(changePIN.displayNumber),
+                changePIN.model,
+                confirm: viewModel.confirmShowCVV,
+                confirmChangePin: viewModel.confirmChangePin,
+                showSpinner: {},
+                resendRequest: changePIN.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
+        case let .confirmOTP(confirm):
+            confirmCodeView(
+                phoneNumber: confirm.phone,
+                cardId: confirm.cardId,
+                actionType: confirm.action,
+                reset: { viewModel.fullScreenCoverState = nil },
+                showSpinner: {},
+                resendRequest: confirm.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
+        case let .successChangePin(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
+        case let .successZeroAccount(zeroAccount):
+            PaymentsSuccessView(viewModel: zeroAccount.viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
         }
     }
     
