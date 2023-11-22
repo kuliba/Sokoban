@@ -141,12 +141,6 @@ struct ProductProfileView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .zIndex(.greatestFiniteMagnitude)
             }
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(
-                    item: $viewModel.fullScreenCoverState,
-                    content: fullScreenCoverContent
-                )
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -158,6 +152,10 @@ struct ProductProfileView: View {
             default: break
             }
         }
+        .fullScreenCover(
+            item: $viewModel.fullScreenCoverState,
+            content: fullScreenCoverContent
+        )
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
             case let .printForm(printFormViewModel):
