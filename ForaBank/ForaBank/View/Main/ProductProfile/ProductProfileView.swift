@@ -93,36 +93,7 @@ struct ProductProfileView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                        
-                    case .productInfo(let productInfoViewModel):
-                        InfoProductView(viewModel: productInfoViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                        
-                    case let .productStatement(productStatementViewModel):
-                        ProductStatementView(viewModel: productStatementViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarTitleDisplayMode(.inline)
-                            .navigationBarTitle("Выписка по счету")
-                        
-                    case let .meToMeExternal(meToMeExternalViewModel):
-                        
-                        MeToMeExternalView(viewModel: meToMeExternalViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarTitleDisplayMode(.inline)
-                            .navigationBarTitle("Пополнить со счета в другом банке")
-                            .navigationBarItems(trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage()))
-                        
-                    case let .myProducts(myProductsViewModel):
-                        MyProductsView(viewModel: myProductsViewModel)
-                        
-                    case let .paymentsTransfers(paymentsTransfersViewModel):
-                        PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
-                        
-                    }
-                }
+                viewModel.link.map(navLinkDestination)
             }
             
             // workaround to fix mini-cards jumps when product name editing alert presents
@@ -160,6 +131,39 @@ struct ProductProfileView: View {
             content: fullScreenCoverContent
         )
         .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    @ViewBuilder
+    private func navLinkDestination(
+        link: ProductProfileViewModel.Link
+    ) -> some View {
+        
+        switch link {
+        case let .productInfo(viewModel):
+            InfoProductView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+            
+        case let .productStatement(viewModel):
+            ProductStatementView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitle("Выписка по счету")
+            
+        case let .meToMeExternal(viewModel):
+            MeToMeExternalView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitle("Пополнить со счета в другом банке")
+                .navigationBarItems(
+                    trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage())
+                )
+            
+        case let .myProducts(viewModel):
+            MyProductsView(viewModel: viewModel)
+            
+        case let .paymentsTransfers(viewModel):
+            PaymentsTransfersView(viewModel: viewModel)
+        }
     }
     
     @ViewBuilder
