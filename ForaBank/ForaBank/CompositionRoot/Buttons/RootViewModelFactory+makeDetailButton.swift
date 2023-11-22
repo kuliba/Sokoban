@@ -28,6 +28,8 @@ extension RootViewModelFactory {
         
         func makeButton(paymentID: PaymentID) -> some View {
             
+            let label = { makeButtonLabel(option: .details) }
+
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
                 performRequest: httpClient.performRequest(_:completion:),
@@ -68,7 +70,7 @@ extension RootViewModelFactory {
             }
             
             return ButtonWithSheet(
-                label: { Text("TBD") },
+                label: label,
                 getSheetState: getSheetState,
                 makeSheetStateView: makeSheetStateView
             )
