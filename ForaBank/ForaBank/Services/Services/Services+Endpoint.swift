@@ -68,6 +68,7 @@ extension Services {
             case getJsonAbroad
             case getOperationDetailByPaymentId
             case getPINConfirmationCode
+            case getPrintForm
             case getProcessingSessionCode
             case getSvgImageList
             case getScenarioQRData
@@ -191,6 +192,12 @@ extension Services.Endpoint {
         pathPrefix: .processing(.cardInfo),
         version: .v1,
         serviceName: .getPINConfirmationCode
+    )
+    
+    static let getPrintForm: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getPrintForm
     )
     
     static let getProcessingSessionCode: Self = .init(
