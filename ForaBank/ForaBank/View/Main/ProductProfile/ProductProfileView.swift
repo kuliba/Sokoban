@@ -165,43 +165,10 @@ struct ProductProfileView: View {
                 PlacesView(viewModel: placesViewModel)
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
-            
-            switch sheet.type {
-            case let .operationDetail(operationDetailViewModel):
-                OperationDetailView(viewModel: operationDetailViewModel)
-                
-            case let .optionsPannel(optionsPannelViewModel):
-                ProductProfileOptionsPannelView(viewModel: optionsPannelViewModel)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 26)
-                    .padding(.bottom, 72)
-                
-            case let .meToMeLegacy(meToMeViewModel):
-                MeToMeView(viewModel: meToMeViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
-                
-            case let .meToMe(viewModel):
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.success) { successViewModel in
-                        
-                        PaymentsSuccessView(viewModel: successViewModel)
-                        
-                    }.transaction { transaction in
-                        transaction.disablesAnimations = false
-                    }
-                
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            case let .placesMap(placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-                
-            case let .info(operationDetailInfoViewModel):
-                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
-            }
-        })
+        .bottomSheet(
+            item: $viewModel.bottomSheet,
+            content: bottomSheetContent
+        )
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
@@ -247,6 +214,47 @@ struct ProductProfileView: View {
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetContent(
+        sheet: ProductProfileViewModel.BottomSheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .operationDetail(operationDetailViewModel):
+            OperationDetailView(viewModel: operationDetailViewModel)
+            
+        case let .optionsPannel(optionsPannelViewModel):
+            ProductProfileOptionsPannelView(viewModel: optionsPannelViewModel)
+                .padding(.horizontal, 20)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+            
+        case let .meToMeLegacy(meToMeViewModel):
+            MeToMeView(viewModel: meToMeViewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .frame(height: 474)
+            
+        case let .meToMe(viewModel):
+            PaymentsMeToMeView(viewModel: viewModel)
+                .fullScreenCover(item: $viewModel.success) { successViewModel in
+                    
+                    PaymentsSuccessView(viewModel: successViewModel)
+                    
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
+        case let .printForm(printFormViewModel):
+            PrintFormView(viewModel: printFormViewModel)
+            
+        case let .placesMap(placesViewModel):
+            PlacesView(viewModel: placesViewModel)
+            
+        case let .info(operationDetailInfoViewModel):
+            OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
         }
     }
     
