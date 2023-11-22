@@ -1830,37 +1830,6 @@ extension ProductProfileViewModel {
         }
     }
     
-    struct FullCover: Identifiable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            
-            case successMeToMe(PaymentsSuccessViewModel)
-        }
-        
-        typealias ResendRequest = () -> Void
-        
-        struct ConfirmCode: Identifiable {
-            
-            let id = UUID()
-            let cardId: CardDomain.CardId
-            let action: ConfirmViewModel.CVVPinAction
-            let phone: PhoneDomain.Phone
-            let request: ResendRequest
-        }
-        
-        struct ChangePin: Identifiable {
-            
-            let id = UUID()
-            let cardId: CardDomain.CardId
-            let displayNumber: PhoneDomain.Phone
-            let model: PinCodeViewModel
-            let request: ResendRequest
-        }
-    }
-    
     struct ZeroAccount: Identifiable {
         
         let id = UUID()
@@ -1869,8 +1838,8 @@ extension ProductProfileViewModel {
 
     enum FullScreenCoverState: Hashable & Identifiable {
         
-        case changePin(FullCover.ChangePin)
-        case confirmOTP(FullCover.ConfirmCode)
+        case changePin(ChangePin)
+        case confirmOTP(ConfirmCode)
         case successChangePin(PaymentsSuccessViewModel)
         case successZeroAccount(ZeroAccount)
         
@@ -1891,6 +1860,23 @@ extension ProductProfileViewModel {
             }
         }
         
+        typealias ResendRequest = () -> Void
+        
+        struct ConfirmCode {
+            
+            let cardId: CardDomain.CardId
+            let action: ConfirmViewModel.CVVPinAction
+            let phone: PhoneDomain.Phone
+            let request: ResendRequest
+        }
+        
+        struct ChangePin {
+            
+            let cardId: CardDomain.CardId
+            let displayNumber: PhoneDomain.Phone
+            let model: PinCodeViewModel
+            let request: ResendRequest
+        }
         enum Case: Hashable {
             
             case changePin
