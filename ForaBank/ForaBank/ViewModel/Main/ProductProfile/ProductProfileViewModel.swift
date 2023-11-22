@@ -38,7 +38,6 @@ class ProductProfileViewModel: ObservableObject {
     @Published var spinner: SpinnerView.ViewModel?
     @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var changePin: FullCover.ChangePin?
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     
@@ -314,13 +313,13 @@ private extension ProductProfileViewModel {
             .sink { [weak self] payload in
                 
                 guard let self else { return }
-                
-                changePin = .init(
+                #warning("optimise pipeline with assign")
+                self.fullScreenCoverState = .changePin(.init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
                     model: self.createPinCodeViewModel(displayNumber: payload.phone), 
                     request: self.resendOtpForPin
-                )
+                ))
             }
             .store(in: &bindings)
         
@@ -1872,6 +1871,7 @@ extension ProductProfileViewModel {
 
     enum FullScreenCoverState: Hashable & Identifiable {
         
+        case changePin(FullCover.ChangePin)
         case confirmOTP(FullCover.ConfirmCode)
         case successChangePin(PaymentsSuccessViewModel)
         case successZeroAccount(ZeroAccount)
@@ -1879,6 +1879,9 @@ extension ProductProfileViewModel {
         var id: Case {
             
             switch self {
+            case .changePin:
+                return .changePin
+                
             case .confirmOTP:
                 return .confirmOTP
                 
@@ -1892,6 +1895,7 @@ extension ProductProfileViewModel {
         
         enum Case: Hashable {
             
+            case changePin
             case confirmOTP
             case successChangePin
             case successZeroAccount
@@ -2067,11 +2071,12 @@ extension ProductProfileViewModel {
             handlePinError(cardId, pinError, displayNumber)
             
         case .success:
-            changePin = .init(
+            fullScreenCoverState = .changePin(.init(
                 cardId: cardId,
                 displayNumber: displayNumber,
-                model: self.createPinCodeViewModel(displayNumber: displayNumber), 
-                request: self.resendOtpForPin)
+                model: self.createPinCodeViewModel(displayNumber: displayNumber),
+                request: self.resendOtpForPin
+            ))
         }
     }
     

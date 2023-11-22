@@ -147,20 +147,6 @@ struct ProductProfileView: View {
                     item: $viewModel.fullScreenCoverState,
                     content: fullScreenCoverContent
                 )
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.changePin) {
-                    changePinCodeView(
-                        cardId: $0.cardId,
-                        actionType: .changePin($0.displayNumber),
-                        $0.model,
-                        confirm: viewModel.confirmShowCVV,
-                        confirmChangePin: viewModel.confirmChangePin,
-                        showSpinner: {},
-                        resendRequest: $0.request,
-                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-                    ).transition(.move(edge: .leading))
-                }
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -229,6 +215,18 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch state {
+        case let .changePin(changePIN):
+            changePinCodeView(
+                cardId: changePIN.cardId,
+                actionType: .changePin(changePIN.displayNumber),
+                changePIN.model,
+                confirm: viewModel.confirmShowCVV,
+                confirmChangePin: viewModel.confirmChangePin,
+                showSpinner: {},
+                resendRequest: changePIN.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
         case let .confirmOTP(confirm):
             confirmCodeView(
                 phoneNumber: confirm.phone,
