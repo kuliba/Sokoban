@@ -223,38 +223,40 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch sheet.type {
-        case let .operationDetail(operationDetailViewModel):
-            OperationDetailView(viewModel: operationDetailViewModel)
+        case let .operationDetail(viewModel):
+            OperationDetailView(viewModel: viewModel)
             
-        case let .optionsPannel(optionsPannelViewModel):
-            ProductProfileOptionsPannelView(viewModel: optionsPannelViewModel)
+        case let .optionsPannel(viewModel):
+            ProductProfileOptionsPannelView(viewModel: viewModel)
                 .padding(.horizontal, 20)
                 .padding(.top, 26)
                 .padding(.bottom, 72)
             
-        case let .meToMeLegacy(meToMeViewModel):
-            MeToMeView(viewModel: meToMeViewModel)
+        case let .meToMeLegacy(viewModel):
+            MeToMeView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
                 .frame(height: 474)
             
         case let .meToMe(viewModel):
             PaymentsMeToMeView(viewModel: viewModel)
-                .fullScreenCover(item: $viewModel.success) { successViewModel in
+                .fullScreenCover(item: $viewModel.success) {
                     
-                    PaymentsSuccessView(viewModel: successViewModel)
+                    PaymentsSuccessView(viewModel: $0)
                     
                 }.transaction { transaction in
                     transaction.disablesAnimations = false
                 }
             
-        case let .printForm(printFormViewModel):
-            PrintFormView(viewModel: printFormViewModel)
+        case let .printForm(viewModel):
+            PrintFormView(viewModel: viewModel)
             
-        case let .placesMap(placesViewModel):
-            PlacesView(viewModel: placesViewModel)
+        case let .placesMap(viewModel):
+            PlacesView(viewModel: viewModel)
             
-        case let .info(operationDetailInfoViewModel):
-            OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+        case let .info(viewModel):
+            OperationDetailInfoView(
+                viewModel: viewModel
+            )
         }
     }
     
