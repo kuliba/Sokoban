@@ -28,6 +28,7 @@ public struct ProductView: View {
                 selectProductView(productViewModel)
                 optionsList(
                     productList,
+                    viewModel: viewModel,
                     optionConfig: appearance.optionConfig
                 )
             }
@@ -38,6 +39,7 @@ public struct ProductView: View {
     
     private func optionsList(
         _ productList: [ProductViewModel],
+        viewModel: ProductStateViewModel,
         optionConfig: Appearance.OptionConfig
     ) -> some View {
         
@@ -81,47 +83,14 @@ public struct ProductView: View {
                     .background(background(product))
                     .frame(width: 112, height: 71)
                     .cornerRadius(8)
+                    .onTapGesture {
+                        
+                        viewModel.selectOption(product)
+                    }
                 }
             }
         }
         .padding(10)
-    }
-    
-    private func productOption(
-        product: ProductViewModel,
-        header: ProductViewModel.HeaderViewModel
-    ) -> some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-            
-            ProductView.HeaderView(
-                viewModel: header,
-                appearance: appearance
-            )
-            .padding(.leading, 10)
-            .padding(.top, 4)
-            
-            Spacer()
-            
-            VStack(alignment: .leading, spacing: 10) {
-                
-                Text(product.main.name)
-                    .font(.body)
-                    .foregroundColor(.black)
-                    .opacity(0.5)
-                
-                ProductView.FooterView(
-                    viewModel: product.footer,
-                    appearance: appearance
-                )
-            }
-        }
-        .frame(width: 112, height: 72)
-        .background(background(product))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .circular))
-        .onTapGesture {
-            
-        }
     }
     
     private func selectProductView(
@@ -355,6 +324,7 @@ struct ProductView_Previews: PreviewProvider {
             appearance: .default,
             viewModel: .init(
                 state: .selected(.init(
+                    id: 1,
                     header: .init(title: "Счет списания"),
                     main: .init(
                         cardLogo: .data(.empty),

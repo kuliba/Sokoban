@@ -87,6 +87,7 @@ public extension ModelToViewModelMapper {
                         action(.product(.chevronTapped(parameterProduct, .list)))
                     }, selectOption: { option in
                         
+                        let option = parameterProduct.allProducts.first(where: { $0.id == option.id })
                         action(.product(.selectProduct(option, parameterProduct)))
                     }
                 )

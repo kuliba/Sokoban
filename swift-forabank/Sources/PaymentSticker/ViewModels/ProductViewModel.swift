@@ -12,12 +12,12 @@ public struct ProductStateViewModel {
     
     var state: State
     let chevronTapped: () -> Void
-    let selectOption: (Operation.Parameter.ProductSelector.Product) -> Void
+    let selectOption: (ProductViewModel) -> Void
     
     public init(
         state: ProductStateViewModel.State,
         chevronTapped: @escaping () -> Void,
-        selectOption: @escaping (Operation.Parameter.ProductSelector.Product) -> Void
+        selectOption: @escaping (ProductViewModel) -> Void
     ) {
         self.state = state
         self.chevronTapped = chevronTapped
@@ -36,6 +36,7 @@ extension ProductStateViewModel {
 
 public struct ProductViewModel: Hashable {
     
+    let id: Int
     let header: HeaderViewModel
     let main: MainViewModel
     let footer: FooterViewModel
@@ -68,6 +69,7 @@ extension ProductViewModel {
     ) -> ProductViewModel {
         
         .init(
+            id: product.id,
             header: .init(title: product.title),
             main: .init(
                 cardLogo: product.cardImage,

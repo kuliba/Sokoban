@@ -36,7 +36,7 @@ public enum Event {
     public enum ProductEvent {
         
         case chevronTapped(ParameterProduct, ParameterProduct.State)
-        case selectProduct(ProductOption, ParameterProduct)
+        case selectProduct(ProductOption?, ParameterProduct)
     }
     
     public enum SelectEvent {
