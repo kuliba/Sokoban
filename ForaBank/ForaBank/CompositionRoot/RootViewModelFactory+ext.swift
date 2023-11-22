@@ -48,25 +48,41 @@ extension RootViewModelFactory {
             )
         }
         
-        let makeOperationStateViewModel = makeOperationStateViewModel(
-            httpClient,
-            model: model
+        return make(
+            model: model,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            onRegister: resetCVVPINActivation
         )
+    }
+    
+    static func makeNavigationOperationView(
+        httpClient: HTTPClient,
+        model: Model
+    ) -> () -> some View {
+     
+        return makeNavigationOperationView
         
         func operationView(setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)) -> some View {
+         
+            let makeOperationStateViewModel = makeOperationStateViewModel(
+                httpClient,
+                model: model
+            )
             
-            OperationView(
+            return OperationView(
                 model: makeOperationStateViewModel(setSelection),
                 configuration: .default
             )
         }
         
-        func atmData() -> [AtmData] {
-            []
+        func dictionaryAtmList() -> [AtmData] {
+            
+            model.dictionaryAtmList() ?? []
         }
         
-        func atmMetroStationData() -> [AtmMetroStationData] {
-            []
+        func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
+            
+            model.dictionaryAtmMetroStations() ?? []
         }
         
         func listView(
@@ -75,11 +91,11 @@ extension RootViewModelFactory {
         ) -> some View {
             
             PlacesListInternalView(
-                items: atmData().map { PlacesListViewModel.ItemViewModel(
+                items: dictionaryAtmList().map { PlacesListViewModel.ItemViewModel(
                     id: $0.id,
                     name: $0.name,
                     address: $0.address,
-                    metro: atmMetroStationData().compactMap {
+                    metro: dictionaryAtmMetroStations().compactMap {
                         
                         PlacesListViewModel.ItemViewModel.MetroStationViewModel(
                             id: $0.id, name: $0.name, color: $0.color.color
@@ -106,12 +122,6 @@ extension RootViewModelFactory {
                 listView: listView
             )
         }
-        
-        return make(
-            model: model,
-            makeProductProfileViewModel: makeProductProfileViewModel,
-            onRegister: resetCVVPINActivation
-        )
     }
 }
 

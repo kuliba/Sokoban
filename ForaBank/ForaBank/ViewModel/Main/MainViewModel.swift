@@ -877,19 +877,6 @@ class MainViewModel: ObservableObject, Resetable {
 // MARK: Helpers
 
 extension MainViewModel {
-
-    func dictionaryAtmList() -> [AtmData] {
-        
-        model.dictionaryAtmList() ?? []
-    }
-    
-    func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
-        
-        model.dictionaryAtmMetroStations() ?? []
-    }
-}
-
-extension MainViewModel {
     
     class UserAccountButtonViewModel: ObservableObject {
         
