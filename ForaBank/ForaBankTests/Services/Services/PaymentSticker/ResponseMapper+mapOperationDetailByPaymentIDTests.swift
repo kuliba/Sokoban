@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class ResponseMapper_mapOperationDetailByPaymentIDTests: XCTestCase {
+final class ResponseMapper_mapOperationDetailByPaymentIDResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidDataErrorOnInvalidData() {
         

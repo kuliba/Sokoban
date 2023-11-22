@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapOperationDetailByPaymentID.swift
+//  ResponseMapper+mapOperationDetailByPaymentIDResponse.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 21.11.2023.
