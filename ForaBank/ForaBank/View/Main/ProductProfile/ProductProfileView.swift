@@ -143,12 +143,10 @@ struct ProductProfileView: View {
             }
             
             Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
-                    PaymentsSuccessView(viewModel: successViewModel.viewModel)
-                    
-                }.transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
+                .fullScreenCover(
+                    item: $viewModel.fullScreenCoverState,
+                    content: fullScreenCoverContent
+                )
             
             Color.clear.frame(maxHeight: 0)
                 .fullScreenCover(item: $viewModel.successChangePin) { successViewModel in
@@ -246,6 +244,20 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverContent(
+        state: ProductProfileViewModel.FullScreenCoverState
+    ) -> some View {
+        
+        switch state {
+        case let .successZeroAccount(zeroAccount):
+            PaymentsSuccessView(viewModel: zeroAccount.viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+        }
     }
     
     private func changePinCodeView(

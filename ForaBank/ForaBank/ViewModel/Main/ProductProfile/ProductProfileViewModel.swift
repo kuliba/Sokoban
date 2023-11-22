@@ -36,9 +36,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     @Published var spinner: SpinnerView.ViewModel?
-    
+    @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var successZeroAccount: ZeroAccount?
     @Published var successChangePin: PaymentsSuccessViewModel?
     @Published var confirmOtpView: FullCover.ConfirmCode?
     @Published var changePin: FullCover.ChangePin?
@@ -472,7 +471,7 @@ private extension ProductProfileViewModel {
                     sheet = nil
                     
                 case _ as ProductProfileViewModelAction.Close.Success:
-                    successZeroAccount = nil
+                    fullScreenCoverState = nil
                     success = nil
                     successChangePin = nil
                     
@@ -1405,7 +1404,9 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
-                    self.successZeroAccount = ZeroAccount(viewModel: payload.viewModel)
+                    self.fullScreenCoverState = .successZeroAccount(
+                        .init(viewModel: payload.viewModel)
+                    )
                     bind(payload.viewModel)
                     self.success = payload.viewModel
                     
@@ -1867,7 +1868,34 @@ extension ProductProfileViewModel {
         
         let id = UUID()
         let viewModel: PaymentsSuccessViewModel
+    }
+
+    enum FullScreenCoverState: Hashable & Identifiable {
         
+        case successZeroAccount(ZeroAccount)
+        
+        var id: Case {
+            
+            switch self {
+            case .successZeroAccount:
+                return .successZeroAccount
+            }
+        }
+        
+        enum Case: Hashable {
+            
+            case successZeroAccount
+        }
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id)
+        }
     }
 }
 
