@@ -244,8 +244,8 @@ struct ProductProfileView: View {
                     transaction.disablesAnimations = false
                 }
             
-        case let .successZeroAccount(zeroAccount):
-            PaymentsSuccessView(viewModel: zeroAccount.viewModel)
+        case let .successZeroAccount(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }

@@ -1401,9 +1401,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
-                    self.fullScreenCoverState = .successZeroAccount(
-                        .init(viewModel: payload.viewModel)
-                    )
+                    self.fullScreenCoverState = .successZeroAccount(payload.viewModel)
                     bind(payload.viewModel)
                     self.success = payload.viewModel
                     
@@ -1841,7 +1839,7 @@ extension ProductProfileViewModel {
         case changePin(ChangePin)
         case confirmOTP(ConfirmCode)
         case successChangePin(PaymentsSuccessViewModel)
-        case successZeroAccount(ZeroAccount)
+        case successZeroAccount(PaymentsSuccessViewModel)
         
         var id: Case {
             
