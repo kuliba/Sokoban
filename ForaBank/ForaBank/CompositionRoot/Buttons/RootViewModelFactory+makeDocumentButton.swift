@@ -9,6 +9,7 @@ import ButtonWithSheet
 import Fetcher
 import Foundation
 import GenericRemoteService
+import PDFKit
 import SwiftUI
 import Tagged
 
@@ -17,8 +18,9 @@ enum _DocumentID {}
 
 extension RootViewModelFactory {
     
-    #warning("PDF???")
-    typealias DocumentResult = Result<Data, DocumentError>
+    typealias GetPrintFormServiceError = MappingRemoteServiceError<ResponseMapper.GetPrintFormError>
+    typealias GetPrintFormServiceResult = Result<Data, GetPrintFormServiceError>
+    typealias PDFResult = Result<PDFDocument, DocumentError>
     
     static func makeDocumentButton(
         httpClient: HTTPClient,
@@ -37,7 +39,7 @@ extension RootViewModelFactory {
             
             let adapted = FetchAdapter(
                 fetch: getDetailService.fetch(_:completion:),
-                mapError: DocumentError.init
+                mapResult: PDFResult.init
             )
             
             let getSheetState = { completion in
@@ -47,7 +49,7 @@ extension RootViewModelFactory {
             
             @ViewBuilder
             func makeSheetStateView(
-                result: DocumentResult,
+                result: PDFResult,
                 dismiss: @escaping () -> Void
             ) -> some View {
                 
@@ -58,9 +60,9 @@ extension RootViewModelFactory {
                         .foregroundColor(.red)
                         .padding()
                     
-                case let .success(data):
-                    #warning("CHANGE TO PRINTFORM")
-                    Text("\(data.count)")
+                case let .success(pdfDocument):
+#warning("CHANGE TO PRINTFORM")
+                    Text("TBD: \(pdfDocument)")
                 }
             }
             
@@ -72,14 +74,33 @@ extension RootViewModelFactory {
         }
     }
     
-    #warning("finish with DocumentError and extension below")
+#warning("finish with DocumentError and extension below")
     struct DocumentError: Error {}
+}
+
+private extension RootViewModelFactory.PDFResult {
+    
+    init(_ result: RootViewModelFactory.GetPrintFormServiceResult) {
+        
+        switch result {
+        case let .failure(error):
+            self = .failure(RootViewModelFactory.DocumentError(error))
+            
+        case let .success(data):
+            if let pdf = PDFDocument(data: data) {
+                self = .success(pdf)
+            } else {
+                self = .failure(RootViewModelFactory.DocumentError())
+                return
+            }
+        }
+    }
 }
 
 private extension RootViewModelFactory.DocumentError {
     
     init(
-        _ error: MappingRemoteServiceError<ResponseMapper.GetPrintFormError>
+        _ error: RootViewModelFactory.GetPrintFormServiceError
     ) {
         self.init()
     }
