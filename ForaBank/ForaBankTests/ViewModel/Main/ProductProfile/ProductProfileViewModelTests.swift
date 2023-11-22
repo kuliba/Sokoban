@@ -169,7 +169,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         let (sut, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.confirmOtpView)
+        XCTAssertNil(sut.fullScreenCoverState)
         XCTAssertNil(sut.spinner)
         
         sut.action.send(ProductProfileViewModelAction.Spinner.Show())
@@ -185,10 +185,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertNotNil(sut.confirmOtpView)
+        XCTAssertNotNil(sut.fullScreenCoverState)
         XCTAssertNil(sut.spinner)
 
-        sut.confirmOtpView = nil
+        sut.fullScreenCoverState = nil
         sut.alert = nil
     }
     
@@ -197,7 +197,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         let (sut, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.confirmOtpView)
+        XCTAssertNil(sut.fullScreenCoverState)
         XCTAssertNil(sut.spinner)
         
         sut.action.send(ProductProfileViewModelAction.Spinner.Show())
@@ -411,8 +411,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertNotNil(sut.optionsPannel)
-        
-        XCTAssertNil(sut.changePin)
+        XCTAssertNil(sut.fullScreenCoverState)
         
         let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
         
@@ -421,9 +420,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
         
-        XCTAssertNotNil(sut.changePin)
-        XCTAssertTrue(sut.changePin?.model is PinCodeViewModel)
-        sut.changePin = nil
+        XCTAssertNotNil(sut.fullScreenCoverState)
+        switch sut.fullScreenCoverState {
+        case .changePin: break
+        default: XCTFail("Expected ChangePIN model")
+        }
+        sut.fullScreenCoverState = nil
     }
     
     // MARK: - test showCvvByTap
@@ -521,7 +523,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         let (sut, _) = try makeSUT()
         
-        XCTAssertNil(sut.confirmOtpView)
+        XCTAssertNil(sut.fullScreenCoverState)
         
         sut.action.send(ProductProfileViewModelAction.CVVPin.ConfirmShow(
             cardId: 11,
@@ -531,7 +533,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertNotNil(sut.confirmOtpView)
+        XCTAssertNotNil(sut.fullScreenCoverState)
     }
     
     // MARK: - Helpers
