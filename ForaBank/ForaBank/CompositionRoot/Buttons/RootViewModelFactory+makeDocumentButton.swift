@@ -63,8 +63,7 @@ extension RootViewModelFactory {
                         .padding()
                     
                 case let .success(pdfDocument):
-#warning("CHANGE TO PRINTFORM")
-                    Text("TBD: \(pdfDocument)")
+                    PDFDocumentView(document: pdfDocument)
                 }
             }
             
