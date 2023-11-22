@@ -21,7 +21,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
 
     init(
         with viewModel: RootViewModel,
-        makeOperationViewModel: @escaping (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+        model: Model,
+        httpClient: HTTPClient
     ) {
         self.viewModel = viewModel
         self.cover = nil
@@ -29,7 +30,8 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         self.isCoverDismissing = false
         super.init(rootView: RootView(
             viewModel: viewModel,
-            makeOperationViewModel: makeOperationViewModel
+            model: model,
+            httpClient: httpClient
         ))
         
         bind()

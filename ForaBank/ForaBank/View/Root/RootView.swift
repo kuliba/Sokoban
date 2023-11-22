@@ -11,7 +11,9 @@ import PaymentSticker
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
-    let makeOperationViewModel: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+    //TODO: think composition to remove model, httpClient
+    let model: Model
+    let httpClient: HTTPClient
 
     var body: some View {
         
@@ -45,9 +47,10 @@ struct RootView: View {
             
             MainView(
                 viewModel: viewModel.mainViewModel,
-                navigationOperationView: {
-                    RootViewModelFactory.navigationOperationView(makeViewModel: makeOperationViewModel)
-                }
+                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
+                    httpClient: httpClient,
+                    model: model
+                )
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
@@ -175,7 +178,8 @@ struct RootView_Previews: PreviewProvider {
                         .init(viewModel: .init(authLoginViewModel: .preview))
                 }
             ),
-            makeOperationViewModel: { _ in .empty }
+            model: .emptyMock,
+            httpClient: Model.emptyMock.authenticatedHTTPClient()
         )
     }
 }

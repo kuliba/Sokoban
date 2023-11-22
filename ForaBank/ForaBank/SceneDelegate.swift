@@ -30,10 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         let rootViewController = RootViewHostingViewController(
             with: rootViewModel,
-            makeOperationViewModel: RootViewModelFactory.makeOperationStateViewModel(
-                httpClient,
-                model: model
-            )
+            model: model,
+            httpClient: httpClient
         )
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
