@@ -648,7 +648,7 @@
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
 		2ADF48EE2A27210D000FE607 /* PaymentComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF48ED2A27210D000FE607 /* PaymentComponents.swift */; };
 		2ADFE59F2B0D0B950020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE59E2B0D0B950020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequest.swift */; };
-		2ADFE5A12B0D0CEA0020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A02B0D0CEA0020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift */; };
+		2ADFE5A12B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A02B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift */; };
 		2ADFE5A32B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A22B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift */; };
 		2ADFE5A52B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A42B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentID.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
@@ -2834,7 +2834,7 @@
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADF48ED2A27210D000FE607 /* PaymentComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentComponents.swift; sourceTree = "<group>"; };
 		2ADFE59E2B0D0B950020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+createGetOperationDetailByPaymentIDRequest.swift"; sourceTree = "<group>"; };
-		2ADFE5A02B0D0CEA0020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift"; sourceTree = "<group>"; };
+		2ADFE5A02B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift"; sourceTree = "<group>"; };
 		2ADFE5A22B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapOperationDetailByPaymentIDTests.swift"; sourceTree = "<group>"; };
 		2ADFE5A42B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapOperationDetailByPaymentID.swift"; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5966,7 +5966,7 @@
 				2A58FAAA2AD7174E00BD1967 /* RequestFactory+makeChangePINRequestTests.swift */,
 				2A58FAAE2AD71E5D00BD1967 /* RequestFactory+makeShowCVVRequestTests.swift */,
 				2A58FAB52AD722BE00BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequestTests.swift */,
-				2ADFE5A02B0D0CEA0020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift */,
+				2ADFE5A02B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift */,
 				2A58FAB02AD71F2600BD1967 /* TestHelpers */,
 			);
 			path = RequestFactory;
@@ -13892,7 +13892,7 @@
 				C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */,
 				2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */,
 				2AA555702A3E603B00B13D47 /* Model+PaymentsTests.swift in Sources */,
-				2ADFE5A12B0D0CEA0020B382 /* ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift in Sources */,
+				2ADFE5A12B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift in Sources */,
 				2A1C3F862A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift in Sources */,
 				2AED64322A41803100A52C35 /* Model+PaymentsTransportGibddTests.swift in Sources */,
 				77EC58B2277121CF0054D75C /* TransferGeneralDataTests.swift in Sources */,

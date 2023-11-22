@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+createGetOperationDetailByPaymentIDRequestTests.swift
+//  RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 21.11.2023.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTestCase {
+final class RequestFactory_createGetOperationDetailByPaymentIDRequestTests: XCTestCase {
     
     func test_makeRequest_shouldThrowOnEmptyDocumentID() throws {
         
