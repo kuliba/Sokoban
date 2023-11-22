@@ -60,8 +60,7 @@ final class NavigationFeatureViewModel: ObservableObject {
 
 struct NavigationOperationView<OperationView: View, ListView: View>: View {
     
-    // MARK: inject location
-    let location: Location = .init(id: "location")
+    let location: Location
     @StateObject var viewModel: NavigationFeatureViewModel
     
     typealias Completion = NavigationFeatureViewModel.Completion
@@ -97,6 +96,7 @@ extension NavigationOperationViewFactory {
     ) -> some View {
         
         let navView = NavigationOperationView(
+            location: <#Location#>,
             viewModel: .init(),
             operationView: { setSelection in
                
@@ -114,13 +114,7 @@ extension NavigationOperationViewFactory {
                         id: $0.id,
                         name: $0.name,
                         address: $0.address,
-                        metro: atmMetroStationData?.compactMap {
-                            
-                            PlacesListViewModel.ItemViewModel.MetroStationViewModel(
-                                id: $0.id, name: $0.name, color: $0.color.color
-                            )
-                            
-                        },
+                        metro: [],
                         schedule: $0.schedule,
                         distance: nil
                     ) },

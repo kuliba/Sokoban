@@ -179,9 +179,12 @@ struct MainView: View {
 
             NavigationOperationViewFactory.makeNavigationOperationView(
                 makeOperation: makeOperation,
-                atmData: viewModel.dictionaryAtmList(),
+                atmData: viewModel.dictionaryAtmList().filter({ $0.type == 9 }),
                 atmMetroStationData: viewModel.dictionaryAtmMetroStations()
+                    
             )
+            .edgesIgnoringSafeArea(.bottom)
+            .navigationBarTitle("Оформление заявки", displayMode: .inline)
         }
     }
     

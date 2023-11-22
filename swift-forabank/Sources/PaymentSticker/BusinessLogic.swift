@@ -323,19 +323,32 @@ extension BusinessLogic {
                 
             } else {
              
-                processTransferService(.init(
+                let productSelector = operation.parameters.first(where: {$0.id == .productSelector })
+                
+                var cardId: String? = nil
+                
+                switch productSelector {
+                case let .productSelector(product):
+                    cardId = product.selectedProduct.id.description
+                default:
+                    break
+                }
+                
+                let stickerPayment = StickerPayment(
                     currencyAmount: "RUB",
                     amount: 790,
                     check: false,
-                    payer: .init(cardId: "10000114306"),
+                    payer: .init(cardId: cardId ?? ""),
                     productToOrderInfo: .init(
                         type: "STICKER",
                         deliverToOffice: true,
                         officeId: "1112"
-                    ))) { result in
+                    ))
+                
+                processTransferService(stickerPayment) { result in
                         
                         switch result {
-                        case .success:
+                        case let .success(success):
                             
                             var newOperation = operation
                             newOperation = newOperation.updateOperation(
@@ -348,7 +361,7 @@ extension BusinessLogic {
                             
                             newOperation = newOperation.updateOperation(
                                 operation: newOperation,
-                                newParameter: .amount(.init(value: "790 ₽"))
+                                newParameter: .amount(.init(value: success.amount.description))
                             )
                             
                             completion(.success(.operation(newOperation)))
