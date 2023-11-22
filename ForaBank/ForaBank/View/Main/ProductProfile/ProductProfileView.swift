@@ -129,9 +129,7 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
             
-            if let closeAccountSpinner = viewModel.closeAccountSpinner {
-                CloseAccountSpinnerView(viewModel: closeAccountSpinner)
-            }
+            viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
             viewModel.spinner.map { spinner in
                 
