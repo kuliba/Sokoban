@@ -152,6 +152,7 @@ struct ProductProfileView: View {
             default: break
             }
         }
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .bottomSheet(
             item: $viewModel.bottomSheet,
             content: bottomSheetContent
@@ -161,9 +162,6 @@ struct ProductProfileView: View {
             content: fullScreenCoverContent
         )
         .sheet(item: $viewModel.sheet, content: sheetContent)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
     }
     
     @ViewBuilder
