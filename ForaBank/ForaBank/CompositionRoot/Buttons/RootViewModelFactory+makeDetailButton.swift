@@ -12,8 +12,8 @@ import GenericRemoteService
 import SwiftUI
 import Tagged
 
-typealias DocumentID = Tagged<_DocumentID, String>
-enum _DocumentID {}
+typealias PaymentID = Tagged<_PaymentID, String>
+enum _PaymentID {}
 
 extension RootViewModelFactory {
     
@@ -22,11 +22,11 @@ extension RootViewModelFactory {
     static func makeOperationDetailButton(
         httpClient: HTTPClient,
         model: Model
-    ) -> (DocumentID) -> some View {
+    ) -> (PaymentID) -> some View {
         
         return makeButton
         
-        func makeButton(documentID: DocumentID) -> some View {
+        func makeButton(paymentID: PaymentID) -> some View {
             
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
@@ -41,7 +41,7 @@ extension RootViewModelFactory {
             
             let getSheetState = { completion in
                 
-                adapted.fetch(documentID, completion: completion)
+                adapted.fetch(paymentID, completion: completion)
             }
             
             @ViewBuilder

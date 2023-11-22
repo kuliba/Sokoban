@@ -62,14 +62,14 @@ extension RootViewModelFactory {
      
         return makeNavigationOperationView
         
-        func makeButtons(documentID: PaymentSticker.PaymentID) -> some View {
+        func makeButtons(paymentID: PaymentSticker.PaymentID) -> some View {
             
             let makeDetailButton = makeOperationDetailButton(
                 httpClient: httpClient,
                 model: model
             )
             
-            return makeDetailButton(.init(documentID.id))
+            return makeDetailButton(.init(paymentID.id))
         }
         
         func operationView(setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)) -> some View {
@@ -85,7 +85,7 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: makeButtons(documentID:))
+                        buttonsView: makeButtons(paymentID:))
                 },
                 configuration: .default
             )

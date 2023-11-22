@@ -54,7 +54,7 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
     // MARK: - Helpers
     
     private func makeRequest(
-        _ documentID: DocumentID? = nil
+        _ documentID: PaymentID? = nil
     ) throws -> URLRequest {
         
         try RequestFactory.createGetOperationDetailByPaymentIDRequest(
@@ -64,7 +64,7 @@ final class ResponseMapper_createGetOperationDetailByPaymentIDRequestTests: XCTe
     
     private func makeDocumentID(
         _ documentIDValue: String = UUID().uuidString
-    ) -> DocumentID {
+    ) -> PaymentID {
         
         .init(documentIDValue)
     }

@@ -11,10 +11,10 @@ import Tagged
 extension RequestFactory {
     
     static func createGetOperationDetailByPaymentIDRequest(
-        documentID: DocumentID
+        paymentID: PaymentID
     ) throws -> URLRequest {
 
-        guard !documentID.isEmpty
+        guard !paymentID.isEmpty
         else {
             throw GetOperationDetailByPaymentIDError.invalidDocumentID
         }
@@ -27,7 +27,7 @@ extension RequestFactory {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "paymentOperationDetailId": documentID.rawValue
+            "paymentOperationDetailId": paymentID.rawValue
         ] as [String: String])
         
         return request
