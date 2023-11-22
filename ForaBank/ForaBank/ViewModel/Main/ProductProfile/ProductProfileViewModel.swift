@@ -141,8 +141,6 @@ class ProductProfileViewModel: ObservableObject {
 
 extension ProductProfileViewModel {
     
-    typealias CompletionErrorOtp = (Int, String)
-    
     func closeLinkAndResendRequest(
         cardId: CardDomain.CardId,
         actionType: ConfirmViewModel.CVVPinAction
