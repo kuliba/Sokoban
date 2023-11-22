@@ -83,18 +83,24 @@ struct NavigationOperationView<OperationView: View, ListView: View>: View {
     }
 }
 
-enum NavigationOperationViewFactory {}
-
-extension NavigationOperationViewFactory {
+extension RootViewModelFactory {
     
     typealias SelectAtmOption = BusinessLogic.SelectOffice
-    typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     
+    //TODO: use closure for atmData and atmMetroStationData '() -> [AtmData]'
     static func makeNavigationOperationView(
         makeOperation: @escaping MakeOperationStateViewModel,
         atmData: [AtmData],
         atmMetroStationData: [AtmMetroStationData]?
     ) -> some View {
+        
+        let operationDetailButton = {
+             
+//            makeOperationDetailButton(
+//                httpClient: <#T##HTTPClient#>,
+//                model: <#T##Model#>
+//            )
+        }
         
         let navView = NavigationOperationView(
             viewModel: .init(),
@@ -104,7 +110,7 @@ extension NavigationOperationViewFactory {
                 
                 return OperationView(
                     model: viewModel,
-                    configuration: MainView.makeOperationViewConfiguration()
+                    configuration: .default
                 )
             },
             listView: { resetState, completion  in

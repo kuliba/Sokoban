@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import PaymentSticker
 
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
-    
+    let makeOperationViewModel: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
+
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -41,7 +43,12 @@ struct RootView: View {
         
         NavigationView {
             
-            MainView(viewModel: viewModel.mainViewModel)
+            MainView(
+                viewModel: viewModel.mainViewModel,
+                navigationOperationView: {
+                    RootViewModelFactory.navigationOperationView(makeViewModel: makeOperationViewModel)
+                }
+            )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
         .accessibilityIdentifier("tabBarMainButton")
@@ -167,7 +174,8 @@ struct RootView_Previews: PreviewProvider {
                 
                         .init(viewModel: .init(authLoginViewModel: .preview))
                 }
-            )
+            ),
+            makeOperationViewModel: { _ in .empty }
         )
     }
 }

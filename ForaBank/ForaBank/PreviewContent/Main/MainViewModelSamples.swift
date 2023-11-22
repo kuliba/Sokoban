@@ -18,7 +18,6 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _  in .empty },
         makeProductProfileViewModel: { _,_,_ in nil },
         onRegister: {}
     )
@@ -32,7 +31,6 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _  in .empty },
         makeProductProfileViewModel: { _,_,_ in nil },
         onRegister: {}
     )
@@ -46,7 +44,6 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeOperationStateViewModel: { _  in .empty },
         makeProductProfileViewModel: { _,_,_ in nil },
         onRegister: {}
     )

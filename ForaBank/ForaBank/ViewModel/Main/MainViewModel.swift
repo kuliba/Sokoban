@@ -12,8 +12,6 @@ import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
     
-    typealias SelectAtmOption = BusinessLogic.SelectOffice
-    typealias MakeOperationStateViewModel = (@escaping SelectAtmOption) -> OperationStateViewModel
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     let action: PassthroughSubject<Action, Never> = .init()
@@ -33,7 +31,6 @@ class MainViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let makeOperationStateViewModel: MakeOperationStateViewModel
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
@@ -41,14 +38,12 @@ class MainViewModel: ObservableObject, Resetable {
     init(
         _ model: Model,
         sections: [MainSectionViewModel],
-        makeOperationStateViewModel: @escaping MakeOperationStateViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
         self.navButtonsRight = []
         self.sections = sections
-        self.makeOperationStateViewModel = makeOperationStateViewModel
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.onRegister = onRegister
         self.navButtonsRight = createNavButtonsRight()
@@ -402,7 +397,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         
-                        self.link = .paymentSticker(makeOperationStateViewModel)
+                        self.link = .paymentSticker
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
@@ -953,7 +948,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case paymentSticker(MakeOperationStateViewModel)
+        case paymentSticker
 
     }
     

@@ -9,9 +9,10 @@ import SwiftUI
 import ScrollViewProxy
 import PaymentSticker
 
-struct MainView: View {
+struct MainView<NavigationOperationView: View>: View {
     
     @ObservedObject var viewModel: MainViewModel
+    let navigationOperationView: () -> NavigationOperationView
     
     var body: some View {
         
@@ -175,13 +176,8 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .paymentSticker(makeOperation):
-
-            NavigationOperationViewFactory.makeNavigationOperationView(
-                makeOperation: makeOperation,
-                atmData: viewModel.dictionaryAtmList(),
-                atmMetroStationData: viewModel.dictionaryAtmMetroStations()
-            )
+        case .paymentSticker:
+            navigationOperationView()
         }
     }
     
@@ -242,84 +238,81 @@ extension MainView {
     struct ScrollOffsetKey: PreferenceKey {
         
         typealias Value = CGFloat
-        static var defaultValue = CGFloat.zero
+        static var defaultValue: CGFloat { .zero }
         static func reduce(value: inout Value, nextValue: () -> Value) {
             value += nextValue()
         }
     }
 }
-
-extension MainView {
     
-    struct UserAccountButton: View {
+struct UserAccountButton: View {
     
-        @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
+    @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
+    
+    var body: some View {
         
-        var body: some View {
+        Button(action: viewModel.action) {
             
-            Button(action: viewModel.action) {
+            HStack {
                 
-                HStack {
+                ZStack {
                     
-                    ZStack {
+                    if let avatar = viewModel.avatar {
                         
-                        if let avatar = viewModel.avatar {
-                            
-                            avatar
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 40, height: 40)
-                                .clipShape(Circle())
-                            
-                        } else {
-                            
-                            ZStack {
-                                
-                                Circle()
-                                    .foregroundColor(.bgIconGrayLightest)
-                                    .frame(width: 40, height: 40)
-                                
-                                Image.ic24User
-                                    .renderingMode(.template)
-                                    .foregroundColor(.iconGray)
-                            }
-                        }
+                        avatar
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
                         
-                        ZStack{
+                    } else {
+                        
+                        ZStack {
                             
                             Circle()
-                                .foregroundColor(.iconWhite)
-                                .frame(width: 20, height: 20)
+                                .foregroundColor(.bgIconGrayLightest)
+                                .frame(width: 40, height: 40)
                             
-                            viewModel.logo
-                                .renderingMode(.original)
+                            Image.ic24User
+                                .renderingMode(.template)
+                                .foregroundColor(.iconGray)
                         }
-                        .offset(x: 18, y: -14)
-                        
                     }
                     
-                    Text(viewModel.name)
-                        .foregroundColor(.textSecondary)
-                        .font(.textH4R16240())
-                        .accessibilityIdentifier("mainUserName")
+                    ZStack{
+                        
+                        Circle()
+                            .foregroundColor(.iconWhite)
+                            .frame(width: 20, height: 20)
+                        
+                        viewModel.logo
+                            .renderingMode(.original)
+                    }
+                    .offset(x: 18, y: -14)
+                    
                 }
-            }
-            .accessibilityIdentifier("mainUserButton")
-        }
-    }
-    
-    struct NavBarButton: View {
-        
-        let viewModel: NavigationBarButtonViewModel
-        
-        var body: some View {
-            
-            Button(action: viewModel.action) {
                 
-                viewModel.icon
-                    .renderingMode(.template)
-                    .foregroundColor(.iconBlack)
+                Text(viewModel.name)
+                    .foregroundColor(.textSecondary)
+                    .font(.textH4R16240())
+                    .accessibilityIdentifier("mainUserName")
             }
+        }
+        .accessibilityIdentifier("mainUserButton")
+    }
+}
+    
+struct NavBarButton: View {
+    
+    let viewModel: NavigationBarButtonViewModel
+    
+    var body: some View {
+        
+        Button(action: viewModel.action) {
+            
+            viewModel.icon
+                .renderingMode(.template)
+                .foregroundColor(.iconBlack)
         }
     }
 }
@@ -329,92 +322,108 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            MainView(viewModel: .sample)
+            MainView(
+                viewModel: .sample,
+                navigationOperationView: NavigationOperationView.preview
+            )
             
             NavigationView {
                 
-                MainView(viewModel: .sample)
+                MainView(
+                    viewModel: .sample,
+                    navigationOperationView: NavigationOperationView.preview
+                )
             }
         }
         .previewLayout(.sizeThatFits)
     }
 }
 
-extension MainView {
+private extension NavigationOperationView
+where OperationView == Color,
+      ListView == Color {
     
-    static func makeOperationViewConfiguration() -> PaymentSticker.OperationViewConfiguration {
-        
-        PaymentSticker.OperationViewConfiguration(
-            tipViewConfig: .init(
-                titleFont: .textBodyMR14200(),
-                titleForeground: .textSecondary,
-                backgroundView: .mainColorsGrayLightest
-            ), stickerViewConfig: .init(
-                rectangleColor: .mainColorsGrayLightest,
-                configHeader: .init(
-                    titleFont: .textH3Sb18240(),
-                    titleColor: .mainColorsBlack,
-                    descriptionFont: .textBodySR12160(),
-                    descriptionColor: .textPlaceholder
-                ),
-                configOption: .init(
-                    titleFont: .textBodySR12160(),
-                    titleColor: .textPlaceholder,
-                    iconColor: .systemColorActive,
-                    descriptionFont: .textH4M16240(),
-                    descriptionColor: .secondary,
-                    optionFont: .textH4M16240(),
-                    optionColor: .textSecondary
-                )),
-            selectViewConfig: .init(
-                selectOptionConfig: .init(
-                    titleFont: .textBodyMR14180(),
-                    titleForeground: .textPlaceholder,
-                    placeholderForeground: .textTertiary,
-                    placeholderFont: .textBodyMR14180()
-                ),
-                optionsListConfig: .init(
-                    titleFont: .textH4M16240(),
-                    titleForeground: .textSecondary
-                ),
-                optionConfig: .init(
-                    nameFont: .textH4M16240(),
-                    nameForeground: .textSecondary
-                )
-            ),
-            productViewConfig: .init(
-                headerTextColor: .textPlaceholder,
-                headerTextFont: .textBodyMR14180(),
-                textColor: .textSecondary,
-                textFont: .textH4M16240(),
-                optionConfig: .init(
-                    numberColor: .textWhite,
-                    numberFont: .textBodyXsR11140(),
-                    nameColor: .textWhite.opacity(0.4),
-                    nameFont: .textBodyXsR11140(),
-                    balanceColor: .textWhite,
-                    balanceFont: .textBodyXsSb11140()
-                ),
-                background: .init(color: .mainColorsGrayLightest)
-            ),
-            inputViewConfig: .init(
-                titleFont: .textBodyMR14180(),
-                titleColor: .textPlaceholder,
-                iconColor: .iconGray,
-                iconName: "ic24SmsCode"
-            ),
-            amountViewConfig: .init(
-                amountFont: .textH2Sb20282(),
-                amountColor: .textWhite,
-                buttonTextFont: .buttonMediumM14160(),
-                buttonTextColor: .textWhite,
-                buttonColor: .mainColorsRed,
-                hintFont: .textBodySR12160(),
-                hintColor: .textPlaceholder,
-                background: .mainColorsBlackMedium
-            )
+    static func preview() -> Self {
+        .init(
+            viewModel: .init(),
+            operationView: { _ in Color.red },
+            listView: { _,_ in Color.yellow }
         )
     }
+}
+
+extension PaymentSticker.OperationViewConfiguration {
+    
+    static let `default`: Self = .init(
+        tipViewConfig: .init(
+            titleFont: .textBodyMR14200(),
+            titleForeground: .textSecondary,
+            backgroundView: .mainColorsGrayLightest
+        ), stickerViewConfig: .init(
+            rectangleColor: .mainColorsGrayLightest,
+            configHeader: .init(
+                titleFont: .textH3Sb18240(),
+                titleColor: .mainColorsBlack,
+                descriptionFont: .textBodySR12160(),
+                descriptionColor: .textPlaceholder
+            ),
+            configOption: .init(
+                titleFont: .textBodySR12160(),
+                titleColor: .textPlaceholder,
+                iconColor: .systemColorActive,
+                descriptionFont: .textH4M16240(),
+                descriptionColor: .secondary,
+                optionFont: .textH4M16240(),
+                optionColor: .textSecondary
+            )),
+        selectViewConfig: .init(
+            selectOptionConfig: .init(
+                titleFont: .textBodyMR14180(),
+                titleForeground: .textPlaceholder,
+                placeholderForeground: .textTertiary,
+                placeholderFont: .textBodyMR14180()
+            ),
+            optionsListConfig: .init(
+                titleFont: .textH4M16240(),
+                titleForeground: .textSecondary
+            ),
+            optionConfig: .init(
+                nameFont: .textH4M16240(),
+                nameForeground: .textSecondary
+            )
+        ),
+        productViewConfig: .init(
+            headerTextColor: .textPlaceholder,
+            headerTextFont: .textBodyMR14180(),
+            textColor: .textSecondary,
+            textFont: .textH4M16240(),
+            optionConfig: .init(
+                numberColor: .textWhite,
+                numberFont: .textBodyXsR11140(),
+                nameColor: .textWhite.opacity(0.4),
+                nameFont: .textBodyXsR11140(),
+                balanceColor: .textWhite,
+                balanceFont: .textBodyXsSb11140()
+            ),
+            background: .init(color: .mainColorsGrayLightest)
+        ),
+        inputViewConfig: .init(
+            titleFont: .textBodyMR14180(),
+            titleColor: .textPlaceholder,
+            iconColor: .iconGray,
+            iconName: "ic24SmsCode"
+        ),
+        amountViewConfig: .init(
+            amountFont: .textH2Sb20282(),
+            amountColor: .textWhite,
+            buttonTextFont: .buttonMediumM14160(),
+            buttonTextColor: .textWhite,
+            buttonColor: .mainColorsRed,
+            hintFont: .textBodySR12160(),
+            hintColor: .textPlaceholder,
+            background: .mainColorsBlackMedium
+        )
+    )
 }
 
 extension OperationStateViewModel {

@@ -62,7 +62,9 @@ struct PaymentsTransfersView: View {
                 
                 if viewModel.mode == .normal {
                     
-                    MainView.UserAccountButton(viewModel: viewModel.userAccountButton)
+                    UserAccountButton(
+                        viewModel: viewModel.userAccountButton
+                    )
                 }
             },
             trailing:

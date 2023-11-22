@@ -8,12 +8,13 @@
 import Foundation
 import PaymentSticker
 import GenericRemoteService
+import SwiftUI
 
 extension RootViewModelFactory {
     
-    static func operationView(
+    static func navigationOperationView(
         makeViewModel: (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
-    ) -> OperationView {
+    ) -> some View {
         
         let vm = NavigationFeatureViewModel()
         let operationStateViewModel = makeViewModel { location, completion in
@@ -26,7 +27,7 @@ extension RootViewModelFactory {
         
         let view = OperationView(
             model: operationStateViewModel,
-            configuration: MainView.makeOperationViewConfiguration()
+            configuration: .default
         )
         
         return view
