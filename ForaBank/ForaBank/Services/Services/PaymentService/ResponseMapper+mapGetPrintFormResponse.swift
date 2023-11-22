@@ -12,6 +12,7 @@ extension ResponseMapper {
 #warning("PDF???")
     typealias GetPrintFormResult = Result<Data, GetPrintFormError>
     
+    // TODO: has the same shape as mapOperationDetailByPaymentIDResponse - make generic
     static func mapGetPrintFormResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
