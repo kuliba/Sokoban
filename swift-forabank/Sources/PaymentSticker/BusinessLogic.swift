@@ -300,7 +300,8 @@ extension BusinessLogic {
                                 result: .success,
                                 title: "Успешная заявка",
                                 description: makeTransfer.productOrderingResponseMessage,
-                                amount: "100"
+                                amount: "100",
+                                paymentID: .init(id: makeTransfer.paymentOperationDetailId.description)
                             ))))
 
                         case let .failure(error):

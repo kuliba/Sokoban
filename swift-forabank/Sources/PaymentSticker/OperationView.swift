@@ -34,17 +34,19 @@ public struct OperationViewConfiguration {
     }
 }
 
-public struct OperationView: View {
+public struct OperationView<OperationResultView: View>: View {
     
     @StateObject var model: OperationStateViewModel
+    let operationResultView: (OperationStateViewModel.OperationResult) -> OperationResultView
     let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
+        operationResultView: @escaping (OperationStateViewModel.OperationResult) -> OperationResultView,
         configuration: OperationViewConfiguration
     ) {
-        
         self._model = .init(wrappedValue: model)
+        self.operationResultView = operationResultView
         self.configuration = configuration
     }
     
@@ -59,46 +61,47 @@ public struct OperationView: View {
             .padding(.bottom, 20)
         
         case let .result(result):
-            OperationResultView(
-                title: result.title,
-                description: result.description,
-                amount: result.amount
-            ) {
-                
-                Button("details") {
-                    
-                    print("details")
-                }
-            }
+            operationResultView(result)
         }
     }
 }
 
-struct OperationResultView<ButtonsView: View>: View {
+public struct PaymentID {
     
-    let title: String
-    let description: String
-    let amount: String
-    let buttonsView: () -> ButtonsView
+    public let id: String
+}
+
+public struct OperationResultView<ButtonsView: View>: View {
     
-    var body: some View {
+    let model: OperationStateViewModel.OperationResult
+    let buttonsView: (PaymentID) -> ButtonsView
+    
+    public init(
+        model: OperationStateViewModel.OperationResult,
+        buttonsView: @escaping (PaymentID) -> ButtonsView
+    ) {
+        self.model = model
+        self.buttonsView = buttonsView
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 20) {
             
             Image(systemName: "photo.artframe")
                 .frame(width: 88, height: 88)
             
-            Text(title)
+            Text(model.title)
                 .font(.headline)
                 .foregroundColor(.black)
             
-            Text(description)
+            Text(model.description)
                 .font(.body)
                 .foregroundColor(.gray.opacity(0.4))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
             
-            Text(amount)
+            Text(model.amount)
                 .font(.largeTitle)
                 .foregroundColor(.black)
             
@@ -106,7 +109,7 @@ struct OperationResultView<ButtonsView: View>: View {
             
             VStack(spacing: 56) {
              
-                buttonsView()
+                buttonsView(model.paymentID)
                 
                 Button {
                     
