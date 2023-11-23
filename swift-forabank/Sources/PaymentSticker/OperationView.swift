@@ -119,23 +119,18 @@ public struct OperationView<OperationResultView: View>: View {
 
 public struct PaymentID {
     
-    public let id: String
-}
-
-public struct DocumentID {
-    
     public let id: Int
 }
 
 public struct OperationResultView<ButtonsView: View>: View {
     
     let model: OperationStateViewModel.OperationResult
-    let buttonsView: (PaymentID, DocumentID) -> ButtonsView
+    let buttonsView: (PaymentID) -> ButtonsView
     let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel.OperationResult,
-        buttonsView: @escaping (PaymentID, DocumentID) -> ButtonsView,
+        buttonsView: @escaping (PaymentID) -> ButtonsView,
         configuration: OperationViewConfiguration
     ) {
         self.model = model
@@ -177,7 +172,7 @@ public struct OperationResultView<ButtonsView: View>: View {
             
             VStack(spacing: 56) {
              
-                buttonsView(model.paymentID, model.documentID)
+                buttonsView(model.paymentID)
                 
                 Button {
                     

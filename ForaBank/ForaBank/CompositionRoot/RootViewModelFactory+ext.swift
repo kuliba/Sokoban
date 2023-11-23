@@ -144,8 +144,7 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         model: Model
     ) -> (
-        PaymentSticker.PaymentID,
-        PaymentSticker.DocumentID
+        PaymentSticker.PaymentID
     ) -> some View {
         
         let makeDetailButton = makeOperationDetailButton(
@@ -161,14 +160,13 @@ extension RootViewModelFactory {
         return make
         
         func make(
-            paymentID: PaymentSticker.PaymentID,
-            documentID: PaymentSticker.DocumentID
+            paymentID: PaymentSticker.PaymentID
         ) -> some View {
             
             HStack {
                 
-                makeDetailButton(.init(paymentID.id))
-                makeDocumentButton(.init(documentID.id))
+                makeDetailButton(.init("\(paymentID.id)"))
+                makeDocumentButton(.init(paymentID.id))
             }
         }
     }

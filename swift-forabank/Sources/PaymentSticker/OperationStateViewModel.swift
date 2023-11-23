@@ -101,22 +101,19 @@ extension OperationStateViewModel {
         public let description: String
         public let amount: String
         public let paymentID: PaymentID
-        public let documentID: DocumentID
         
         public init(
             result: Result,
             title: String,
             description: String,
             amount: String,
-            paymentID: PaymentID,
-            documentID: DocumentID
+            paymentID: PaymentID
         ) {
             self.result = result
             self.title = title
             self.description = description
             self.amount = amount
             self.paymentID = paymentID
-            self.documentID = documentID
         }
         
         public enum Result {

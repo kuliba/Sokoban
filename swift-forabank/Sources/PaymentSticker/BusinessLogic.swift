@@ -315,8 +315,7 @@ extension BusinessLogic {
                                 title: "Успешная заявка",
                                 description: makeTransfer.productOrderingResponseMessage,
                                 amount: amount ?? "",
-                                paymentID: .init(id: makeTransfer.paymentOperationDetailId.description),
-                                documentID: .init(id: makeTransfer.paymentOperationDetailId)
+                                paymentID: .init(id: makeTransfer.paymentOperationDetailId)
                             ))))
 
                         case let .failure(error):
