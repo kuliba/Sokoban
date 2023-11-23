@@ -91,7 +91,14 @@ extension PrintFormView {
             let activityViewModel = ActivityView.ViewModel(activityItems: [pdfDocument.dataRepresentation() as Any])
             let state: State = .loading
             self.init(state: state, dismissAction: dismissAction)
-            let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+            let button = ButtonSimpleView.ViewModel(
+                title: "Сохранить или отправить",
+                style: .red,
+                action: { [weak self] in
+                    
+                    self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                    
+                })
             self.state = .document(pdfDocument, button)
         }
         
@@ -108,11 +115,18 @@ extension PrintFormView {
                             if let document = PDFDocument(data: data) {
                                 
                                 let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
-                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                let button = ButtonSimpleView.ViewModel(
+                                    title: "Сохранить или отправить",
+                                    style: .red,
+                                    action: { [weak self] in
+                                        
+                                        self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                                        
+                                    })
                                 withAnimation {
                                     self.state = .document(document, button)
                                 }
-      
+                                
                             } else {
                                 
                                 withAnimation {
@@ -133,11 +147,18 @@ extension PrintFormView {
                             if let document = PDFDocument(data: data) {
                                 
                                 let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
-                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                let button = ButtonSimpleView.ViewModel(
+                                    title: "Сохранить или отправить",
+                                    style: .red,
+                                    action: { [weak self] in
+                                        
+                                        self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                                        
+                                    })
                                 withAnimation {
                                     self.state = .document(document, button)
                                 }
-      
+                                
                             } else {
                                 
                                 withAnimation {
@@ -161,7 +182,14 @@ extension PrintFormView {
                             if let document = PDFDocument(data: data) {
                                 
                                 let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
-                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                let button = ButtonSimpleView.ViewModel(
+                                    title: "Сохранить или отправить",
+                                    style: .red,
+                                    action: { [weak self] in
+                                        
+                                        self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                                    })
+                                
                                 withAnimation {
                                     self.state = .document(document, button)
                                 }
@@ -188,9 +216,13 @@ extension PrintFormView {
                             if let document = PDFDocument(data: data) {
                                 
                                 let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
-                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red) { [weak self] in
+                                let button = ButtonSimpleView.ViewModel(
+                                    title: "Сохранить или отправить",
+                                    style: .red,
+                                    action: { [weak self] in
+                                        
                                     self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
-                                }
+                                })
                                 
                                 withAnimation {
                                     self.state = .document(document, button)
@@ -248,7 +280,7 @@ struct PrintFormView: View {
     var body: some View {
         
         Group {
-         
+            
             switch viewModel.state {
             case .document(let document, let button):
                 VStack {
