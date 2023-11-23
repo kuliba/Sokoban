@@ -178,6 +178,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case .paymentSticker:
             navigationOperationView()
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -345,6 +347,7 @@ where OperationView == Color,
     
     static func preview() -> Self {
         .init(
+            location: .init(id: ""),
             viewModel: .init(),
             operationView: { _ in Color.red },
             listView: { _,_ in Color.yellow }
@@ -383,29 +386,13 @@ extension PaymentSticker.OperationViewConfiguration {
                 placeholderForeground: .textTertiary,
                 placeholderFont: .textBodyMR14180()
             ),
-            amountViewConfig: .init(
-                amountFont: .textH2Sb20282(),
-                amountColor: .textWhite,
-                buttonTextFont: .buttonMediumM14160(),
-                buttonTextColor: .textWhite,
-                buttonColor: .mainColorsRed,
-                hintFont: .textBodySR12160(),
-                hintColor: .textPlaceholder,
-                background: .mainColorsBlackMedium
+            optionsListConfig: .init(
+                titleFont: .textH4M16240(),
+                titleForeground: .textSecondary
             ),
-            resultViewConfiguration: .init(
-                colorSuccess: Color.systemColorActive,
-                colorWait: Color.systemColorWarning,
-                colorFailed: Color.systemColorError,
-                titleColor: Color.textSecondary,
-                titleFont: .textH3Sb18240(),
-                descriptionColor: .textPlaceholder,
-                descriptionFont: .textBodyMR14200(),
-                amountColor: .textSecondary,
-                amountFont: .textH1Sb24322(),
-                mainButtonColor: .textWhite,
-                mainButtonFont: .textH3Sb18240(),
-                mainButtonBackgroundColor: .buttonPrimary
+            optionConfig: .init(
+                nameFont: .textH4M16240(),
+                nameForeground: .textSecondary
             )
         ),
         productViewConfig: .init(
@@ -438,6 +425,20 @@ extension PaymentSticker.OperationViewConfiguration {
             hintFont: .textBodySR12160(),
             hintColor: .textPlaceholder,
             background: .mainColorsBlackMedium
+        ),
+        resultViewConfiguration: .init(
+            colorSuccess: Color.systemColorActive,
+            colorWait: Color.systemColorWarning,
+            colorFailed: Color.systemColorError,
+            titleColor: Color.textSecondary,
+            titleFont: .textH3Sb18240(),
+            descriptionColor: .textPlaceholder,
+            descriptionFont: .textBodyMR14200(),
+            amountColor: .textSecondary,
+            amountFont: .textH1Sb24322(),
+            mainButtonColor: .textWhite,
+            mainButtonFont: .textH3Sb18240(),
+            mainButtonBackgroundColor: .buttonPrimary
         )
     )
 }
