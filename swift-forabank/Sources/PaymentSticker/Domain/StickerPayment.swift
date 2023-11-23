@@ -24,6 +24,7 @@ public struct StickerPayment {
         
         public let type: String
         public let deliverToOffice: Bool
-        public let officeId: String
+        public let officeId: String?
+        public let cityId: Int?
     }
 }
