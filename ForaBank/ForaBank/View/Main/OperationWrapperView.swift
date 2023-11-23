@@ -96,7 +96,7 @@ extension NavigationOperationViewFactory {
     ) -> some View {
         
         let navView = NavigationOperationView(
-            location: <#Location#>,
+            location: .init(id: ""),
             viewModel: .init(),
             operationView: { setSelection in
                
@@ -107,10 +107,10 @@ extension NavigationOperationViewFactory {
                     configuration: MainView.makeOperationViewConfiguration()
                 )
             },
-            listView: { resetState, completion  in
+            listView: { location, completion  in
                 
                 PlacesListInternalView(
-                    items: atmData.map { PlacesListViewModel.ItemViewModel(
+                    items: atmData.filter({ $0.cityId.description == location.id }).map { PlacesListViewModel.ItemViewModel(
                         id: $0.id,
                         name: $0.name,
                         address: $0.address,
