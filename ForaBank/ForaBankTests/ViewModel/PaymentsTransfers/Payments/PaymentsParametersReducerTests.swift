@@ -59,6 +59,16 @@ final class PaymentsParametersReducerTests: XCTestCase {
         XCTAssertEqual(successLogoParam.value, "value")
     }
     
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton() {
+
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons])
+        
+        let result = reduce(params, ([], direct()))
+        
+        XCTExpectFailure("Prove wrong order")
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successActionButton]))
+    }
+    
     //MARK: - Helpers
     
     private func reduce(
@@ -69,6 +79,11 @@ final class PaymentsParametersReducerTests: XCTestCase {
     ) -> [PaymentsParameterRepresentable] {
         
         PaymentsParametersReducer.reduce(state, action)
+    }
+    
+    private func direct() -> OperationDetailData.TransferEnum {
+        
+        return .direct
     }
     
     private func unsupportedType() -> OperationDetailData.TransferEnum {
