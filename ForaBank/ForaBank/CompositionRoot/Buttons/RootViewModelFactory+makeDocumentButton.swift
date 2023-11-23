@@ -31,7 +31,7 @@ extension RootViewModelFactory {
         
         func makeButton(documentID: DocumentID) -> some View {
             
-            let label = { makeButtonLabel(option: .document) }
+            let label = { makeSuccessButtonLabel(option: .document) }
             
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetPrintFormRequest,

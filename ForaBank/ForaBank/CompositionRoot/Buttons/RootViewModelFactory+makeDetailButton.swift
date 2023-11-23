@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         
         func makeButton(paymentID: PaymentID) -> some View {
             
-            let label = { makeButtonLabel(option: .details) }
+            let label = { makeSuccessButtonLabel(option: .details) }
 
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
