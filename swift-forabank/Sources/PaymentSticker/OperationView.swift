@@ -37,6 +37,54 @@ public struct OperationViewConfiguration {
     }
 }
 
+public struct ResultViewConfiguration {
+
+    let colorSuccess: Color
+    let colorWait: Color
+    let colorFailed: Color
+    
+    let titleColor: Color
+    let titleFont: Font
+    
+    let descriptionColor: Color
+    let descriptionFont: Font
+    
+    let amountColor: Color
+    let amountFont: Font
+    
+    let mainButtonColor: Color
+    let mainButtonFont: Font
+    let mainButtonBackgroundColor: Color
+    
+    public init(
+        colorSuccess: Color,
+        colorWait: Color,
+        colorFailed: Color,
+        titleColor: Color,
+        titleFont: Font,
+        descriptionColor: Color,
+        descriptionFont: Font,
+        amountColor: Color,
+        amountFont: Font,
+        mainButtonColor: Color,
+        mainButtonFont: Font,
+        mainButtonBackgroundColor: Color
+    ) {
+        self.colorSuccess = colorSuccess
+        self.colorWait = colorWait
+        self.colorFailed = colorFailed
+        self.titleColor = titleColor
+        self.titleFont = titleFont
+        self.descriptionColor = descriptionColor
+        self.descriptionFont = descriptionFont
+        self.amountColor = amountColor
+        self.amountFont = amountFont
+        self.mainButtonColor = mainButtonColor
+        self.mainButtonFont = mainButtonFont
+        self.mainButtonBackgroundColor = mainButtonBackgroundColor
+    }
+}
+
 public struct OperationView<OperationResultView: View>: View {
     
     @StateObject var model: OperationStateViewModel
@@ -83,13 +131,16 @@ public struct OperationResultView<ButtonsView: View>: View {
     
     let model: OperationStateViewModel.OperationResult
     let buttonsView: (PaymentID, DocumentID) -> ButtonsView
+    let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel.OperationResult,
-        buttonsView: @escaping (PaymentID, DocumentID) -> ButtonsView
+        buttonsView: @escaping (PaymentID, DocumentID) -> ButtonsView,
+        configuration: OperationViewConfiguration
     ) {
         self.model = model
         self.buttonsView = buttonsView
+        self.configuration = configuration
     }
     
     public var body: some View {
@@ -108,17 +159,17 @@ public struct OperationResultView<ButtonsView: View>: View {
                     .frame(width: 88, height: 88)
             }
             
-            Text(title)
+            Text(model.title)
                 .font(configuration.resultViewConfiguration.titleFont)
                 .foregroundColor(configuration.resultViewConfiguration.titleColor)
             
-            Text(description)
+            Text(model.description)
                 .font(configuration.resultViewConfiguration.descriptionFont)
                 .foregroundColor(configuration.resultViewConfiguration.descriptionColor)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
             
-            Text("\(amount) ₽")
+            Text("\(model.amount) ₽")
                 .font(configuration.resultViewConfiguration.amountFont)
                 .foregroundColor(configuration.resultViewConfiguration.amountColor)
             
