@@ -97,7 +97,9 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: makeButtons(paymentID:documentID:))
+                        buttonsView: makeButtons(paymentID:documentID:),
+                        configuration: .default
+                    )
                 },
                 configuration: .default
             )
@@ -119,20 +121,24 @@ extension RootViewModelFactory {
         ) -> some View {
             
             PlacesListInternalView(
-                items: dictionaryAtmList().map { PlacesListViewModel.ItemViewModel(
-                    id: $0.id,
-                    name: $0.name,
-                    address: $0.address,
-                    metro: dictionaryAtmMetroStations().compactMap {
-                        
-                        PlacesListViewModel.ItemViewModel.MetroStationViewModel(
-                            id: $0.id, name: $0.name, color: $0.color.color
-                        )
-                        
-                    },
-                    schedule: $0.schedule,
-                    distance: nil
-                ) },
+                items: dictionaryAtmList().map { item in
+                    PlacesListViewModel.ItemViewModel(
+                        id: item.id,
+                        name: item.name,
+                        address: item.address,
+                        metro: dictionaryAtmMetroStations().filter({
+                            item.metroStationList.contains($0.id)
+                        }).map({
+                            PlacesListViewModel.ItemViewModel.MetroStationViewModel(
+                                id: $0.id,
+                                name: $0.name,
+                                color: $0.color.color
+                            )
+                        }),
+                        schedule: item.schedule,
+                        distance: nil
+                    )
+                },
                 selectItem: { item in
                     
                     completion(Office(id: item.id, name: item.name))
@@ -145,6 +151,7 @@ extension RootViewModelFactory {
         func makeNavigationOperationView() -> some View {
             
             NavigationOperationView(
+                location: .init(id: ""),
                 viewModel: .init(),
                 operationView: operationView,
                 listView: listView
