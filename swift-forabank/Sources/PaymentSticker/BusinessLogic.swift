@@ -136,7 +136,7 @@ extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
-                        
+
                     case "Доставка курьером":
                         processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
@@ -151,6 +151,7 @@ extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
+                        
                     default:
                         break
                     }
@@ -171,7 +172,18 @@ extension BusinessLogic {
                         
                         let newOperation = operation.updateOperation(
                             operation: operation,
-                            newParameter: .select(.init(id: .officeSelector, value: office.id, title: "Выберите отделение", placeholder: "", options: [], state: .selected(.init(title: "Выберите отделение", placeholder: "", name: office.name, iconName: "")))))
+                            newParameter: .select(.init(
+                                id: .officeSelector,
+                                value: office.id,
+                                title: "Выберите отделение",
+                                placeholder: "",
+                                options: [],
+                                state: .selected(.init(
+                                    title: "Выберите отделение",
+                                    placeholder: "",
+                                    name: office.name,
+                                    iconName: ""
+                                )))))
                         
                         completion(.success(.operation(newOperation)))
                         
@@ -310,12 +322,7 @@ extension BusinessLogic {
                         }
                     }
                     
-                    return .success(.result(OperationStateViewModel.OperationResult(
-                        result: .success,
-                        title: "Успешная заявка",
-                        description: "",
-                        amount: amount ?? ""
-                    )))
+                    return .success(.operation(operation))
 
                 default:
                     return .success(.operation(operation))
@@ -334,15 +341,55 @@ extension BusinessLogic {
                     break
                 }
                 
+                var deliverToOffice: Bool?
+                var officeId: String?
+                var cityId: Int?
+                var amount: Decimal = 0
+                
+                let transferType = operation.parameters.first(where: { $0.id == .transferType })
+                switch transferType {
+                case let .select(select):
+                    if select.value == "Получить в офисе" {
+                        deliverToOffice = true
+                        cityId = nil
+                        amount = 790
+                        
+                        let branches = operation.parameters.first(where: { $0.id == .branches })
+                        switch branches {
+                        case let .select(select):
+                            officeId = select.value
+                        default:
+                            break
+                        }
+                        
+                    } else {
+                        
+                        deliverToOffice = false
+                        officeId = nil
+                        amount = 1500
+                        
+                        let city = operation.parameters.first(where: { $0.id == .city })
+                        switch city {
+                        case let .select(select):
+                            cityId = Int(select.value ?? "")
+                        default:
+                            break
+                        }
+                    }
+                    
+                default: break
+                }
+                
                 let stickerPayment = StickerPayment(
                     currencyAmount: "RUB",
-                    amount: 790,
+                    amount: amount,
                     check: false,
                     payer: .init(cardId: cardId ?? ""),
                     productToOrderInfo: .init(
                         type: "STICKER",
-                        deliverToOffice: true,
-                        officeId: "1112"
+                        deliverToOffice: deliverToOffice ?? false,
+                        officeId: officeId,
+                        cityId: cityId
                     ))
                 
                 processTransferService(stickerPayment) { result in
@@ -571,14 +618,21 @@ extension BusinessLogic {
                 }
             }.compactMap{ $0 }
             
-            var newOperation: [PaymentSticker.Operation.Parameter] = operation.parameters
+            var newOperation: [PaymentSticker.Operation.Parameter] = []
             
-            for parameter in parameters {
+            for parameter in operation.parameters {
                 
-                if !operation.parameters.contains(where: { $0.id == parameter.id }) {
+                let availableParameter: [PaymentSticker.Operation.Parameter.ID] = [.tip, .sticker, .productSelector, .transferType]
+                
+                if availableParameter.contains(where: { $0.rawValue == parameter.id.rawValue }) {
                     
                     newOperation.append(parameter)
                 }
+            }
+            
+            for parameter in parameters {
+                
+                newOperation.append(parameter)
             }
             
             return .operation(.init(parameters: newOperation))
