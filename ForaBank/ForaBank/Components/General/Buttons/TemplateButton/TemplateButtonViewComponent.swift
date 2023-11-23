@@ -576,7 +576,7 @@ struct TemplateButtonView: View {
     
     var body: some View {
         
-        VStack(spacing: 12) {
+        VStack(spacing: 20) {
             
             switch viewModel.state {
             case .idle:
