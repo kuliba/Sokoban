@@ -26,7 +26,20 @@ struct AtmData: Identifiable, Codable, Equatable {
     
     var servicesListSet: Set<Int> { Set(serviceIdList) }
 
-    internal init(id: String, name: String, type: Int, serviceIdList: [Int], metroStationList: [Int], cityId: Int, address: String, schedule: String, location: LocationData, email: String, phoneNumber: String, action: AtmData.Action) {
+    internal init(
+        id: String,
+        name: String,
+        type: Int,
+        serviceIdList: [Int],
+        metroStationList: [Int],
+        cityId: Int,
+        address: String,
+        schedule: String,
+        location: LocationData,
+        email: String,
+        phoneNumber: String,
+        action: AtmData.Action
+    ) {
         self.id = id
         self.name = name
         self.type = type
