@@ -18,10 +18,6 @@ enum _DocumentID {}
 
 extension RootViewModelFactory {
     
-    fileprivate typealias GetPrintFormServiceError = MappingRemoteServiceError<ResponseMapper.GetPrintFormError>
-    fileprivate typealias GetPrintFormServiceResult = Result<Data, GetPrintFormServiceError>
-    fileprivate typealias PDFResult = Result<PDFDocument, DocumentError>
-    
     static func makeDocumentButton(
         httpClient: HTTPClient,
         model: Model
@@ -31,7 +27,7 @@ extension RootViewModelFactory {
         
         func makeButton(documentID: DocumentID) -> some View {
             
-            let label = { makeButtonLabel(option: .document) }
+            let buttonLabel = { makeSuccessButtonLabel(option: .document) }
             
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetPrintFormRequest,
@@ -39,70 +35,84 @@ extension RootViewModelFactory {
                 mapResponse: ResponseMapper.mapGetPrintFormResponse
             )
             
-            let adapted = FetchAdapter(
-                fetch: getDetailService.fetch(_:completion:),
-                mapResult: PDFResult.init
-            )
+            typealias Completion = (PDFDocument?) -> Void
             
-            let getSheetState = { completion in
+            func getValue(completion: @escaping Completion) {
                 
-                adapted.fetch(documentID, completion: completion)
-            }
-            
-            @ViewBuilder
-            func makeSheetStateView(
-                result: PDFResult,
-                dismiss: @escaping () -> Void
-            ) -> some View {
-                
-                switch result {
+                getDetailService.fetch(documentID) { result in
                     
-                case let .failure(error):
-                    Text(error.localizedDescription)
-                        .foregroundColor(.red)
-                        .padding()
-                    
-                case let .success(pdfDocument):
-                    PDFDocumentView(document: pdfDocument)
+                    switch result {
+                    case .failure:
+                        completion(nil)
+                        
+                    case let .success(data):
+                        completion(PDFDocument(data: data))
+                    }
                 }
             }
             
-            return ButtonWithSheet(
-                label: label,
-                getSheetState: getSheetState,
-                makeSheetStateView: makeSheetStateView
+            @ViewBuilder
+            func makePDFDocumentView(
+                pdfDocument: PDFDocument,
+                dismiss: @escaping () -> Void
+            ) -> some View {
+                
+                PDFDocumentWrapperView(
+                    pdfDocument: pdfDocument,
+                    dismissAction: dismiss
+                )
+            }
+            
+            return MagicButtonWithSheet(
+                buttonLabel: buttonLabel,
+                getValue: getValue,
+                makeValueView: makePDFDocumentView
             )
         }
     }
-    
-#warning("finish with DocumentError and extension below")
-    fileprivate struct DocumentError: Error {}
 }
 
-private extension RootViewModelFactory.PDFResult {
+private struct PDFDocumentWrapperView: View {
     
-    init(_ result: RootViewModelFactory.GetPrintFormServiceResult) {
+    @State private var isShowingSheet = false
+    
+    let pdfDocument: PDFDocument
+    let dismissAction: () -> Void
+    
+    var body: some View {
         
-        switch result {
-        case let .failure(error):
-            self = .failure(RootViewModelFactory.DocumentError(error))
+        VStack {
             
-        case let .success(data):
-            if let pdf = PDFDocument(data: data) {
-                self = .success(pdf)
-            } else {
-                self = .failure(RootViewModelFactory.DocumentError())
-                return
-            }
+            PDFDocumentView(document: pdfDocument)
+            
+            ButtonSimpleView(viewModel: .saveAndShare {
+                
+                isShowingSheet = true
+            })
+            .frame(height: 48)
+            .padding()
+        }
+        .sheet(isPresented: $isShowingSheet) {
+            
+            ActivityView(
+                viewModel: .init(
+                    activityItems: [pdfDocument.dataRepresentation() as Any]
+                )
+            )
         }
     }
 }
 
-private extension RootViewModelFactory.DocumentError {
+private extension ButtonSimpleView.ViewModel {
     
-    init(
-        _ error: RootViewModelFactory.GetPrintFormServiceError
-    ) {
-        self.init()
+    static func saveAndShare(
+        action: @escaping () -> Void
+    ) ->  ButtonSimpleView.ViewModel {
+        
+        .init(
+            title: "Сохранить или отправить",
+            style: .red,
+            action: action
+        )
     }
 }
