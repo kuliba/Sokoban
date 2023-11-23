@@ -31,7 +31,7 @@ struct StickerView: View {
                 
                 HStack(alignment: .top, spacing: 20) {
                     
-                    Image(data: viewModel.sticker.data)
+                    Image("StickerPreview")
                         .resizable()
                         .frame(width: 112, height: 72, alignment: .center)
                     

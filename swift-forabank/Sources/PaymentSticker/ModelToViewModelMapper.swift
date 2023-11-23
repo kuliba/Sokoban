@@ -28,7 +28,7 @@ public extension ModelToViewModelMapper {
                         title: parameterSticker.title,
                         detailTitle: parameterSticker.description
                     ),
-                    sticker: parameterSticker.image,
+                    sticker: .named("StickerPreview"),
                     options: parameterSticker.options.map {
                         
                         .init(
