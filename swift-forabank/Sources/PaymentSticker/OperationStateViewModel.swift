@@ -33,6 +33,28 @@ final public class OperationStateViewModel: ObservableObject {
         operation?.parameters.first(where: { $0.id == .amount })
     }
     
+    public var isOperationComplete: Bool {
+    
+        guard let parameters = operation?.parameters else {
+            return false
+        }
+        
+        var complete: Bool = true
+         
+        for parameter in parameters {
+            switch parameter {
+            case let .select(select):
+                if select.value == nil {
+                    complete = false
+                }
+            
+            default: break
+            }
+        }
+        
+        return complete
+    }
+    
     public func event(_ event: Event) {
         
         guard let operation else {
