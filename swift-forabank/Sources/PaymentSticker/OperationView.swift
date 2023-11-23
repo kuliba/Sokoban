@@ -209,6 +209,7 @@ struct OperationProcessView: View {
                     ForEach(model.scrollParameters) { parameter in
                         
                         parameterView(
+                            operation: model.operation,
                             parameter: parameter,
                             configuration: configuration
                         )
@@ -218,47 +219,73 @@ struct OperationProcessView: View {
             .padding(.horizontal)
             .padding(.vertical, 16)
             
-            continueButton(configuration: configuration)
+            continueButton(
+                viewModel: .init(isActive: model.isOperationComplete ),
+                model: model,
+                configuration: configuration
+            )
         }
     }
     
-    @ViewBuilder
-    private func continueButton(
-        configuration: OperationViewConfiguration
-    ) -> some View {
+    struct ContinueButtonViewModel {
+    
+        let isActive: Bool
+    }
+    
+    struct ContinueButton: View {
         
-        if let amount = model.amountParameter {
+        let viewModel: ContinueButtonViewModel
+        let model: OperationStateViewModel
+        
+        var body: some View {
             
-            parameterView(
-                parameter: amount,
-                configuration: configuration
-            )
-            
-        } else {
-            
-            Button {
-                model.event(.continueButtonTapped(.continue))
-            } label: {
+            Button { model.event(.continueButtonTapped(.continue)) } label: {
                 
                 Text("Продолжить")
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.red)
+                    .background(viewModel.isActive ? Color.red : Color.gray)
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .allowsHitTesting(viewModel.isActive ? true : false)
             }
             .padding(.horizontal)
         }
     }
     
     @ViewBuilder
+    private func continueButton(
+        viewModel: ContinueButtonViewModel,
+        model: OperationStateViewModel,
+        configuration: OperationViewConfiguration
+    ) -> some View {
+        
+        if let amount = model.amountParameter {
+            
+            parameterView(
+                operation: model.operation,
+                parameter: amount,
+                configuration: configuration
+            )
+            
+        } else {
+            
+            ContinueButton(
+                viewModel: viewModel,
+                model: model
+            )
+        }
+    }
+    
+    @ViewBuilder
     private func parameterView(
+        operation: Operation?,
         parameter: Operation.Parameter,
         configuration: OperationViewConfiguration
     ) -> some View {
         
         let mapper = ModelToViewModelMapper(model)
-        let viewModel = mapper.map(parameter)
+        let viewModel = mapper.map(operation, parameter)
         
         ParameterView(
             viewModel: viewModel,
