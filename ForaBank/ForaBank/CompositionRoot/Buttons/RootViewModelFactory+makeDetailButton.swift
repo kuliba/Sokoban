@@ -28,7 +28,7 @@ extension RootViewModelFactory {
         
         func makeButton(paymentID: PaymentID) -> some View {
             
-            let label = { makeSuccessButtonLabel(option: .details) }
+            let buttonLabel = { makeSuccessButtonLabel(option: .details) }
 
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
@@ -36,43 +36,40 @@ extension RootViewModelFactory {
                 mapResponse: ResponseMapper.mapOperationDetailByPaymentIDResponse
             )
             
-            let adapted = FetchAdapter(
-                fetch: getDetailService.fetch(_:completion:),
-                mapError: DetailError.init
-            )
+            typealias Completion = (OperationDetailData?) -> Void
             
-            let getSheetState = { completion in
+            func getValue(completion: @escaping Completion) {
                 
-                adapted.fetch(paymentID, completion: completion)
-            }
-            
-            @ViewBuilder
-            func makeSheetStateView(
-                result: DetailResult,
-                dismiss: @escaping () -> Void
-            ) -> some View {
-                
-                switch result {
+                getDetailService.fetch(paymentID) { result in
                     
-                case let .failure(error):
-                    Text(error.localizedDescription)
-                        .foregroundColor(.red)
-                        .padding()
-                    
-                case let .success(data):
-                    let viewModel = OperationDetailInfoViewModel(
-                        model: model,
-                        operation: data,
-                        dismissAction: dismiss
-                    )
-                    OperationDetailInfoView(viewModel: viewModel)
+                    switch result {
+                    case .failure:
+                        completion(nil)
+                        
+                    case let .success(detail):
+                        completion(detail)
+                    }
                 }
             }
             
-            return ButtonWithSheet(
-                label: label,
-                getSheetState: getSheetState,
-                makeSheetStateView: makeSheetStateView
+            @ViewBuilder
+            func makeDetailView(
+                detail: OperationDetailData,
+                dismiss: @escaping () -> Void
+            ) -> some View {
+                
+                let viewModel = OperationDetailInfoViewModel(
+                    model: model,
+                    operation: detail,
+                    dismissAction: dismiss
+                )
+                OperationDetailInfoView(viewModel: viewModel)
+            }
+            
+            return MagicButtonWithSheet(
+                buttonLabel: buttonLabel,
+                getValue: getValue,
+                makeValueView: makeDetailView
             )
         }
     }
