@@ -17,6 +17,7 @@ public struct OperationViewConfiguration {
     let inputViewConfig: InputConfiguration
     let amountViewConfig: AmountViewConfiguration
     let resultViewConfiguration: ResultViewConfiguration
+    let continueButtonConfiguration: ContinueButtonConfiguration
     
     public init(
         tipViewConfig: TipViewConfiguration,
@@ -25,7 +26,8 @@ public struct OperationViewConfiguration {
         productViewConfig: ProductView.Appearance,
         inputViewConfig: InputConfiguration,
         amountViewConfig: AmountViewConfiguration,
-        resultViewConfiguration: ResultViewConfiguration
+        resultViewConfiguration: ResultViewConfiguration,
+        continueButtonConfiguration: ContinueButtonConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
@@ -34,6 +36,27 @@ public struct OperationViewConfiguration {
         self.inputViewConfig = inputViewConfig
         self.amountViewConfig = amountViewConfig
         self.resultViewConfiguration = resultViewConfiguration
+        self.continueButtonConfiguration = continueButtonConfiguration
+    }
+}
+
+public struct ContinueButtonConfiguration {
+
+    let activeColor: Color
+    let inActiveColor: Color
+    let textFont: Font
+    let textColor: Color
+    
+    public init(
+        activeColor: Color,
+        inActiveColor: Color,
+        textFont: Font,
+        textColor: Color
+    ) {
+        self.activeColor = activeColor
+        self.inActiveColor = inActiveColor
+        self.textFont = textFont
+        self.textColor = textColor
     }
 }
 
@@ -239,6 +262,7 @@ struct OperationProcessView: View {
         
         let viewModel: ContinueButtonViewModel
         let model: OperationStateViewModel
+        let configuration: OperationViewConfiguration
         
         var body: some View {
             
@@ -275,7 +299,8 @@ struct OperationProcessView: View {
             
             ContinueButton(
                 viewModel: viewModel,
-                model: model
+                model: model,
+                configuration: configuration
             )
         }
     }
