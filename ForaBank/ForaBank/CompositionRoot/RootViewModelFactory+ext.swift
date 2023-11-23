@@ -62,28 +62,6 @@ extension RootViewModelFactory {
      
         return makeNavigationOperationView
         
-        func makeButtons(
-            paymentID: PaymentSticker.PaymentID,
-            documentID: PaymentSticker.DocumentID
-        ) -> some View {
-            
-            let makeDetailButton = makeOperationDetailButton(
-                httpClient: httpClient,
-                model: model
-            )
-            
-            let makeDocumentButton = makeDocumentButton(
-                httpClient: httpClient,
-                model: model
-            )
-            
-            return HStack {
-                
-                makeDetailButton(.init(paymentID.id))
-                makeDocumentButton(.init(documentID.id))
-            }
-        }
-        
         func operationView(setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)) -> some View {
          
             let makeOperationStateViewModel = makeOperationStateViewModel(
@@ -97,7 +75,10 @@ extension RootViewModelFactory {
                     
                     OperationResultView(
                         model: result,
-                        buttonsView: makeButtons(paymentID:documentID:),
+                        buttonsView: makeStickerDetailDocumentButtons(
+                            httpClient: httpClient,
+                            model: model
+                        ),
                         configuration: .default
                     )
                 },
@@ -156,6 +137,39 @@ extension RootViewModelFactory {
                 operationView: operationView,
                 listView: listView
             )
+        }
+    }
+    
+    static func makeStickerDetailDocumentButtons(
+        httpClient: HTTPClient,
+        model: Model
+    ) -> (
+        PaymentSticker.PaymentID,
+        PaymentSticker.DocumentID
+    ) -> some View {
+        
+        let makeDetailButton = makeOperationDetailButton(
+            httpClient: httpClient,
+            model: model
+        )
+        
+        let makeDocumentButton = makeDocumentButton(
+            httpClient: httpClient,
+            model: model
+        )
+        
+        return make
+        
+        func make(
+            paymentID: PaymentSticker.PaymentID,
+            documentID: PaymentSticker.DocumentID
+        ) -> some View {
+            
+            HStack {
+                
+                makeDetailButton(.init(paymentID.id))
+                makeDocumentButton(.init(documentID.id))
+            }
         }
     }
 }
