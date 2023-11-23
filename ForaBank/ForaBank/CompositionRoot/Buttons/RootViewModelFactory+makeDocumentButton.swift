@@ -57,8 +57,12 @@ extension RootViewModelFactory {
                 dismiss: @escaping () -> Void
             ) -> some View {
                 
-                #warning("add dismiss or change view")
-                PDFDocumentView(document: pdfDocument)
+                PrintFormView(
+                    viewModel: .init(
+                        pdfDocument: pdfDocument,
+                        dismissAction: dismiss
+                    )
+                )
             }
             
             return MagicButtonWithSheet(
@@ -67,5 +71,15 @@ extension RootViewModelFactory {
                 makeValueView: makePDFDocumentView
             )
         }
+    }
+}
+
+private struct PDFDocumentWrapperView {
+    
+    @StateObject var viewModel: PrintFormView.ViewModel
+    
+    var body: some View {
+        
+        PrintFormView(viewModel: viewModel)
     }
 }
