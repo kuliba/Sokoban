@@ -17,23 +17,14 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> GetPrintFormResult {
         
-        do {
-            switch httpURLResponse.statusCode {
-            case 200:
-                return .success(data)
-                
-            default:
-                let error = try JSONDecoder().decode(ServerError.self, from: data)
-                return .failure(.server(statusCode: error.statusCode, errorMessage: error.errorMessage))
-            }
-        } catch {
-            return .failure(.invalidData(statusCode: httpURLResponse.statusCode, data: data))
+        switch httpURLResponse.statusCode {
+        case 200:
+            return .success(data)
+            
+        default:
+            return .failure(GetPrintFormError())
         }
     }
     
-    enum GetPrintFormError: Error {
-        
-        case invalidData(statusCode: Int, data: Data)
-        case server(statusCode: Int, errorMessage: String)
-    }
+    struct GetPrintFormError: Error {}
 }
