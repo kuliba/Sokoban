@@ -189,7 +189,8 @@ where Input == RequestFactory.StickerPayment,
                 productToOrderInfo: .init(
                     type: input.productToOrderInfo.type,
                     deliverToOffice: input.productToOrderInfo.deliverToOffice,
-                    officeId: input.productToOrderInfo.officeId
+                    officeId: input.productToOrderInfo.officeId ?? nil,
+                    cityId: input.productToOrderInfo.cityId ?? nil
                 ))
         ) { result in
 
@@ -409,7 +410,7 @@ private extension Model {
         model: Model
     ) -> [BusinessLogic.Product] {
         
-        let allProducts = model.allProducts.map({ BusinessLogic.Product(
+        let allProducts = model.allProducts.filter({ $0.balance ?? 0 >= 790 }).map({ BusinessLogic.Product(
             id: $0.id,
             title: "Счет списания",
             nameProduct: $0.displayName,

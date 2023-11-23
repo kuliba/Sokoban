@@ -104,7 +104,8 @@ extension RequestFactory {
             
             let type: String
             let deliverToOffice: Bool
-            let officeId: String
+            let officeId: String?
+            let cityId: Int?
         }
     }
 }
@@ -113,7 +114,30 @@ private extension RequestFactory.StickerPayment {
     
     var json: Data? {
         
-        try? JSONSerialization.data(withJSONObject: [
+        var productToOrderInfoJSON = [
+            "type": productToOrderInfo.type,
+            "deliverToOffice": productToOrderInfo.deliverToOffice
+        ] as [String : Any]
+        
+        if let officeId = productToOrderInfo.officeId {
+            
+            productToOrderInfoJSON = [
+                "type": productToOrderInfo.type,
+                "deliverToOffice": productToOrderInfo.deliverToOffice,
+                "officeId": officeId
+            ] as [String : Any]
+        }
+        
+        if let cityId = productToOrderInfo.cityId {
+            
+            productToOrderInfoJSON = [
+                "type": productToOrderInfo.type,
+                "deliverToOffice": productToOrderInfo.deliverToOffice,
+                "cityId": cityId
+            ]
+        }
+        
+        return try? JSONSerialization.data(withJSONObject: [
             "currencyAmount": currencyAmount,
             "amount": amount,
             "check": check,
@@ -121,12 +145,8 @@ private extension RequestFactory.StickerPayment {
                 
                 "cardId": payer.cardId
             ],
-            "productToOrderInfo": [
-                
-                "type": productToOrderInfo.type,
-                "deliverToOffice": productToOrderInfo.deliverToOffice,
-                "officeId": productToOrderInfo.officeId
-            ] as [String : Any]
+            "productToOrderInfo": productToOrderInfoJSON
+            
         ] as [String: Any])
     }
 }
