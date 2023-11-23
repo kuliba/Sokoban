@@ -88,7 +88,14 @@ extension PlacesListViewModel {
         let schedule: String
         let distance: String?
         
-        internal init(id: AtmData.ID, name: String, address: String, metro: [MetroStationViewModel]?, schedule: String, distance: String?) {
+        internal init(
+            id: AtmData.ID,
+            name: String,
+            address: String,
+            metro: [MetroStationViewModel]?,
+            schedule: String,
+            distance: String?
+        ) {
             
             self.id = id
             self.name = name
@@ -98,17 +105,22 @@ extension PlacesListViewModel {
             self.distance = distance
         }
         
-        init(atmItem: AtmData, metroStationsList: [AtmMetroStationData]?, currentLocation: CLLocationCoordinate2D?) {
+        init(
+            atmItem: AtmData,
+            metroStationsList: [AtmMetroStationData]?,
+            currentLocation: CLLocationCoordinate2D?
+        ) {
             
             let metroStations = metroStationsList?.filter({ atmItem.metroStationList.contains($0.id) }).map({ MetroStationViewModel(id: $0.id, name: $0.name, color: $0.color.color)})
             
-            self.init(id: atmItem.id,
-                      name: atmItem.name,
-                      address: atmItem.address,
-                      metro: metroStations,
-                      schedule: atmItem.schedule,
-                      distance: atmItem.distanceFormatted(to: currentLocation))
-            
+            self.init(
+                id: atmItem.id,
+                name: atmItem.name,
+                address: atmItem.address,
+                metro: metroStations,
+                schedule: atmItem.schedule,
+                distance: atmItem.distanceFormatted(to: currentLocation)
+            )
         }
         
         struct MetroStationViewModel: Identifiable, Hashable {
