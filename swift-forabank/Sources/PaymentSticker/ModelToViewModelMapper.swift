@@ -15,6 +15,7 @@ public struct ModelToViewModelMapper {
 public extension ModelToViewModelMapper {
     
     func map(
+        _ operation: Operation?,
         _ parameter: Operation.Parameter
     ) -> ParameterViewModel {
         
@@ -58,7 +59,21 @@ public extension ModelToViewModelMapper {
                 icon = .named("ic24MapPin")
                 
             case .officeSelector:
-                tapAction = { action(.select(.openBranch(.init(id: "")))) }
+                var location: Event.Location = .init(id: "")
+                
+                let cityID = operation?.parameters.first(where: { $0.id == .city })
+                switch cityID {
+                case let .select(city):
+                    if let value = city.value {
+                        
+                        location = .init(id: value)
+                    }
+                    
+                default:
+                    break
+                }
+                
+                tapAction = { action(.select(.openBranch(location))) }
                 icon = .named("ic24Bank")
                 
             default:
