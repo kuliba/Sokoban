@@ -13,6 +13,7 @@ struct LabeledView<Label: View>: View {
     
     let title: String
     let configuration: InputConfiguration
+    let warning: String?
     let makeLabel: MakeLabel
     
     var body: some View {
@@ -46,6 +47,13 @@ struct LabeledView<Label: View>: View {
             titleView
             
             makeLabel()
+            
+            if let warning {
+                
+                Text(warning)
+                    .font(configuration.warningFont)
+                    .foregroundColor(configuration.warningColor)
+            }
         }
     }
     
@@ -84,8 +92,11 @@ struct LabeledView_Previews: PreviewProvider {
                 titleFont: .body,
                 titleColor: .black,
                 iconColor: .black,
-                iconName: "photo.fill"
+                iconName: "photo.fill",
+                warningFont: .body,
+                warningColor: .red
             ),
+            warning: nil,
             makeLabel: { Text("TextField") }
         )
     }

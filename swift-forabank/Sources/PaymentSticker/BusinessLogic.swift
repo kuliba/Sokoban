@@ -249,7 +249,8 @@ extension BusinessLogic {
                     operation: operation,
                     newParameter: .input(.init(
                         value: input,
-                        title: title
+                        title: title,
+                        warning: nil
                     ))
                 )
                 return .success(.operation(parametersUpdate))
@@ -319,7 +320,15 @@ extension BusinessLogic {
                             ))))
 
                         case let .failure(error):
-                            completion(.failure(error))
+                            let newOperation = operation.updateOperation(
+                                operation: operation,
+                                newParameter: .input(.init(
+                                    value: "",
+                                    title: "Введите код",
+                                    warning: error.localizedDescription
+                                ))
+                            )
+                            completion(.success(.operation(newOperation)))
                         }
                     }
                     
@@ -350,7 +359,7 @@ extension BusinessLogic {
                 let transferType = operation.parameters.first(where: { $0.id == .transferType })
                 switch transferType {
                 case let .select(select):
-                    if select.value == "Получить в офисе" {
+                    if select.value == "typeDeliveryOffice" {
                         deliverToOffice = true
                         cityId = nil
                         amount = 790
@@ -403,7 +412,8 @@ extension BusinessLogic {
                                 operation: newOperation,
                                 newParameter: .input(.init(
                                     value: "",
-                                    title: "Введите код из смс"
+                                    title: "Введите код из смс",
+                                    warning: nil
                                 ))
                             )
                             
@@ -655,7 +665,7 @@ extension BusinessLogic {
                     newParameter: .sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
-                        image: .data(images.first?.data),
+                        image: .named("StickerPreview"),
                         options: banner.txtConditionList.map { item in
                             
                                 .init(
@@ -697,7 +707,7 @@ extension PaymentSticker.ParameterViewModel {
     
     var inputTitle: String? {
         
-        guard case let .input(title) = self else {
+        guard case let .input(title, _) = self else {
             return nil
         }
         

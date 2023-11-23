@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-//import TextFieldComponent
 
 // MARK: - View
 
@@ -59,7 +58,7 @@ struct AmountView: View {
                     
                     HStack {
                         
-                        TextField("Сумма", text: $text)
+                        Text("\(text) ₽")
                             .foregroundColor(configuration.amountColor)
                             .font(configuration.amountFont)
                     }

@@ -15,6 +15,7 @@ struct InputView: View {
     
     let title: String
     let commit: (String) -> Void
+    let warning: String?
     let configuration: InputConfiguration
     
     var body: some View {
@@ -24,6 +25,7 @@ struct InputView: View {
         LabeledView(
             title: title,
             configuration: configuration,
+            warning: warning,
             makeLabel: { textField }
         )
         .onChange(of: text, perform: commit)
@@ -34,19 +36,27 @@ public struct InputConfiguration {
 
     let titleFont: Font
     let titleColor: Color
+    
     let iconColor: Color
     let iconName: String
+    
+    let warningFont: Font
+    let warningColor: Color
     
     public init(
         titleFont: Font,
         titleColor: Color,
         iconColor: Color,
-        iconName: String
+        iconName: String,
+        warningFont: Font,
+        warningColor: Color
     ) {
         self.titleFont = titleFont
         self.titleColor = titleColor
         self.iconColor = iconColor
         self.iconName = iconName
+        self.warningFont = warningFont
+        self.warningColor = warningColor
     }
 }
 

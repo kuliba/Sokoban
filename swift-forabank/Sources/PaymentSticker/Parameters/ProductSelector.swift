@@ -30,6 +30,7 @@ public extension Operation.Parameter {
             let title: String
             let nameProduct: String
             let balance: String
+            let balanceFormatted: String
             let description: String
             let cardImage: ImageData
             let paymentSystem: ImageData
@@ -41,6 +42,7 @@ public extension Operation.Parameter {
                 title: String,
                 nameProduct: String,
                 balance: String,
+                balanceFormatted: String,
                 description: String,
                 cardImage: ImageData,
                 paymentSystem: ImageData,
@@ -51,6 +53,7 @@ public extension Operation.Parameter {
                 self.title = title
                 self.nameProduct = nameProduct
                 self.balance = balance
+                self.balanceFormatted = balanceFormatted
                 self.description = description
                 self.cardImage = cardImage
                 self.paymentSystem = paymentSystem

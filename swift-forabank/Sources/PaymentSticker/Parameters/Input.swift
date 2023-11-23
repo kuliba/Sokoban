@@ -13,13 +13,16 @@ public extension Operation.Parameter {
         
         public var value: String
         public let title: String
+        public let warning: String?
         
         public init(
             value: String,
-            title: String
+            title: String,
+            warning: String?
         ) {
             self.value = value
             self.title = title
+            self.warning = warning
         }
     }
 }
