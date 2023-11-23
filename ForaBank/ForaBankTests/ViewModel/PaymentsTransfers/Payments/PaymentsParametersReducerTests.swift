@@ -65,7 +65,6 @@ final class PaymentsParametersReducerTests: XCTestCase {
         
         let result = reduce(params, ([], direct()))
         
-        XCTExpectFailure("Prove wrong order")
         XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successActionButton]))
     }
     

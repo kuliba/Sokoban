@@ -19,6 +19,7 @@ extension OperationDetailData
                     .successTitle,
                     .successAmount,
                     .successLogo,
+                    .successOptionButtons,
                     .successActionButton]
             
         case .changeOutgoing, .returnOutgoing:
