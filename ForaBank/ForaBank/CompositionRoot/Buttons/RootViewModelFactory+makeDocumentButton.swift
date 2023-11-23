@@ -31,7 +31,7 @@ extension RootViewModelFactory {
         
         func makeButton(documentID: DocumentID) -> some View {
             
-            let label = { makeSuccessButtonLabel(option: .document) }
+            let buttonLabel = { makeSuccessButtonLabel(option: .document) }
             
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetPrintFormRequest,
@@ -39,38 +39,36 @@ extension RootViewModelFactory {
                 mapResponse: ResponseMapper.mapGetPrintFormResponse
             )
             
-            let adapted = FetchAdapter(
-                fetch: getDetailService.fetch(_:completion:),
-                mapResult: PDFResult.init
-            )
+            typealias Completion = (PDFDocument?) -> Void
             
-            let getSheetState = { completion in
+            func getValue(completion: @escaping Completion) {
                 
-                adapted.fetch(documentID, completion: completion)
-            }
-            
-            @ViewBuilder
-            func makeSheetStateView(
-                result: PDFResult,
-                dismiss: @escaping () -> Void
-            ) -> some View {
-                
-                switch result {
+                getDetailService.fetch(documentID) { result in
                     
-                case let .failure(error):
-                    Text(error.localizedDescription)
-                        .foregroundColor(.red)
-                        .padding()
-                    
-                case let .success(pdfDocument):
-                    PDFDocumentView(document: pdfDocument)
+                    switch result {
+                    case .failure:
+                        completion(nil)
+                        
+                    case let .success(data):
+                        completion(PDFDocument(data: data))
+                    }
                 }
             }
             
-            return ButtonWithSheet(
-                label: label,
-                getSheetState: getSheetState,
-                makeSheetStateView: makeSheetStateView
+            @ViewBuilder
+            func makePDFDocumentView(
+                pdfDocument: PDFDocument,
+                dismiss: @escaping () -> Void
+            ) -> some View {
+                
+                #warning("add dismiss or change view")
+                PDFDocumentView(document: pdfDocument)
+            }
+            
+            return MagicButtonWithSheet(
+                buttonLabel: buttonLabel,
+                getValue: getValue,
+                makeValueView: makePDFDocumentView
             )
         }
     }
