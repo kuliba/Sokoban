@@ -16,6 +16,7 @@ public struct OperationViewConfiguration {
     let productViewConfig: ProductView.Appearance
     let inputViewConfig: InputConfiguration
     let amountViewConfig: AmountViewConfiguration
+    let resultViewConfiguration: ResultViewConfiguration
     
     public init(
         tipViewConfig: TipViewConfiguration,
@@ -23,7 +24,8 @@ public struct OperationViewConfiguration {
         selectViewConfig: SelectViewConfiguration,
         productViewConfig: ProductView.Appearance,
         inputViewConfig: InputConfiguration,
-        amountViewConfig: AmountViewConfiguration
+        amountViewConfig: AmountViewConfiguration,
+        resultViewConfiguration: ResultViewConfiguration
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
@@ -31,6 +33,7 @@ public struct OperationViewConfiguration {
         self.productViewConfig = productViewConfig
         self.inputViewConfig = inputViewConfig
         self.amountViewConfig = amountViewConfig
+        self.resultViewConfiguration = resultViewConfiguration
     }
 }
 
@@ -62,7 +65,8 @@ public struct OperationView: View {
             OperationResultView(
                 title: result.title,
                 description: result.description,
-                amount: result.amount
+                amount: result.amount,
+                configuration: configuration
             ) {
                 
                 Button("details") {
@@ -74,33 +78,92 @@ public struct OperationView: View {
     }
 }
 
+public struct ResultViewConfiguration {
+
+    let colorSuccess: Color
+    let colorWait: Color
+    let colorFailed: Color
+    
+    let titleColor: Color
+    let titleFont: Font
+    
+    let descriptionColor: Color
+    let descriptionFont: Font
+    
+    let amountColor: Color
+    let amountFont: Font
+    
+    let mainButtonColor: Color
+    let mainButtonFont: Font
+    let mainButtonBackgroundColor: Color
+    
+    public init(
+        colorSuccess: Color,
+        colorWait: Color,
+        colorFailed: Color,
+        titleColor: Color,
+        titleFont: Font,
+        descriptionColor: Color,
+        descriptionFont: Font,
+        amountColor: Color,
+        amountFont: Font,
+        mainButtonColor: Color,
+        mainButtonFont: Font,
+        mainButtonBackgroundColor: Color
+    ) {
+        self.colorSuccess = colorSuccess
+        self.colorWait = colorWait
+        self.colorFailed = colorFailed
+        self.titleColor = titleColor
+        self.titleFont = titleFont
+        self.descriptionColor = descriptionColor
+        self.descriptionFont = descriptionFont
+        self.amountColor = amountColor
+        self.amountFont = amountFont
+        self.mainButtonColor = mainButtonColor
+        self.mainButtonFont = mainButtonFont
+        self.mainButtonBackgroundColor = mainButtonBackgroundColor
+    }
+}
+
 struct OperationResultView<ButtonsView: View>: View {
     
     let title: String
     let description: String
     let amount: String
+    let configuration: OperationViewConfiguration
+
     let buttonsView: () -> ButtonsView
-    
+        
     var body: some View {
         
         VStack(spacing: 20) {
             
-            Image(systemName: "photo.artframe")
-                .frame(width: 88, height: 88)
+            
+            ZStack(alignment: .center) {
+                
+                Circle()
+                    .foregroundColor(configuration.resultViewConfiguration.colorSuccess)
+                    .frame(width: 88, height: 88, alignment: .center)
+                
+                Image("ic48Check")
+                    .foregroundColor(.white)
+                    .frame(width: 88, height: 88)
+            }
             
             Text(title)
-                .font(.headline)
-                .foregroundColor(.black)
+                .font(configuration.resultViewConfiguration.titleFont)
+                .foregroundColor(configuration.resultViewConfiguration.titleColor)
             
             Text(description)
-                .font(.body)
-                .foregroundColor(.gray.opacity(0.4))
+                .font(configuration.resultViewConfiguration.descriptionFont)
+                .foregroundColor(configuration.resultViewConfiguration.descriptionColor)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
             
-            Text(amount)
-                .font(.largeTitle)
-                .foregroundColor(.black)
+            Text("\(amount) ₽")
+                .font(configuration.resultViewConfiguration.amountFont)
+                .foregroundColor(configuration.resultViewConfiguration.amountColor)
             
             Spacer()
             
@@ -117,8 +180,9 @@ struct OperationResultView<ButtonsView: View>: View {
                     Text("На главный")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.red)
-                        .foregroundColor(.white)
+                        .background(configuration.resultViewConfiguration.mainButtonBackgroundColor)
+                        .font(configuration.resultViewConfiguration.mainButtonFont)
+                        .foregroundColor(configuration.resultViewConfiguration.mainButtonColor)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }

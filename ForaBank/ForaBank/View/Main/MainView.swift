@@ -415,6 +415,20 @@ extension MainView {
                 hintFont: .textBodySR12160(),
                 hintColor: .textPlaceholder,
                 background: .mainColorsBlackMedium
+            ),
+            resultViewConfiguration: .init(
+                colorSuccess: Color.systemColorActive,
+                colorWait: Color.systemColorWarning,
+                colorFailed: Color.systemColorError,
+                titleColor: Color.textSecondary,
+                titleFont: .textH3Sb18240(),
+                descriptionColor: .textPlaceholder,
+                descriptionFont: .textBodyMR14200(),
+                amountColor: .textSecondary,
+                amountFont: .textH1Sb24322(),
+                mainButtonColor: .textWhite,
+                mainButtonFont: .textH3Sb18240(),
+                mainButtonBackgroundColor: .buttonPrimary
             )
         )
     }
