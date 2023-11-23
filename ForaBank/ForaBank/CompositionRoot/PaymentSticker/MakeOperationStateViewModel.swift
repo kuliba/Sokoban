@@ -414,7 +414,16 @@ private extension Model {
         model: Model
     ) -> [BusinessLogic.City] {
         
-        let cities = model.localAgent.load(type: [AtmCityData].self)
+        let atmData = model.dictionaryAtmList()
+        
+        let cities = model.localAgent.load(type: [AtmCityData].self)?
+            .filter({ $0.productList?.contains(where: { $0 == .sticker } ) ?? false })
+            .filter({ item in
+                
+                atmData?
+                    .filter({ $0.serviceIdList.contains(where: { $0 == 140 } )})
+                    .contains(where: {$0.cityId == item.id }) ?? false
+            })
         return (cities?.compactMap{ $0 }.map({
             
             BusinessLogic.City(id: $0.id.description, name: $0.name)
