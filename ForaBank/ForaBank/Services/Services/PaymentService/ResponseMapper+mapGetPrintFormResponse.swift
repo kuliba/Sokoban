@@ -17,18 +17,10 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> GetPrintFormResult {
         
-        typealias Response = ResponseMapper.ServerResponse<Data>
-        
         do {
             switch httpURLResponse.statusCode {
             case 200:
-                let response = try JSONDecoder().decode(Response.self, from: data)
-                let data = try response.data.get(orThrow: NSError(domain: "Empty data", code: -1))
-                if let errorMessage = response.errorMessage {
-                    return .failure(.server(statusCode: response.statusCode, errorMessage: errorMessage))
-                } else {
-                    return .success(data)
-                }
+                return .success(data)
                 
             default:
                 let error = try JSONDecoder().decode(ServerError.self, from: data)
