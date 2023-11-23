@@ -57,11 +57,9 @@ extension RootViewModelFactory {
                 dismiss: @escaping () -> Void
             ) -> some View {
                 
-                PrintFormView(
-                    viewModel: .init(
-                        pdfDocument: pdfDocument,
-                        dismissAction: dismiss
-                    )
+                PDFDocumentWrapperView(
+                    pdfDocument: pdfDocument,
+                    dismissAction: dismiss
                 )
             }
             
@@ -74,12 +72,47 @@ extension RootViewModelFactory {
     }
 }
 
-private struct PDFDocumentWrapperView {
+private struct PDFDocumentWrapperView: View {
     
-    @StateObject var viewModel: PrintFormView.ViewModel
+    @State private var isShowingSheet = false
+    
+    let pdfDocument: PDFDocument
+    let dismissAction: () -> Void
     
     var body: some View {
         
-        PrintFormView(viewModel: viewModel)
+        VStack {
+            
+            PDFDocumentView(document: pdfDocument)
+            
+            ButtonSimpleView(viewModel: .red {
+                
+                isShowingSheet = true
+            })
+            .frame(height: 48)
+            .padding()
+        }
+        .sheet(isPresented: $isShowingSheet) {
+            
+            ActivityView(
+                viewModel: .init(
+                    activityItems: [pdfDocument.dataRepresentation() as Any]
+                )
+            )
+        }
+    }
+}
+
+private extension ButtonSimpleView.ViewModel {
+    
+    static func red(
+        action: @escaping () -> Void
+    ) ->  ButtonSimpleView.ViewModel {
+        
+        .init(
+            title: "Сохранить или отправить",
+            style: .red,
+            action: action
+        )
     }
 }
