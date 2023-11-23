@@ -85,7 +85,7 @@ private struct PDFDocumentWrapperView: View {
             
             PDFDocumentView(document: pdfDocument)
             
-            ButtonSimpleView(viewModel: .red {
+            ButtonSimpleView(viewModel: .saveAndShare {
                 
                 isShowingSheet = true
             })
@@ -105,7 +105,7 @@ private struct PDFDocumentWrapperView: View {
 
 private extension ButtonSimpleView.ViewModel {
     
-    static func red(
+    static func saveAndShare(
         action: @escaping () -> Void
     ) ->  ButtonSimpleView.ViewModel {
         
