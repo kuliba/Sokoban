@@ -306,21 +306,20 @@ extension TemplateButtonView {
         
         HStack(spacing: 3) {
             
-            if let icon = viewModel.icon {
+            viewModel.icon.map { icon in
                 
                 icon
                     .resizable()
-                    .foregroundColor(foregroundColor)
                     .frame(width: 12, height: 12, alignment: .center)
                     .accessibilityIdentifier("TemplateButtonStatusIcon")
             }
             
             Text(viewModel.title)
-                .font(.system(size: 12, weight: .medium))
+                .font(.textBodySM12160())
                 .multilineTextAlignment(.center)
-                .foregroundColor(foregroundColor)
                 .accessibilityIdentifier("TemplateButtonTitle")
         }
+        .foregroundColor(foregroundColor)
     }
     
     private var foregroundColor: Color {
