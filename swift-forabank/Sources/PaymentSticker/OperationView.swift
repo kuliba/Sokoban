@@ -37,17 +37,19 @@ public struct OperationViewConfiguration {
     }
 }
 
-public struct OperationView: View {
+public struct OperationView<OperationResultView: View>: View {
     
     @StateObject var model: OperationStateViewModel
+    let operationResultView: (OperationStateViewModel.OperationResult) -> OperationResultView
     let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
+        operationResultView: @escaping (OperationStateViewModel.OperationResult) -> OperationResultView,
         configuration: OperationViewConfiguration
     ) {
-        
         self._model = .init(wrappedValue: model)
+        self.operationResultView = operationResultView
         self.configuration = configuration
     }
     
@@ -62,80 +64,35 @@ public struct OperationView: View {
             .padding(.bottom, 20)
         
         case let .result(result):
-            OperationResultView(
-                title: result.title,
-                description: result.description,
-                amount: result.amount,
-                configuration: configuration
-            ) {
-                
-                Button("details") {
-                    
-                    print("details")
-                }
-            }
+            operationResultView(result)
         }
     }
 }
 
-public struct ResultViewConfiguration {
-
-    let colorSuccess: Color
-    let colorWait: Color
-    let colorFailed: Color
+public struct PaymentID {
     
-    let titleColor: Color
-    let titleFont: Font
-    
-    let descriptionColor: Color
-    let descriptionFont: Font
-    
-    let amountColor: Color
-    let amountFont: Font
-    
-    let mainButtonColor: Color
-    let mainButtonFont: Font
-    let mainButtonBackgroundColor: Color
-    
-    public init(
-        colorSuccess: Color,
-        colorWait: Color,
-        colorFailed: Color,
-        titleColor: Color,
-        titleFont: Font,
-        descriptionColor: Color,
-        descriptionFont: Font,
-        amountColor: Color,
-        amountFont: Font,
-        mainButtonColor: Color,
-        mainButtonFont: Font,
-        mainButtonBackgroundColor: Color
-    ) {
-        self.colorSuccess = colorSuccess
-        self.colorWait = colorWait
-        self.colorFailed = colorFailed
-        self.titleColor = titleColor
-        self.titleFont = titleFont
-        self.descriptionColor = descriptionColor
-        self.descriptionFont = descriptionFont
-        self.amountColor = amountColor
-        self.amountFont = amountFont
-        self.mainButtonColor = mainButtonColor
-        self.mainButtonFont = mainButtonFont
-        self.mainButtonBackgroundColor = mainButtonBackgroundColor
-    }
+    public let id: String
 }
 
-struct OperationResultView<ButtonsView: View>: View {
+public struct DocumentID {
     
-    let title: String
-    let description: String
-    let amount: String
-    let configuration: OperationViewConfiguration
+    public let id: Int
+}
 
-    let buttonsView: () -> ButtonsView
-        
-    var body: some View {
+public struct OperationResultView<ButtonsView: View>: View {
+    
+    let model: OperationStateViewModel.OperationResult
+    let buttonsView: (PaymentID, DocumentID) -> ButtonsView
+    
+    public init(
+        model: OperationStateViewModel.OperationResult,
+        buttonsView: @escaping (PaymentID, DocumentID) -> ButtonsView
+    ) {
+        self.model = model
+        self.buttonsView = buttonsView
+    }
+    
+    public var body: some View {
         
         VStack(spacing: 20) {
             
@@ -169,7 +126,7 @@ struct OperationResultView<ButtonsView: View>: View {
             
             VStack(spacing: 56) {
              
-                buttonsView()
+                buttonsView(model.paymentID, model.documentID)
                 
                 Button {
                     

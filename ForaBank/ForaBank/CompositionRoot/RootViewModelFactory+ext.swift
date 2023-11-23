@@ -7,17 +7,17 @@
 
 import Foundation
 import PaymentSticker
+import SwiftUI
 
 extension RootViewModelFactory {
     
     typealias MakeOperationStateViewModel = (@escaping BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
+        httpClient: HTTPClient,
         model: Model,
         logger: LoggerAgentProtocol
     ) -> RootViewModel {
-        
-        let httpClient = model.authenticatedHTTPClient()
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -48,17 +48,108 @@ extension RootViewModelFactory {
             )
         }
         
-        let makeOperationStateViewModel = makeOperationStateViewModel(
-            httpClient,
-            model: model
-        )
-        
         return make(
             model: model,
-            makeOperationStateViewModel: makeOperationStateViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             onRegister: resetCVVPINActivation
         )
+    }
+    
+    static func makeNavigationOperationView(
+        httpClient: HTTPClient,
+        model: Model
+    ) -> () -> some View {
+     
+        return makeNavigationOperationView
+        
+        func makeButtons(
+            paymentID: PaymentSticker.PaymentID,
+            documentID: PaymentSticker.DocumentID
+        ) -> some View {
+            
+            let makeDetailButton = makeOperationDetailButton(
+                httpClient: httpClient,
+                model: model
+            )
+            
+            let makeDocumentButton = makeDocumentButton(
+                httpClient: httpClient,
+                model: model
+            )
+            
+            return HStack {
+                
+                makeDetailButton(.init(paymentID.id))
+                makeDocumentButton(.init(documentID.id))
+            }
+        }
+        
+        func operationView(setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)) -> some View {
+         
+            let makeOperationStateViewModel = makeOperationStateViewModel(
+                httpClient,
+                model: model
+            )
+            
+            return OperationView(
+                model: makeOperationStateViewModel(setSelection),
+                operationResultView: { result in
+                    
+                    OperationResultView(
+                        model: result,
+                        buttonsView: makeButtons(paymentID:documentID:))
+                },
+                configuration: .default
+            )
+        }
+        
+        func dictionaryAtmList() -> [AtmData] {
+            
+            model.dictionaryAtmList() ?? []
+        }
+        
+        func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
+            
+            model.dictionaryAtmMetroStations() ?? []
+        }
+        
+        func listView(
+            location: Location,
+            completion: @escaping (Office?) -> Void
+        ) -> some View {
+            
+            PlacesListInternalView(
+                items: dictionaryAtmList().map { PlacesListViewModel.ItemViewModel(
+                    id: $0.id,
+                    name: $0.name,
+                    address: $0.address,
+                    metro: dictionaryAtmMetroStations().compactMap {
+                        
+                        PlacesListViewModel.ItemViewModel.MetroStationViewModel(
+                            id: $0.id, name: $0.name, color: $0.color.color
+                        )
+                        
+                    },
+                    schedule: $0.schedule,
+                    distance: nil
+                ) },
+                selectItem: { item in
+                    
+                    completion(Office(id: item.id, name: item.name))
+                }
+            )
+            
+        }
+        
+        //NavigationOperationView
+        func makeNavigationOperationView() -> some View {
+            
+            NavigationOperationView(
+                viewModel: .init(),
+                operationView: operationView,
+                listView: listView
+            )
+        }
     }
 }
 
@@ -93,7 +184,6 @@ private extension RootViewModelFactory {
     
     static func make(
         model: Model,
-        makeOperationStateViewModel: @escaping MakeOperationStateViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
@@ -101,7 +191,6 @@ private extension RootViewModelFactory {
         let mainViewModel = MainViewModel(
             model,
             sections: makeMainSections(model: model),
-            makeOperationStateViewModel: makeOperationStateViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             onRegister: onRegister
         )

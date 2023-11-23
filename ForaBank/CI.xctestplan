@@ -229,7 +229,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SberQRTests",
         "name" : "SberQRTests"
       }

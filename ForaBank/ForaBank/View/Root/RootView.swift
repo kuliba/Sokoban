@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import PaymentSticker
 
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
-    
+    //TODO: think composition to remove model, httpClient
+    let model: Model
+    let httpClient: HTTPClient
+
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -41,7 +45,13 @@ struct RootView: View {
         
         NavigationView {
             
-            MainView(viewModel: viewModel.mainViewModel)
+            MainView(
+                viewModel: viewModel.mainViewModel,
+                navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
+                    httpClient: httpClient,
+                    model: model
+                )
+            )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
         .accessibilityIdentifier("tabBarMainButton")
@@ -167,7 +177,9 @@ struct RootView_Previews: PreviewProvider {
                 
                         .init(viewModel: .init(authLoginViewModel: .preview))
                 }
-            )
+            ),
+            model: .emptyMock,
+            httpClient: Model.emptyMock.authenticatedHTTPClient()
         )
     }
 }

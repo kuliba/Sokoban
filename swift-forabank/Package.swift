@@ -38,6 +38,7 @@ let package = Package(
         .transferPublicKey,
         .urlRequestFactory,
         // UI
+        .buttonWithSheet,
         .linkableText,
         .manageSubscriptionsUI,
         .pickerWithPreviewComponent,
@@ -111,6 +112,7 @@ let package = Package(
         .urlRequestFactory,
         .urlRequestFactoryTests,
         // UI
+        .buttonWithSheet,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
@@ -223,6 +225,13 @@ private extension Product {
     )
     
     // MARK: - UI
+    
+    static let buttonWithSheet = library(
+        name: .buttonWithSheet,
+        targets: [
+            .buttonWithSheet
+        ]
+    )
     
     static let linkableText = library(
         name: .linkableText,
@@ -770,6 +779,11 @@ private extension Target {
 
     // MARK: - UI
     
+    static let buttonWithSheet = target(
+        name: .buttonWithSheet,
+        path: "Sources/UI/\(String.buttonWithSheet)"
+    )
+    
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -957,6 +971,10 @@ private extension Target.Dependency {
     
     // MARK: - UI
     
+    static let buttonWithSheet = byName(
+        name: .buttonWithSheet
+    )
+    
     static let linkableText = byName(
         name: .linkableText
     )
@@ -1078,6 +1096,8 @@ private extension String {
     static let paymentsComponentsTests = "PaymentsComponentsTests"
     
     // MARK: - UI
+    
+    static let buttonWithSheet = "ButtonWithSheet"
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"

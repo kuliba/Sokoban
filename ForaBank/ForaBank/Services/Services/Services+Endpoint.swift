@@ -20,6 +20,7 @@ extension Services {
             case processing(Processing)
             case dict
             case binding
+            case rest
             case transfer
             
             var path: String {
@@ -33,6 +34,9 @@ extension Services {
 
                 case .binding:
                     return "rest/binding"
+
+                case .rest:
+                    return "rest"
 
                 case .transfer:
                     return "rest/transfer"
@@ -62,11 +66,13 @@ extension Services {
             case createStickerPayment
             case formSessionKey
             case getJsonAbroad
+            case getOperationDetailByPaymentId
+            case getPINConfirmationCode
+            case getPrintForm
+            case getProcessingSessionCode
             case getSvgImageList
             case getScenarioQRData
             case getStickerPayment
-            case getPINConfirmationCode
-            case getProcessingSessionCode
             case makeTransfer
             case processPublicKeyAuthenticationRequest
             case showCVV
@@ -176,10 +182,22 @@ extension Services.Endpoint {
         serviceName: .getSvgImageList
     )
     
+    static let getOperationDetailByPaymentID: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getOperationDetailByPaymentId
+    )
+    
     static let getPINConfirmationCode: Self = .init(
         pathPrefix: .processing(.cardInfo),
         version: .v1,
         serviceName: .getPINConfirmationCode
+    )
+    
+    static let getPrintForm: Self = .init(
+        pathPrefix: .rest,
+        version: nil,
+        serviceName: .getPrintForm
     )
     
     static let getProcessingSessionCode: Self = .init(

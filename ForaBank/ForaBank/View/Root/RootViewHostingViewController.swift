@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import PaymentSticker
 
 class RootViewHostingViewController: UIHostingController<RootView> {
     
@@ -18,13 +19,20 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     private var spinner: UIViewController?
     private var bindings = Set<AnyCancellable>()
 
-    init(with viewModel: RootViewModel) {
-        
+    init(
+        with viewModel: RootViewModel,
+        model: Model,
+        httpClient: HTTPClient
+    ) {
         self.viewModel = viewModel
         self.cover = nil
         self.informer = nil
         self.isCoverDismissing = false
-        super.init(rootView: RootView(viewModel: viewModel))
+        super.init(rootView: RootView(
+            viewModel: viewModel,
+            model: model,
+            httpClient: httpClient
+        ))
         
         bind()
     }

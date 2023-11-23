@@ -15,7 +15,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private lazy var model: Model = AppDelegate.shared.model
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
+    private lazy var httpClient: HTTPClient = { model.authenticatedHTTPClient()
+    }()
     private lazy var rootViewModel = RootViewModelFactory.make(
+        httpClient: httpClient,
         model: model,
         logger: logger
     )
@@ -25,7 +28,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = RootViewHostingViewController(with: rootViewModel)
+        let rootViewController = RootViewHostingViewController(
+            with: rootViewModel,
+            model: model,
+            httpClient: httpClient
+        )
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         

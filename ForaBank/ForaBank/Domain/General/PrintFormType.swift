@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PrintFormType: String, Codable, Unknownable {
+enum PrintFormType: String, Codable, Hashable, Unknownable {
     
     case sbp
     case direct

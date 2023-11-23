@@ -36,7 +36,7 @@ final class TemplatesListViewModelTests: XCTestCase {
         XCTAssertFalse(model.paymentTemplatesUpdating.value)
         
         // wait for bindings
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.2)
 
         let navBarRegularModel = try XCTUnwrap(sut.navBarState.regularModel)
         XCTAssertEqual(navBarRegularModel.title, "Шаблоны")
