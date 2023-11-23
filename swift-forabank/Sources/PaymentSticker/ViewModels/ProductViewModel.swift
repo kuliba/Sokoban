@@ -75,7 +75,7 @@ extension ProductViewModel {
                 cardLogo: product.cardImage,
                 paymentSystem: product.paymentSystem,
                 name: product.nameProduct,
-                balance: product.balance,
+                balance: product.balanceFormatted,
                 backgroundImage: product.backgroundImage,
                 backgroundColor: Color(product.backgroundColor)
             ),

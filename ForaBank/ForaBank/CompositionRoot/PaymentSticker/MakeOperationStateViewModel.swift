@@ -390,11 +390,16 @@ private extension Model {
         model: Model
     ) -> [BusinessLogic.Product] {
         
-        let allProducts = model.allProducts.filter({ $0.balance ?? 0 >= 790 }).map({ BusinessLogic.Product(
+        let allProducts = model.allProducts.filter({ $0.productType == .card }).filter({ $0.allowDebit == true  }).filter({ $0.isProductOwner }).filter({ $0.balance ?? 0 >= 790 }).map({ BusinessLogic.Product(
             id: $0.id,
             title: "Счет списания",
             nameProduct: $0.displayName,
             balance: $0.balanceValue.description,
+            balanceFormatted: amountFormatted(
+                amount: $0.balanceValue,
+                currencyCode: $0.currency,
+                style: .clipped
+            ) ?? "",
             description: $0.displayNumber ?? "",
             cardImage: PaymentSticker.ImageData.data($0.smallDesign.uiImage?.pngData()),
             paymentSystem: PaymentSticker.ImageData.data($0.paymentSystemData),
