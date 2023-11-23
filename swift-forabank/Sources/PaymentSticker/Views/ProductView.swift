@@ -114,17 +114,16 @@ public struct ProductView: View {
                 Spacer()
                 
                 mainView(
-                    productViewModel,
-                    chevronTapped: viewModel.chevronTapped
+                    productViewModel
                 )
             }
         }
         .padding(.init(top: 13, leading: 12, bottom: 13, trailing: 16))
+        .onTapGesture(perform: viewModel.chevronTapped)
     }
     
     private func mainView(
-        _ viewModel: ProductViewModel,
-        chevronTapped: @escaping () -> Void
+        _ viewModel: ProductViewModel
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 4) {
@@ -132,10 +131,12 @@ public struct ProductView: View {
             HStack(alignment: .center, spacing: 8) {
 
                 // FIXME: create extension for data to image AGAIN
-                if let paymentSystemImage = viewModel.main.paymentSystem {
-                    
-                    Image(data: paymentSystemImage.data)
-                }
+//                if let paymentSystemImage = viewModel.main.paymentSystem {
+//                    
+//                    Image(data: paymentSystemImage.data)
+//                        .resizable()
+//                        .frame(width: 24, height: 24, alignment: .center)
+//                }
                 
                 Text(viewModel.main.name)
                     .lineLimit(1)
@@ -149,8 +150,6 @@ public struct ProductView: View {
                     .foregroundColor(appearance.textColor)
                 
                 Image(systemName: "chevron.down")
-                    .onTapGesture(perform: chevronTapped)
-                
             }
             
             ProductView.FooterView(
