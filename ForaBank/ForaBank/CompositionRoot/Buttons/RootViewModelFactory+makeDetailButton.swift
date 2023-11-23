@@ -17,8 +17,6 @@ enum _PaymentID {}
 
 extension RootViewModelFactory {
     
-    fileprivate typealias DetailResult = Result<OperationDetailData, DetailError>
-    
     static func makeOperationDetailButton(
         httpClient: HTTPClient,
         model: Model
@@ -72,17 +70,5 @@ extension RootViewModelFactory {
                 makeValueView: makeDetailView
             )
         }
-    }
-    
-#warning("finish with DetailError and extension below")
-    fileprivate struct DetailError: Error {}
-}
-
-private extension RootViewModelFactory.DetailError {
-    
-    init(
-        _ error: MappingRemoteServiceError<ResponseMapper.OperationDetailByPaymentIDError>
-    ) {
-        self.init()
     }
 }

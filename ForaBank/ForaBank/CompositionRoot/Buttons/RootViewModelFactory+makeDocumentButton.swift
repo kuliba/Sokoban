@@ -18,10 +18,6 @@ enum _DocumentID {}
 
 extension RootViewModelFactory {
     
-    fileprivate typealias GetPrintFormServiceError = MappingRemoteServiceError<ResponseMapper.GetPrintFormError>
-    fileprivate typealias GetPrintFormServiceResult = Result<Data, GetPrintFormServiceError>
-    fileprivate typealias PDFResult = Result<PDFDocument, DocumentError>
-    
     static func makeDocumentButton(
         httpClient: HTTPClient,
         model: Model
@@ -71,36 +67,5 @@ extension RootViewModelFactory {
                 makeValueView: makePDFDocumentView
             )
         }
-    }
-    
-#warning("finish with DocumentError and extension below")
-    fileprivate struct DocumentError: Error {}
-}
-
-private extension RootViewModelFactory.PDFResult {
-    
-    init(_ result: RootViewModelFactory.GetPrintFormServiceResult) {
-        
-        switch result {
-        case let .failure(error):
-            self = .failure(RootViewModelFactory.DocumentError(error))
-            
-        case let .success(data):
-            if let pdf = PDFDocument(data: data) {
-                self = .success(pdf)
-            } else {
-                self = .failure(RootViewModelFactory.DocumentError())
-                return
-            }
-        }
-    }
-}
-
-private extension RootViewModelFactory.DocumentError {
-    
-    init(
-        _ error: RootViewModelFactory.GetPrintFormServiceError
-    ) {
-        self.init()
     }
 }
