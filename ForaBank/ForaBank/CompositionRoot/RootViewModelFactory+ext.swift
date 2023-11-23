@@ -86,9 +86,11 @@ extension RootViewModelFactory {
             )
         }
         
-        func dictionaryAtmList() -> [AtmData] {
+        func dictionaryAtmList(location: Location) -> [AtmData] {
             
-            model.dictionaryAtmList() ?? []
+            model.dictionaryAtmList()?
+                .filter({ $0.cityId.description == location.id })
+                .filter({ $0.serviceIdList.contains(where: { $0 == 140 } )}) ?? []
         }
         
         func dictionaryAtmMetroStations() -> [AtmMetroStationData] {
@@ -102,7 +104,7 @@ extension RootViewModelFactory {
         ) -> some View {
             
             PlacesListInternalView(
-                items: dictionaryAtmList().filter({ $0.cityId.description == location.id }).filter({ $0.serviceIdList.contains(where: { $0 == 140 } )}).map { item in
+                items: dictionaryAtmList(location: location).map { item in
                     PlacesListViewModel.ItemViewModel(
                         id: item.id,
                         name: item.name,
