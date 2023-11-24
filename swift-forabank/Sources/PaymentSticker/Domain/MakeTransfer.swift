@@ -9,6 +9,7 @@ import Foundation
 
 public enum MakeTransferError: Error , Equatable {
     
+    case network
     case error(
         statusCode: Int,
         errorMessage: String

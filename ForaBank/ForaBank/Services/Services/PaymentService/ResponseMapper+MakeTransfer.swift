@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PaymentSticker
 
 extension ResponseMapper {
     
@@ -20,7 +21,7 @@ extension ResponseMapper {
             
             switch httpURLResponse.statusCode {
             case 200:
-                    
+                
                 let makeTransferResponse = try JSONDecoder().decode(
                     MakeTransferResponse.self,
                     from: data
@@ -37,20 +38,16 @@ extension ResponseMapper {
             }
             
         } catch {
-            return .failure(.invalidData(
-                statusCode: httpURLResponse.statusCode, data: data
-            ))
-            
+            if let error = try? JSONDecoder().decode(ServerError.self, from: data) {
+                
+                return .failure(.error(statusCode: error.statusCode, errorMessage: error.errorMessage))
+            } else {
+             
+                return .failure(.invalidData(
+                    statusCode: httpURLResponse.statusCode, data: data
+                ))
+            }
         }
-    }
-    
-    enum MakeTransferError: Error , Equatable {
-        
-        case error(
-            statusCode: Int,
-            errorMessage: String
-        )
-        case invalidData(statusCode: Int, data: Data)
     }
 }
 

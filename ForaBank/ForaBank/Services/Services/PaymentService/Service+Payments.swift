@@ -38,7 +38,7 @@ extension Services {
         )
     }
     
-    typealias TransferService = MappingRemoteService<String, MakeTransfer, ResponseMapper.MakeTransferError>
+    typealias TransferService = MappingRemoteService<String, MakeTransfer, MakeTransferError>
     
     static func makeTransferService(
         httpClient: HTTPClient

@@ -320,15 +320,20 @@ extension BusinessLogic {
                             ))))
 
                         case let .failure(error):
-                            let newOperation = operation.updateOperation(
-                                operation: operation,
-                                newParameter: .input(.init(
-                                    value: "",
-                                    title: "Введите код",
-                                    warning: error.localizedDescription
-                                ))
-                            )
-                            completion(.success(.operation(newOperation)))
+                            
+                            if case let .error(_, errorMessage) = error {
+
+                                let newOperation = operation.updateOperation(
+                                    operation: operation,
+                                    newParameter: .input(.init(
+                                        value: "",
+                                        title: "Введите код",
+                                        warning: errorMessage
+                                    ))
+                                )
+                                completion(.success(.operation(newOperation)))
+
+                            }
                         }
                     }
                     

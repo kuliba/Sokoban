@@ -110,7 +110,7 @@ where Input == String,
       Output == MakeTransfer,
       CreateRequestError == Error,
       PerformRequestError == Error,
-      MapResponseError == ResponseMapper.MakeTransferError {
+      MapResponseError == MakeTransferError {
     
     typealias MakeTransferResult = Result<MakeTransferResponse, MakeTransferError>
     typealias MakeTransferServiceCompletion = (MakeTransferResult) -> Void
@@ -140,9 +140,15 @@ where Input == String,
 
 private extension MakeTransferError {
     
-    init(_ error: MappingRemoteServiceError<ResponseMapper.MakeTransferError>) {
+    init(_ error: MappingRemoteServiceError<MakeTransferError>) {
         
-        self = .error(statusCode: error._code, errorMessage: error.localizedDescription)
+        switch error {
+        case .createRequest, .performRequest:
+            self = .network
+            
+        case let .mapResponse(mapResponseError):
+            self = mapResponseError
+        }
     }
 }
 
