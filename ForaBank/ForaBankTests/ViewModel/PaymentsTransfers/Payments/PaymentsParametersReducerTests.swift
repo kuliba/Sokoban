@@ -68,6 +68,15 @@ final class PaymentsParametersReducerTests: XCTestCase {
         XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successActionButton]))
     }
     
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_contactAddressless() {
+
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successAdditionalButtons, .successOptions])
+        
+        let result = reduce(params, ([], contactAddressless()))
+        
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successAdditionalButtons, .successOptions, .successActionButton]))
+    }
+    
     //MARK: - Helpers
     
     private func reduce(
@@ -78,6 +87,11 @@ final class PaymentsParametersReducerTests: XCTestCase {
     ) -> [PaymentsParameterRepresentable] {
         
         PaymentsParametersReducer.reduce(state, action)
+    }
+    
+    private func contactAddressless() -> OperationDetailData.TransferEnum {
+        
+        return .contactAddressing
     }
     
     private func direct() -> OperationDetailData.TransferEnum {
