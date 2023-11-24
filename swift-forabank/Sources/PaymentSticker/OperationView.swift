@@ -243,13 +243,13 @@ struct OperationProcessView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.vertical, 16)
             
             continueButton(
                 viewModel: .init(isActive: model.isOperationComplete),
                 model: model,
                 configuration: configuration
             )
+            .background(Color.clear)
         }
     }
     
