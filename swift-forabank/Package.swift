@@ -427,7 +427,8 @@ private extension Target {
     static let paymentSticker = target(
         name: .paymentSticker,
         dependencies: [
-            .genericRemoteService
+            .genericRemoteService,
+            .textFieldComponent
         ]
     )
     
