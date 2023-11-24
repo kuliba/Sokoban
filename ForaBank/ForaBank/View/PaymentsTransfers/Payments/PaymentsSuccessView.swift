@@ -17,21 +17,10 @@ struct PaymentsSuccessView: View {
             
             VStack(spacing: 0) {
                 
-                //content
-                ScrollView(showsIndicators: false) {
-                    
-                    VStack(spacing: 24) {
-                        
-                        ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
-                    }
-                }
+                scrollContent()
                 
-                // bottom
-                VStack(spacing: 0) {
-                    
-                    ForEach(viewModel.bottom, content: PaymentsGroupView.groupView(for:))
-                    
-                }.padding(.bottom, 24)
+                bottom()
+                    .padding(.bottom, 24)
             }
             
             viewModel.spinner.map(SpinnerView.init(viewModel:))
@@ -39,6 +28,25 @@ struct PaymentsSuccessView: View {
         .alert(item: $viewModel.alert, content: Alert.init(with:))
         .fullScreenCover(item: $viewModel.fullScreenCover, content: fullScreenCoverContent)
         .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    private func scrollContent() -> some View {
+        
+        ScrollView(showsIndicators: false) {
+            
+            VStack(spacing: 24) {
+                
+                ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
+            }
+        }
+    }
+    
+    private func bottom() -> some View {
+        
+        VStack(spacing: 0) {
+            
+            ForEach(viewModel.bottom, content: PaymentsGroupView.groupView(for:))
+        }
     }
     
     @ViewBuilder
@@ -73,7 +81,7 @@ struct PaymentsSuccessView: View {
 struct PaymentsSuccessView_Previews: PreviewProvider {
     
     static var previews: some View {
-
+        
         Group {
             
             Group {
