@@ -45,9 +45,26 @@ final public class OperationStateViewModel: ObservableObject {
             switch parameter {
             case let .select(select):
                 if select.value == nil {
+                    
                     complete = false
                 }
-            
+                
+            case let .productSelector(product):
+                
+                let banner = operation?.parameters.first(where: { $0.id == .sticker })
+                
+                switch banner {
+                case let .sticker(banner):
+                    
+                    if let minAmount = banner.options.map({ $0.price }).min(),
+                       Double(product.selectedProduct.balance) ?? 0 < minAmount {
+
+                        complete = false
+                    }
+                    
+                default: break
+                }
+                
             default: break
             }
         }
