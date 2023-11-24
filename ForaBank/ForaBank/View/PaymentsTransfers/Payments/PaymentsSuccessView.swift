@@ -72,7 +72,7 @@ struct PaymentsSuccessView: View {
         
         ForEach(viewModel.items) { itemViewModel in
             
-            let isTheItem = itemViewModel is PaymentsSuccessOptionsView.ViewModel
+            let isTheItem = itemViewModel is PaymentsSuccessOptionButtonsView.ViewModel
             
             PaymentsGroupView.separatedItemView(
                 for: itemViewModel,
