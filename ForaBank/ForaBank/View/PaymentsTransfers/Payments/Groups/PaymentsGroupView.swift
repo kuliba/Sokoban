@@ -304,9 +304,26 @@ extension PaymentsGroupView {
     }
 }
 
+//MARK: - Preview Content
+
 struct PaymentsGroupView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
+        Group {
+            
+            VStack {
+                
+                ScrollView(content: previewsGroup)
+            }
+            .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+        @ViewBuilder
+    static func previewsGroup() -> some View {
         
         Group {
             
@@ -369,8 +386,6 @@ struct PaymentsGroupView_Previews: PreviewProvider {
             .padding(.vertical, 16)
     }
 }
-
-//MARK: - Preview Content
 
 extension PaymentsGroupViewModel {
     
