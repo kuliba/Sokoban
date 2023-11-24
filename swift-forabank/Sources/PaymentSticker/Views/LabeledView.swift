@@ -42,7 +42,7 @@ struct LabeledView<Label: View>: View {
     
     private var content: some View {
         
-        VStack(alignment: .leading, spacing: 11) {
+        VStack(alignment: .leading, spacing: 2) {
             
             titleView
             
