@@ -34,12 +34,14 @@ struct PaymentsGroupView: View {
 
 extension PaymentsGroupView {
     
-    func backgroundCorners(for itemViewModel: PaymentsParameterViewModel) -> UIRectCorner {
+    func backgroundCorners(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> UIRectCorner {
         
         switch itemViewModel.source {
         case _ as Payments.ParameterMessage:
             return []
-
+            
         default:
             if viewModel.items.count > 1 {
                 
@@ -52,9 +54,7 @@ extension PaymentsGroupView {
                     
                 default:
                     return []
-                    
                 }
-
             } else {
                 
                 return .allCorners
@@ -62,7 +62,9 @@ extension PaymentsGroupView {
         }
     }
     
-    func backgroundColor(for itemViewModel: PaymentsParameterViewModel) -> Color {
+    func backgroundColor(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> Color {
         
         switch itemViewModel.source {
         case _ as Payments.ParameterMessage:
@@ -94,7 +96,9 @@ extension PaymentsGroupView {
         }
     }
     
-    func horizontalPadding(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
+    func horizontalPadding(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> CGFloat {
         
         switch itemViewModel.source {
         case _ as Payments.ParameterMessage,
@@ -106,7 +110,9 @@ extension PaymentsGroupView {
         }
     }
     
-    func frameMinHeight(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
+    func frameMinHeight(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> CGFloat {
         
         switch itemViewModel.source {
         case _ as Payments.ParameterSuccessStatus,
@@ -126,7 +132,9 @@ extension PaymentsGroupView {
     }
     
     @ViewBuilder
-    func itemView(for viewModel: PaymentsParameterViewModel) -> some View {
+    func itemView(
+        for viewModel: PaymentsParameterViewModel
+    ) -> some View {
         
         switch viewModel {
         case let messageViewModel as PaymentsMessageView.ViewModel:
@@ -146,7 +154,7 @@ extension PaymentsGroupView {
             
         case let inputViewModel as PaymentsInputView.ViewModel:
             PaymentsInputView(viewModel: inputViewModel)
-
+            
         case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
             PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
             
@@ -158,7 +166,7 @@ extension PaymentsGroupView {
             
         case let nameViewModel as PaymentsNameView.ViewModel:
             PaymentsNameView(viewModel: nameViewModel)
-
+            
         case let productViewModel as PaymentsProductView.ViewModel:
             PaymentsProductView(viewModel: productViewModel)
             
@@ -231,10 +239,12 @@ extension PaymentsGroupView {
     }
     
     @ViewBuilder
-    func separatorView(for itemViewModel: PaymentsParameterViewModel) -> some View {
+    func separatorView(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> some View {
         
         if viewModel.items.count > 1,
-            itemViewModel.id != viewModel.items.last?.id {
+           itemViewModel.id != viewModel.items.last?.id {
             
             Rectangle()
                 .frame(height: 1)
@@ -253,7 +263,9 @@ extension PaymentsGroupView {
 extension PaymentsGroupView {
     
     @ViewBuilder
-    static func groupView(for groupViewModel: PaymentsGroupViewModel) -> some View {
+    static func groupView(
+        for groupViewModel: PaymentsGroupViewModel
+    ) -> some View {
         
         switch groupViewModel {
         case let contactGroupViewModel as PaymentsContactGroupViewModel:
@@ -310,7 +322,7 @@ struct PaymentsGroupView_Previews: PreviewProvider {
         }.previewLayout(.fixed(width: 375, height: 120))
         
         Group {
-           
+            
             PaymentsGroupView(viewModel: .sampleSingleProduct)
                 .previewDisplayName("Product")
             
