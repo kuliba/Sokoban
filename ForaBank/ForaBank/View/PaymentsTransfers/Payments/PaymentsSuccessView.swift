@@ -37,25 +37,35 @@ struct PaymentsSuccessView: View {
             viewModel.spinner.map(SpinnerView.init(viewModel:))
         }
         .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .fullScreenCover(item: $viewModel.fullScreenCover) { cover in
+        .fullScreenCover(item: $viewModel.fullScreenCover, content: fullScreenCoverContent)
+        .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverContent(
+        cover: PaymentsSuccessViewModel.FullScreenCover
+    ) -> some View {
+        
+        switch cover.type {
+        case let .abroad(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
             
-            switch cover.type {
-            case let .abroad(paymentsViewModel):
-                PaymentsView(viewModel: paymentsViewModel)
-                
-            case let .success(successViewModel):
-                PaymentsSuccessView(viewModel: successViewModel)
-            }
+        case let .success(successViewModel):
+            PaymentsSuccessView(viewModel: successViewModel)
         }
-        .sheet(item: $viewModel.sheet) { sheet in
+    }
+    
+    @ViewBuilder
+    private func sheetContent(
+        sheet: PaymentsSuccessViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .printForm(printFormViewModel):
+            PrintFormView(viewModel: printFormViewModel)
             
-            switch sheet.type {
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            case let .detailInfo(detailInfoViewModel):
-                OperationDetailInfoView(viewModel: detailInfoViewModel)
-            }
+        case let .detailInfo(detailInfoViewModel):
+            OperationDetailInfoView(viewModel: detailInfoViewModel)
         }
     }
 }
