@@ -38,6 +38,7 @@ struct PaymentsSuccessView: View {
                 
                 ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
             }
+            .padding(.bottom, 56)
         }
     }
     
