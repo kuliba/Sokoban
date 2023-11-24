@@ -170,22 +170,35 @@ struct PaymentsSuccessView_Previews: PreviewProvider {
             Group {
                 
                 PaymentsSuccessView(viewModel: .sampleSuccess)
+                    .previewDisplayName("sampleSuccess")
                 PaymentsSuccessView(viewModel: .sampleC2BSub)
+                    .previewDisplayName("sampleC2BSub")
                 PaymentsSuccessView(viewModel: .sampleC2B)
+                    .previewDisplayName("sampleC2B")
             }
             
             Group {
                 
                 PaymentsSuccessView(viewModel: .sample1)
+                    .previewDisplayName("Успешный перевод")
                 PaymentsSuccessView(viewModel: .sample2)
+                    .previewDisplayName("принят в обработку")
                 PaymentsSuccessView(viewModel: .sample3)
+                    .previewDisplayName("Операция неуспешна!")
                 PaymentsSuccessView(viewModel: .sample4)
+                    .previewDisplayName("принят в обработку")
                 PaymentsSuccessView(viewModel: .sample5)
+                    .previewDisplayName("Операция в обработке!")
                 PaymentsSuccessView(viewModel: .sample6)
+                    .previewDisplayName("Перевод отменен!")
                 PaymentsSuccessView(viewModel: .sample7)
+                    .previewDisplayName("Перевод отменен!")
                 PaymentsSuccessView(viewModel: .sample8)
+                    .previewDisplayName("Из банка:")
                 PaymentsSuccessView(viewModel: .sample9)
+                    .previewDisplayName("Из банка:")
                 PaymentsSuccessView(viewModel: .sample10)
+                    .previewDisplayName("Привязка счета оформлена")
             }
         }
     }
@@ -210,7 +223,7 @@ extension PaymentsSuccessViewModel {
             groups: [
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam])
             ])
-    ], adapter: .init(model: .emptyMock), operation: nil)
+    ], adapter: .preview, operation: nil)
     
     static let sampleC2BSub = PaymentsSuccessViewModel(sections: [
         PaymentsSectionViewModel(
@@ -227,7 +240,7 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam]),
                 .init(items: [PaymentsSuccessIconView.ViewModel.sampleName])
             ])
-    ], adapter: .init(model: .emptyMock), operation: nil)
+    ], adapter: .preview, operation: nil)
     
     static let sampleC2B = PaymentsSuccessViewModel(sections: [
         PaymentsSectionViewModel(
@@ -248,5 +261,10 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam]),
                 .init(items: [PaymentsSuccessIconView.ViewModel.sampleName])
             ])
-    ], adapter: .init(model: .emptyMock), operation: nil)
+    ], adapter: .preview, operation: nil)
+}
+
+private extension PaymentsSuccessViewModelAdapter {
+    
+    static let preview: PaymentsSuccessViewModelAdapter = .init(model: .emptyMock)
 }
