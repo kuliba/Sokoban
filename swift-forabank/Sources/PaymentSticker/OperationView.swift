@@ -224,6 +224,8 @@ struct OperationProcessView: View {
     @ObservedObject var model: OperationStateViewModel
     let configuration: OperationViewConfiguration
     
+    @State private var value: CGFloat = 0
+
     var body: some View {
         
         VStack {
@@ -243,6 +245,23 @@ struct OperationProcessView: View {
                 }
             }
             .padding(.horizontal)
+            .offset(y: -self.value)
+            .onAppear {
+                
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (notification) in
+                    
+                    if let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                        
+                        let height = value.height - 100
+                        self.value = height
+                    }
+                }
+                
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { (notification) in
+                    
+                    self.value = 0
+                }
+            }
             
             continueButton(
                 viewModel: .init(isActive: model.isOperationComplete),
