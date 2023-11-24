@@ -550,6 +550,7 @@ extension BusinessLogic {
                             
                             Operation.Parameter.Sticker.PriceOption(
                                 title: $0.name,
+                                price: $0.value,
                                 description: "\($0.description) \($0.value)")
                         })
                     ))
@@ -691,6 +692,7 @@ extension BusinessLogic {
                             
                                 .init(
                                     title: item.name,
+                                    price: item.value,
                                     description: "\(item.value.description.dropLast(2)) ₽"
                                 )
                         }

@@ -31,13 +31,16 @@ extension Operation.Parameter {
         public struct PriceOption: Hashable {
             
             let title: String
+            let price: Double
             let description: String
             
             public init(
                 title: String,
+                price: Double,
                 description: String
             ) {
                 self.title = title
+                self.price = price
                 self.description = description
             }
         }
