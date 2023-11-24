@@ -1556,7 +1556,7 @@ extension Payments {
         let options: [Option]
         let placement: Payments.Parameter.Placement
         
-        init(options: [Option], placement: Payments.Parameter.Placement = .feed) {
+        init(options: [Option], placement: Payments.Parameter.Placement = .bottom) {
             
             self.parameter = .init(id: Payments.Parameter.Identifier.successAdditionalButtons.rawValue, value: nil)
             self.options = options
