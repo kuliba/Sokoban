@@ -6,21 +6,49 @@
 //
 
 import SwiftUI
+import TextFieldComponent
 
 // MARK: - View
 
 struct InputView: View {
     
-    @State private var text = ""
+    @StateObject private var regularFieldViewModel: RegularFieldViewModel
     
-    let title: String
-    let commit: (String) -> Void
-    let warning: String?
-    let configuration: InputConfiguration
+    private let title: String
+    private let commit: (String) -> Void
+    private let warning: String?
+    private let configuration: InputConfiguration
+    private let textFieldConfig: TextFieldView.TextFieldConfig
+    
+    init(
+        title: String,
+        commit: @escaping (String) -> Void,
+        warning: String?,
+        configuration: InputConfiguration
+    ) {
+        self._regularFieldViewModel = .init(wrappedValue: .make(
+            placeholderText: "Введите код из смс",
+            limit: 6
+        ))
+        self.title = title
+        self.commit = commit
+        self.warning = warning
+        self.configuration = configuration
+        self.textFieldConfig = .init(
+            font: .systemFont(ofSize: 16),
+            textColor: configuration.textFieldColor,
+            tintColor: configuration.textFieldTintColor,
+            backgroundColor: configuration.textFieldBackgroundColor,
+            placeholderColor: configuration.textFieldPlaceholderColor
+        )
+    }
     
     var body: some View {
         
-        let textField = TextField(title, text: $text)
+        let textField = TextFieldView(
+            viewModel: regularFieldViewModel,
+            textFieldConfig: textFieldConfig
+        )
         
         LabeledView(
             title: title,
@@ -28,7 +56,6 @@ struct InputView: View {
             warning: warning,
             makeLabel: { textField }
         )
-        .onChange(of: text, perform: commit)
     }
 }
 
