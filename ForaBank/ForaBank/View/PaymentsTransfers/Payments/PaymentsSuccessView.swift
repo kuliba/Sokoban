@@ -35,36 +35,30 @@ struct PaymentsSuccessView: View {
             }
             
             viewModel.spinner.map(SpinnerView.init(viewModel:))
+        }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
             
-            Color.clear
-                .fullScreenCover(item: $viewModel.fullScreenCover) { cover in
-                    
-                    switch cover.type {
-                    case let .abroad(paymentsViewModel):
-                        PaymentsView(viewModel: paymentsViewModel)
-                        
-                    case let .success(successViewModel):
-                        PaymentsSuccessView(viewModel: successViewModel)
-                    }
-                }
+            Alert(with: alertViewModel)
+        })
+        .fullScreenCover(item: $viewModel.fullScreenCover) { cover in
             
-            Color.clear
-                .alert(item: $viewModel.alert, content: { alertViewModel in
-                    
-                    Alert(with: alertViewModel)
-                })
+            switch cover.type {
+            case let .abroad(paymentsViewModel):
+                PaymentsView(viewModel: paymentsViewModel)
+                
+            case let .success(successViewModel):
+                PaymentsSuccessView(viewModel: successViewModel)
+            }
+        }
+        .sheet(item: $viewModel.sheet) { sheet in
             
-            Color.clear
-                .sheet(item: $viewModel.sheet) { sheet in
-                    
-                    switch sheet.type {
-                    case let .printForm(printFormViewModel):
-                        PrintFormView(viewModel: printFormViewModel)
-                        
-                    case let .detailInfo(detailInfoViewModel):
-                        OperationDetailInfoView(viewModel: detailInfoViewModel)
-                    }
-                }
+            switch sheet.type {
+            case let .printForm(printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            case let .detailInfo(detailInfoViewModel):
+                OperationDetailInfoView(viewModel: detailInfoViewModel)
+            }
         }
     }
 }
