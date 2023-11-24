@@ -38,41 +38,11 @@ extension PaymentsGroupView {
     ) -> some View {
         
         switch viewModel {
-        case let messageViewModel as PaymentsMessageView.ViewModel:
-            PaymentsMessageView(viewModel: messageViewModel)
-            
-        case let selectViewModel as PaymentsSelectView.ViewModel:
-            PaymentsSelectView(viewModel: selectViewModel)
-            
-        case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
-            PaymentsSelectBankView(viewModel: selectBankViewModel)
-            
-        case let selectCountryViewModel as PaymentsSelectCountryView.ViewModel:
-            PaymentsSelectCountryView(viewModel: selectCountryViewModel)
-            
-        case let selectDropDownViewModel as PaymentSelectDropDownView.ViewModel:
-            PaymentSelectDropDownView(viewModel: selectDropDownViewModel)
-            
-        case let inputViewModel as PaymentsInputView.ViewModel:
-            PaymentsInputView(viewModel: inputViewModel)
-            
-        case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
-            PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
+        case let amountViewModel as PaymentsAmountView.ViewModel:
+            PaymentsAmountView(viewModel: amountViewModel)
             
         case let checkBoxViewModel as PaymentsCheckView.ViewModel:
             PaymentsCheckView(viewModel: checkBoxViewModel)
-            
-        case let infoViewModel as PaymentsInfoView.ViewModel:
-            PaymentsInfoView(viewModel: infoViewModel)
-            
-        case let nameViewModel as PaymentsNameView.ViewModel:
-            PaymentsNameView(viewModel: nameViewModel)
-            
-        case let productViewModel as PaymentsProductView.ViewModel:
-            PaymentsProductView(viewModel: productViewModel)
-            
-        case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
-            PaymentsProductTemplateView(viewModel: productTemplateViewModel)
             
         case let codeViewModel as PaymentsCodeView.ViewModel:
             PaymentsCodeView(viewModel: codeViewModel)
@@ -94,36 +64,53 @@ extension PaymentsGroupView {
             PaymentsButtonView(viewModel: continueButtonViewModel)
                 .padding(.bottom, 16)
             
+        case let infoViewModel as PaymentsInfoView.ViewModel:
+            PaymentsInfoView(viewModel: infoViewModel)
+            
+        case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
+            PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
+            
+        case let inputViewModel as PaymentsInputView.ViewModel:
+            PaymentsInputView(viewModel: inputViewModel)
+            
+        case let messageViewModel as PaymentsMessageView.ViewModel:
+            PaymentsMessageView(viewModel: messageViewModel)
+            
+        case let nameViewModel as PaymentsNameView.ViewModel:
+            PaymentsNameView(viewModel: nameViewModel)
+            
+        case let productViewModel as PaymentsProductView.ViewModel:
+            PaymentsProductView(viewModel: productViewModel)
+            
+        case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
+            PaymentsProductTemplateView(viewModel: productTemplateViewModel)
+            
+        case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
+            PaymentsSelectBankView(viewModel: selectBankViewModel)
+            
+        case let selectCountryViewModel as PaymentsSelectCountryView.ViewModel:
+            PaymentsSelectCountryView(viewModel: selectCountryViewModel)
+            
+        case let selectDropDownViewModel as PaymentSelectDropDownView.ViewModel:
+            PaymentSelectDropDownView(viewModel: selectDropDownViewModel)
+            
+        case let selectViewModel as PaymentsSelectView.ViewModel:
+            PaymentsSelectView(viewModel: selectViewModel)
+            
         case let subscriberViewModel as PaymentsSubscriberView.ViewModel:
             PaymentsSubscriberView(viewModel: subscriberViewModel)
             
         case let subscribeViewModel as PaymentsSubscribeView.ViewModel:
             PaymentsSubscribeView(viewModel: subscribeViewModel)
             
-        case let amountViewModel as PaymentsAmountView.ViewModel:
-            PaymentsAmountView(viewModel: amountViewModel)
-            
-        case let successStatus as PaymentsSuccessStatusView.ViewModel:
-            PaymentsSuccessStatusView(viewModel: successStatus)
-                .padding(.top, 130)
-            
-        case let successText as PaymentsSuccessTextView.ViewModel:
-            PaymentsSuccessTextView(viewModel: successText)
+        case let successAdditionalButtons as PaymentsSuccessAdditionalButtonsView.ViewModel:
+            PaymentsSuccessAdditionalButtonsView(viewModel: successAdditionalButtons)
             
         case let successIcon as PaymentsSuccessIconView.ViewModel:
             PaymentsSuccessIconView(viewModel: successIcon)
             
-        case let successOptionButtons as PaymentsSuccessOptionButtonsView.ViewModel:
-            PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
-            
         case let successLink as PaymentsSuccessLinkView.ViewModel:
             PaymentsSuccessLinkView(viewModel: successLink)
-            
-        case let successAdditionalButtons as PaymentsSuccessAdditionalButtonsView.ViewModel:
-            PaymentsSuccessAdditionalButtonsView(viewModel: successAdditionalButtons)
-            
-        case let successTransferNumber as PaymentsSuccessTransferNumberView.ViewModel:
-            PaymentsSuccessTransferNumberView(viewModel: successTransferNumber)
             
         case let successLogo as PaymentsSuccessLogoView.ViewModel:
             PaymentsSuccessLogoView(viewModel: successLogo)
@@ -131,8 +118,21 @@ extension PaymentsGroupView {
         case let successOptions as PaymentsSuccessOptionsView.ViewModel:
             PaymentsSuccessOptionsView(viewModel: successOptions)
             
+        case let successOptionButtons as PaymentsSuccessOptionButtonsView.ViewModel:
+            PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
+            
+        case let successText as PaymentsSuccessTextView.ViewModel:
+            PaymentsSuccessTextView(viewModel: successText)
+            
+        case let successTransferNumber as PaymentsSuccessTransferNumberView.ViewModel:
+            PaymentsSuccessTransferNumberView(viewModel: successTransferNumber)
+            
         case let successService as PaymentsSuccessServiceView.ViewModel:
             PaymentsSuccessServiceView(viewModel: successService)
+            
+        case let successStatus as PaymentsSuccessStatusView.ViewModel:
+            PaymentsSuccessStatusView(viewModel: successStatus)
+                .padding(.top, 130)
             
         default:
             EmptyView()
