@@ -122,7 +122,9 @@ extension PaymentsGroupView {
             VStack {
                 
                 Spacer(minLength: 20)
+                
                 PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
+                    .padding(.top, 4)
             }
             
         case let successText as PaymentsSuccessTextView.ViewModel:
