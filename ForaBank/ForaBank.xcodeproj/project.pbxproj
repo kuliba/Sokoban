@@ -1809,7 +1809,7 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C18FDF0E2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */; };
-		C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */; };
+		C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */; };
 		C19738DC2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */; };
 		C19738DE2AF2A52C00101B1B /* StickerOrderForm.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */; };
 		C19738E22AF2B07F00101B1B /* StickerOrderDeliveryCourier.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */; };
@@ -3981,7 +3981,7 @@
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
 		C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSourceReducerTemplatesTests.swift; sourceTree = "<group>"; };
 		C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeOperationStateViewModel.swift; sourceTree = "<group>"; };
-		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbrodDict.swift"; sourceTree = "<group>"; };
+		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
 		C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerResponseMapperTests.swift; sourceTree = "<group>"; };
 		C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderForm.json; sourceTree = "<group>"; };
 		C19738E12AF2B07F00101B1B /* StickerOrderDeliveryCourier.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderDeliveryCourier.json; sourceTree = "<group>"; };
@@ -9749,7 +9749,7 @@
 			children = (
 				C19738E52AF396D000101B1B /* Domain */,
 				C1BA23E42ACD543B00425B10 /* Service+Payments.swift */,
-				C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift */,
+				C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */,
 				C139D9112AFC3B29008B5F5E /* ResponseMapper+CommissionProductTransfer.swift */,
 				C139D9152AFC420A008B5F5E /* ResponseMapper+MakeTransfer.swift */,
 				C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */,
@@ -12920,7 +12920,7 @@
 				0B8BC0432901EF610022DDE4 /* QRScannerViewComponent.swift in Sources */,
 				68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */,
 				6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */,
-				C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbrodDict.swift in Sources */,
+				C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */,
 				509EE0E2285F855D002281BF /* KeyboardPublisher.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				7758400227B13CF300251969 /* ImageData.swift in Sources */,
@@ -14486,7 +14486,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -14838,7 +14838,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -15398,7 +15398,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -15433,7 +15433,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

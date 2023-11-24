@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+getJsonAbrodDict.swift
+//  ResponseMapper+getJsonAbroadDict.swift
 //  ForaBank
 //
 //  Created by Дмитрий Савушкин on 01.11.2023.
