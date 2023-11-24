@@ -1071,7 +1071,7 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)",
                                                    iconType: IconType.date.icon,
                                                    value: dateString))
-                
+            
             default:
                 break
         }
@@ -1467,9 +1467,13 @@ extension OperationDetailInfoViewModel {
             ]
             
             if let payeeProductNumber {
-                let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
-                                                               iconType: Image("otherCard"),
-                                                               value: payeeProductNumber)
+                
+                let payeeCellViewModel = PropertyCellViewModel(
+                    title: "Номер карты получателя",
+                    iconType: Image("otherCard"),
+                    value: payeeProductNumber
+                )
+                
                 cells.insert(payeeCellViewModel, at: 0)
             }
             
@@ -1513,6 +1517,25 @@ extension OperationDetailInfoViewModel {
             ].compactMap { $0 }
             
             return cells
+        
+        case .productPaymentOffice, .productPaymentCourier:
+            var cells = [
+                amountViewModel,
+                payerViewModel,
+                dateViewModel
+            ]
+            if let comment = operation.comment {
+                
+                let commentCell = PropertyCellViewModel(
+                    title: "Наименование операции",
+                    iconType: .ic40BankServices,
+                    value: comment
+                )
+                
+                cells.insert(commentCell, at: 0)
+            }
+            
+            return cells.compactMap {$0}
             
         default:
             

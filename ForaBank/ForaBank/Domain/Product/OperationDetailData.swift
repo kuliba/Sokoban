@@ -152,6 +152,7 @@ struct OperationDetailData: Codable, Hashable {
         case c2bPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
         case productPaymentOffice = "PRODUCT_PAYMENT_OFFICE"
+        case productPaymentCourier = "PRODUCT_PAYMENT_COURIER"
         case unknown
     }
     
