@@ -46,7 +46,7 @@ struct AmountView: View {
     
     let viewModel: AmountViewModel
     let configuration: AmountViewConfiguration
-    @State var text: String
+    let text: String
     
     var body: some View {
         
@@ -70,7 +70,7 @@ struct AmountView: View {
                 }
                 
                 TransferButtonView(
-                    viewModel: .active(action: viewModel.continueButtonTapped),
+                    viewModel: viewModel.parameter.state == .loading ? .loading : .active(action: viewModel.continueButtonTapped),
                     configuration: configuration
                 )
                 .frame(width: 113, height: 40)
@@ -111,7 +111,7 @@ struct AmountView: View {
                 
             case .loading:
                 SpinnerRefreshView(
-                    icon: .init(systemName: "photo.artframe"),
+                    icon: .init("Logo Fora Bank"),
                     iconSize: .init(width: 32, height: 32)
                 )
             }

@@ -246,7 +246,7 @@ struct OperationProcessView: View {
             .padding(.vertical, 16)
             
             continueButton(
-                viewModel: .init(isActive: model.isOperationComplete ),
+                viewModel: .init(isActive: model.isOperationComplete),
                 model: model,
                 configuration: configuration
             )
@@ -295,13 +295,20 @@ struct OperationProcessView: View {
                 configuration: configuration
             )
             
-        } else {
+        } else if case let .operation(operation) = model.state {
             
-            ContinueButton(
-                viewModel: viewModel,
-                model: model,
-                configuration: configuration
-            )
+            switch operation.state {
+            case .process:
+                SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+                
+            case .userInteraction:
+                
+                ContinueButton(
+                    viewModel: viewModel,
+                    model: model,
+                    configuration: configuration
+                )
+            }
         }
     }
     

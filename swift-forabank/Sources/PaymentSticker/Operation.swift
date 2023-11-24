@@ -9,11 +9,20 @@ import Foundation
 
 public struct Operation {
     
+    let state: State
     public var parameters: [Parameter]
     
+    public enum State {
+        
+        case process
+        case userInteraction
+    }
+    
     public init(
+        state: State = .userInteraction,
         parameters: [Operation.Parameter]
     ) {
+        self.state = state
         self.parameters = parameters
     }
 }

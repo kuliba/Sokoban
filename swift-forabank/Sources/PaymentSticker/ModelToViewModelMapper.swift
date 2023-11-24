@@ -108,10 +108,10 @@ public extension ModelToViewModelMapper {
                 )
             )
             
-        case let .amount(amountViewModel):
+        case let .amount(parameter):
             return .amount(
                 .init(
-                    parameter: amountViewModel,
+                    parameter: parameter,
                     continueButtonTapped: {
                         action(.continueButtonTapped(.getOTPCode))
                     }

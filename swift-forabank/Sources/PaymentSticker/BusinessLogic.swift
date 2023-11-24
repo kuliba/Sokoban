@@ -298,7 +298,7 @@ extension BusinessLogic {
                     }
                 }
                 
-                return .success(.operation(operation))
+                return .success(.operation(.init(state: .process, parameters: operation.parameters)))
                 
             } else if let input = operation.parameters.first(where: { $0.id == .input }) {
                 
@@ -337,7 +337,23 @@ extension BusinessLogic {
                         }
                     }
                     
-                    return .success(.operation(operation))
+                    let amount =  operation.parameters.first(where: { $0.id == .amount })
+                    
+                    switch amount {
+                    case let .amount(amount):
+                        
+                        let newOperation = operation.updateOperation(
+                            operation: operation,
+                            newParameter: .amount(.init(
+                                state: .loading,
+                                value: amount.value
+                            ))
+                        )
+                        
+                        return .success(.operation(.init(state: .process, parameters: newOperation.parameters)))
+                    default:
+                        return .success(.operation(.init(parameters: operation.parameters)))
+                    }
 
                 default:
                     return .success(.operation(operation))
@@ -434,7 +450,7 @@ extension BusinessLogic {
                         }
                     }
                 
-                return .success(.operation(operation))
+                return .success(.operation(.init(state: .process, parameters: operation.parameters)))
             }
             
         case let .product(productEvents):
