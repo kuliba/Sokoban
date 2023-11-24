@@ -207,6 +207,7 @@ extension PaymentsGroupView {
             _ as Payments.ParameterSuccessLink,
             _ as Payments.ParameterSubscriber,
             _ as Payments.ParameterSubscribe,
+            _ as Payments.ParameterSuccessAdditionalButtons,
             _ as Payments.ParameterSuccessLogo,
             _ as Payments.ParameterSuccessOptions,
             _ as Payments.ParameterSuccessService:
@@ -229,6 +230,7 @@ extension PaymentsGroupView {
         
         switch itemViewModel.source {
         case _ as Payments.ParameterMessage,
+            _ as Payments.ParameterSuccessAdditionalButtons,
             _ as Payments.ParameterAmount:
             return 0
             
