@@ -43,7 +43,7 @@ struct PaymentsSuccessAdditionalButtonsView: View {
     
     var body: some View {
         
-        HStack(spacing: 8) {
+        HStack(spacing: 16) {
             
             ForEach(viewModel.buttons) { button in
                 
