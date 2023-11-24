@@ -1470,7 +1470,7 @@ extension Payments {
         init(
             options: [Option],
             operationDetail: OperationDetailData? = nil,
-            placement: Payments.Parameter.Placement = .bottom,
+            placement: Payments.Parameter.Placement = .feed,
             templateID: PaymentTemplateData.ID?,
             meToMePayment: MeToMePayment?,
             operation: Payments.Operation?
