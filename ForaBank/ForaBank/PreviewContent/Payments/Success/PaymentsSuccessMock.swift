@@ -21,6 +21,7 @@ extension PaymentsSuccessViewModel {
             operation: .emptyMock,
             parameters: [
                 Payments.ParameterSuccessStatus(status: .success),
+                Payments.ParameterSuccessAdditionalButtons(options: [.change, .return]),
                 Payments.ParameterSuccessText(value: "Успешный перевод", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
                 Payments.ParameterSuccessOptionButtons(
