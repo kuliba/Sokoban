@@ -396,7 +396,10 @@ private extension Model {
         model: Model
     ) -> [BusinessLogic.Product] {
         
-        let allProducts = model.allProducts.filter({ $0.productType == .card }).filter({ $0.allowDebit == true  }).filter({ $0.isProductOwner }).filter({ $0.balance ?? 0 >= 790 }).map({ BusinessLogic.Product(
+        let cards = model.allProducts.compactMap({ $0 as? ProductCardData })
+        let products = cards.filter({ $0.isMain ?? false }).filter({ $0.allowDebit == true })
+        
+        let allProducts = products.map({ BusinessLogic.Product(
             id: $0.id,
             title: "Счет списания",
             nameProduct: $0.displayName,
