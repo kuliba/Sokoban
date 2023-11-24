@@ -34,11 +34,7 @@ struct PaymentsSuccessView: View {
                 }.padding(.bottom, 24)
             }
             
-            if let spinnerViewModel = viewModel.spinner {
-                
-                SpinnerView(viewModel: spinnerViewModel)
-                    .zIndex(1)
-            }
+            viewModel.spinner.map(SpinnerView.init(viewModel:))
             
             Color.clear
                 .fullScreenCover(item: $viewModel.fullScreenCover) { cover in
@@ -114,12 +110,12 @@ extension PaymentsSuccessViewModel {
                 .init(items: [PaymentsSuccessStatusView.ViewModel.sampleSuccess]),
                 .init(items: [PaymentsSuccessTextView.ViewModel.sampleTitle]),
                 .init(items: [PaymentsSuccessTextView.ViewModel.sampleAmount]),
-                .init(items: [PaymentsSuccessIconView.ViewModel.sampleImage])
+                .init(items: [PaymentsSuccessIconView.ViewModel.sampleImage]),
+                .init(items: [PaymentsSuccessOptionButtonsView.ViewModel.sample]),
             ]),
         PaymentsSectionViewModel(
             placement: .bottom,
             groups: [
-                .init(items: [PaymentsSuccessOptionButtonsView.ViewModel.sample]),
                 .init(items: [PaymentsButtonView.ViewModel.sampleParam])
             ])
     ], adapter: .init(model: .emptyMock), operation: nil)
