@@ -59,7 +59,7 @@ final class PaymentsParametersReducerTests: XCTestCase {
         XCTAssertEqual(successLogoParam.value, "value")
     }
     
-    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton() {
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_direct() {
 
         let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons])
         
