@@ -20,9 +20,7 @@ struct PaymentsGroupView: View {
                 
                 itemView(for: itemViewModel)
                     .frame(minHeight: frameMinHeight(for: itemViewModel))
-                    .background(
-                        RoundedCorner(radius: 12, corners: backgroundCorners(for: itemViewModel))
-                            .foregroundColor(backgroundColor(for: itemViewModel)))
+                    .background(background(for: itemViewModel))
                     .padding(.horizontal, horizontalPadding(for: itemViewModel))
                 
                 separatorView(for: itemViewModel)
@@ -33,6 +31,17 @@ struct PaymentsGroupView: View {
 }
 
 extension PaymentsGroupView {
+    
+    func background(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> some View {
+        
+        RoundedCorner(
+            radius: 12,
+            corners: backgroundCorners(for: itemViewModel)
+        )
+        .foregroundColor(backgroundColor(for: itemViewModel))
+    }
     
     func backgroundCorners(
         for itemViewModel: PaymentsParameterViewModel
