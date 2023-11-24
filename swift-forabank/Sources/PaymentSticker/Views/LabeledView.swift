@@ -94,7 +94,12 @@ struct LabeledView_Previews: PreviewProvider {
                 iconColor: .black,
                 iconName: "photo.fill",
                 warningFont: .body,
-                warningColor: .red
+                warningColor: .red,
+                textFieldFont: .body,
+                textFieldColor: .accentColor,
+                textFieldTintColor: .black,
+                textFieldBackgroundColor: .gray,
+                textFieldPlaceholderColor: .gray
             ),
             warning: nil,
             makeLabel: { Text("TextField") }

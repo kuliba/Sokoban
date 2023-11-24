@@ -416,7 +416,12 @@ extension PaymentSticker.OperationViewConfiguration {
             iconColor: .iconGray,
             iconName: "ic24SmsCode",
             warningFont: .textBodySR12160(),
-            warningColor: .systemColorError
+            warningColor: .systemColorError,
+            textFieldFont: .body,
+            textFieldColor: .textSecondary,
+            textFieldTintColor: .textSecondary,
+            textFieldBackgroundColor: .clear,
+            textFieldPlaceholderColor: .textPlaceholder
         ),
         amountViewConfig: .init(
             amountFont: .textH2Sb20282(),
