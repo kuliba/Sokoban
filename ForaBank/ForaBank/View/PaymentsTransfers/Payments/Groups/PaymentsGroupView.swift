@@ -18,13 +18,7 @@ struct PaymentsGroupView: View {
             
             ForEach(viewModel.items) { itemViewModel in
                 
-                itemView(for: itemViewModel)
-                    .frame(minHeight: frameMinHeight(for: itemViewModel))
-                    .background(background(for: itemViewModel))
-                    .padding(.horizontal, horizontalPadding(for: itemViewModel))
-                
-                separatorView(for: itemViewModel)
-                    .padding(.horizontal, 16)
+                Self.separatedItemView(for: itemViewModel, items: viewModel.items)
             }
         }
     }
@@ -33,7 +27,22 @@ struct PaymentsGroupView: View {
 extension PaymentsGroupView {
     
     @ViewBuilder
-    func itemView(
+    static func separatedItemView(
+        for viewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
+    ) -> some View {
+        
+        itemView(for: viewModel)
+            .frame(minHeight: frameMinHeight(for: viewModel))
+            .background(background(for: viewModel, items: items))
+            .padding(.horizontal, horizontalPadding(for: viewModel))
+        
+        separatorView(for: viewModel, items: items)
+            .padding(.horizontal, 16)
+    }
+    
+    @ViewBuilder
+    static func itemView(
         for viewModel: PaymentsParameterViewModel
     ) -> some View {
         
@@ -145,19 +154,21 @@ extension PaymentsGroupView {
         }
     }
     
-    func background(
-        for itemViewModel: PaymentsParameterViewModel
+    static func background(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
     ) -> some View {
         
         RoundedCorner(
             radius: 12,
-            corners: backgroundCorners(for: itemViewModel)
+            corners: backgroundCorners(for: itemViewModel, items: items)
         )
         .foregroundColor(backgroundColor(for: itemViewModel))
     }
     
-    func backgroundCorners(
-        for itemViewModel: PaymentsParameterViewModel
+    static func backgroundCorners(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
     ) -> UIRectCorner {
         
         switch itemViewModel.source {
@@ -165,13 +176,13 @@ extension PaymentsGroupView {
             return []
             
         default:
-            if viewModel.items.count > 1 {
+            if items.count > 1 {
                 
                 switch itemViewModel.id  {
-                case viewModel.items.first?.id:
+                case items.first?.id:
                     return [.topLeft, .topRight]
                     
-                case viewModel.items.last?.id:
+                case items.last?.id:
                     return [.bottomLeft, .bottomRight]
                     
                 default:
@@ -184,7 +195,7 @@ extension PaymentsGroupView {
         }
     }
     
-    func backgroundColor(
+    static func backgroundColor(
         for itemViewModel: PaymentsParameterViewModel
     ) -> Color {
         
@@ -218,7 +229,7 @@ extension PaymentsGroupView {
         }
     }
     
-    func horizontalPadding(
+    static func horizontalPadding(
         for itemViewModel: PaymentsParameterViewModel
     ) -> CGFloat {
         
@@ -232,7 +243,7 @@ extension PaymentsGroupView {
         }
     }
     
-    func frameMinHeight(
+    static func frameMinHeight(
         for itemViewModel: PaymentsParameterViewModel
     ) -> CGFloat {
         
@@ -254,12 +265,13 @@ extension PaymentsGroupView {
     }
     
     @ViewBuilder
-    func separatorView(
-        for itemViewModel: PaymentsParameterViewModel
+    static func separatorView(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
     ) -> some View {
         
-        if viewModel.items.count > 1,
-           itemViewModel.id != viewModel.items.last?.id {
+        if items.count > 1,
+           itemViewModel.id != items.last?.id {
             
             Rectangle()
                 .frame(height: 1)

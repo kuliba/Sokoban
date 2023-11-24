@@ -11,6 +11,11 @@ struct PaymentsSuccessView: View {
     
     @ObservedObject var viewModel: PaymentsSuccessViewModel
     
+    var spacing: CGFloat = 24
+    var bottomPadding: CGFloat = 56
+    
+    @State private var totalItemHeights: CGFloat = .zero
+    
     var body: some View {
         
         ZStack {
@@ -41,14 +46,53 @@ struct PaymentsSuccessView: View {
     
     private func scrollContent() -> some View {
         
-        ScrollView(showsIndicators: false) {
+        GeometryReader { proxy in
             
-            VStack(spacing: 24) {
+            ScrollView(showsIndicators: false) {
                 
-                ForEach(viewModel.feed, content: PaymentsGroupView.groupView)
+                VStack(spacing: spacing) {
+                    
+                    ForEach(viewModel.feed) { groupView($0, proxy.size.height) }
+                }
+                .onPreferenceChange(HeightsPreferenceKey.self) {
+                    
+                    totalItemHeights = $0
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, bottomPadding)
             }
-            .padding(.bottom, 56)
         }
+    }
+    
+    @ViewBuilder
+    private func groupView(
+        _ viewModel: PaymentsGroupViewModel,
+        _ height: CGFloat
+    ) -> some View {
+        
+        ForEach(viewModel.items) { itemViewModel in
+            
+            let isTheItem = itemViewModel is PaymentsSuccessOptionsView.ViewModel
+            
+            PaymentsGroupView.separatedItemView(
+                for: itemViewModel,
+                items: viewModel.items
+            )
+            .reportHeight()
+            .padding(.top, isTheItem ? extraTopPadding(for: height) : 0)
+        }
+    }
+    
+    private func extraTopPadding(
+        for height: CGFloat
+    ) -> CGFloat {
+        
+        let totalSpacingHeight = spacing * CGFloat(viewModel.feed.count - 1)
+        let totalContentHeight = totalItemHeights + totalSpacingHeight
+        let availableHeight = height - bottomPadding
+        let requiredPadding = availableHeight - totalContentHeight
+        
+        return max(0, requiredPadding)
     }
     
     private func bottom() -> some View {
@@ -85,6 +129,35 @@ struct PaymentsSuccessView: View {
         case let .detailInfo(detailInfoViewModel):
             OperationDetailInfoView(viewModel: detailInfoViewModel)
         }
+    }
+}
+
+private struct HeightsPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(
+        value: inout CGFloat,
+        nextValue: () -> CGFloat
+    ) {
+        value += nextValue()
+    }
+}
+
+private extension View {
+    
+    func reportHeight() -> some View {
+        
+        self.background(
+            GeometryReader { proxy in
+                
+                Color.clear
+                    .preference(
+                        key: HeightsPreferenceKey.self,
+                        value: proxy.size.height
+                    )
+            }
+        )
     }
 }
 
