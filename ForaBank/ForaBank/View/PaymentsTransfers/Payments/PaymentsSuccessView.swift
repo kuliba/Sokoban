@@ -36,10 +36,7 @@ struct PaymentsSuccessView: View {
             
             viewModel.spinner.map(SpinnerView.init(viewModel:))
         }
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            
-            Alert(with: alertViewModel)
-        })
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .fullScreenCover(item: $viewModel.fullScreenCover) { cover in
             
             switch cover.type {
