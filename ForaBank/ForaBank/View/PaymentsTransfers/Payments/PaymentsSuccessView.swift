@@ -25,9 +25,18 @@ struct PaymentsSuccessView: View {
             
             viewModel.spinner.map(SpinnerView.init(viewModel:))
         }
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
-        .fullScreenCover(item: $viewModel.fullScreenCover, content: fullScreenCoverContent)
-        .sheet(item: $viewModel.sheet, content: sheetContent)
+        .alert(
+            item: $viewModel.alert,
+            content: Alert.init(with:)
+        )
+        .fullScreenCover(
+            item: $viewModel.fullScreenCover,
+            content: fullScreenCoverContent
+        )
+        .sheet(
+            item: $viewModel.sheet,
+            content: sheetContent
+        )
     }
     
     private func scrollContent() -> some View {
@@ -36,7 +45,7 @@ struct PaymentsSuccessView: View {
             
             VStack(spacing: 24) {
                 
-                ForEach(viewModel.feed, content: PaymentsGroupView.groupView(for:))
+                ForEach(viewModel.feed, content: PaymentsGroupView.groupView)
             }
             .padding(.bottom, 56)
         }
@@ -46,7 +55,7 @@ struct PaymentsSuccessView: View {
         
         VStack(spacing: 0) {
             
-            ForEach(viewModel.bottom, content: PaymentsGroupView.groupView(for:))
+            ForEach(viewModel.bottom, content: PaymentsGroupView.groupView)
         }
     }
     
