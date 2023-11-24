@@ -200,17 +200,17 @@ extension PaymentsGroupView {
         case _ as Payments.ParameterAmount,
             _ as Payments.ParameterButton,
             _ as Payments.ParameterCheck,
-            _ as Payments.ParameterSuccessStatus,
-            _ as Payments.ParameterSuccessText,
-            _ as Payments.ParameterSuccessIcon,
-            _ as Payments.ParameterSuccessOptionButtons,
-            _ as Payments.ParameterSuccessLink,
-            _ as Payments.ParameterSubscriber,
-            _ as Payments.ParameterSubscribe,
             _ as Payments.ParameterSuccessAdditionalButtons,
+            _ as Payments.ParameterSuccessIcon,
+            _ as Payments.ParameterSuccessLink,
             _ as Payments.ParameterSuccessLogo,
+            _ as Payments.ParameterSuccessOptionButtons,
             _ as Payments.ParameterSuccessOptions,
-            _ as Payments.ParameterSuccessService:
+            _ as Payments.ParameterSuccessText,
+            _ as Payments.ParameterSuccessService,
+            _ as Payments.ParameterSuccessStatus,
+            _ as Payments.ParameterSubscribe,
+            _ as Payments.ParameterSubscriber:
             return .clear
             
         default:
@@ -229,9 +229,9 @@ extension PaymentsGroupView {
     ) -> CGFloat {
         
         switch itemViewModel.source {
-        case _ as Payments.ParameterMessage,
-            _ as Payments.ParameterSuccessAdditionalButtons,
-            _ as Payments.ParameterAmount:
+        case _ as Payments.ParameterAmount,
+            _ as Payments.ParameterMessage,
+            _ as Payments.ParameterSuccessAdditionalButtons:
             return 0
             
         default:
