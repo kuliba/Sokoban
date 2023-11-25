@@ -36,9 +36,9 @@ extension OperationDetailData
                     .successAmount,
                     .successLogo,
                     .successTransferNumber,
+                    .successOptions,
                     .successOptionButtons,
                     .successAdditionalButtons,
-                    .successOptions,
                     .successActionButton]
             
         default:

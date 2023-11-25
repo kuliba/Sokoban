@@ -84,7 +84,7 @@ final class PaymentsParametersReducerTests: XCTestCase {
         
         let result = reduce(params, ([], contactAddressless()))
         
-        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successAdditionalButtons, .successOptions, .successActionButton]))
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptions, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
     }
     
     func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_contactAddressless() {
@@ -94,7 +94,7 @@ final class PaymentsParametersReducerTests: XCTestCase {
 
         let result = reduce(params, (newParams, contactAddressless()))
         
-        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successLogo, .successOptionButtons, .successAdditionalButtons, .successOptions, .successActionButton]))
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successLogo, .successOptions, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
     }
     
     //MARK: - Helpers
