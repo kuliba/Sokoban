@@ -14,6 +14,8 @@ extension PaymentsSuccessTransferNumberView {
         let title: String
         @Published private(set) var state: State
         
+        private let timeoutMS: Int
+        
         enum State {
             
             case copy
@@ -23,17 +25,26 @@ extension PaymentsSuccessTransferNumberView {
         init(
             title: String,
             state: State,
-            source: PaymentsParameterRepresentable
+            source: PaymentsParameterRepresentable,
+            timeoutMS: Int = 300
         ) {
             self.title = title
             self.state = state
+            self.timeoutMS = timeoutMS
             
             super.init(source: source)
         }
         
-        convenience init(_ source: Payments.ParameterSuccessTransferNumber) {
-            
-            self.init(title: source.value ?? "", state: .copy, source: source)
+        convenience init(
+            _ source: Payments.ParameterSuccessTransferNumber,
+            timeoutMS: Int = 300
+        ) {
+            self.init(
+                title: source.value ?? "", 
+                state: .copy,
+                source: source,
+                timeoutMS: timeoutMS
+            )
         }
         
         func copyButtonDidTapped() {
@@ -43,7 +54,7 @@ extension PaymentsSuccessTransferNumberView {
             state = .check
             
             DispatchQueue.main.asyncAfter(
-                deadline: .now() + .milliseconds(300)
+                deadline: .now() + .milliseconds(timeoutMS)
             ) { [weak self] in self?.state = .copy }
         }
     }
