@@ -20,6 +20,7 @@ extension OperationDetailData
                     .successAmount,
                     .successLogo,
                     .successOptionButtons,
+                    .successAdditionalButtons,
                     .successActionButton]
             
         case .changeOutgoing, .returnOutgoing:
