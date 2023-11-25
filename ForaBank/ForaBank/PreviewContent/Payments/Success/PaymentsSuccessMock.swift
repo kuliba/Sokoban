@@ -24,6 +24,7 @@ extension PaymentsSuccessViewModel {
                 Payments.ParameterSuccessAdditionalButtons(options: [.change, .return]),
                 Payments.ParameterSuccessText(value: "Успешный перевод", style: .title),
                 Payments.ParameterSuccessText(value: "1 000 ₽", style: .amount),
+                Payments.ParameterSuccessTransferNumber(number: "1234567890"),
                 Payments.ParameterSuccessOptionButtons(
                     options: [.template, .document, .details],
                     templateID: nil,

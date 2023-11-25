@@ -28,6 +28,8 @@ struct PaymentsSuccessView: View {
                     .padding(.bottom, 24)
             }
             
+            viewModel.informer.map(informerView)
+            
             viewModel.spinner.map(SpinnerView.init(viewModel:))
         }
         .alert(
@@ -101,6 +103,19 @@ struct PaymentsSuccessView: View {
             
             ForEach(viewModel.bottom, content: PaymentsGroupView.groupView)
         }
+    }
+    
+    private func informerView(
+        informer: PaymentsSuccessViewModel.Informer
+    ) -> some View {
+        
+        InformerInternalView(
+            message: informer.message,
+            icon: .ic24Copy,
+            color: .mainColorsBlackMedium
+        )
+        .frame(maxHeight: .infinity, alignment: .top)
+        .padding(.top, 108)
     }
     
     @ViewBuilder
