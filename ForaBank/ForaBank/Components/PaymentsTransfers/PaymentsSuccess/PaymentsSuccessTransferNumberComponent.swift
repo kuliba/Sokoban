@@ -61,18 +61,15 @@ struct PaymentsSuccessTransferNumberView: View {
             
             switch viewModel.state {
             case .copy:
-                Button {
-                    
-                    viewModel.copyButtonDidTapped()
-                    
-                } label: {
+                Button(action: viewModel.copyButtonDidTapped) {
                     
                     Image.ic24Copy
                         .resizable()
                         .foregroundColor(.iconGray)
                         .frame(width: 24, height: 24)
                     
-                }.padding(6)
+                }
+                .padding(6)
                 
             case .check:
                 
@@ -87,7 +84,50 @@ struct PaymentsSuccessTransferNumberView: View {
         .background(Color(hex: "F6F6F7"))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .animation(.default, value: viewModel.state)
-        
     }
 }
 
+struct PaymentsSuccessTransferNumberView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    private static func previewsGroup() -> some View {
+        
+        Group {
+            
+            PaymentsSuccessTransferNumberView(viewModel: .preview(.check))
+                .previewDisplayName("check")
+            
+            PaymentsSuccessTransferNumberView(viewModel: .preview(.copy))
+                .previewDisplayName("copy")
+        }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel {
+    
+    static func preview(
+        transferNumber: String = "219771514",
+        _ state: PaymentsSuccessTransferNumberView.ViewModel.State
+    ) -> PaymentsSuccessTransferNumberView.ViewModel {
+        
+        let source = Payments.ParameterSuccessTransferNumber(
+            number: transferNumber
+        )
+        
+        return .init(
+            title: transferNumber,
+            state: .copy,
+            source: source
+        )
+    }
+}
