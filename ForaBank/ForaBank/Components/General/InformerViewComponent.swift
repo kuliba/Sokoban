@@ -238,7 +238,7 @@ struct InformerView: View {
     var body: some View {
         
         InformerInternalView(
-            message: viewModel.message, 
+            message: viewModel.message,
             icon: viewModel.icon,
             color: viewModel.color
         )
@@ -282,16 +282,37 @@ struct InformerInternalView: View {
 
 extension InformerView.InformerItemViewModel {
     
-    static let sample1: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic24RefreshCw)
-    static let sample2: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic16Check)
-    static let sample3: InformerView.InformerItemViewModel = .init(message: "USD счет открывается", icon: .ic16Close)
+    static let sample1: InformerView.InformerItemViewModel = .init(
+        message: "USD счет открывается", 
+        icon: .ic24RefreshCw
+    )
+    static let sample2: InformerView.InformerItemViewModel = .init(
+        message: "USD счет открывается", 
+        icon: .ic16Check
+    )
+    static let sample3: InformerView.InformerItemViewModel = .init(
+        message: "USD счет открывается", 
+        icon: .ic16Close
+    )
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct InformerViewComponent_Previews: PreviewProvider {
+    
     static var previews: some View {
-
+        
+        Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    private static func previewsGroup() -> some View {
+        
         Group {
             
             InformerView(viewModel: .sample1)
