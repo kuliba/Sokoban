@@ -20,8 +20,11 @@ extension PaymentsSuccessTransferNumberView {
             case check
         }
         
-        init(title: String, state: State, source: PaymentsParameterRepresentable) {
-            
+        init(
+            title: String,
+            state: State,
+            source: PaymentsParameterRepresentable
+        ) {
             self.title = title
             self.state = state
             
@@ -38,10 +41,10 @@ extension PaymentsSuccessTransferNumberView {
             UIPasteboard.general.string = source.value
             
             state = .check
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {[weak self] in
-                
-                self?.state = .copy
-            }
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .milliseconds(300)
+            ) { [weak self] in self?.state = .copy }
         }
     }
 }
