@@ -237,16 +237,32 @@ struct InformerView: View {
     
     var body: some View {
         
+        InformerInternalView(
+            message: viewModel.message, 
+            icon: viewModel.icon,
+            color: viewModel.color
+        )
+    }
+}
+        
+struct InformerInternalView: View {
+    
+    let message: String
+    let icon: Image
+    let color: Color
+    
+    var body: some View {
+        
         ZStack {
             
             HStack(spacing: 10) {
                 
-                viewModel.icon
+                icon
                     .resizable()
                     .frame(width: 24, height: 24)
                     .foregroundColor(.mainColorsWhite)
                 
-                Text(viewModel.message)
+                Text(message)
                     .font(.textH4R16240())
                     .foregroundColor(.mainColorsWhite)
             }
@@ -254,11 +270,11 @@ struct InformerView: View {
             .padding([.top, .bottom], 12)
             
         }
-        .background(viewModel.color)
+        .background(color)
         .cornerRadius(8)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(viewModel.color.opacity(0.5), lineWidth: 1))
+                .stroke(color.opacity(0.5), lineWidth: 1))
     }
 }
 
