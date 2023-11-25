@@ -66,30 +66,41 @@ struct PaymentsSuccessTransferNumberView: View {
     
     var body: some View {
         
-        HStack {
-            
-            Text(viewModel.title)
-                .font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color.black)
-                .padding(.leading, 6)
+        Group {
             
             switch viewModel.state {
-            case .copy:
-                Button(action: viewModel.copyButtonDidTapped) {
-                    
-                    icon(.ic24Copy)
-                }
-                .padding(6)
-                
-            case .check:
-                icon(.ic24Check)
-                    .padding(6)
+            case .copy:  button(label(image: .ic24Copy))
+            case .check: label(image: .ic24Check)
             }
         }
-        .padding(8)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .background(Color(hex: "F6F6F7"))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .animation(.default, value: viewModel.state)
+    }
+    
+    private func button(
+       _ label: @autoclosure () -> some View
+    ) -> some View {
+        
+        Button(action: viewModel.copyButtonDidTapped, label: label)
+    }
+    
+    private func label(image: Image) -> some View {
+        
+        HStack(spacing: 8) {
+            
+            title()
+            icon(image)
+        }
+    }
+    
+    private func title() -> some View {
+        
+        Text(viewModel.title)
+            .font(.textBodyMM14200())
+            .foregroundColor(.textSecondary)
     }
     
     private func icon(_ image: Image) -> some View {
@@ -140,7 +151,7 @@ private extension PaymentsSuccessTransferNumberView.ViewModel {
         
         return .init(
             title: transferNumber,
-            state: .copy,
+            state: state,
             source: source
         )
     }
