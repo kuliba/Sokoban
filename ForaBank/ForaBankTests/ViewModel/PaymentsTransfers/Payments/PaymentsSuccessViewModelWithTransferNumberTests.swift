@@ -29,8 +29,13 @@ final class PaymentsSuccessViewModelWithTransferNumberTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [nil])
         
         transferNumber.copyButtonDidTapped()
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        XCTAssertNoDiff(spy.values, [nil, .init("Номер скопирован")])
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 1.9)
+        XCTAssertNoDiff(spy.values, [nil, .init("Номер скопирован")])
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         XCTAssertNoDiff(spy.values, [nil, .init("Номер скопирован"), nil])
     }
     

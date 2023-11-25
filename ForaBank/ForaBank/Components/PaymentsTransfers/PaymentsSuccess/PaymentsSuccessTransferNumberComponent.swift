@@ -26,7 +26,7 @@ extension PaymentsSuccessTransferNumberView {
             title: String,
             state: State,
             source: PaymentsParameterRepresentable,
-            timeoutMS: Int = 300
+            timeoutMS: Int = 2_000
         ) {
             self.title = title
             self.state = state
@@ -37,7 +37,7 @@ extension PaymentsSuccessTransferNumberView {
         
         convenience init(
             _ source: Payments.ParameterSuccessTransferNumber,
-            timeoutMS: Int = 300
+            timeoutMS: Int = 2_000
         ) {
             self.init(
                 title: source.value ?? "", 
