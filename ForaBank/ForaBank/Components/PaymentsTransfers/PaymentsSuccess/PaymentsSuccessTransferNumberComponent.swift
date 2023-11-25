@@ -63,20 +63,12 @@ struct PaymentsSuccessTransferNumberView: View {
             case .copy:
                 Button(action: viewModel.copyButtonDidTapped) {
                     
-                    Image.ic24Copy
-                        .resizable()
-                        .foregroundColor(.iconGray)
-                        .frame(width: 24, height: 24)
-                    
+                    icon(.ic24Copy)
                 }
                 .padding(6)
                 
             case .check:
-                
-                Image.ic24Check
-                    .resizable()
-                    .foregroundColor(.iconGray)
-                    .frame(width: 24, height: 24)
+                icon(.ic24Check)
                     .padding(6)
             }
         }
@@ -84,6 +76,14 @@ struct PaymentsSuccessTransferNumberView: View {
         .background(Color(hex: "F6F6F7"))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .animation(.default, value: viewModel.state)
+    }
+    
+    private func icon(_ image: Image) -> some View {
+        
+        image
+            .resizable()
+            .foregroundColor(.iconGray)
+            .frame(width: 24, height: 24)
     }
 }
 
