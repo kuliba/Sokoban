@@ -198,7 +198,7 @@ struct PaymentsSuccessOptionButtonsView: View {
                     EmptyView()
                 }
             }
-        }.padding(.bottom, 16)
+        }
     }
 }
 

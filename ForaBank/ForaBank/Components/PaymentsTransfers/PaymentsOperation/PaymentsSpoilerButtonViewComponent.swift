@@ -101,19 +101,27 @@ struct PaymentsButtonAdditionalView_Preview: PreviewProvider {
         
         Group {
             
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
             
             PaymentsSpoilerButtonView(viewModel: .sampleSelected)
-                .previewLayout(.fixed(width: 375, height: 60))
                 .previewDisplayName("Selected")
             
             PaymentsSpoilerButtonView(viewModel: .sampleNotSelected)
-                .previewLayout(.fixed(width: 375, height: 60))
                 .previewDisplayName("Selected")
             
             PaymentsSpoilerGroupView(viewModel: .init(items: [], isCollapsed: true))
-                .previewLayout(.fixed(width: 375, height: 90))
                 .previewDisplayName("Spoiler Group")
         }
+        .previewLayout(.fixed(width: 375, height: 60))
     }
 }
 

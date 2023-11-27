@@ -196,18 +196,13 @@ struct PaymentsSubscriberView_Previews: PreviewProvider {
         Group {
             
             PaymentsSubscriberView(viewModel: .sampleShimmerNormal)
-                .previewLayout(.fixed(width: 375, height: 200))
-            
             PaymentsSubscriberView(viewModel: .samplePlaceholderNormal)
-                .previewLayout(.fixed(width: 375, height: 200))
-            
             PaymentsSubscriberView(viewModel: .samplePlaceholderSuccess)
-                .previewLayout(.fixed(width: 375, height: 200))
             
             PaymentsSubscriberView(viewModel: .sampleC2BSub)
-                .previewLayout(.fixed(width: 375, height: 200))
                 .previewDisplayName("C2B sucscribe success")
         }
+        .previewLayout(.fixed(width: 375, height: 200))
     }
 }
 

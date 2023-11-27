@@ -30,7 +30,7 @@ extension PaymentsSuccessAdditionalButtonsView {
         }
         
         struct ButtonViewModel: Identifiable {
-
+            
             let id: Payments.ParameterSuccessAdditionalButtons.Option
             var title: String { id.title }
         }
@@ -43,25 +43,30 @@ struct PaymentsSuccessAdditionalButtonsView: View {
     
     var body: some View {
         
-        HStack(spacing: 8) {
+        HStack(spacing: 16) {
             
             ForEach(viewModel.buttons) { button in
                 
-                ButtonSimpleView(viewModel: .init(title: button.title, style: .gray, action: { viewModel.buttonDidTapped(id: button.id) }))
-                    .frame(height: 48)
+                ButtonSimpleView(
+                    viewModel: .init(
+                        title: button.title,
+                        style: .gray,
+                        action: { viewModel.buttonDidTapped(id: button.id) }
+                    )
+                )
+                .frame(height: 48)
             }
         }
         .padding(.horizontal, 20)
     }
 }
 
-
-//MARK: - Action
+// MARK: - Action
 
 extension PaymentsParameterViewModelAction {
-
-    enum SuccessAdditionalButtons {
     
+    enum SuccessAdditionalButtons {
+        
         struct ButtonDidTapped: Action {
             
             let option: Payments.ParameterSuccessAdditionalButtons.Option

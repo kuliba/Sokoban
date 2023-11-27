@@ -22,6 +22,7 @@ struct InfoProductSheet: View {
                 .frame(width: 64, height: 64, alignment: .center)
                 .background(Color.mainColorsGrayLightest)
                 .cornerRadius(90)
+                .accessibilityIdentifier("InfoProductSheetIcon")
             
             Text("Реквизиты карты")
                 .font(.textH3UnderlineM18240())
@@ -29,6 +30,7 @@ struct InfoProductSheet: View {
                 .foregroundColor(Color.textSecondary)
                 .frame(width: 310, height: 24, alignment: .center)
                 .padding(.top, 10)
+                .accessibilityIdentifier("InfoProductSheetTitle")
             
             Text("Вы можете поделиться всеми реквизитами (кроме CVV кода) или выбрать некоторые")
                 .font(.textBodyMR14180())
@@ -36,6 +38,7 @@ struct InfoProductSheet: View {
                 .foregroundColor(Color.textPlaceholder)
                 .frame(width: 344, height: 40, alignment: .top)
                 .padding(.top, 20)
+                .accessibilityIdentifier("InfoProductSheetSubtitle")
             
             Button(action: sendSelected.action) {
                 
@@ -50,6 +53,7 @@ struct InfoProductSheet: View {
             .cornerRadius(12)
             .foregroundColor(Color.mainColorsBlack)
             .padding(.top, 35)
+            .accessibilityIdentifier("InfoProductSheetTopButton")
             
             Button(action: sendAll.action) {
                 
@@ -64,6 +68,7 @@ struct InfoProductSheet: View {
             .cornerRadius(12)
             .foregroundColor(Color.mainColorsBlack)
             .padding(.top, 8)
+            .accessibilityIdentifier("InfoProductSheetBottomButton")
         }
         .frame(height: 397)
         .frame(maxWidth: .infinity)

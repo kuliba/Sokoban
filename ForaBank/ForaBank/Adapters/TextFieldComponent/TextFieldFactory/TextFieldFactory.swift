@@ -111,10 +111,7 @@ extension TextFieldFactory {
                 UIApplication.shared.endEditing()
             },
             doneButtonLabel: .title("Готово"),
-            doneButtonAction: {
-                UIApplication.shared.endEditing()
-                
-            }
+            doneButtonAction: { UIApplication.shared.endEditing() }
         )
         
         return .init(

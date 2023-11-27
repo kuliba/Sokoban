@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 17.04.2023.
 //
 
+import Combine
 @testable import ForaBank
 import XCTest
 
@@ -216,6 +217,90 @@ final class PaymentsInputViewComponentTests: XCTestCase {
         XCTAssertEqual(titleSpy.values, ["Enter message", nil])
     }
     
+    func test_updateSource_shouldNotSetAdditionalButtonOnNilHint() {
+        
+        let noHintParameterInput = anyParameterInput(hint: nil)
+        let sut = makeSUT(initialValue: nil)
+        let spy = ValueSpy(sut.$additionalButton.map(\.isPresent))
+        XCTAssertNoDiff(spy.values, [false])
+        
+        sut.update(source: noHintParameterInput)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [false, false])
+    }
+    
+    func test_updateSource_shouldSetAdditionalButtonWithHint() {
+        
+        let parameterInputWithHint = anyParameterInput(
+            hint: anyInputHint()
+        )
+        let sut = makeSUT(initialValue: nil)
+        let spy = ValueSpy(sut.$additionalButton.map(\.isPresent))
+        XCTAssertNoDiff(spy.values, [false])
+        
+        sut.update(source: parameterInputWithHint)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [false, true])
+    }
+    
+    func test_updateSource_shouldSetAdditionalButtonActionToShowHint() {
+        
+        let hintTitle = "Hint Title"
+        let parameterInputWithHint = anyParameterInput(
+            hint: anyInputHint(title: hintTitle)
+        )
+        let sut = makeSUT(initialValue: nil)
+        let spy = ValueSpy(sut.showHintTitlePublisher)
+        XCTAssertNoDiff(spy.values, [])
+        
+        sut.update(source: parameterInputWithHint)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        sut.additionalButton?.action()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [hintTitle])
+    }
+    
+    func test_textField_editing_shouldSetCursorAtExpectedPosition() {
+        
+        let sut = makeSUT(initialValue: nil)
+        let spy = ValueSpy(sut.textField.$state)
+        
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+        ])
+        
+        sut.textField.startEditing()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+        ])
+        
+        sut.textField.insert("abcdf", atCursor: 0)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+            .editing(.init("abcdf", cursorAt: 5)),
+        ])
+
+        sut.textField.insert("-", atCursor: 3)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+
+        XCTAssertNoDiff(spy.values, [
+            .placeholder("Enter message"),
+            .editing(.init("", cursorAt: 0)),
+            .editing(.init("abcdf", cursorAt: 5)),
+            .editing(.init("abc-df", cursorAt: 4)),
+        ])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -253,4 +338,56 @@ private extension Payments.Validation.LengthLimitsRule {
         lengthLimits: [3, 5],
         actions: [.post: .warning("value lenght 3 or 5")]
     )
+}
+
+private func anyParameterInput(
+    value: String? = nil,
+    hint: Payments.ParameterInput.Hint? = nil
+) -> Payments.ParameterInput {
+    
+    .init(
+        .init(id: "input", value: value),
+        title: "Title",
+        hint: hint,
+        validator: .anyValue
+    )
+}
+
+private func anyInputHint(
+    title: String = UUID().uuidString,
+    subtitle: String = UUID().uuidString,
+    icon: ImageData = .empty,
+    hints: [Payments.ParameterInput.Hint.Content] = [anyInputHintContent()]
+) -> Payments.ParameterInput.Hint {
+    
+    .init(
+        title: title,
+        subtitle: subtitle,
+        icon: icon,
+        hints: hints
+    )
+}
+
+private func anyInputHintContent(
+    title: String = UUID().uuidString,
+    description: String = UUID().uuidString
+) -> Payments.ParameterInput.Hint.Content {
+    
+    .init(title: title, description: description)
+}
+
+private extension PaymentsInputView.ViewModel.ButtonViewModel? {
+    
+    var isPresent: Bool { self != nil }
+}
+
+private extension PaymentsInputView.ViewModel {
+    
+    var showHintTitlePublisher: AnyPublisher<String, Never> {
+        
+        action
+            .compactMap { $0 as? PaymentsParameterViewModelAction.Hint.Show }
+            .map(\.viewModel.header.title)
+            .eraseToAnyPublisher()
+    }
 }
