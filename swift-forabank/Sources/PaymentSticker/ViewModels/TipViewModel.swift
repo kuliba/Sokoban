@@ -15,7 +15,6 @@ public struct TipViewModel {
     public init(
         text: String
     ) {
-        
         self.text = text
     }
 }

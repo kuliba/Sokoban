@@ -390,9 +390,9 @@ extension Operation.Parameter: Identifiable {
     }
 }
 
-extension ModelToViewModelMapper {
+private extension ModelToViewModelMapper {
     
-    public init(_ model: OperationStateViewModel) {
+    init(_ model: OperationStateViewModel) {
         
         self.action = model.event(_:)
     }

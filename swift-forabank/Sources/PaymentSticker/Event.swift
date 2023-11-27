@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Event {
+public enum Event: Equatable {
     
     public typealias ParameterProduct = Operation.Parameter.ProductSelector
     public typealias ProductOption = ParameterProduct.Product
@@ -20,33 +20,33 @@ public enum Event {
     case continueButtonTapped(ContinueEvent)
     case input(InputEvent)
     
-    public enum ContinueEvent {
+    public enum ContinueEvent: Hashable {
     
         case `continue`
         case getOTPCode
         case makeTransfer
     }
     
-    public enum InputEvent {
+    public enum InputEvent: Hashable {
         
         case valueUpdate(String)
         case getOtpCode
     }
     
-    public enum ProductEvent {
+    public enum ProductEvent: Hashable {
         
         case chevronTapped(ParameterProduct, ParameterProduct.State)
         case selectProduct(ProductOption?, ParameterProduct)
     }
     
-    public enum SelectEvent {
+    public enum SelectEvent: Hashable {
         
         case selectOption(SelectOptionID, ParameterSelect)
         case chevronTapped(ParameterSelect)
         case openBranch(Location)
     }
     
-    public struct Location {
+    public struct Location: Hashable {
         
         public let id: String
         

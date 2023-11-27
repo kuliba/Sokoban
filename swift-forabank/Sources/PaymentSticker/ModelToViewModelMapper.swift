@@ -10,6 +10,12 @@ import Foundation
 public struct ModelToViewModelMapper {
     
     let action: (Event) -> Void
+    
+    public init(
+        action: @escaping (Event) -> Void
+    ) {
+        self.action = action
+    }
 }
 
 public extension ModelToViewModelMapper {

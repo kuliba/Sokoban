@@ -62,7 +62,7 @@ public extension Operation.Parameter {
             }
         }
         
-        public enum State {
+        public enum State: Hashable {
             
             case select
             case list

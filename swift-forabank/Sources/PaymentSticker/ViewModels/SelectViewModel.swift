@@ -35,25 +35,3 @@ public struct SelectViewModel {
         case openBranch
     }
 }
-
-extension SelectViewModel {
-    
-//    private static func textField() -> TextFieldView {
-//
-//        let textFieldConfig: TextFieldView.TextFieldConfig = .init(
-//            font: .systemFont(ofSize: 19, weight: .regular),
-//            textColor: .orange,
-//            tintColor: .black,
-//            backgroundColor: .clear,
-//            placeholderColor: .gray
-//        )
-//
-//        return .init(
-//            state: .constant(.placeholder("Выберите значение")),
-//            keyboardType: .default,
-//            toolbar: nil,
-//            send: { _ in },
-//            textFieldConfig: textFieldConfig
-//        )
-//    }
-}
