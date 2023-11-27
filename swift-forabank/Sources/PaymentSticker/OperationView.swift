@@ -327,6 +327,7 @@ struct OperationProcessView: View {
                     model: model,
                     configuration: configuration
                 )
+                .allowsHitTesting(model.isOperationComplete)
             }
         }
     }
