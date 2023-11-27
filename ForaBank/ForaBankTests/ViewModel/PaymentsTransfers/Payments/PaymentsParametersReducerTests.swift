@@ -59,22 +59,42 @@ final class PaymentsParametersReducerTests: XCTestCase {
         XCTAssertEqual(successLogoParam.value, "value")
     }
     
-    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_direct() {
-
-        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons])
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_direct_empty() {
+        
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successAdditionalButtons])
         
         let result = reduce(params, ([], direct()))
         
-        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successActionButton]))
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
+    }
+    
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_direct() {
+
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successAdditionalButtons])
+        let newParams = makeParams([.successLogo], value: "value")
+
+        let result = reduce(params, (newParams, direct()))
+        
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successLogo, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
+    }
+    
+    func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_contactAddressless_empty() {
+
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successOptions, .successAdditionalButtons])
+        
+        let result = reduce(params, ([], contactAddressless()))
+        
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptions, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
     }
     
     func test_reduce_shouldSetOrderWithOptionsButtonsBeforeActionButton_contactAddressless() {
 
-        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successAdditionalButtons, .successOptions])
+        let params = makeParams([.successTitle, .successStatus, .successActionButton, .successOptionButtons, .successOptions, .successAdditionalButtons])
+        let newParams = makeParams([.successLogo], value: "value")
+
+        let result = reduce(params, (newParams, contactAddressless()))
         
-        let result = reduce(params, ([], contactAddressless()))
-        
-        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successOptionButtons, .successAdditionalButtons, .successOptions, .successActionButton]))
+        XCTAssertNoDiff(result.map(\.id), makeIDs([.successStatus, .successTitle, .successLogo, .successOptions, .successOptionButtons, .successAdditionalButtons, .successActionButton]))
     }
     
     //MARK: - Helpers

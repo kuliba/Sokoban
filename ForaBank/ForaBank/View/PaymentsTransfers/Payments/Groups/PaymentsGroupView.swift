@@ -18,15 +18,7 @@ struct PaymentsGroupView: View {
             
             ForEach(viewModel.items) { itemViewModel in
                 
-                itemView(for: itemViewModel)
-                    .frame(minHeight: frameMinHeight(for: itemViewModel))
-                    .background(
-                        RoundedCorner(radius: 12, corners: backgroundCorners(for: itemViewModel))
-                            .foregroundColor(backgroundColor(for: itemViewModel)))
-                    .padding(.horizontal, horizontalPadding(for: itemViewModel))
-                
-                separatorView(for: itemViewModel)
-                    .padding(.horizontal, 16)
+                Self.separatedItemView(for: itemViewModel, items: viewModel.items)
             }
         }
     }
@@ -34,136 +26,32 @@ struct PaymentsGroupView: View {
 
 extension PaymentsGroupView {
     
-    func backgroundCorners(for itemViewModel: PaymentsParameterViewModel) -> UIRectCorner {
+    @ViewBuilder
+    static func separatedItemView(
+        for viewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
+    ) -> some View {
         
-        switch itemViewModel.source {
-        case _ as Payments.ParameterMessage:
-            return []
-
-        default:
-            if viewModel.items.count > 1 {
-                
-                switch itemViewModel.id  {
-                case viewModel.items.first?.id:
-                    return [.topLeft, .topRight]
-                    
-                case viewModel.items.last?.id:
-                    return [.bottomLeft, .bottomRight]
-                    
-                default:
-                    return []
-                    
-                }
-
-            } else {
-                
-                return .allCorners
-            }
-        }
-    }
-    
-    func backgroundColor(for itemViewModel: PaymentsParameterViewModel) -> Color {
+        itemView(for: viewModel)
+            .frame(minHeight: frameMinHeight(for: viewModel))
+            .background(background(for: viewModel, items: items))
+            .padding(.horizontal, horizontalPadding(for: viewModel))
         
-        switch itemViewModel.source {
-        case _ as Payments.ParameterMessage:
-            return .mainColorsBlack
-            
-        case _ as Payments.ParameterAmount,
-            _ as Payments.ParameterButton,
-            _ as Payments.ParameterCheck,
-            _ as Payments.ParameterSuccessStatus,
-            _ as Payments.ParameterSuccessText,
-            _ as Payments.ParameterSuccessIcon,
-            _ as Payments.ParameterSuccessOptionButtons,
-            _ as Payments.ParameterSuccessLink,
-            _ as Payments.ParameterSubscriber,
-            _ as Payments.ParameterSubscribe,
-            _ as Payments.ParameterSuccessLogo,
-            _ as Payments.ParameterSuccessOptions,
-            _ as Payments.ParameterSuccessService:
-            return .clear
-            
-        default:
-            switch itemViewModel.source.style {
-            case .light:
-                return .mainColorsGrayLightest
-                
-            case .dark:
-                return .mainColorsBlack
-            }
-        }
-    }
-    
-    func horizontalPadding(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
-        
-        switch itemViewModel.source {
-        case _ as Payments.ParameterMessage,
-            _ as Payments.ParameterAmount:
-            return 0
-            
-        default:
-            return 16
-        }
-    }
-    
-    func frameMinHeight(for itemViewModel: PaymentsParameterViewModel) -> CGFloat {
-        
-        switch itemViewModel.source {
-        case _ as Payments.ParameterSuccessStatus,
-            _ as Payments.ParameterSuccessText,
-            _ as Payments.ParameterSuccessIcon,
-            _ as Payments.ParameterSuccessOptionButtons,
-            _ as Payments.ParameterSuccessLink,
-            _ as Payments.ParameterSubscriber,
-            _ as Payments.ParameterSuccessService,
-            _ as Payments.ParameterSuccessLogo,
-            _ as Payments.ParameterButton:
-            return 0
-            
-        default:
-            return 72
-        }
+        separatorView(for: viewModel, items: items)
+            .padding(.horizontal, 16)
     }
     
     @ViewBuilder
-    func itemView(for viewModel: PaymentsParameterViewModel) -> some View {
+    static func itemView(
+        for viewModel: PaymentsParameterViewModel
+    ) -> some View {
         
         switch viewModel {
-        case let messageViewModel as PaymentsMessageView.ViewModel:
-            PaymentsMessageView(viewModel: messageViewModel)
-            
-        case let selectViewModel as PaymentsSelectView.ViewModel:
-            PaymentsSelectView(viewModel: selectViewModel)
-            
-        case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
-            PaymentsSelectBankView(viewModel: selectBankViewModel)
-            
-        case let selectCountryViewModel as PaymentsSelectCountryView.ViewModel:
-            PaymentsSelectCountryView(viewModel: selectCountryViewModel)
-            
-        case let selectDropDownViewModel as PaymentSelectDropDownView.ViewModel:
-            PaymentSelectDropDownView(viewModel: selectDropDownViewModel)
-            
-        case let inputViewModel as PaymentsInputView.ViewModel:
-            PaymentsInputView(viewModel: inputViewModel)
-
-        case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
-            PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
+        case let amountViewModel as PaymentsAmountView.ViewModel:
+            PaymentsAmountView(viewModel: amountViewModel)
             
         case let checkBoxViewModel as PaymentsCheckView.ViewModel:
             PaymentsCheckView(viewModel: checkBoxViewModel)
-            
-        case let infoViewModel as PaymentsInfoView.ViewModel:
-            PaymentsInfoView(viewModel: infoViewModel)
-            
-        case let nameViewModel as PaymentsNameView.ViewModel:
-            PaymentsNameView(viewModel: nameViewModel)
-
-        case let productViewModel as PaymentsProductView.ViewModel:
-            PaymentsProductView(viewModel: productViewModel)
-            
-        case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
-            PaymentsProductTemplateView(viewModel: productTemplateViewModel)
             
         case let codeViewModel as PaymentsCodeView.ViewModel:
             PaymentsCodeView(viewModel: codeViewModel)
@@ -185,36 +73,53 @@ extension PaymentsGroupView {
             PaymentsButtonView(viewModel: continueButtonViewModel)
                 .padding(.bottom, 16)
             
+        case let infoViewModel as PaymentsInfoView.ViewModel:
+            PaymentsInfoView(viewModel: infoViewModel)
+            
+        case let inputPhoneViewModel as PaymentsInputPhoneView.ViewModel:
+            PaymentsInputPhoneView(viewModel: inputPhoneViewModel)
+            
+        case let inputViewModel as PaymentsInputView.ViewModel:
+            PaymentsInputView(viewModel: inputViewModel)
+            
+        case let messageViewModel as PaymentsMessageView.ViewModel:
+            PaymentsMessageView(viewModel: messageViewModel)
+            
+        case let nameViewModel as PaymentsNameView.ViewModel:
+            PaymentsNameView(viewModel: nameViewModel)
+            
+        case let productViewModel as PaymentsProductView.ViewModel:
+            PaymentsProductView(viewModel: productViewModel)
+            
+        case let productTemplateViewModel as PaymentsProductTemplateView.ViewModel:
+            PaymentsProductTemplateView(viewModel: productTemplateViewModel)
+            
+        case let selectBankViewModel as PaymentsSelectBankView.ViewModel:
+            PaymentsSelectBankView(viewModel: selectBankViewModel)
+            
+        case let selectCountryViewModel as PaymentsSelectCountryView.ViewModel:
+            PaymentsSelectCountryView(viewModel: selectCountryViewModel)
+            
+        case let selectDropDownViewModel as PaymentSelectDropDownView.ViewModel:
+            PaymentSelectDropDownView(viewModel: selectDropDownViewModel)
+            
+        case let selectViewModel as PaymentsSelectView.ViewModel:
+            PaymentsSelectView(viewModel: selectViewModel)
+            
         case let subscriberViewModel as PaymentsSubscriberView.ViewModel:
             PaymentsSubscriberView(viewModel: subscriberViewModel)
             
-        case let subscribeVewModel as PaymentsSubscribeView.ViewModel:
-            PaymentsSubscribeView(viewModel: subscribeVewModel)
-            
-        case let amountViewModel as PaymentsAmountView.ViewModel:
-            PaymentsAmountView(viewModel: amountViewModel)
-            
-        case let successStatus as PaymentsSuccessStatusView.ViewModel:
-            PaymentsSuccessStatusView(viewModel: successStatus)
-                .padding(.top, 130)
-            
-        case let successText as PaymentsSuccessTextView.ViewModel:
-            PaymentsSuccessTextView(viewModel: successText)
-            
-        case let successIcon as PaymentsSuccessIconView.ViewModel:
-            PaymentsSuccessIconView(viewModel: successIcon)
-            
-        case let successOptionButtons as PaymentsSuccessOptionButtonsView.ViewModel:
-            PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
-            
-        case let successLink as PaymentsSuccessLinkView.ViewModel:
-            PaymentsSuccessLinkView(viewModel: successLink)
+        case let subscribeViewModel as PaymentsSubscribeView.ViewModel:
+            PaymentsSubscribeView(viewModel: subscribeViewModel)
             
         case let successAdditionalButtons as PaymentsSuccessAdditionalButtonsView.ViewModel:
             PaymentsSuccessAdditionalButtonsView(viewModel: successAdditionalButtons)
             
-        case let successTransferNumber as PaymentsSuccessTransferNumberView.ViewModel:
-            PaymentsSuccessTransferNumberView(viewModel: successTransferNumber)
+        case let successIcon as PaymentsSuccessIconView.ViewModel:
+            PaymentsSuccessIconView(viewModel: successIcon)
+            
+        case let successLink as PaymentsSuccessLinkView.ViewModel:
+            PaymentsSuccessLinkView(viewModel: successLink)
             
         case let successLogo as PaymentsSuccessLogoView.ViewModel:
             PaymentsSuccessLogoView(viewModel: successLogo)
@@ -222,19 +127,147 @@ extension PaymentsGroupView {
         case let successOptions as PaymentsSuccessOptionsView.ViewModel:
             PaymentsSuccessOptionsView(viewModel: successOptions)
             
+        case let successOptionButtons as PaymentsSuccessOptionButtonsView.ViewModel:
+            PaymentsSuccessOptionButtonsView(viewModel: successOptionButtons)
+            
+        case let successText as PaymentsSuccessTextView.ViewModel:
+            PaymentsSuccessTextView(viewModel: successText)
+            
+        case let successTransferNumber as PaymentsSuccessTransferNumberView.ViewModel:
+            PaymentsSuccessTransferNumberView(viewModel: successTransferNumber)
+            
         case let successService as PaymentsSuccessServiceView.ViewModel:
             PaymentsSuccessServiceView(viewModel: successService)
+            
+        case let successStatus as PaymentsSuccessStatusView.ViewModel:
+            PaymentsSuccessStatusView(viewModel: successStatus)
+                .padding(.top, 130)
             
         default:
             EmptyView()
         }
     }
     
-    @ViewBuilder
-    func separatorView(for itemViewModel: PaymentsParameterViewModel) -> some View {
+    static func background(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
+    ) -> some View {
         
-        if viewModel.items.count > 1,
-            itemViewModel.id != viewModel.items.last?.id {
+        RoundedCorner(
+            radius: 12,
+            corners: backgroundCorners(for: itemViewModel, items: items)
+        )
+        .foregroundColor(backgroundColor(for: itemViewModel))
+    }
+    
+    static func backgroundCorners(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
+    ) -> UIRectCorner {
+        
+        switch itemViewModel.source {
+        case _ as Payments.ParameterMessage:
+            return []
+            
+        default:
+            if items.count > 1 {
+                
+                switch itemViewModel.id  {
+                case items.first?.id:
+                    return [.topLeft, .topRight]
+                    
+                case items.last?.id:
+                    return [.bottomLeft, .bottomRight]
+                    
+                default:
+                    return []
+                }
+            } else {
+                
+                return .allCorners
+            }
+        }
+    }
+    
+    static func backgroundColor(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> Color {
+        
+        switch itemViewModel.source {
+        case _ as Payments.ParameterMessage:
+            return .mainColorsBlack
+            
+        case _ as Payments.ParameterAmount,
+            _ as Payments.ParameterButton,
+            _ as Payments.ParameterCheck,
+            _ as Payments.ParameterSuccessAdditionalButtons,
+            _ as Payments.ParameterSuccessIcon,
+            _ as Payments.ParameterSuccessLink,
+            _ as Payments.ParameterSuccessLogo,
+            _ as Payments.ParameterSuccessOptionButtons,
+            _ as Payments.ParameterSuccessOptions,
+            _ as Payments.ParameterSuccessText,
+            _ as Payments.ParameterSuccessService,
+            _ as Payments.ParameterSuccessStatus,
+            _ as Payments.ParameterSubscribe,
+            _ as Payments.ParameterSubscriber:
+            return .clear
+            
+        default:
+            switch itemViewModel.source.style {
+            case .light:
+                return .mainColorsGrayLightest
+                
+            case .dark:
+                return .mainColorsBlack
+            }
+        }
+    }
+    
+    static func horizontalPadding(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> CGFloat {
+        
+        switch itemViewModel.source {
+        case _ as Payments.ParameterAmount,
+            _ as Payments.ParameterMessage,
+            _ as Payments.ParameterSuccessAdditionalButtons:
+            return 0
+            
+        default:
+            return 16
+        }
+    }
+    
+    static func frameMinHeight(
+        for itemViewModel: PaymentsParameterViewModel
+    ) -> CGFloat {
+        
+        switch itemViewModel.source {
+        case _ as Payments.ParameterSuccessStatus,
+            _ as Payments.ParameterSuccessText,
+            _ as Payments.ParameterSuccessIcon,
+            _ as Payments.ParameterSuccessOptionButtons,
+            _ as Payments.ParameterSuccessLink,
+            _ as Payments.ParameterSubscriber,
+            _ as Payments.ParameterSuccessService,
+            _ as Payments.ParameterSuccessLogo,
+            _ as Payments.ParameterButton:
+            return 0
+            
+        default:
+            return 72
+        }
+    }
+    
+    @ViewBuilder
+    static func separatorView(
+        for itemViewModel: PaymentsParameterViewModel,
+        items: [PaymentsParameterViewModel]
+    ) -> some View {
+        
+        if items.count > 1,
+           itemViewModel.id != items.last?.id {
             
             Rectangle()
                 .frame(height: 1)
@@ -253,7 +286,9 @@ extension PaymentsGroupView {
 extension PaymentsGroupView {
     
     @ViewBuilder
-    static func groupView(for groupViewModel: PaymentsGroupViewModel) -> some View {
+    static func groupView(
+        for groupViewModel: PaymentsGroupViewModel
+    ) -> some View {
         
         switch groupViewModel {
         case let contactGroupViewModel as PaymentsContactGroupViewModel:
@@ -271,9 +306,26 @@ extension PaymentsGroupView {
     }
 }
 
+//MARK: - Preview Content
+
 struct PaymentsGroupView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
+        Group {
+            
+            VStack {
+                
+                ScrollView(content: previewsGroup)
+            }
+            .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+        @ViewBuilder
+    static func previewsGroup() -> some View {
         
         Group {
             
@@ -310,7 +362,7 @@ struct PaymentsGroupView_Previews: PreviewProvider {
         }.previewLayout(.fixed(width: 375, height: 120))
         
         Group {
-           
+            
             PaymentsGroupView(viewModel: .sampleSingleProduct)
                 .previewDisplayName("Product")
             
@@ -336,8 +388,6 @@ struct PaymentsGroupView_Previews: PreviewProvider {
             .padding(.vertical, 16)
     }
 }
-
-//MARK: - Preview Content
 
 extension PaymentsGroupViewModel {
     

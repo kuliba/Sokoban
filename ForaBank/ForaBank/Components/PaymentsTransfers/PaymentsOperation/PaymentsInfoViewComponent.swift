@@ -232,6 +232,17 @@ struct PaymentsInfoView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
 
             PaymentsInfoView(viewModel: .sample, isCompact: false)
                 .previewLayout(.fixed(width: 375, height: 190))

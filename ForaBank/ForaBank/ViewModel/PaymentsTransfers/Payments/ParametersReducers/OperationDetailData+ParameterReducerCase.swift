@@ -20,6 +20,7 @@ extension OperationDetailData
                     .successAmount,
                     .successLogo,
                     .successOptionButtons,
+                    .successAdditionalButtons,
                     .successActionButton]
             
         case .changeOutgoing, .returnOutgoing:
@@ -35,9 +36,9 @@ extension OperationDetailData
                     .successAmount,
                     .successLogo,
                     .successTransferNumber,
+                    .successOptions,
                     .successOptionButtons,
                     .successAdditionalButtons,
-                    .successOptions,
                     .successActionButton]
             
         default:
