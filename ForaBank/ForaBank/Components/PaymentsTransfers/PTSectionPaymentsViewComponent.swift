@@ -76,17 +76,25 @@ struct PTSectionPaymentsView: View {
     
     @ObservedObject
     var viewModel: ViewModel
-    let pageScrollViewWidth: CGFloat = 312
-    let rowsCount: Int = 3
+    
+    private let spacing = 64.0
+    private let rowsCount: Int = 3
     
     // temporally off
     //let rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
     
+    @State private var maxWidth: CGFloat = .zero
+    @State private var scrollWidth: CGFloat = .zero
     @State private var scrollProxy: AmzdScrollViewProxy?
     @State private var scrollOffsetX: CGFloat = 0
     
+    private var spacerWidth: CGFloat {
+        
+        scrollWidth - maxWidth - spacing
+    }
+    
     private func scrollToRight() {
-        let itemIndex = (Int(scrollOffsetX / pageScrollViewWidth) + 1) * rowsCount
+        let itemIndex = (Int(scrollOffsetX / scrollWidth) + 1) * rowsCount
         scrollProxy?.scrollTo(itemIndex, alignment: .leading, animated: true)
     }
     
@@ -98,11 +106,11 @@ struct PTSectionPaymentsView: View {
             .padding(.top, 4)
             .padding(.bottom, 14)
             .padding(.leading, 20)
-      
+        
         HStack {
             ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
-                HStack(spacing: 64) {
+                HStack(spacing: spacing) {
                     
                     let gridItems = Array(repeating: GridItem(.fixed(48), spacing: 8),
                                           count: rowsCount)
@@ -111,32 +119,89 @@ struct PTSectionPaymentsView: View {
                         ForEach(viewModel.paymentButtons.indices, id: \.self) { index in
                             
                             ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
+                                .reportMaxWidth()
                                 .scrollId(index)
                         }
                     }
                     
-                    Spacer(minLength: 1)
+                    Spacer(minLength: spacerWidth)
+                        .frame(minWidth: spacerWidth, maxHeight: 0)
                 }
                 .onReceive(proxy.offset) { scrollOffsetX = $0.x }
                 .onAppear { scrollProxy = proxy }
-                
             }
-            .frame(width: pageScrollViewWidth)
+            .reportScrollWidth()
             .introspectScrollView {
                 $0.isPagingEnabled = true
                 $0.clipsToBounds = false
             }
             
-            Color.clear
+            Color.clear.frame(width: 0)
                 .contentShape(Rectangle())
                 .gesture(DragGesture().onEnded { _ in scrollToRight() })
                 .onTapGesture { scrollToRight() }
             
-        }.padding(.leading, 20)
+        }
+        .padding(.leading, 20)
+        .onPreferenceChange(MaxWidthPreferenceKey.self) { maxWidth = $0 }
+        .onPreferenceChange(ScrollWidthPreferenceKey.self) { scrollWidth = $0 }
     }
-    
 }
 
+private struct MaxWidthPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(
+        value: inout CGFloat,
+        nextValue: () -> CGFloat
+    ) {
+        value = max(value, nextValue())
+    }
+}
+
+private struct ScrollWidthPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(
+        value: inout CGFloat,
+        nextValue: () -> CGFloat
+    ) {
+        value = max(value, nextValue())
+    }
+}
+
+private extension View {
+    
+    func reportMaxWidth() -> some View {
+        
+        self.background(
+            GeometryReader { proxy in
+                
+                Color.clear
+                    .preference(
+                        key: MaxWidthPreferenceKey.self,
+                        value: proxy.size.width
+                    )
+            }
+        )
+    }
+    
+    func reportScrollWidth() -> some View {
+        
+        self.background(
+            GeometryReader { proxy in
+                
+                Color.clear
+                    .preference(
+                        key: ScrollWidthPreferenceKey.self,
+                        value: proxy.size.width
+                    )
+            }
+        )
+    }
+}
 //MARK: - ButtonPayGroupView
 
 extension PTSectionPaymentsView {
