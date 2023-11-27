@@ -6,7 +6,24 @@
 //
 
 import SwiftUI
+import Foundation
 import TextFieldComponent
+import Combine
+
+class ReceiveCode: ObservableObject {
+    
+    @Published private (set) var code: String? = nil
+    
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("otpCode"), object: nil)
+    }
+    
+    @objc func methodOfReceivedNotification(notification: Notification) {
+        
+        let otp = notification.userInfo?["otp"] as? String
+        self._code = .init(wrappedValue: otp)
+    }
+}
 
 // MARK: - View
 
@@ -15,6 +32,7 @@ struct InputView: View {
     @StateObject private var regularFieldViewModel: RegularFieldViewModel
     
     private let title: String
+    private let receiveCode: ReceiveCode = .init()
     private let commit: (String) -> Void
     private let warning: String?
     private let configuration: InputConfiguration
@@ -40,6 +58,11 @@ struct InputView: View {
             tintColor: configuration.textFieldTintColor,
             backgroundColor: configuration.textFieldBackgroundColor,
             placeholderColor: configuration.textFieldPlaceholderColor
+        )
+        
+        let reducer = TransformingReducer(
+            placeholderText: "Введите код из смс",
+            transform: Transformers.limiting(6).transform(_:)
         )
     }
     
