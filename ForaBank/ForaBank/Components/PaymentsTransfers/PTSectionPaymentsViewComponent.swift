@@ -9,14 +9,13 @@ import SwiftUI
 import ScrollViewProxy
 import Combine
 
-//MARK: Section ViewModel
+// MARK: Section ViewModel
 
 extension PTSectionPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
-        @Published
-        var paymentButtons: [PaymentButtonVM]
+        @Published var paymentButtons: [PaymentButtonVM]
 
         override var type: PaymentsTransfersSectionType { .payments }
         
@@ -32,27 +31,35 @@ extension PTSectionPaymentsView {
         ]
         
         override init() {
+            
             self.paymentButtons = []
             super.init()
             self.paymentButtons = PaymentsType.allCases
                 .filter { Self.allowedButtonsTypes.contains($0) }
-                .map { item in PaymentButtonVM(type: item,
-                                       action: { self.action.send(PTSectionPaymentsViewAction
-                                                                    .ButtonTapped
-                                                                    .Payment(type: item)) })
-            }
+                .map { item in PaymentButtonVM(
+                    type: item,
+                    action: {
+                        
+                        self.action.send(PTSectionPaymentsViewAction
+                            .ButtonTapped
+                            .Payment(type: item))
+                    })
+                }
         }
         
         init(paymentButtons: [PaymentButtonVM]) {
+            
             self.paymentButtons = paymentButtons
             super.init()
         }
         
         enum PaymentsType: String, CaseIterable {
+            
             case qrPayment, mobile, service, internet,
                  transport, taxAndStateService, socialAndGame, security, others
             
             var apearance: (title: String, imageName: String) {
+                
                 switch self {
                 case .qrPayment: return (title: "Оплата по QR", imageName: "ic24BarcodeScanner2")
                 case .mobile: return (title: "Мобильная связь", imageName: "ic24Smartphone")
@@ -66,16 +73,14 @@ extension PTSectionPaymentsView {
                 }
             }
         }
-        
     }
 }
 
-//MARK: Section View
+// MARK: Section View
 
 struct PTSectionPaymentsView: View {
     
-    @ObservedObject
-    var viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     private let spacing = 64.0
     private let rowsCount: Int = 3
@@ -99,6 +104,7 @@ struct PTSectionPaymentsView: View {
     }
     
     var body: some View {
+        
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.textH2Sb20282())
@@ -108,6 +114,7 @@ struct PTSectionPaymentsView: View {
             .padding(.leading, 20)
         
         HStack {
+            
             ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
                 HStack(spacing: spacing) {
@@ -140,7 +147,6 @@ struct PTSectionPaymentsView: View {
                 .contentShape(Rectangle())
                 .gesture(DragGesture().onEnded { _ in scrollToRight() })
                 .onTapGesture { scrollToRight() }
-            
         }
         .padding(.leading, 20)
         .onPreferenceChange(MaxWidthPreferenceKey.self) { maxWidth = $0 }
@@ -202,7 +208,8 @@ private extension View {
         )
     }
 }
-//MARK: - ButtonPayGroupView
+
+// MARK: - ButtonPayGroupView
 
 extension PTSectionPaymentsView {
     
@@ -210,11 +217,15 @@ extension PTSectionPaymentsView {
         let viewModel: ViewModel.PaymentButtonVM
         
         var body: some View {
-            Button(action: viewModel.action,  label: {
+            
+            Button(action: viewModel.action) {
+                
                 ZStack(alignment: .leading) {
                     
                     Color.clear.frame(width: 248, height: 48)
+                    
                     HStack(spacing: 16) {
+                        
                         ZStack {
                             
                             Color.mainColorsGrayLightest
@@ -225,15 +236,17 @@ extension PTSectionPaymentsView {
                                 .resizable()
                                 .frame(width: 24, height: 24)
                         }
+                        
                         Text(viewModel.type.apearance.title).font(.textH4R16240())
                     }
-                }.foregroundColor(.textSecondary)
-            })
+                }
+                .foregroundColor(.textSecondary)
+            }
         }
     }
 }
 
-//MARK: - Action PTSectionPaymentsViewAction
+// MARK: - Action PTSectionPaymentsViewAction
 
 enum PTSectionPaymentsViewAction {
 
@@ -246,7 +259,7 @@ enum PTSectionPaymentsViewAction {
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct PTSectionPayGroupView_Previews: PreviewProvider {
     
@@ -258,7 +271,7 @@ struct PTSectionPayGroupView_Previews: PreviewProvider {
     }
 }
 
-//MARK: - Extention View
+// MARK: - Extention View
 
 @available(iOS, deprecated: 15.0, message: "Use the built-in APIs instead")
 extension View {
