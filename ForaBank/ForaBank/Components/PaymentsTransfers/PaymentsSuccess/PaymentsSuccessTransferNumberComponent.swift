@@ -14,23 +14,37 @@ extension PaymentsSuccessTransferNumberView {
         let title: String
         @Published private(set) var state: State
         
+        private let timeoutMS: Int
+        
         enum State {
             
             case copy
             case check
         }
         
-        init(title: String, state: State, source: PaymentsParameterRepresentable) {
-            
+        init(
+            title: String,
+            state: State,
+            source: PaymentsParameterRepresentable,
+            timeoutMS: Int = 2_000
+        ) {
             self.title = title
             self.state = state
+            self.timeoutMS = timeoutMS
             
             super.init(source: source)
         }
         
-        convenience init(_ source: Payments.ParameterSuccessTransferNumber) {
-            
-            self.init(title: source.value ?? "", state: .copy, source: source)
+        convenience init(
+            _ source: Payments.ParameterSuccessTransferNumber,
+            timeoutMS: Int = 2_000
+        ) {
+            self.init(
+                title: source.value ?? "", 
+                state: .copy,
+                source: source,
+                timeoutMS: timeoutMS
+            )
         }
         
         func copyButtonDidTapped() {
@@ -38,10 +52,10 @@ extension PaymentsSuccessTransferNumberView {
             UIPasteboard.general.string = source.value
             
             state = .check
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {[weak self] in
-                
-                self?.state = .copy
-            }
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .milliseconds(timeoutMS)
+            ) { [weak self] in self?.state = .copy }
         }
     }
 }
@@ -52,42 +66,93 @@ struct PaymentsSuccessTransferNumberView: View {
     
     var body: some View {
         
-        HStack {
-            
-            Text(viewModel.title)
-                .font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color.black)
-                .padding(.leading, 6)
+        Group {
             
             switch viewModel.state {
-            case .copy:
-                Button {
-                    
-                    viewModel.copyButtonDidTapped()
-                    
-                } label: {
-                    
-                    Image.ic24Copy
-                        .resizable()
-                        .foregroundColor(.iconGray)
-                        .frame(width: 24, height: 24)
-                    
-                }.padding(6)
-                
-            case .check:
-                
-                Image.ic24Check
-                    .resizable()
-                    .foregroundColor(.iconGray)
-                    .frame(width: 24, height: 24)
-                    .padding(6)
+            case .copy:  button(label(image: .ic24Copy))
+            case .check: label(image: .ic24Check)
             }
         }
-        .padding(8)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .background(Color(hex: "F6F6F7"))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .animation(.default, value: viewModel.state)
+    }
+    
+    private func button(
+       _ label: @autoclosure () -> some View
+    ) -> some View {
         
+        Button(action: viewModel.copyButtonDidTapped, label: label)
+    }
+    
+    private func label(image: Image) -> some View {
+        
+        HStack(spacing: 8) {
+            
+            title()
+            icon(image)
+        }
+    }
+    
+    private func title() -> some View {
+        
+        Text(viewModel.title)
+            .font(.textBodyMM14200())
+            .foregroundColor(.textSecondary)
+    }
+    
+    private func icon(_ image: Image) -> some View {
+        
+        image
+            .resizable()
+            .foregroundColor(.iconGray)
+            .frame(width: 24, height: 24)
     }
 }
 
+struct PaymentsSuccessTransferNumberView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    private static func previewsGroup() -> some View {
+        
+        Group {
+            
+            PaymentsSuccessTransferNumberView(viewModel: .preview(.check))
+                .previewDisplayName("check")
+            
+            PaymentsSuccessTransferNumberView(viewModel: .preview(.copy))
+                .previewDisplayName("copy")
+        }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel {
+    
+    static func preview(
+        transferNumber: String = "219771514",
+        _ state: PaymentsSuccessTransferNumberView.ViewModel.State
+    ) -> PaymentsSuccessTransferNumberView.ViewModel {
+        
+        let source = Payments.ParameterSuccessTransferNumber(
+            number: transferNumber
+        )
+        
+        return .init(
+            title: transferNumber,
+            state: state,
+            source: source
+        )
+    }
+}

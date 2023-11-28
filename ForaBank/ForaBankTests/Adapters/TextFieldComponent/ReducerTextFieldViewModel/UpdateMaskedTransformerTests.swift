@@ -121,7 +121,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         
         // when
         let updated = updateMasked(
-            for: .abroad,
             value: value,
             inRange: range,
             update: update,
@@ -140,7 +139,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         
         // when
         let updated = updateMasked(
-            for: .other,
             value: value,
             inRange: range,
             update: update,
@@ -188,7 +186,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         
         // when
         let updated = updateMasked(
-            for: .abroad,
             value: value,
             inRange: range,
             update: update,
@@ -207,7 +204,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         
         // when
         let updated = updateMasked(
-            for: .other,
             value: value,
             inRange: range,
             update: update,
@@ -276,7 +272,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 2, length: 0)
         
         // when
-        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .russian)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         #warning("assertion differs from original test `test_updateMasked_shouldFormatArmenianCountryCode_onEmptyUpdate`: XCTAssertEqual(updated, \"+(3\")")
         XCTAssertEqual(updated, "+3")
@@ -290,7 +286,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 2, length: 0)
         
         // when
-        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .russian)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian)
         
         XCTAssertEqual(updated, "+3")
     }
@@ -318,7 +314,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
         
         XCTAssertEqual(updated, "+373")
     }
@@ -332,7 +328,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
         
         XCTAssertEqual(updated, "+373")
     }
@@ -346,7 +342,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
         
         XCTAssertEqual(updated, "+91")
     }
@@ -360,7 +356,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let limit: Int? = nil
         
         // when
-        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: limit)
         
         XCTAssertEqual(updated, "+91")
     }
@@ -373,7 +369,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
         
         XCTAssertEqual(updated, "+3")
     }
@@ -386,7 +382,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
         
         XCTAssertEqual(updated, "+3")
     }
@@ -399,7 +395,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(for: .abroad, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
         
         XCTAssertEqual(updated, "+3")
     }
@@ -412,7 +408,7 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let range = NSRange(location: 0, length: 0)
         
         // when
-        let updated = updateMasked(for: .other, value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
+        let updated = updateMasked(value: value, inRange: range, update: update, countryCodeReplace: .russian, limit: nil)
         
         XCTAssertEqual(updated, "+3")
     }
@@ -421,7 +417,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
     
     /// resembles `TextFieldPhoneNumberViewComponentsTests.swift`
     func updateMasked(
-        for type: ContactsViewModel.PaymentsType = .other,
         value: String?,
         inRange range: NSRange,
         update: String,
@@ -442,7 +437,6 @@ final class UpdateMaskedTransformerTests: XCTestCase {
         let substitutions: [CountryCodeSubstitution] = countryCodeReplace?.map(\.substitution) ?? []
         
         let transformer = Transformers.phoneKit(
-            for: type,
             filterSymbols: filterSymbols ?? [],
             substitutions: substitutions,
             limit: limit

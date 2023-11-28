@@ -97,16 +97,15 @@ extension PaymentsInputView {
             
             withAnimation {
                 
-                if let hint = parameterInput?.hint  {
+                additionalButton = parameterInput?.hint.map { hint in
                     
-                    additionalButton = .init(icon: Image.ic24Info, action: { [weak self] in
-                        
-                        self?.action.send(PaymentsParameterViewModelAction.Hint.Show(viewModel: .init(hintData: hint)))
-                    })
-                    
-                } else {
- 
-                    additionalButton = nil
+                        .init(
+                            icon: Image.ic24Info,
+                            action: { [weak self] in
+                                
+                                self?.action.send(PaymentsParameterViewModelAction.Hint.Show(viewModel: .init(hintData: hint)))
+                            }
+                        )
                 }
             }
         }

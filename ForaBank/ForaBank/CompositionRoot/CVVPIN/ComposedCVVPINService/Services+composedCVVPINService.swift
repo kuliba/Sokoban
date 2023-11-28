@@ -331,6 +331,8 @@ extension Services {
                retryAttempts == 0 {
                 
                 rsaKeyPairStore.deleteCache { _ in completion() }
+            } else {
+                completion()
             }
         }
         

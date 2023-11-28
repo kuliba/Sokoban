@@ -27,6 +27,7 @@ struct ItemView: View {
                         
                         item.actionForIcon()
                     }
+                    .accessibilityIdentifier("InfoProductItemButton")
             }
         }
     }

@@ -22,6 +22,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     @Published var alert: Alert.ViewModel?
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullScreenCover?
+    @Published var informer: Informer?
 
     private let adapter: PaymentsSuccessViewModelAdapter
     private var bindings = Set<AnyCancellable>()
@@ -264,6 +265,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     self?.action.send($0)
                 }
             ).store(in: &bindings)
+        
+        transferNumberInformer()?.assign(to: &$informer)
     }
     
     // FIXME: figure out how to get rid of second Success View
@@ -434,6 +437,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self?.sections = updatedSections
         }
+        transferNumberInformer()?.assign(to: &$informer)
     }
 }
 
@@ -525,6 +529,18 @@ extension PaymentsSuccessViewModel {
         }
     }
     
+    struct Informer: Identifiable & Hashable {
+        
+        let message: String
+        
+        init(_ message: String) {
+            
+            self.message = message
+        }
+        
+        var id: String { message }
+    }
+
     struct Sheet: Identifiable {
         
         let id = UUID()
@@ -535,6 +551,54 @@ extension PaymentsSuccessViewModel {
             case printForm(PrintFormView.ViewModel)
             case detailInfo(OperationDetailInfoViewModel)
         }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel.State {
+    
+    var informer: PaymentsSuccessViewModel.Informer? {
+        
+        switch self {
+        case .check: return .init("Номер скопирован")
+        case .copy: return nil
+        }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel {
+    
+    var informer: AnyPublisher<PaymentsSuccessViewModel.Informer?, Never> {
+        
+        $state
+            .map(\.informer)
+            .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsSuccessViewModel {
+    
+    func parameterViewModel(
+        with id: Payments.Parameter.ID
+    ) -> PaymentsParameterViewModel? {
+        
+        sections.flatMap(\.items).first(where: { $0.id == id })
+    }
+    
+    func transferNumberViewModel(
+    ) -> PaymentsSuccessTransferNumberView.ViewModel? {
+        
+        let id = Payments.Parameter.Identifier.successTransferNumber.rawValue
+        let viewModel = parameterViewModel(with: id)
+        
+        return viewModel as? PaymentsSuccessTransferNumberView.ViewModel
+    }
+    
+    func transferNumberInformer() -> AnyPublisher<PaymentsSuccessViewModel.Informer?, Never>? {
+        
+        transferNumberViewModel()?
+            .$state
+            .map(\.informer)
+            .eraseToAnyPublisher()
     }
 }
 

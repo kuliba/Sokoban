@@ -1,5 +1,5 @@
 //
-//  Reducer+ext.swift
+//  TransformingReducer+ext.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 19.05.2023.

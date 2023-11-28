@@ -1,6 +1,6 @@
 //
 //  CardDomain.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 12.10.2023.
 //
@@ -15,7 +15,7 @@ public extension CardDomain {
     typealias CardAction = (CardEvent) -> Void
     typealias CardId = Tagged<_CardId, Int>
     enum _CardId {}
-
+    
     enum CardEvent {
         
         case copyCardNumber(String)
@@ -44,35 +44,70 @@ public enum ErrorDomain: Equatable {
     
     public typealias ErrorMessage = Tagged<_ErrorMessage, String>
     public enum _ErrorMessage {}
-
+    
     public typealias ButtonTitle = Tagged<_ButtonTitle, String>
     public enum _ButtonTitle {}
-
-    case errorForAlert(ErrorMessage)
-    case errorScreen
-    case weakPinAlert(ErrorMessage, ButtonTitle)
+    
+    case pinError(PinError)
+    case cvvError(CvvError)
     
     public var message: ErrorMessage? {
+        
         switch self {
+        case let .cvvError(error):
+            switch error {
+            case let .errorForAlert(errorMessage):
+                return errorMessage
+                
+            case let .noRetry(errorMessage, _):
+                return errorMessage
+            }
             
-        case let .errorForAlert(errorMessage):
-            return errorMessage
-        case .errorScreen:
-            return nil
-        case let .weakPinAlert(errorMessage, _):
-            return errorMessage
+        case let .pinError(error):
+            switch error {
+            case let .errorForAlert(errorMessage):
+                return errorMessage
+                
+            case .errorScreen:
+                return nil
+                
+            case let .weakPinAlert(errorMessage, _):
+                return errorMessage
+            }
         }
     }
     
     public var buttonTitle: ButtonTitle? {
         switch self {
+        case let .cvvError(error):
+            switch error {
+            case let .noRetry(_, buttonTitle):
+                return buttonTitle
+                
+            default:
+                return nil
+            }
             
-        case .errorForAlert, .errorScreen:
-            return nil
-            
-        case let .weakPinAlert(_, buttonTitle):
-            return buttonTitle
+        case let .pinError(error):
+            switch error {
+            case let .weakPinAlert(_, buttonTitle):
+                return buttonTitle
+                
+            default:
+                return nil
+            }
         }
+    }
+    
+    public enum PinError: Equatable {
+        case errorForAlert(ErrorMessage)
+        case errorScreen
+        case weakPinAlert(ErrorMessage, ButtonTitle)
+    }
+    
+    public enum CvvError: Equatable {
+        case errorForAlert(ErrorMessage)
+        case noRetry(ErrorMessage, ButtonTitle)
     }
 }
 

@@ -36,12 +36,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var textFieldAlert: AlertTextFieldView.ViewModel?
     @Published var spinner: SpinnerView.ViewModel?
-    
+    @Published var fullScreenCoverState: FullScreenCoverState?
     @Published var success: PaymentsSuccessViewModel?
-    @Published var successZeroAccount: ZeroAccount?
-    @Published var successChangePin: PaymentsSuccessViewModel?
-    @Published var confirmOtpView: FullCover.ConfirmCode?
-    @Published var changePin: FullCover.ChangePin?
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     
@@ -145,8 +141,6 @@ class ProductProfileViewModel: ObservableObject {
 
 extension ProductProfileViewModel {
     
-    typealias CompletionErrorOtp = (Int, String)
-    
     func closeLinkAndResendRequest(
         cardId: CardDomain.CardId,
         actionType: ConfirmViewModel.CVVPinAction
@@ -172,7 +166,7 @@ extension ProductProfileViewModel {
             }
             
         case .showCvv:
-            DispatchQueue.global().async { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 
                 self?.showCVV(cardId: cardId)
             }
@@ -317,12 +311,13 @@ private extension ProductProfileViewModel {
             .sink { [weak self] payload in
                 
                 guard let self else { return }
-                
-                changePin = .init(
+
+                self.fullScreenCoverState = .changePin(.init(
                     cardId: payload.cardId,
                     displayNumber: payload.phone,
-                    model: self.createPinCodeViewModel(displayNumber: payload.phone))
-                
+                    model: self.createPinCodeViewModel(displayNumber: payload.phone), 
+                    request: self.resendOtpForPin
+                ))
             }
             .store(in: &bindings)
         
@@ -349,14 +344,17 @@ private extension ProductProfileViewModel {
         action
             .compactMap { $0 as? ProductProfileViewModelAction.CVVPin.ConfirmShow }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                self.alert = nil
-                self.confirmOtpView = .init(
+            .sink { [weak self] action in
+                
+                self?.alert = nil
+                self?.fullScreenCoverState = .confirmOTP(.init(
                     cardId: action.cardId,
                     action: action.actionType,
                     phone: action.phone,
-                    request: action.resendOtp)
-            }.store(in: &bindings)
+                    request: action.resendOtp
+                ))
+            }
+            .store(in: &bindings)
         
         // Show Spinner
         action
@@ -471,9 +469,8 @@ private extension ProductProfileViewModel {
                     sheet = nil
                     
                 case _ as ProductProfileViewModelAction.Close.Success:
-                    successZeroAccount = nil
+                    fullScreenCoverState = nil
                     success = nil
-                    successChangePin = nil
                     
                 case _ as ProductProfileViewModelAction.Close.AccountSpinner:
                     closeAccountSpinner = nil
@@ -1404,7 +1401,7 @@ private extension ProductProfileViewModel {
                 
                 switch action {
                 case let payload as CloseAccountSpinnerAction.Response.Success:
-                    self.successZeroAccount = ZeroAccount(viewModel: payload.viewModel)
+                    self.fullScreenCoverState = .successZeroAccount(payload.viewModel)
                     bind(payload.viewModel)
                     self.success = payload.viewModel
                     
@@ -1435,7 +1432,7 @@ private extension ProductProfileViewModel {
                     self.rootActions?.switchTab(.main)
                     
                 case _ as PaymentsSuccessAction.Button.Ready:
-                    successChangePin = nil
+                    self.fullScreenCoverState = nil
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     
@@ -1831,41 +1828,64 @@ extension ProductProfileViewModel {
         }
     }
     
-    struct FullCover: Identifiable {
+    enum FullScreenCoverState: Hashable & Identifiable {
         
-        let id = UUID()
-        let type: Kind
+        case changePin(ChangePin)
+        case confirmOTP(ConfirmCode)
+        case successChangePin(PaymentsSuccessViewModel)
+        case successZeroAccount(PaymentsSuccessViewModel)
         
-        enum Kind {
+        var id: Case {
             
-            case successMeToMe(PaymentsSuccessViewModel)
+            switch self {
+            case .changePin:
+                return .changePin
+                
+            case .confirmOTP:
+                return .confirmOTP
+                
+            case .successChangePin:
+                return .successChangePin
+                
+            case .successZeroAccount:
+                return .successZeroAccount
+            }
         }
         
         typealias ResendRequest = () -> Void
         
-        struct ConfirmCode: Identifiable {
+        struct ConfirmCode {
             
-            let id = UUID()
             let cardId: CardDomain.CardId
             let action: ConfirmViewModel.CVVPinAction
             let phone: PhoneDomain.Phone
             let request: ResendRequest
         }
         
-        struct ChangePin: Identifiable {
+        struct ChangePin {
             
-            let id = UUID()
             let cardId: CardDomain.CardId
             let displayNumber: PhoneDomain.Phone
             let model: PinCodeViewModel
+            let request: ResendRequest
         }
-    }
-    
-    struct ZeroAccount: Identifiable {
+        enum Case: Hashable {
+            
+            case changePin
+            case confirmOTP
+            case successChangePin
+            case successZeroAccount
+        }
         
-        let id = UUID()
-        let viewModel: PaymentsSuccessViewModel
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            
+            lhs.id == rhs.id
+        }
         
+        func hash(into hasher: inout Hasher) {
+            
+            hasher.combine(id)
+        }
     }
 }
 
@@ -2027,10 +2047,31 @@ extension ProductProfileViewModel {
             handlePinError(cardId, pinError, displayNumber)
             
         case .success:
-            changePin = .init(
+            fullScreenCoverState = .changePin(.init(
                 cardId: cardId,
                 displayNumber: displayNumber,
-                model: self.createPinCodeViewModel(displayNumber: displayNumber))
+                model: self.createPinCodeViewModel(displayNumber: displayNumber),
+                request: self.resendOtpForPin
+            ))
+        }
+    }
+    
+    func resendOtpForPin() {
+        
+        cvvPINServicesClient.getPINConfirmationCode { [weak self] result in
+            
+            guard let self else { return }
+            
+            Task { @MainActor in
+                if case let .failure(error) = result {
+                    switch error {
+                    case let .server(_, errorMessage):
+                        self.makeAlert(errorMessage)
+                    case .serviceFailure, .activationFailure:
+                        self.makeAlert("Техническая ошибка.")
+                    }
+                }
+            }
         }
     }
     
@@ -2163,7 +2204,7 @@ extension ProductProfileViewModel {
         )
         
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-        self.successChangePin = successViewModel
+        self.fullScreenCoverState = .successChangePin(successViewModel)
         bind(successViewModel)
     }
     
@@ -2177,7 +2218,7 @@ extension ProductProfileViewModel {
         )
         
         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
-        self.successChangePin = successViewModel
+        self.fullScreenCoverState = .successChangePin(successViewModel)
         bind(successViewModel)
     }
 }
@@ -2218,11 +2259,11 @@ extension ProductProfileViewModel {
             
         case let .server(code, _):
             // show Alert with message
-            self.makeAlert("\(String.cvvNotReceived)\nКод ошибки \(code).")
+            self.makeAlert("\(String.cvvNotReceived).\nКод ошибки \(code).")
             
         case .serviceFailure:
             // show Alert
-            self.makeAlert("\(String.cvvNotReceived)\n\(String.tryLater).")
+            self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
         }
     }
 }

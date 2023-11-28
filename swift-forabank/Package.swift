@@ -13,6 +13,7 @@ let package = Package(
         .loadableResourceComponent,
         .paymentSticker,
         .phoneNumberWrapper,
+        .sberQR,
         .sharedAPIInfra,
         .textFieldModel,
         // Landing
@@ -64,6 +65,8 @@ let package = Package(
         .paymentStickerTests,
         .phoneNumberWrapper,
         .phoneNumberWrapperTests,
+        .sberQR,
+        .sberQRTests,
         .sharedAPIInfra,
         .sharedAPIInfraTests,
         .textFieldDomain,
@@ -156,6 +159,13 @@ private extension Product {
         name: .phoneNumberWrapper,
         targets: [
             .phoneNumberWrapper,
+        ]
+    )
+    
+    static let sberQR = library(
+        name: .sberQR,
+        targets: [
+            .sberQR,
         ]
     )
     
@@ -436,6 +446,16 @@ private extension Target {
             .customDump,
             // internal modules
             .phoneNumberWrapper,
+        ]
+    )
+    
+    static let sberQR = target(
+        name: .sberQR
+    )
+    static let sberQRTests = testTarget(
+        name: .sberQRTests,
+        dependencies: [
+            .sberQR,
         ]
     )
     
@@ -889,6 +909,10 @@ private extension Target.Dependency {
         name: .phoneNumberWrapper
     )
     
+    static let sberQR = byName(
+        name: .sberQR
+    )
+    
     static let sharedAPIInfra = byName(
         name: .sharedAPIInfra
     )
@@ -1019,6 +1043,9 @@ private extension String {
     
     static let phoneNumberWrapper = "PhoneNumberWrapper"
     static let phoneNumberWrapperTests = "PhoneNumberWrapperTests"
+    
+    static let sberQR = "SberQR"
+    static let sberQRTests = "SberQRTests"
     
     static let sharedAPIInfra = "SharedAPIInfra"
     static let sharedAPIInfraTests = "SharedAPIInfraTests"

@@ -63,14 +63,12 @@ extension Model {
         }
     }
     
-    // TODO: добавить тесты!!!
-
     // update parameter value with source
     func paymentsProcessSourceReducerSFP(phone: String, bankId: BankData.ID, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
 
         switch parameterId {
         case Payments.Parameter.Identifier.sfpPhone.rawValue:
-            return phone
+            return PhoneNumberKitFormater().format(phone.digits.addCodeRuIfNeeded())
             
         case Payments.Parameter.Identifier.sfpBank.rawValue:
             return bankId
