@@ -59,11 +59,6 @@ struct InputView: View {
             backgroundColor: configuration.textFieldBackgroundColor,
             placeholderColor: configuration.textFieldPlaceholderColor
         )
-        
-        let reducer = TransformingReducer(
-            placeholderText: "Введите код из смс",
-            transform: Transformers.limiting(6).transform(_:)
-        )
     }
     
     var body: some View {
@@ -79,7 +74,36 @@ struct InputView: View {
             warning: warning,
             makeLabel: { textField }
         )
+        .onChange(of: regularFieldViewModel.text ?? "", perform: commit)
+
     }
+}
+
+extension ReducerTextFieldViewModel {
+    
+    var text: String? { state.text }
+    
+    func textPublisher(
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> AnyPublisher<String?, Never> {
+        
+        $state
+            .map(\.text)
+            .eraseToAnyPublisher()
+    }
+    
+    func isEditing(
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> AnyPublisher<Bool, Never> {
+        
+        $state
+            .map(\.isEditing)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Support existing API
+    
+    var hasValue: Bool { text != "" && text != nil }
 }
 
 public struct InputConfiguration {
