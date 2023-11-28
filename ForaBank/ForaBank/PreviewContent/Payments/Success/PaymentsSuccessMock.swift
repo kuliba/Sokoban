@@ -187,22 +187,6 @@ extension PaymentsSuccessViewModel {
                 Payments.ParameterButton.actionButtonMain()
             ]), .emptyMock)
     
-   
-    static let pinSuccess: PaymentsSuccessViewModel = .init(
-        paymentSuccess: .init(
-            operation: .emptyMock,
-            parameters: [
-                Payments.ParameterSuccessStatus(status: .success),
-                Payments.ParameterSuccessLogo(icon: .name("ic40Sbp"), title: "PIN-код успешно изменен"),
-                Payments.ParameterSuccessOptionButtons(
-                    options: [.template, .document, .details],
-                    templateID: nil,
-                    meToMePayment: nil,
-                    operation: nil
-                ),
-                Payments.ParameterButton.actionButtonMain()
-            ]), .emptyMock)
-    
     static let previewMobileConnectionAccepted: PaymentsSuccessViewModel = .init(
         paymentSuccess: .init(
             operation: .emptyMock,

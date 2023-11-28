@@ -12,7 +12,7 @@ public struct ConfirmView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     let config: ConfirmView.Config
-    @ObservedObject var viewModel: ConfirmViewModel
+    @StateObject var viewModel: ConfirmViewModel
     private var timerViewModel: ConfirmViewModel.TimerViewModel
     
     public init(
