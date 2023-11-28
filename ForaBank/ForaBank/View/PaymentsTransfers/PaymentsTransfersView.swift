@@ -54,7 +54,10 @@ struct PaymentsTransfersView: View {
             
             Color.clear
                 .fullScreenCover(
-                    item: $viewModel.fullScreenSheet,
+                    item: .init(
+                        get: { viewModel.route?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.route = nil } }
+                    ),
                     content: fullScreenCoverView
                 )
         }

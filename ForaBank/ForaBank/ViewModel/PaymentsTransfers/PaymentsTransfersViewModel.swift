@@ -44,7 +44,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool
-    @Published var fullScreenSheet: FullScreenSheet?
+//    @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
     
     let mode: Mode
@@ -108,7 +108,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         route = nil
         fullCover = nil
         link = nil
-        fullScreenSheet = nil
         
         if mode == .normal {
             isTabBarHidden = false
@@ -163,7 +162,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     })
                     
                     self.bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     route = nil
@@ -178,7 +177,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     link = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
-                    fullScreenSheet = nil
+                    route = nil
                     
                     
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
@@ -373,7 +372,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             })
                             
                             self.bind(qrScannerModel)
-                            fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                            route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                             
                         case .service, .internet:
                             
@@ -545,7 +544,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     })
                     
                     self.bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
                     let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
@@ -830,7 +829,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                 }, requisitsAction: { [weak self] in
                                     
-                                    self?.fullScreenSheet = nil
+                                    self?.route = nil
                                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                                     
                                 })
