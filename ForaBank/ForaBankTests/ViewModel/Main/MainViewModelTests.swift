@@ -13,7 +13,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.fastPayment?.tapTemplatesAndWait()
@@ -24,7 +24,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait()
@@ -35,7 +35,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$link.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
@@ -196,8 +196,8 @@ private extension MainViewModel {
     
     var templatesListViewModel: TemplatesListViewModel? {
         
-        switch link {
-        case let .templates(templatesListViewModel):
+        switch route {
+        case let .link(.templates(templatesListViewModel)):
             return templatesListViewModel
             
         default:
@@ -206,12 +206,12 @@ private extension MainViewModel {
     }
 }
 
-private extension MainViewModel.Link {
+private extension MainViewModel.Route {
     
     var `case`: Case? {
         
         switch self {
-        case .templates: return .templates
+        case .link(.templates): return .templates
         default:         return .other
         }
     }
