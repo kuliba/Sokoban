@@ -75,8 +75,23 @@ struct MainView<NavigationOperationView: View>: View {
             }
             .coordinateSpace(name: "scroll")
             .zIndex(0)
+            
+            Color.clear
+                .fullScreenCover(
+                    item: .init(
+                        get: { viewModel.route?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.route = nil } }
+                    ),
+                    content: fullScreenSheetView
+                )
         }
         .ignoreKeyboard()
+        .sheet(
+            item: .init(
+                get: { viewModel.route?.sheet },
+                set: { if $0 == nil { viewModel.route = nil } }),
+            content: sheetView
+        )
         .alert(
             item: .init(
                 get: { viewModel.route?.alert },
@@ -90,19 +105,6 @@ struct MainView<NavigationOperationView: View>: View {
                 set: { if $0 == nil { viewModel.route = nil } }
             ),
             content: bottomSheetView
-        )
-        .sheet(
-            item: .init(
-                get: { viewModel.route?.sheet },
-                set: { if $0 == nil { viewModel.route = nil } }),
-            content: sheetView
-        )
-        .fullScreenCover(
-            item: .init(
-                get: { viewModel.route?.fullScreenSheet },
-                set: { if $0 == nil { viewModel.route = nil } }
-            ),
-            content: fullScreenSheetView
         )
         .navigationDestination(
             item: .init(
