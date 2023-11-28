@@ -72,7 +72,13 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route?.bottomSheet },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: bottomSheetView
+        )
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

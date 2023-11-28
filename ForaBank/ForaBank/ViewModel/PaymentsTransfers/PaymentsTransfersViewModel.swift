@@ -27,7 +27,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
-    @Published var bottomSheet: BottomSheet?
+    
+    @Published var route: Route?
+//    @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var fullCover: FullCover?
     @Published var link: Link? {
@@ -103,7 +105,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     func reset() {
         
-        bottomSheet = nil
+        route = nil
         fullCover = nil
         sheet = nil
         link = nil
@@ -165,7 +167,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
-                    bottomSheet = nil
+                    route = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
@@ -337,7 +339,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             bind(viewModel)
                             
-                            bottomSheet = .init(type: .meToMe(viewModel))
+                            route = .bottomSheet(.init(type: .meToMe(viewModel)))
                             
                         case .requisites:
                             let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
@@ -431,10 +433,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }
                             link = .init(.payments(paymentsViewModel))
                             
-                        case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .socialAndGame: 
+                            route = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue))) //TODO:
                             
+                        case .security:
+                            route = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue)))
+                            //TODO:
+                            
+                        case .others:
+                            route = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue))) //TODO:
                         }
                         
                     default:
@@ -589,7 +596,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
-                    guard let bottomSheet = bottomSheet else {
+                    guard case let .bottomSheet(bottomSheet) = route else {
                         return
                     }
                     
@@ -1158,7 +1165,7 @@ extension PaymentsTransfersViewModel {
                 )
 
         default: //error matching
-            bottomSheet = .init(type: .exampleDetail(latestPayment.type.rawValue)) //TODO:
+            route = .bottomSheet(.init(type: .exampleDetail(latestPayment.type.rawValue))) //TODO:
         }
     }
     
@@ -1175,6 +1182,65 @@ extension PaymentsTransfersViewModel {
         
         /// view presented in navigation stack
         case link
+    }
+    
+    enum Route {
+        
+        case alert(Alert.ViewModel)
+        case bottomSheet(BottomSheet)
+        case fullScreenSheet(FullScreenSheet)
+        case link(Link)
+        case sheet(Sheet)
+        
+        var alert: Alert.ViewModel? {
+            if case let .alert(alert) = self {
+                
+                return alert
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var bottomSheet: BottomSheet? {
+            if case let .bottomSheet(bottomSheet) = self {
+                
+                return bottomSheet
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var fullScreenSheet: FullScreenSheet? {
+            if case let .fullScreenSheet(fullScreenSheet) = self {
+                
+                return fullScreenSheet
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var link: Link? {
+            if case let .link(link) = self {
+                
+                return link
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var sheet: Sheet? {
+            if case let .sheet(sheet) = self {
+                
+                return sheet
+            } else {
+                
+                return nil
+            }
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {

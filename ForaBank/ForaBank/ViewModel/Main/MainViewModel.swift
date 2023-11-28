@@ -22,14 +22,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var productProfile: ProductProfileViewModel?
     
     @Published var route: Route?
-    
-//    @Published var sheet: Sheet?
-//    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
-//    @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
-//    @Published var bottomSheet: BottomSheet?
-//    @Published var fullScreenSheet: FullScreenSheet?
-//    @Published var alert: Alert.ViewModel?
     
     var rootActions: RootViewModel.RootActions?
     
