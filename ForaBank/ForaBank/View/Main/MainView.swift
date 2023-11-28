@@ -77,6 +77,14 @@ struct MainView<NavigationOperationView: View>: View {
             .zIndex(0)
             
             Color.clear
+                .sheet(
+                    item: .init(
+                        get: { viewModel.route?.sheet },
+                        set: { if $0 == nil { viewModel.route = nil } }),
+                    content: sheetView
+                )
+            
+            Color.clear
                 .fullScreenCover(
                     item: .init(
                         get: { viewModel.route?.fullScreenSheet },
@@ -86,12 +94,6 @@ struct MainView<NavigationOperationView: View>: View {
                 )
         }
         .ignoreKeyboard()
-        .sheet(
-            item: .init(
-                get: { viewModel.route?.sheet },
-                set: { if $0 == nil { viewModel.route = nil } }),
-            content: sheetView
-        )
         .alert(
             item: .init(
                 get: { viewModel.route?.alert },
