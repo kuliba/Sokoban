@@ -221,13 +221,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             }.store(in: &bindings)
         
         action
-            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Payment })
+            .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Payment }
+            .map(\.viewModel)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] in
-                
-                self.link = .payments($0.viewModel)
-                
-            }.store(in: &bindings)
+            .sink { [unowned self] in self.link = .payments($0) }
+            .store(in: &bindings)
         
         action
             .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Contacts })
