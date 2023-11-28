@@ -49,7 +49,8 @@ struct RootView: View {
                 viewModel: viewModel.mainViewModel,
                 navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
                     httpClient: httpClient,
-                    model: model
+                    model: model,
+                    dismissAll: viewModel.rootActions.dismissAll
                 )
             )
         }

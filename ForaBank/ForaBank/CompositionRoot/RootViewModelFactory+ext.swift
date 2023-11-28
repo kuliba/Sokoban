@@ -57,12 +57,15 @@ extension RootViewModelFactory {
     
     static func makeNavigationOperationView(
         httpClient: HTTPClient,
-        model: Model
+        model: Model,
+        dismissAll: @escaping() -> Void
     ) -> () -> some View {
      
         return makeNavigationOperationView
         
-        func operationView(setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)) -> some View {
+        func operationView(
+            setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
+        ) -> some View {
          
             let makeOperationStateViewModel = makeOperationStateViewModel(
                 httpClient,
@@ -79,6 +82,7 @@ extension RootViewModelFactory {
                             httpClient: httpClient,
                             model: model
                         ),
+                        mainButtonAction: dismissAll,
                         configuration: .default
                     )
                 },

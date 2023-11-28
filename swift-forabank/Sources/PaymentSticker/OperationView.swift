@@ -150,14 +150,17 @@ public struct OperationResultView<ButtonsView: View>: View {
     let model: OperationStateViewModel.OperationResult
     let buttonsView: (PaymentID) -> ButtonsView
     let configuration: OperationViewConfiguration
+    let mainButtonAction: () -> Void
     
     public init(
         model: OperationStateViewModel.OperationResult,
         buttonsView: @escaping (PaymentID) -> ButtonsView,
+        mainButtonAction: @escaping () -> Void,
         configuration: OperationViewConfiguration
     ) {
         self.model = model
         self.buttonsView = buttonsView
+        self.mainButtonAction = mainButtonAction
         self.configuration = configuration
     }
     
@@ -197,11 +200,7 @@ public struct OperationResultView<ButtonsView: View>: View {
              
                 buttonsView(model.paymentID)
                 
-                Button {
-                    
-                    print("button end tapped")
-                    
-                } label: {
+                Button(action: mainButtonAction) {
                     
                     Text("На главный")
                         .padding()
