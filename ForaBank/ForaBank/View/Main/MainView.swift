@@ -93,14 +93,14 @@ struct MainView<NavigationOperationView: View>: View {
                     content: fullScreenSheetView
                 )
         }
-        .navigationDestination(
+        .ignoreKeyboard()
+        .alert(
             item: .init(
-                get: { viewModel.route?.link },
+                get: { viewModel.route?.alert },
                 set: { if $0 == nil { viewModel.route = nil } }
             ),
-            content: destinationView
+            content: Alert.init(with:)
         )
-        .ignoreKeyboard()
         .bottomSheet(
             item: .init(
                 get: { viewModel.route?.bottomSheet },
@@ -108,7 +108,13 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: bottomSheetView
         )
-        .alert(item: $viewModel.alert, content: Alert.init(with:))
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route?.link },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: destinationView
+        )
         .tabBar(isHidden: $viewModel.isTabBarHidden)
         .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
         .navigationBarTitle("", displayMode: .inline)

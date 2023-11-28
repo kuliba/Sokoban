@@ -29,7 +29,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var isTabBarHidden: Bool = false
 //    @Published var bottomSheet: BottomSheet?
 //    @Published var fullScreenSheet: FullScreenSheet?
-    @Published var alert: Alert.ViewModel?
+//    @Published var alert: Alert.ViewModel?
     
     var rootActions: RootViewModel.RootActions?
     
@@ -226,10 +226,10 @@ class MainViewModel: ObservableObject, Resetable {
                             continue
                         }
                         
-                        self.alert = .init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
+                        self.route = .alert(.init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: deposit.id))
-                        }))
+                        })))
                         
                         self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.id))
                         
@@ -604,7 +604,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 await MainActor.run {
                                     
-                                    self.alert = .init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                                    self.route = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.route = nil })))
                                 }
                                 
                                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
@@ -906,31 +906,21 @@ extension MainViewModel {
     
     enum Route {
         
-        case sheet(Sheet)
-        case link(Link)
+        case alert(Alert.ViewModel)
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
-        case alert(Alert.ViewModel)
+        case link(Link)
+        case sheet(Sheet)
         
-        var sheet: Sheet? {
-            if case let .sheet(sheet) = self {
+        var alert: Alert.ViewModel? {
+            if case let .alert(alert) = self {
                 
-                return sheet
+                return alert
             } else {
                 
                 return nil
             }
-        } 
-        
-        var link: Link? {
-            if case let .link(link) = self {
-                
-                return link
-            } else {
-                
-                return nil
-            }
-        }    
+        }
         
         var bottomSheet: BottomSheet? {
             if case let .bottomSheet(bottomSheet) = self {
@@ -940,12 +930,32 @@ extension MainViewModel {
                 
                 return nil
             }
-        } 
+        }
         
         var fullScreenSheet: FullScreenSheet? {
             if case let .fullScreenSheet(fullScreenSheet) = self {
                 
                 return fullScreenSheet
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var link: Link? {
+            if case let .link(link) = self {
+                
+                return link
+            } else {
+                
+                return nil
+            }
+        }
+        
+        var sheet: Sheet? {
+            if case let .sheet(sheet) = self {
+                
+                return sheet
             } else {
                 
                 return nil
