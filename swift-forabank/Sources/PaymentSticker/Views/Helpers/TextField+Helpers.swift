@@ -7,6 +7,35 @@
 
 import Foundation
 import TextFieldDomain
+import TextFieldComponent
+import Combine
+
+extension ReducerTextFieldViewModel {
+    
+    var text: String? { state.text }
+    
+    func textPublisher(
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> AnyPublisher<String?, Never> {
+        
+        $state
+            .map(\.text)
+            .eraseToAnyPublisher()
+    }
+    
+    func isEditing(
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> AnyPublisher<Bool, Never> {
+        
+        $state
+            .map(\.isEditing)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Support existing API
+    
+    var hasValue: Bool { text != "" && text != nil }
+}
 
 extension TextFieldState {
     
