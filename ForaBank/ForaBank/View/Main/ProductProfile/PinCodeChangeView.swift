@@ -12,7 +12,7 @@ import Tagged
 
 struct PinCodeChangeView<ConfirmationView: View>: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
+    
     @ObservedObject private var viewModel: PinCodeViewModel
     
     private let config: PinCodeView.Config
@@ -30,56 +30,47 @@ struct PinCodeChangeView<ConfirmationView: View>: View {
     
     var body: some View {
         
-        VStack(alignment: .center) {
+        if viewModel.phoneNumber != nil {
             
-            Button(
-                action: { self.presentationMode.wrappedValue.dismiss() },
-                label: {
-                    Image.ic24ChevronLeft
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fit)
-                }
+            confirmationView(
+                .init(value: viewModel.phoneNumber?.value ?? "default"),
+                .init(viewModel.state.code)
             )
-            .buttonStyle(.plain)
-            .padding(.top, 12)
-            .padding(.leading, 20)
-            .maxWidthLeadingFrame()
-
-            PinCodeView(
-                viewModel: viewModel,
-                config: config.pinCodeConfig)
-            .padding(.bottom, 16)
             
-            KeyPad(
-                string: $viewModel.state.code,
-                config: config.buttonConfig,
-                deleteImage: .ic40Delete,
-                pinCodeLength: viewModel.pincodeLength,
-                action: viewModel.confirm
-            )
-            .fixedSize()
-            .animationsDisabled()
-            .fullScreenCover(
-                item: .init(
-                    get: { viewModel.phoneNumber },
-                    set: viewModel.dismissFullCover
-                ),
-                onDismiss: {
-                    self.presentationMode.wrappedValue.dismiss()
- },
-                content: { phoneNumber in
-                    
-                    NavigationView {
-                        confirmationView(
-                            .init(value: phoneNumber.value),
-                            .init(viewModel.state.code)
-                        )
-                        .navigationBarHidden(true)
+        } else {
+            
+            VStack(alignment: .center) {
+                
+                Button(
+                    action: { self.presentationMode.wrappedValue.dismiss() },
+                    label: {
+                        Image.ic24ChevronLeft
+                            .frame(width: 24, height: 24)
+                            .aspectRatio(contentMode: .fit)
                     }
-                }
-            )
-            
-            Spacer()
+                )
+                .buttonStyle(.plain)
+                .padding(.top, 12)
+                .padding(.leading, 20)
+                .maxWidthLeadingFrame()
+                
+                PinCodeView(
+                    viewModel: viewModel,
+                    config: config.pinCodeConfig)
+                .padding(.bottom, 16)
+                
+                KeyPad(
+                    string: $viewModel.state.code,
+                    config: config.buttonConfig,
+                    deleteImage: .ic40Delete,
+                    pinCodeLength: viewModel.pincodeLength,
+                    action: viewModel.confirm
+                )
+                .fixedSize()
+                .animationsDisabled()
+                
+                Spacer()
+            }
         }
     }
 }

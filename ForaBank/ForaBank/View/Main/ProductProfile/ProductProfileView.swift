@@ -216,6 +216,7 @@ struct ProductProfileView: View {
         
         switch state {
         case let .changePin(changePIN):
+            
             changePinCodeView(
                 cardId: changePIN.cardId,
                 actionType: .changePin(changePIN.displayNumber),
@@ -228,6 +229,7 @@ struct ProductProfileView: View {
             ).transition(.move(edge: .leading))
             
         case let .confirmOTP(confirm):
+            
             confirmCodeView(
                 phoneNumber: confirm.phone,
                 cardId: confirm.cardId,
@@ -239,12 +241,14 @@ struct ProductProfileView: View {
             ).transition(.move(edge: .leading))
             
         case let .successChangePin(viewModel):
+            
             PaymentsSuccessView(viewModel: viewModel)
                 .transaction { transaction in
                     transaction.disablesAnimations = false
                 }
             
         case let .successZeroAccount(viewModel):
+            
             PaymentsSuccessView(viewModel: viewModel)
                 .transaction { transaction in
                     transaction.disablesAnimations = false

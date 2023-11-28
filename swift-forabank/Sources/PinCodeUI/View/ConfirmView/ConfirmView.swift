@@ -1,6 +1,6 @@
 //
 //  ConfirmView.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 18.07.2023.
 //
@@ -12,7 +12,7 @@ public struct ConfirmView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     let config: ConfirmView.Config
-    @StateObject var viewModel: ConfirmViewModel
+    @ObservedObject var viewModel: ConfirmViewModel
     private var timerViewModel: ConfirmViewModel.TimerViewModel
     
     public init(
