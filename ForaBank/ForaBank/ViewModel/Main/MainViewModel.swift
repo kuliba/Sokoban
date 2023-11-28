@@ -28,7 +28,7 @@ class MainViewModel: ObservableObject, Resetable {
 //    @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
 //    @Published var bottomSheet: BottomSheet?
-    @Published var fullScreenSheet: FullScreenSheet?
+//    @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
     
     var rootActions: RootViewModel.RootActions?
@@ -128,7 +128,7 @@ class MainViewModel: ObservableObject, Resetable {
                     self.route = nil
 
                 case _ as MainViewModelAction.Close.FullScreenSheet:
-                    self.fullScreenSheet = nil
+                    self.route = nil
 
                 case _ as MainViewModelAction.ViewDidApear:
                     self.isTabBarHidden = false
@@ -139,7 +139,7 @@ class MainViewModel: ObservableObject, Resetable {
                     })
 
                     bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                                     
                 default:
                     break
@@ -319,7 +319,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 })
 
                                 bind(qrScannerModel)
-                                fullScreenSheet = .init(type: .qrScanner(qrScannerModel)) 
+                                route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                             }
                             
                         default:
@@ -491,7 +491,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
                                 guard operators.count > 0 else {
                                 
-                                    self.fullScreenSheet = nil
+                                    self.route = nil
                                     self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                                     return
                                 }
@@ -559,7 +559,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             } else {
                                 
-                                self.fullScreenSheet = nil
+                                self.route = nil
                                 self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                             }
                             
@@ -577,7 +577,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     
                                 }, requisitsAction: { [weak self] in
                                     
-                                    self?.fullScreenSheet = nil
+                                    self?.route = nil
                                     self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                                 })
                                 self.route = .link(.failedView(failedView))
@@ -705,7 +705,7 @@ class MainViewModel: ObservableObject, Resetable {
                     })
 
                     bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                     
                 default: break
                 }
@@ -936,6 +936,16 @@ extension MainViewModel {
             if case let .bottomSheet(bottomSheet) = self {
                 
                 return bottomSheet
+            } else {
+                
+                return nil
+            }
+        } 
+        
+        var fullScreenSheet: FullScreenSheet? {
+            if case let .fullScreenSheet(fullScreenSheet) = self {
+                
+                return fullScreenSheet
             } else {
                 
                 return nil
