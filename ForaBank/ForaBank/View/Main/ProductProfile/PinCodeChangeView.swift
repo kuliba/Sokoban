@@ -30,7 +30,7 @@ struct PinCodeChangeView<ConfirmationView: View>: View {
     
     var body: some View {
         
-        if viewModel.phoneNumber != nil {
+        if let phone = viewModel.phoneNumber {
             
             confirmationView(
                 .init(value: viewModel.phoneNumber?.value ?? "default"),
