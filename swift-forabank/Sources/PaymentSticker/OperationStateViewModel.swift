@@ -36,32 +36,11 @@ final public class OperationStateViewModel: ObservableObject {
     
     @objc func methodOfReceivedNotification(notification: Notification) {
         
-        let otp = notification.userInfo?["otp"] as? String
-     
-        guard let input = self.operation?.parameters.first(where: { $0.id == .input }) else { return }
+        guard let otp = notification.userInfo?["otp"] as? String else { return }
         
-        switch input {
-        case let .input(input):
+        DispatchQueue.main.async {
             
-            guard let operation = operation, let otp else { return }
-            
-            let newOperation = self.operation?.updateOperation(
-                operation: operation,
-                newParameter: .input(.init(
-                    value: otp,
-                    title: input.title,
-                    warning: input.warning
-                ))
-            )
-            
-            guard let newOperation else { return }
-            
-            DispatchQueue.main.async {
-                
-                self.event(.input(.valueUpdate(otp)))
-            }
-            
-        default: return
+            self.event(.input(.valueUpdate(otp)))
         }
     }
     
@@ -112,13 +91,15 @@ final public class OperationStateViewModel: ObservableObject {
         
         blackBoxGet((operation, event)) { result in
             
-            switch result {
-            case let .failure(error):
-                self.handleAPIError(error)
-                
-            case let .success(state):
-                self.state = state
-
+            DispatchQueue.main.async {
+             
+                switch result {
+                case let .failure(error):
+                    self.handleAPIError(error)
+                    
+                case let .success(state):
+                    self.state = state
+                }
             }
         }
     }
