@@ -45,7 +45,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool
 //    @Published var fullScreenSheet: FullScreenSheet?
-    @Published var alert: Alert.ViewModel?
+//    @Published var alert: Alert.ViewModel?
     
     let mode: Mode
     var rootActions: RootViewModel.RootActions?
@@ -216,7 +216,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] in
                 
-                self.alert = .init(title: $0.title, message: $0.message, primary: .init(type: .default, title: "Ок", action: {}))
+                self.route = .alert(.init(title: $0.title, message: $0.message, primary: .init(type: .default, title: "Ок", action: {})))
                 
             }.store(in: &bindings)
         
@@ -937,7 +937,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             self?.action.send(ProductProfileViewModelAction.Close.Alert())
         })
         
-        alert = .init(alertViewModel)
+        route = .alert(alertViewModel)
     }
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {

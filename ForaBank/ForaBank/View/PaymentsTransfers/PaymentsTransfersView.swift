@@ -87,9 +87,13 @@ struct PaymentsTransfersView: View {
             ),
             content: bottomSheetView
         )
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .alert(
+            item: .init(
+                get: { viewModel.route?.alert },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: Alert.init(with:)
+        )
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
     
