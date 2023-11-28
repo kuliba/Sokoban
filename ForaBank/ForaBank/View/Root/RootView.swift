@@ -30,6 +30,7 @@ struct RootView: View {
                 .accentColor(.black)
                 .accessibilityIdentifier("tabBar")
                 .environment(\.mainViewSize, geo.size)
+                
             } //geo
             
             //FIXME: this is completely wrong implementation. There is no chance that in will work like NavigationView stack. Refactoring required.

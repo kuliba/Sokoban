@@ -30,7 +30,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     @Published var route: Route?
     @Published var fullCover: FullCover?
-    @Published var isTabBarHidden: Bool
     
     let mode: Mode
     var rootActions: RootViewModel.RootActions?
@@ -42,7 +41,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
         self.navButtonsRight = []
@@ -51,7 +49,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             PTSectionTransfersView.ViewModel(),
             PTSectionPaymentsView.ViewModel()
         ]
-        self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -69,11 +66,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         navButtonsRight: [NavigationBarButtonViewModel],
-        isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
         self.sections = sections
-        self.isTabBarHidden = isTabBarHidden
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -92,10 +87,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         route = nil
         fullCover = nil
-        
-        if mode == .normal {
-            isTabBarHidden = false
-        }
     }
     
     private func bind() {
@@ -173,10 +164,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                 case _ as PaymentsTransfersViewModelAction.ViewDidApear:
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                    
-                    if mode == .normal {
-                        isTabBarHidden = false
-                    }
                     
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())

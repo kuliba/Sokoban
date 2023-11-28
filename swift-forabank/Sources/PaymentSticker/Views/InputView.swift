@@ -13,7 +13,7 @@ import TextFieldComponent
 
 struct InputView: View {
     
-    @ObservedObject private var regularFieldViewModel: RegularFieldViewModel
+    @StateObject private var regularFieldViewModel: RegularFieldViewModel
     
     private let title: String
     private let commit: (String) -> Void
@@ -29,11 +29,11 @@ struct InputView: View {
         configuration: InputConfiguration
     ) {
         
-        self.regularFieldViewModel = .make(
+        self._regularFieldViewModel = .init(wrappedValue: .make(
             code: code,
             placeholderText: "Введите код из смс",
             limit: 6
-        )
+        ))
         
         self.title = title
         self.commit = commit

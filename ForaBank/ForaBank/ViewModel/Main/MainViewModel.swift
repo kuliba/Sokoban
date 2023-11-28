@@ -22,7 +22,6 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var productProfile: ProductProfileViewModel?
     
     @Published var route: Route?
-    @Published var isTabBarHidden: Bool = false
     
     var rootActions: RootViewModel.RootActions?
     
@@ -52,7 +51,6 @@ class MainViewModel: ObservableObject, Resetable {
     func reset() {
         
         route = nil
-        isTabBarHidden = false
         
         for section in sections {
             
@@ -122,9 +120,6 @@ class MainViewModel: ObservableObject, Resetable {
 
                 case _ as MainViewModelAction.Close.FullScreenSheet:
                     self.route = nil
-
-                case _ as MainViewModelAction.ViewDidApear:
-                    self.isTabBarHidden = false
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
@@ -1094,8 +1089,6 @@ enum MainViewModelAction {
     struct OpenProduct: Action {}
     
     struct PullToRefresh: Action {}
-    
-    struct ViewDidApear: Action {}
     
     enum Close {
         

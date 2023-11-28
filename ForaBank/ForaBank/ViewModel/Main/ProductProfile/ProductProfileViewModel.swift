@@ -332,7 +332,6 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     makeProductProfileViewModel: makeProductProfileViewModel,
-                    isTabBarHidden: true,
                     mode: .link
                 )
                 link = .paymentsTransfers(paymentsTransfersViewModel)

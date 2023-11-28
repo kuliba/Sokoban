@@ -96,7 +96,10 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .tabBar(isHidden: $viewModel.isTabBarHidden)
+        .tabBar(isHidden: .init(
+            get: { viewModel.route != nil },
+            set: { _ in }
+        ))
     }
     
     @ViewBuilder

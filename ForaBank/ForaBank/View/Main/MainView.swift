@@ -111,8 +111,10 @@ struct MainView<NavigationOperationView: View>: View {
             ),
             content: destinationView
         )
-        .tabBar(isHidden: $viewModel.isTabBarHidden)
-        .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }
+        .tabBar(isHidden: .init(
+            get: { viewModel.route != nil },
+            set: { _ in }
+        ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading:
