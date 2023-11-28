@@ -87,7 +87,12 @@ struct MainView<NavigationOperationView: View>: View {
             }
             
             Color.clear
-                .sheet(item: $viewModel.sheet, content: sheetView)
+                .sheet(
+                    item: .init(
+                        get: { viewModel.route?.sheet },
+                        set: { if $0 == nil { viewModel.route = nil } }),
+                    content: sheetView
+                )
             
             Color.clear
                 .fullScreenCover(
@@ -189,12 +194,6 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch sheet.type {
-        case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
-            
-        case let .messages(messagesHistoryViewModel):
-            MessagesHistoryView(viewModel: messagesHistoryViewModel)
-            
         case let .places(placesViewModel):
             PlacesView(viewModel: placesViewModel)
             

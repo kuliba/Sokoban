@@ -20,7 +20,10 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?
-    @Published var sheet: Sheet?
+    
+    @Published var route: Route?
+    
+//    @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
@@ -55,7 +58,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     func reset() {
         
-        sheet = nil
+        route = nil
         link = nil
         bottomSheet = nil
         isTabBarHidden = false
@@ -124,7 +127,7 @@ class MainViewModel: ObservableObject, Resetable {
                     self.link = nil
                     
                 case _ as MainViewModelAction.Close.Sheet:
-                    self.sheet = nil
+                    self.route = nil
 
                 case _ as MainViewModelAction.Close.FullScreenSheet:
                     self.fullScreenSheet = nil
@@ -181,7 +184,7 @@ class MainViewModel: ObservableObject, Resetable {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
-                sheet = .init(type: .byPhone(contactsViewModel))
+                route = .sheet(.init(type: .byPhone(contactsViewModel)))
                
             }).store(in: &bindings)
         
@@ -193,7 +196,7 @@ class MainViewModel: ObservableObject, Resetable {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
-                sheet = .init(type: .byPhone(contactsViewModel))
+                route = .sheet(.init(type: .byPhone(contactsViewModel)))
                
             }).store(in: &bindings)
         
@@ -447,7 +450,7 @@ class MainViewModel: ObservableObject, Resetable {
                         guard let placesViewModel = PlacesViewModel(model) else {
                             return
                         }
-                        sheet = .init(type: .places(placesViewModel))
+                        route = .sheet(.init(type: .places(placesViewModel)))
                         
                     default:
                         break
@@ -903,6 +906,25 @@ extension MainViewModel {
         }
     }
     
+    enum Route {
+        
+        case sheet(Sheet)
+        case link(Link)
+        case bottomSheet(BottomSheet)
+        case fullScreenSheet(FullScreenSheet)
+        case alert(Alert.ViewModel)
+        
+        var sheet: Sheet? {
+            if case let .sheet(sheet) = self {
+                
+                return sheet
+            } else {
+                
+                return nil
+            }
+        }
+    }
+    
     struct Sheet: Identifiable {
         
         let id = UUID()
@@ -910,8 +932,6 @@ extension MainViewModel {
         
         enum Kind {
             
-            case productProfile(ProductProfileViewModel)
-            case messages(MessagesHistoryViewModel)
             case places(PlacesViewModel)
             case byPhone(ContactsViewModel)
         }
