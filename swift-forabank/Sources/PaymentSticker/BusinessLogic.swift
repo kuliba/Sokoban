@@ -730,7 +730,7 @@ extension PaymentSticker.ParameterViewModel {
     
     var inputTitle: String? {
         
-        guard case let .input(title, _) = self else {
+        guard case let .input(_, title, _) = self else {
             return nil
         }
         

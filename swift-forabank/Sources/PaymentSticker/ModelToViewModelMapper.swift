@@ -124,7 +124,11 @@ public extension ModelToViewModelMapper {
                 ))
             
         case let .input(input):
-            return .input(input.title, input.warning)
+            return .input(
+                value: input.value,
+                title: input.title,
+                warning: input.warning
+            )
         }
     }
 }

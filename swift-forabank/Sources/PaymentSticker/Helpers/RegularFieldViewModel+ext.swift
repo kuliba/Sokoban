@@ -14,6 +14,7 @@ typealias RegularFieldViewModel = ReducerTextFieldViewModel<TextFieldUI.ToolbarV
 extension RegularFieldViewModel {
     
     static func make(
+        code: String?,
         placeholderText: String,
         limit: Int
     ) -> RegularFieldViewModel {
@@ -34,11 +35,23 @@ extension RegularFieldViewModel {
             }
         )
         
-        return .init(
-            initialState: .placeholder(placeholderText),
-            reducer: reducer,
-            keyboardType: .number,
-            toolbar: toolbar
-        )
+        if let code {
+            
+            return .init(
+                initialState: .noFocus(code),
+                reducer: reducer,
+                keyboardType: .number,
+                toolbar: toolbar
+            )
+            
+        } else {
+            
+            return .init(
+                initialState: .placeholder(placeholderText),
+                reducer: reducer,
+                keyboardType: .number,
+                toolbar: toolbar
+            )
+        }
     }
 }

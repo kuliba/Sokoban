@@ -14,5 +14,5 @@ public enum ParameterViewModel {
     case select(SelectViewModel)
     case product(ProductStateViewModel)
     case amount(AmountViewModel)
-    case input(String, String?)
+    case input(value: String?, title: String, warning: String?)
 }

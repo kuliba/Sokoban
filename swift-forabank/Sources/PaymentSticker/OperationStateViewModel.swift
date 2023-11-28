@@ -21,6 +21,7 @@ final public class OperationStateViewModel: ObservableObject {
         self.state = state
         self.blackBoxGet = blackBoxGet
         event(.continueButtonTapped(.continue))
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("otpCode"), object: nil)
     }
     
     public var scrollParameters: [Operation.Parameter] {
@@ -31,6 +32,37 @@ final public class OperationStateViewModel: ObservableObject {
     public var amountParameter: Operation.Parameter? {
         
         operation?.parameters.first(where: { $0.id == .amount })
+    }
+    
+    @objc func methodOfReceivedNotification(notification: Notification) {
+        
+        let otp = notification.userInfo?["otp"] as? String
+     
+        guard let input = self.operation?.parameters.first(where: { $0.id == .input }) else { return }
+        
+        switch input {
+        case let .input(input):
+            
+            guard let operation = operation, let otp else { return }
+            
+            let newOperation = self.operation?.updateOperation(
+                operation: operation,
+                newParameter: .input(.init(
+                    value: otp,
+                    title: input.title,
+                    warning: input.warning
+                ))
+            )
+            
+            guard let newOperation else { return }
+            
+            DispatchQueue.main.async {
+                
+                self.event(.input(.valueUpdate(otp)))
+            }
+            
+        default: return
+        }
     }
     
     public var isOperationComplete: Bool {

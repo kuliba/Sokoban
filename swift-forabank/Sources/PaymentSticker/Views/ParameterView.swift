@@ -60,8 +60,9 @@ struct ParameterView: View {
                 text: amountViewModel.parameter.value
             )
         
-        case let .input(title, error):
+        case let .input(value, title, error):
             InputView(
+                code: value,
                 title: title,
                 commit: { event(.valueUpdate($0)) },
                 warning: error,
