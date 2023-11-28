@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import LandingUIComponent
 import PaymentSticker
 
 class MainViewModel: ObservableObject, Resetable {
@@ -28,6 +29,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let onRegister: () -> Void
+    private let factory: ModelAuthLoginViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -48,6 +50,34 @@ class MainViewModel: ObservableObject, Resetable {
         bind(sections)
     }
     
+    private static func getSections(
+        _ model: Model,
+        stickerViewModel: ProductCarouselView.StickerViewModel? = nil
+    ) -> [MainSectionViewModel] {
+        
+        return [
+            MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: stickerViewModel
+            ),
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
+    }
+    
+    private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
+        
+        return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
+            self.handleLandingAction(.sticker)
+        } hide: {
+            model.settingsAgent.saveShowStickerSetting(shouldShow: false)
+            self.sections = MainViewModel.getSections(model)
+        }
+    }
+    
     func reset() {
         
         route = nil
@@ -64,6 +94,18 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func bind() {
+        
+        model.images
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] images in
+                
+                if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
+                   products.productCarouselViewModel.stickerViewModel == nil {
+                    
+                    self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
+                }
+            }
+            .store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
@@ -265,15 +307,19 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             case .card:
                                 
-                                let authProductsViewModel = AuthProductsViewModel(self.model,
-                                                                                      products: self.model.catalogProducts.value,
-                                                                                      dismissAction: { [weak self] in
-                                        self?.action.send(MainViewModelAction.Close.Link()) })
+                                let authProductsViewModel = AuthProductsViewModel(
+                                    self.model,
+                                    products: self.model.catalogProducts.value,
+                                    dismissAction: { [weak self] in
+                                        self?.action.send(MainViewModelAction.Close.Link())
+                                    })
                                     
                                 route = .link( .openCard(authProductsViewModel))
                                 
                             default:
-                                break
+                                //MARK: Action for Sticker Product
+                                
+                                handleLandingAction(.sticker)
                             }
                             
                         default:
@@ -386,7 +432,8 @@ class MainViewModel: ObservableObject, Resetable {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         
-                        route = .link(.paymentSticker)
+                    case _ as MainSectionViewModelAction.Products.StickerDidTapped:
+                        handleLandingAction(.sticker)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
@@ -1043,6 +1090,8 @@ extension MainViewModel {
             case paymentsServices
             case paymentSticker
         }
+        case landing(LandingWrapperViewModel)
+        case orderSticker(LandingWrapperViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -1070,6 +1119,70 @@ extension MainViewModel {
         static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {
             lhs.id == rhs.id
         }
+    }
+}
+
+extension MainViewModel {
+    
+    func handleLandingAction(_ abroadType: AbroadType) {
+        
+        let viewModel = factory.makeStickerLandingViewModel(
+            abroadType,
+            config: .stickerDefault,
+            landingActions: landingAction
+        )
+        
+        UIApplication.shared.endEditing()
+        link = .landing(viewModel)
+    }
+    
+    private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
+        
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+        case .order:
+            return orderSticker
+        }
+    }
+    
+    private func handleCloseLinkAction() {
+        
+        LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
+        link = nil
+    }
+    
+    func orderSticker() {
+        
+        let productsCard = model.products(.card)
+        
+        if productsCard == nil ||
+            productsCard?.contains(where: {
+                ($0 as? ProductCardData)?.isMain == true }) == false
+        {
+            
+            self.alert = .init(
+                title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
+                    type: .default, title: "Отмена", action: {}), secondary: .init(
+                        type: .default, title: "Продолжить", action: {
+                            
+                            DispatchQueue.main.async {
+                                let authProductsViewModel = AuthProductsViewModel(
+                                    self.model,
+                                    products: self.model.catalogProducts.value,
+                                    dismissAction: { [weak self] in
+                                        self?.action.send(MyProductsViewModelAction.Close.Link()) })
+                                
+                                self.link = .openCard(authProductsViewModel)
+                            }
+                        }
+                    ))
+        }
+        
+        /* TODO: v4 сейчас нет
+         если по запросу rest/v4/getProductListByType?productType=CARD нет карт с параметрами:
+         cardType: MAIN - главная карта. или cardType: REGULAR - обычная карта.
+         */
     }
 }
 

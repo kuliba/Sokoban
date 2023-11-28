@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ScrollViewProxy
+import LandingUIComponent
 import PaymentSticker
 
 struct MainView<NavigationOperationView: View>: View {
@@ -194,6 +195,13 @@ struct MainView<NavigationOperationView: View>: View {
             PaymentsServicesOperatorsView(viewModel: viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
+            
+        case let .landing(viewModel):
+                LandingWrapperView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+            
+        case let .orderSticker(viewModel):
+                LandingWrapperView(viewModel: viewModel)
             
         case .paymentSticker:
             navigationOperationView()

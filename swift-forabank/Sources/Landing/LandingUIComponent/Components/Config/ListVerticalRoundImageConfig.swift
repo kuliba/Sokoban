@@ -65,6 +65,7 @@ public extension UILanding.List.VerticalRoundImage {
         public struct ListItem {
             
             public let imageWidthHeight: CGFloat
+            public let hstackAlignment: VerticalAlignment
             public let font: Fonts
             public let color: Colors
             public let padding: Paddings
@@ -93,8 +94,9 @@ public extension UILanding.List.VerticalRoundImage {
                 }
             }
             
-            public init(imageWidthHeight: CGFloat, font: Fonts, color: Colors, padding: Paddings) {
+            public init(imageWidthHeight: CGFloat, hstackAlignment: VerticalAlignment, font: Fonts, color: Colors, padding: Paddings) {
                 self.imageWidthHeight = imageWidthHeight
+                self.hstackAlignment = hstackAlignment
                 self.font = font
                 self.color = color
                 self.padding = padding

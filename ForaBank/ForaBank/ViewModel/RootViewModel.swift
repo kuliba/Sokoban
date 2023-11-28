@@ -379,6 +379,62 @@ class RootViewModel: ObservableObject, Resetable {
     }()
 }
 
+private extension Model {
+    
+    var eventPublishers: AuthLoginViewModel.EventPublishers {
+        
+        .init(
+            clientInformMessage: clientInform
+                .filter { [self] _ in
+                    
+                    !clientInformStatus.isShowNotAuthorized
+                }
+                .compactMap(\.data?.notAuthorized)
+                .handleEvents(receiveOutput: { [self] _ in
+                    
+                    clientInformStatus.isShowNotAuthorized = true
+                })
+                .eraseToAnyPublisher(),
+            
+            checkClientResponse: action
+                .compactMap { $0 as? ModelAction.Auth.CheckClient.Response }
+                .eraseToAnyPublisher(),
+            
+            catalogProducts: catalogProducts
+                .eraseToAnyPublisher(),
+            
+            sessionStateFcmToken: sessionState
+                .combineLatest(fcmToken)
+                .eraseToAnyPublisher()
+        )
+    }
+    
+    func register(cardNumber: String) -> Void {
+        
+        LoggerAgent.shared.log(category: .ui, message: "send ModelAction.Auth.CheckClient.Request number: ...\(cardNumber.suffix(4))")
+        
+        action.send(ModelAction.Auth.CheckClient.Request(number: cardNumber))
+    }
+    
+    func catalogProduct(
+        for request: AuthLoginViewModel.EventHandlers.Request
+    ) -> CatalogProductData? {
+        
+        switch request {
+        case let .id(id):
+            return catalogProducts.value.first {
+                $0.id == id
+            }
+            
+        case let .tarif(tarif, type: type):
+            return catalogProducts.value.first {
+                $0.tariff == tarif &&
+                $0.productType == type
+            }
+        }
+    }
+}
+
 // MARK: - Types
 
 extension RootViewModel {

@@ -79,31 +79,35 @@ final class ModelAuthLoginViewModelFactoryTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - makeLandingViewModel
+    // MARK: - makeCardLandingViewModel
     
     func test_makeOrderProductViewModel_orderCard() {
         
         let (sut, factory) = makeSUT()
         
-        let landingViewModel = factory.makeLandingViewModel(
+        let landingViewModel = factory.makeCardLandingViewModel(
             .orderCard,
             config: .default,
-            goMain: {},
-            orderCard: {_,_ in })
-        
-        XCTAssertNotNil(landingViewModel)
-        XCTAssertNotNil(sut)
+            landingActions: { _ in
+                return {}
+            }
+        )
+            
+            XCTAssertNotNil(landingViewModel)
+            XCTAssertNotNil(sut)
     }
     
     func test_makeOrderProductViewModel_transfer() {
         
         let (sut, factory) = makeSUT()
         
-        let landingViewModel = factory.makeLandingViewModel(
+        let landingViewModel = factory.makeCardLandingViewModel(
             .transfer,
             config: .default,
-            goMain: {},
-            orderCard: {_,_ in })
+            landingActions: { _ in
+                return {}
+            }
+        )
         
         XCTAssertNotNil(landingViewModel)
         XCTAssertNotNil(sut)
