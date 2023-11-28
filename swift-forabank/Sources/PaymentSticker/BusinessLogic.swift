@@ -238,7 +238,7 @@ extension BusinessLogic {
             case .getOtpCode:
                 return .success(.operation(operation))
 
-            case let .valueUpdate(input):
+            case let .valueUpdate(value):
                 guard let title = operation.parameters.inputTitle else {
                     // TODO: error missing input
                     struct MissingInputError: Error {}
@@ -248,7 +248,7 @@ extension BusinessLogic {
                 let parametersUpdate = operation.updateOperation(
                     operation: operation,
                     newParameter: .input(.init(
-                        value: input,
+                        value: value,
                         title: title,
                         warning: nil
                     ))
