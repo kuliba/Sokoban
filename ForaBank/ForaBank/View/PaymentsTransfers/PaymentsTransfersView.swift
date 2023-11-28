@@ -64,6 +64,20 @@ struct PaymentsTransfersView: View {
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
         }
+        .alert(
+            item: .init(
+                get: { viewModel.route?.alert },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: Alert.init(with:)
+        )
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route?.bottomSheet },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: bottomSheetView
+        )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
             leading: Group {
@@ -79,20 +93,6 @@ struct PaymentsTransfersView: View {
                 HStack {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
-        )
-        .bottomSheet(
-            item: .init(
-                get: { viewModel.route?.bottomSheet },
-                set: { if $0 == nil { viewModel.route = nil } }
-            ),
-            content: bottomSheetView
-        )
-        .alert(
-            item: .init(
-                get: { viewModel.route?.alert },
-                set: { if $0 == nil { viewModel.route = nil } }
-            ),
-            content: Alert.init(with:)
         )
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }

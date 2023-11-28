@@ -29,8 +29,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     
     @Published var route: Route?
-//    @Published var bottomSheet: BottomSheet?
-//    @Published var sheet: Sheet?
     @Published var fullCover: FullCover?
     @Published var link: Link? {
         didSet {
@@ -44,8 +42,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
     @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool
-//    @Published var fullScreenSheet: FullScreenSheet?
-//    @Published var alert: Alert.ViewModel?
     
     let mode: Mode
     var rootActions: RootViewModel.RootActions?
