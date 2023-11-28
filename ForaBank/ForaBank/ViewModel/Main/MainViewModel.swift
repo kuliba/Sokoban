@@ -24,8 +24,8 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var route: Route?
     
 //    @Published var sheet: Sheet?
-    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
-    @Published var isLinkActive: Bool = false
+//    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
+//    @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
     @Published var bottomSheet: BottomSheet?
     @Published var fullScreenSheet: FullScreenSheet?
@@ -59,7 +59,6 @@ class MainViewModel: ObservableObject, Resetable {
     func reset() {
         
         route = nil
-        link = nil
         bottomSheet = nil
         isTabBarHidden = false
         
@@ -86,17 +85,17 @@ class MainViewModel: ObservableObject, Resetable {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.link = nil })
+                            { [weak self] in self?.route = nil })
                     else { return }
 
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
-                    link = .productProfile(productProfileViewModel)
+                    route = .link(.productProfile(productProfileViewModel))
                     
                 case _ as MainViewModelAction.Show.OpenDeposit:
                     let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
                     })
-                    link = .openDepositsList(openDepositViewModel)
+                    route = .link(.openDepositsList(openDepositViewModel))
                     
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
@@ -106,25 +105,25 @@ class MainViewModel: ObservableObject, Resetable {
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                                         
                     // TODO: replace with injected factory
-                    link = .userAccount(.init(
+                    route = .link(.userAccount(.init(
                         model: model,
                         clientInfo: clientInfo,
                         dismissAction: { [weak self] in
                             
                             self?.action.send(MainViewModelAction.Close.Link())
                         }
-                    ))
+                    )))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})
-                    link = .messages(messagesHistoryViewModel)
+                    route = .link(.messages(messagesHistoryViewModel))
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
  
                 case _ as MainViewModelAction.Close.Link:
-                    self.link = nil
+                    route = nil
                     
                 case _ as MainViewModelAction.Close.Sheet:
                     self.route = nil
@@ -172,7 +171,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] paymentsViewModel in
                 
-                link = .payments(paymentsViewModel)
+                route = .link(.payments(paymentsViewModel))
                 
             }).store(in: &bindings)
         
@@ -284,7 +283,7 @@ class MainViewModel: ObservableObject, Resetable {
                                                                                       dismissAction: { [weak self] in
                                         self?.action.send(MainViewModelAction.Close.Link()) })
                                     
-                                    self.link = .openCard(authProductsViewModel)
+                                route = .link( .openCard(authProductsViewModel))
                                 
                             default:
                                 break
@@ -309,7 +308,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 let templatesListViewModel = TemplatesListViewModel(
                                     model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
                                 bind(templatesListViewModel)
-                                link = .templates(templatesListViewModel)
+                                route = .link(.templates(templatesListViewModel))
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -345,12 +344,12 @@ class MainViewModel: ObservableObject, Resetable {
                                     
                                     return
                                 }
-                                self.link = .openDeposit(openDepositViewModel)
+                                route = .link( .openDeposit(openDepositViewModel))
                                 
                             case _ as BannerActionDepositsList:
-                                self.link = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                                route = .link(.openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                }))
+                                })))
                                 
                             case let payload as BannerActionMigTransfer:
                                 let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
@@ -400,7 +399,7 @@ class MainViewModel: ObservableObject, Resetable {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
 //                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         
-                        self.link = .paymentSticker
+                        route = .link(.paymentSticker)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
@@ -408,7 +407,7 @@ class MainViewModel: ObservableObject, Resetable {
                             makeProductProfileViewModel: makeProductProfileViewModel
                         )
                         myProductsViewModel.rootActions = rootActions
-                        link = .myProducts(myProductsViewModel)
+                        route = .link(.myProducts(myProductsViewModel))
                         
                         // CurrencyMetall section
                         
@@ -421,7 +420,7 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        link = .currencyWallet(walletViewModel)
+                        route = .link(.currencyWallet(walletViewModel))
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
@@ -432,7 +431,7 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        link = .currencyWallet(walletViewModel)
+                        route = .link(.currencyWallet(walletViewModel))
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
@@ -443,7 +442,7 @@ class MainViewModel: ObservableObject, Resetable {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        link = .currencyWallet(walletViewModel)
+                        route = .link(.currencyWallet(walletViewModel))
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
@@ -516,7 +515,7 @@ class MainViewModel: ObservableObject, Resetable {
                                                 self.bind(paymentsViewModel)
 
                                                 await MainActor.run {
-                                                    self.link = .payments(paymentsViewModel)
+                                                    self.route = .link( .payments(paymentsViewModel))
                                                 }
                                         }
                                     }
@@ -525,7 +524,7 @@ class MainViewModel: ObservableObject, Resetable {
                                             
                                             let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
                                             
-                                            self.link = .operatorView(viewModel)
+                                            route = .link( .operatorView(viewModel))
                                         }
                                         
                                     }
@@ -537,25 +536,25 @@ class MainViewModel: ObservableObject, Resetable {
                                         
                                         let navigationBarViewModel = NavigationBarView.ViewModel(title: "Все регионы", titleButton: .init(icon: Image.ic24ChevronDown, action: { [weak self] in
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
-                                        }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })])
+                                        }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.route = nil })])
                                         
                                         let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             
-                                            self?.link = nil
+                                            self?.route = nil
                                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                                 self?.rootActions?.switchTab(.chat)
                                             }
                                             
                                         }, requisitesAction: { [weak self] in
                                             
-                                            self?.link = nil
+                                            self?.route = nil
                                             self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
 
                                         }, qrCode: qr)
                                         
-                                        self.link = .searchOperators(operatorsViewModel)
+                                        self.route = .link(.searchOperators(operatorsViewModel))
                                     }
                                 }
                                 
@@ -572,7 +571,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                     
-                                    self?.link = nil
+                                    self?.route = nil
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                         self?.rootActions?.switchTab(.chat)
                                     }
@@ -582,7 +581,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     self?.fullScreenSheet = nil
                                     self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                                 })
-                                self.link = .failedView(failedView)
+                                self.route = .link(.failedView(failedView))
                             }
                         }
 
@@ -599,7 +598,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                                 await MainActor.run {
                                     
-                                    self.link = .payments(operationViewModel)
+                                    route = .link(.payments(operationViewModel))
                                 }
                                 
                             } catch {
@@ -632,7 +631,7 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                 
-                                self?.link = nil
+                                self?.route = nil
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                     self?.rootActions?.switchTab(.chat)
                                 }
@@ -652,7 +651,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                                 )
                             })
-                            self.link = .failedView(failedView)
+                            self.route = .link(.failedView(failedView))
                         }
                         
                     case .unknown:
@@ -662,7 +661,7 @@ class MainViewModel: ObservableObject, Resetable {
                             
                             let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                 
-                                self?.link = nil
+                                self?.route = nil
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                     self?.rootActions?.switchTab(.chat)
                                 }
@@ -682,7 +681,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                                 )
                             })
-                            self.link = .failedView(failedView)
+                            self.route = .link(.failedView(failedView))
                         }
                     }
                     
@@ -922,6 +921,26 @@ extension MainViewModel {
                 
                 return nil
             }
+        } 
+        
+        var link: Link? {
+            if case let .link(link) = self {
+                
+                return link
+            } else {
+                
+                return nil
+            }
+        }    
+        
+        var bottomSheet: BottomSheet? {
+            if case let .bottomSheet(bottomSheet) = self {
+                
+                return bottomSheet
+            } else {
+                
+                return nil
+            }
         }
     }
     
@@ -937,7 +956,7 @@ extension MainViewModel {
         }
     }
     
-    enum Link {
+    enum Link: Identifiable {
         
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
@@ -956,7 +975,67 @@ extension MainViewModel {
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
         case paymentSticker
-
+        
+        var id: Case {
+            
+            switch self {
+            case .userAccount:
+                return .userAccount
+            case .productProfile:
+                return .productProfile
+            case .messages:
+                return .messages
+            case .openDeposit:
+                return .openDeposit
+            case .openDepositsList:
+                return .openDepositsList
+            case .templates:
+                return .templates
+            case .currencyWallet:
+                return .currencyWallet
+            case .myProducts:
+                return .myProducts
+            case .country:
+                return .country
+            case .serviceOperators:
+                return .serviceOperators
+            case .failedView:
+                return .failedView
+            case .searchOperators:
+                return .searchOperators
+            case .openCard:
+                return .openCard
+            case .payments:
+                return .payments
+            case .operatorView:
+                return .operatorView
+            case .paymentsServices:
+                return .paymentsServices
+            case .paymentSticker:
+                return .paymentSticker
+            }
+        }
+        
+        enum Case {
+            
+            case userAccount
+            case productProfile
+            case messages
+            case openDeposit
+            case openDepositsList
+            case templates
+            case currencyWallet
+            case myProducts
+            case country
+            case serviceOperators
+            case failedView
+            case searchOperators
+            case openCard
+            case payments
+            case operatorView
+            case paymentsServices
+            case paymentSticker
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {

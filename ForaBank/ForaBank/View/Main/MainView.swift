@@ -76,16 +76,6 @@ struct MainView<NavigationOperationView: View>: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map {
-                    
-                    destinationView(
-                        link: $0
-                    )
-                }
-            }
-            
             Color.clear
                 .sheet(
                     item: .init(
@@ -100,6 +90,13 @@ struct MainView<NavigationOperationView: View>: View {
                     content: fullScreenSheetView
                 )
         }
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route?.link },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: destinationView
+        )
         .ignoreKeyboard()
         .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
         .alert(item: $viewModel.alert, content: Alert.init(with:))
