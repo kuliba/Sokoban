@@ -98,7 +98,13 @@ struct MainView<NavigationOperationView: View>: View {
             content: destinationView
         )
         .ignoreKeyboard()
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
+        .bottomSheet(
+            item: .init(
+                get: { viewModel.route?.bottomSheet },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: bottomSheetView
+        )
         .alert(item: $viewModel.alert, content: Alert.init(with:))
         .tabBar(isHidden: $viewModel.isTabBarHidden)
         .onAppear { viewModel.action.send(MainViewModelAction.ViewDidApear()) }

@@ -27,7 +27,7 @@ class MainViewModel: ObservableObject, Resetable {
 //    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
 //    @Published var isLinkActive: Bool = false
     @Published var isTabBarHidden: Bool = false
-    @Published var bottomSheet: BottomSheet?
+//    @Published var bottomSheet: BottomSheet?
     @Published var fullScreenSheet: FullScreenSheet?
     @Published var alert: Alert.ViewModel?
     
@@ -59,7 +59,6 @@ class MainViewModel: ObservableObject, Resetable {
     func reset() {
         
         route = nil
-        bottomSheet = nil
         isTabBarHidden = false
         
         for section in sections {
@@ -271,7 +270,7 @@ class MainViewModel: ObservableObject, Resetable {
                                     return
                                 }
                                 
-                                bottomSheet = .init(type: .openAccount(openAccountViewModel))
+                                route = .bottomSheet(.init(type: .openAccount(openAccountViewModel)))
                                 
                             case .deposit:
                                 self.action.send(MainViewModelAction.Show.OpenDeposit())
