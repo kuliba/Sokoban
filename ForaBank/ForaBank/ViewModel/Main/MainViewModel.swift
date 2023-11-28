@@ -34,13 +34,21 @@ class MainViewModel: ObservableObject, Resetable {
     
     init(
         _ model: Model,
-        sections: [MainSectionViewModel],
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
         self.navButtonsRight = []
-        self.sections = sections
+        self.sections = [
+            MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
+             MainSectionFastOperationView.ViewModel(),
+             MainSectionPromoView.ViewModel(model),
+             MainSectionCurrencyMetallView.ViewModel(model),
+             MainSectionOpenProductView.ViewModel(model),
+             MainSectionAtmView.ViewModel.initial
+         ]
+
+        self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.onRegister = onRegister
         self.navButtonsRight = createNavButtonsRight()
@@ -430,7 +438,7 @@ class MainViewModel: ObservableObject, Resetable {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-//                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
+                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
                         
                     case _ as MainSectionViewModelAction.Products.StickerDidTapped:
                         handleLandingAction(.sticker)
@@ -1028,6 +1036,8 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
+        case landing(LandingWrapperViewModel)
+        case orderSticker(LandingWrapperViewModel)
         case paymentSticker
         
         var id: Case {
@@ -1065,6 +1075,10 @@ extension MainViewModel {
                 return .operatorView
             case .paymentsServices:
                 return .paymentsServices
+            case .landing:
+                return .landing
+            case .orderSticker:
+                return .orderSticker
             case .paymentSticker:
                 return .paymentSticker
             }
@@ -1089,9 +1103,9 @@ extension MainViewModel {
             case operatorView
             case paymentsServices
             case paymentSticker
+            case landing
+            case orderSticker
         }
-        case landing(LandingWrapperViewModel)
-        case orderSticker(LandingWrapperViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -1133,7 +1147,7 @@ extension MainViewModel {
         )
         
         UIApplication.shared.endEditing()
-        link = .landing(viewModel)
+        route = .link(.landing(viewModel))
     }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -1149,7 +1163,7 @@ extension MainViewModel {
     private func handleCloseLinkAction() {
         
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
-        link = nil
+        route = nil
     }
     
     func orderSticker() {
@@ -1161,7 +1175,7 @@ extension MainViewModel {
                 ($0 as? ProductCardData)?.isMain == true }) == false
         {
             
-            self.alert = .init(
+            self.route = .alert(.init(
                 title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
                     type: .default, title: "Отмена", action: {}), secondary: .init(
                         type: .default, title: "Продолжить", action: {
@@ -1173,10 +1187,10 @@ extension MainViewModel {
                                     dismissAction: { [weak self] in
                                         self?.action.send(MyProductsViewModelAction.Close.Link()) })
                                 
-                                self.link = .openCard(authProductsViewModel)
+                                self.route = .link(.openCard(authProductsViewModel))
                             }
                         }
-                    ))
+                    )))
         }
         
         /* TODO: v4 сейчас нет

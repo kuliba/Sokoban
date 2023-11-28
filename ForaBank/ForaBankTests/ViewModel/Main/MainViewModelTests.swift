@@ -104,7 +104,7 @@ final class MainViewModelTests: XCTestCase {
       sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-      XCTAssertNotNil(sut.alert)
+        XCTAssertNotNil(sut.route?.alert)
     }
     
     // MARK: - Helpers
@@ -119,7 +119,6 @@ final class MainViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         let sut = MainViewModel(
             model,
-            sections: makeMainSections(model),
             makeProductProfileViewModel: { _,_,_ in nil },
             onRegister: {}
         )
@@ -169,7 +168,6 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            sections: [],
             makeProductProfileViewModel: { _,_,_ in nil },
             onRegister: {}
         )
@@ -260,8 +258,8 @@ private extension MainViewModel {
     
     var authProductsViewModel: AuthProductsViewModel? {
         
-        switch link {
-        case let .openCard(authProductsViewModel):
+        switch route {
+        case let .link(.openCard(authProductsViewModel)):
             return authProductsViewModel
             
         default:

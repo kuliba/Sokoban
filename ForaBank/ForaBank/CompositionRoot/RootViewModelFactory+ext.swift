@@ -215,7 +215,6 @@ private extension RootViewModelFactory {
         
         let mainViewModel = MainViewModel(
             model,
-            sections: makeMainSections(model: model),
             makeProductProfileViewModel: makeProductProfileViewModel,
             onRegister: onRegister
         )
@@ -250,19 +249,5 @@ private extension RootViewModelFactory {
             model,
             showLoginAction: showLoginAction
         )
-    }
-    
-    static func makeMainSections(
-        model: Model
-    ) -> [MainSectionViewModel] {
-        
-        return [
-            MainSectionProductsView.ViewModel(model),
-            MainSectionFastOperationView.ViewModel(),
-            MainSectionPromoView.ViewModel(model),
-            MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
-            MainSectionAtmView.ViewModel.initial
-        ]
     }
 }

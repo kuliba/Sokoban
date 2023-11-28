@@ -207,7 +207,6 @@ final class RootViewModelTests: XCTestCase {
         let sut = RootViewModel(
             mainViewModel: .init(
                 model,
-                sections: [],
                 makeProductProfileViewModel: { _,_,_ in nil },
                 onRegister: {}
             ),
