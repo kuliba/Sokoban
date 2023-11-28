@@ -1191,6 +1191,9 @@ extension MainViewModel {
                             }
                         }
                     )))
+        } else {
+            
+            self.route = .link(.paymentSticker)
         }
         
         /* TODO: v4 сейчас нет
