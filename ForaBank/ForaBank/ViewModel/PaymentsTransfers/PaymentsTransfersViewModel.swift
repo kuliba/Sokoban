@@ -30,7 +30,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     @Published var route: Route?
 //    @Published var bottomSheet: BottomSheet?
-    @Published var sheet: Sheet?
+//    @Published var sheet: Sheet?
     @Published var fullCover: FullCover?
     @Published var link: Link? {
         didSet {
@@ -107,7 +107,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         route = nil
         fullCover = nil
-        sheet = nil
         link = nil
         fullScreenSheet = nil
         
@@ -170,7 +169,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     route = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
-                    sheet = nil
+                    route = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
@@ -239,7 +238,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
-                sheet = .init(type: .fastPayment(contactsViewModel))
+                route = .sheet(.init(type: .fastPayment(contactsViewModel)))
                 
             }.store(in: &bindings)
         
@@ -251,7 +250,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
-                sheet = .init(type: .country(contactsViewModel))
+                route = .sheet(.init(type: .country(contactsViewModel)))
                 
             }.store(in: &bindings)
         
