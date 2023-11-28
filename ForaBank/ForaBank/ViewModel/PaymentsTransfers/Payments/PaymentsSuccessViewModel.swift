@@ -331,25 +331,11 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                             name: name)))
                     
                 case .additionalReturn:
-                    guard let operationDetailData,
-                          let number = operationDetailData.transferReference else {
-                        return
-                    }
+                    guard let source = makeReturnSource(from: operationDetailData)
+                    else { return }
                     
-                    let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
-                    let currency = operationDetailData.payerCurrency
-                    guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction) else {
-                        return
-                    }
-                    
-                    let operationID = operationDetailData.paymentOperationDetailId
-                    let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .return(
-                            operationId: operationID,
-                            transferNumber: number,
-                            amount: amount,
-                            productId: productID)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .close:
                     self.action.send(PaymentsSuccessAction.Button.Ready())
@@ -438,6 +424,33 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             self?.sections = updatedSections
         }
         transferNumberInformer()?.assign(to: &$informer)
+    }
+}
+
+extension PaymentsSuccessViewModel {
+    
+    func makeReturnSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
+        let currency = operationDetailData.payerCurrency
+        guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction)
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId
+        let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
+        
+        return .return(
+            operationId: operationID,
+            transferNumber: number,
+            amount: amount,
+            productId: productID
+        )
     }
 }
 
