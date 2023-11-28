@@ -123,6 +123,7 @@ struct PTSectionPaymentsView: View {
                                           count: rowsCount)
                     
                     LazyHGrid(rows: gridItems, spacing: 64) {
+                        
                         ForEach(viewModel.paymentButtons.indices, id: \.self) { index in
                             
                             ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
@@ -149,8 +150,24 @@ struct PTSectionPaymentsView: View {
                 .onTapGesture { scrollToRight() }
         }
         .padding(.leading, 20)
-        .onPreferenceChange(MaxWidthPreferenceKey.self) { maxWidth = $0 }
-        .onPreferenceChange(ScrollWidthPreferenceKey.self) { scrollWidth = $0 }
+        .onPreferenceChange(MaxWidthPreferenceKey.self, perform: setMaxWidth)
+        .onPreferenceChange(ScrollWidthPreferenceKey.self, perform: setScrollWidth)
+    }
+    
+    private func setMaxWidth(to maxWidth: CGFloat) {
+        
+        DispatchQueue.main.async {
+            
+            self.maxWidth = maxWidth
+        }
+    }
+    
+    private func setScrollWidth(to scrollWidth: CGFloat) {
+        
+        DispatchQueue.main.async {
+            
+            self.scrollWidth = scrollWidth
+        }
     }
 }
 
