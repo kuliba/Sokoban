@@ -124,21 +124,9 @@ public class ConfirmViewModel: ObservableObject {
                
                 self.action.send(ConfirmViewModelAction.Close.SelfView())
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(450)) {
                     self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
                 }
-
-//                let delayedAction = DelayWrappedAction(
-//                    delayMS: 450,
-//                    action: .init(
-//                        get: { [weak self] in
-//                            self?.resendRequestAfterClose(self?.cardId ?? 0, .changePinResult(.successScreen))
-//                            self?.action.send(ConfirmViewModelAction.Close.SelfView())
-//                        }
-//                    )
-//                )
-//                self.action.send(delayedAction)
-               
                 
             case let .some(error):
                 
