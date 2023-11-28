@@ -318,17 +318,11 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     self.action.send(PaymentsSuccessAction.Button.Repeat())
                     
                 case .additionalChange:
-                    guard let operationDetailData,
-                          let name = operationDetailData.payeeFullName,
-                          let number = operationDetailData.transferReference
+                    guard let source = makeChangeSource(from: operationDetailData)
                     else { return }
                     
-                    let operationID = operationDetailData.paymentOperationDetailId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .change(
-                            operationId: operationID,
-                            transferNumber: number,
-                            name: name)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .additionalReturn:
                     guard let source = makeReturnSource(from: operationDetailData)
@@ -428,6 +422,24 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
 }
 
 extension PaymentsSuccessViewModel {
+    
+    func makeChangeSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let name = operationDetailData.payeeFullName,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId.description
+        
+        return .change(
+            operationId: operationID,
+            transferNumber: number,
+            name: name
+        )
+    }
     
     func makeReturnSource(
         from operationDetailData: OperationDetailData?
