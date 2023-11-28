@@ -39,11 +39,6 @@ struct PaymentsTransfersView: View {
                 } //mainVerticalScrollView
             } //mainVStack
             
-            NavigationLink("", isActive: $viewModel.isLinkActive) {
-                
-                viewModel.link.map(destinationView)
-            }
-            
             Color.clear
                 .sheet(
                     item: .init(
@@ -77,6 +72,13 @@ struct PaymentsTransfersView: View {
                 set: { if $0 == nil { viewModel.route = nil } }
             ),
             content: bottomSheetView
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route?.link },
+                set: { if $0 == nil { viewModel.route = nil } }
+            ),
+            content: destinationView(link:)
         )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
