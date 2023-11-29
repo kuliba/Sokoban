@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic12Percent.svg"
+      "filename" : "ic12Percent.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

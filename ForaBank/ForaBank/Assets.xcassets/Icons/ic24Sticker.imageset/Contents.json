@@ -1,14 +1,18 @@
 {
-  "images" : [
-    {
-      "filename" : "ic24Sticker.svg",
-      "idiom" : "universal"
-    }
-  ],
   "info" : {
     "author" : "xcode",
     "version" : 1
   },
+  "images" : [
+    {
+      "filename" : "ic24Sticker.svg",
+      "idiom" : "universal"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "ic24Sticker.svg"
+    }
+  ],
   "properties" : {
     "template-rendering-intent" : "template"
   }

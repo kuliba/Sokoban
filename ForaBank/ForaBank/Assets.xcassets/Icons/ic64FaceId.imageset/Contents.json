@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "filename" : "ic64FaceId.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic64FaceId.svg"
     }
   ],
   "properties" : {

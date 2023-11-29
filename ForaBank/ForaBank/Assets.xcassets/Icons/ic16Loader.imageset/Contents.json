@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Loader.svg"
+      "filename" : "ic16Loader.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

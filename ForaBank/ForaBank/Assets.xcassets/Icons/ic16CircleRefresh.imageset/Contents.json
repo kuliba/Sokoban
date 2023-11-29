@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16CircleRefresh.svg"
+      "filename" : "ic16CircleRefresh.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

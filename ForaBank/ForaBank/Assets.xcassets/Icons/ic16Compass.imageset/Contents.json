@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Compass.svg"
+      "filename" : "ic16Compass.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

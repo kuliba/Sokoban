@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16CornerRightDown.svg"
+      "filename" : "ic16CornerRightDown.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

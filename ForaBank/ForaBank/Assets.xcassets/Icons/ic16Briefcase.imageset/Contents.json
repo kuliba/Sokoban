@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Briefcase.svg"
+      "filename" : "ic16Briefcase.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

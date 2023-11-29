@@ -8,8 +8,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16DollarSign.svg"
+      "filename" : "ic16DollarSign.svg",
+      "idiom" : "universal"
     }
   ]
 }

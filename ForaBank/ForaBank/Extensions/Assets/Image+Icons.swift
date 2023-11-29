@@ -226,6 +226,7 @@ public extension Image {
     static var ic16MathPlus: Image { Image(#function) }
     static var ic16Maximize: Image { Image(#function) }
     static var ic16MaximizeHorizontal: Image { Image(#function) }
+    static var ic16MaximizeArrow: Image { Image(#function) }
     static var ic16MaximizeSquare: Image { Image(#function) }
     static var ic16Meh: Image { Image(#function) }
     static var ic16Menu: Image { Image(#function) }

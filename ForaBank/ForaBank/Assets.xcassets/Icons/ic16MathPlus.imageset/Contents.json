@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16MathPlus.svg"
+      "filename" : "ic16MathPlus.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

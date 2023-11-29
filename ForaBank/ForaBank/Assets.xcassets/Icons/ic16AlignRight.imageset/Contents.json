@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16AlignRight.svg"
+      "filename" : "ic16AlignRight.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16CreditCardValidity.svg"
+      "filename" : "ic16CreditCardValidity.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Tariff.svg"
+      "filename" : "ic16Tariff.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

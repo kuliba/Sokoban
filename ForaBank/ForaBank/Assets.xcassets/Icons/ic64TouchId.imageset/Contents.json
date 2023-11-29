@@ -1,14 +1,14 @@
 {
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  },
   "images" : [
     {
       "filename" : "ic64TouchId.svg",
       "idiom" : "universal"
     }
   ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
   "properties" : {
     "template-rendering-intent" : "template"
   }

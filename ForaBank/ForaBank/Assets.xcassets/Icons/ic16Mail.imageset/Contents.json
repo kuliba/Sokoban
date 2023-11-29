@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Mail.svg"
+      "filename" : "ic16Mail.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

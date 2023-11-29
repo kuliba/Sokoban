@@ -1,12 +1,12 @@
 {
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic24Film.svg"
+      "filename" : "ic24Film.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

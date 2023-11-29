@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Eye.svg"
+      "filename" : "ic16Eye.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

@@ -8,8 +8,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Location.svg"
+      "filename" : "ic16Location.svg",
+      "idiom" : "universal"
     }
   ]
 }

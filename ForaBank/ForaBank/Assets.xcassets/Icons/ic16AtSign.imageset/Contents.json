@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16AtSign.svg"
+      "filename" : "ic16AtSign.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

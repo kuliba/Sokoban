@@ -1,15 +1,15 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "info" : {
     "version" : 1,
     "author" : "xcode"
   },
   "images" : [
     {
-      "filename" : "ic40Goods.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic40Goods.svg"
     }
-  ],
-  "properties" : {
-    "template-rendering-intent" : "template"
-  }
+  ]
 }

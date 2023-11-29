@@ -8,8 +8,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic12Shield.svg"
+      "filename" : "ic12Shield.svg",
+      "idiom" : "universal"
     }
   ]
 }

@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16LifeBuoy.svg"
+      "filename" : "ic16LifeBuoy.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

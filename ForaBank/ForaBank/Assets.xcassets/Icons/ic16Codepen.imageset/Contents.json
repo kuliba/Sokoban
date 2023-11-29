@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Codepen.svg"
+      "filename" : "ic16Codepen.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

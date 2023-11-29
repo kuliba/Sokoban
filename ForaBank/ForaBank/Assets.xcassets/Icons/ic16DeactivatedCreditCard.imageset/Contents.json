@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16DeactivatedCreditCard.svg"
+      "filename" : "ic16DeactivatedCreditCard.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

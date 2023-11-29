@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Hexagon.svg"
+      "filename" : "ic16Hexagon.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

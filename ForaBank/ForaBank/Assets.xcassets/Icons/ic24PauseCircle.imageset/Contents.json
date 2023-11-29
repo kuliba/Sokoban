@@ -1,4 +1,7 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "info" : {
     "author" : "xcode",
     "version" : 1
@@ -8,8 +11,5 @@
       "idiom" : "universal",
       "filename" : "ic24PauseCircle.svg"
     }
-  ],
-  "properties" : {
-    "template-rendering-intent" : "template"
-  }
+  ]
 }

@@ -8,8 +8,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16GitPullRequest.svg"
+      "filename" : "ic16GitPullRequest.svg",
+      "idiom" : "universal"
     }
   ]
 }

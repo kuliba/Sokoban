@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic16Bluetooth.svg"
+      "filename" : "ic16Bluetooth.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {
