@@ -476,14 +476,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile(productId: payload.productId))
-                    }
-                    
                 case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
                     
                     self.action.send(PaymentsTransfersViewModelAction.Close.Link())

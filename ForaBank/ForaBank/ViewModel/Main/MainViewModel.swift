@@ -765,15 +765,7 @@ class MainViewModel: ObservableObject, Resetable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
-                switch action {
-                case let payload as ProductProfileViewModelAction.MyProductsTapped.ProductProfile:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.ProductProfile(productId: payload.productId))
-                    }
-                    
+                switch action {                    
                 case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
                     self.action.send(MainViewModelAction.Close.Link())
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {

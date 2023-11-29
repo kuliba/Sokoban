@@ -1956,11 +1956,6 @@ enum ProductProfileViewModelAction {
     
     enum MyProductsTapped {
         
-        struct ProductProfile: Action {
-            
-            let productId: ProductData.ID
-        }
-        
         struct OpenDeposit: Action {}
     }
     
