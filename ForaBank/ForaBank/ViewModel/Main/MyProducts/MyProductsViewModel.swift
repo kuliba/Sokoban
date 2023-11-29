@@ -562,10 +562,6 @@ enum MyProductsViewModelAction {
     
     enum Tapped {
         
-        struct Product: Action {
-            let productId: ProductData.ID
-        }
-        
         struct OpenDeposit: Action {}
         
         struct NewProduct: Action {
