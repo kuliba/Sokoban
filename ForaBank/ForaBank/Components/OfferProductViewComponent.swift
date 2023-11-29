@@ -326,8 +326,11 @@ struct OfferProductView: View {
             if let depositId = viewModel.id,
                let openViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: Model.shared) {
                 
-                NavigationLink(destination: OpenDepositDetailView(viewModel: openViewModel)) {
-                    
+                NavigationLink(
+                    destination: WrapperOpenDepositDetailView(
+                        viewModel: openViewModel
+                    )
+                ) {
                     Text(viewModel.orderButton.title)
                         .foregroundColor(.textWhite)
                         .padding(.vertical, 12)
@@ -336,6 +339,16 @@ struct OfferProductView: View {
                         .cornerRadius(8)
                 }
             }
+        }
+    }
+    
+    struct WrapperOpenDepositDetailView: View {
+        
+        @StateObject var viewModel: OpenDepositDetailViewModel
+        
+        var body: some View {
+            
+            OpenDepositDetailView(viewModel: viewModel)
         }
     }
     
