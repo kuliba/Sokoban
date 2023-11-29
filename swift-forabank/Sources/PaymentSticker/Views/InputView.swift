@@ -8,44 +8,13 @@
 import SwiftUI
 import Foundation
 import TextFieldComponent
-import Combine
-
-class CodeObserver: ObservableObject {
-    
-    private let notificationName: String
-    private let code = PassthroughSubject<String, Never>()
-
-    private var bindings = Set<AnyCancellable>()
-
-    init(
-        notificationName: String,
-        onCode: @escaping (String) -> Void
-    ) {
-        self.notificationName = notificationName
-
-        code
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { [onCode] in onCode($0) }
-            .store(in: &bindings)
-                
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name(notificationName), object: nil)
-    }
-    
-    @objc func methodOfReceivedNotification(notification: Notification) {
-        
-        guard let otp = notification.userInfo?[notificationName] as? String
-        else { return }
-        self.code.send(otp)
-    }
-}
 
 // MARK: - View
 
 struct InputView: View {
     
     @StateObject private var regularFieldViewModel: RegularFieldViewModel
-    private let codeObserver: CodeObserver
+    private let codeObserver: NotificationObserver<String>
     
     private let title: String
     private let commit: (String) -> Void
@@ -66,9 +35,10 @@ struct InputView: View {
             limit: 6
         )
         
-        let codeObserver = CodeObserver(
+        let codeObserver = NotificationObserver<String>(
             notificationName: "otpCode",
-            onCode: regularFieldViewModel.setText(to:)
+            userInfoKey: "otp",
+            onReceive: regularFieldViewModel.setText(to:)
         )
         
         self._regularFieldViewModel = .init(
