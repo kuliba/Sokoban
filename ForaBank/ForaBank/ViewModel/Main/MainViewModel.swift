@@ -776,20 +776,6 @@ class MainViewModel: ObservableObject, Resetable {
             .store(in: &bindings)
     }
 
-    private func bind(_ myProductsViewModel: MyProductsViewModel) {
-        
-        myProductsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-    
     private func bind(_ templatesListViewModel: TemplatesListViewModel) {
         
         templatesListViewModel.action
