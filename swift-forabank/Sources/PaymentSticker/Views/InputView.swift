@@ -12,24 +12,29 @@ import Combine
 
 class CodeObserver: ObservableObject {
     
-    let code = PassthroughSubject<String, Never>()
+    private let notificationName: String
+    private let code = PassthroughSubject<String, Never>()
 
     private var bindings = Set<AnyCancellable>()
 
-    init(onCode: @escaping (String) -> Void) {
-        
+    init(
+        notificationName: String,
+        onCode: @escaping (String) -> Void
+    ) {
+        self.notificationName = notificationName
+
         code
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [onCode] in onCode($0) }
             .store(in: &bindings)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("otpCode"), object: nil)
+                
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name(notificationName), object: nil)
     }
     
     @objc func methodOfReceivedNotification(notification: Notification) {
         
-        guard let otp = notification.userInfo?["otp"] as? String
+        guard let otp = notification.userInfo?[notificationName] as? String
         else { return }
         self.code.send(otp)
     }
@@ -61,7 +66,10 @@ struct InputView: View {
             limit: 6
         )
         
-        let codeObserver = CodeObserver(onCode: regularFieldViewModel.setText(to:))
+        let codeObserver = CodeObserver(
+            notificationName: "otpCode",
+            onCode: regularFieldViewModel.setText(to:)
+        )
         
         self._regularFieldViewModel = .init(
             wrappedValue: regularFieldViewModel
