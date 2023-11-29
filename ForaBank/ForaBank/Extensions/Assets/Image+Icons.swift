@@ -24,6 +24,7 @@ public extension Image {
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
     static var ic12LogoForaColor: Image { Image(#function) }
+    static var ic12Navigation: Image { Image(#function) }
     static var ic12Percent: Image { Image(#function) }
     static var ic12Shield: Image { Image(#function) }
     static var ic12Star: Image { Image(#function) }
@@ -224,7 +225,7 @@ public extension Image {
     static var ic16MathMinus: Image { Image(#function) }
     static var ic16MathPlus: Image { Image(#function) }
     static var ic16Maximize: Image { Image(#function) }
-    static var ic16MaximizeArrow: Image { Image(#function) }
+    static var ic16MaximizeHorizontal: Image { Image(#function) }
     static var ic16MaximizeSquare: Image { Image(#function) }
     static var ic16Meh: Image { Image(#function) }
     static var ic16Menu: Image { Image(#function) }
@@ -673,6 +674,8 @@ public extension Image {
     static var ic24Promotions: Image { Image(#function) }
     static var ic24Rabbit: Image { Image(#function) }
     static var ic24Radio: Image { Image(#function) }
+    static var ic24RadioChecked: Image { Image(#function) }
+    static var ic24RadioDefolt: Image { Image(#function) }
     static var ic24RefreshCcw: Image { Image(#function) }
     static var ic24RefreshCw: Image { Image(#function) }
     static var ic24RegistrationAllday: Image { Image(#function) }
@@ -798,8 +801,10 @@ public extension Image {
     static var ic32Location: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
     static var ic32Office: Image { Image(#function) }
+    static var ic32Rectangle: Image { Image(#function) }
     static var ic32Sbp: Image { Image(#function) }
     static var ic32SbpLine: Image { Image(#function) }
+    static var ic32Search: Image { Image(#function) }
     static var ic32Service: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
     static var ic32Trash: Image { Image(#function) }
@@ -825,6 +830,7 @@ public extension Image {
     static var ic40Helth: Image { Image(#function) }
     static var ic40Lock: Image { Image(#function) }
     static var ic40Multimedia: Image { Image(#function) }
+    static var ic40Passport: Image { Image(#function) }
     static var ic40PropertyInsurance: Image { Image(#function) }
     static var ic40Recreation: Image { Image(#function) }
     static var ic40Renovation: Image { Image(#function) }

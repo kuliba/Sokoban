@@ -1,15 +1,15 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic24Wallet.svg"
+      "filename" : "ic24Wallet.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }
