@@ -904,6 +904,20 @@ private extension MainViewModel {
             }
         )]
     }
+    
+    // remove `MainViewModelAction.Show.OpenDeposit`
+    private func openDeposit() {
+        
+        let openDepositViewModel = OpenDepositViewModel(
+            model,
+            catalogType: .deposit,
+            dismissAction: { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Close.Link())
+            })
+        
+        route = .link(.openDepositsList(openDepositViewModel))
+    }
 }
 
 // MARK: Helpers
