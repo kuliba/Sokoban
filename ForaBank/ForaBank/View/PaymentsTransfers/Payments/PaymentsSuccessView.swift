@@ -56,10 +56,7 @@ struct PaymentsSuccessView: View {
                     
                     ForEach(viewModel.feed) { groupView($0, proxy.size.height) }
                 }
-                .onPreferenceChange(HeightsPreferenceKey.self) {
-                    
-                    totalItemHeights = $0
-                }
+                .onPreferenceChange(HeightsPreferenceKey.self, perform: setTotalItemHeights)
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, bottomPadding)
             }
@@ -82,6 +79,14 @@ struct PaymentsSuccessView: View {
             )
             .reportHeight()
             .padding(.top, isTheItem ? extraTopPadding(for: height) : 0)
+        }
+    }
+    
+    private func setTotalItemHeights(to totalItemHeights: CGFloat) {
+        
+        DispatchQueue.main.async {
+            
+            self.totalItemHeights = totalItemHeights
         }
     }
     
