@@ -1,0 +1,20 @@
+{
+  "colors" : [
+    {
+      "color" : {
+        "components" : {
+          "red" : "0x80",
+          "alpha" : "1.000",
+          "green" : "0xD7",
+          "blue" : "0xFF"
+        },
+        "color-space" : "srgb"
+      },
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
