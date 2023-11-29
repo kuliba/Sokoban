@@ -110,6 +110,57 @@ extension Payments.Success {
     }
     
     init(
+        with response: OutgoingTransferResponse,
+        operation: Payments.Operation,
+        title: String? = nil
+    ) throws {
+        
+        let status: TransferResponseBaseData.DocumentStatus = .inProgress
+        
+        if let title {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(with: title),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: .normal,
+                    documentStatus: status,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+            
+        } else {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(.normal, documentStatus: status),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: .normal,
+                    documentStatus: status,
+                    operationDetail: nil,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+        }
+    }
+    
+    init(
         status: Payments.ParameterSuccessStatus.Status,
         title: String,
         subTitle: String? = nil,
