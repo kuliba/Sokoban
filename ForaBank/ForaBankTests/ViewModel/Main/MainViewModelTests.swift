@@ -13,7 +13,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.fastPayment?.tapTemplatesAndWait()
@@ -24,7 +24,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait()
@@ -35,7 +35,7 @@ final class MainViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
@@ -104,7 +104,7 @@ final class MainViewModelTests: XCTestCase {
       sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNotNil(sut.route?.alert)
+        XCTAssertNotNil(sut.route.modal?.alert)
     }
     
     // MARK: - Helpers
@@ -238,8 +238,8 @@ private extension MainViewModel {
     
     var templatesListViewModel: TemplatesListViewModel? {
         
-        switch route {
-        case let .link(.templates(templatesListViewModel)):
+        switch route.destination {
+        case let .templates(templatesListViewModel):
             return templatesListViewModel
             
         default:
@@ -258,8 +258,8 @@ private extension MainViewModel {
     
     var authProductsViewModel: AuthProductsViewModel? {
         
-        switch route {
-        case let .link(.openCard(authProductsViewModel)):
+        switch route.destination {
+        case let .openCard(authProductsViewModel):
             return authProductsViewModel
             
         default:
@@ -272,8 +272,8 @@ private extension MainViewModel.Route {
     
     var `case`: Case? {
         
-        switch self {
-        case .link(.templates): return .templates
+        switch destination {
+        case .templates: return .templates
         default:         return .other
         }
     }
