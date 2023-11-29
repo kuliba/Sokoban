@@ -95,10 +95,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
     
     func resetDestination() {
+        
         route.destination = nil
     }
     
     func resetModal() {
+        
         route.modal = nil
     }
     
@@ -114,7 +116,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.route.destination = nil })
+                            { [weak self] in self?.resetDestination() })
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
@@ -152,7 +154,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     fullCover = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
-                    route.destination = nil
+                    resetDestination()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
                     route.modal = nil
@@ -373,7 +375,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 titleButtonAction: { [weak self] in
                                     self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
                                 },
-                                navLeadingAction: { [weak self] in self?.route.destination = nil },
+                                navLeadingAction: { [weak self] in self?.resetDestination() },
                                 navTrailingAction: { [weak self] in self?.openQRScanner() }
                             )
                             let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
@@ -387,7 +389,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 allOperators: operators,
                                 addCompanyAction: { [weak self] in
                                     
-                                    self?.route.destination = nil
+                                    self?.resetDestination()
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                         self?.rootActions?.switchTab(.chat)
                                     }
@@ -395,7 +397,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 },
                                 requisitesAction: { [weak self] in
                                     
-                                    self?.route.destination = nil
+                                    self?.resetDestination()
                                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
                                 }
                             )
@@ -504,7 +506,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 switch action {
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     
-                    self.route.destination = nil
+                    self.resetDestination()
                     
                     let qrScannerModel = QRViewModel.init(closeAction: {
                         self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -753,20 +755,20 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                         
                                         let navigationBarViewModel = NavigationBarView.ViewModel(title: "Все регионы", titleButton: .init(icon: Image.ic24ChevronDown, action: { [weak self] in
                                             self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
-                                        }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.route.destination = nil })])
+                                        }), leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: { [weak self] in self?.resetDestination() })])
                                         
                                         let operatorsViewModel = QRSearchOperatorViewModel(searchBar: .nameOrTaxCode(),
                                                                                            navigationBar: navigationBarViewModel, model: self.model,
                                                                                            operators: operators, addCompanyAction: { [weak self] in
                                             
-                                            self?.route.destination = nil
+                                            self?.resetDestination()
                                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                                 self?.rootActions?.switchTab(.chat)
                                             }
                                             
                                         }, requisitesAction: { [weak self] in
                                             
-                                            self?.route.destination = nil
+                                            self?.resetDestination()
                                             self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                                             
                                             
@@ -789,7 +791,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 
                                 let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                     
-                                    self?.route.destination = nil
+                                    self?.resetDestination()
                                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                         self?.rootActions?.switchTab(.chat)
                                     }
@@ -837,7 +839,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                 
-                                self?.route.destination = nil
+                                self?.resetDestination()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                     self?.rootActions?.switchTab(.chat)
                                 }
@@ -867,7 +869,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                                 
-                                self?.route.destination = nil
+                                self?.resetDestination()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                     self?.rootActions?.switchTab(.chat)
                                 }
@@ -922,7 +924,7 @@ extension PaymentsTransfersViewModel {
     
     func dismiss() {
         
-        self.route.destination = nil
+        self.resetDestination()
     }
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
