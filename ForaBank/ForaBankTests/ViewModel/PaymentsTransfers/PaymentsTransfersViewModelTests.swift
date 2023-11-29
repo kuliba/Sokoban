@@ -231,7 +231,7 @@ extension ProductSelectorView.ViewModel {
     }
 }
 
-private extension PaymentsTransfersViewModel.Route {
+private extension PaymentsTransfersViewModel.Modal {
     
     var `case`: Case? {
         
