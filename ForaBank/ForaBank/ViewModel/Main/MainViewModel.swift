@@ -137,11 +137,6 @@ private extension MainViewModel {
                     bind(productProfileViewModel)
                     route = .link(.productProfile(productProfileViewModel))
                     
-                case _ as MainViewModelAction.Show.OpenDeposit:
-                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())
-                    })
-                    route = .link(.openDepositsList(openDepositViewModel))
-                    
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
                         return
@@ -316,7 +311,7 @@ private extension MainViewModel {
                                 route = .bottomSheet(.init(type: .openAccount(openAccountViewModel)))
                                 
                             case .deposit:
-                                self.action.send(MainViewModelAction.Show.OpenDeposit())
+                                self.openDeposit()
                                 
                             case .card:
                                 
@@ -785,15 +780,7 @@ private extension MainViewModel {
         productProfile.action
             .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in
-                
-                self.action.send(MainViewModelAction.Close.Link())
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                    
-                    self.action.send(MainViewModelAction.Show.OpenDeposit())
-                }
-            }
+            .sink { [unowned self] _ in self.openDeposit() }
             .store(in: &bindings)
     }
     
@@ -905,7 +892,6 @@ private extension MainViewModel {
         )]
     }
     
-    // remove `MainViewModelAction.Show.OpenDeposit`
     private func openDeposit() {
         
         let openDepositViewModel = OpenDepositViewModel(
@@ -1237,8 +1223,6 @@ enum MainViewModelAction {
             
             let productId: ProductData.ID
         }
-        
-        struct OpenDeposit: Action {}
         
         struct ContactPayment: Action {}
         
