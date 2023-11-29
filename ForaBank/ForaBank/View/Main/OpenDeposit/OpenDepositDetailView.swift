@@ -332,10 +332,8 @@ extension OpenDepositDetailView {
                         
                         if viewModel.isIconPresented {
                             
-                            Image.ic24MaximizeArrow
+                            Image.ic16MaximizeArrow
                                 .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 16, height: 16)
                                 .foregroundColor(.mainColorsGrayMedium)
                                 .rotationEffect(.degrees(45))
                         }
