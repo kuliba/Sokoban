@@ -762,22 +762,18 @@ class MainViewModel: ObservableObject, Resetable {
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action
+            .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] _ in
                 
-                switch action {                    
-                case _ as ProductProfileViewModelAction.MyProductsTapped.OpenDeposit:
-                    self.action.send(MainViewModelAction.Close.Link())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        
-                        self.action.send(MainViewModelAction.Show.OpenDeposit())
-                    }
+                self.action.send(MainViewModelAction.Close.Link())
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
                     
-                default:
-                    break
+                    self.action.send(MainViewModelAction.Show.OpenDeposit())
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
 
     private func bind(_ myProductsViewModel: MyProductsViewModel) {
