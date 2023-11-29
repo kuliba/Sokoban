@@ -96,8 +96,8 @@ struct PaymentsTransfersView: View {
                 }
         )
         .tabBar(isHidden: .init(
-            get: { viewModel.route.destination == nil || viewModel.route.modal == nil },
-            set: { _ in }
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
         ))
     }
     
@@ -329,6 +329,14 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
+    }
+}
+
+private extension PaymentsTransfersViewModel.Route {
+    
+    var isEmpty: Bool {
+        
+        destination == nil && modal == nil
     }
 }
 
