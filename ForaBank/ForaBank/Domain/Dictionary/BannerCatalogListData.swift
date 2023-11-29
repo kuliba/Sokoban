@@ -17,7 +17,14 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
     let conditionURL: URL
     let action: BannerAction?
     
-    internal init(productName: String, conditions: [String], imageEndpoint: String, orderURL: URL, conditionURL: URL, action: BannerAction?) {
+    internal init(
+        productName: String,
+        conditions: [String],
+        imageEndpoint: String,
+        orderURL: URL,
+        conditionURL: URL,
+        action: BannerAction?
+    ) {
         self.productName = productName
         self.conditions = conditions
         self.imageEndpoint = imageEndpoint
@@ -47,6 +54,8 @@ struct BannerCatalogListData: Codable, Equatable, Identifiable, Hashable {
         if let action = try container.decodeIfPresent(BannerAction.self, forKey: .action) {
             
             switch action.type {
+            case .landing:
+                self.action = action
                 
             case .openDeposit:
                 let action = try container.decodeIfPresent(BannerActionDepositOpen.self, forKey: .action)
@@ -99,6 +108,7 @@ enum BannerActionType: String, Codable, Equatable {
     case migAuthTransfer = "MIG_AUTH_TRANSFER"
     case contact = "CONTACT_TRANSFER"
     case depositTransfer = "DEPOSIT_TRANSFER"
+    case landing = "LANDING"
 }
 
 class BannerAction: Codable, Equatable, Hashable {
