@@ -41,12 +41,12 @@ class MainViewModel: ObservableObject, Resetable {
         self.navButtonsRight = []
         self.sections = [
             MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
-             MainSectionFastOperationView.ViewModel(),
-             MainSectionPromoView.ViewModel(model),
-             MainSectionCurrencyMetallView.ViewModel(model),
-             MainSectionOpenProductView.ViewModel(model),
-             MainSectionAtmView.ViewModel.initial
-         ]
+            MainSectionFastOperationView.ViewModel(),
+            MainSectionPromoView.ViewModel(model),
+            MainSectionCurrencyMetallView.ViewModel(model),
+            MainSectionOpenProductView.ViewModel(model),
+            MainSectionAtmView.ViewModel.initial
+        ]
 
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -80,9 +80,10 @@ class MainViewModel: ObservableObject, Resetable {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
             self.handleLandingAction(.sticker)
-        } hide: {
+        } hide: { [self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
             self.sections = MainViewModel.getSections(model)
+            self.bind(sections)
         }
     }
     
@@ -111,6 +112,7 @@ class MainViewModel: ObservableObject, Resetable {
                    products.productCarouselViewModel.stickerViewModel == nil {
                     
                     self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
+                    bind(sections)
                 }
             }
             .store(in: &bindings)
@@ -420,7 +422,8 @@ class MainViewModel: ObservableObject, Resetable {
                                     action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                                 )
                                 
-                            default: break
+                            default:
+                                handleLandingAction(.sticker)
                             }
                         default:
                             break
