@@ -136,6 +136,8 @@ public struct OperationView<OperationResultView: View>: View {
         
         case let .result(result):
             operationResultView(result)
+                .navigationBarBackButtonHidden()
+                .navigationTitle("")
         }
     }
 }
@@ -168,31 +170,41 @@ public struct OperationResultView<ButtonsView: View>: View {
         
         VStack(spacing: 20) {
             
+            Spacer()
+                .frame(minHeight: 20, maxHeight: 112)
             
-            ZStack(alignment: .center) {
+            VStack(spacing: 24) {
                 
-                Circle()
-                    .foregroundColor(configuration.resultViewConfiguration.colorSuccess)
-                    .frame(width: 88, height: 88, alignment: .center)
+                ZStack(alignment: .center) {
+                    
+                    Circle()
+                        .foregroundColor(configuration.resultViewConfiguration.colorSuccess)
+                        .frame(width: 88, height: 88, alignment: .center)
+                    
+                    Image("ic48Check")
+                        .foregroundColor(.white)
+                        .frame(width: 88, height: 88)
+                }
                 
-                Image("ic48Check")
-                    .foregroundColor(.white)
-                    .frame(width: 88, height: 88)
+                VStack(spacing: 12) {
+                    
+                    Text(model.title)
+                        .font(configuration.resultViewConfiguration.titleFont)
+                        .foregroundColor(configuration.resultViewConfiguration.titleColor)
+                    
+                    Text(model.description)
+                        .font(configuration.resultViewConfiguration.descriptionFont)
+                        .foregroundColor(configuration.resultViewConfiguration.descriptionColor)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 28)
+                        .frame(minHeight: 40, idealHeight: 40, maxHeight: 40, alignment: .center)
+                    
+                }
+                
+                Text("\(model.amount) ₽")
+                    .font(configuration.resultViewConfiguration.amountFont)
+                    .foregroundColor(configuration.resultViewConfiguration.amountColor)
             }
-            
-            Text(model.title)
-                .font(configuration.resultViewConfiguration.titleFont)
-                .foregroundColor(configuration.resultViewConfiguration.titleColor)
-            
-            Text(model.description)
-                .font(configuration.resultViewConfiguration.descriptionFont)
-                .foregroundColor(configuration.resultViewConfiguration.descriptionColor)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 28)
-            
-            Text("\(model.amount) ₽")
-                .font(configuration.resultViewConfiguration.amountFont)
-                .foregroundColor(configuration.resultViewConfiguration.amountColor)
             
             Spacer()
             
