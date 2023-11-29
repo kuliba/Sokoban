@@ -756,21 +756,18 @@ private extension MainViewModel {
     func bind(_ paymentsViewModel: PaymentsViewModel) {
         
         paymentsViewModel.action
+            .compactMap { $0 as? PaymentsViewModelAction.ScanQrCode }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                    
-                case _ as PaymentsViewModelAction.ScanQrCode:
-                    let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+            .sink { [unowned self] _ in
+            
+                let qrScannerModel = QRViewModel.init(
+                    closeAction: { [weak self] in
+                        
+                        self?.route = nil
                     })
-                    
-                    bind(qrScannerModel)
-                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
-                    
-                default: break
-                }
+                
+                bind(qrScannerModel)
+                route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
             }
             .store(in: &bindings)
     }
