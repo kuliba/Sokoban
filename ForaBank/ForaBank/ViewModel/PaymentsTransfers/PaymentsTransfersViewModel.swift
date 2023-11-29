@@ -145,10 +145,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     ))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
-                    route.modal = nil
+                    resetModal()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
-                    route.modal = nil
+                    resetModal()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
@@ -157,7 +157,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     resetDestination()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullScreenSheet:
-                    route.modal = nil
+                    resetModal()
                     
                     
                 case _ as PaymentsTransfersViewModelAction.Close.DismissAll:
@@ -257,7 +257,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     func openQRScanner() {
         
         let qrScannerModel = QRViewModel(
-            closeAction: { [weak self] in self?.route.modal = nil }
+            closeAction: { [weak self] in self?.resetModal() }
         )
         
         self.bind(qrScannerModel)
@@ -798,7 +798,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                     
                                 }, requisitsAction: { [weak self] in
                                     
-                                    self?.route.modal = nil
+                                    self?.resetModal()
                                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                                     
                                 })
