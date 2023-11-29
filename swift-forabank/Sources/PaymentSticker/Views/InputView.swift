@@ -12,36 +12,35 @@ import Combine
 
 class CodeObserver: ObservableObject {
     
-    @Published private (set) var code: String? = nil
+    let code = PassthroughSubject<String, Never>()
 
     private var bindings = Set<AnyCancellable>()
 
     init(onCode: @escaping (String) -> Void) {
         
-        $code
+        code
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [onCode] in onCode($0) }
             .store(in: &bindings)
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("otpCode"), object: nil)
     }
     
     @objc func methodOfReceivedNotification(notification: Notification) {
         
-        let otp = notification.userInfo?["otp"] as? String
-        self.code = otp
+        guard let otp = notification.userInfo?["otp"] as? String
+        else { return }
+        self.code.send(otp)
     }
 }
-
 
 // MARK: - View
 
 struct InputView: View {
     
     @StateObject private var regularFieldViewModel: RegularFieldViewModel
-    @StateObject private var codeObserver: CodeObserver
+    private let codeObserver: CodeObserver
     
     private let title: String
     private let commit: (String) -> Void
@@ -67,7 +66,8 @@ struct InputView: View {
         self._regularFieldViewModel = .init(
             wrappedValue: regularFieldViewModel
         )
-        self._codeObserver = .init(wrappedValue: codeObserver)
+
+        self.codeObserver = codeObserver
         
         self.title = title
         self.commit = commit
