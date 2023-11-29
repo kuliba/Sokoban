@@ -129,16 +129,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         }
                     )))
                     
-                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
-                    
-                    // на экране платежей верхний переход
-                    let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    })
-                    
-                    self.bind(qrScannerModel)
-                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
-                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     route = nil
                     
@@ -247,6 +237,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                          clientPhoto: clientData.1,
                                          clientName: clientData.2)
             }.store(in: &bindings)
+    }
+    
+    func openQRScanner() {
+        
+        let qrScannerModel = QRViewModel(
+            closeAction: { [weak self] in self?.route = nil }
+        )
+        
+        self.bind(qrScannerModel)
+        route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
     }
     
     private func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
@@ -360,12 +360,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                                 titleButtonAction: { [weak self] in
                                     self?.model.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
                                 },
-                                navLeadingAction: { [weak self] in
-                                    self?.route = nil },
-                                navTrailingAction: { [weak self] in
-                                    self?.route = nil
-                                    self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
-                                }
+                                navLeadingAction: { [weak self] in self?.route = nil },
+                                navTrailingAction: { [weak self] in self?.openQRScanner() }
                             )
                             let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
                             let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: self.model, including: [lastPaymentsKind])
@@ -900,11 +896,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
-        [.init(icon: .ic24BarcodeScanner2,
-               action: { [weak self] in
-            self?.action.send(PaymentsTransfersViewModelAction
-                .ButtonTapped.Scanner())})
-        ]
+        [.init(
+            icon: .ic24BarcodeScanner2,
+            action: { [weak self] in self?.openQRScanner() }
+        )]
     }
 }
 
@@ -915,12 +910,6 @@ extension PaymentsTransfersViewModel {
     func dismiss() {
         
         self.route = nil
-    }
-    
-    func openScanner() {
-        
-        self.route = nil
-        self.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
     }
     
     func getMosParkingPickerData() async throws -> MosParkingPickerData {
@@ -1384,8 +1373,6 @@ enum PaymentsTransfersViewModelAction {
     enum ButtonTapped {
         
         struct UserAccount: Action {}
-        
-        struct Scanner: Action {}
     }
     
     enum Close {
