@@ -124,7 +124,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     route.destination = .productProfile(productProfileViewModel)
                     
                 case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
-                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: {[weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    let openDepositViewModel = OpenDepositViewModel(model, catalogType: .deposit, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                     })
                     route.destination = .openDepositsList(openDepositViewModel)
                     

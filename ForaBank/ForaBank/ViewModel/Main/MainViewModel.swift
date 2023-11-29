@@ -22,7 +22,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?
     
-    @Published var route: Route?
+    @Published var route: Route
     
     var rootActions: RootViewModel.RootActions?
     
@@ -35,6 +35,7 @@ class MainViewModel: ObservableObject, Resetable {
     init(
         _ model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        route: Route = .empty,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
@@ -50,7 +51,9 @@ class MainViewModel: ObservableObject, Resetable {
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.route = route
         self.onRegister = onRegister
+        
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -86,10 +89,14 @@ class MainViewModel: ObservableObject, Resetable {
             self.bind(sections)
         }
     }
+}
+
+extension MainViewModel {
     
     func reset() {
         
-        route = nil
+        resetDestination()
+        resetModal()
         
         for section in sections {
             
@@ -100,6 +107,16 @@ class MainViewModel: ObservableObject, Resetable {
                 continue
             }
         }
+    }
+    
+    func resetDestination() {
+        
+        route.destination = nil
+    }
+    
+    func resetModal() {
+        
+        route.modal = nil
     }
 }
 
@@ -130,12 +147,12 @@ private extension MainViewModel {
                           let productProfileViewModel = makeProductProfileViewModel(
                             product,
                             "\(type(of: self))",
-                            { [weak self] in self?.route = nil })
+                            { [weak self] in self?.resetDestination() })
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
-                    route = .link(.productProfile(productProfileViewModel))
+                    route.destination = .productProfile(productProfileViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value else {
@@ -145,31 +162,28 @@ private extension MainViewModel {
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
                     
                     // TODO: replace with injected factory
-                    route = .link(.userAccount(.init(
+                    route.destination = .userAccount(.init(
                         model: model,
                         clientInfo: clientInfo,
-                        dismissAction: { [weak self] in
-                            
-                            self?.action.send(MainViewModelAction.Close.Link())
-                        }
-                    )))
+                        dismissAction: { [weak self] in self?.resetDestination() }
+                    ))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.Close.Link())})
-                    route = .link(.messages(messagesHistoryViewModel))
+                    route.destination = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
                     
                 case _ as MainViewModelAction.Close.Link:
-                    route = nil
+                    resetDestination()
                     
                 case _ as MainViewModelAction.Close.Sheet:
-                    self.route = nil
+                    resetModal()
                     
                 case _ as MainViewModelAction.Close.FullScreenSheet:
-                    self.route = nil
+                    resetModal()
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
@@ -177,7 +191,7 @@ private extension MainViewModel {
                     })
                     
                     bind(qrScannerModel)
-                    route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
+                    route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                     
                 default:
                     break
@@ -208,7 +222,7 @@ private extension MainViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] paymentsViewModel in
                 
-                route = .link(.payments(paymentsViewModel))
+                route.destination = .payments(paymentsViewModel)
                 
             }).store(in: &bindings)
         
@@ -220,7 +234,7 @@ private extension MainViewModel {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .fastPayments(.contacts))
                 bind(contactsViewModel)
                 
-                route = .sheet(.init(type: .byPhone(contactsViewModel)))
+                route.modal = .sheet(.init(type: .byPhone(contactsViewModel)))
                 
             }).store(in: &bindings)
         
@@ -232,7 +246,7 @@ private extension MainViewModel {
                 let contactsViewModel = model.makeContactsViewModel(forMode: .abroad)
                 bind(contactsViewModel)
                 
-                route = .sheet(.init(type: .byPhone(contactsViewModel)))
+                route.modal = .sheet(.init(type: .byPhone(contactsViewModel)))
                 
             }).store(in: &bindings)
         
@@ -242,7 +256,6 @@ private extension MainViewModel {
                 
                 Just($0.action)
                     .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
-                
             })
             .sink(receiveValue: { [weak self] in
                 
@@ -264,7 +277,7 @@ private extension MainViewModel {
                             continue
                         }
                         
-                        self.route = .alert(.init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
+                        self.route.modal = .alert(.init(title: "Срок действия вклада истек", message: "Переведите деньги со вклада на свою карту/счет в любое время", primary: .init(type: .default, title: "Отмена", action: {}), secondary: .init(type: .default, title: "Ok", action: {
                             
                             self.action.send(MainViewModelAction.Show.ProductProfile(productId: deposit.id))
                         })))
@@ -308,7 +321,7 @@ private extension MainViewModel {
                                     return
                                 }
                                 
-                                route = .bottomSheet(.init(type: .openAccount(openAccountViewModel)))
+                                route.modal = .bottomSheet(.init(type: .openAccount(openAccountViewModel)))
                                 
                             case .deposit:
                                 self.openDeposit()
@@ -322,7 +335,7 @@ private extension MainViewModel {
                                         self?.action.send(MainViewModelAction.Close.Link())
                                     })
                                 
-                                route = .link( .openCard(authProductsViewModel))
+                                route.destination =  .openCard(authProductsViewModel)
                                 
                             default:
                                 //MARK: Action for Sticker Product
@@ -349,7 +362,7 @@ private extension MainViewModel {
                                 let templatesListViewModel = TemplatesListViewModel(
                                     model, dismissAction: { [weak self] in self?.action.send(MainViewModelAction.Close.Link()) })
                                 bind(templatesListViewModel)
-                                route = .link(.templates(templatesListViewModel))
+                                route.destination = .templates(templatesListViewModel)
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
@@ -361,7 +374,7 @@ private extension MainViewModel {
                                 })
                                 
                                 bind(qrScannerModel)
-                                route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
+                                route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
                             }
                             
                         default:
@@ -385,12 +398,12 @@ private extension MainViewModel {
                                     
                                     return
                                 }
-                                route = .link( .openDeposit(openDepositViewModel))
+                                route.destination = .openDeposit(openDepositViewModel)
                                 
                             case _ as BannerActionDepositsList:
-                                route = .link(.openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
+                                route.destination = .openDepositsList(.init(model, catalogType: .deposit, dismissAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.Close.Link())
-                                })))
+                                }))
                                 
                             case let payload as BannerActionMigTransfer:
                                 let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
@@ -400,7 +413,6 @@ private extension MainViewModel {
                                 bind(paymentsViewModel)
                                 
                                 self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                                
                                 
                             case let payload as BannerActionContactTransfer:
                                 let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
@@ -450,7 +462,7 @@ private extension MainViewModel {
                             makeProductProfileViewModel: makeProductProfileViewModel
                         )
                         myProductsViewModel.rootActions = rootActions
-                        route = .link(.myProducts(myProductsViewModel))
+                        route.destination = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
                         
@@ -463,7 +475,7 @@ private extension MainViewModel {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        route = .link(.currencyWallet(walletViewModel))
+                        route.destination = .currencyWallet(walletViewModel)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
@@ -474,7 +486,7 @@ private extension MainViewModel {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        route = .link(.currencyWallet(walletViewModel))
+                        route.destination = .currencyWallet(walletViewModel)
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
@@ -485,14 +497,14 @@ private extension MainViewModel {
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
-                        route = .link(.currencyWallet(walletViewModel))
+                        route.destination = .currencyWallet(walletViewModel)
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
                             return
                         }
-                        route = .sheet(.init(type: .places(placesViewModel)))
+                        route.modal = .sheet(.init(type: .places(placesViewModel)))
                         
                     default:
                         break
@@ -558,7 +570,7 @@ private extension MainViewModel {
                 let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
                 guard operators.count > 0 else {
                     
-                    self.route = nil
+                    self.resetModal()
                     self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                     return
                 }
@@ -587,7 +599,7 @@ private extension MainViewModel {
                             self.bind(paymentsViewModel)
                             
                             await MainActor.run {
-                                self.route = .link( .payments(paymentsViewModel))
+                                self.route.destination = .payments(paymentsViewModel)
                             }
                         }
                     }
@@ -596,7 +608,7 @@ private extension MainViewModel {
                             
                             let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
                             
-                            route = .link( .operatorView(viewModel))
+                            route.destination = .operatorView(viewModel)
                         }
                     }
                 } else {
@@ -615,7 +627,7 @@ private extension MainViewModel {
                             leftItems: [
                                 NavigationBarView.ViewModel.BackButtonItemViewModel(
                                     icon: .ic24ChevronLeft,
-                                    action: { [weak self] in self?.route = nil })
+                                    action: { [weak self] in self?.resetDestination() })
                             ])
                         
                         let operatorsViewModel = QRSearchOperatorViewModel(
@@ -625,7 +637,7 @@ private extension MainViewModel {
                             operators: operators,
                             addCompanyAction: { [weak self] in
                                 
-                                self?.route = nil
+                                self?.resetDestination()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                                     
                                     self?.rootActions?.switchTab(.chat)
@@ -633,18 +645,18 @@ private extension MainViewModel {
                             },
                             requisitesAction: { [weak self] in
                                 
-                                self?.route = nil
+                                self?.resetDestination()
                                 self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                             },
                             qrCode: qr)
                         
-                        self.route = .link(.searchOperators(operatorsViewModel))
+                        self.route.destination = .searchOperators(operatorsViewModel)
                     }
                 }
                 
             } else {
                 
-                self.route = nil
+                self.resetModal()
                 self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
             }
             
@@ -655,17 +667,17 @@ private extension MainViewModel {
                 
                 let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                     
-                    self?.route = nil
+                    self?.resetDestination()
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         self?.rootActions?.switchTab(.chat)
                     }
                     
                 }, requisitsAction: { [weak self] in
                     
-                    self?.route = nil
+                    self?.resetModal()
                     self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                 })
-                self.route = .link(.failedView(failedView))
+                self.route.destination = .failedView(failedView)
             }
         }
     }
@@ -683,14 +695,14 @@ private extension MainViewModel {
                 
                 await MainActor.run {
                     
-                    route = .link(.payments(operationViewModel))
+                    route.destination = .payments(operationViewModel)
                 }
                 
             } catch {
                 
                 await MainActor.run {
                     
-                    self.route = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.route = nil })))
+                    self.route.modal = .alert(.init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.resetModal() })))
                 }
                 
                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
@@ -700,12 +712,12 @@ private extension MainViewModel {
     
     func handleC2bSubscribeQRURL(url: URL) {
         
-        route = nil
+       resetModal()
         
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
-            closeAction: { [weak self] in self?.route = nil }
+            closeAction: { [weak self] in self?.resetDestination() }
         )
         
         bind(paymentsViewModel)
@@ -718,7 +730,7 @@ private extension MainViewModel {
     
     func handleQRURL() {
         
-       route = nil
+       resetModal()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
@@ -726,7 +738,7 @@ private extension MainViewModel {
                 model: self.model,
                 addCompanyAction: { [weak self] in
                 
-                self?.route = nil
+                self?.resetDestination()
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     self?.rootActions?.switchTab(.chat)
                 }
@@ -735,11 +747,11 @@ private extension MainViewModel {
                 
                 guard let self else { return }
                 
-                self.route = nil
+                self.resetModal()
                 let paymentsViewModel = PaymentsViewModel(
                     model,
                     service: .requisites,
-                    closeAction: { [weak self] in self?.route = nil }
+                    closeAction: { [weak self] in self?.resetDestination() }
                 )
                 self.bind(paymentsViewModel)
                 
@@ -748,7 +760,7 @@ private extension MainViewModel {
                     action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                 )
             })
-            self.route = .link(.failedView(failedView))
+            self.route.destination = .failedView(failedView)
         }
     }
     
@@ -759,7 +771,7 @@ private extension MainViewModel {
             
             let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
                 
-                self?.route = nil
+                self?.resetDestination()
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     self?.rootActions?.switchTab(.chat)
                 }
@@ -779,7 +791,7 @@ private extension MainViewModel {
                     action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
                 )
             })
-            self.route = .link(.failedView(failedView))
+            self.route.destination = .failedView(failedView)
         }
     }
     
@@ -793,11 +805,11 @@ private extension MainViewModel {
                 let qrScannerModel = QRViewModel.init(
                     closeAction: { [weak self] in
                         
-                        self?.route = nil
+                        self?.resetModal()
                     })
                 
                 bind(qrScannerModel)
-                route = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
+                route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
             }
             .store(in: &bindings)
     }
@@ -929,7 +941,7 @@ private extension MainViewModel {
                 self?.action.send(MainViewModelAction.Close.Link())
             })
         
-        route = .link(.openDepositsList(openDepositViewModel))
+        route.destination = .openDepositsList(openDepositViewModel)
     }
 }
 
@@ -962,15 +974,23 @@ extension MainViewModel {
         }
     }
     
-    enum Route {
+    struct Route {
+        
+        var destination: Link?
+        var modal: Modal?
+        
+        static let empty: Self = .init(destination: nil, modal: nil)
+    }
+    
+    enum Modal {
         
         case alert(Alert.ViewModel)
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
-        case link(Link)
         case sheet(Sheet)
         
         var alert: Alert.ViewModel? {
+            
             if case let .alert(alert) = self {
                 
                 return alert
@@ -981,6 +1001,7 @@ extension MainViewModel {
         }
         
         var bottomSheet: BottomSheet? {
+            
             if case let .bottomSheet(bottomSheet) = self {
                 
                 return bottomSheet
@@ -991,6 +1012,7 @@ extension MainViewModel {
         }
         
         var fullScreenSheet: FullScreenSheet? {
+            
             if case let .fullScreenSheet(fullScreenSheet) = self {
                 
                 return fullScreenSheet
@@ -1000,17 +1022,8 @@ extension MainViewModel {
             }
         }
         
-        var link: Link? {
-            if case let .link(link) = self {
-                
-                return link
-            } else {
-                
-                return nil
-            }
-        }
-        
         var sheet: Sheet? {
+            
             if case let .sheet(sheet) = self {
                 
                 return sheet
@@ -1162,7 +1175,7 @@ extension MainViewModel {
         )
         
         UIApplication.shared.endEditing()
-        route = .link(.landing(viewModel))
+        route.destination = .landing(viewModel)
     }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -1178,7 +1191,7 @@ extension MainViewModel {
     private func handleCloseLinkAction() {
         
         LoggerAgent.shared.log(category: .ui, message: "received AuthLoginViewModelAction.Close.Link")
-        route = nil
+        resetDestination()
     }
     
     func orderSticker() {
@@ -1190,7 +1203,7 @@ extension MainViewModel {
                 ($0 as? ProductCardData)?.isMain == true }) == false
         {
             
-            self.route = .alert(.init(
+            self.route.modal = .alert(.init(
                 title: "Нет карты", message: "Сначала нужно заказать карту.", primary: .init(
                     type: .default, title: "Отмена", action: {}), secondary: .init(
                         type: .default, title: "Продолжить", action: {
@@ -1202,13 +1215,13 @@ extension MainViewModel {
                                     dismissAction: { [weak self] in
                                         self?.action.send(MyProductsViewModelAction.Close.Link()) })
                                 
-                                self.route = .link(.openCard(authProductsViewModel))
+                                self.route.destination = .openCard(authProductsViewModel)
                             }
                         }
                     )))
         } else {
             
-            self.route = .link(.paymentSticker)
+            self.route.destination = .paymentSticker
         }
         
         /* TODO: v4 сейчас нет

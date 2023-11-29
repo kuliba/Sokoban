@@ -137,7 +137,7 @@ class RootViewModel: ObservableObject, Resetable {
                               let clientInformViewModel = ClientInformViewModel(model: self.model, itemsData: clientInformData)
                         else { return }
                         
-                        self.mainViewModel.route = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
+                        self.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(clientInformViewModel)))
                     }
                 }
             }
