@@ -11,14 +11,14 @@ import ScrollViewProxy
 struct OpenDepositView: View {
     
     @ObservedObject var viewModel: OpenDepositViewModel
-
+    
     var body: some View {
         
         ZStack {
             
             ScrollView(showsIndicators: false) {
                 
-                ForEach(viewModel.products, content: OfferProductView.init)
+                ForEach(viewModel.offers, content: OfferProductView.init)
             }
             .foregroundColor(.black)
             .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in

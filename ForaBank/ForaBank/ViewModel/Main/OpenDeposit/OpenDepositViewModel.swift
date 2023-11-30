@@ -14,7 +14,7 @@ class OpenDepositViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
-    @Published var products: [OfferProductView.ViewModel]
+    @Published var offers: [OfferProductView.ViewModel]
     @Published var bottomSheet: BottomSheet?
 
     let catalogType: CatalogType
@@ -23,11 +23,11 @@ class OpenDepositViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
 
     
-    init(_ model: Model = .emptyMock, navigationBar: NavigationBarView.ViewModel, products: [OfferProductView.ViewModel], catalogType: CatalogType) {
+    init(_ model: Model = .emptyMock, navigationBar: NavigationBarView.ViewModel, products offers: [OfferProductView.ViewModel], catalogType: CatalogType) {
         
         self.navigationBar = navigationBar
         self.catalogType = catalogType
-        self.products = products
+        self.offers = offers
         self.model = model
     }
     
@@ -35,7 +35,7 @@ class OpenDepositViewModel: ObservableObject {
         
         self.navigationBar = .init(title: "Вклады", leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
         self.model = model
-        self.products = []
+        self.offers = []
         self.catalogType = catalogType
         
         bind()
@@ -46,9 +46,7 @@ class OpenDepositViewModel: ObservableObject {
 
         case .catalog:
             self.model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.productCatalogList]))
-        
         }
-
     }
     
     private func bind() {
@@ -60,10 +58,10 @@ class OpenDepositViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] deposits in
                     
-                    self.products = deposits.map(OfferProductView.ViewModel.init(with:))
+                    self.offers = deposits.map(OfferProductView.ViewModel.init(with:))
                     
                     requestDepositImages(for: deposits)
-                    bind(self.products)
+                    bind(self.offers)
                     
                 }.store(in: &bindings)
             
@@ -73,10 +71,10 @@ class OpenDepositViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] products in
                     
-                    self.products = products.map { OfferProductView.ViewModel(with: $0) }
+                    self.offers = products.map { OfferProductView.ViewModel(with: $0) }
                     
                     requestImages(for: products)
-                    bind(self.products)
+                    bind(self.offers)
 
                 }.store(in: &bindings)
                 
@@ -104,7 +102,7 @@ class OpenDepositViewModel: ObservableObject {
                         return
                     }
                     
-                    guard let productCard = products.first(where: { productCard in
+                    guard let productCard = offers.first(where: { productCard in
                         
                         guard case let .endpoint(endpoint) = productCard.image
                         else { return false }
@@ -127,16 +125,16 @@ class OpenDepositViewModel: ObservableObject {
             .store(in: &bindings)
     }
     
-    private func bind(_ products: [OfferProductView.ViewModel]) {
+    private func bind(_ offers: [OfferProductView.ViewModel]) {
         
-        for product in products {
+        for offer in offers {
             
-            product.action
+            offer.action
                 .compactMap { $0 as? ModelActionOpenDeposit.ButtonTapped }
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] _ in
                     
-                    if let additionalCondition = product.additionalCondition {
+                    if let additionalCondition = offer.additionalCondition {
                         
                         bottomSheet = .init(.init(type: .openDeposit(.init(desc: additionalCondition.desc))))
                     }
