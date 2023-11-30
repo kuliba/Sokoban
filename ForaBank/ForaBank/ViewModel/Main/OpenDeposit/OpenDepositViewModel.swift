@@ -83,17 +83,13 @@ class OpenDepositViewModel: ObservableObject {
         }
         
         action
+            .compactMap { $0 as? OperationDetailViewModelAction.Dismiss }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] _ in
                 
-                switch action {
-                case _ as OperationDetailViewModelAction.Dismiss:
-                    self.action.send(OperationDetailViewModelAction.Dismiss())
-                    
-                default: break
-                }
-                
-            }.store(in: &bindings)
+                self.action.send(OperationDetailViewModelAction.Dismiss())
+            }
+            .store(in: &bindings)
         
         model.action
             .compactMap { $0 as? ModelAction.General.DownloadImage.Response }
