@@ -207,7 +207,7 @@ struct PaymentsTransfersView: View {
             OpenDepositDetailView(viewModel: depositListViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
         }
     }
     

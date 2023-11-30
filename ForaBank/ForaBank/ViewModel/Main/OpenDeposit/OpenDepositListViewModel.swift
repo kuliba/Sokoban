@@ -1,5 +1,5 @@
 //
-//  OpenDepositViewModel.swift
+//  OpenDepositListViewModel.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 28.04.2022.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class OpenDepositViewModel: ObservableObject {
+class OpenDepositListViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -163,7 +163,7 @@ class OpenDepositViewModel: ObservableObject {
     }
 }
 
-extension OpenDepositViewModel {
+extension OpenDepositListViewModel {
     
     struct BottomSheet: BottomSheetCustomizable {
 

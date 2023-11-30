@@ -106,7 +106,7 @@ struct MyProductsView: View {
                         AuthProductsView(viewModel: authProductsViewModel)
                         
                     case let  .openDeposit(openDepositViewModel):
-                        OpenDepositView(viewModel: openDepositViewModel)
+                        OpenDepositListView(viewModel: openDepositViewModel)
                     
                     case let .productProfile(productProfileViewModel):
                         ProductProfileView(viewModel: productProfileViewModel)

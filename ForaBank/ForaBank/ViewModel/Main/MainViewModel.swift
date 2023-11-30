@@ -933,7 +933,7 @@ private extension MainViewModel {
     
     private func openDeposit() {
         
-        let openDepositViewModel = OpenDepositViewModel(
+        let openDepositViewModel = OpenDepositListViewModel(
             model,
             catalogType: .deposit,
             dismissAction: { [weak self] in
@@ -1052,7 +1052,7 @@ extension MainViewModel {
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
         case openDeposit(OpenDepositDetailViewModel)
-        case openDepositsList(OpenDepositViewModel)
+        case openDepositsList(OpenDepositListViewModel)
         case templates(TemplatesListViewModel)
         case currencyWallet(CurrencyWalletViewModel)
         case myProducts(MyProductsViewModel)

@@ -192,7 +192,7 @@ extension OfferProductView {
            }
 
             return InfoButton(url: url, action: { [weak self] in
-                            self?.action.send(OpenDepositViewModel.ModelActionOpenDeposit.ButtonTapped())
+                            self?.action.send(OpenDepositListViewModel.ModelActionOpenDeposit.ButtonTapped())
                         })
         }
 

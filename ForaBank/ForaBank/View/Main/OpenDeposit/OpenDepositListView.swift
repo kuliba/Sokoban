@@ -1,5 +1,5 @@
 //
-//  OpenDepositView.swift
+//  OpenDepositListView.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 28.04.2022.
@@ -8,9 +8,9 @@
 import SwiftUI
 import ScrollViewProxy
 
-struct OpenDepositView: View {
+struct OpenDepositListView: View {
     
-    @ObservedObject var viewModel: OpenDepositViewModel
+    @ObservedObject var viewModel: OpenDepositListViewModel
     
     var body: some View {
         
@@ -39,7 +39,7 @@ struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OpenDepositView(
+        OpenDepositListView(
             viewModel: .init(
                 navigationBar: .init(title: "Вклады"),
                 products: [.depositSample, .depositSample],

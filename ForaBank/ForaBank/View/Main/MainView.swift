@@ -153,7 +153,7 @@ struct MainView<NavigationOperationView: View>: View {
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
