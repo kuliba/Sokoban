@@ -56,6 +56,7 @@ struct RootView: View {
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarMainButton")
     }
     
@@ -66,6 +67,7 @@ struct RootView: View {
             PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
+        .navigationViewStyle(StackNavigationViewStyle())
         .accessibilityIdentifier("tabBarTransferButton")
     }
     
