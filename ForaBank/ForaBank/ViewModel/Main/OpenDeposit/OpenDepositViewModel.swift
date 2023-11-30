@@ -142,18 +142,16 @@ class OpenDepositViewModel: ObservableObject {
         for product in products {
             
             product.action
+                .compactMap { $0 as? ModelActionOpenDeposit.ButtonTapped }
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    switch action {
+                .sink { [unowned self] _ in
+                    
+                    if let additionalCondition = product.additionalCondition {
                         
-                    case _ as ModelActionOpenDeposit.ButtonTapped:
-                        if let additionalCondition = product.additionalCondition {
-                            bottomSheet = .init(.init(type: .openDeposit(.init(desc: additionalCondition.desc))))
-                        }
-                        
-                    default: break
+                        bottomSheet = .init(.init(type: .openDeposit(.init(desc: additionalCondition.desc))))
                     }
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
     }
     
