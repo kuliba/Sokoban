@@ -38,9 +38,13 @@ struct OpenDepositView: View {
 struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
-        OpenDepositView(viewModel:
-                .init(navigationBar: .init(title: "Вклады"),
-                      products: [.depositSample, .depositSample],
-                      catalogType: .deposit))
+        
+        OpenDepositView(
+            viewModel: .init(
+                navigationBar: .init(title: "Вклады"),
+                products: [.depositSample, .depositSample],
+                catalogType: .deposit
+            )
+        )
     }
 }
