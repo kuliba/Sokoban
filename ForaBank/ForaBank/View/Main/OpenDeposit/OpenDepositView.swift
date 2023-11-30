@@ -18,11 +18,7 @@ struct OpenDepositView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                ForEach(viewModel.products) { productCard in
-                    
-                    OfferProductView(viewModel: productCard)
-                    
-                }
+                ForEach(viewModel.products, content: OfferProductView.init)
             }
             .foregroundColor(.black)
             .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
