@@ -96,45 +96,39 @@ class OpenDepositViewModel: ObservableObject {
             }.store(in: &bindings)
         
         model.action
+            .compactMap { $0 as? ModelAction.General.DownloadImage.Response }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                case let payload as ModelAction.General.DownloadImage.Response:
-                    switch payload.result {
-                    case .success(let data):
-                        
-                        guard let image = Image(data: data) else {
-                            //TODO: set logger
-                            return
-                        }
-                        
-                        guard let productCard = products.first(where: { productCard in
-                            
-                            guard case .endpoint(let endpoint) = productCard.image else {
-                                return false
-                            }
-                            
-                            return endpoint == payload.endpoint
-                            
-                        }) else {
-                            
-                            return
-                        }
-                        
-                        withAnimation {
-                            
-                            productCard.image = .image(image)
-                        }
-                        
-                    case .failure(let error):
+            .sink { [unowned self] response in
+                
+                switch response.result {
+                case let .success(data):
+                    
+                    guard let image = Image(data: data) else {
                         //TODO: set logger
-                        break
+                        return
                     }
-                default:
+                    
+                    guard let productCard = products.first(where: { productCard in
+                        
+                        guard case let .endpoint(endpoint) = productCard.image
+                        else { return false }
+                        
+                        return endpoint == response.endpoint
+                        
+                    })
+                    else { return }
+                    
+                    withAnimation {
+                        
+                        productCard.image = .image(image)
+                    }
+                    
+                case let .failure(error):
+                    //TODO: set logger
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ products: [OfferProductView.ViewModel]) {
