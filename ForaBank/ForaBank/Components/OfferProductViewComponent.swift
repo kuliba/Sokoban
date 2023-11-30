@@ -30,8 +30,20 @@ extension OfferProductView {
         var additionalCondition: AdditionalCondition? = nil
         @Published var isShowSheet: Bool = false
         
-        internal init(id: Int, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButton: OrderButton, conditionViewModel: ConditionViewModel, design: Design, additionalCondition: AdditionalCondition?) {
-            
+        @Published private(set) var route: Route
+        
+        internal init(
+            id: Int,
+            title: String, 
+            subtitle: [String],
+            image: ImageData,
+            infoButton: InfoButton,
+            orderButton: OrderButton,
+            conditionViewModel: ConditionViewModel,
+            design: Design,
+            additionalCondition: AdditionalCondition?,
+            route: Route = .empty
+        ) {
             self.id = id
             self.title = title
             self.subtitle = subtitle
@@ -41,11 +53,15 @@ extension OfferProductView {
             self.conditionViewModel = conditionViewModel
             self.design = design
             self.additionalCondition = additionalCondition
+            self.route = route
         }
         
-        init(with product: CatalogProductData) {
-            
+        init(
+            with product: CatalogProductData,
+            route: Route = .empty
+        ) {
             self.id = product.id
+            self.route = route
             self.title = product.name
             self.subtitle = product.description
             self.image = .endpoint(product.imageEndpoint)
@@ -54,9 +70,12 @@ extension OfferProductView {
             self.infoButton = createInfoButton(with: product.infoURL)
         }
         
-        init(with deposit: DepositProductData) {
-            
+        init(
+            with deposit: DepositProductData,
+            route: Route = .empty
+        ) {
             self.id = deposit.depositProductID
+            self.route = route
             self.title = deposit.name
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
@@ -127,6 +146,31 @@ extension OfferProductView {
             struct OpenDetail: Action {}
         }
         
+        struct Route {
+            
+            var destination: Link?
+            
+            static let empty: Self = .init(destination: nil)
+            
+            enum Link: Identifiable {
+                
+                case openDeposit(OpenDepositDetailViewModel)
+                
+                var id: Case {
+                    
+                    switch self {
+                    case let .openDeposit(viewModel):
+                        return .openDeposit(viewModel.id)
+                    }
+                }
+                
+                enum Case: Hashable {
+                    
+                    case openDeposit(DepositProductData.ID)
+                }
+            }
+        }
+        
         func bind() {
             action
                 .receive(on: DispatchQueue.main)
@@ -167,6 +211,21 @@ extension OfferProductView.ViewModel {
         }
         
         return description
+    }
+    
+    func orderButtonTapped() {
+        
+        #warning("remove `Model`")
+        if let depositId = id,
+           let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: Model.shared) {
+            
+            route.destination = .openDeposit(openDepositViewModel)
+        }
+    }
+    
+    func resetDestination() {
+        
+        route.destination = nil
     }
 }
 
@@ -240,13 +299,33 @@ struct OfferProductView: View {
                     
                     Spacer()
                     
-                    OfferProductView.OrderButtonView(viewModel: viewModel)
+                    OfferProductView.OrderButtonView(
+                        title: viewModel.orderButton.title,
+                        action: viewModel.orderButtonTapped
+                    )
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
                 .padding(.bottom, 32)
             }
             .padding(.horizontal, 20)
+        }
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() }}
+            ),
+            content: destinationView
+        )
+    }
+    
+    private func destinationView(
+        destination: OfferProductView.ViewModel.Route.Link
+    ) -> some View {
+        
+        switch destination {
+        case let .openDeposit(viewModel):
+            OpenDepositDetailView(viewModel: viewModel)
         }
     }
     
@@ -318,40 +397,23 @@ struct OfferProductView: View {
     
     struct OrderButtonView: View {
         
-        let viewModel: OfferProductView.ViewModel
+        let title: String
+        let action: () -> Void
         
         var body: some View {
             
-            //FIXME: move all this to view model !!!!
-            if let depositId = viewModel.id,
-               let openViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: Model.shared) {
+            Button(action: action) {
                 
-                NavigationLink(
-                    destination: WrapperOpenDepositDetailView(
-                        viewModel: openViewModel
-                    )
-                ) {
-                    Text(viewModel.orderButton.title)
-                        .foregroundColor(.textWhite)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 17)
-                        .background(Color.buttonPrimary)
-                        .cornerRadius(8)
-                }
+                Text(title)
+                    .foregroundColor(.textWhite)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 17)
+                    .background(Color.buttonPrimary)
+                    .cornerRadius(8)
             }
         }
     }
-    
-    struct WrapperOpenDepositDetailView: View {
-        
-        @StateObject var viewModel: OpenDepositDetailViewModel
-        
-        var body: some View {
-            
-            OpenDepositDetailView(viewModel: viewModel)
-        }
-    }
-    
+
     struct DetailConditionView: View {
         
         let viewModel: OfferProductView.ViewModel.AdditionalCondition

@@ -58,7 +58,10 @@ class OpenDepositViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] deposits in
                     
-                    self.offers = deposits.map(OfferProductView.ViewModel.init(with:))
+                    self.offers = deposits.map {
+                        
+                        OfferProductView.ViewModel(with: $0)
+                    }
                     
                     requestDepositImages(for: deposits)
                     bind(self.offers)
