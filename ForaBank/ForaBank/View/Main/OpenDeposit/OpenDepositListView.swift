@@ -18,7 +18,7 @@ struct OpenDepositListView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                ForEach(viewModel.offers, content: OfferProductView.init)
+                ForEach(viewModel.offers, content: offerProductView)
             }
             .foregroundColor(.black)
             .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
@@ -32,6 +32,13 @@ struct OpenDepositListView: View {
         .navigationBarTitle(viewModel.navigationBar.title, displayMode: .inline)
         .ignoresSafeArea()
         .navigationBar(with: viewModel.navigationBar)
+    }
+    
+    private func offerProductView(
+        offer: OfferProductView.ViewModel
+    ) -> some View {
+        
+        OfferProductView(viewModel: offer)
     }
 }
 
