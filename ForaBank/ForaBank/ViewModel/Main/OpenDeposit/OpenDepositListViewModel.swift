@@ -17,26 +17,38 @@ class OpenDepositListViewModel: ObservableObject {
     @Published var offers: [OfferProductView.ViewModel]
     @Published var bottomSheet: BottomSheet?
 
+    @Published private(set) var route: Route
+    
     let catalogType: CatalogType
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
-
     
-    init(_ model: Model = .emptyMock, navigationBar: NavigationBarView.ViewModel, products offers: [OfferProductView.ViewModel], catalogType: CatalogType) {
-        
+    init(
+        _ model: Model = .emptyMock,
+        navigationBar: NavigationBarView.ViewModel,
+        products offers: [OfferProductView.ViewModel],
+        catalogType: CatalogType,
+        route: Route = .empty
+    ) {
         self.navigationBar = navigationBar
         self.catalogType = catalogType
         self.offers = offers
         self.model = model
+        self.route = route
     }
     
-    init(_ model: Model, catalogType: CatalogType, dismissAction: @escaping () -> Void) {
-        
+    init(
+        _ model: Model,
+        catalogType: CatalogType,
+        route: Route = .empty,
+        dismissAction: @escaping () -> Void
+    ) {
         self.navigationBar = .init(title: "Вклады", leftItems: [NavigationBarView.ViewModel.BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
         self.model = model
         self.offers = []
         self.catalogType = catalogType
+        self.route = route
         
         bind()
         
@@ -46,6 +58,31 @@ class OpenDepositListViewModel: ObservableObject {
 
         case .catalog:
             self.model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.productCatalogList]))
+        }
+    }
+    
+    struct Route {
+        
+        var destination: Link?
+        
+        static let empty: Self = .init(destination: nil)
+        
+        enum Link: Identifiable {
+            
+            case openDeposit(OpenDepositDetailViewModel)
+            
+            var id: Case {
+                
+                switch self {
+                case let .openDeposit(viewModel):
+                    return .openDeposit(viewModel.id)
+                }
+            }
+            
+            enum Case: Hashable {
+                
+                case openDeposit(DepositProductData.ID)
+            }
         }
     }
     
@@ -60,7 +97,10 @@ class OpenDepositListViewModel: ObservableObject {
                     
                     self.offers = deposits.map {
                         
-                        OfferProductView.ViewModel(with: $0)
+                        OfferProductView.ViewModel(
+                            with: $0,
+                            openDeposit: orderButtonTapped
+                        )
                     }
                     
                     requestDepositImages(for: deposits)
@@ -74,7 +114,13 @@ class OpenDepositListViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] products in
                     
-                    self.offers = products.map { OfferProductView.ViewModel(with: $0) }
+                    self.offers = products.map {
+                        
+                        OfferProductView.ViewModel(
+                            with: $0,
+                            openDeposit: orderButtonTapped
+                        )
+                    }
                     
                     requestImages(for: products)
                     bind(self.offers)
@@ -160,6 +206,20 @@ class OpenDepositListViewModel: ObservableObject {
             
             model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.generalСondition.imageLink))
         }
+    }
+    
+    func orderButtonTapped(depositID: DepositProductData.ID?) {
+        
+        if let depositID,
+           let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositID, model: model) {
+            
+            route.destination = .openDeposit(openDepositViewModel)
+        }
+    }
+
+    func resetDestination() {
+        
+        route.destination = nil
     }
 }
 

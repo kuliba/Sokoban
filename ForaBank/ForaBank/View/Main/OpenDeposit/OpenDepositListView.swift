@@ -32,6 +32,13 @@ struct OpenDepositListView: View {
         .navigationBarTitle(viewModel.navigationBar.title, displayMode: .inline)
         .ignoresSafeArea()
         .navigationBar(with: viewModel.navigationBar)
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() }}
+            ),
+            content: destinationView
+        )
     }
     
     private func offerProductView(
@@ -39,6 +46,16 @@ struct OpenDepositListView: View {
     ) -> some View {
         
         OfferProductView(viewModel: offer)
+    }
+    
+    private func destinationView(
+        destination: OpenDepositListViewModel.Route.Link
+    ) -> some View {
+        
+        switch destination {
+        case let .openDeposit(viewModel):
+            OpenDepositDetailView(viewModel: viewModel)
+        }
     }
 }
 
