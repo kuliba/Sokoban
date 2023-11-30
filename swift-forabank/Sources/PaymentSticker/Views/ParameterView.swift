@@ -52,10 +52,7 @@ struct ParameterView: View {
             
         case let .amount(amountViewModel):
             AmountView(
-                viewModel: .init(
-                    parameter: amountViewModel.parameter,
-                    continueButtonTapped: amountViewModel.continueButtonTapped
-                ),
+                viewModel: amountViewModel,
                 configuration: configuration.amountViewConfig,
                 text: amountViewModel.parameter.value
             )

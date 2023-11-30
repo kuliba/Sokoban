@@ -70,7 +70,11 @@ struct AmountView: View {
                 }
                 
                 TransferButtonView(
-                    viewModel: viewModel.parameter.state == .loading ? .loading : .active(action: viewModel.continueButtonTapped),
+                    viewModel: viewModel.reduceState(
+                        state: viewModel.parameter.state,
+                        isCompleteOperation: viewModel.isCompleteOperation,
+                        action: viewModel.continueButtonTapped
+                    ),
                     configuration: configuration
                 )
                 .frame(width: 113, height: 40)

@@ -118,6 +118,7 @@ public extension ModelToViewModelMapper {
             return .amount(
                 .init(
                     parameter: parameter,
+                    isCompleteOperation: operation?.isOperationComplete ?? false,
                     continueButtonTapped: {
                         action(.continueButtonTapped(.getOTPCode))
                     }
