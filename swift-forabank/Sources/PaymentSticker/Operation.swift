@@ -63,6 +63,57 @@ extension [Operation.Parameter] {
 
 extension Operation {
 
+    public var isOperationComplete: Bool {
+        
+        var complete: Bool = true
+         
+        for parameter in parameters {
+            switch parameter {
+            case let .select(select):
+                if select.value == nil {
+                    
+                    complete = false
+                }
+                
+            case let .productSelector(product):
+                
+                let banner = self.parameters.first(where: { $0.id == .sticker })
+                
+                switch banner {
+                case let .sticker(banner):
+                    
+                    if let minAmount = banner.options.map({ $0.price }).min(),
+                       Double(product.selectedProduct.balance) ?? 0 < minAmount {
+
+                        complete = false
+                    }
+                    
+                default: break
+                }
+                
+            case .amount:
+                let parameters = self.parameters.first(where: { $0.id == .input })
+                
+                switch parameters {
+                case let .input(input):
+                    
+                    if input.value.count < 6 {
+                        
+                        return false
+                    } else {
+                        return true
+                    }
+                    
+                default: break
+                }
+                
+            default: break
+            }
+        }
+        
+        return complete
+    }
+    
     func containsParameter(_ parameter: Operation.Parameter) -> Bool {
         
         self.parameters.contains(where: { $0.id.rawValue == parameter.id.rawValue })
