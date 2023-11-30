@@ -120,17 +120,35 @@ extension BusinessLogic {
                 
                 switch parameter.id {
                 case .transferTypeSticker:
-                    
                     switch id.name {
                     case "Получить в офисе":
                         processDictionaryService(.stickerOrderDeliveryOffice) { result in
                             
                             switch result {
                             case let .success(dictionaryResponse):
-                                completion(.success(self.dictionaryStickerReduce(
+                                let state = self.dictionaryStickerReduce(
                                     operation,
                                     dictionaryResponse
-                                )))
+                                )
+                                
+                                if operation.parameters.contains(where: { $0.id == .input }) {
+                                    
+                                    switch state {
+                                    case let .operation(operation):
+                                        
+                                        let operationBack = operation.parameters.filter({ $0.id != .input })
+                                        completion(.success(.operation(.init(parameters: operationBack))))
+                                        
+                                    default:
+                                        
+                                        completion(.success(self.dictionaryStickerReduce(
+                                            operation,
+                                            dictionaryResponse
+                                        )))
+                                    }
+                                }
+                                
+                                completion(.success(state))
                                 
                             case let .failure(error):
                                 completion(.failure(error))
@@ -142,24 +160,92 @@ extension BusinessLogic {
                             
                             switch result {
                             case let .success(dictionaryResponse):
-                                completion(.success(self.dictionaryStickerReduce(
+                                
+                                let state = self.dictionaryStickerReduce(
                                     operation,
                                     dictionaryResponse
-                                )))
+                                )
+                                
+                                if operation.parameters.contains(where: { $0.id == .input }) {
+                                    
+                                    switch state {
+                                    case let .operation(operation):
+                                        
+                                        let operationBack = operation.parameters.filter({ $0.id != .input })
+                                    
+                                        completion(.success(.operation(.init(parameters: operationBack))))
+                                        
+                                    default:
+                                        
+                                        completion(.success(self.dictionaryStickerReduce(
+                                            operation,
+                                            dictionaryResponse
+                                        )))
+                                    }
+                                }
+                                
+                                completion(.success(state))
                                 
                             case let .failure(error):
                                 completion(.failure(error))
                             }
                         }
-                        
+                
                     default:
                         break
                     }
+                case .citySelector:
+                    let operation = selectOption(
+                        id: id.name,
+                        operation: operation,
+                        parameter: parameter
+                    )
+                    
+                    let newOperation = operation.updateOperation(
+                        operation: operation,
+                        newParameter: .select(parameter)
+                    )
+                    
+                    if let transferType = operation.parameters.first(where: { $0.id == .transferType }) {
+                        
+                        switch transferType {
+                        case let .select(select):
+                            if select.value == "typeDeliveryOffice" {
+                                
+                                let filterOperation = newOperation.updateOperation(
+                                    operation: newOperation,
+                                    newParameter: .select(.init(
+                                        id: .officeSelector,
+                                        value: nil,
+                                        title: "Выберите отделение",
+                                        placeholder: "",
+                                        options: [],
+                                        state: .idle(.init(iconName: "ic24Bank", title: "Выберите отделение")))
+                                    ))
+                                
+                                
+                                let operation = selectOption(
+                                    id: id.name,
+                                    operation: filterOperation,
+                                    parameter: parameter
+                                )
+                                
+                                completion(.success(.operation(operation)))
+                                return .success(.operation(operation))
+                            }
+                        default:
+                            break
+                        }
+                    }
+
+                    completion(.success(.operation(newOperation)))
+                    return .success(.operation(newOperation))
                     
                 default:
                     break
                 }
                 
+                completion(.success(.operation(operation)))
                 return .success(.operation(operation))
             
             case let .openBranch(location):
