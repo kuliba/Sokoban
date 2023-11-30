@@ -232,9 +232,21 @@ extension BusinessLogic {
                                 
                                 completion(.success(.operation(operation)))
                                 return .success(.operation(operation))
+                            } else {
+                                
+                                let operation = selectOption(
+                                    id: id.name,
+                                    operation: newOperation,
+                                    parameter: parameter
+                                )
+                                
+                                completion(.success(.operation(operation)))
+                                return .success(.operation(operation))
                             }
+                            
                         default:
-                            break
+                            completion(.success(.operation(newOperation)))
+                            return .success(.operation(newOperation))
                         }
                     }
 
@@ -242,7 +254,8 @@ extension BusinessLogic {
                     return .success(.operation(newOperation))
                     
                 default:
-                    break
+                    completion(.success(.operation(operation)))
+                    return .success(.operation(operation))
                 }
                 
                 completion(.success(.operation(operation)))
