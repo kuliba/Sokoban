@@ -273,6 +273,7 @@ private extension MainViewModel.Route {
     var `case`: Case? {
         
         switch destination {
+        case .none:      return .none
         case .templates: return .templates
         default:         return .other
         }

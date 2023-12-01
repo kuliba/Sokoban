@@ -48,6 +48,7 @@ struct OpenDepositListView: View {
         OfferProductView(viewModel: offer)
     }
     
+    @ViewBuilder
     private func destinationView(
         destination: OpenDepositListViewModel.Route.Link
     ) -> some View {
