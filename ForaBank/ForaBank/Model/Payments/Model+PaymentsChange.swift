@@ -11,12 +11,14 @@ extension Model {
     
     func paymentsChangeAbroadName(_ parameters: [PaymentsParameterRepresentable]) throws -> String {
         
-        if let name = parameters.first(where: { $0.id == Payments.Parameter.Identifier.countryReturnName.rawValue} )?.value {
+        let id = Payments.Parameter.Identifier.countryReturnName
+        
+        if let name = parameters.first(where: { $0.id == id.rawValue} )?.value {
             
             return name
         } else {
             
-            throw Payments.Error.missingParameter(Payments.Parameter.Identifier.countryReturnName.rawValue)
+            throw Payments.Error.missingParameter(id.rawValue)
         }
     }
 }

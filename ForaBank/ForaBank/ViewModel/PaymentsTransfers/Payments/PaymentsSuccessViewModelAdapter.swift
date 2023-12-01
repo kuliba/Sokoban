@@ -65,7 +65,7 @@ class PaymentsSuccessViewModelAdapter {
     
     func requestOperationDetail(with paymentOperationDetailID: Int) {
         
-        model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailID)))
+        model.action.send(ModelAction.Operation.Detail.Request.paymentOperationDetailId(paymentOperationDetailID))
     }
     
     func requestSubscription(

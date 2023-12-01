@@ -248,14 +248,14 @@ extension OperationDetailViewModelTests {
 
 extension OperationDetailViewModelTests {
     
-    typealias Kind = ModelAction.Operation.Detail.Request.Kind
+    typealias Request = ModelAction.Operation.Detail.Request
     
     func makeSUT(
         statement: ProductStatementData = .stub(),
         statementData: StatementsData? = .stub(),
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> (OperationDetailViewModel, ValueSpy<Kind>) {
+    ) throws -> (OperationDetailViewModel, ValueSpy<Request>) {
         
         let model = Model.mockWithEmptyExcept()
         if let statementData {
@@ -277,7 +277,6 @@ extension OperationDetailViewModelTests {
         
         let publisher = sut.model.action
             .compactMap { $0 as? ModelAction.Operation.Detail.Request }
-            .map(\.type)
         
         let spy = ValueSpy(publisher)
         
