@@ -142,6 +142,7 @@ extension OperationDetailInfoInternalView {
             if let image = viewModel.iconType {
                 image
                     .resizable()
+                    .renderingMode(.original)
                     .accessibilityIdentifier("OperationDetailInfoItemIcon")
             } else {
                 Color.clear
