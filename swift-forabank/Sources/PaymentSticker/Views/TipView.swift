@@ -60,7 +60,6 @@ struct TipView: View {
         
         Text(viewModel.text)
             .font(configuration.titleFont)
-            .lineLimit(2)
             .lineSpacing(5)
             .foregroundColor(configuration.titleForeground)
             .padding(.trailing, 40)
