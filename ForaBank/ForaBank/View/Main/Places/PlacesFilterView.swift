@@ -15,10 +15,7 @@ struct PlacesFilterView: View {
         
         VStack {
             
-            Capsule()
-                .frame(width: 48, height: 4)
-                .foregroundColor(.mainColorsGrayMedium)
-                .padding(.top, 8)
+            dragIndicator()
             
             VStack(alignment: .leading, spacing: 20) {
                 
@@ -55,7 +52,6 @@ struct PlacesFilterView: View {
                     ForEach(viewModel.services) { serviceGroup in
                         
                         PlacesFilterView.ServiceGroupView(viewModel: serviceGroup, selected: $viewModel.selectedServicesIds, available: $viewModel.availableServicesIds)
-                        
                     }
                 }
                 .padding(.horizontal, 20)
@@ -64,7 +60,14 @@ struct PlacesFilterView: View {
             }
             .padding(.top, 16)
         }
+    }
+    
+    private func dragIndicator() -> some View {
         
+        Capsule()
+            .frame(width: 48, height: 4)
+            .foregroundColor(.mainColorsGrayMedium)
+            .padding(.top, 8)
     }
 }
 
