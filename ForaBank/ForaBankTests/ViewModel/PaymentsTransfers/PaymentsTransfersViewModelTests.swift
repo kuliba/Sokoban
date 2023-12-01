@@ -236,6 +236,7 @@ private extension PaymentsTransfersViewModel.Route {
     var `case`: Case? {
         
         switch destination {
+        case .none:      return .none
         case .template:  return .template
         default:         return .other
         }
