@@ -190,7 +190,7 @@ extension PlacesFilterView {
         let isAvailable: Bool
         
         var color: Color {
-         
+            
             isAvailable
             ? isSelected ? .textWhite : .textSecondary
             : .textSecondary.opacity(0.1)
@@ -207,33 +207,21 @@ extension PlacesFilterView {
             
             if isAvailable {
                 
-                Button {
-                    
-                    viewModel.action(viewModel.id)
-                    
-                } label: {
-                    
-                    HStack(spacing: 4) {
-                        
-                        Text(viewModel.name)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(color)
-                    }
-                    .padding(8)
-                    .background(Capsule().foregroundColor(backgroundColor))
-                }
+                Button(action: { viewModel.action(viewModel.id) }, label: label)
                 
             } else {
                 
-                HStack(spacing: 4) {
-                    
-                    Text(viewModel.name)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(color)
-                }
+                label()
+            }
+        }
+        
+        func label() -> some View {
+            
+            Text(viewModel.name)
+                .font(.textBodyMR14200())
+                .foregroundColor(color)
                 .padding(8)
                 .background(Capsule().foregroundColor(backgroundColor))
-            }
         }
     }
 }
