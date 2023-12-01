@@ -38,10 +38,7 @@ struct PlacesFilterView: View {
                             Color.clear
                                 .frame(width: 10, height: 20)
                             
-                            ForEach(viewModel.categories) { categoryOption in
-                                
-                                PlacesFilterView.CategoryOptionView(viewModel: categoryOption, isSelected: viewModel.selectedCategoriesIds.contains(categoryOption.id))
-                            }
+                            ForEach(viewModel.categories, content: categoryOptionView)
                         }
                     }
                     .frame(height: 32)
@@ -68,6 +65,16 @@ struct PlacesFilterView: View {
             .frame(width: 48, height: 4)
             .foregroundColor(.mainColorsGrayMedium)
             .padding(.top, 8)
+    }
+    
+    private func categoryOptionView(
+        categoryOption: PlacesFilterViewModel.CategoryOptionViewModel
+    ) -> some View {
+        
+        CategoryOptionView(
+            viewModel: categoryOption,
+            isSelected: viewModel.selectedCategoriesIds.contains(categoryOption.id)
+        )
     }
 }
 
