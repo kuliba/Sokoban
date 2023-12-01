@@ -16,14 +16,17 @@ struct PlacesFilterView: View {
         VStack {
             
             dragIndicator()
+                .padding(.top, 8)
             
             VStack(alignment: .leading, spacing: 20) {
                 
                 title()
+                    .padding(.horizontal, 20)
                 
                 VStack(alignment: .leading, spacing: 16) {
                     
                     subtitle()
+                        .padding(.horizontal, 20)
                     
                     categoriesView()
                         .frame(height: 32)
@@ -46,7 +49,6 @@ struct PlacesFilterView: View {
         Capsule()
             .frame(width: 48, height: 4)
             .foregroundColor(.mainColorsGrayMedium)
-            .padding(.top, 8)
     }
     
     private func title() -> some View {
@@ -54,7 +56,6 @@ struct PlacesFilterView: View {
         Text(viewModel.title)
             .font(.textH3Sb18240())
             .foregroundColor(.mainColorsBlack)
-            .padding(.horizontal, 20)
     }
     
     private func subtitle() -> some View {
@@ -62,7 +63,6 @@ struct PlacesFilterView: View {
         Text(viewModel.categoriesSubtitle)
             .font(.textBodyMR14200())
             .foregroundColor(.mainColorsGray)
-            .padding(.horizontal, 20)
     }
     
     private func categoriesView() -> some View {
