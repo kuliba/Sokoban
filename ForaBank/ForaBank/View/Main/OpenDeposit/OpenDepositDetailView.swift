@@ -75,6 +75,7 @@ struct OpenDepositDetailView: View {
         )
     }
     
+    @ViewBuilder
     private func destinationView(
         destination: OpenDepositDetailViewModel.Route.Link
     ) -> some View {
