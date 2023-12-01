@@ -19,10 +19,7 @@ struct PlacesFilterView: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 
-                Text(viewModel.title)
-                    .font(.textH3Sb18240())
-                    .foregroundColor(.mainColorsBlack)
-                    .padding(.horizontal, 20)
+                title()
                 
                 VStack(alignment: .leading, spacing: 16) {
                     
@@ -62,6 +59,14 @@ struct PlacesFilterView: View {
             .frame(width: 48, height: 4)
             .foregroundColor(.mainColorsGrayMedium)
             .padding(.top, 8)
+    }
+    
+    private func title() -> some View {
+        
+        Text(viewModel.title)
+            .font(.textH3Sb18240())
+            .foregroundColor(.mainColorsBlack)
+            .padding(.horizontal, 20)
     }
     
     private func categoryOptionView(
@@ -200,7 +205,7 @@ extension PlacesFilterView {
                 }
                 
             } else {
-              
+                
                 HStack(spacing: 4) {
                     
                     Text(viewModel.name)
