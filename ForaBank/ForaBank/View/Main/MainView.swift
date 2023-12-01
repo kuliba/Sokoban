@@ -317,7 +317,8 @@ struct UserAccountButton: View {
                             .frame(width: 20, height: 20)
                         
                         viewModel.logo
-                            .renderingMode(.original)
+                            .resizable()
+                            .frame(width: 12, height: 12)
                     }
                     .offset(x: 18, y: -14)
                     

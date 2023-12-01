@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "icon_NY_logo_2048p.png",
+      "filename" : "1024 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon_NY_logo_2048p-2.png",
+      "filename" : "1024.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon_NY_logo_2048p-1.png",
+      "filename" : "1024 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
