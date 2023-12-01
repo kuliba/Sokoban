@@ -46,10 +46,7 @@ struct PlacesFilterView: View {
                 
                 VStack(spacing: 24) {
                     
-                    ForEach(viewModel.services) { serviceGroup in
-                        
-                        PlacesFilterView.ServiceGroupView(viewModel: serviceGroup, selected: $viewModel.selectedServicesIds, available: $viewModel.availableServicesIds)
-                    }
+                    ForEach(viewModel.services, content: serviceGroupView)
                 }
                 .padding(.horizontal, 20)
                 
@@ -74,6 +71,17 @@ struct PlacesFilterView: View {
         CategoryOptionView(
             viewModel: categoryOption,
             isSelected: viewModel.selectedCategoriesIds.contains(categoryOption.id)
+        )
+    }
+    
+    private func serviceGroupView(
+        serviceGroup: PlacesFilterViewModel.ServiceGroupViewModel
+    ) -> some View {
+        
+        ServiceGroupView(
+            viewModel: serviceGroup,
+            selected: $viewModel.selectedServicesIds,
+            available: $viewModel.availableServicesIds
         )
     }
 }
