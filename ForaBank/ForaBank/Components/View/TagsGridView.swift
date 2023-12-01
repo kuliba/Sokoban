@@ -16,11 +16,12 @@ public struct TagsGridView<Data: Collection, Content: View>: View where Data.Ele
     
     @State private var availableWidth: CGFloat = 0
     
-    public init(data: Data,
-                spacing: CGFloat,
-                alignment: HorizontalAlignment,
-                content: @escaping (Data.Element) -> Content) {
-        
+    public init(
+        data: Data,
+        spacing: CGFloat,
+        alignment: HorizontalAlignment,
+        content: @escaping (Data.Element) -> Content
+    ) {
         self.data = data
         self.spacing = spacing
         self.alignment = alignment
@@ -29,20 +30,59 @@ public struct TagsGridView<Data: Collection, Content: View>: View where Data.Ele
     
     public var body: some View {
         
-        ZStack(alignment: Alignment(horizontal: alignment,
-                                    vertical: .center)) {
+        ZStack(
+            alignment: Alignment(
+                horizontal: alignment,
+                vertical: .center)
+        ) {
             Color.clear
                 .frame( height: 1)
-                .readSize { size in
-                    availableWidth = size.width
-                }
+                .reportWidth()
             
-            InnerGridView(availableWidth: availableWidth,
-                          data: data,
-                          spacing: spacing,
-                          alignment: alignment,
-                          content: content)
+            InnerGridView(
+                availableWidth: availableWidth,
+                data: data,
+                spacing: spacing,
+                alignment: alignment,
+                content: content
+            )
         }
+        .onPreferenceChange(WidthPreferenceKey.self) { width in
+            
+            DispatchQueue.main.async {
+                
+                availableWidth = width
+            }
+        }
+    }
+}
+
+private struct WidthPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = .zero
+    
+    static func reduce(
+        value: inout CGFloat,
+        nextValue: () -> CGFloat
+    ) {
+        value += nextValue()
+    }
+}
+
+private extension View {
+    
+    func reportWidth() -> some View {
+        
+        self.background(
+            GeometryReader { proxy in
+                
+                Color.clear
+                    .preference(
+                        key: WidthPreferenceKey.self,
+                        value: proxy.size.width
+                    )
+            }
+        )
     }
 }
 
@@ -54,7 +94,7 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
     let alignment: HorizontalAlignment
     let content: (Data.Element) -> Content
     
-    @State var elementsSize: [Data.Element: CGSize] = [:]
+    @State var sizes: [Int: CGSize] = [:]
     
     var body: some View {
         
@@ -68,12 +108,14 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
                         
                         content(element)
                             .fixedSize()
-                            .readSize { size in
-                                elementsSize[element] = size
-                            }
+                            .reportSize(element.hashValue)
                     }
                 }
             }
+        }
+        .onPreferenceChange(SizesPreferenceKey.self) { sizes in
+            
+            DispatchQueue.main.async { self.sizes = sizes }
         }
     }
     
@@ -85,7 +127,7 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
         
         for element in data {
             
-            let elementSize = elementsSize[element, default: CGSize(width: availableWidth, height: 1)]
+            let elementSize = sizes[element.hashValue, default: CGSize(width: availableWidth, height: 1)]
             
             if remainingWidth - (elementSize.width + spacing) >= 0 {
                 
@@ -105,6 +147,36 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
     }
 }
 
+private extension View {
+    
+    func reportSize(_ hash: Int) -> some View {
+        
+        background(
+            GeometryReader { geometry in
+                
+                Color.clear
+                    .preference(
+                        key: SizesPreferenceKey.self,
+                        value: [hash: geometry.size]
+                    )
+            }
+        )
+    }
+}
+
+private struct SizesPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: [Int: CGSize] = [:]
+    
+    static func reduce(
+        value: inout [Int : CGSize],
+        nextValue: () -> [Int : CGSize]
+    ) {
+        value.merge(nextValue(), uniquingKeysWith: { (current, _) in current })
+    }
+}
+
+#warning("this is a broken solution but it is reused in the codebase")
 public extension View {
     
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {

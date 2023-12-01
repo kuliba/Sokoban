@@ -93,8 +93,12 @@ extension ChangingReducer: Reducer {
             case .placeholder, .noFocus:
                 return .noFocus(temp.text)
                 
-            case .editing:
-                return .editing(.init(temp.text))
+            case let .editing(textState):
+                if textState.text == text {
+                    return .editing(textState)
+                } else {
+                    return .editing(.init(temp.text))
+                }
             }
         }
     }
@@ -121,7 +125,9 @@ extension ChangingReducer {
                 with: replacementText
             )
             
-            return transform(temp)
+            let transformed = transform(temp)
+            
+            return transformed
         }
     }
 }

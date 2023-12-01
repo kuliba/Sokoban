@@ -93,45 +93,14 @@ struct ProductProfileView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                        
-                    case .productInfo(let productInfoViewModel):
-                        InfoProductView(viewModel: productInfoViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                        
-                    case let .productStatement(productStatementViewModel):
-                        ProductStatementView(viewModel: productStatementViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarTitleDisplayMode(.inline)
-                            .navigationBarTitle("Выписка по счету")
-                        
-                    case let .meToMeExternal(meToMeExternalViewModel):
-                        
-                        MeToMeExternalView(viewModel: meToMeExternalViewModel)
-                            .edgesIgnoringSafeArea(.bottom)
-                            .navigationBarTitleDisplayMode(.inline)
-                            .navigationBarTitle("Пополнить со счета в другом банке")
-                            .navigationBarItems(trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage()))
-                        
-                    case let .myProducts(myProductsViewModel):
-                        MyProductsView(viewModel: myProductsViewModel)
-                        
-                    case let .paymentsTransfers(paymentsTransfersViewModel):
-                        PaymentsTransfersView(viewModel: paymentsTransfersViewModel)
-                        
-                    }
-                }
+                viewModel.link.map(navLinkDestination)
             }
             
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
             
-            if let closeAccountSpinner = viewModel.closeAccountSpinner {
-                CloseAccountSpinnerView(viewModel: closeAccountSpinner)
-            }
+            viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
             viewModel.spinner.map { spinner in
                 
@@ -141,51 +110,6 @@ struct ProductProfileView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .zIndex(.greatestFiniteMagnitude)
             }
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.successZeroAccount) { successViewModel in
-                    PaymentsSuccessView(viewModel: successViewModel.viewModel)
-                    
-                }.transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.successChangePin) { successViewModel in
-                    PaymentsSuccessView(viewModel: successViewModel)
-                    
-                }.transaction { transaction in
-                    transaction.disablesAnimations = false
-                }
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.confirmOtpView) {
-                    confirmCodeView(
-                        phoneNumber: $0.phone,
-                        cardId: $0.cardId,
-                        actionType: $0.action,
-                        reset: {
-                            viewModel.confirmOtpView = nil
-                        },
-                        showSpinner: {},
-                        resendRequest: $0.request,
-                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-                    ).transition(.move(edge: .leading))
-                }
-            
-            Color.clear.frame(maxHeight: 0)
-                .fullScreenCover(item: $viewModel.changePin) {
-                    changePinCodeView(
-                        cardId: $0.cardId,
-                        actionType: .changePin($0.displayNumber),
-                        $0.model,
-                        confirm: viewModel.confirmShowCVV,
-                        confirmChangePin: viewModel.confirmChangePin,
-                        showSpinner: {},
-                        resendRequest: $0.request,
-                        resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-                    ).transition(.move(edge: .leading))
-                }
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBar(with: viewModel.navigationBar)
@@ -197,55 +121,139 @@ struct ProductProfileView: View {
             default: break
             }
         }
-        .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet.type {
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            case let .placesMap(placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-            }
-        })
-        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
+        .bottomSheet(
+            item: $viewModel.bottomSheet,
+            content: bottomSheetContent
+        )
+        .fullScreenCover(
+            item: $viewModel.fullScreenCoverState,
+            content: fullScreenCoverContent
+        )
+        .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    @ViewBuilder
+    private func navLinkDestination(
+        link: ProductProfileViewModel.Link
+    ) -> some View {
+        
+        switch link {
+        case let .productInfo(viewModel):
+            InfoProductView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
             
-            switch sheet.type {
-            case let .operationDetail(operationDetailViewModel):
-                OperationDetailView(viewModel: operationDetailViewModel)
-                
-            case let .optionsPannel(optionsPannelViewModel):
-                ProductProfileOptionsPannelView(viewModel: optionsPannelViewModel)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 26)
-                    .padding(.bottom, 72)
-                
-            case let .meToMeLegacy(meToMeViewModel):
-                MeToMeView(viewModel: meToMeViewModel)
-                    .edgesIgnoringSafeArea(.bottom)
-                    .frame(height: 474)
-                
-            case let .meToMe(viewModel):
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.success) { successViewModel in
-                        
-                        PaymentsSuccessView(viewModel: successViewModel)
-                        
-                    }.transaction { transaction in
-                        transaction.disablesAnimations = false
-                    }
-                
-            case let .printForm(printFormViewModel):
-                PrintFormView(viewModel: printFormViewModel)
-                
-            case let .placesMap(placesViewModel):
-                PlacesView(viewModel: placesViewModel)
-                
-            case let .info(operationDetailInfoViewModel):
-                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
-            }
-        })
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        case let .productStatement(viewModel):
+            ProductStatementView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitle("Выписка по счету")
+            
+        case let .meToMeExternal(viewModel):
+            MeToMeExternalView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitle("Пополнить со счета в другом банке")
+                .navigationBarItems(
+                    trailing: Image(uiImage: UIImage(named: "logo-spb-mini") ?? UIImage())
+                )
+            
+        case let .myProducts(viewModel):
+            MyProductsView(viewModel: viewModel)
+            
+        case let .paymentsTransfers(viewModel):
+            PaymentsTransfersView(viewModel: viewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetContent(
+        sheet: ProductProfileViewModel.BottomSheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .operationDetail(viewModel):
+            OperationDetailView(viewModel: viewModel)
+            
+        case let .optionsPannel(viewModel):
+            ProductProfileOptionsPannelView(viewModel: viewModel)
+                .padding(.horizontal, 20)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+            
+        case let .meToMeLegacy(viewModel):
+            MeToMeView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .frame(height: 474)
+            
+        case let .meToMe(viewModel):
+            PaymentsMeToMeView(viewModel: viewModel)
+                .fullScreenCover(item: $viewModel.success) {
+                    
+                    PaymentsSuccessView(viewModel: $0)
+                    
+                }.transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
+        case let .printForm(viewModel):
+            PrintFormView(viewModel: viewModel)
+            
+        case let .placesMap(viewModel):
+            PlacesView(viewModel: viewModel)
+            
+        case let .info(viewModel):
+            OperationDetailInfoView(
+                viewModel: viewModel
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverContent(
+        state: ProductProfileViewModel.FullScreenCoverState
+    ) -> some View {
+        
+        switch state {
+        case let .changePin(changePIN):
+            
+            changePinCodeView(
+                cardId: changePIN.cardId,
+                actionType: .changePin(changePIN.displayNumber),
+                changePIN.model,
+                confirm: viewModel.confirmShowCVV,
+                confirmChangePin: viewModel.confirmChangePin,
+                showSpinner: {},
+                resendRequest: changePIN.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
+        case let .confirmOTP(confirm):
+            
+            confirmCodeView(
+                phoneNumber: confirm.phone,
+                cardId: confirm.cardId,
+                actionType: confirm.action,
+                reset: { viewModel.fullScreenCoverState = nil },
+                showSpinner: {},
+                resendRequest: confirm.request,
+                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+            ).transition(.move(edge: .leading))
+            
+        case let .successChangePin(viewModel):
+            
+            PaymentsSuccessView(viewModel: viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+            
+        case let .successZeroAccount(viewModel):
+            
+            PaymentsSuccessView(viewModel: viewModel)
+                .transaction { transaction in
+                    transaction.disablesAnimations = false
+                }
+        }
     }
     
     private func changePinCodeView(
@@ -324,6 +332,20 @@ struct ProductProfileView: View {
             showSpinner: showSpinner,
             resendRequestAfterClose: resendRequestAfterClose
         )
+    }
+    
+    @ViewBuilder
+    private func sheetContent(
+        sheet: ProductProfileViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .printForm(viewModel):
+            PrintFormView(viewModel: viewModel)
+            
+        case let .placesMap(viewModel):
+            PlacesView(viewModel: viewModel)
+        }
     }
 }
 

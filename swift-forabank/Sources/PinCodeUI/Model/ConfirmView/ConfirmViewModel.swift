@@ -121,8 +121,12 @@ public class ConfirmViewModel: ObservableObject {
             switch result {
                 
             case .none:
-                self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
+               
                 self.action.send(ConfirmViewModelAction.Close.SelfView())
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(450)) {
+                    self.resendRequestAfterClose(self.cardId, .changePinResult(.successScreen))
+                }
                 
             case let .some(error):
                 
@@ -166,8 +170,8 @@ public class ConfirmViewModel: ObservableObject {
             switch result {
                 
             case .none:
-                self.resendRequestAfterClose(self.cardId, self.actionType)
                 self.action.send(ConfirmViewModelAction.Close.SelfView())
+                self.resendRequestAfterClose(self.cardId, self.actionType)
                 
             case let .some(error):
                 switch error {

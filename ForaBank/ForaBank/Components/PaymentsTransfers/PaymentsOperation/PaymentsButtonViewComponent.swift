@@ -108,17 +108,25 @@ struct PaymentsButtonViewComponent_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsButtonView(viewModel: .sample)
-            .previewLayout(.fixed(width: 375, height: 100))
+        Group {
+            
+            VStack(spacing: 32, content: previewsGroup)
+                .previewDisplayName("Xcode 14+")
+            
+            previewsGroup()
+        }
+    }
+    
+    static func previewsGroup() -> some View {
         
-        PaymentsButtonView(viewModel: .sampleInactive)
-            .previewLayout(.fixed(width: 375, height: 100))
-        
-        PaymentsButtonView(viewModel: .sampleParam)
-            .previewLayout(.fixed(width: 375, height: 100))
-        
-        PaymentsButtonView(viewModel: .sampleParamSecondary)
-            .previewLayout(.fixed(width: 375, height: 100))
+        Group {
+            
+            PaymentsButtonView(viewModel: .sample)
+            PaymentsButtonView(viewModel: .sampleInactive)
+            PaymentsButtonView(viewModel: .sampleParam)
+            PaymentsButtonView(viewModel: .sampleParamSecondary)
+        }
+        .previewLayout(.fixed(width: 375, height: 100))
     }
 }
 

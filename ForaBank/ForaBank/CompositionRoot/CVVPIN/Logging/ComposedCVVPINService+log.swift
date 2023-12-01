@@ -85,10 +85,10 @@ extension ComposedCVVPINService {
                     
                     switch result {
                     case let .failure(error):
-                        log(.error, .crypto, "Activation failure: \(error).", #file, #line)
+                        log(.error, .crypto, "Initiate Activation failure: \(error).", #file, #line)
                         
                     case let .success(success):
-                        log(.info, .crypto, "Activation success: \(success.phone.phoneValue).", #file, #line)
+                        log(.info, .crypto, "Initiate Activation success: \(success.phone.phoneValue).", #file, #line)
                     }
                     
                     completion(result)

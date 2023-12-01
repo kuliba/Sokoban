@@ -22,6 +22,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
     @Published var alert: Alert.ViewModel?
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullScreenCover?
+    @Published var informer: Informer?
 
     private let adapter: PaymentsSuccessViewModelAdapter
     private var bindings = Set<AnyCancellable>()
@@ -264,6 +265,8 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     self?.action.send($0)
                 }
             ).store(in: &bindings)
+        
+        transferNumberInformer()?.assign(to: &$informer)
     }
     
     // FIXME: figure out how to get rid of second Success View
@@ -315,38 +318,18 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     self.action.send(PaymentsSuccessAction.Button.Repeat())
                     
                 case .additionalChange:
-                    guard let operationDetailData,
-                          let name = operationDetailData.payeeFullName,
-                          let number = operationDetailData.transferReference
+                    guard let source = makeChangeSource(from: operationDetailData)
                     else { return }
                     
-                    let operationID = operationDetailData.paymentOperationDetailId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .change(
-                            operationId: operationID,
-                            transferNumber: number,
-                            name: name)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .additionalReturn:
-                    guard let operationDetailData,
-                          let number = operationDetailData.transferReference else {
-                        return
-                    }
+                    guard let source = makeReturnSource(from: operationDetailData)
+                    else { return }
                     
-                    let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
-                    let currency = operationDetailData.payerCurrency
-                    guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction) else {
-                        return
-                    }
-                    
-                    let operationID = operationDetailData.paymentOperationDetailId
-                    let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .return(
-                            operationId: operationID,
-                            transferNumber: number,
-                            amount: amount,
-                            productId: productID)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .close:
                     self.action.send(PaymentsSuccessAction.Button.Ready())
@@ -369,7 +352,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit:
+                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID
@@ -434,6 +417,52 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             
             self?.sections = updatedSections
         }
+        transferNumberInformer()?.assign(to: &$informer)
+    }
+}
+
+extension PaymentsSuccessViewModel {
+    
+    func makeChangeSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let name = operationDetailData.payeeFullName,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId.description
+        
+        return .change(
+            operationId: operationID,
+            transferNumber: number,
+            name: name
+        )
+    }
+    
+    func makeReturnSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
+        let currency = operationDetailData.payerCurrency
+        guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction)
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId
+        let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
+        
+        return .return(
+            operationId: operationID,
+            transferNumber: number,
+            amount: amount,
+            productId: productID
+        )
     }
 }
 
@@ -511,6 +540,7 @@ extension PaymentsSuccessViewModel {
         case makePaymentToDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case changePin
+        case change, refund
     }
     
     struct FullScreenCover: Identifiable {
@@ -525,6 +555,18 @@ extension PaymentsSuccessViewModel {
         }
     }
     
+    struct Informer: Identifiable & Hashable {
+        
+        let message: String
+        
+        init(_ message: String) {
+            
+            self.message = message
+        }
+        
+        var id: String { message }
+    }
+
     struct Sheet: Identifiable {
         
         let id = UUID()
@@ -535,6 +577,54 @@ extension PaymentsSuccessViewModel {
             case printForm(PrintFormView.ViewModel)
             case detailInfo(OperationDetailInfoViewModel)
         }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel.State {
+    
+    var informer: PaymentsSuccessViewModel.Informer? {
+        
+        switch self {
+        case .check: return .init("Номер скопирован")
+        case .copy: return nil
+        }
+    }
+}
+
+private extension PaymentsSuccessTransferNumberView.ViewModel {
+    
+    var informer: AnyPublisher<PaymentsSuccessViewModel.Informer?, Never> {
+        
+        $state
+            .map(\.informer)
+            .eraseToAnyPublisher()
+    }
+}
+
+private extension PaymentsSuccessViewModel {
+    
+    func parameterViewModel(
+        with id: Payments.Parameter.ID
+    ) -> PaymentsParameterViewModel? {
+        
+        sections.flatMap(\.items).first(where: { $0.id == id })
+    }
+    
+    func transferNumberViewModel(
+    ) -> PaymentsSuccessTransferNumberView.ViewModel? {
+        
+        let id = Payments.Parameter.Identifier.successTransferNumber.rawValue
+        let viewModel = parameterViewModel(with: id)
+        
+        return viewModel as? PaymentsSuccessTransferNumberView.ViewModel
+    }
+    
+    func transferNumberInformer() -> AnyPublisher<PaymentsSuccessViewModel.Informer?, Never>? {
+        
+        transferNumberViewModel()?
+            .$state
+            .map(\.informer)
+            .eraseToAnyPublisher()
     }
 }
 

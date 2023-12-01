@@ -68,7 +68,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         if let documentId = productStatement.documentId {
             
-            model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+            model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
             
             withAnimation {
                 
@@ -105,7 +105,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+                    model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case _ as ModelAction.PaymentTemplate.Delete.Complete:
                     
@@ -114,7 +114,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    model.action.send(ModelAction.Operation.Detail.Request(type: .documentId(documentId)))
+                    model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case let payload as ModelAction.Operation.Detail.Response:
                     withAnimation {

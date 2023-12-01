@@ -22,7 +22,7 @@ extension DocumentCellType {
         
         switch self {
             
-        case .passport:     return "Паспорт РФ"
+        case .passport:     return "Паспорт"
         case .inn:          return "ИНН"
         case .adressPass:   return "Адрес регистрации"
         case .adress:       return "Адрес проживания"

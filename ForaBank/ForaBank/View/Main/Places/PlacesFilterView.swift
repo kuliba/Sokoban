@@ -15,56 +15,94 @@ struct PlacesFilterView: View {
         
         VStack {
             
-            Capsule()
-                .frame(width: 48, height: 4)
-                .foregroundColor(.mainColorsGrayMedium)
+            dragIndicator()
                 .padding(.top, 8)
             
             VStack(alignment: .leading, spacing: 20) {
                 
-                Text(viewModel.title)
-                    .font(.textH3Sb18240())
-                    .foregroundColor(.mainColorsBlack)
+                title()
                     .padding(.horizontal, 20)
                 
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    Text(viewModel.categoriesSubtitle)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.mainColorsGray)
+                    subtitle()
                         .padding(.horizontal, 20)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        
-                        HStack(spacing: 8) {
-                            
-                            Color.clear
-                                .frame(width: 10, height: 20)
-                            
-                            ForEach(viewModel.categories) { categoryOption in
-                                
-                                PlacesFilterView.CategoryOptionView(viewModel: categoryOption, isSelected: viewModel.selectedCategoriesIds.contains(categoryOption.id))
-                            }
-                        }
-                    }
-                    .frame(height: 32)
+                    categoriesView()
+                        .frame(height: 32)
                 }
                 
-                VStack(spacing: 24) {
-                    
-                    ForEach(viewModel.services) { serviceGroup in
-                        
-                        PlacesFilterView.ServiceGroupView(viewModel: serviceGroup, selected: $viewModel.selectedServicesIds, available: $viewModel.availableServicesIds)
-                        
-                    }
-                }
-                .padding(.horizontal, 20)
+                servicesView()
+                    .padding(.horizontal, 20)
                 
                 Spacer()
             }
             .padding(.top, 16)
         }
+    }
+    
+    private func dragIndicator() -> some View {
         
+        Capsule()
+            .frame(width: 48, height: 4)
+            .foregroundColor(.mainColorsGrayMedium)
+    }
+    
+    private func title() -> some View {
+        
+        Text(viewModel.title)
+            .font(.textH3Sb18240())
+            .foregroundColor(.mainColorsBlack)
+    }
+    
+    private func subtitle() -> some View {
+        
+        Text(viewModel.categoriesSubtitle)
+            .font(.textBodyMR14200())
+            .foregroundColor(.mainColorsGray)
+    }
+    
+    private func categoriesView() -> some View {
+        
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: 8) {
+                
+                Color.clear
+                    .frame(width: 10, height: 20)
+                
+                ForEach(viewModel.categories, content: categoryOptionView)
+            }
+        }
+    }
+    
+    private func categoryOptionView(
+        categoryOption: PlacesFilterViewModel.CategoryOptionViewModel
+    ) -> some View {
+        
+        CategoryOptionView(
+            viewModel: categoryOption,
+            isSelected: viewModel.selectedCategoriesIds.contains(categoryOption.id)
+        )
+    }
+    
+    private func servicesView() -> some View {
+        
+        VStack(spacing: 24) {
+            
+            ForEach(viewModel.services, content: serviceGroupView)
+        }
+    }
+    
+    private func serviceGroupView(
+        serviceGroup: PlacesFilterViewModel.ServiceGroupViewModel
+    ) -> some View {
+        
+        ServiceGroupView(
+            viewModel: serviceGroup,
+            selected: $viewModel.selectedServicesIds,
+            available: $viewModel.availableServicesIds
+        )
     }
 }
 
@@ -112,6 +150,7 @@ extension PlacesFilterView {
     struct ServiceGroupView: View {
         
         let viewModel: PlacesFilterViewModel.ServiceGroupViewModel
+        
         @Binding var selected: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
         @Binding var available: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
         
@@ -123,11 +162,24 @@ extension PlacesFilterView {
                     .font(.textBodyMR14200())
                     .foregroundColor(.mainColorsGray)
                 
-                TagsGridView(data: viewModel.options, spacing: 8, alignment: .leading) { service in
-                    
-                    PlacesFilterView.ServiceOptionView(viewModel: service, isSelected: selected.contains(service.id), isAvailable: available.contains(service.id))
-                }
+                TagsGridView(
+                    data: viewModel.options,
+                    spacing: 8,
+                    alignment: .leading,
+                    content: serviceView
+                )
             }
+        }
+        
+        private func serviceView(
+            service: PlacesFilterViewModel.ServiceOptionViewModel
+        ) -> some View {
+            
+            ServiceOptionView(
+                viewModel: service,
+                isSelected: selected.contains(service.id),
+                isAvailable: available.contains(service.id)
+            )
         }
     }
     
@@ -139,60 +191,37 @@ extension PlacesFilterView {
         
         var color: Color {
             
-            if isAvailable == true {
-                
-                return isSelected ? .textWhite : .textSecondary
-                
-            } else {
-                
-                return .textSecondary.opacity(0.1)
-            }
+            isAvailable
+            ? isSelected ? .textWhite : .textSecondary
+            : .textSecondary.opacity(0.1)
         }
         
         var backgroundColor: Color {
             
-            if isAvailable == true {
-                
-                return isSelected ? .buttonBlackMedium : .mainColorsGrayLightest
-                
-            } else {
-                
-                return .mainColorsGrayLightest.opacity(0.1)
-            }
+            isAvailable
+            ? isSelected ? .buttonBlackMedium : .mainColorsGrayLightest
+            :.mainColorsGrayLightest.opacity(0.1)
         }
         
         var body: some View {
             
-            if isAvailable == true {
+            if isAvailable {
                 
-                Button {
-                    
-                    viewModel.action(viewModel.id)
-                    
-                } label: {
-                    
-                    HStack(spacing: 4) {
-                        
-                        Text(viewModel.name)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(color)
-                    }
-                    .padding(8)
-                    .background(Capsule().foregroundColor(backgroundColor))
-                }
+                Button(action: { viewModel.action(viewModel.id) }, label: label)
                 
             } else {
-              
-                HStack(spacing: 4) {
-                    
-                    Text(viewModel.name)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(color)
-                }
+                
+                label()
+            }
+        }
+        
+        func label() -> some View {
+            
+            Text(viewModel.name)
+                .font(.textBodyMR14200())
+                .foregroundColor(color)
                 .padding(8)
                 .background(Capsule().foregroundColor(backgroundColor))
-                
-            }
         }
     }
 }
