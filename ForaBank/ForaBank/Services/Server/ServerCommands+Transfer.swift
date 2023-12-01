@@ -59,7 +59,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: TransferResponseBaseData?
+                let data: OutgoingTransferResponse?
             }
             
             internal init(token: String, payload: Payload) {
@@ -425,7 +425,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: TransferResponseBaseData?
+                let data: OutgoingTransferResponse?
             }
             
             internal init(token: String, payload: Payload) {

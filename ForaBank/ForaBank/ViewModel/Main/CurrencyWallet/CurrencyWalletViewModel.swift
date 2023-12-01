@@ -789,7 +789,7 @@ class CurrencyWalletViewModel: ObservableObject {
                         sheet = .init(type: .printForm(printViewModel))
                         
                     case _ as CurrencyExchangeSuccessAction.Button.Details:
-                        model.action.send(ModelAction.Operation.Detail.Request(type: .paymentOperationDetailId(paymentOperationDetailId)))
+                        model.action.send(ModelAction.Operation.Detail.Request.paymentOperationDetailId(paymentOperationDetailId))
                         
                     case _ as CurrencyExchangeSuccessAction.Button.Repeat:
                         

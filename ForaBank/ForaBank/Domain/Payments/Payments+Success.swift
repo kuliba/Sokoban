@@ -110,6 +110,72 @@ extension Payments.Success {
     }
     
     init(
+        with response: OutgoingTransferResponse,
+        operation: Payments.Operation,
+        title: String? = nil
+    ) throws {
+        
+        let mode: PaymentsSuccessViewModel.Mode? = {
+            
+            switch operation.service {
+            case .return: return .refund
+            case .change: return .change
+            default: return nil
+            }
+        }()
+        
+        guard let mode else {
+            
+            struct OutgoingTransferResponseOperationServiceMismatch: Error {}
+            throw OutgoingTransferResponseOperationServiceMismatch()
+        }
+        
+        let status: TransferResponseBaseData.DocumentStatus = .inProgress
+        
+        if let title {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(with: title),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: status,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+            
+        } else {
+            
+            let params: [PaymentsParameterRepresentable?] = [
+                Payments.ParameterDataValue.operationDetail(with: response.paymentOperationDetailId),
+                Payments.ParameterSuccessStatus(with: status),
+                Payments.ParameterSuccessText.title(.normal, documentStatus: status),
+                Payments.ParameterSuccessOptionButtons.buttons(
+                    with: mode,
+                    documentStatus: status,
+                    operationDetail: nil,
+                    operation: operation,
+                    meToMePayment: nil
+                ),
+                Payments.ParameterButton.actionButtonMain()
+            ]
+            
+            self.init(
+                operation: operation,
+                parameters: params.compactMap{ $0 }
+            )
+        }
+    }
+    
+    init(
         status: Payments.ParameterSuccessStatus.Status,
         title: String,
         subTitle: String? = nil,
@@ -386,6 +452,9 @@ extension Payments.ParameterSuccessText {
                 
             case .changePin:
                 return .init(id: paramId, value: "PIN-код успешно изменен", style: .title)
+                
+            case .change, .refund:
+                return .init(id: paramId, value: "Операция успешно завершена", style: .title)
             }
             
         case .inProgress:
@@ -396,6 +465,12 @@ extension Payments.ParameterSuccessText {
                 
             case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit:
                 return .init(id: paramId, value: "Платеж принят в обработку", style: .title)
+    
+            case .change:
+                return .init(id: paramId, value: "Запрос на изменение перевода принят в обработку", style: .title)
+    
+            case .refund:
+                return .init(id: paramId, value: "Запрос на возврат перевода принят в обработку", style: .title)
             }
             
         case .rejected, .unknown:
@@ -409,6 +484,12 @@ extension Payments.ParameterSuccessText {
                 
             case .changePin:
                 return .init(id: paramId, value: "Не удалось изменить PIN-код.\nПовторите попытку позднее", style: .title)
+                
+            case .change:
+                return .init(id: paramId, value: "Не удалось изменить перевод", style: .title)
+                
+            case .refund:
+                return .init(id: paramId, value: "Не удалось вернуть перевод", style: .title)
             }
         }
     }
@@ -557,6 +638,14 @@ extension Payments.ParameterSuccessOptionButtons {
             
         case .changePin:
             return nil
+            
+        case .change, .refund:
+            return optionButtons(
+                operation: operation,
+                options: [.document],
+                operationDetail: operationDetail,
+                meToMePayment: meToMePayment
+            )
         }
     }
     
@@ -584,7 +673,7 @@ extension Payments.ParameterSuccessOptionButtons {
                 operation: operation
             )
             
-        case .closeAccount, .closeAccountEmpty, .changePin:
+        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund:
             return nil
         }
     }

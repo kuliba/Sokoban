@@ -318,38 +318,18 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                     self.action.send(PaymentsSuccessAction.Button.Repeat())
                     
                 case .additionalChange:
-                    guard let operationDetailData,
-                          let name = operationDetailData.payeeFullName,
-                          let number = operationDetailData.transferReference
+                    guard let source = makeChangeSource(from: operationDetailData)
                     else { return }
                     
-                    let operationID = operationDetailData.paymentOperationDetailId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .change(
-                            operationId: operationID,
-                            transferNumber: number,
-                            name: name)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .additionalReturn:
-                    guard let operationDetailData,
-                          let number = operationDetailData.transferReference else {
-                        return
-                    }
+                    guard let source = makeReturnSource(from: operationDetailData)
+                    else { return }
                     
-                    let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
-                    let currency = operationDetailData.payerCurrency
-                    guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction) else {
-                        return
-                    }
-                    
-                    let operationID = operationDetailData.paymentOperationDetailId
-                    let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
-                    self.action.send(PaymentsSuccessAction.Payment(
-                        source: .return(
-                            operationId: operationID,
-                            transferNumber: number,
-                            amount: amount,
-                            productId: productID)))
+                    let action = PaymentsSuccessAction.Payment(source: source)
+                    self.action.send(action)
                     
                 case .close:
                     self.action.send(PaymentsSuccessAction.Button.Ready())
@@ -372,7 +352,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit:
+                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID
@@ -438,6 +418,51 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
             self?.sections = updatedSections
         }
         transferNumberInformer()?.assign(to: &$informer)
+    }
+}
+
+extension PaymentsSuccessViewModel {
+    
+    func makeChangeSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let name = operationDetailData.payeeFullName,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId.description
+        
+        return .change(
+            operationId: operationID,
+            transferNumber: number,
+            name: name
+        )
+    }
+    
+    func makeReturnSource(
+        from operationDetailData: OperationDetailData?
+    ) -> Payments.Operation.Source? {
+        
+        guard let operationDetailData,
+              let number = operationDetailData.transferReference
+        else { return nil }
+        
+        let amountValue = operationDetailData.payerAmount - operationDetailData.payerFee
+        let currency = operationDetailData.payerCurrency
+        guard let amount = adapter.amountFormatted(amount: amountValue, currencyCode: currency, style: .fraction)
+        else { return nil }
+        
+        let operationID = operationDetailData.paymentOperationDetailId
+        let productID = operationDetailData.payerCardId?.description ?? operationDetailData.payerAccountId.description
+        
+        return .return(
+            operationId: operationID,
+            transferNumber: number,
+            amount: amount,
+            productId: productID
+        )
     }
 }
 
@@ -515,6 +540,7 @@ extension PaymentsSuccessViewModel {
         case makePaymentToDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case changePin
+        case change, refund
     }
     
     struct FullScreenCover: Identifiable {
