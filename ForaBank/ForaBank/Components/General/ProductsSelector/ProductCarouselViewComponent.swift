@@ -130,22 +130,6 @@ extension ProductCarouselView {
             return nil
         }
         
-        // TODO: Worked
-        //        var stickerViewModel: ProductCarouselView.StickerViewModel? {
-        //
-        //            guard let md5hash = model.productListBannersWithSticker.value.first?.md5hash,
-        //                  let image = model.images.value[md5hash]?.image
-        //            else { return nil }
-        //
-        //            return self.model.productListBannersWithSticker.value.first?.mapper(
-        //                backgroundImage: image,
-        //                onTap: {
-        //                    self.showSticker()
-        //                }, onHide: {
-        //                    self.hideSticker()
-        //                })
-        //        }
-        
         var selectedType: ProductType? {
             
             guard let selected = selector?.selected,
