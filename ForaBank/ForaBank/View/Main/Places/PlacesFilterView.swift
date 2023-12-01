@@ -150,6 +150,7 @@ extension PlacesFilterView {
     struct ServiceGroupView: View {
         
         let viewModel: PlacesFilterViewModel.ServiceGroupViewModel
+        
         @Binding var selected: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
         @Binding var available: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
         
@@ -161,11 +162,24 @@ extension PlacesFilterView {
                     .font(.textBodyMR14200())
                     .foregroundColor(.mainColorsGray)
                 
-                TagsGridView(data: viewModel.options, spacing: 8, alignment: .leading) { service in
-                    
-                    PlacesFilterView.ServiceOptionView(viewModel: service, isSelected: selected.contains(service.id), isAvailable: available.contains(service.id))
-                }
+                TagsGridView(
+                    data: viewModel.options,
+                    spacing: 8,
+                    alignment: .leading,
+                    content: serviceView
+                )
             }
+        }
+        
+        private func serviceView(
+            service: PlacesFilterViewModel.ServiceOptionViewModel
+        ) -> some View {
+            
+            ServiceOptionView(
+                viewModel: service,
+                isSelected: selected.contains(service.id),
+                isAvailable: available.contains(service.id)
+            )
         }
     }
     
