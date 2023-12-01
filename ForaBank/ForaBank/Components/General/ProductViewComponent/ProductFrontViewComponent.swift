@@ -14,12 +14,16 @@ import Tagged
 
 struct ProductFrontView<Header: View, Footer: View>: View {
     
+    public typealias Balance = Tagged<_Balance, String>
+
+    public enum _Balance {}
+    
     @Binding var name: String
-    @Binding var balance: String
+    @Binding var balance: Balance
     
     let config: ProductView.Config
     let headerView: () -> Header
-    let footerView: (String) -> Footer
+    let footerView: (Balance) -> Footer
     
     var body: some View {
         

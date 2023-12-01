@@ -735,7 +735,12 @@ struct ProductView: View {
         
         ProductFrontView(
             name: $viewModel.cardInfo.name,
-            balance: $viewModel.footer.balance,
+            balance: .init(
+                get: {
+                    .init(viewModel.footer.balance)
+                },
+                set: { _ in }
+            ),
             config: viewModel.config,
             headerView: {
                 
@@ -745,13 +750,16 @@ struct ProductView: View {
                 
                 ProductView.FooterView(
                     config: viewModel.config,
-                    footer: .init(get: { 
-                        .init(
-                            balance: balance,
-                            interestRate: viewModel.footer.interestRate,
-                            paymentSystem: viewModel.footer.paymentSystem
-                        )
-                    }, set: { _ in })
+                    footer: .init(
+                        get: {
+                            .init(
+                                balance: balance.rawValue,
+                                interestRate: viewModel.footer.interestRate,
+                                paymentSystem: viewModel.footer.paymentSystem
+                            )
+                        },
+                        set: { _ in }
+                    )
                 )
             })
         .card(
