@@ -190,32 +190,22 @@ extension PlacesFilterView {
         let isAvailable: Bool
         
         var color: Color {
-            
-            if isAvailable == true {
-                
-                return isSelected ? .textWhite : .textSecondary
-                
-            } else {
-                
-                return .textSecondary.opacity(0.1)
-            }
+         
+            isAvailable
+            ? isSelected ? .textWhite : .textSecondary
+            : .textSecondary.opacity(0.1)
         }
         
         var backgroundColor: Color {
             
-            if isAvailable == true {
-                
-                return isSelected ? .buttonBlackMedium : .mainColorsGrayLightest
-                
-            } else {
-                
-                return .mainColorsGrayLightest.opacity(0.1)
-            }
+            isAvailable
+            ? isSelected ? .buttonBlackMedium : .mainColorsGrayLightest
+            :.mainColorsGrayLightest.opacity(0.1)
         }
         
         var body: some View {
             
-            if isAvailable == true {
+            if isAvailable {
                 
                 Button {
                     
@@ -243,7 +233,6 @@ extension PlacesFilterView {
                 }
                 .padding(8)
                 .background(Capsule().foregroundColor(backgroundColor))
-                
             }
         }
     }
