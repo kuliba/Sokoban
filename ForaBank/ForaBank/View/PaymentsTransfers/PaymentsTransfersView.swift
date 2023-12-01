@@ -35,23 +35,22 @@ struct PaymentsTransfersView: View {
                             EmptyView()
                         }
                     }
-                    
                 } //mainVerticalScrollView
             } //mainVStack
             
             Color.clear
                 .sheet(
                     item: .init(
-                        get: { viewModel.route?.sheet },
-                        set: { if $0 == nil { viewModel.route = nil } }),
+                        get: { viewModel.route.modal?.sheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }),
                     content: sheetView
                 )
             
             Color.clear
                 .fullScreenCover(
                     item: .init(
-                        get: { viewModel.route?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.route = nil } }
+                        get: { viewModel.route.modal?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }
                     ),
                     content: fullScreenCoverView
                 )
@@ -61,22 +60,22 @@ struct PaymentsTransfersView: View {
         }
         .alert(
             item: .init(
-                get: { viewModel.route?.alert },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
-                get: { viewModel.route?.bottomSheet },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.modal?.bottomSheet },
+                set: { if $0 == nil { viewModel.resetModal() } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
-                get: { viewModel.route?.link },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() } }
             ),
             content: destinationView(link:)
         )
@@ -97,8 +96,8 @@ struct PaymentsTransfersView: View {
                 }
         )
         .tabBar(isHidden: .init(
-            get: { viewModel.route != nil },
-            set: { _ in }
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
         ))
     }
     
@@ -208,7 +207,7 @@ struct PaymentsTransfersView: View {
             OpenDepositDetailView(viewModel: depositListViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
         }
     }
     
@@ -254,7 +253,7 @@ struct PaymentsTransfersView: View {
             with: .with(
                 title: "Транспорт",
                 navLeadingAction: viewModel.dismiss,
-                navTrailingAction: viewModel.openScanner
+                navTrailingAction: viewModel.openQRScanner
             )
         )
     }
@@ -330,6 +329,14 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
+    }
+}
+
+private extension PaymentsTransfersViewModel.Route {
+    
+    var isEmpty: Bool {
+        
+        destination == nil && modal == nil
     }
 }
 

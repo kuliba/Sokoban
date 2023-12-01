@@ -80,16 +80,16 @@ struct MainView<NavigationOperationView: View>: View {
             Color.clear
                 .sheet(
                     item: .init(
-                        get: { viewModel.route?.sheet },
-                        set: { if $0 == nil { viewModel.route = nil } }),
+                        get: { viewModel.route.modal?.sheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }),
                     content: sheetView
                 )
             
             Color.clear
                 .fullScreenCover(
                     item: .init(
-                        get: { viewModel.route?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.route = nil } }
+                        get: { viewModel.route.modal?.fullScreenSheet },
+                        set: { if $0 == nil { viewModel.resetModal() } }
                     ),
                     content: fullScreenSheetView
                 )
@@ -97,28 +97,28 @@ struct MainView<NavigationOperationView: View>: View {
         .ignoreKeyboard()
         .alert(
             item: .init(
-                get: { viewModel.route?.alert },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.modal?.alert },
+                set: { if $0 == nil { viewModel.resetModal() } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
-                get: { viewModel.route?.bottomSheet },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.modal?.bottomSheet },
+                set: { if $0 == nil { viewModel.resetModal() } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
-                get: { viewModel.route?.link },
-                set: { if $0 == nil { viewModel.route = nil } }
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() } }
             ),
             content: destinationView
         )
         .tabBar(isHidden: .init(
-            get: { viewModel.route != nil },
-            set: { _ in }
+            get: { !viewModel.route.isEmpty },
+            set: { if !$0 { viewModel.reset() } }
         ))
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
@@ -153,7 +153,7 @@ struct MainView<NavigationOperationView: View>: View {
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
@@ -253,6 +253,14 @@ struct MainView<NavigationOperationView: View>: View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
+    }
+}
+
+private extension MainViewModel.Route {
+    
+    var isEmpty: Bool {
+        
+        destination == nil && modal == nil
     }
 }
 

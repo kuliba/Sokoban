@@ -30,8 +30,20 @@ extension OfferProductView {
         var additionalCondition: AdditionalCondition? = nil
         @Published var isShowSheet: Bool = false
         
-        internal init(id: Int, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButton: OrderButton, conditionViewModel: ConditionViewModel, design: Design, additionalCondition: AdditionalCondition?) {
-            
+        private let openDeposit: (DepositProductData.ID?) -> Void
+        
+        internal init(
+            id: Int,
+            title: String,
+            subtitle: [String],
+            image: ImageData,
+            infoButton: InfoButton,
+            orderButton: OrderButton,
+            conditionViewModel: ConditionViewModel,
+            design: Design,
+            additionalCondition: AdditionalCondition?,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = id
             self.title = title
             self.subtitle = subtitle
@@ -41,22 +53,29 @@ extension OfferProductView {
             self.conditionViewModel = conditionViewModel
             self.design = design
             self.additionalCondition = additionalCondition
+            self.openDeposit = openDeposit
         }
         
-        init(with product: CatalogProductData) {
-            
+        init(
+            with product: CatalogProductData,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = product.id
             self.title = product.name
             self.subtitle = product.description
             self.image = .endpoint(product.imageEndpoint)
             self.orderButton = OrderButton(url: product.orderURL)
             self.design = .init(background: .mainColorsBlack, textColor: .mainColorsWhite)
+            self.openDeposit = openDeposit
             self.infoButton = createInfoButton(with: product.infoURL)
         }
         
-        init(with deposit: DepositProductData) {
-            
+        init(
+            with deposit: DepositProductData,
+            openDeposit: @escaping (DepositProductData.ID?) -> Void
+        ) {
             self.id = deposit.depositProductID
+            self.openDeposit = openDeposit
             self.title = deposit.name
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
@@ -142,16 +161,16 @@ extension OfferProductView {
         }
         
         private func createInfoButton(with url: URL?) -> InfoButton? {
-
-           guard let url = url else {
-              return nil
-           }
-
+            
+            guard let url = url else {
+                return nil
+            }
+            
             return InfoButton(url: url, action: { [weak self] in
-                            self?.action.send(OpenDepositViewModel.ModelActionOpenDeposit.ButtonTapped())
-                        })
+                self?.action.send(OpenDepositListViewModel.ModelActionOpenDeposit.ButtonTapped())
+            })
         }
-
+        
     }
 }
 
@@ -167,6 +186,11 @@ extension OfferProductView.ViewModel {
         }
         
         return description
+    }
+    
+    func orderButtonTapped() {
+        
+        openDeposit(id)
     }
 }
 
@@ -240,7 +264,10 @@ struct OfferProductView: View {
                     
                     Spacer()
                     
-                    OfferProductView.OrderButtonView(viewModel: viewModel)
+                    OfferProductView.OrderButtonView(
+                        title: viewModel.orderButton.title,
+                        action: viewModel.orderButtonTapped
+                    )
                 }
                 .frame(height: 48)
                 .padding(.top, 24)
@@ -318,23 +345,19 @@ struct OfferProductView: View {
     
     struct OrderButtonView: View {
         
-        let viewModel: OfferProductView.ViewModel
+        let title: String
+        let action: () -> Void
         
         var body: some View {
             
-            //FIXME: move all this to view model !!!!
-            if let depositId = viewModel.id,
-               let openViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: Model.shared) {
+            Button(action: action) {
                 
-                NavigationLink(destination: OpenDepositDetailView(viewModel: openViewModel)) {
-                    
-                    Text(viewModel.orderButton.title)
-                        .foregroundColor(.textWhite)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 17)
-                        .background(Color.buttonPrimary)
-                        .cornerRadius(8)
-                }
+                Text(title)
+                    .foregroundColor(.textWhite)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 17)
+                    .background(Color.buttonPrimary)
+                    .cornerRadius(8)
             }
         }
     }
@@ -366,7 +389,7 @@ struct OfferProductView: View {
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsBlack)
-
+                                
                             } else {
                                 
                                 Image.ic24Close
@@ -409,9 +432,9 @@ struct OfferProductView_Previews: PreviewProvider {
 
 extension OfferProductView.ViewModel {
     
-    static let catalogSample: OfferProductView.ViewModel = .init(with: .init(name: "Карта «Миг»", description: ["Получите карту с кешбэком в любом офисе без предварительного заказа!"], imageEndpoint: "", infoURL: URL(string: "https://www.forabank.ru/private/cards/")!, orderURL: URL(string: "https://www.forabank.ru/private/cards/")!, tariff: 1, productType: 1))
+    static let catalogSample: OfferProductView.ViewModel = .init(with: .init(name: "Карта «Миг»", description: ["Получите карту с кешбэком в любом офисе без предварительного заказа!"], imageEndpoint: "", infoURL: URL(string: "https://www.forabank.ru/private/cards/")!, orderURL: URL(string: "https://www.forabank.ru/private/cards/")!, tariff: 1, productType: 1), openDeposit: { _ in })
     
-    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]))
+    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]), openDeposit: { _ in })
     
 }
 

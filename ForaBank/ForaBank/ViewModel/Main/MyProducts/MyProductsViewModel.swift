@@ -298,7 +298,7 @@ class MyProductsViewModel: ObservableObject {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                             
-                            let openDepositViewModel = OpenDepositViewModel(
+                            let openDepositViewModel = OpenDepositListViewModel(
                                 self.model,
                                 catalogType: .deposit,
                                 dismissAction: {[weak self] in
@@ -534,7 +534,7 @@ extension MyProductsViewModel {
     enum Link {
         
         case openCard(AuthProductsViewModel)
-        case openDeposit(OpenDepositViewModel)
+        case openDeposit(OpenDepositListViewModel)
         case productProfile(ProductProfileViewModel)
     }
     
@@ -561,12 +561,6 @@ extension MyProductsViewModel {
 enum MyProductsViewModelAction {
     
     enum Tapped {
-        
-        struct Product: Action {
-            let productId: ProductData.ID
-        }
-        
-        struct OpenDeposit: Action {}
         
         struct NewProduct: Action {
             let productType: ProductType

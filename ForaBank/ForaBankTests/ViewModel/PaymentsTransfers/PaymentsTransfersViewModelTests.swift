@@ -68,7 +68,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
         sut.section?.tapTemplatesAndWait()
@@ -79,7 +79,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait()
@@ -90,7 +90,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
         let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.?.case))
+        let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
         sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
@@ -149,7 +149,7 @@ extension PaymentsTransfersViewModel {
     
     var meToMe: PaymentsMeToMeViewModel? {
         
-        guard case let .bottomSheet(bottomSheet) = route,
+        guard case let .bottomSheet(bottomSheet) = route.modal,
               case let .meToMe(viewModel) = bottomSheet.type
         else { return nil }
         
@@ -199,7 +199,7 @@ extension PaymentsTransfersViewModel {
     
     func closeBottomSheet() {
         
-        route = nil
+        resetModal()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
     }
     
@@ -210,8 +210,8 @@ extension PaymentsTransfersViewModel {
     
     var templatesListViewModel: TemplatesListViewModel? {
         
-        switch route {
-        case let .link(.template(templatesListViewModel)):
+        switch route.destination {
+        case let .template(templatesListViewModel):
             return templatesListViewModel
             
         default:
@@ -235,8 +235,8 @@ private extension PaymentsTransfersViewModel.Route {
     
     var `case`: Case? {
         
-        switch self {
-        case .link(.template): return .template
+        switch destination {
+        case .template:  return .template
         default:         return .other
         }
     }

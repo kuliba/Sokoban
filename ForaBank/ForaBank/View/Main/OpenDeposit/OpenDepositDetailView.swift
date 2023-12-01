@@ -49,12 +49,7 @@ struct OpenDepositDetailView: View {
                     .opacity(0.7)
             }
 
-            
-            NavigationLink(destination:
-                            ConfirmView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline))
-            {
+            Button(action: viewModel.confirmButtonTapped) {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
@@ -64,14 +59,32 @@ struct OpenDepositDetailView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .padding(.bottom, 39)
-                
             }
-            
+
             DepositShowBottomSheetView(viewModel: viewModel.calculator.bottomSheet)
         }
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
         .edgesIgnoringSafeArea(.bottom)
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.destination },
+                set: { if $0 == nil { viewModel.resetDestination() }}
+            ),
+            content: destinationView
+        )
+    }
+    
+    private func destinationView(
+        destination: OpenDepositDetailViewModel.Route.Link
+    ) -> some View {
+        
+        switch destination {
+        case let .confirm(viewModel):
+            ConfirmView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline)
+        }
     }
 }
 
