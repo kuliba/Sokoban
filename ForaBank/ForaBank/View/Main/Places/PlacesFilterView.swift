@@ -23,10 +23,7 @@ struct PlacesFilterView: View {
                 
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    Text(viewModel.categoriesSubtitle)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.mainColorsGray)
-                        .padding(.horizontal, 20)
+                    subtitle()
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         
@@ -66,6 +63,14 @@ struct PlacesFilterView: View {
         Text(viewModel.title)
             .font(.textH3Sb18240())
             .foregroundColor(.mainColorsBlack)
+            .padding(.horizontal, 20)
+    }
+    
+    private func subtitle() -> some View {
+        
+        Text(viewModel.categoriesSubtitle)
+            .font(.textBodyMR14200())
+            .foregroundColor(.mainColorsGray)
             .padding(.horizontal, 20)
     }
     
