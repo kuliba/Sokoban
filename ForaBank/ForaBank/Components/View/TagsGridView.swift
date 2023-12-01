@@ -118,7 +118,10 @@ public extension View {
                                 value: geometry.size)
             }
         )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+        .onPreferenceChange(SizePreferenceKey.self) { size in
+            
+            DispatchQueue.main.async { onChange(size) }
+        }
     }
 }
 
