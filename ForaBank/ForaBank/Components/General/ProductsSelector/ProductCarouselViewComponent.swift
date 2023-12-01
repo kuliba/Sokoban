@@ -777,8 +777,10 @@ struct ProductCarouselView: View {
                                     
                                     if let vm = viewModel.stickerViewModel {
                                         
-                                        stickerView(isCard: groupViewModel.productType == .card,
-                                                    model: vm)
+                                        stickerView(
+                                            isCard: groupViewModel.productType == .card,
+                                            model: vm
+                                        )
                                     }
                                     
                                 }
