@@ -25,17 +25,8 @@ struct PlacesFilterView: View {
                     
                     subtitle()
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        
-                        HStack(spacing: 8) {
-                            
-                            Color.clear
-                                .frame(width: 10, height: 20)
-                            
-                            ForEach(viewModel.categories, content: categoryOptionView)
-                        }
-                    }
-                    .frame(height: 32)
+                    categoriesView()
+                        .frame(height: 32)
                 }
                 
                 VStack(spacing: 24) {
@@ -72,6 +63,20 @@ struct PlacesFilterView: View {
             .font(.textBodyMR14200())
             .foregroundColor(.mainColorsGray)
             .padding(.horizontal, 20)
+    }
+    
+    private func categoriesView() -> some View {
+        
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            HStack(spacing: 8) {
+                
+                Color.clear
+                    .frame(width: 10, height: 20)
+                
+                ForEach(viewModel.categories, content: categoryOptionView)
+            }
+        }
     }
     
     private func categoryOptionView(
