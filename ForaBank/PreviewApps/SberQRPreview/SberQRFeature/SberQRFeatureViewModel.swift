@@ -24,7 +24,6 @@ final class SberQRFeatureViewModel: ObservableObject {
         routeSubject
             .removeDuplicates()
             .receive(on: scheduler)
-            .handleEvents(receiveOutput: { print($0 as Any) })
             .assign(to: &$route)
     }
 }

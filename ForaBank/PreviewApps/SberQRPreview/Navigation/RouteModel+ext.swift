@@ -14,63 +14,38 @@ extension RouteModel {
     
     func resetAlert() {
         
-        if route?.destination != nil {
-            
-            resetRoute()
-        }
+        resetModel()
     }
     
     func setAlert(
-        to alert: Route.Alert
+        to alert: Route.Modal.Alert
     ) {
-        setRoute(to: .alert(alert))
-    }
-    
-    // MARK: - Destination
-    
-    func resetDestination() {
-        
-        if route?.destination != nil {
-            
-            resetRoute()
-        }
-    }
-    
-    func setDestination(
-        to destination: Route.Destination
-    ) {
-        setRoute(to: .destination(destination))
+        setModal(to: .alert(alert))
     }
     
     // MARK: - FullScreenCover
     
     func resetFullScreenCover() {
         
-        if route?.fullScreenCover != nil {
-            
-            resetRoute()
-        }
+        resetModel()
     }
     
     func setFullScreenCover(
-        to fullScreenCover: Route.FullScreenCover
+        to fullScreenCover: Route.Modal.FullScreenCover
     ) {
-        setRoute(to: .fullScreenCover(fullScreenCover))
+        setModal(to: .fullScreenCover(fullScreenCover))
     }
     
     // MARK: - Sheet
     
     func resetSheet() {
         
-        if route?.sheet != nil {
-            
-            resetRoute()
-        }
+        resetModel()
     }
     
     func setSheet(
-        to sheet: Route.Sheet
+        to sheet: Route.Modal.Sheet
     ) {
-        setRoute(to: .sheet(sheet))
+        setModal(to: .sheet(sheet))
     }
 }

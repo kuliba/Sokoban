@@ -11,7 +11,7 @@ final class Composer {
     
     let routeModel: RouteModel
     
-    init(route: Route? = nil) {
+    init(route: Route = .empty) {
         
         self.routeModel = .init(route: route)
     }
@@ -21,16 +21,7 @@ final class Composer {
 
 extension Composer {
     
-    // MARK: - Alert
-    
-    func makeAlertView(
-        _ alert: Route.Alert
-    ) -> SwiftUI.Alert {
-        
-        .init(title: Text(alert.message))
-    }
-    
-    // MARK: - Navigation
+    // MARK: - Navigation Destination
     
     @ViewBuilder
     func makeDestinationView(
@@ -42,16 +33,25 @@ extension Composer {
             
             makeSberQRFeatureView(
                 url: url,
-                dismiss: routeModel.resetRoute
+                dismiss: routeModel.resetDestination
             )
         }
     }
     
-    // MARK: - FullScreenCover
+    // MARK: - Modal: Alert
+    
+    func makeAlertView(
+        _ alert: Route.Modal.Alert
+    ) -> SwiftUI.Alert {
+        
+        .init(title: Text(alert.message))
+    }
+    
+    // MARK: - Modal: FullScreenCover
     
     @ViewBuilder
     func makeFullScreenCoverView(
-        _ fullScreenCover: Route.FullScreenCover
+        _ fullScreenCover: Route.Modal.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -64,11 +64,11 @@ extension Composer {
         }
     }
     
-    // MARK: - FullScreenCover
+    // MARK: - Modal: FullScreenCover
     
     @ViewBuilder
     func makeSheet(
-        _ sheet: Route.Sheet
+        _ sheet: Route.Modal.Sheet
     ) -> some View {
         
         switch sheet {
@@ -76,13 +76,13 @@ extension Composer {
             
             makeSberQRFeatureView(
                 url: url,
-                dismiss: routeModel.resetRoute
+                dismiss: routeModel.resetSheet
             )
             .sheet(
                 item: .init(
                     get: {
 #warning("extract as property or helper")
-                        guard case let .sheet(.picker(wrapped)) = self.routeModel.route
+                        guard case let .sheet(.picker(wrapped)) = self.routeModel.route.modal
                         else { return nil }
                         
                         return wrapped
@@ -92,7 +92,7 @@ extension Composer {
 #warning("fix this empty setter")
                     }
                 ),
-                content: { (wrapped: Route.Sheet.Wrapped) in
+                content: { (wrapped: Route.Modal.Sheet.Wrapped) in
                     
                     TextPickerView(commit: wrapped.closure)
                 }
@@ -110,19 +110,11 @@ private extension Composer {
         
         switch qrResult {
         case let .sberQR(url):
-            changeRoute(to: .sheet(.sberQRPayment(url)))
+                routeModel.setModal(to: .sheet(.sberQRPayment(url)))
             
         case let .error(text):
-            changeRoute(to: .alert(.init(message: text)))
+            routeModel.setModal(to: .alert(.init(message: text)))
         }
-    }
-}
-
-private extension Composer {
-    
-    func changeRoute(to route: Route) {
-        
-        routeModel.changeRoute(to: route)
     }
 }
 

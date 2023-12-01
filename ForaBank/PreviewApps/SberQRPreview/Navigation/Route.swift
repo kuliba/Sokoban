@@ -7,25 +7,38 @@
 
 import Foundation
 
-enum Route: Hashable & Identifiable {
+struct Route: Equatable {
     
-    case alert(Alert)
-    case destination(Destination)
-    case fullScreenCover(FullScreenCover)
-    case sheet(Sheet)
+    var destination: Destination?
+    var modal: Modal?
     
-    var id: Self { self }
-    
-    struct Alert: Hashable & Identifiable {
-        
-        let message: String
-        
-        var id: Self { self }
-    }
+    static let empty: Self = .init(destination: nil, modal: nil)
+}
+
+extension Route {
     
     enum Destination: Hashable & Identifiable {
         
         case sberQRPayment(URL)
+        
+        var id: Self { self }
+    }
+    
+    enum Modal: Hashable & Identifiable {
+        
+        case alert(Alert)
+        case fullScreenCover(FullScreenCover)
+        case sheet(Sheet)
+        
+        var id: Self { self }
+    }
+}
+
+extension Route.Modal {
+    
+    struct Alert: Hashable & Identifiable {
+        
+        let message: String
         
         var id: Self { self }
     }
@@ -64,33 +77,25 @@ enum Route: Hashable & Identifiable {
 
 extension Route {
     
-    var alert: Alert? {
+    var alert: Modal.Alert? {
         
-        guard case let .alert(alert) = self
+        guard case let .alert(alert) = modal
         else { return nil }
         
         return alert
     }
     
-    var destination: Destination? {
+    var fullScreenCover: Modal.FullScreenCover? {
         
-        guard case let .destination(destination) = self
-        else { return nil }
-        
-        return destination
-    }
-    
-    var fullScreenCover: FullScreenCover? {
-        
-        guard case let .fullScreenCover(fullScreenCover) = self
+        guard case let .fullScreenCover(fullScreenCover) = modal
         else { return nil }
         
         return fullScreenCover
     }
     
-    var sheet: Sheet? {
+    var sheet: Modal.Sheet? {
         
-        guard case let .sheet(sheet) = self
+        guard case let .sheet(sheet) = modal
         else { return nil }
         
         return sheet

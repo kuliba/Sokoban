@@ -10,9 +10,10 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject private var routeModel: RouteModel
+    
     private let composer: Composer
     
-    init(route: Route? = nil) {
+    init(route: Route = .empty) {
         
         let composer = Composer(route: route)
         self.composer = composer
@@ -43,21 +44,10 @@ struct ContentView: View {
 
 private extension RouteModel {
     
-    var alertBinding: Binding<Route.Alert?> {
-        
-        .init(
-            get: { [weak self] in self?.route?.alert },
-            set: { [weak self] in
-                
-                if $0 == nil { self?.resetAlert() }
-            }
-        )
-    }
-    
     var destinationBinding: Binding<Route.Destination?> {
         
         .init(
-            get: { [weak self] in self?.route?.destination },
+            get: { [weak self] in self?.route.destination },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetDestination() }
@@ -65,10 +55,21 @@ private extension RouteModel {
         )
     }
     
-    var fullScreenCoverBinding: Binding<Route.FullScreenCover?> {
+    var alertBinding: Binding<Route.Modal.Alert?> {
         
         .init(
-            get: { [weak self] in self?.route?.fullScreenCover },
+            get: { [weak self] in self?.route.alert },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetAlert() }
+            }
+        )
+    }
+    
+    var fullScreenCoverBinding: Binding<Route.Modal.FullScreenCover?> {
+        
+        .init(
+            get: { [weak self] in self?.route.fullScreenCover },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetFullScreenCover() }
@@ -76,10 +77,10 @@ private extension RouteModel {
         )
     }
     
-    var sheetBinding: Binding<Route.Sheet?> {
+    var sheetBinding: Binding<Route.Modal.Sheet?> {
         
         .init(
-            get: { [weak self] in self?.route?.sheet },
+            get: { [weak self] in self?.route.sheet },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetSheet() }

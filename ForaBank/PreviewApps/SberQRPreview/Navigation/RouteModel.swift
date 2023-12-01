@@ -11,46 +11,48 @@ import Foundation
 
 final class RouteModel: ObservableObject {
     
-    @Published private(set) var route: Route?
+    @Published private(set) var route: Route
     
-    private let routeSubject = PassthroughSubject<Route?, Never>()
+    private let routeSubject = PassthroughSubject<Route, Never>()
     
     init(
-        route: Route? = nil,
+        route: Route = .empty,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.route = route
         
         routeSubject
-        // .debounce(for: 0.2, scheduler: scheduler)
             .removeDuplicates()
             .receive(on: scheduler)
-            .handleEvents(receiveOutput: { print($0 as Any) })
             .assign(to: &$route)
     }
 }
 
 extension RouteModel {
     
-    func resetRoute() {
+    func setDestination(to destination: Route.Destination?) {
         
-        setRoute(to: nil)
-    }
-    
-    func setRoute(to route: Route?) {
+        var route = route
+        route.destination = destination
         
         routeSubject.send(route)
     }
     
-    func changeRoute(to route: Route) {
+    func setModal(to modal: Route.Modal?) {
         
-        resetRoute()
+        var route = route
+        route.modal = modal
         
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.2
-        ) { [weak self] in
-            
-            self?.setRoute(to: route)
-        }
+        routeSubject.send(route)
+    }
+    
+    func resetDestination() {
+        
+        setDestination(to: nil)
+    }
+    
+    func resetModel() {
+        
+        setModal(to: nil)
     }
 }
