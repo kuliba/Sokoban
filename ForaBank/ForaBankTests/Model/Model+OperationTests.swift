@@ -103,7 +103,7 @@ private extension Model {
     
     func sendDetailRequestAndWait(timeout: TimeInterval = 0.05) {
         
-        let request = ModelAction.Operation.Detail.Request(type: .documentId(123))
+        let request = ModelAction.Operation.Detail.Request.documentId(123)
         action.send(request)
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
