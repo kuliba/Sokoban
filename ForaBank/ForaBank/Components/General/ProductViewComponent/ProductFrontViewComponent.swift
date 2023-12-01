@@ -8,16 +8,18 @@
 import Foundation
 import SwiftUI
 import Combine
+import Tagged
 
 //MARK: - View
 
 struct ProductFrontView<Header: View, Footer: View>: View {
     
     @Binding var name: String
+    @Binding var balance: String
     
     let config: ProductView.Config
     let headerView: () -> Header
-    let footerView: () -> Footer
+    let footerView: (String) -> Footer
     
     var body: some View {
         
@@ -35,7 +37,7 @@ struct ProductFrontView<Header: View, Footer: View>: View {
                     .opacity(0.5)
                     .accessibilityIdentifier("productName")
                 
-                footerView()
+                footerView(balance)
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
