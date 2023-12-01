@@ -16,11 +16,12 @@ public struct TagsGridView<Data: Collection, Content: View>: View where Data.Ele
     
     @State private var availableWidth: CGFloat = 0
     
-    public init(data: Data,
-                spacing: CGFloat,
-                alignment: HorizontalAlignment,
-                content: @escaping (Data.Element) -> Content) {
-        
+    public init(
+        data: Data,
+        spacing: CGFloat,
+        alignment: HorizontalAlignment,
+        content: @escaping (Data.Element) -> Content
+    ) {
         self.data = data
         self.spacing = spacing
         self.alignment = alignment
@@ -85,7 +86,6 @@ private extension View {
     }
 }
 
-
 private struct InnerGridView<Data: Collection, Content: View>: View where Data.Element: Hashable {
     
     let availableWidth: CGFloat
@@ -113,7 +113,7 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
                 }
             }
         }
-        .onPreferenceChange(SizePreferenceKey.self) { sizes in
+        .onPreferenceChange(SizesPreferenceKey.self) { sizes in
             
             DispatchQueue.main.async { self.sizes = sizes }
         }
@@ -147,7 +147,7 @@ private struct InnerGridView<Data: Collection, Content: View>: View where Data.E
     }
 }
 
-public extension View {
+private extension View {
     
     func reportSize(_ hash: Int) -> some View {
         
@@ -156,7 +156,7 @@ public extension View {
                 
                 Color.clear
                     .preference(
-                        key: SizePreferenceKey.self,
+                        key: SizesPreferenceKey.self,
                         value: [hash: geometry.size]
                     )
             }
@@ -164,7 +164,7 @@ public extension View {
     }
 }
 
-private struct SizePreferenceKey: PreferenceKey {
+private struct SizesPreferenceKey: PreferenceKey {
     
     static var defaultValue: [Int: CGSize] = [:]
     
@@ -174,4 +174,28 @@ private struct SizePreferenceKey: PreferenceKey {
     ) {
         value.merge(nextValue(), uniquingKeysWith: { (current, _) in current })
     }
+}
+
+#warning("this is a broken solution but it is reused in the codebase")
+public extension View {
+    
+    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+        
+        background(
+            
+            GeometryReader { geometry in
+                
+                Color.clear
+                    .preference(key: SizePreferenceKey.self,
+                                value: geometry.size)
+            }
+        )
+        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+    }
+}
+
+private struct SizePreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) { }
 }
