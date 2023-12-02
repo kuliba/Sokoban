@@ -127,7 +127,7 @@ class QRViewModel: ObservableObject {
                             
                             if let qrData = self?.string(from: image) {
                                 
-                                let result = Self.resolve(data: qrData)
+                                let result = Self.resolve(string: qrData)
                                 
                                 self?.action.send(QRViewModelAction.Result(result: result))
                             }
@@ -154,7 +154,7 @@ class QRViewModel: ObservableObject {
                         if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
-                            let result = Self.resolve(data: qrData)
+                            let result = Self.resolve(string: qrData)
                             
                             self?.action.send(QRViewModelAction.Result(result: result))
                             
@@ -184,7 +184,7 @@ class QRViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as QRScannerViewAction.Scanned:
-                    let result = Self.resolve(data: payload.value)
+                    let result = Self.resolve(string: payload.value)
                     
                     self.action.send(QRViewModelAction.Result(result: result))
                     
@@ -240,7 +240,7 @@ extension QRViewModel {
         case failedView(QRFailedViewModel)
     }
     
-    enum Result {
+    enum ScanResult {
         
         case qrCode(QRCode)
         case c2bURL(URL)
@@ -250,14 +250,14 @@ extension QRViewModel {
     }
 }
 
-//MARK: - Resovers
+// MARK: - Resolvers
 
 extension QRViewModel {
     
-    //TODO: tests
-    static func resolve(data: String) -> Result {
+    // TODO: add tests
+    static func resolve(string: String) -> ScanResult {
         
-        if let url = URL(string: data) {
+        if let url = URL(string: string) {
             
             if url.absoluteString.contains("qr.nspk.ru") {
                 
@@ -272,7 +272,7 @@ extension QRViewModel {
                 return .url(url)
             }
             
-        } else if let qrCode = QRCode(string: data) {
+        } else if let qrCode = QRCode(string: string) {
             
             return .qrCode(qrCode)
             
@@ -428,7 +428,7 @@ enum QRViewModelAction {
     struct Flashlight: Action {}
     struct Result: Action {
         
-        let result: QRViewModel.Result
+        let result: QRViewModel.ScanResult
     }
     struct CloseLink: Action {}
     struct CloseBottomSheet: Action {}
