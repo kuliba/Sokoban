@@ -733,18 +733,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case let .c2bURL(url):
                     handleC2bURL(url)
                     
-                case .c2bSubscribeURL(let url):
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: {[weak self] in
-                        
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    })
-                    bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 700,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
+                case let .c2bSubscribeURL(url):
+                    handleC2bSubscribeURL(url)
                     
                 case .url(_):
                     
@@ -944,6 +934,25 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             source: .c2b(url),
             model: model,
             closeAction: {[weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(DelayWrappedAction(
+            delayMS: 700,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
+    }
+    
+    private func handleC2bSubscribeURL(_ url: URL) {
+        
+        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        let paymentsViewModel = PaymentsViewModel(
+            source: .c2bSubscribe(url),
+            model: model,
+            closeAction: { [weak self] in
                 
                 self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
             }
