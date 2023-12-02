@@ -527,6 +527,7 @@ class MainViewModel: ObservableObject, Resetable {
         if let operatorsFromQr = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
             let validQrOperators = model.dictionaryQRAnewayOperator()
             let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
+            
             guard operators.count > 0 else {
                 
                 self.fullScreenSheet = nil
@@ -540,7 +541,9 @@ class MainViewModel: ObservableObject, Resetable {
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                     
                     Task { [weak self] in
+                        
                         guard let self = self else { return }
+                        
                         let puref = operatorValue.code
                         let additionalList = self.model.additionalList(for: operatorValue, qrCode: qr)
                         let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
@@ -558,15 +561,20 @@ class MainViewModel: ObservableObject, Resetable {
                         )
                         self.bind(paymentsViewModel)
                         
-                        await MainActor.run {
-                            self.link = .payments(paymentsViewModel)
+                        await MainActor.run { [weak self] in
+                            
+                            self?.self.link = .payments(paymentsViewModel)
                         }
                     }
                 } else {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
                         
-                        let viewModel = InternetTVDetailsViewModel(model: model, qrCode: qr, mapping: qrMapping)
+                        let viewModel = InternetTVDetailsViewModel(
+                            model: model,
+                            qrCode: qr,
+                            mapping: qrMapping
+                        )
                         
                         self.link = .operatorView(viewModel)
                     }

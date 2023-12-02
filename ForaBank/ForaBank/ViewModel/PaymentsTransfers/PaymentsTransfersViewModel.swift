@@ -765,8 +765,11 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
                 
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
+                    
                     Task { [weak self] in
+                        
                         guard let self = self else { return }
+                        
                         let puref = operatorValue.code
                         let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
                         let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
@@ -785,6 +788,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         self.bind(paymentsViewModel)
                         
                         await MainActor.run { [weak self] in
+                            
                             self?.link = .init(.payments(paymentsViewModel))
                         }
                     }
