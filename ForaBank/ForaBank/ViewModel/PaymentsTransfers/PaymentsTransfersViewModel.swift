@@ -725,27 +725,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case let .qrCode(qr):
                     
                     if let qrMapping = model.qrMapping.value {
-                        handleQRMapping(qr, qrMapping)                        
+                        handleQRMapping(qr, qrMapping)
                     } else {
-                        
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                            
-                            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
-                                
-                                self?.link = nil
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                    self?.rootActions?.switchTab(.chat)
-                                }
-                                
-                            }, requisitsAction: { [weak self] in
-                                
-                                self?.fullScreenSheet = nil
-                                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                                
-                            })
-                            self.link = .failedView(failedView)
-                        }
+                        handleFailure(qr: qr)
                     }
                     
                 case .c2bURL(let url):
@@ -927,7 +909,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             
                             self?.link = nil
                             self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                        }, 
+                        },
                         qrCode: qr
                     )
                     
@@ -938,6 +920,30 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
             self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
             self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        }
+    }
+    
+    private func handleFailure(qr: QRCode) {
+        
+        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+            
+            let failedView = QRFailedViewModel(
+                model: self.model,
+                addCompanyAction: { [weak self] in
+                    
+                    self?.link = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        self?.rootActions?.switchTab(.chat)
+                    }
+                },
+                requisitsAction: { [weak self] in
+                    
+                    self?.fullScreenSheet = nil
+                    self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+                }
+            )
+            self.link = .failedView(failedView)
         }
     }
     
