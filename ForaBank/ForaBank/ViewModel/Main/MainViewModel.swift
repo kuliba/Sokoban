@@ -508,32 +508,8 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     }
                     
-                case .c2bURL(let url):
-                    
-                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    Task.detached(priority: .high) { [self] in
-                        
-                        do {
-                            
-                            let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
-                                self?.action.send(MainViewModelAction.Close.Link())})
-                            bind(operationViewModel)
-                            
-                            await MainActor.run {
-                                
-                                self.link = .payments(operationViewModel)
-                            }
-                            
-                        } catch {
-                            
-                            await MainActor.run {
-                                
-                                self.alert = .init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
-                            }
-                            
-                            LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
-                        }
-                    }
+                case let .c2bURL(url):
+                    handleC2bURL(url)
                     
                 case .c2bSubscribeURL(let url):
                     self.action.send(MainViewModelAction.Close.FullScreenSheet())
@@ -827,6 +803,35 @@ class MainViewModel: ObservableObject, Resetable {
             })
             self.link = .failedView(failedView)
         }
+    }
+    
+    private func handleC2bURL(_ url: URL) {
+        
+        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        Task.detached(priority: .high) { [self] in
+            
+            do {
+                
+                let operationViewModel = try await PaymentsViewModel(source: .c2b(url), model: model, closeAction: { [weak self] in
+                    self?.action.send(MainViewModelAction.Close.Link())})
+                bind(operationViewModel)
+                
+                await MainActor.run {
+                    
+                    self.link = .payments(operationViewModel)
+                }
+                
+            } catch {
+                
+                await MainActor.run {
+                    
+                    self.alert = .init(title: "Ошибка C2B оплаты по QR", message: error.localizedDescription, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                }
+                
+                LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
+            }
+        }
+
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
