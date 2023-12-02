@@ -187,12 +187,12 @@ class QRViewModel: ObservableObject {
                 
                 self.action.send(QRViewModelAction.Result(result: result))
                 
-                guard case .qrCode(let qrCode) = result,
-                      let mapping = model.qrMapping.value,
-                      let failData = qrCode.check(mapping: mapping) 
-                else { return }
-                
-                self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+                if case let .qrCode(qrCode) = result,
+                   let mapping = model.qrMapping.value,
+                   let failData = qrCode.check(mapping: mapping) {
+                    
+                    self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+                }
             }
             .store(in: &bindings)
     }
