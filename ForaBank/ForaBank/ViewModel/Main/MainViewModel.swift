@@ -511,17 +511,8 @@ class MainViewModel: ObservableObject, Resetable {
                 case let .c2bURL(url):
                     handleC2bURL(url)
                     
-                case .c2bSubscribeURL(let url):
-                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    let paymentsViewModel = PaymentsViewModel(source: .c2bSubscribe(url), model: model, closeAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.Close.Link())
-                    })
-                    bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 700,
-                        action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                    )
+                case let .c2bSubscribeURL(url):
+                    handleC2bSubscribeURL(url)
                     
                 case .url(_):
                     
@@ -831,7 +822,25 @@ class MainViewModel: ObservableObject, Resetable {
                 LoggerAgent.shared.log(level: .error, category: .ui, message: "Unable create PaymentsViewModel for c2b subscribtion with error: \(error.localizedDescription) ")
             }
         }
-
+    }
+    
+    private func handleC2bSubscribeURL(_ url: URL) {
+        
+        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        let paymentsViewModel = PaymentsViewModel(
+            source: .c2bSubscribe(url),
+            model: model,
+            closeAction: { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Close.Link())
+            }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(DelayWrappedAction(
+            delayMS: 700,
+            action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+        )
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
