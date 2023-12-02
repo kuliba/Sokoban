@@ -73,10 +73,10 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.Info:
                     self.bottomSheet = .init(sheetType: .info(.init(icon: .ic48Info,
-                                                                                     title: "Сканировать QR-код",
-                                                                                     content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
-                                                                                               "\tПеред оплатой проверьте, что все поля заполнены правильно.",
-                                                                                               "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."])))
+                                                                    title: "Сканировать QR-код",
+                                                                    content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                                                                              "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                                                                              "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."])))
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
@@ -179,28 +179,22 @@ class QRViewModel: ObservableObject {
             }.store(in: &bindings)
         
         scanner.action
+            .compactMap { $0 as? QRScannerViewAction.Scanned }
+            .map(\.value)
+            .map(ScanResult.init)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] result in
                 
-                switch action {
-                case let payload as QRScannerViewAction.Scanned:
-                    let result = ScanResult(string: payload.value)
-                    
-                    self.action.send(QRViewModelAction.Result(result: result))
-                    
-                    guard case .qrCode(let qrCode) = result,
-                          let mapping = model.qrMapping.value,
-                          let failData = qrCode.check(mapping: mapping) else {
-                        
-                        return
-                    }
-                    
-                    self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
-                          
-                default:
-                    break
-                }
-            } .store(in: &bindings)
+                self.action.send(QRViewModelAction.Result(result: result))
+                
+                guard case .qrCode(let qrCode) = result,
+                      let mapping = model.qrMapping.value,
+                      let failData = qrCode.check(mapping: mapping) 
+                else { return }
+                
+                self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+            }
+            .store(in: &bindings)
     }
 }
 
