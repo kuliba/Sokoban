@@ -499,13 +499,9 @@ class MainViewModel: ObservableObject, Resetable {
                 case let .qrCode(qr):
                     
                     if let qrMapping = model.qrMapping.value {
-                        
                         handleQRMapping(qr, qrMapping)
-                        
                     } else {
-                        
                         handleFailure(qr: qr)
-                        
                     }
                     
                 case let .c2bURL(url):
@@ -518,34 +514,7 @@ class MainViewModel: ObservableObject, Resetable {
                     handleURL()
                     
                 case .unknown:
-                    
-                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
-                            
-                            self?.link = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                self?.rootActions?.switchTab(.chat)
-                            }
-                            
-                        }, requisitsAction: { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                            let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
-                                self?.action.send(MainViewModelAction.Close.Link())
-                            })
-                            self.bind(paymentsViewModel)
-                            
-                            self.action.send(DelayWrappedAction(
-                                delayMS: 700,
-                                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                            )
-                        })
-                        self.link = .failedView(failedView)
-                    }
+                    handleUnknownQR()
                 }
             }
             .store(in: &bindings)
@@ -838,6 +807,41 @@ class MainViewModel: ObservableObject, Resetable {
                     let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
                         self?.action.send(MainViewModelAction.Close.Link())
                     })
+                    self.bind(paymentsViewModel)
+                    
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 700,
+                        action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                    )
+                }
+            )
+            self.link = .failedView(failedView)
+        }
+    }
+    
+    private func handleUnknownQR() {
+        
+        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+            
+            let failedView = QRFailedViewModel(
+                model: self.model,
+                addCompanyAction: { [weak self] in
+                    
+                    self?.link = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        self?.rootActions?.switchTab(.chat)
+                    }
+                },
+                requisitsAction: { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                    let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                        self?.action.send(MainViewModelAction.Close.Link())
+                    }
+                    )
                     self.bind(paymentsViewModel)
                     
                     self.action.send(DelayWrappedAction(
