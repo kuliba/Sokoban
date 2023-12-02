@@ -504,23 +504,8 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     } else {
                         
-                        self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                            
-                            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
-                                
-                                self?.link = nil
-                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                    self?.rootActions?.switchTab(.chat)
-                                }
-                                
-                            }, requisitsAction: { [weak self] in
-                                
-                                self?.fullScreenSheet = nil
-                                self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
-                            })
-                            self.link = .failedView(failedView)
-                        }
+                        handleFailure(qr: qr)
+                        
                     }
                     
                 case .c2bURL(let url):
@@ -820,6 +805,27 @@ class MainViewModel: ObservableObject, Resetable {
             
             self.fullScreenSheet = nil
             self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
+        }
+    }
+    
+    private func handleFailure(qr: QRCode) {
+        
+        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+            
+            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
+                
+                self?.link = nil
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    self?.rootActions?.switchTab(.chat)
+                }
+                
+            }, requisitsAction: { [weak self] in
+                
+                self?.fullScreenSheet = nil
+                self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
+            })
+            self.link = .failedView(failedView)
         }
     }
     
