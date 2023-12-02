@@ -730,18 +730,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         handleFailure(qr: qr)
                     }
                     
-                case .c2bURL(let url):
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    let paymentsViewModel = PaymentsViewModel(source: .c2b(url), model: model, closeAction: {[weak self] in
-                        
-                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    })
-                    bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 700,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
+                case let .c2bURL(url):
+                    handleC2bURL(url)
                     
                 case .c2bSubscribeURL(let url):
                     self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
@@ -945,6 +935,25 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             )
             self.link = .failedView(failedView)
         }
+    }
+    
+    private func handleC2bURL(_ url: URL) {
+        
+        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        let paymentsViewModel = PaymentsViewModel(
+            source: .c2b(url),
+            model: model,
+            closeAction: {[weak self] in
+                
+                self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(DelayWrappedAction(
+            delayMS: 700,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
     }
     
     private func makeAlert(_ message: String) {
