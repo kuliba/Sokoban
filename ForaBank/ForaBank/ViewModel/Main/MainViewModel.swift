@@ -524,12 +524,10 @@ class MainViewModel: ObservableObject, Resetable {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        if let operatorsFromQr = model.dictionaryAnywayOperators(with: qr, mapping: qrMapping)  {
-            let validQrOperators = model.dictionaryQRAnewayOperator()
-            let operators = operatorsFromQr.filter{ validQrOperators.contains($0) && !$0.parameterList.isEmpty }
+        if let operators = model.operatorsFromQR(qr, qrMapping) {
             
             guard operators.count > 0 else {
-                
+
                 self.fullScreenSheet = nil
                 self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                 return
@@ -1098,4 +1096,3 @@ enum MainViewModelAction {
         struct Countries: Action {}
     }
 }
-
