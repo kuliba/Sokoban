@@ -275,7 +275,7 @@ struct OperationProcessView: View {
             }
             
             continueButton(
-                viewModel: .init(isActive: model.isOperationComplete),
+                viewModel: .init(isActive: model.isOperationComplete()),
                 model: model,
                 configuration: configuration
             )
@@ -338,7 +338,7 @@ struct OperationProcessView: View {
                     model: model,
                     configuration: configuration
                 )
-                .allowsHitTesting(model.isOperationComplete)
+                .allowsHitTesting(model.isOperationComplete())
             }
         }
     }

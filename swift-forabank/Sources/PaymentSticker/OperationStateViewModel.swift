@@ -33,39 +33,84 @@ final public class OperationStateViewModel: ObservableObject {
         operation?.parameters.first(where: { $0.id == .amount })
     }
     
-    public var isOperationComplete: Bool {
+    public var product: Operation.Parameter.ProductSelector? {
+        
+        let product = operation?.parameters.first(where: { $0.id == .productSelector })
+        
+        switch product {
+        case let .productSelector(product):
+            return product
+            
+        default:
+            return nil
+        }
+    }
     
+    public var banner: Operation.Parameter.Sticker? {
+        
+        let product = operation?.parameters.first(where: { $0.id == .sticker })
+        
+        switch product {
+        case let .sticker(sticker):
+            return sticker
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var transferType: Operation.Parameter.Select? {
+        
+        let product = operation?.parameters.first(where: { $0.id == .transferType })
+        
+        switch product {
+        case let .select(select):
+            return select
+            
+        default:
+            return nil
+        }
+    }
+    
+    public func isOperationComplete() -> Bool {
+        
+        var complete: Bool = true
+        
         guard let parameters = operation?.parameters else {
             return false
         }
-        
-        var complete: Bool = true
-         
+    
         for parameter in parameters {
+            
+            if transferType?.id == .transferTypeSticker {
+                
+                if transferType?.value == "typeDeliveryCourier" {
+                    
+                    if let maxAmount = self.banner?.options.map({ $0.price }).max(),
+                       Double(self.product?.selectedProduct.balance ?? "0") ?? 0 < maxAmount {
+                        
+                        return false
+                    }
+                } else if transferType?.value == "typeDeliveryOffice" {
+                    
+                    if let minAmount = self.banner?.options.map({ $0.price }).min(),
+                       Double(self.product?.selectedProduct.balance ?? "0") ?? 0 < minAmount {
+                        
+                        complete = false
+                    }
+                }
+            }
+            
             switch parameter {
             case let .select(select):
+                
                 if select.value == nil {
                     
                     complete = false
                 }
                 
-            case let .productSelector(product):
-                
-                let banner = operation?.parameters.first(where: { $0.id == .sticker })
-                
-                switch banner {
-                case let .sticker(banner):
-                    
-                    if let minAmount = banner.options.map({ $0.price }).min(),
-                       Double(product.selectedProduct.balance) ?? 0 < minAmount {
-
-                        complete = false
-                    }
-                    
-                default: break
-                }
-                
-            default: break
+            default:
+                break
             }
         }
         
