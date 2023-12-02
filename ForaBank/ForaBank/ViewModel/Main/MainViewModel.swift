@@ -514,35 +514,8 @@ class MainViewModel: ObservableObject, Resetable {
                 case let .c2bSubscribeURL(url):
                     handleC2bSubscribeURL(url)
                     
-                case .url(_):
-                    
-                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
-                            
-                            self?.link = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                                self?.rootActions?.switchTab(.chat)
-                            }
-                            
-                        }, requisitsAction: { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            self.action.send(MainViewModelAction.Close.FullScreenSheet())
-                            let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
-                                self?.action.send(MainViewModelAction.Close.Link())
-                            })
-                            self.bind(paymentsViewModel)
-                            
-                            self.action.send(DelayWrappedAction(
-                                delayMS: 700,
-                                action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                            )
-                        })
-                        self.link = .failedView(failedView)
-                    }
+                case .url:
+                    handleURL()
                     
                 case .unknown:
                     
@@ -841,6 +814,40 @@ class MainViewModel: ObservableObject, Resetable {
             delayMS: 700,
             action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
         )
+    }
+    
+    private func handleURL() {
+        
+        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+            
+            let failedView = QRFailedViewModel(
+                model: self.model,
+                addCompanyAction: { [weak self] in
+                    
+                    self?.link = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        self?.rootActions?.switchTab(.chat)
+                    }
+                },
+                requisitsAction: { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    self.action.send(MainViewModelAction.Close.FullScreenSheet())
+                    let paymentsViewModel = PaymentsViewModel(model, service: .requisites, closeAction: { [weak self] in
+                        self?.action.send(MainViewModelAction.Close.Link())
+                    })
+                    self.bind(paymentsViewModel)
+                    
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 700,
+                        action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                    )
+                }
+            )
+            self.link = .failedView(failedView)
+        }
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
