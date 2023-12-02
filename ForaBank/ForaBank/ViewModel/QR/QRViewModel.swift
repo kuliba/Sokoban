@@ -127,7 +127,7 @@ class QRViewModel: ObservableObject {
                             
                             if let qrData = self?.string(from: image) {
                                 
-                                let result = Self.resolve(string: qrData)
+                                let result = ScanResult(string: qrData)
                                 
                                 self?.action.send(QRViewModelAction.Result(result: result))
                             }
@@ -154,7 +154,7 @@ class QRViewModel: ObservableObject {
                         if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
-                            let result = Self.resolve(string: qrData)
+                            let result = ScanResult(string: qrData)
                             
                             self?.action.send(QRViewModelAction.Result(result: result))
                             
@@ -184,7 +184,7 @@ class QRViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as QRScannerViewAction.Scanned:
-                    let result = Self.resolve(string: payload.value)
+                    let result = ScanResult(string: payload.value)
                     
                     self.action.send(QRViewModelAction.Result(result: result))
                     
@@ -252,35 +252,38 @@ extension QRViewModel {
 
 // MARK: - Resolvers
 
-extension QRViewModel {
+extension QRViewModel.ScanResult {
     
     // TODO: add tests
-    static func resolve(string: String) -> ScanResult {
+    init(string: String) {
         
         if let url = URL(string: string) {
             
             if url.absoluteString.contains("qr.nspk.ru") {
                 
-                return .c2bURL(url)
+                self = .c2bURL(url)
                 
             } else if url.absoluteString.contains("sub.nspk.ru") {
                 
-                return .c2bSubscribeURL(url)
+                self = .c2bSubscribeURL(url)
                 
             } else {
                 
-                return .url(url)
+                self = .url(url)
             }
             
         } else if let qrCode = QRCode(string: string) {
             
-            return .qrCode(qrCode)
+            self = .qrCode(qrCode)
             
         } else {
             
-            return .unknown
+            self = .unknown
         }
     }
+}
+
+extension QRViewModel {
     
     func qrFromPDF(path: URL) -> UIImage? {
         
