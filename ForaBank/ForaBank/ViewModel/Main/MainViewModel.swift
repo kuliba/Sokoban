@@ -636,18 +636,21 @@ class MainViewModel: ObservableObject, Resetable {
         self.action.send(MainViewModelAction.Close.FullScreenSheet())
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
             
-            let failedView = QRFailedViewModel(model: self.model, addCompanyAction: { [weak self] in
-                
-                self?.link = nil
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                    self?.rootActions?.switchTab(.chat)
+            let failedView = QRFailedViewModel(
+                model: self.model,
+                addCompanyAction: { [weak self] in
+                    
+                    self?.link = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        self?.rootActions?.switchTab(.chat)
+                    }
+                },
+                requisitsAction: { [weak self] in
+                    
+                    self?.fullScreenSheet = nil
+                    self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
                 }
-                
-            }, requisitsAction: { [weak self] in
-                
-                self?.fullScreenSheet = nil
-                self?.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
-            })
+            )
             self.link = .failedView(failedView)
         }
     }
