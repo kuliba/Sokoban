@@ -90,6 +90,18 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
     
+    private func openScanner() {
+        
+        let qrScannerModel = QRViewModel(
+            closeAction: { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+            }
+        )
+        bind(qrScannerModel)
+        fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+    }
+    
     private func bind() {
         
         action
@@ -152,15 +164,7 @@ class MainViewModel: ObservableObject, Resetable {
                     self.isTabBarHidden = false
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
-                    let qrScannerModel = QRViewModel(
-                        closeAction: { [weak self] in
-                            
-                            self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                        }
-                    )
-                    
-                    bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    self.openScanner()
                     
                 default:
                     break
@@ -334,15 +338,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 self.action.send(MainViewModelAction.Show.Contacts())
          
                             case .byQr:
-                                let qrScannerModel = QRViewModel(
-                                    closeAction: { [weak self] in
-                                        
-                                        self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                                    }
-                                )
-
-                                bind(qrScannerModel)
-                                fullScreenSheet = .init(type: .qrScanner(qrScannerModel)) 
+                                self.openScanner()
                             }
                             
                         default:
@@ -785,15 +781,7 @@ class MainViewModel: ObservableObject, Resetable {
                 switch action {
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
-                    let qrScannerModel = QRViewModel(
-                        closeAction: { [weak self] in
-                            
-                            self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                        }
-                    )
-                    
-                    bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    self.openScanner()
                     
                 default: break
                 }
