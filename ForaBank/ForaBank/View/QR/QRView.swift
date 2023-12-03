@@ -58,7 +58,7 @@ struct QRView: View {
                         }
                     }
                     
-                    ButtonSimpleView(viewModel: viewModel.clouseButton)
+                    ButtonSimpleView(viewModel: viewModel.closeButton)
                         .frame(height: 48)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 50)
