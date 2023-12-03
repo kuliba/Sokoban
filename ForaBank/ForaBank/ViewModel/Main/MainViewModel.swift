@@ -307,11 +307,11 @@ class MainViewModel: ObservableObject, Resetable {
                             case .card:
                                 
                                 let authProductsViewModel = AuthProductsViewModel(self.model,
-                                                                                      products: self.model.catalogProducts.value,
-                                                                                      dismissAction: { [weak self] in
-                                        self?.action.send(MainViewModelAction.Close.Link()) })
-                                    
-                                    self.link = .openCard(authProductsViewModel)
+                                                                                  products: self.model.catalogProducts.value,
+                                                                                  dismissAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.Close.Link()) })
+                                
+                                self.link = .openCard(authProductsViewModel)
                                 
                             default:
                                 break
@@ -340,7 +340,7 @@ class MainViewModel: ObservableObject, Resetable {
                                 
                             case .byPhone:
                                 self.action.send(MainViewModelAction.Show.Contacts())
-         
+                                
                             case .byQr:
                                 self.openScanner()
                             }
@@ -362,10 +362,12 @@ class MainViewModel: ObservableObject, Resetable {
                             switch payload.actionData {
                             case let payload as BannerActionDepositOpen:
                                 guard let depositId = Int(payload.depositProductId),
-                                      let openDepositViewModel: OpenDepositDetailViewModel = .init(depositId: depositId, model: model) else {
-                                    
-                                    return
-                                }
+                                      let openDepositViewModel = OpenDepositDetailViewModel(
+                                        depositId: depositId,
+                                        model: model
+                                      )
+                                else { return }
+                                
                                 self.link = .openDeposit(openDepositViewModel)
                                 
                             case _ as BannerActionDepositsList:
@@ -374,17 +376,23 @@ class MainViewModel: ObservableObject, Resetable {
                                 }))
                                 
                             case let payload as BannerActionMigTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                let paymentsViewModel = PaymentsViewModel(
+                                    source: .direct(phone: nil, countryId: payload.countryId),
+                                    model: model
+                                ) { [weak self] in
                                     
                                     self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                                 }
                                 bind(paymentsViewModel)
                                 
                                 self.action.send(MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-
+                                
                                 
                             case let payload as BannerActionContactTransfer:
-                                let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
+                                let paymentsViewModel = PaymentsViewModel(
+                                    source: .direct(phone: nil, countryId: payload.countryId),
+                                    model: model
+                                ) { [weak self] in
                                     
                                     guard let self else { return }
                                     
@@ -406,8 +414,8 @@ class MainViewModel: ObservableObject, Resetable {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
             default: break
             }
@@ -433,10 +441,16 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
+                        guard let walletViewModel = CurrencyWalletViewModel(
+                            currency: payload.code,
+                            currencyOperation: .buy,
+                            model: model,
+                            dismissAction: { [weak self] in
+                                
+                                self?.action.send(MainViewModelAction.Close.Link())
+                            }
+                        )
+                        else { return }
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
@@ -444,10 +458,16 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy:
                         
-                        guard let walletViewModel = CurrencyWalletViewModel(currency: payload.code, currencyOperation: .buy, model: model, dismissAction: { [weak self] in
-                            self?.action.send(MainViewModelAction.Close.Link())}) else {
-                            return
-                        }
+                        guard let walletViewModel = CurrencyWalletViewModel(
+                            currency: payload.code,
+                            currencyOperation: .buy,
+                            model: model,
+                            dismissAction: { [weak self] in
+                                
+                                self?.action.send(MainViewModelAction.Close.Link())
+                            }
+                        )
+                        else { return }
                         
                         model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList]))
                         model.action.send(ModelAction.Account.ProductList.Request())
@@ -473,9 +493,9 @@ class MainViewModel: ObservableObject, Resetable {
                         
                     default:
                         break
-                        
                     }
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
             
             if let collapsableSection = section as? MainSectionCollapsableViewModel {
                 
@@ -487,13 +507,13 @@ class MainViewModel: ObservableObject, Resetable {
                         var settings = model.settingsMainSections
                         settings.update(sectionType: collapsableSection.type, isCollapsed: isCollapsed)
                         model.settingsMainSectionsUpdate(settings)
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
             }
         }
     }
     
-    func bind(_ qrViewModel: QRViewModel ) {
+    func bind(_ qrViewModel: QRViewModel) {
         
         qrViewModel.action
             .compactMap { $0 as? QRViewModelAction.Result}
