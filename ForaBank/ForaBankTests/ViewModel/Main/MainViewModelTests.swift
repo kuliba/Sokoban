@@ -80,7 +80,13 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: { .init(closeAction: $0) },
+            makeQRScannerModel: {
+                
+                .init(
+                    closeAction: $0,
+                    qrResolver: QRViewModel.ScanResult.init
+                )
+            },
             onRegister: {}
         )
         
@@ -112,7 +118,13 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: { .init(closeAction: $0) },
+            makeQRScannerModel: {
+                
+                .init(
+                    closeAction: $0,
+                    qrResolver: QRViewModel.ScanResult.init
+                )
+            },
             onRegister: {}
         )
         

@@ -50,7 +50,7 @@ class QRViewModel: ObservableObject {
     
     convenience init(
         closeAction: @escaping () -> Void,
-        qrResolver: @escaping QRResolver = ScanResult.init
+        qrResolver: @escaping QRResolver
     ) {
         let closeButton = ButtonSimpleView.ViewModel(
             title: "Отмена",

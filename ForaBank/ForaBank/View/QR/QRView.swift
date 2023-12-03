@@ -264,7 +264,8 @@ extension QRCenterRectangleView {
 struct QRView_Previews: PreviewProvider {
     
     static var previews: some View {
-        QRView(viewModel: .init(closeAction: {}))
+        
+        QRView(viewModel: .init(closeAction: {}, qrResolver: QRViewModel.ScanResult.init))
     }
 }
 

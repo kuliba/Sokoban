@@ -344,14 +344,26 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: { .init(closeAction: $0) },
+                makeQRScannerModel: {
+                    
+                    .init(
+                        closeAction: $0,
+                        qrResolver: QRViewModel.ScanResult.init
+                    )
+                },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: { .init(closeAction: $0) },
+        makeQRScannerModel: {
+            
+            .init(
+                closeAction: $0,
+                qrResolver: QRViewModel.ScanResult.init
+            )
+        },
         onRegister: {}
     )
     
@@ -370,14 +382,26 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: { .init(closeAction: $0) },
+                makeQRScannerModel: {
+                    
+                    .init(
+                        closeAction: $0,
+                        qrResolver: QRViewModel.ScanResult.init
+                    )
+                },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: { .init(closeAction: $0) },
+        makeQRScannerModel: {
+            
+            .init(
+                closeAction: $0,
+                qrResolver: QRViewModel.ScanResult.init
+            )
+        },
         onRegister: {}
     )
     
@@ -397,14 +421,26 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: { .init(closeAction: $0) },
+                makeQRScannerModel: {
+                    
+                    .init(
+                        closeAction: $0,
+                        qrResolver: QRViewModel.ScanResult.init
+                    )
+                },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: { .init(closeAction: $0) },
+        makeQRScannerModel: {
+            
+            .init(
+                closeAction: $0,
+                qrResolver: QRViewModel.ScanResult.init
+            )
+        },
         onRegister: {}
     )
 }

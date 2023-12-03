@@ -80,14 +80,26 @@ extension PaymentsTransfersViewModel {
                 
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: { .init(closeAction: $0) },
+                makeQRScannerModel: {
+                    
+                    .init(
+                        closeAction: $0,
+                        qrResolver: QRViewModel.ScanResult.init
+                    )
+                },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: { .init(closeAction: $0) },
+        makeQRScannerModel: {
+            
+            .init(
+                closeAction: $0,
+                qrResolver: QRViewModel.ScanResult.init
+            )
+        },
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
