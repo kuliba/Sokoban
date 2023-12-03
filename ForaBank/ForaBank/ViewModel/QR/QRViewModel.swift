@@ -12,11 +12,14 @@ import AVFoundation
 
 class QRViewModel: ObservableObject {
     
+    typealias QRResolver = (String) -> ScanResult
+    
     let action: PassthroughSubject<Action, Never> = .init()
     let scanner: QRScannerView.ViewModel
     let title: String
     let subTitle: String
     private let model: Model
+    private let qrResolver: QRResolver
     
     var flashLight: FlashLight = .on
     @Published var buttons: [ButtonIconTextView.ViewModel]
@@ -30,21 +33,31 @@ class QRViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     
-    
-    init(scanner: QRScannerView.ViewModel, title: String, subTitle: String, buttons: [ButtonIconTextView.ViewModel], clouseButton: ButtonSimpleView.ViewModel, model: Model) {
+    init(
+        scanner: QRScannerView.ViewModel,
+        title: String,
+        subTitle: String,
+        buttons: [ButtonIconTextView.ViewModel],
+        clouseButton: ButtonSimpleView.ViewModel,
+        model: Model,
+        qrResolver: @escaping QRResolver
+    ) {
         self.scanner = scanner
         self.title = title
         self.subTitle = subTitle
         self.buttons = buttons
         self.clouseButton = clouseButton
         self.model = model
+        self.qrResolver = qrResolver
     }
     
-    convenience init(closeAction: @escaping () -> Void) {
-        
+    convenience init(
+        closeAction: @escaping () -> Void,
+        qrResolver: @escaping QRResolver = ScanResult.init
+    ) {
         let clouseButton = ButtonSimpleView.ViewModel(title: "Отмена", style: .gray, action: closeAction)
         
-        self.init(scanner: QRScannerView.ViewModel(), title: "Наведите камеру", subTitle: "на QR-код", buttons: [], clouseButton: clouseButton, model: Model.shared)
+        self.init(scanner: QRScannerView.ViewModel(), title: "Наведите камеру", subTitle: "на QR-код", buttons: [], clouseButton: clouseButton, model: Model.shared, qrResolver: qrResolver)
         
         self.buttons = createButtons()
         
