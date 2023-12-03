@@ -1027,7 +1027,7 @@ extension PaymentsTransfersViewModel {
         self.link = nil
     }
     
-    func openScanner() {
+    func openScannerAction() {
         
         self.link = nil
         self.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
