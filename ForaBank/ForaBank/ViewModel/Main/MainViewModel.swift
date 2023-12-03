@@ -104,7 +104,7 @@ class MainViewModel: ObservableObject, Resetable {
                             "\(type(of: self))",
                             { [weak self] in self?.link = nil })
                     else { return }
-
+                    
                     productProfileViewModel.rootActions = rootActions
                     bind(productProfileViewModel)
                     link = .productProfile(productProfileViewModel)
@@ -118,9 +118,9 @@ class MainViewModel: ObservableObject, Resetable {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-
+                    
                     model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
-                                        
+                    
                     // TODO: replace with injected factory
                     link = .userAccount(.init(
                         model: model,
@@ -138,33 +138,36 @@ class MainViewModel: ObservableObject, Resetable {
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
- 
+                    
                 case _ as MainViewModelAction.Close.Link:
                     self.link = nil
                     
                 case _ as MainViewModelAction.Close.Sheet:
                     self.sheet = nil
-
+                    
                 case _ as MainViewModelAction.Close.FullScreenSheet:
                     self.fullScreenSheet = nil
-
+                    
                 case _ as MainViewModelAction.ViewDidApear:
                     self.isTabBarHidden = false
                     
                 case _ as PaymentsViewModelAction.ScanQrCode:
-                    let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    })
-
+                    let qrScannerModel = QRViewModel(
+                        closeAction: { [weak self] in
+                            
+                            self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+                        }
+                    )
+                    
                     bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
-                                    
+                    
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
-
+            }
+            .store(in: &bindings)
+        
         action
             .compactMap({ $0 as? MainViewModelAction.Show.Requisites })
             .map(\.qrCode)
@@ -201,7 +204,7 @@ class MainViewModel: ObservableObject, Resetable {
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
-               
+                
             }).store(in: &bindings)
         
         action
@@ -213,7 +216,7 @@ class MainViewModel: ObservableObject, Resetable {
                 bind(contactsViewModel)
                 
                 sheet = .init(type: .byPhone(contactsViewModel))
-               
+                
             }).store(in: &bindings)
         
         action
@@ -222,7 +225,7 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 Just($0.action)
                     .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
-
+                
             })
             .sink(receiveValue: { [weak self] in
                 
@@ -331,10 +334,12 @@ class MainViewModel: ObservableObject, Resetable {
                                 self.action.send(MainViewModelAction.Show.Contacts())
          
                             case .byQr:
-                                
-                                let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                                })
+                                let qrScannerModel = QRViewModel(
+                                    closeAction: { [weak self] in
+                                        
+                                        self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+                                    }
+                                )
 
                                 bind(qrScannerModel)
                                 fullScreenSheet = .init(type: .qrScanner(qrScannerModel)) 
@@ -343,8 +348,8 @@ class MainViewModel: ObservableObject, Resetable {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
@@ -772,25 +777,28 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func bind(_ paymentsViewModel: PaymentsViewModel) {
-    
+        
         paymentsViewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
-            
-                switch action {
                 
+                switch action {
+                    
                 case _ as PaymentsViewModelAction.ScanQrCode:
-                    let qrScannerModel = QRViewModel.init(closeAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-                    })
-
+                    let qrScannerModel = QRViewModel(
+                        closeAction: { [weak self] in
+                            
+                            self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+                        }
+                    )
+                    
                     bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
                     
                 default: break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ productProfile: ProductProfileViewModel) {
