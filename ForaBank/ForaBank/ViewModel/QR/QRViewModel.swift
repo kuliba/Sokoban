@@ -12,14 +12,11 @@ import AVFoundation
 
 class QRViewModel: ObservableObject {
     
-    typealias QRResolver = (String) -> ScanResult
-    
     let action: PassthroughSubject<Action, Never> = .init()
     let scanner: QRScannerView.ViewModel
     let title: String
     let subTitle: String
     private let model: Model
-    private let qrResolver: QRResolver
     
     var flashLight: FlashLight = .on
     @Published var buttons: [ButtonIconTextView.ViewModel]
@@ -39,8 +36,7 @@ class QRViewModel: ObservableObject {
         subTitle: String,
         buttons: [ButtonIconTextView.ViewModel],
         closeButton: ButtonSimpleView.ViewModel,
-        model: Model,
-        qrResolver: @escaping QRResolver
+        model: Model
     ) {
         self.scanner = scanner
         self.title = title
@@ -48,8 +44,9 @@ class QRViewModel: ObservableObject {
         self.buttons = buttons
         self.closeButton = closeButton
         self.model = model
-        self.qrResolver = qrResolver
     }
+    
+    typealias QRResolver = (String) -> ScanResult
     
     convenience init(
         closeAction: @escaping () -> Void,
@@ -67,17 +64,16 @@ class QRViewModel: ObservableObject {
             subTitle: "на QR-код",
             buttons: [],
             closeButton: closeButton,
-            model: Model.shared,
-            qrResolver: qrResolver
+            model: Model.shared
         )
         
         self.buttons = createButtons()
         
-        bind()
+        bind(qrResolver: qrResolver)
         cameraAccess()
     }
     
-    func bind() {
+    func bind(qrResolver: @escaping QRResolver) {
         
         action
             .receive(on: DispatchQueue.main)
@@ -171,7 +167,7 @@ class QRViewModel: ObservableObject {
                             
                             if let qrData = self?.string(from: image) {
                                 
-                                let result = ScanResult(string: qrData)
+                                let result = qrResolver(qrData)
                                 
                                 self?.action.send(QRViewModelAction.Result(result: result))
                             }
@@ -198,7 +194,7 @@ class QRViewModel: ObservableObject {
                         if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
-                            let result = ScanResult(string: qrData)
+                            let result = qrResolver(qrData)
                             
                             self?.action.send(QRViewModelAction.Result(result: result))
                             
@@ -225,7 +221,7 @@ class QRViewModel: ObservableObject {
         scanner.action
             .compactMap { $0 as? QRScannerViewAction.Scanned }
             .map(\.value)
-            .map(ScanResult.init)
+            .map(qrResolver)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] result in
                 
