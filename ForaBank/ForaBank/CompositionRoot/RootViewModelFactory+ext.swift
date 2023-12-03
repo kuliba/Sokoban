@@ -88,9 +88,12 @@ private extension RootViewModelFactory {
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
+        let qrResolver: QRViewModel.QRResolver = QRViewModel.ScanResult.init
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            makeQRScannerModel: { .init(closeAction: $0, qrResolver: qrResolver) },
             onRegister: onRegister
         )
         

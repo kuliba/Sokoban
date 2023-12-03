@@ -12,6 +12,7 @@ import SwiftUI
 class MainViewModel: ObservableObject, Resetable {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -31,6 +32,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let makeQRScannerModel: MakeQRScannerModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -39,18 +41,21 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.makeQRScannerModel = makeQRScannerModel
         self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -64,6 +69,7 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.makeQRScannerModel = makeQRScannerModel
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -92,12 +98,10 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func openScanner() {
         
-        let qrScannerModel = QRViewModel(
-            closeAction: { [weak self] in
-                
-                self?.action.send(MainViewModelAction.Close.FullScreenSheet())
-            }
-        )
+        let qrScannerModel = makeQRScannerModel { [weak self] in
+            
+            self?.action.send(MainViewModelAction.Close.FullScreenSheet())
+        }
         bind(qrScannerModel)
         fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
     }

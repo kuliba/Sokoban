@@ -208,6 +208,7 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
+                makeQRScannerModel: { .init(closeAction: $0) },
                 onRegister: {}
             ),
             paymentsViewModel: .init(

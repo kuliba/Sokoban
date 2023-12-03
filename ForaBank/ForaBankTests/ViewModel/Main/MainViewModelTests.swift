@@ -77,7 +77,12 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = MainViewModel(model, makeProductProfileViewModel: { _,_,_  in nil }, onRegister: {})
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            makeQRScannerModel: { .init(closeAction: $0) },
+            onRegister: {}
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
@@ -104,7 +109,12 @@ final class MainViewModelTests: XCTestCase {
         )
         model.clientInfo.value = makeClientInfoDummy()
         
-        let sut = MainViewModel(model, makeProductProfileViewModel: { _,_,_  in nil }, onRegister: {})
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            makeQRScannerModel: { .init(closeAction: $0) },
+            onRegister: {}
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix

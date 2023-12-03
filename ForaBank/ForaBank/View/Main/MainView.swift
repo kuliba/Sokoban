@@ -350,6 +350,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
+        makeQRScannerModel: { .init(closeAction: $0) },
         onRegister: {}
     )
     
@@ -374,6 +375,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
+        makeQRScannerModel: { .init(closeAction: $0) },
         onRegister: {}
     )
     
@@ -399,6 +401,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
+        makeQRScannerModel: { .init(closeAction: $0) },
         onRegister: {}
     )
 }
