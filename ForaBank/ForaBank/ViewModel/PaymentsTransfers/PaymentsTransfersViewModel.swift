@@ -157,9 +157,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     
                     // на экране платежей верхний переход
-                    let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    })
+                    let qrScannerModel = QRViewModel(
+                        closeAction: { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                        }
+                    )
                     
                     self.bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
@@ -365,9 +368,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .qrPayment:
                             
                             // на экране платежей нижний переход
-                            let qrScannerModel = QRViewModel(closeAction: {
-                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                            })
+                            let qrScannerModel = QRViewModel(
+                                closeAction: { [weak self] in
+                                    
+                                    self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                                }
+                            )
                             
                             self.bind(qrScannerModel)
                             fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
@@ -532,9 +538,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     
                     self.link = nil
                     
-                    let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    })
+                    let qrScannerModel = QRViewModel(
+                        closeAction: { [weak self] in
+                            
+                            self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+                        }
+                    )
                     
                     self.bind(qrScannerModel)
                     fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
