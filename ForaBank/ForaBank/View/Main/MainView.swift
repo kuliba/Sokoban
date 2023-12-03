@@ -238,7 +238,7 @@ extension MainView {
 extension MainView {
     
     struct UserAccountButton: View {
-    
+        
         @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
         
         var body: some View {
@@ -344,6 +344,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
+                makeQRScannerModel: { .init(closeAction: $0) },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -369,6 +370,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
+                makeQRScannerModel: { .init(closeAction: $0) },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -395,6 +397,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
+                makeQRScannerModel: { .init(closeAction: $0) },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,

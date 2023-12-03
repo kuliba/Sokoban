@@ -213,7 +213,8 @@ final class RootViewModelTests: XCTestCase {
             ),
             paymentsViewModel: .init(
                 model: model,
-                makeProductProfileViewModel: { _,_,_ in nil }
+                makeProductProfileViewModel: { _,_,_ in nil },
+                makeQRScannerModel: { .init(closeAction: $0) }
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

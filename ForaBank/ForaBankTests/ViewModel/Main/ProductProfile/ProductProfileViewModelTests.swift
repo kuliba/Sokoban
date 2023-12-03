@@ -551,7 +551,8 @@ final class ProductProfileViewModelTests: XCTestCase {
         trackForMemoryLeaks(model, file: file, line: line)
 
         return .init(
-            model,
+            model, 
+            makeQRScannerModel: { .init(closeAction: $0 )},
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -582,6 +583,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
+                makeQRScannerModel: { .init(closeAction: $0 )},
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

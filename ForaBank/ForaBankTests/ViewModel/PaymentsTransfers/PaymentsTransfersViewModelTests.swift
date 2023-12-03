@@ -127,12 +127,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 ProductProfileViewModel(
                     model,
+                    makeQRScannerModel: { .init(closeAction: $0 )},
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction
                 )
-            }
+            },
+            makeQRScannerModel: { .init(closeAction: $0) }
         )
         
         // TODO: restore memory leaks tracking after Model fix

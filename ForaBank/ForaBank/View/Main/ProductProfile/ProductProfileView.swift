@@ -387,6 +387,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
+        makeQRScannerModel: { .init(closeAction: $0) },
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -397,6 +398,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
+        makeQRScannerModel: { .init(closeAction: $0) },
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

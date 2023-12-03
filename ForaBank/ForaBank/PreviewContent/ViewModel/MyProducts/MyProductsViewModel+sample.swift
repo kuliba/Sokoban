@@ -21,6 +21,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
+                makeQRScannerModel: { .init(closeAction: $0) },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -44,6 +45,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
+                makeQRScannerModel: { .init(closeAction: $0) },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,

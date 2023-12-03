@@ -14,6 +14,8 @@ import Tagged
 
 class ProductProfileViewModel: ObservableObject {
     
+    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
+    
     typealias CardAction = CardDomain.CardAction
     typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
@@ -46,6 +48,7 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
+    private let makeQRScannerModel: MakeQRScannerModel
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -64,6 +67,7 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
+         makeQRScannerModel: @escaping MakeQRScannerModel,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -76,6 +80,7 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
+        self.makeQRScannerModel = makeQRScannerModel
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -90,6 +95,7 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -107,7 +113,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, makeQRScannerModel: makeQRScannerModel, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -332,6 +338,7 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     makeProductProfileViewModel: makeProductProfileViewModel,
+                    makeQRScannerModel: makeQRScannerModel,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1456,6 +1463,7 @@ private extension ProductProfileViewModel {
         
         .init(
             model,
+            makeQRScannerModel: makeQRScannerModel,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
