@@ -62,6 +62,28 @@ extension RootViewModelFactory {
     }
 }
 
+// Mocks for Sber QR with the shape of `QRViewModel.QRResolver`
+private func fail(
+    _ string: String = UUID().uuidString
+) -> QRViewModel.ScanResult {
+    
+    .sberQR(.init(string: "https://platiqr.ru/?fail")!)
+}
+
+private func withAmount(
+    _ string: String = UUID().uuidString
+) -> QRViewModel.ScanResult {
+    
+    .sberQR(.init(string: "https://platiqr.ru/?uuid=22428")!)
+}
+
+private func withoutAmount(
+    _ string: String = UUID().uuidString
+) -> QRViewModel.ScanResult {
+
+    .sberQR(.init(string: "https://platiqr.ru/?uuid=1000101124")!)
+}
+
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
@@ -90,6 +112,8 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
+    typealias GetSberQRDataCompletion = (Result<Data, Error>) -> Void
+    typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
     typealias OnRegister = () -> Void
     
     static func make(
@@ -99,10 +123,13 @@ private extension RootViewModelFactory {
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
+        let getSberQRData = getSberQRDataStub
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
+            getSberQRData: getSberQRData,
             onRegister: onRegister
         )
         
@@ -137,5 +164,19 @@ private extension RootViewModelFactory {
             model,
             showLoginAction: showLoginAction
         )
+    }
+    
+    private static func getSberQRDataStub(
+        url: URL,
+        completion: @escaping GetSberQRDataCompletion
+    ) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            
+            if url.absoluteString.contains("fail") {
+                completion(.failure(NSError(domain: "GetSberQRData Failure", code: -1)))
+            } else {
+                completion(.success(.init()))
+            }
+        }
     }
 }

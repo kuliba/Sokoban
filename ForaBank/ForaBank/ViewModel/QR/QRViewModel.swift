@@ -279,6 +279,7 @@ extension QRViewModel {
         case qrCode(QRCode)
         case c2bURL(URL)
         case c2bSubscribeURL(URL)
+        case sberQR(URL)
         case url(URL)
         case unknown
     }

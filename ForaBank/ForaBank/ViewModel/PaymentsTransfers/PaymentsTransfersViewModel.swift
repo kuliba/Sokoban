@@ -733,6 +733,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 case let .c2bSubscribeURL(url):
                     handleC2bSubscribeURL(url)
                     
+                case let .sberQR(url):
+                    handleSberQRURL(url)
+                    
                 case .url:
                     handleURL()
                     
@@ -907,6 +910,12 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             delayMS: 700,
             action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
         )
+    }
+    
+    private func handleSberQRURL(_ url: URL) {
+        
+        action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        rootActions?.spinner.show()
     }
     
     private func handleURL() {

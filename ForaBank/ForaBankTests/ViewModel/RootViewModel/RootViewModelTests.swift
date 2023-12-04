@@ -215,6 +215,7 @@ final class RootViewModelTests: XCTestCase {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
                 onRegister: {}
             ),
             paymentsViewModel: .init(

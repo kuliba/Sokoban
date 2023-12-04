@@ -87,6 +87,7 @@ final class MainViewModelTests: XCTestCase {
                     qrResolver: QRViewModel.ScanResult.init
                 )
             },
+            getSberQRData: { _,_ in },
             onRegister: {}
         )
         
@@ -125,6 +126,7 @@ final class MainViewModelTests: XCTestCase {
                     qrResolver: QRViewModel.ScanResult.init
                 )
             },
+            getSberQRData: { _,_ in },
             onRegister: {}
         )
         

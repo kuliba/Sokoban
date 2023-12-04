@@ -364,6 +364,7 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
         onRegister: {}
     )
     
@@ -402,6 +403,7 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
         onRegister: {}
     )
     
@@ -441,6 +443,7 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
         onRegister: {}
     )
 }
