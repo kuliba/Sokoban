@@ -134,6 +134,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                             qrResolver: QRViewModel.ScanResult.init
                         )
                     },
+                    getSberQRData: { _,_ in },
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
@@ -146,7 +147,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                     closeAction: $0,
                     qrResolver: QRViewModel.ScanResult.init
                 )
-            }
+            },
+            getSberQRData: { _,_ in }
         )
         
         // TODO: restore memory leaks tracking after Model fix

@@ -350,7 +350,8 @@ extension MainViewModel {
                         closeAction: $0,
                         qrResolver: QRViewModel.ScanResult.init
                     )
-                },
+                }, 
+                getSberQRData: { _,_ in },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -390,6 +391,7 @@ extension MainViewModel {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -430,6 +432,7 @@ extension MainViewModel {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,

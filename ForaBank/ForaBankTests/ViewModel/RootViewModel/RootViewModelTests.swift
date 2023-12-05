@@ -227,7 +227,8 @@ final class RootViewModelTests: XCTestCase {
                         closeAction: $0,
                         qrResolver: QRViewModel.ScanResult.init
                     )
-                }
+                },
+                getSberQRData: { _,_ in }
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

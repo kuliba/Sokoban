@@ -15,6 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
+    typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -52,12 +53,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
+    private let getSberQRData: GetSberQRData
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
+        getSberQRData: @escaping GetSberQRData,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -72,6 +75,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
+        self.getSberQRData = getSberQRData
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -86,6 +90,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
+        getSberQRData: @escaping GetSberQRData,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -96,6 +101,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
+        self.getSberQRData = getSberQRData
         
         self.navButtonsRight = navButtonsRight
         
@@ -916,6 +922,34 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         
         action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
         rootActions?.spinner.show()
+        
+        getSberQRData(url) { [weak self] result in
+            
+            guard let self else { return }
+            
+            self.rootActions?.spinner.hide()
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                switch result {
+                case .failure:
+                    
+                    self?.alert = .init(
+                        title: "Ошибка",
+                        message: "Возникла техническая ошибка",
+                        primary: .init(
+                            type: .default,
+                            title: "OK",
+                            action: { [weak self] in self?.alert = nil }
+                        )
+                    )
+                    
+                case let .success(data):
+                    // self?.link = .??
+                    break
+                }
+            }
+        }
     }
     
     private func handleURL() {
