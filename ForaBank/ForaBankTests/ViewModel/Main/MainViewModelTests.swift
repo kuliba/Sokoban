@@ -145,6 +145,7 @@ final class MainViewModelTests: XCTestCase {
                 
                 completion(getSberQRDataResultStub)
             },
+            makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
             onRegister: {}
         )
         
@@ -184,6 +185,7 @@ final class MainViewModelTests: XCTestCase {
                 )
             },
             getSberQRData: { _,_ in },
+            makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
             onRegister: {}
         )
         

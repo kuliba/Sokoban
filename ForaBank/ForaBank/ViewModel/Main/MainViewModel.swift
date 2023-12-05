@@ -14,6 +14,7 @@ class MainViewModel: ObservableObject, Resetable {
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
     typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
+    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -35,6 +36,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
     private let getSberQRData: GetSberQRData
+    private let makeSberQRPaymentViewModel: MakeSberQRPaymentViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -45,6 +47,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
@@ -53,6 +56,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
+        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
         self.onRegister = onRegister
     }
     
@@ -61,6 +65,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -76,6 +81,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
+        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -749,15 +755,15 @@ class MainViewModel: ObservableObject, Resetable {
             
             DispatchQueue.main.async { [weak self] in
                 
+                guard let self else { return }
+                
                 switch result {
                 case .failure:
-                    self?.alert = self?.techErrorAlert()
+                    self.alert = self.techErrorAlert()
                     
                 case let .success(sberQRData):
-                    self?.link = .sberQRPayment(.init(
-                        sberQRURL: url,
-                        sberQRData: sberQRData
-                    ))
+                    let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
+                    self.link = .sberQRPayment(viewModel)
                 }
             }
         }

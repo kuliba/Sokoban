@@ -354,7 +354,8 @@ extension MainViewModel {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 }, 
-                getSberQRData: { _,_ in },
+                getSberQRData: { _,_ in }, 
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -369,6 +370,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -395,6 +397,7 @@ extension MainViewModel {
                     )
                 },
                 getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -409,6 +412,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -436,6 +440,7 @@ extension MainViewModel {
                     )
                 },
                 getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -450,6 +455,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
 }

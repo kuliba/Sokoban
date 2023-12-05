@@ -46,12 +46,15 @@ extension RootViewModelFactory {
         
         let getSberQRData = getSberQRDataStub
         
+        let makeSberQRPaymentViewModel = SberQRPaymentViewModel.init
+        
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
                 model,
                 makeQRScannerModel: makeQRScannerModel,
                 getSberQRData: getSberQRData,
+                makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
                 rootView: $1,
@@ -64,6 +67,7 @@ extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
     }
@@ -136,6 +140,7 @@ private extension RootViewModelFactory {
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
     typealias GetSberQRDataCompletion = (Result<Data, Error>) -> Void
     typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
+    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
     typealias OnRegister = () -> Void
     
     static func make(
@@ -143,6 +148,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
@@ -151,6 +157,7 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
             onRegister: onRegister
         )
         
@@ -158,7 +165,8 @@ private extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData
+            getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel
         )
         
         let chatViewModel = ChatViewModel()
