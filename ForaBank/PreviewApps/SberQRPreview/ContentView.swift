@@ -9,55 +9,45 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject private var navigationModel: NavigationModel
+    @ObservedObject private var routeModel: RouteModel
+    
     private let composer: Composer
     
-    init(navigation: Navigation? = nil) {
+    init(route: Route = .empty) {
         
-        let composer = Composer(navigation: navigation)
+        let composer = Composer(route: route)
         self.composer = composer
-        self.navigationModel = composer.navigationModel
+        self.routeModel = composer.routeModel
     }
     
     var body: some View {
         
         composer.makeMainView()
             .alert(
-                item: navigationModel.alertBinding,
+                item: routeModel.alertBinding,
                 content: composer.makeAlertView
             )
             .fullScreenCover(
-                item: navigationModel.fullScreenCoverBinding,
+                item: routeModel.fullScreenCoverBinding,
                 content: composer.makeFullScreenCoverView
             )
             .navigationDestination(
-                item: navigationModel.destinationBinding,
+                item: routeModel.destinationBinding,
                 content: composer.makeDestinationView
             )
             .sheet(
-                item: navigationModel.sheetBinding,
+                item: routeModel.sheetBinding,
                 content: composer.makeSheet
             )
     }
 }
 
-private extension NavigationModel {
+private extension RouteModel {
     
-    var alertBinding: Binding<Navigation.Alert?> {
+    var destinationBinding: Binding<Route.Destination?> {
         
         .init(
-            get: { [weak self] in self?.navigation?.alert },
-            set: { [weak self] in
-                
-                if $0 == nil { self?.resetAlert() }
-            }
-        )
-    }
-    
-    var destinationBinding: Binding<Navigation.Destination?> {
-        
-        .init(
-            get: { [weak self] in self?.navigation?.destination },
+            get: { [weak self] in self?.route.destination },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetDestination() }
@@ -65,10 +55,21 @@ private extension NavigationModel {
         )
     }
     
-    var fullScreenCoverBinding: Binding<Navigation.FullScreenCover?> {
+    var alertBinding: Binding<Route.Modal.Alert?> {
         
         .init(
-            get: { [weak self] in self?.navigation?.fullScreenCover },
+            get: { [weak self] in self?.route.alert },
+            set: { [weak self] in
+                
+                if $0 == nil { self?.resetAlert() }
+            }
+        )
+    }
+    
+    var fullScreenCoverBinding: Binding<Route.Modal.FullScreenCover?> {
+        
+        .init(
+            get: { [weak self] in self?.route.fullScreenCover },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetFullScreenCover() }
@@ -76,10 +77,10 @@ private extension NavigationModel {
         )
     }
     
-    var sheetBinding: Binding<Navigation.Sheet?> {
+    var sheetBinding: Binding<Route.Modal.Sheet?> {
         
         .init(
-            get: { [weak self] in self?.navigation?.sheet },
+            get: { [weak self] in self?.route.sheet },
             set: { [weak self] in
                 
                 if $0 == nil { self?.resetSheet() }
