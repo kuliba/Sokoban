@@ -168,6 +168,9 @@ struct MainView: View {
             PaymentsServicesOperatorsView(viewModel: viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
+            
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
         }
     }
     

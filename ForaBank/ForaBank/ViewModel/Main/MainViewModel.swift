@@ -762,8 +762,8 @@ class MainViewModel: ObservableObject, Resetable {
                         )
                     )
                     
-                case let .success(data):
-                    self?.link = .messages(.sample)
+                case let .success(sberQRData):
+                    self?.link = .sberQRPayment(.init(sberQRData))
                 }
             }
         }
@@ -1076,7 +1076,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-
+        case sberQRPayment(SberQRPaymentViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {

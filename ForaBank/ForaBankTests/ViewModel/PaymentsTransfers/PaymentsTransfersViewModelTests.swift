@@ -98,6 +98,47 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [nil, .template, nil])
     }
     
+    // MARK: SBER QR
+    
+    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataFailure() throws {
+        
+        let (sut, _) = makeSUT(
+            getSberQRDataResultStub: .failure(anyError())
+        )
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        try sut.scanAndWait()
+                
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка"])
+    }
+
+    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataFailure() throws {
+        
+        let (sut, _) = makeSUT(
+            getSberQRDataResultStub: .failure(anyError())
+        )
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        
+        try sut.scanAndWait()
+        try sut.tapPrimaryAlertButton()
+                
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка", nil])
+    }
+
+    func test_sberQR_should() throws {
+        
+        let (sut, _) = makeSUT(
+//            getSberQRDataResultStub: .failure(anyError())
+        )
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        try sut.scanAndWait()
+                
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка"])
+    }
+
     // MARK: - Helpers
     
     private func makeTwoProducts() -> (ProductData, ProductData) {
@@ -108,6 +149,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
+        getSberQRDataResultStub: Result<Data, Error> = .success(.empty),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
@@ -134,7 +176,10 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                             qrResolver: QRViewModel.ScanResult.init
                         )
                     },
-                    getSberQRData: { _,_ in },
+                    getSberQRData: { _, completion in
+                        
+                        completion(getSberQRDataResultStub)
+                    },
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
@@ -148,7 +193,10 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                     qrResolver: QRViewModel.ScanResult.init
                 )
             },
-            getSberQRData: { _,_ in }
+            getSberQRData: { _, completion in
+                
+                completion(getSberQRDataResultStub)
+            }
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -232,6 +280,62 @@ extension PaymentsTransfersViewModel {
         default:
             return nil
         }
+    }
+    
+    var qrScanner: QRViewModel? {
+        
+        guard case let .qrScanner(qrScanner) = fullScreenSheet?.type
+        else { return nil }
+        
+        return qrScanner
+    }
+    
+    func tapQRButtonAndWait(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let qrPaymentButton = try XCTUnwrap(
+            sections
+                .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
+                .first?
+                .paymentButtons
+                .first { $0.type == .qrPayment },
+            "Expected to have QR BUtton but got nil.",
+            file: file, line: line
+        )
+        
+        qrPaymentButton.action()
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func scanAndWait(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try tapQRButtonAndWait(timeout: timeout, file: file, line: line)
+        
+        let qrScanner = try XCTUnwrap(qrScanner, "Expected to have a QR Scanner but got nil.", file: file, line: line)
+        let result = QRViewModelAction.Result(result: .sberQR(anyURL()))
+        qrScanner.action.send(result)
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+    
+    func tapPrimaryAlertButton(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let alert = try XCTUnwrap(alert, "Expected to have alert but got nil.", file: file, line: line)
+        alert.primary.action()
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
 }
 
