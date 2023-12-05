@@ -107,6 +107,7 @@ final class MainViewModelTests: XCTestCase {
 
     func test_sberQR_shouldNavigateToSberQRPaymentWithData() throws {
         
+        let sberQRURL = anyURL()
         let sberQRData = anyData()
         let (sut, _) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
@@ -114,9 +115,9 @@ final class MainViewModelTests: XCTestCase {
         let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
         XCTAssertNoDiff(navigationSpy.values, [nil])
         
-        try sut.scanAndWait()
+        try sut.scanAndWait(sberQRURL)
         
-        XCTAssertNoDiff(navigationSpy.values, [nil, .sberQRPayment(.init(sberQRData))])
+        XCTAssertNoDiff(navigationSpy.values, [nil, .sberQRPayment(sberQRURL, sberQRData)])
     }
 
     // MARK: - Helpers
@@ -279,16 +280,20 @@ private extension MainViewModel.Link {
             return .templates
 
         case let .sberQRPayment(sberQRPayment):
-            return .sberQRPayment(sberQRPayment.sberQRData)
+            return .sberQRPayment(
+                sberQRPayment.sberQRURL, 
+                sberQRPayment.sberQRData
+            )
 
-        default:         return .other
+        default:         
+            return .other
         }
     }
     
     enum Case: Equatable {
         
         case templates
-        case sberQRPayment(Data)
+        case sberQRPayment(URL, Data)
         case other
     }
 }
@@ -344,6 +349,7 @@ private extension MainViewModel {
     }
     
     func scanAndWait(
+        _ url: URL = anyURL(),
         timeout: TimeInterval = 0.05,
         file: StaticString = #file,
         line: UInt = #line
@@ -353,7 +359,7 @@ private extension MainViewModel {
         fastPayment.tapOpenScanner()
         
         let qrScanner = try XCTUnwrap(qrScanner, "Expected to have a QR Scanner but got nil.", file: file, line: line)
-        let result = QRViewModelAction.Result(result: .sberQR(anyURL()))
+        let result = QRViewModelAction.Result(result: .sberQR(url))
         qrScanner.action.send(result)
 
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)

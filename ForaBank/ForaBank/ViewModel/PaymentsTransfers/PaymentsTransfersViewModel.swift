@@ -936,7 +936,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     self?.alert = self?.techErrorAlert()
 
                 case let .success(sberQRData):
-                    self?.link = .sberQRPayment(.init(sberQRData))
+                    self?.link = .sberQRPayment(.init(
+                        sberQRURL: url,
+                        sberQRData: sberQRData
+                    ))
                 }
             }
         }
