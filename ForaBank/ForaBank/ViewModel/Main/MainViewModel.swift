@@ -755,17 +755,22 @@ class MainViewModel: ObservableObject, Resetable {
             
             DispatchQueue.main.async { [weak self] in
                 
-                guard let self else { return }
-                
-                switch result {
-                case .failure:
-                    self.alert = self.techErrorAlert()
-                    
-                case let .success(sberQRData):
-                    let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
-                    self.link = .sberQRPayment(viewModel)
-                }
+                self?.handleGetSberQRDataResult(url, result)
             }
+        }
+    }
+    
+    private func handleGetSberQRDataResult(
+        _ url: URL,
+        _ result: Result<Data, Error>
+    ) {
+        switch result {
+        case .failure:
+            alert = techErrorAlert()
+            
+        case let .success(sberQRData):
+            let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
+            link = .sberQRPayment(viewModel)
         }
     }
     
