@@ -720,7 +720,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     func bind(_ qrViewModel: QRViewModel) {
         
         qrViewModel.action
-            .compactMap { $0 as? QRViewModelAction.Result}
+            .compactMap { $0 as? QRViewModelAction.Result }
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] payload in
                 
