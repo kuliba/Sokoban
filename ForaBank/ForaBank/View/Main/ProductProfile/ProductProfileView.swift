@@ -395,6 +395,7 @@ extension ProductProfileViewModel {
             )
         },
         getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -413,6 +414,7 @@ extension ProductProfileViewModel {
             )
         },
         getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

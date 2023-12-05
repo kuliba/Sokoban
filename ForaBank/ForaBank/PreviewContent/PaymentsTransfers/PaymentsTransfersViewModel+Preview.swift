@@ -88,6 +88,7 @@ extension PaymentsTransfersViewModel {
                     )
                 },
                 getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -102,7 +103,8 @@ extension PaymentsTransfersViewModel {
             )
         },
         getSberQRData: { _,_ in },
-        navButtonsRight: [
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
     )

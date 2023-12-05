@@ -16,6 +16,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
     typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
+    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -54,6 +55,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
     private let getSberQRData: GetSberQRData
+    private let makeSberQRPaymentViewModel: MakeSberQRPaymentViewModel
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -61,6 +63,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -76,7 +79,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
-        
+        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -91,6 +95,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -102,7 +107,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
-        
+        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+
         self.navButtonsRight = navButtonsRight
         
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsTransfersViewModel initialized")
@@ -931,15 +937,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
             DispatchQueue.main.async { [weak self] in
                 
+                guard let self else { return }
+                
                 switch result {
                 case .failure:
-                    self?.alert = self?.techErrorAlert()
-
+                    self.alert = self.techErrorAlert()
+                    
                 case let .success(sberQRData):
-                    self?.link = .sberQRPayment(.init(
-                        sberQRURL: url,
-                        sberQRData: sberQRData
-                    ))
+                    let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
+                    self.link = .sberQRPayment(viewModel)
                 }
             }
         }
