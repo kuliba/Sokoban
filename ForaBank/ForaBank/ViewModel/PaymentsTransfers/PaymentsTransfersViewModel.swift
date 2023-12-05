@@ -933,22 +933,26 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 switch result {
                 case .failure:
-                    
-                    self?.alert = .init(
-                        title: "Ошибка",
-                        message: "Возникла техническая ошибка",
-                        primary: .init(
-                            type: .default,
-                            title: "OK",
-                            action: { [weak self] in self?.alert = nil }
-                        )
-                    )
-                    
+                    self?.alert = self?.techErrorAlert()
+
                 case let .success(sberQRData):
                     self?.link = .sberQRPayment(.init(sberQRData))
                 }
             }
         }
+    }
+    
+    private func techErrorAlert() -> Alert.ViewModel {
+        
+        .init(
+            title: "Ошибка",
+            message: "Возникла техническая ошибка",
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: { [weak self] in self?.alert = nil }
+            )
+        )
     }
     
     private func handleURL() {
