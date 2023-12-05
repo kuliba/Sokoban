@@ -34,10 +34,18 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
+        let qrResolver: QRViewModel.QRResolver = QRViewModel.ScanResult.init
+        
+        let makeQRScannerModel: MakeQRScannerModel = {
+            
+            .init(closeAction: $0, qrResolver: qrResolver)
+        }
+        
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
                 model,
+                makeQRScannerModel: makeQRScannerModel,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
                 rootView: $1,
@@ -48,6 +56,7 @@ extension RootViewModelFactory {
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            makeQRScannerModel: makeQRScannerModel,
             onRegister: resetCVVPINActivation
         )
     }
@@ -80,23 +89,27 @@ private extension RootViewModelFactory {
     }
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
     typealias OnRegister = () -> Void
     
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            makeQRScannerModel: makeQRScannerModel,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: makeProductProfileViewModel
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makeQRScannerModel: makeQRScannerModel
         )
         
         let chatViewModel = ChatViewModel()

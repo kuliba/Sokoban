@@ -14,7 +14,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    
+    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     lazy var userAccountButton: MainViewModel.UserAccountButtonViewModel = .init(
@@ -50,11 +51,13 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let makeQRScannerModel: MakeQRScannerModel
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -68,6 +71,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.makeQRScannerModel = makeQRScannerModel
         
         self.navButtonsRight = createNavButtonsRight()
         
@@ -81,6 +85,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeQRScannerModel: @escaping MakeQRScannerModel,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -90,6 +95,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
+        self.makeQRScannerModel = makeQRScannerModel
         
         self.navButtonsRight = navButtonsRight
         
@@ -112,6 +118,16 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         if mode == .normal {
             isTabBarHidden = false
         }
+    }
+    
+    private func openScanner() {
+        
+        let qrScannerModel = makeQRScannerModel { [weak self] in
+            
+            self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
+        }
+        bind(qrScannerModel)
+        fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
     }
     
     private func bind() {
@@ -155,14 +171,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                     ))
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
-                    
                     // на экране платежей верхний переход
-                    let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    })
-                    
-                    self.bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    self.openScanner()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
@@ -363,14 +373,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                             
                         case .qrPayment:
-                            
                             // на экране платежей нижний переход
-                            let qrScannerModel = QRViewModel(closeAction: {
-                                self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                            })
-                            
-                            self.bind(qrScannerModel)
-                            fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                            self.openScanner()
                             
                         case .service, .internet:
                             
@@ -528,16 +532,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as PaymentsViewModelAction.ScanQrCode:
-                    
+                case _ as PaymentsViewModelAction.ScanQrCode:                    
                     self.link = nil
-                    
-                    let qrScannerModel = QRViewModel.init(closeAction: {
-                        self.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
-                    })
-                    
-                    self.bind(qrScannerModel)
-                    fullScreenSheet = .init(type: .qrScanner(qrScannerModel))
+                    self.openScanner()
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
                     let paymentsViewModel = PaymentsViewModel(source: payload.source, model: model) { [weak self] in
@@ -1018,7 +1015,7 @@ extension PaymentsTransfersViewModel {
         self.link = nil
     }
     
-    func openScanner() {
+    func openScannerAction() {
         
         self.link = nil
         self.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())

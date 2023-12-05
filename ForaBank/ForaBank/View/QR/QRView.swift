@@ -58,7 +58,7 @@ struct QRView: View {
                         }
                     }
                     
-                    ButtonSimpleView(viewModel: viewModel.clouseButton)
+                    ButtonSimpleView(viewModel: viewModel.closeButton)
                         .frame(height: 48)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 50)
@@ -264,7 +264,8 @@ extension QRCenterRectangleView {
 struct QRView_Previews: PreviewProvider {
     
     static var previews: some View {
-        QRView(viewModel: .init(closeAction: {}))
+        
+        QRView(viewModel: .init(closeAction: {}, qrResolver: QRViewModel.ScanResult.init))
     }
 }
 

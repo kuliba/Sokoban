@@ -229,7 +229,7 @@ struct PaymentsTransfersView: View {
             with: .with(
                 title: "Транспорт",
                 navLeadingAction: viewModel.dismiss,
-                navTrailingAction: viewModel.openScanner
+                navTrailingAction: viewModel.openScannerAction
             )
         )
     }

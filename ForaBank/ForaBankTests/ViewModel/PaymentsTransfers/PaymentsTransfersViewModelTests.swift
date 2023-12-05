@@ -127,10 +127,24 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 ProductProfileViewModel(
                     model,
+                    makeQRScannerModel: {
+                        
+                        .init(
+                            closeAction: $0,
+                            qrResolver: QRViewModel.ScanResult.init
+                        )
+                    },
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction
+                )
+            },
+            makeQRScannerModel: {
+                
+                .init(
+                    closeAction: $0,
+                    qrResolver: QRViewModel.ScanResult.init
                 )
             }
         )
