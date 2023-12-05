@@ -12,9 +12,6 @@ import SwiftUI
 class MainViewModel: ObservableObject, Resetable {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
-    typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
-    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -769,7 +766,11 @@ class MainViewModel: ObservableObject, Resetable {
             alert = techErrorAlert()
             
         case let .success(sberQRData):
-            let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
+            let viewModel = makeSberQRPaymentViewModel(
+                url,
+                sberQRData
+            ) { [weak self] in self?.handleSberQRPaymentResult($0) }
+            
             link = .sberQRPayment(viewModel)
         }
     }
@@ -785,6 +786,29 @@ class MainViewModel: ObservableObject, Resetable {
                 action: { [weak self] in self?.alert = nil }
             )
         )
+    }
+    
+    private func handleSberQRPaymentResult(
+        _ result: Result<Data, Error>
+    ) {
+        link = nil
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            switch result {
+            case .failure:
+                self.alert = self.techErrorAlert()
+                
+            case let .success(success):
+                
+                #warning("add success screen")
+                _ = success
+                // let successViewModel = Payments.Success(with: success)
+                // self.fullScreenSheet = .success(successViewModel)
+            }
+        }
     }
     
     private func handleURL() {

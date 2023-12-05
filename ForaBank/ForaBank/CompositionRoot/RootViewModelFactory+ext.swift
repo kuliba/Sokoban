@@ -97,10 +97,6 @@ private extension RootViewModelFactory {
     }
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
-    typealias GetSberQRDataCompletion = (Result<Data, Error>) -> Void
-    typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
-    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
     typealias OnRegister = () -> Void
     
     static func make(

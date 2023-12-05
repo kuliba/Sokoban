@@ -13,11 +13,7 @@ import PinCodeUI
 import Tagged
 
 class ProductProfileViewModel: ObservableObject {
-    
-    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
-    typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
-    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
-    
+        
     typealias CardAction = CardDomain.CardAction
     typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
