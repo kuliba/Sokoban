@@ -35,16 +35,13 @@ extension RootViewModelFactory {
         )
         
         let qrResolver: QRViewModel.QRResolver = QRViewModel.ScanResult.init
-        // fail
-        // withAmount
-        // withoutAmount
         
         let makeQRScannerModel: MakeQRScannerModel = {
             
             .init(closeAction: $0, qrResolver: qrResolver)
         }
         
-        let getSberQRData = getSberQRDataStub
+        let getSberQRData: GetSberQRData = { _,_ in }
         
         let makeSberQRPaymentViewModel = SberQRPaymentViewModel.init
         
@@ -70,43 +67,6 @@ extension RootViewModelFactory {
             makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
-    }
-    
-    private static func getSberQRDataStub(
-        url: URL,
-        completion: @escaping GetSberQRDataCompletion
-    ) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            
-            if url.absoluteString.contains("fail") {
-                completion(.failure(NSError(domain: "GetSberQRData Failure", code: -1)))
-            } else {
-                completion(.success(.init()))
-            }
-        }
-    }
-    
-    // Mocks for Sber QR with the shape of `QRViewModel.QRResolver`
-    
-    private static func fail(
-        _ string: String = UUID().uuidString
-    ) -> QRViewModel.ScanResult {
-        
-        .sberQR(.init(string: "https://platiqr.ru/?fail")!)
-    }
-    
-    private static func withAmount(
-        _ string: String = UUID().uuidString
-    ) -> QRViewModel.ScanResult {
-        
-        .sberQR(.init(string: "https://platiqr.ru/?uuid=22428")!)
-    }
-    
-    private static func withoutAmount(
-        _ string: String = UUID().uuidString
-    ) -> QRViewModel.ScanResult {
-        
-        .sberQR(.init(string: "https://platiqr.ru/?uuid=1000101124")!)
     }
 }
 
