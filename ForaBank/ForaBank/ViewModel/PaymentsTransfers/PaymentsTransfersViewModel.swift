@@ -944,9 +944,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         )
                     )
                     
-                case let .success(data):
-                    // self?.link = .??
-                    break
+                case let .success(sberQRData):
+                    self?.link = .sberQRPayment(.init(sberQRData))
                 }
             }
         }
@@ -1362,6 +1361,7 @@ extension PaymentsTransfersViewModel {
         case productProfile(ProductProfileViewModel)
         case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositViewModel)
+        case sberQRPayment(SberQRPaymentViewModel)
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

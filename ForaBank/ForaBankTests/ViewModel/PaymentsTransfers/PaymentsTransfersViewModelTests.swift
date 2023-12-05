@@ -126,17 +126,28 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка", nil])
     }
 
-    func test_sberQR_should() throws {
+    func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
-        let (sut, _) = makeSUT(
-//            getSberQRDataResultStub: .failure(anyError())
-        )
+        let (sut, _) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
         try sut.scanAndWait()
                 
-        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка"])
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+    }
+
+    func test_sberQR_shouldNavigateToSberQRPaymentWithData() throws {
+        
+        let sberQRData = anyData()
+        let (sut, _) = makeSUT(
+            getSberQRDataResultStub: .success(sberQRData)
+        )
+        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
+        XCTAssertNoDiff(navigationSpy.values, [nil])
+        
+        try sut.scanAndWait()
+        
+        XCTAssertNoDiff(navigationSpy.values, [nil, .sberQRPayment(.init(sberQRData))])
     }
 
     // MARK: - Helpers
@@ -355,14 +366,21 @@ private extension PaymentsTransfersViewModel.Link {
     var `case`: Case? {
         
         switch self {
-        case .template: return .template
-        default:         return .other
+        case .template: 
+            return .template
+            
+        case let .sberQRPayment(sberQRPayment):
+            return .sberQRPayment(sberQRPayment.sberQRData)
+
+        default:
+            return .other
         }
     }
     
     enum Case: Equatable {
         
         case template
+        case sberQRPayment(Data)
         case other
     }
 }
