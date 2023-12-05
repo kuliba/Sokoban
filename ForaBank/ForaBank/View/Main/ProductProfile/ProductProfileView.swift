@@ -394,6 +394,8 @@ extension ProductProfileViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -411,6 +413,8 @@ extension ProductProfileViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

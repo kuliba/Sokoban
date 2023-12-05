@@ -184,6 +184,9 @@ struct PaymentsTransfersView: View {
             
         case let .openDepositsList(openDepositViewModel):
             OpenDepositView(viewModel: openDepositViewModel)
+            
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
         }
     }
     

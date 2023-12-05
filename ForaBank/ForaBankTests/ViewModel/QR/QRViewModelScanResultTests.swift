@@ -37,10 +37,9 @@ final class QRViewModelScanResultTests: XCTestCase {
         XCTAssertNoDiff(result, .url(url))
     }
     
-    func test_qrString_shouldDeliverQRCoded() throws {
+    func test_qrString_shouldDeliverQRCode() throws {
         
         let string = "This is not a URL"
-        let qrCode = QRCode(original: string, rawData: [:])
         
         let result = ScanResult(string: string).equatable
         
@@ -94,6 +93,9 @@ private extension QRViewModel.ScanResult {
         case let .c2bSubscribeURL(c2bSubscribeURL):
             return .c2bSubscribeURL(c2bSubscribeURL)
 
+        case let .sberQR(url):
+            return .sberQR(url)
+            
         case let .url(url):
             return .url(url)
 
@@ -107,6 +109,7 @@ private extension QRViewModel.ScanResult {
         case qrCode(original: String, rawData: [String : String])
         case c2bURL(URL)
         case c2bSubscribeURL(URL)
+        case sberQR(URL)
         case url(URL)
         case unknown
     }

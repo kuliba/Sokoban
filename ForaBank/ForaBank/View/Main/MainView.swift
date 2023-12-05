@@ -168,6 +168,9 @@ struct MainView: View {
             PaymentsServicesOperatorsView(viewModel: viewModel)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
+            
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
         }
     }
     
@@ -350,7 +353,9 @@ extension MainViewModel {
                         closeAction: $0,
                         qrResolver: QRViewModel.ScanResult.init
                     )
-                },
+                }, 
+                getSberQRData: { _,_ in }, 
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -364,6 +369,8 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -389,6 +396,8 @@ extension MainViewModel {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -402,6 +411,8 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -428,6 +439,8 @@ extension MainViewModel {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -441,6 +454,8 @@ extension MainViewModel {
                 qrResolver: QRViewModel.ScanResult.init
             )
         },
+        getSberQRData: { _,_ in },
+        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
         onRegister: {}
     )
 }

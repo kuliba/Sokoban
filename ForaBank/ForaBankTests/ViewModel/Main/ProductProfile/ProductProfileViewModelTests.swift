@@ -559,6 +559,8 @@ final class ProductProfileViewModelTests: XCTestCase {
                     qrResolver: QRViewModel.ScanResult.init
                 )
             },
+            getSberQRData: { _,_ in },
+            makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -596,6 +598,8 @@ final class ProductProfileViewModelTests: XCTestCase {
                         qrResolver: QRViewModel.ScanResult.init
                     )
                 },
+                getSberQRData: { _,_ in },
+                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

@@ -41,11 +41,17 @@ extension RootViewModelFactory {
             .init(closeAction: $0, qrResolver: qrResolver)
         }
         
+        let getSberQRData: GetSberQRData = { _,_ in }
+        
+        let makeSberQRPaymentViewModel = SberQRPaymentViewModel.init
+        
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
                 model,
                 makeQRScannerModel: makeQRScannerModel,
+                getSberQRData: getSberQRData,
+                makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
                 rootView: $1,
@@ -57,6 +63,8 @@ extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
+            getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
     }
@@ -90,12 +98,17 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
+    typealias GetSberQRDataCompletion = (Result<Data, Error>) -> Void
+    typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
+    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
     typealias OnRegister = () -> Void
     
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
+        getSberQRData: @escaping GetSberQRData,
+        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
@@ -103,13 +116,17 @@ private extension RootViewModelFactory {
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
+            getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeQRScannerModel: makeQRScannerModel
+            makeQRScannerModel: makeQRScannerModel,
+            getSberQRData: getSberQRData,
+            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel
         )
         
         let chatViewModel = ChatViewModel()
