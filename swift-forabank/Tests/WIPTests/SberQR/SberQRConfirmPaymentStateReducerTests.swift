@@ -40,14 +40,26 @@ final class SberQRConfirmPaymentStateReducer {
         
         var newState = state
         
-        return state
+        switch (state, event) {
+        case let (.editableAmount(state), .editable(event)):
+            newState = .editableAmount(editableReducer.reduce(state, event))
+            
+        case let (.fixedAmount(state), .fixed(event)):
+            
+            newState = .fixedAmount(fixedReducer.reduce(state, event))
+            
+        default:
+            break
+        }
+        
+        return newState
     }
 }
 
 enum SberQRConfirmPaymentEvent {
     
     case editable(SberQRConfirmPaymentState.EditableAmountEvent)
-    case fixed
+    case fixed(SberQRConfirmPaymentState.FixedAmountEvent)
 }
 
 final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
@@ -330,22 +342,24 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
 private extension SberQRConfirmPaymentStateReducer {
     
     func reduce(
-        _ state: SberQRConfirmPaymentState.EditableAmount,
+        _ editableAmount: SberQRConfirmPaymentState.EditableAmount,
         _ event: SberQRConfirmPaymentState.EditableAmountEvent
     ) -> State {
         
-        let newEditable = editableReducer.reduce(state, event)
-        
-        return .editableAmount(newEditable)
+        reduce(
+            .editableAmount(editableAmount),
+            .editable(event)
+        )
     }
     
     func reduce(
-        _ state: SberQRConfirmPaymentState.FixedAmount,
+        _ fixedAmount: SberQRConfirmPaymentState.FixedAmount,
         _ event: SberQRConfirmPaymentState.FixedAmountEvent
     ) -> State {
         
-        let newEditable = fixedReducer.reduce(state, event)
-        
-        return .fixedAmount(newEditable)
+        reduce(
+            .fixedAmount(fixedAmount),
+            .fixed(event)
+        )
     }
 }
