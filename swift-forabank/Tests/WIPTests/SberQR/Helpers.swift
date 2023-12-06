@@ -9,17 +9,20 @@ import Foundation
 
 extension GetSberQRDataResponse.Parameter.Amount {
     
-    static let paymentAmount: Self = .init(
-        id: .paymentAmount,
-        value: nil,
-        title: "Сумма перевода",
-        validationRules: [],
-        button: .init(
-            title: "Оплатить",
-            action: .paySberQR,
-            color: .red
+    static func paymentAmount() -> Self {
+        
+        .init(
+            id: .paymentAmount,
+            value: nil,
+            title: "Сумма перевода",
+            validationRules: [],
+            button: .init(
+                title: "Оплатить",
+                action: .paySberQR,
+                color: .red
+            )
         )
-    )
+    }
 }
 
 extension GetSberQRDataResponse.Parameter.Button {

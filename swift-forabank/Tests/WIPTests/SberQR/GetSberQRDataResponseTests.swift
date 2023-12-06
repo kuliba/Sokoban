@@ -91,7 +91,7 @@ class GetSberQRDataResponseTests: XCTestCase {
     
     func paymentAmount() -> GetSberQRDataResponse.Parameter {
         
-        .amount(.paymentAmount)
+        .amount(.paymentAmount())
     }
     
     func recipientBank() -> GetSberQRDataResponse.Parameter {

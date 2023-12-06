@@ -39,7 +39,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
             recipientBank: .recipientBank,
             currency: .rub,
-            bottom: .paymentAmount
+            bottom: .paymentAmount()
         )))
     }
     
@@ -132,7 +132,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: brandName),
             recipientBank: .recipientBank,
             currency: .rub,
-            bottom: .paymentAmount
+            bottom: .paymentAmount()
         )
     }
 }
