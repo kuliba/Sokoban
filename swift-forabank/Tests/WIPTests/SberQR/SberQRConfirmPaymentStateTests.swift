@@ -104,6 +104,34 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         XCTAssertNoDiff(newState, state)
     }
     
+    func test_editableAmountReducer_reduce_shouldNotCallPayOnEditAmount() {
+        
+        var payCallCount = 0
+        let reducer = EditableAmountReducer { payCallCount += 1 }
+        
+        _ = reducer.reduce(makeEditableAmount(amount: 123.45), .editAmount(3_456.78))
+        
+        XCTAssertNoDiff(payCallCount, 0)
+    }
+    
+    func test_editableAmountReducer_reduce_shouldChangeStateOnEditAmount() {
+        
+        let amount: Decimal = 123.45
+        let brandName = "Some Brand Name"
+        let reducer = EditableAmountReducer {}
+        let state = makeEditableAmount(
+            brandName: brandName,
+            amount: amount
+        )
+        
+        let newState = reducer.reduce(state, .editAmount(3_456.78))
+        
+        XCTAssertNoDiff(newState, makeEditableAmount(
+            brandName: brandName,
+            amount: 3_456.78
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias FixedAmountReducer = SberQRConfirmPaymentStateFixedAmountReducer
@@ -192,6 +220,22 @@ final class SberQRConfirmPaymentStateEditableAmountReducer {
     ) -> State {
         
         switch event {
+        case let .editAmount(amount):
+            return .init(
+                header: state.header,
+                productSelect: state.productSelect,
+                brandName: state.brandName,
+                recipientBank: state.recipientBank,
+                currency: state.currency,
+                bottom: .init(
+                    id: state.bottom.id,
+                    value: amount,
+                    title: state.bottom.title,
+                    validationRules: state.bottom.validationRules,
+                    button: state.bottom.button
+                )
+            )
+            
         case .pay:
             pay()
             return state
@@ -203,6 +247,7 @@ extension SberQRConfirmPaymentState {
     
     enum EditableAmountEvent {
         
+        case editAmount(Decimal)
         case pay
     }
 }
