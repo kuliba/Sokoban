@@ -9,11 +9,16 @@ extension GetSberQRDataResponse.Parameter {
     
     struct Amount: Equatable {
         
-        let id: String
+        let id: ID
         let value: String?
         let title: String
         let validationRules: [ValidationRule]
         let button: Button
+        
+        enum ID: String, Equatable {
+            
+            case paymentAmount = "payment_amount"
+        }
         
         struct Button: Equatable {
             

@@ -253,7 +253,10 @@ private extension ResponseMapper._Response._Data {
             
             switch type {
             case .amount:
-                guard let title,
+                typealias ID = GetSberQRDataResponse.Parameter.Amount.ID
+                
+                guard let id = ID(rawValue: id),
+                      let title,
                       let validationRules,
                       let amountButton = button?.amountButton
                 else { throw MappingError() }
@@ -267,7 +270,10 @@ private extension ResponseMapper._Response._Data {
                 ))
                 
             case .button:
-                guard let value,
+                typealias ID = GetSberQRDataResponse.Parameter.Button.ID
+                
+                guard let id = ID(rawValue: id),
+                      let value,
                       let color = color?.buttonColor,
                       let placement = placement?.placement,
                       let action = action?.action
@@ -288,12 +294,19 @@ private extension ResponseMapper._Response._Data {
                 return .dataString(.init(id: id, value: value))
                 
             case .header:
-                guard let value else { throw MappingError() }
+                typealias ID = GetSberQRDataResponse.Parameter.Header.ID
+                
+                guard let id = ID(rawValue: id),
+                      let value
+                else { throw MappingError() }
                 
                 return .header(.init(id: id, value: value))
                 
             case .productSelect:
-                guard let title,
+                typealias ID = GetSberQRDataResponse.Parameter.ProductSelect.ID
+                
+                guard let id = ID(rawValue: id),
+                      let title,
                       let filter = filter?.filter
                 else { throw MappingError() }
                 

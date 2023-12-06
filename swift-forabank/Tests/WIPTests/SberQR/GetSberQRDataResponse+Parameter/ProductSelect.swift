@@ -9,10 +9,15 @@ extension GetSberQRDataResponse.Parameter {
 
     struct ProductSelect: Equatable {
         
-        let id: String
+        let id: ID
         let value: String?
         let title: String
         let filter: Filter
+        
+        enum ID: String, Equatable {
+            
+            case debitAccount = "debit_account"
+        }
         
         struct Filter: Equatable {
             

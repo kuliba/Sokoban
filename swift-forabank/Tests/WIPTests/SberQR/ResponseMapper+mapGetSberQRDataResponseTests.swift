@@ -142,7 +142,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func header() -> GetSberQRDataResponse.Parameter {
         
         .header(.init(
-            id: "title",
+            id: .title,
             value: "Оплата по QR-коду"
         ))
     }
@@ -150,7 +150,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func debitAccount() -> GetSberQRDataResponse.Parameter {
         
         .productSelect(.init(
-            id: "debit_account",
+            id: .debitAccount,
             value: nil,
             title: "Счет списания",
             filter: .init(
@@ -205,7 +205,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func buttonPay() -> GetSberQRDataResponse.Parameter {
         
         .button(.init(
-            id: "button_pay",
+            id: .buttonPay,
             value: "Оплатить",
             color: .red,
             action: .pay,
@@ -216,7 +216,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func paymentAmount() -> GetSberQRDataResponse.Parameter {
         
         .amount(.init(
-            id: "payment_amount",
+            id: .paymentAmount,
             value: nil,
             title: "Сумма перевода",
             validationRules: [],

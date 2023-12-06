@@ -9,7 +9,12 @@ extension GetSberQRDataResponse.Parameter {
 
     struct Header: Equatable {
         
-        let id: String
+        let id: ID
         let value: String
+        
+        enum ID: String, Equatable {
+            
+            case title
+        }
     }
 }
