@@ -20,11 +20,13 @@ class GetSberQRDataResponseTests: XCTestCase {
         )
     }
     
-    func responseWithEditableAmount() -> GetSberQRDataResponse {
+    func responseWithEditableAmount(
+        amount: Decimal
+    ) -> GetSberQRDataResponse {
         
         .init(
             qrcID: "a6a05778867f439b822e7632036a9b45",
-            parameters: editableAmountParameters(),
+            parameters: editableAmountParameters(amount: amount),
             required: [
                 .debitAccount,
                 .paymentAmount,
@@ -45,14 +47,16 @@ class GetSberQRDataResponseTests: XCTestCase {
         ]
     }
     
-    func editableAmountParameters() -> [GetSberQRDataResponse.Parameter] {
+    func editableAmountParameters(
+        amount: Decimal
+    ) -> [GetSberQRDataResponse.Parameter] {
         
         return [
             header(),
             debitAccount(),
             brandName(value: "Тест Макусов. Кутуза_QR"),
             recipientBank(),
-            paymentAmount(),
+            paymentAmount(value: amount),
             currency(),
         ]
     }
@@ -89,9 +93,11 @@ class GetSberQRDataResponseTests: XCTestCase {
         .header(.payQR)
     }
     
-    func paymentAmount() -> GetSberQRDataResponse.Parameter {
+    func paymentAmount(
+        value: Decimal
+    ) -> GetSberQRDataResponse.Parameter {
         
-        .amount(.paymentAmount())
+        .amount(.paymentAmount(value: value))
     }
     
     func recipientBank() -> GetSberQRDataResponse.Parameter {

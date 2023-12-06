@@ -9,11 +9,13 @@ import Foundation
 
 extension GetSberQRDataResponse.Parameter.Amount {
     
-    static func paymentAmount() -> Self {
+    static func paymentAmount(
+        value: Decimal
+    ) -> Self {
         
         .init(
             id: .paymentAmount,
-            value: nil,
+            value: value,
             title: "Сумма перевода",
             validationRules: [],
             button: .init(

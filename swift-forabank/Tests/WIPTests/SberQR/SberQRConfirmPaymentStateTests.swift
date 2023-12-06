@@ -29,7 +29,8 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
     
     func test_init_editableAmount_fromResponseWithEditableAmount() throws {
         
-        let response = responseWithEditableAmount()
+        let amount: Decimal = 123.45
+        let response = responseWithEditableAmount(amount: amount)
         
         let state = try SberQRConfirmPaymentState(response)
         
@@ -39,7 +40,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
             recipientBank: .recipientBank,
             currency: .rub,
-            bottom: .paymentAmount()
+            bottom: .paymentAmount(value: amount)
         )))
     }
     
@@ -88,7 +89,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         var payCallCount = 0
         let reducer = EditableAmountReducer { payCallCount += 1 }
         
-        _ = reducer.reduce(makeEditableAmount(), .pay)
+        _ = reducer.reduce(makeEditableAmount(amount: 123.45), .pay)
         
         XCTAssertNoDiff(payCallCount, 1)
     }
@@ -96,7 +97,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
     func test_editableAmountReducer_reduce_shouldNotChangeStateOnPay() {
         
         let reducer = EditableAmountReducer {}
-        let state = makeEditableAmount()
+        let state = makeEditableAmount(amount: 123.45)
         
         let newState = reducer.reduce(state, .pay)
         
@@ -123,7 +124,8 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
     }
     
     private func makeEditableAmount(
-        brandName: String = UUID().uuidString
+        brandName: String = UUID().uuidString,
+        amount: Decimal
     ) -> SberQRConfirmPaymentState.EditableAmount {
         
         .init(
@@ -132,7 +134,7 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: brandName),
             recipientBank: .recipientBank,
             currency: .rub,
-            bottom: .paymentAmount()
+            bottom: .paymentAmount(value: amount)
         )
     }
 }

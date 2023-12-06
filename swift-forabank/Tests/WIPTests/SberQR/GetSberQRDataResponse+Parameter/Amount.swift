@@ -5,12 +5,14 @@
 //  Created by Igor Malyarov on 03.12.2023.
 //
 
+import Foundation
+
 extension GetSberQRDataResponse.Parameter {
     
     struct Amount: Equatable {
         
         let id: ID
-        let value: String?
+        let value: Decimal
         let title: String
         let validationRules: [ValidationRule]
         let button: Button

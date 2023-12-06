@@ -60,7 +60,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         let result = try map(jsonWithoutAmount)
         
-        assert(result, equals: .success(responseWithEditableAmount()))
+        assert(result, equals: .success(responseWithEditableAmount(amount: 0)))
     }
     
     // MARK: - Helpers

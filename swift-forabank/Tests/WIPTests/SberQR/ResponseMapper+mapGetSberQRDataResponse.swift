@@ -257,6 +257,7 @@ private extension ResponseMapper._Response._Data {
                 
                 guard let id = ID(rawValue: id),
                       let title,
+                      let value = Decimal(string: value ?? "0"),
                       let validationRules,
                       let amountButton = button?.amountButton
                 else { throw MappingError() }
