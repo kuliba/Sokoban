@@ -11,26 +11,27 @@ final class SberQRConfirmPaymentStateReducer {
     
     typealias State = SberQRConfirmPaymentState
     typealias Event = SberQRConfirmPaymentEvent
+
+    typealias EditableState = State.EditableAmount
+#warning("move to event")
+    typealias EditableEvent = State.EditableAmountEvent
     
-    typealias GetProducts = () -> [ProductSelect.Product]
-    typealias Pay = () -> Void
+    typealias FixedState = State.FixedAmount
+#warning("move to event")
+    typealias FixedEvent = State.FixedAmountEvent
     
-    #warning("replace with closures")
-    let editableReducer: SberQRConfirmPaymentStateEditableAmountReducer
-    let fixedReducer: SberQRConfirmPaymentStateFixedAmountReducer
+    typealias EditableReduce = (EditableState, EditableEvent) -> EditableState
+    typealias FixedReduce = (FixedState, FixedEvent) -> FixedState
+    
+    let editableReduce: EditableReduce
+    let fixedReduce: FixedReduce
     
     init(
-        getProducts: @escaping GetProducts,
-        pay: @escaping Pay
+        editableReduce: @escaping EditableReduce,
+        fixedReduce: @escaping FixedReduce
     ) {
-        self.editableReducer = .init(
-            getProducts: getProducts,
-            pay: pay
-        )
-        self.fixedReducer = .init(
-            getProducts: getProducts,
-            pay: pay
-        )
+        self.editableReduce = editableReduce
+        self.fixedReduce = fixedReduce
     }
     
     func reduce(
@@ -42,11 +43,11 @@ final class SberQRConfirmPaymentStateReducer {
         
         switch (state, event) {
         case let (.editableAmount(state), .editable(event)):
-            newState = .editableAmount(editableReducer.reduce(state, event))
+            newState = .editableAmount(editableReduce(state, event))
             
         case let (.fixedAmount(state), .fixed(event)):
             
-            newState = .fixedAmount(fixedReducer.reduce(state, event))
+            newState = .fixedAmount(fixedReduce(state, event))
             
         default:
             break
@@ -327,9 +328,17 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         spy: CallSpy
     ) {
         let spy = CallSpy()
-        let sut = SUT(
+        let editable = SberQRConfirmPaymentStateEditableAmountReducer(
             getProducts: { products },
             pay: spy.call
+        )
+        let fixed = SberQRConfirmPaymentStateFixedAmountReducer(
+            getProducts: { products },
+            pay: spy.call
+        )
+        let sut = SUT(
+            editableReduce: editable.reduce(_:_:),
+            fixedReduce: fixed.reduce(_:_:)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
