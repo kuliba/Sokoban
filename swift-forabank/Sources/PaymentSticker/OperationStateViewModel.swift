@@ -23,6 +23,51 @@ final public class OperationStateViewModel: ObservableObject {
         event(.continueButtonTapped(.continue))
     }
     
+    public func event(_ event: Event) {
+        
+        guard let operation else {
+            return
+        }
+        
+        blackBoxGet((operation, event)) { result in
+            
+            DispatchQueue.main.async {
+             
+                switch result {
+                case let .failure(error):
+                    self.handleAPIError(error)
+                    
+                case let .success(state):
+                    self.state = state
+                }
+            }
+        }
+    }
+    
+    private func handleAPIError(_ error: Error) {
+        
+        // TODO: setup error
+    }
+    
+    func updateOperation(with parameters: [Operation.Parameter]) {
+        
+        self.state = .operation(.init(parameters: parameters))
+    }
+}
+
+//MARK: Helpers
+
+extension OperationStateViewModel {
+    
+    var operation: Operation? {
+        
+        guard case let .operation(operation) = state else {
+            return nil
+        }
+        
+        return operation
+    }
+    
     public var scrollParameters: [Operation.Parameter] {
         
         operation?.parameters.filter({ $0.id != .amount }) ?? []
@@ -116,37 +161,6 @@ final public class OperationStateViewModel: ObservableObject {
         
         return complete
     }
-    
-    public func event(_ event: Event) {
-        
-        guard let operation else {
-            return
-        }
-        
-        blackBoxGet((operation, event)) { result in
-            
-            DispatchQueue.main.async {
-             
-                switch result {
-                case let .failure(error):
-                    self.handleAPIError(error)
-                    
-                case let .success(state):
-                    self.state = state
-                }
-            }
-        }
-    }
-    
-    private func handleAPIError(_ error: Error) {
-        
-        // TODO: setup error
-    }
-    
-    func updateOperation(with parameters: [Operation.Parameter]) {
-        
-        self.state = .operation(.init(parameters: parameters))
-    }
 }
 
 extension OperationStateViewModel {
@@ -186,18 +200,6 @@ extension OperationStateViewModel {
             case waiting
             case failed
         }
-    }
-}
-
-extension OperationStateViewModel {
-
-    var operation: Operation? {
-        
-        guard case let .operation(operation) = state else {
-            return nil
-        }
-        
-        return operation
     }
 }
 
