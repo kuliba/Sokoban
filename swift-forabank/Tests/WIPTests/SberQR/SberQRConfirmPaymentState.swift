@@ -6,11 +6,30 @@
 //
 
 import Foundation
+import Tagged
 
 enum SberQRConfirmPaymentState: Equatable {
     
     case fixedAmount(FixedAmount)
     case editableAmount(EditableAmount)
+}
+
+enum ProductSelect: Equatable {
+    
+    case compact(Product)
+    case expanded(Product, [Product])
+    
+    struct Product: Equatable, Identifiable {
+    
+        typealias ID = Tagged<_ID, String>
+        enum _ID {}
+        
+        let id: ID
+        let icon: String
+        let title: String
+        let amountFormatted: String
+        let color: String
+    }
 }
 
 extension SberQRConfirmPaymentState {
@@ -20,12 +39,11 @@ extension SberQRConfirmPaymentState {
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
     typealias Header = GetSberQRDataResponse.Parameter.Header
     typealias Info = GetSberQRDataResponse.Parameter.Info
-    typealias ProductSelect = GetSberQRDataResponse.Parameter.ProductSelect
     
     struct FixedAmount: Equatable {
         
         let header: Header
-        let productSelect: ProductSelect
+        var productSelect: ProductSelect
         let brandName: Info
         let amount: Info
         let recipientBank: Info
@@ -45,25 +63,38 @@ extension SberQRConfirmPaymentState {
 
 extension SberQRConfirmPaymentState {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         if response.required.contains(.paymentAmount) {
             
-            self = try .editableAmount(.init(response))
+            self = try .editableAmount(.init(
+                product: product, 
+                response: response
+            ))
+            
         } else {
             
-            self = try .fixedAmount(.init(response))
+            self = try .fixedAmount(.init(
+                product: product, 
+                response: response
+            ))
         }
     }
 }
 
 private extension SberQRConfirmPaymentState.FixedAmount {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: response.parameters.productSelect(),
+            productSelect: .compact(product),
             brandName: response.parameters.info(withID: .brandName),
             amount: response.parameters.info(withID: .amount),
             recipientBank: response.parameters.info(withID: .recipientBank),
@@ -74,11 +105,14 @@ private extension SberQRConfirmPaymentState.FixedAmount {
 
 private extension SberQRConfirmPaymentState.EditableAmount {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: response.parameters.productSelect(),
+            productSelect: .compact(product),
             brandName: response.parameters.info(withID: .brandName),
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),

@@ -7,29 +7,236 @@
 
 import XCTest
 
+final class SberQRConfirmPaymentStateFixedAmountReducer {
+    
+    typealias State = SberQRConfirmPaymentState.FixedAmount
+    typealias Event = SberQRConfirmPaymentState.FixedAmountEvent
+
+    typealias GetProducts = () -> [ProductSelect.Product]
+    typealias Pay = () -> Void
+    
+    private let getProducts: GetProducts
+    private let pay: Pay
+    
+    init(
+        getProducts: @escaping GetProducts,
+        pay: @escaping Pay
+    ) {
+        self.getProducts = getProducts
+        self.pay = pay
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> State {
+        
+        var newState = state
+
+        switch event {
+        case .pay:
+            pay()
+
+        case let .select(id):
+            guard let product = getProducts().first(where: { $0.id == id })
+            else { break }
+            
+            newState.productSelect = .compact(product)
+            
+        case .toggleProductSelect:
+            switch state.productSelect {
+            case let .compact(product):
+                newState.productSelect = .expanded(product, getProducts())
+                
+            case let .expanded(selected, _):
+                newState.productSelect = .compact(selected)
+            }
+        }
+        
+        return newState
+    }
+}
+
+extension SberQRConfirmPaymentState {
+    
+    enum FixedAmountEvent {
+        
+        case toggleProductSelect
+        case pay
+        case select(ProductSelect.Product.ID)
+    }
+}
+
 final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
+    
+    func test_init_shouldNotCallPay() {
+        
+        let (_, spy) = makeSUT()
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        XCTAssertNoDiff(spy.callCount, 0)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func test_reduce_pay_shouldCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .pay)
+        
+        XCTAssertNoDiff(spy.callCount, 1)
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func test_reduce_pay_shouldNotChangeState() {
+        
+        let (sut, _) = makeSUT()
+        let state = makeFixedAmount()
+        
+        let newState = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(newState, state)
     }
+    
+    func test_reduce_select_shouldNotCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .select(.init("abcdef")))
+        
+        XCTAssertNoDiff(spy.callCount, 0)
+    }
+    
+    func test_reduce_select_shouldNotChangeProductIfProductIsMissing() {
+        
+        let (sut, _) = makeSUT(products: [.test, .test2])
+        let missingProduct: ProductSelect.Product = .missing
+        let state = makeFixedAmount(
+            brandName: "some brand"
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(.test))
+        
+        let newState = sut.reduce(state, .select(missingProduct.id))
+        
+        XCTAssertNoDiff(newState, state)
+    }
+    
+    func test_reduce_select_shouldChangeProductIfProductExists() {
+        
+        let (sut, _) = makeSUT(products: [.test, .test2])
+        let existingProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand"
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(.test))
+        
+        let newState = sut.reduce(state, .select(existingProduct.id))
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        XCTAssertNoDiff(newState, makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(existingProduct)
+        ))
+    }
+    
+    func test_reduce_toggleProductSelect_shouldNotCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .toggleProductSelect)
+        
+        XCTAssertNoDiff(spy.callCount, 0)
+    }
+    
+    func test_reduce_toggleProductSelect_shouldExpandProductSelectWithSameProduct() {
+        
+        let products: [ProductSelect.Product] = [.test, .test2]
+        let (sut, _) = makeSUT(products: products)
+        let selectedProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(selectedProduct)
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
+        
+        let newState = sut.reduce(state, .toggleProductSelect)
+
+        XCTAssertNoDiff(newState, makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .expanded(selectedProduct, products)
+        ))
+    }
+    
+    func test_reduce_toggleProductSelect_shouldCollapseProductSelectWithSameProduct() {
+        
+        let products: [ProductSelect.Product] = [.test, .test2]
+        let (sut, _) = makeSUT(products: products)
+        let selectedProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .expanded(selectedProduct, products)
+        )
+        XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
+        
+        let newState = sut.reduce(state, .toggleProductSelect)
+
+        XCTAssertNoDiff(newState, makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(selectedProduct)
+        ))
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = SberQRConfirmPaymentStateFixedAmountReducer
+    
+    private func makeSUT(
+        products: [ProductSelect.Product] = [.test],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        spy: Spy
+    ) {
+        let spy = Spy()
+        let sut = SUT(
+            getProducts: { products },
+            pay: spy.call
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        
+        return (sut, spy)
+    }
+    
+    private func makeFixedAmount(
+        brandName: String = UUID().uuidString,
+        productSelect: ProductSelect = .compact(.test)
+    ) -> SberQRConfirmPaymentState.FixedAmount {
+        
+        .init(
+            header: .payQR,
+              productSelect: productSelect,
+              brandName: .brandName(value: brandName),
+              amount: .amount,
+              recipientBank: .recipientBank,
+              bottom: .buttonPay
+        )
+    }
+    
+    private final class Spy {
+        
+        private(set) var callCount = 0
+        
+        func call() {
+            
+            callCount += 1
         }
     }
+}
 
+private extension ProductSelect.Product {
+    
+    static let test: Self = .init(id: "test", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+    
+    static let test2: Self = .init(id: "test2", icon: "", title: "Title", amountFormatted: "4.21 $", color: "blue")
+    
+    static let missing: Self = .init(id: "missing", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
 }
