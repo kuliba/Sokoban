@@ -35,7 +35,22 @@ final class OperationStateViewModelTests {
         return sut
     }
     
+    func makeProductStub() -> Parameter.ProductSelector {
         
-        return .init(state: .operation(.init(parameters: [])), blackBoxGet: { _,_ in })
+        return .init(
+            state: .select,
+            selectedProduct: .init(
+                id: 1,
+                title: "title",
+                nameProduct: "nameProduct",
+                balance: "100.0",
+                balanceFormatted: "100 R",
+                description: "description",
+                cardImage: .named("cardImage"),
+                paymentSystem: .named("paymentSystem"),
+                backgroundImage: .named("backgroundImage"),
+                backgroundColor: "color"),
+            allProducts: []
+        )
     }
 }
