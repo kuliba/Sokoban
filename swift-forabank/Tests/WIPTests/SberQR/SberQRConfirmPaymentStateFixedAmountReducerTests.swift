@@ -205,19 +205,4 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         
         return (sut, spy)
     }
-    
-    private func makeFixedAmount(
-        brandName: String = UUID().uuidString,
-        productSelect: ProductSelect = .compact(.test)
-    ) -> SberQRConfirmPaymentState.FixedAmount {
-        
-        .init(
-            header: .payQR,
-            productSelect: productSelect,
-            brandName: .brandName(value: brandName),
-            amount: .amount,
-            recipientBank: .recipientBank,
-            bottom: .buttonPay
-        )
-    }
 }
