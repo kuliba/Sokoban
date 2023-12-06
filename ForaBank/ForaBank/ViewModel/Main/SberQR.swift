@@ -9,8 +9,10 @@ import Foundation
 // QRScanner
 typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
 
-typealias GetSberQRDataCompletion = (Result<Data, Error>) -> Void
+typealias GetSberQRDataResult = (Result<Data, Error>)
+typealias GetSberQRDataCompletion = (GetSberQRDataResult) -> Void
 typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
 
-typealias MakeSberQRPaymentCompletion = (Result<Data, Error>) -> Void
+typealias MakeSberQRPaymentResult = (Result<Data, Error>)
+typealias MakeSberQRPaymentCompletion = (MakeSberQRPaymentResult) -> Void
 typealias MakeSberQRPaymentViewModel = (URL, Data, @escaping MakeSberQRPaymentCompletion) -> SberQRPaymentViewModel

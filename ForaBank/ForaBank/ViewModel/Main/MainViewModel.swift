@@ -759,7 +759,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func handleGetSberQRDataResult(
         _ url: URL,
-        _ result: Result<Data, Error>
+        _ result: GetSberQRDataResult
     ) {
         switch result {
         case .failure:
@@ -789,7 +789,7 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func handleSberQRPaymentResult(
-        _ result: Result<Data, Error>
+        _ result: MakeSberQRPaymentResult
     ) {
         link = nil
         
