@@ -7,18 +7,22 @@
 
 import XCTest
 
+enum SberQRConfirmPaymentEvent {
+    
+    case editable(EditableAmountEvent)
+    case fixed(FixedAmountEvent)
+}
+
 final class SberQRConfirmPaymentStateReducer {
     
     typealias State = SberQRConfirmPaymentState
     typealias Event = SberQRConfirmPaymentEvent
-
+    
     typealias EditableState = State.EditableAmount
-#warning("move to event")
-    typealias EditableEvent = State.EditableAmountEvent
+    typealias EditableEvent = Event.EditableAmountEvent
     
     typealias FixedState = State.FixedAmount
-#warning("move to event")
-    typealias FixedEvent = State.FixedAmountEvent
+    typealias FixedEvent = Event.FixedAmountEvent
     
     typealias EditableReduce = (EditableState, EditableEvent) -> EditableState
     typealias FixedReduce = (FixedState, FixedEvent) -> FixedState
@@ -55,12 +59,6 @@ final class SberQRConfirmPaymentStateReducer {
         
         return newState
     }
-}
-
-enum SberQRConfirmPaymentEvent {
-    
-    case editable(SberQRConfirmPaymentState.EditableAmountEvent)
-    case fixed(SberQRConfirmPaymentState.FixedAmountEvent)
 }
 
 final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
@@ -352,23 +350,23 @@ private extension SberQRConfirmPaymentStateReducer {
     
     func reduce(
         _ editableAmount: SberQRConfirmPaymentState.EditableAmount,
-        _ event: SberQRConfirmPaymentState.EditableAmountEvent
+        _ editableEvent: SberQRConfirmPaymentEvent.EditableAmountEvent
     ) -> State {
         
         reduce(
             .editableAmount(editableAmount),
-            .editable(event)
+            .editable(editableEvent)
         )
     }
     
     func reduce(
         _ fixedAmount: SberQRConfirmPaymentState.FixedAmount,
-        _ event: SberQRConfirmPaymentState.FixedAmountEvent
+        _ fixedEvent: SberQRConfirmPaymentEvent.FixedAmountEvent
     ) -> State {
         
         reduce(
             .fixedAmount(fixedAmount),
-            .fixed(event)
+            .fixed(fixedEvent)
         )
     }
 }

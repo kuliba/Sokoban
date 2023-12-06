@@ -7,10 +7,20 @@
 
 import XCTest
 
+extension SberQRConfirmPaymentEvent {
+    
+    enum FixedAmountEvent {
+        
+        case toggleProductSelect
+        case pay
+        case select(ProductSelect.Product.ID)
+    }
+}
+
 final class SberQRConfirmPaymentStateFixedAmountReducer {
     
     typealias State = SberQRConfirmPaymentState.FixedAmount
-    typealias Event = SberQRConfirmPaymentState.FixedAmountEvent
+    typealias Event = SberQRConfirmPaymentEvent.FixedAmountEvent
     
     typealias GetProducts = () -> [ProductSelect.Product]
     typealias Pay = () -> Void
@@ -54,16 +64,6 @@ final class SberQRConfirmPaymentStateFixedAmountReducer {
         }
         
         return newState
-    }
-}
-
-extension SberQRConfirmPaymentState {
-    
-    enum FixedAmountEvent {
-        
-        case toggleProductSelect
-        case pay
-        case select(ProductSelect.Product.ID)
     }
 }
 
