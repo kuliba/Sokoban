@@ -9,7 +9,9 @@ extension GetSberQRDataResponse.Parameter {
 
     struct DataString: Equatable {
         
-        let id: String
+        typealias ID = String
+        
+        let id: ID
         let value: String
     }
 }
