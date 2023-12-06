@@ -55,14 +55,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         assert(result, equals: .success(.init(
             qrcID: "04a7ae2bee8f4f13ab151c1e6066d304",
-            parameters: [
-                header(),
-                debitAccount(),
-                brandName(value: "сббол енот_QR"),
-                amount(),
-                recipientBank(),
-                buttonPay(),
-            ],
+            parameters: fixedAmountParameters(),
             required: [
                 .debitAccount
             ]
@@ -75,14 +68,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         assert(result, equals: .success(.init(
             qrcID: "a6a05778867f439b822e7632036a9b45",
-            parameters: [
-                header(),
-                debitAccount(),
-                brandName(value: "Тест Макусов. Кутуза_QR"),
-                recipientBank(),
-                paymentAmount(),
-                currency(),
-            ],
+            parameters: editableAmountParameters(),
             required: [
                 .debitAccount,
                 .paymentAmount,
