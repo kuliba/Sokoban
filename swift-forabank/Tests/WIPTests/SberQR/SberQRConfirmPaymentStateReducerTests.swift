@@ -194,6 +194,113 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )))
     }
     
+    // MARK: - FixedAmount
+    
+    func test_reduce_fixedAmount_pay_shouldCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .pay)
+        
+        XCTAssertNoDiff(spy.callCount, 1)
+    }
+    
+    func test_reduce_fixedAmount_pay_shouldNotChangeState() {
+        
+        let (sut, _) = makeSUT()
+        let state = makeFixedAmount()
+        
+        let newState = sut.reduce(state, .pay)
+        
+        XCTAssertNoDiff(newState, .fixedAmount(state))
+    }
+    
+    func test_reduce_fixedAmount_select_shouldNotCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .select(.init("abcdef")))
+        
+        XCTAssertNoDiff(spy.callCount, 0)
+    }
+    
+    func test_reduce_fixedAmount_select_shouldNotChangeProductIfProductIsMissing() {
+        
+        let (sut, _) = makeSUT(products: [.test, .test2])
+        let missingProduct: ProductSelect.Product = .missing
+        let state = makeFixedAmount(
+            brandName: "some brand"
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(.test))
+        
+        let newState = sut.reduce(state, .select(missingProduct.id))
+        
+        XCTAssertNoDiff(newState, .fixedAmount(state))
+    }
+    
+    func test_reduce_fixedAmount_select_shouldChangeProductIfProductExists() {
+        
+        let (sut, _) = makeSUT(products: [.test, .test2])
+        let existingProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand"
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(.test))
+        
+        let newState = sut.reduce(state, .select(existingProduct.id))
+        
+        XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(existingProduct)
+        )))
+    }
+    
+    func test_reduce_fixedAmount_toggleProductSelect_shouldNotCallPay() {
+        
+        let (sut, spy) = makeSUT()
+        
+        _ = sut.reduce(makeFixedAmount(), .toggleProductSelect)
+        
+        XCTAssertNoDiff(spy.callCount, 0)
+    }
+    
+    func test_reduce_fixedAmount_toggleProductSelect_shouldExpandProductSelectWithSameProduct() {
+        
+        let products: [ProductSelect.Product] = [.test, .test2]
+        let (sut, _) = makeSUT(products: products)
+        let selectedProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(selectedProduct)
+        )
+        XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
+        
+        let newState = sut.reduce(state, .toggleProductSelect)
+        
+        XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .expanded(selectedProduct, products)
+        )))
+    }
+    
+    func test_reduce_fixedAmount_toggleProductSelect_shouldCollapseProductSelectWithSameProduct() {
+        
+        let products: [ProductSelect.Product] = [.test, .test2]
+        let (sut, _) = makeSUT(products: products)
+        let selectedProduct: ProductSelect.Product = .test2
+        let state = makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .expanded(selectedProduct, products)
+        )
+        XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
+        
+        let newState = sut.reduce(state, .toggleProductSelect)
+        
+        XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
+            brandName: "some brand",
+            productSelect: .compact(selectedProduct)
+        )))
+    }
     
     // MARK: - Helpers
     
@@ -230,5 +337,15 @@ private extension SberQRConfirmPaymentStateReducer {
         let newEditable = editableReducer.reduce(state, event)
         
         return .editableAmount(newEditable)
+    }
+    
+    func reduce(
+        _ state: SberQRConfirmPaymentState.FixedAmount,
+        _ event: SberQRConfirmPaymentState.FixedAmountEvent
+    ) -> State {
+        
+        let newEditable = fixedReducer.reduce(state, event)
+        
+        return .fixedAmount(newEditable)
     }
 }
