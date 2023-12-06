@@ -9,26 +9,6 @@ import Foundation
 import Combine
 import GenericRemoteService
 
-public struct Location: Hashable, Identifiable {
-    
-    public let id: String
-    
-    public init(id: String) {
-        self.id = id
-    }
-}
-
-public struct Office {
-    
-    let id: String
-    let name: String
-    
-    public init(id: String, name: String) {
-        self.id = id
-        self.name = name
-    }
-}
-
 final public class BusinessLogic {
     
     // TODO: simplify remote services error
@@ -47,7 +27,7 @@ final public class BusinessLogic {
     let processMakeTransferService: ProcessMakeTransferService
     let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
-    let products: [Product]
+    let products: [Product] //() -> [Products]
     let cityList: [City]
     
     public init(
@@ -87,7 +67,7 @@ public extension BusinessLogic {
     }
 }
 
-extension BusinessLogic {
+public extension BusinessLogic {
     
     func process(
         operation: PaymentSticker.Operation,
