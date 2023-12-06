@@ -22,7 +22,7 @@ extension ResponseMapper {
             
             switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
             case let (200, .none, .some(data)):
-                return .success(data.response)
+                return try .success(data.response())
                 
             case let (_, .some(errorMessage), .none):
                 return .failure(.server(
@@ -231,14 +231,16 @@ extension ResponseMapper {
                     }
                 }
                 
-                var parameter: GetSberQRDataResponse.Parameter? {
+                struct MappingError: Error {}
+                
+                func parameter() throws -> GetSberQRDataResponse.Parameter {
                     
                     switch type {
                     case .amount:
                         guard let title,
                               let validationRules,
                               let amountButton = button?.amountButton
-                        else { return nil }
+                        else { throw MappingError() }
                         
                         return .amount(.init(
                             id: id,
@@ -253,7 +255,7 @@ extension ResponseMapper {
                               let color = color?.buttonColor,
                               let placement = placement?.placement,
                               let action = action?.action
-                        else { return nil }
+                        else { throw MappingError() }
                         
                         return
                             .button(.init(
@@ -265,23 +267,19 @@ extension ResponseMapper {
                             ))
                         
                     case .dataString:
-                        guard let value else { return nil }
+                        guard let value else { throw MappingError() }
                         
                         return .dataString(.init(id: id, value: value))
                         
                     case .header:
-                        return value.map {
-                            
-                            .header(.init(
-                                id: id,
-                                value: $0
-                            ))
-                        }
+                        guard let value else { throw MappingError() }
+
+                        return .header(.init(id: id, value: value))
                         
                     case .productSelect:
                         guard let title,
                               let filter = filter?.filter
-                        else { return nil }
+                        else { throw MappingError() }
                         
                         return .productSelect(.init(
                             id: id,
@@ -294,7 +292,7 @@ extension ResponseMapper {
                         guard let value,
                               let title,
                               let icon = icon?.icon
-                        else { return nil }
+                        else { throw MappingError() }
                         
                         return .info(.init(
                             id: id,
@@ -327,11 +325,11 @@ extension ResponseMapper {
                 }
             }
             
-            var response: GetSberQRDataResponse {
+            func  response() throws -> GetSberQRDataResponse {
                 
-                .init(
+                try .init(
                     qrcID: qrcId,
-                    parameters: parameters.compactMap(\.parameter),
+                    parameters: parameters.map { try $0.parameter() },
                     required: required.map(\.required)
                 )
             }
