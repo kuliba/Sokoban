@@ -41,7 +41,7 @@ extension ResponseMapper {
     }
 }
 
-extension ResponseMapper {
+private extension ResponseMapper {
     
     struct _Response: Decodable {
         
@@ -325,7 +325,7 @@ extension ResponseMapper {
                 }
             }
             
-            func  response() throws -> GetSberQRDataResponse {
+            func response() throws -> GetSberQRDataResponse {
                 
                 try .init(
                     qrcID: qrcId,
