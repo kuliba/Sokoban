@@ -289,7 +289,10 @@ private extension ResponseMapper._Response._Data {
                     ))
                 
             case .dataString:
-                guard let value else { throw MappingError() }
+                typealias ID = GetSberQRDataResponse.Parameter.DataString.ID
+                
+                guard let id = ID(rawValue: id),
+                      let value else { throw MappingError() }
                 
                 return .dataString(.init(id: id, value: value))
                 

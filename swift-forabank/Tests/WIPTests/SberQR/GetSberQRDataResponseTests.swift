@@ -57,100 +57,48 @@ class GetSberQRDataResponseTests: XCTestCase {
         ]
     }
     
-    func header() -> GetSberQRDataResponse.Parameter {
+    func amount() -> GetSberQRDataResponse.Parameter {
         
-        .header(.init(
-            id: .title,
-            value: "Оплата по QR-коду"
-        ))
-    }
-    
-    func debitAccount() -> GetSberQRDataResponse.Parameter {
-        
-        .productSelect(.init(
-            id: .debitAccount,
-            value: nil,
-            title: "Счет списания",
-            filter: .init(
-                productTypes: [.card, .account],
-                currencies: [.rub],
-                additional: false
-            )
-        ))
+        .info(.amount)
     }
     
     func brandName(
         value: String
     ) -> GetSberQRDataResponse.Parameter {
         
-        .info(.init(
-            id: .brandName,
-            value: value,
-            title: "Получатель",
-            icon: .init(
-                type: .remote,
-                value: "b6e5b5b8673544184896724799e50384"
-            )
-        ))
-    }
-    
-    func amount() -> GetSberQRDataResponse.Parameter {
-        
-        .info(.init(
-            id: .amount,
-            value: "220 ₽",
-            title: "Сумма",
-            icon: .init(
-                type: .local,
-                value: "ic24IconMessage"
-            )
-        ))
-    }
-    
-    func recipientBank() -> GetSberQRDataResponse.Parameter {
-        
-        .info(.init(
-            id: .recipientBank,
-            value: "Сбербанк",
-            title: "Банк получателя",
-            icon: .init(
-                type: .remote,
-                value: "c37971b7264d55c3c467d2127ed600aa"
-            )
-        ))
+        .info(.brandName(value: value))
     }
     
     func buttonPay() -> GetSberQRDataResponse.Parameter {
         
-        .button(.init(
-            id: .buttonPay,
-            value: "Оплатить",
-            color: .red,
-            action: .pay,
-            placement: .bottom
-        ))
-    }
-    
-    func paymentAmount() -> GetSberQRDataResponse.Parameter {
-        
-        .amount(.init(
-            id: .paymentAmount,
-            value: nil,
-            title: "Сумма перевода",
-            validationRules: [],
-            button: .init(
-                title: "Оплатить",
-                action: .paySberQR,
-                color: .red
-            )
-        ))
+        .button(.buttonPay)
     }
     
     func currency() -> GetSberQRDataResponse.Parameter {
         
-        .dataString(.init(id: "currency", value: "RUB"))
+        .dataString(.rub)
     }
-
+    
+    func debitAccount() -> GetSberQRDataResponse.Parameter {
+        
+        .productSelect(.debitAccount)
+    }
+    
+    func header() -> GetSberQRDataResponse.Parameter {
+        
+        .header(.payQR)
+    }
+    
+    func paymentAmount() -> GetSberQRDataResponse.Parameter {
+        
+        .amount(.paymentAmount)
+    }
+    
+    func recipientBank() -> GetSberQRDataResponse.Parameter {
+        
+        .info(.recipientBank)
+    }
+    
     let jsonWithError = """
     {
         "statusCode": 102,
