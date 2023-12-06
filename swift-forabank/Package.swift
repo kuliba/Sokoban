@@ -875,6 +875,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .customDump,
+            .tagged,
             // internal modules
             .cvvPin,
             .genericRemoteService,
