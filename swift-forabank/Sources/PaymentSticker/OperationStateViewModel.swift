@@ -80,7 +80,7 @@ extension OperationStateViewModel {
     
     public var product: Operation.Parameter.ProductSelector? {
         
-        let product = operation?.parameters.first(where: { $0.id == .productSelector })
+        let product = operation?.parameters.first { $0.id == .productSelector }
         
         switch product {
         case let .productSelector(product):
@@ -93,7 +93,7 @@ extension OperationStateViewModel {
     
     public var banner: Operation.Parameter.Sticker? {
         
-        let product = operation?.parameters.first(where: { $0.id == .sticker })
+        let product = operation?.parameters.first { $0.id == .sticker }
         
         switch product {
         case let .sticker(sticker):
@@ -106,7 +106,7 @@ extension OperationStateViewModel {
     
     public var transferType: Operation.Parameter.Select? {
         
-        let product = operation?.parameters.first(where: { $0.id == .transferType })
+        let product = operation?.parameters.first { $0.id == .transferType }
         
         switch product {
         case let .select(select):
