@@ -53,11 +53,11 @@ extension SberQRConfirmPaymentState {
     struct EditableAmount: Equatable {
         
         let header: Header
-        let productSelect: ProductSelect
+        var productSelect: ProductSelect
         let brandName: Info
         let recipientBank: Info
         let currency: DataString
-        let bottom: Amount
+        var bottom: Amount
     }
 }
 
