@@ -112,7 +112,7 @@ class GetSberQRDataResponseTests: XCTestCase {
         "data": null
     }
     """
-
+    
     let jsonWithAmount = """
     {
         "statusCode": 0,
@@ -185,7 +185,7 @@ class GetSberQRDataResponseTests: XCTestCase {
         }
     }
     """
-
+    
     let jsonWithoutAmount = """
     {
         "statusCode": 0,

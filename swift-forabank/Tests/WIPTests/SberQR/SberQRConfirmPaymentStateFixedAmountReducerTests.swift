@@ -11,7 +11,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducer {
     
     typealias State = SberQRConfirmPaymentState.FixedAmount
     typealias Event = SberQRConfirmPaymentState.FixedAmountEvent
-
+    
     typealias GetProducts = () -> [ProductSelect.Product]
     typealias Pay = () -> Void
     
@@ -32,11 +32,11 @@ final class SberQRConfirmPaymentStateFixedAmountReducer {
     ) -> State {
         
         var newState = state
-
+        
         switch event {
         case .pay:
             pay()
-
+            
         case let .select(id):
             guard let product = getProducts().first(where: { $0.id == id })
             else { break }
@@ -72,7 +72,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     func test_init_shouldNotCallPay() {
         
         let (_, spy) = makeSUT()
-
+        
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
@@ -128,7 +128,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
         let newState = sut.reduce(state, .select(existingProduct.id))
-
+        
         XCTAssertNoDiff(newState, makeFixedAmount(
             brandName: "some brand",
             productSelect: .compact(existingProduct)
@@ -156,7 +156,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
         
         let newState = sut.reduce(state, .toggleProductSelect)
-
+        
         XCTAssertNoDiff(newState, makeFixedAmount(
             brandName: "some brand",
             productSelect: .expanded(selectedProduct, products)
@@ -175,7 +175,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
         
         let newState = sut.reduce(state, .toggleProductSelect)
-
+        
         XCTAssertNoDiff(newState, makeFixedAmount(
             brandName: "some brand",
             productSelect: .compact(selectedProduct)
@@ -213,11 +213,11 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         
         .init(
             header: .payQR,
-              productSelect: productSelect,
-              brandName: .brandName(value: brandName),
-              amount: .amount,
-              recipientBank: .recipientBank,
-              bottom: .buttonPay
+            productSelect: productSelect,
+            brandName: .brandName(value: brandName),
+            amount: .amount,
+            recipientBank: .recipientBank,
+            bottom: .buttonPay
         )
     }
     
