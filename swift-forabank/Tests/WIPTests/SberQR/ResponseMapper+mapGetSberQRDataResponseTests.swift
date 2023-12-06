@@ -166,7 +166,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     ) -> GetSberQRDataResponse.Parameter {
         
         .info(.init(
-            id: "brandName",
+            id: .brandName,
             value: value,
             title: "Получатель",
             icon: .init(
@@ -179,7 +179,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func amount() -> GetSberQRDataResponse.Parameter {
         
         .info(.init(
-            id: "amount",
+            id: .amount,
             value: "220 ₽",
             title: "Сумма",
             icon: .init(
@@ -192,7 +192,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: XCTestCase {
     private func recipientBank() -> GetSberQRDataResponse.Parameter {
         
         .info(.init(
-            id: "recipientBank",
+            id: .recipientBank,
             value: "Сбербанк",
             title: "Банк получателя",
             icon: .init(

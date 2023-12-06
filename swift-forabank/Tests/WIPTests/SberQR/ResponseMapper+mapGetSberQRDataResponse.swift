@@ -305,7 +305,10 @@ private extension ResponseMapper._Response._Data {
                 ))
                 
             case .info:
-                guard let value,
+                typealias ID = GetSberQRDataResponse.Parameter.Info.ID
+                
+                guard let id = ID(rawValue: id),
+                      let value,
                       let title,
                       let icon = icon?.icon
                 else { throw MappingError() }

@@ -9,10 +9,15 @@ extension GetSberQRDataResponse.Parameter {
 
     struct Info: Equatable {
         
-        let id: String
+        let id: ID
         let value: String
         let title: String
         let icon: Icon
+        
+        enum ID: String, Equatable {
+            
+            case amount, brandName, recipientBank
+        }
         
         struct Icon: Equatable {
             
