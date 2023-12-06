@@ -92,7 +92,7 @@ extension GetSberQRDataResponse.Parameter.Info {
 extension GetSberQRDataResponse.Parameter.ProductSelect {
     
     static let debitAccount: Self = .init(
-        id: .debitAccount,
+        id: "debit_account",
         value: nil,
         title: "Счет списания",
         filter: .init(
