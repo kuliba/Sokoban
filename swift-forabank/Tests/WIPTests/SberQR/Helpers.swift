@@ -102,3 +102,12 @@ extension GetSberQRDataResponse.Parameter.ProductSelect {
         )
     )
 }
+
+extension ProductSelect.Product {
+    
+    static let test: Self = .init(id: "test", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+    
+    static let test2: Self = .init(id: "test2", icon: "", title: "Title", amountFormatted: "4.21 $", color: "blue")
+    
+    static let missing: Self = .init(id: "missing", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+}
