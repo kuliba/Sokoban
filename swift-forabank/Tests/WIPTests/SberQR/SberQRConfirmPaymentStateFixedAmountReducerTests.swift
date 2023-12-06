@@ -192,9 +192,9 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: Spy
+        spy: CallSpy
     ) {
-        let spy = Spy()
+        let spy = CallSpy()
         let sut = SUT(
             getProducts: { products },
             pay: spy.call
@@ -219,15 +219,5 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
             recipientBank: .recipientBank,
             bottom: .buttonPay
         )
-    }
-    
-    private final class Spy {
-        
-        private(set) var callCount = 0
-        
-        func call() {
-            
-            callCount += 1
-        }
     }
 }
