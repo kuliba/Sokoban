@@ -53,28 +53,14 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         let result = try map(jsonWithAmount)
         
-        assert(result, equals: .success(.init(
-            qrcID: "04a7ae2bee8f4f13ab151c1e6066d304",
-            parameters: fixedAmountParameters(),
-            required: [
-                .debitAccount
-            ]
-        )))
+        assert(result, equals: .success(responseWithFixedAmount()))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithoutAmount() throws {
         
         let result = try map(jsonWithoutAmount)
         
-        assert(result, equals: .success(.init(
-            qrcID: "a6a05778867f439b822e7632036a9b45",
-            parameters: editableAmountParameters(),
-            required: [
-                .debitAccount,
-                .paymentAmount,
-                .currency
-            ]
-        )))
+        assert(result, equals: .success(responseWithEditableAmount()))
     }
     
     // MARK: - Helpers

@@ -9,6 +9,30 @@ import XCTest
 
 class GetSberQRDataResponseTests: XCTestCase {
     
+    func responseWithFixedAmount() -> GetSberQRDataResponse {
+        
+        .init(
+            qrcID: "04a7ae2bee8f4f13ab151c1e6066d304",
+            parameters: fixedAmountParameters(),
+            required: [
+                .debitAccount
+            ]
+        )
+    }
+    
+    func responseWithEditableAmount() -> GetSberQRDataResponse {
+        
+        .init(
+            qrcID: "a6a05778867f439b822e7632036a9b45",
+            parameters: editableAmountParameters(),
+            required: [
+                .debitAccount,
+                .paymentAmount,
+                .currency
+            ]
+        )
+    }
+    
     func fixedAmountParameters() -> [GetSberQRDataResponse.Parameter] {
         
         return [
