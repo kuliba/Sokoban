@@ -1,5 +1,5 @@
 //
-//  SberQRConfirmPaymentStateEditableAmountReducerTests.swift
+//  SberQRConfirmPaymentStateReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 06.12.2023.
@@ -7,23 +7,30 @@
 
 import XCTest
 
-final class SberQRConfirmPaymentStateEditableAmountReducer {
+final class SberQRConfirmPaymentStateReducer {
     
-    typealias State = SberQRConfirmPaymentState.EditableAmount
-    typealias Event = SberQRConfirmPaymentState.EditableAmountEvent
+    typealias State = SberQRConfirmPaymentState
+    typealias Event = SberQRConfirmPaymentEvent
     
     typealias GetProducts = () -> [ProductSelect.Product]
     typealias Pay = () -> Void
     
-    private let getProducts: GetProducts
-    private let pay: Pay
+    #warning("replace with closures")
+    let editableReducer: SberQRConfirmPaymentStateEditableAmountReducer
+    let fixedReducer: SberQRConfirmPaymentStateFixedAmountReducer
     
     init(
         getProducts: @escaping GetProducts,
         pay: @escaping Pay
     ) {
-        self.getProducts = getProducts
-        self.pay = pay
+        self.editableReducer = .init(
+            getProducts: getProducts,
+            pay: pay
+        )
+        self.fixedReducer = .init(
+            getProducts: getProducts,
+            pay: pay
+        )
     }
     
     func reduce(
@@ -33,51 +40,19 @@ final class SberQRConfirmPaymentStateEditableAmountReducer {
         
         var newState = state
         
-        switch event {
-        case let .editAmount(amount):
-            newState.bottom = .init(
-                id: state.bottom.id,
-                value: amount,
-                title: state.bottom.title,
-                validationRules: state.bottom.validationRules,
-                button: state.bottom.button
-            )
-            
-        case .pay:
-            pay()
-            
-        case let .select(id):
-            guard let product = getProducts().first(where: { $0.id == id })
-            else { break }
-            
-            newState.productSelect = .compact(product)
-            
-        case .toggleProductSelect:
-            switch state.productSelect {
-            case let .compact(product):
-                newState.productSelect = .expanded(product, getProducts())
-                
-            case let .expanded(selected, _):
-                newState.productSelect = .compact(selected)
-            }
-        }
-        
-        return newState
+        return state
     }
 }
 
-extension SberQRConfirmPaymentState {
+enum SberQRConfirmPaymentEvent {
     
-    enum EditableAmountEvent {
-        
-        case editAmount(Decimal)
-        case toggleProductSelect
-        case pay
-        case select(ProductSelect.Product.ID)
-    }
+    case editable(SberQRConfirmPaymentState.EditableAmountEvent)
+    case fixed
 }
 
-final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
+final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
+    
+    // MARK: - EditableAmount
     
     func test_init_shouldNotCallPay() {
         
@@ -86,16 +61,16 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_editAmount_shouldNotCallPayOnEditAmount() {
+    func test_reduce_editableAmount_editAmount_shouldNotCallPayOnEditAmount() {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(amount: 123.45), .editAmount(3_456.78))
+        _ = sut.reduce(.editableAmount(makeEditableAmount(amount: 123.45)), .editable(.editAmount(3_456.78)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_editAmount_shouldChangeStateOnEditAmount() {
+    func test_reduce_editableAmount_editAmount_shouldChangeStateOnEditAmount() {
         
         let amount: Decimal = 123.45
         let brandName = "Some Brand Name"
@@ -107,13 +82,13 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let newState = sut.reduce(state, .editAmount(3_456.78))
         
-        XCTAssertNoDiff(newState, makeEditableAmount(
+        XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: brandName,
             amount: 3_456.78
-        ))
+        )))
     }
     
-    func test_reduce_pay_shouldCallPay() {
+    func test_reduce_editableAmount_pay_shouldCallPay() {
         
         let (sut, spy) = makeSUT()
         
@@ -122,17 +97,17 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 1)
     }
     
-    func test_reduce_pay_shouldNotChangeState() {
+    func test_reduce_editableAmount_pay_shouldNotChangeState() {
         
         let (sut, _) = makeSUT()
         let state = makeEditableAmount()
         
         let newState = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(newState, state)
+        XCTAssertNoDiff(newState, .editableAmount(state))
     }
     
-    func test_reduce_select_shouldNotCallPay() {
+    func test_reduce_editableAmount_select_shouldNotCallPay() {
         
         let (sut, spy) = makeSUT()
         
@@ -141,7 +116,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_select_shouldNotChangeProductIfProductIsMissing() {
+    func test_reduce_editableAmount_select_shouldNotChangeProductIfProductIsMissing() {
         
         let (sut, _) = makeSUT(products: [.test, .test2])
         let missingProduct: ProductSelect.Product = .missing
@@ -152,10 +127,10 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let newState = sut.reduce(state, .select(missingProduct.id))
         
-        XCTAssertNoDiff(newState, state)
+        XCTAssertNoDiff(newState, .editableAmount(state))
     }
     
-    func test_reduce_select_shouldChangeProductIfProductExists() {
+    func test_reduce_editableAmount_select_shouldChangeProductIfProductExists() {
         
         let (sut, _) = makeSUT(products: [.test, .test2])
         let existingProduct: ProductSelect.Product = .test2
@@ -166,13 +141,13 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let newState = sut.reduce(state, .select(existingProduct.id))
         
-        XCTAssertNoDiff(newState, makeEditableAmount(
+        XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
             productSelect: .compact(existingProduct)
-        ))
+        )))
     }
     
-    func test_reduce_toggleProductSelect_shouldNotCallPay() {
+    func test_reduce_editableAmount_toggleProductSelect_shouldNotCallPay() {
         
         let (sut, spy) = makeSUT()
         
@@ -181,7 +156,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_toggleProductSelect_shouldExpandProductSelectWithSameProduct() {
+    func test_reduce_editableAmount_toggleProductSelect_shouldExpandProductSelectWithSameProduct() {
         
         let products: [ProductSelect.Product] = [.test, .test2]
         let (sut, _) = makeSUT(products: products)
@@ -194,13 +169,13 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let newState = sut.reduce(state, .toggleProductSelect)
         
-        XCTAssertNoDiff(newState, makeEditableAmount(
+        XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
             productSelect: .expanded(selectedProduct, products)
-        ))
+        )))
     }
     
-    func test_reduce_toggleProductSelect_shouldCollapseProductSelectWithSameProduct() {
+    func test_reduce_editableAmount_toggleProductSelect_shouldCollapseProductSelectWithSameProduct() {
         
         let products: [ProductSelect.Product] = [.test, .test2]
         let (sut, _) = makeSUT(products: products)
@@ -213,15 +188,16 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let newState = sut.reduce(state, .toggleProductSelect)
         
-        XCTAssertNoDiff(newState, makeEditableAmount(
+        XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
             productSelect: .compact(selectedProduct)
-        ))
+        )))
     }
+    
     
     // MARK: - Helpers
     
-    private typealias SUT = SberQRConfirmPaymentStateEditableAmountReducer
+    typealias SUT = SberQRConfirmPaymentStateReducer
     
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
@@ -241,5 +217,18 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy)
+    }
+}
+
+private extension SberQRConfirmPaymentStateReducer {
+    
+    func reduce(
+        _ state: SberQRConfirmPaymentState.EditableAmount,
+        _ event: SberQRConfirmPaymentState.EditableAmountEvent
+    ) -> State {
+        
+        let newEditable = editableReducer.reduce(state, event)
+        
+        return .editableAmount(newEditable)
     }
 }

@@ -121,3 +121,19 @@ final class CallSpy {
         callCount += 1
     }
 }
+
+func makeEditableAmount(
+    brandName: String = UUID().uuidString,
+    productSelect: ProductSelect = .compact(.test),
+    amount: Decimal = 123.45
+) -> SberQRConfirmPaymentState.EditableAmount {
+    
+    .init(
+        header: .payQR,
+        productSelect: productSelect,
+        brandName: .brandName(value: brandName),
+        recipientBank: .recipientBank,
+        currency: .rub,
+        bottom: .paymentAmount(value: amount)
+    )
+}
