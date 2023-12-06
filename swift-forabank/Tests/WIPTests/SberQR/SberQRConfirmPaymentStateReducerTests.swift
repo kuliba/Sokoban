@@ -50,7 +50,6 @@ final class SberQRConfirmPaymentStateReducer {
             newState = .editableAmount(editableReduce(state, event))
             
         case let (.fixedAmount(state), .fixed(event)):
-            
             newState = .fixedAmount(fixedReduce(state, event))
             
         default:
