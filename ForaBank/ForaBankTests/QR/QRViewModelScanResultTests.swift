@@ -79,7 +79,7 @@ final class QRViewModelScanResultTests: XCTestCase {
     }
 }
 
-private extension QRViewModel.ScanResult {
+extension QRViewModel.ScanResult {
     
     var equatable: EquatableScanResult {
         
