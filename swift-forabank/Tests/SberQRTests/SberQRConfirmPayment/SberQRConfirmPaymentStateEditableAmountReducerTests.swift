@@ -68,7 +68,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .select(.init("abcdef")))
+        _ = sut.reduce(makeEditableAmount(), .select(.init(100000)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }

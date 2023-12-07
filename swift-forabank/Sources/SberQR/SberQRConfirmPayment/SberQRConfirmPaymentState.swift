@@ -51,7 +51,7 @@ public extension ProductSelect {
 
 public extension ProductSelect.Product {
     
-    typealias ID = Tagged<_ID, String>
+    typealias ID = Tagged<_ID, Int>
     enum _ID {}
     
     enum ProductType {

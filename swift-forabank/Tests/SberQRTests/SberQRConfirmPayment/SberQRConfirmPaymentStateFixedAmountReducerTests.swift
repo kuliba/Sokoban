@@ -41,7 +41,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .select(.init("abcdef")))
+        _ = sut.reduce(makeFixedAmount(), .select(.init(100000)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
