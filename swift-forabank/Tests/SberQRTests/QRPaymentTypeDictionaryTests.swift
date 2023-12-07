@@ -38,8 +38,6 @@ extension QRPaymentTypeDictionary {
     }
 }
 
-enum ResponseMapper {}
-
 extension ResponseMapper {
     
     static func mapQRPaymentTypeJSON(data: Data) throws -> QRPaymentTypeDictionary {
@@ -129,11 +127,4 @@ final class QRPaymentTypeDictionaryTests: XCTestCase {
         
         "https://platiqr.ru/?uuid=3001638371&amount=27.50&trxid=2023072420443097822"
     }
-}
-
-private func anyURL(
-    _ string: String = UUID().uuidString
-) -> URL {
-    
-    .init(string: string)!
 }
