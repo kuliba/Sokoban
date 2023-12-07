@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 03.12.2023.
 //
 
-import Combine
+import CombineSchedulers
+import SberQR
 import XCTest
 
 final class SberQRFeatureViewModelTests: XCTestCase {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum GetSberQRDataError: Error, Equatable {
+public enum GetSberQRDataError: Error, Equatable {
     
     case invalid(statusCode: Int, data: Data)
     case server(statusCode: Int, errorMessage: String)

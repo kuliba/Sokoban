@@ -8,17 +8,17 @@
 import Combine
 import Foundation
 
-final class SberQRFeatureViewModel: ObservableObject {
+public final class SberQRFeatureViewModel: ObservableObject {
     
-    typealias GetSberQRDataResult = Result<GetSberQRDataResponse, ScenarioQRError>
-    typealias GetSberQRData = (QRLink, @escaping (GetSberQRDataResult) -> Void) -> Void
+    public typealias GetSberQRDataResult = Result<GetSberQRDataResponse, ScenarioQRError>
+    public typealias GetSberQRData = (QRLink, @escaping (GetSberQRDataResult) -> Void) -> Void
     
-    @Published private(set) var state: SberQRFeatureState
+    @Published public private(set) var state: SberQRFeatureState
     
     private let stateSubject = PassthroughSubject<SberQRFeatureState, Never>()
     private let getSberQRData: GetSberQRData
     
-    init(
+    public init(
         initialState: SberQRFeatureState = .loading,
         getSberQRData: @escaping GetSberQRData,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -32,7 +32,7 @@ final class SberQRFeatureViewModel: ObservableObject {
             .assign(to: &$state)
     }
     
-    func loadSberQRData(url: URL) {
+    public func loadSberQRData(url: URL) {
         
         let payload = QRLink(qrLinkString: url.absoluteString)
         
@@ -50,7 +50,7 @@ final class SberQRFeatureViewModel: ObservableObject {
         }
     }
     
-    enum ScenarioQRError: Error {
+    public enum ScenarioQRError: Error {
         
         case server(statusCode: Int, errorMessage: String)
         case other(statusCode: Int, data: Data)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SberQR
 
 extension GetSberQRDataResponse.Parameter.Amount {
     

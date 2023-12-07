@@ -8,31 +8,48 @@
 import Foundation
 import Tagged
 
-enum SberQRConfirmPaymentState: Equatable {
+public enum SberQRConfirmPaymentState: Equatable {
     
     case fixedAmount(FixedAmount)
     case editableAmount(EditableAmount)
 }
 
-enum ProductSelect: Equatable {
+public enum ProductSelect: Equatable {
     
     case compact(Product)
     case expanded(Product, [Product])
+}
+
+public extension ProductSelect {
     
     struct Product: Equatable, Identifiable {
         
-        typealias ID = Tagged<_ID, String>
-        enum _ID {}
+        public typealias ID = Tagged<_ID, String>
+        public enum _ID {}
         
-        let id: ID
+        public let id: ID
         let icon: String
         let title: String
         let amountFormatted: String
         let color: String
+        
+        public init(
+            id: ID,
+            icon: String,
+            title: String,
+            amountFormatted: String,
+            color: String
+        ) {
+            self.id = id
+            self.icon = icon
+            self.title = title
+            self.amountFormatted = amountFormatted
+            self.color = color
+        }
     }
 }
 
-extension SberQRConfirmPaymentState {
+public extension SberQRConfirmPaymentState {
     
     typealias Amount = GetSberQRDataResponse.Parameter.Amount
     typealias Button = GetSberQRDataResponse.Parameter.Button
@@ -42,26 +59,58 @@ extension SberQRConfirmPaymentState {
     
     struct FixedAmount: Equatable {
         
-        let header: Header
-        var productSelect: ProductSelect
-        let brandName: Info
-        let amount: Info
-        let recipientBank: Info
-        let bottom: Button
+        public let header: Header
+        public var productSelect: ProductSelect
+        public let brandName: Info
+        public let amount: Info
+        public let recipientBank: Info
+        public let bottom: Button
+        
+        public init(
+            header: Header,
+            productSelect: ProductSelect,
+            brandName: Info,
+            amount: Info,
+            recipientBank: Info,
+            bottom: Button
+        ) {
+            self.header = header
+            self.productSelect = productSelect
+            self.brandName = brandName
+            self.amount = amount
+            self.recipientBank = recipientBank
+            self.bottom = bottom
+        }
     }
     
     struct EditableAmount: Equatable {
         
-        let header: Header
-        var productSelect: ProductSelect
-        let brandName: Info
-        let recipientBank: Info
-        let currency: DataString
-        var bottom: Amount
+        public let header: Header
+        public var productSelect: ProductSelect
+        public let brandName: Info
+        public let recipientBank: Info
+        public let currency: DataString
+        public var bottom: Amount
+        
+        public init(
+            header: Header,
+            productSelect: ProductSelect,
+            brandName: Info,
+            recipientBank: Info,
+            currency: DataString,
+            bottom: Amount
+        ) {
+            self.header = header
+            self.productSelect = productSelect
+            self.brandName = brandName
+            self.recipientBank = recipientBank
+            self.currency = currency
+            self.bottom = bottom
+        }
     }
 }
 
-extension SberQRConfirmPaymentState {
+public extension SberQRConfirmPaymentState {
     
     init(
         product: ProductSelect.Product,

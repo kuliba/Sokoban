@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ResponseMapper {
+public extension ResponseMapper {
     
     typealias GetSberQRDataResult = Result<GetSberQRDataResponse, GetSberQRDataError>
     

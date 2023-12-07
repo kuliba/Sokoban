@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 06.12.2023.
 //
 
+import SberQR
 import XCTest
 
 extension SberQRConfirmPaymentEvent {

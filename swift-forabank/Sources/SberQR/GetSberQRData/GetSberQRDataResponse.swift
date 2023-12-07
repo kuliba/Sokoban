@@ -7,14 +7,24 @@
 
 import Foundation
 
-struct GetSberQRDataResponse: Equatable {
+public struct GetSberQRDataResponse: Equatable {
     
     let qrcID: String
     let parameters: [Parameter]
     let required: [Required]
+    
+    public init(
+        qrcID: String, 
+        parameters: [Parameter],
+        required: [Required]
+    ) {
+        self.qrcID = qrcID
+        self.parameters = parameters
+        self.required = required
+    }
 }
 
-extension GetSberQRDataResponse {
+public extension GetSberQRDataResponse {
     
     enum Parameter: Equatable {
         
@@ -27,7 +37,7 @@ extension GetSberQRDataResponse {
     }
 }
 
-extension GetSberQRDataResponse {
+public extension GetSberQRDataResponse {
     
     enum Required: Equatable {
         

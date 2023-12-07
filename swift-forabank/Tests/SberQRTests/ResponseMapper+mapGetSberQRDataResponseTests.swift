@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.12.2023.
 //
 
+import SberQR
 import XCTest
 
 final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseTests {
