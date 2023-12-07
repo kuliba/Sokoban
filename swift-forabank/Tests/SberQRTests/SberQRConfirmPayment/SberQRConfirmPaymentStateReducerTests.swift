@@ -8,59 +8,6 @@
 import SberQR
 import XCTest
 
-enum SberQRConfirmPaymentEvent {
-    
-    case editable(EditableAmountEvent)
-    case fixed(FixedAmountEvent)
-}
-
-final class SberQRConfirmPaymentStateReducer {
-    
-    typealias State = SberQRConfirmPaymentState
-    typealias Event = SberQRConfirmPaymentEvent
-    
-    typealias EditableState = State.EditableAmount
-    typealias EditableEvent = Event.EditableAmountEvent
-    
-    typealias FixedState = State.FixedAmount
-    typealias FixedEvent = Event.FixedAmountEvent
-    
-    typealias EditableReduce = (EditableState, EditableEvent) -> EditableState
-    typealias FixedReduce = (FixedState, FixedEvent) -> FixedState
-    
-    let editableReduce: EditableReduce
-    let fixedReduce: FixedReduce
-    
-    init(
-        editableReduce: @escaping EditableReduce,
-        fixedReduce: @escaping FixedReduce
-    ) {
-        self.editableReduce = editableReduce
-        self.fixedReduce = fixedReduce
-    }
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> State {
-        
-        var newState = state
-        
-        switch (state, event) {
-        case let (.editableAmount(state), .editable(event)):
-            newState = .editableAmount(editableReduce(state, event))
-            
-        case let (.fixedAmount(state), .fixed(event)):
-            newState = .fixedAmount(fixedReduce(state, event))
-            
-        default:
-            break
-        }
-        
-        return newState
-    }
-}
-
 final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
     
     // MARK: - EditableAmount

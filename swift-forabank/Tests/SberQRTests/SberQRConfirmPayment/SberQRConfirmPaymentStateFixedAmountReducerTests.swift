@@ -8,66 +8,6 @@
 import SberQR
 import XCTest
 
-extension SberQRConfirmPaymentEvent {
-    
-    enum FixedAmountEvent {
-        
-        case toggleProductSelect
-        case pay
-        case select(ProductSelect.Product.ID)
-    }
-}
-
-final class SberQRConfirmPaymentStateFixedAmountReducer {
-    
-    typealias State = SberQRConfirmPaymentState.FixedAmount
-    typealias Event = SberQRConfirmPaymentEvent.FixedAmountEvent
-    
-    typealias GetProducts = () -> [ProductSelect.Product]
-    typealias Pay = () -> Void
-    
-    private let getProducts: GetProducts
-    private let pay: Pay
-    
-    init(
-        getProducts: @escaping GetProducts,
-        pay: @escaping Pay
-    ) {
-        self.getProducts = getProducts
-        self.pay = pay
-    }
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> State {
-        
-        var newState = state
-        
-        switch event {
-        case .pay:
-            pay()
-            
-        case let .select(id):
-            guard let product = getProducts().first(where: { $0.id == id })
-            else { break }
-            
-            newState.productSelect = .compact(product)
-            
-        case .toggleProductSelect:
-            switch state.productSelect {
-            case let .compact(product):
-                newState.productSelect = .expanded(product, getProducts())
-                
-            case let .expanded(selected, _):
-                newState.productSelect = .compact(selected)
-            }
-        }
-        
-        return newState
-    }
-}
-
 final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     
     func test_init_shouldNotCallPay() {
