@@ -61,6 +61,7 @@ extension Services {
             case createStickerPayment
             case formSessionKey
             case getJsonAbroad
+            case getSberQRData
             case getScenarioQRData
             case getStickerPayment
             case getPINConfirmationCode
@@ -170,6 +171,12 @@ extension Services.Endpoint {
         pathPrefix: .processing(.registration),
         version: .v1,
         serviceName: .getProcessingSessionCode
+    )
+    
+    static let getSberQRDataRequest: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .getSberQRData
     )
     
     static let getScenarioQRDataRequest: Self = .init(
