@@ -14,7 +14,7 @@ public extension ResponseMapper {
     static func mapGetSberQRDataResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) throws -> GetSberQRDataResult {
+    ) -> GetSberQRDataResult {
         
         do {
             

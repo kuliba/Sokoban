@@ -52,18 +52,3 @@ where PerformRequestError: Error,
         )
     }
 }
-
-private extension RemoteService where CreateRequestError == Error {
-    
-    convenience init(
-        createRequest: @escaping (Input) throws -> URLRequest,
-        performRequest: @escaping PerformRequest,
-        mapResponse: @escaping MapResponse
-    ) {
-        self.init(
-            createRequest: { input in .init { try createRequest(input) }},
-            performRequest: performRequest,
-            mapResponse: mapResponse
-        )
-    }
-}
