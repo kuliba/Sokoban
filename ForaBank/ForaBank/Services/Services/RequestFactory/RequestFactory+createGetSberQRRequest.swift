@@ -10,33 +10,29 @@ import Foundation
 extension RequestFactory {
     
     static func createGetSberQRRequest(
-        _ input: QRLink
+        _ url: URL
     ) throws -> URLRequest {
-        
-        guard !input.link.isEmpty else {
-            throw QRDataError.emptyLink
-        }
         
         let base = Config.serverAgentEnvironment.baseURL
         let endpoint = Services.Endpoint.getSberQRDataRequest
-        let url = try! endpoint.url(withBase: base)
+        let endpointURL = try! endpoint.url(withBase: base)
         
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: endpointURL)
         request.httpMethod = "POST"
-        request.httpBody = try? input.json
+        request.httpBody = try? url.json
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
     }
 }
 
-private extension QRLink {
+private extension URL {
     
     var json: Data {
         
         get throws {
             
             try JSONSerialization.data(withJSONObject: [
-                "QRLink": link.rawValue
+                "QRLink": absoluteString
             ] as [String: String])
         }
     }

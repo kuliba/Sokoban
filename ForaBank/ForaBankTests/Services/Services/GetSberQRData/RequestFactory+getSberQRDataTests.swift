@@ -10,21 +10,9 @@ import XCTest
 
 final class RequestFactory_getSberQRDataTests: XCTestCase {
     
-    func test_createGetSberQRRequest_shouldThrowOnEmptyLink() throws {
-        
-        XCTAssertThrowsError(
-            try createGetSberQRRequest(linkString: "")
-        ) {
-            XCTAssertNoDiff(
-                $0 as? RequestFactory.QRDataError,
-                .emptyLink
-            )
-        }
-    }
-    
     func test_createGetSberQRRequest_shouldSetRequestURL() throws {
         
-        let (_, request) = try createGetSberQRRequest()
+        let request = try createGetSberQRRequest()
         
         XCTAssertEqual(
             request.url?.absoluteString,
@@ -34,58 +22,37 @@ final class RequestFactory_getSberQRDataTests: XCTestCase {
     
     func test_createGetSberQRRequest_shouldSetRequestMethodToPost() throws {
         
-        let (_, request) = try createGetSberQRRequest()
+        let request = try createGetSberQRRequest()
         
         XCTAssertEqual(request.httpMethod, "POST")
     }
     
     func test_createGetSberQRRequest_shouldSetRequestBody() throws {
         
-        let (qrLink, request) = try createGetSberQRRequest()
+        let url = anyURL()
+        let request = try createGetSberQRRequest(url: url)
         let data = try XCTUnwrap(request.httpBody)
         let decodedRequest = try JSONDecoder().decode(DecodableQRLink.self, from: data)
         
-        XCTAssertNoDiff(qrLink, decodedRequest.qrLink)
+        XCTAssertNoDiff(decodedRequest.url, url)
     }
     
     // MARK: - Helpers
     
     private func createGetSberQRRequest(
-        linkString: String = UUID().uuidString
-    ) throws -> (
-        qrLink: QRLink,
-        request: URLRequest
-    ) {
-        let link = anyQrLink(link: linkString)
-        let request = try RequestFactory.createGetSberQRRequest(link)
+        url: URL = anyURL()
+    ) throws -> URLRequest {
         
-        return (link, request)
-    }
-    
-    private func anyQrLink(
-        link: String = UUID().uuidString
-    ) -> QRLink {
-        
-        .init(link: .init(link))
+        try RequestFactory.createGetSberQRRequest(url)
     }
     
     private struct DecodableQRLink: Decodable {
         
-        let linkString: String
+        let url: URL
         
         enum CodingKeys: String, CodingKey {
             
-            case linkString = "QRLink"
-        }
-        
-        init(_ link: QRLink) {
-            
-            self.linkString = link.link.rawValue
-        }
-        
-        var qrLink: QRLink {
-            
-            .init(link: .init(linkString))
+            case url = "QRLink"
         }
     }
 }
