@@ -6,18 +6,19 @@
 //
 
 import Foundation
+import SberQR
 
 final class SberQRPaymentViewModel: ObservableObject {
     
     typealias Commit = MakeSberQRPaymentCompletion
     
     let sberQRURL: URL
-    let sberQRData: Data
+    let sberQRData: GetSberQRDataResponse
     let commit: Commit
     
     init(
         sberQRURL: URL,
-        sberQRData: Data,
+        sberQRData: GetSberQRDataResponse,
         commit: @escaping Commit
     ) {
         self.sberQRURL = sberQRURL

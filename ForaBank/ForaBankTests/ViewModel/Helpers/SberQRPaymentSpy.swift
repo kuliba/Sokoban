@@ -7,17 +7,18 @@
 
 @testable import ForaBank
 import Foundation
+import SberQR
 
 final class SberQRPaymentSpy {
     
     typealias Completion = MakeSberQRPaymentCompletion
-    typealias Message = (URL, Data, completion: Completion)
+    typealias Message = (URL, GetSberQRDataResponse, completion: Completion)
     
     private(set) var messages = [Message]()
     
     func make(
     _ url: URL,
-    _ data: Data,
+    _ data: GetSberQRDataResponse,
     completion: @escaping MakeSberQRPaymentCompletion
     ) -> SberQRPaymentViewModel {
         

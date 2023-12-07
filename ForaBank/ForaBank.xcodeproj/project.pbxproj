@@ -340,6 +340,7 @@
 		2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */; };
 		2A0801B62B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */; };
 		2A08F96A2B21B0A800227548 /* SberQR in Frameworks */ = {isa = PBXBuildFile; productRef = 2A08F9692B21B0A800227548 /* SberQR */; };
+		2A08F96C2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A08F96B2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift */; };
 		2A118E1F2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */; };
 		2A118E212AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E202AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift */; };
 		2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */; };
@@ -2525,6 +2526,7 @@
 		2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getScenarioQRData_1_1_1.json; sourceTree = "<group>"; };
 		2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTransferNumberViewModelTests.swift; sourceTree = "<group>"; };
 		2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessViewModelWithTransferNumberTests.swift; sourceTree = "<group>"; };
+		2A08F96B2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResult+emptySuccess.swift"; sourceTree = "<group>"; };
 		2A0DBD792B05E89B008386DA /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 		2A0F2F4329AE338E0054B920 /* MCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCError.swift; sourceTree = "<group>"; };
 		2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iFora_515A3_10rub_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = createAnywayTransfer_iFora_515A3_10rub_response.json; sourceTree = "<group>"; };
@@ -5399,6 +5401,7 @@
 			isa = PBXGroup;
 			children = (
 				2A1650A22B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift */,
+				2A08F96B2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -14021,6 +14024,7 @@
 				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,
 				2A8A28442A4089FF000D3807 /* LocalAgentStub+convenience.swift in Sources */,
 				2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */,
+				2A08F96C2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift in Sources */,
 				2A3599AE2ADA80A700820369 /* KeyChainStoreTestTypes.swift in Sources */,
 				779511A72A6A961500A570F8 /* KeychainSymmetricKeyProviderAdapterTests.swift in Sources */,
 				7757DB552A711E6300745EFF /* KeychainAgentSpy.swift in Sources */,
