@@ -126,16 +126,17 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateFixedAmountReducer
-    
+    private typealias Spy = CallSpy<SUT.State>
+
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: CallSpy
+        spy: Spy
     ) {
-        let spy = CallSpy()
+        let spy = Spy()
         let sut = SUT(
             getProducts: { products },
             pay: spy.call

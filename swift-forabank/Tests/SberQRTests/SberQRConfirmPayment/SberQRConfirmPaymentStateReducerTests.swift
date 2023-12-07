@@ -263,27 +263,20 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
     // MARK: - Helpers
     
     typealias SUT = SberQRConfirmPaymentStateReducer
-    
+    private typealias Spy = CallSpy<SUT.State>
+
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: CallSpy
+        spy: Spy
     ) {
-        let spy = CallSpy()
-        let editable = SberQRConfirmPaymentStateEditableAmountReducer(
-            getProducts: { products },
-            pay: spy.call
-        )
-        let fixed = SberQRConfirmPaymentStateFixedAmountReducer(
-            getProducts: { products },
-            pay: spy.call
-        )
+        let spy = Spy()
         let sut = SUT(
-            editableReduce: editable.reduce(_:_:),
-            fixedReduce: fixed.reduce(_:_:)
+            getProducts: { products },
+            pay: spy.call
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

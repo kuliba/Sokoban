@@ -52,3 +52,28 @@ public final class SberQRConfirmPaymentStateReducer {
     }
 }
 
+extension SberQRConfirmPaymentStateReducer {
+    
+    public typealias GetProducts = () -> [ProductSelect.Product]
+    public typealias Pay = (State) -> Void
+
+    public convenience init(
+        getProducts: @escaping GetProducts,
+        pay: @escaping Pay
+    ) {
+        
+        let editableReducer = SberQRConfirmPaymentStateEditableAmountReducer(
+            getProducts: getProducts,
+            pay: { pay(.editableAmount($0)) }
+        )
+        let fixedReducer = SberQRConfirmPaymentStateFixedAmountReducer(
+            getProducts: getProducts,
+            pay: { pay(.fixedAmount($0)) }
+        )
+        
+        self.init(
+            editableReduce: editableReducer.reduce(_:_:),
+            fixedReduce: fixedReducer.reduce(_:_:)
+        )
+    }
+}

@@ -153,6 +153,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateEditableAmountReducer
+    private typealias Spy = CallSpy<SUT.State>
     
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
@@ -160,9 +161,9 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: CallSpy
+        spy: Spy
     ) {
-        let spy = CallSpy()
+        let spy = Spy()
         let sut = SUT(
             getProducts: { products },
             pay: spy.call
