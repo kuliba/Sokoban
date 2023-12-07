@@ -348,6 +348,7 @@
 		2A118E272AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */; };
 		2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */; };
 		2A118E2B2AFF79B9007EF30E /* CVVPINHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */; };
+		2A123A372B21DBDC00E03010 /* QRPaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A123A362B21DBDC00E03010 /* QRPaymentType.swift */; };
 		2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A12674729EFE53200461884 /* CombineSchedulers */; };
 		2A14A8552A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */; };
 		2A14A8572A2750450018511E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A14A8562A2750450018511E /* ContentView.swift */; };
@@ -2546,6 +2547,7 @@
 		2A118E262AFED217007EF30E /* CVVPINFunctionalityActivationService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVVPINFunctionalityActivationService+Fetcher.swift"; sourceTree = "<group>"; };
 		2A118E282AFF791A007EF30E /* Services+makeChangePINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINServiceTests.swift"; sourceTree = "<group>"; };
 		2A118E2A2AFF79B9007EF30E /* CVVPINHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINHelpers.swift; sourceTree = "<group>"; };
+		2A123A362B21DBDC00E03010 /* QRPaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRPaymentType.swift; sourceTree = "<group>"; };
 		2A14A8522A2750450018511E /* TextFieldViewVithBindingPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFieldViewVithBindingPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A14A8542A2750450018511E /* TextFieldViewVithBindingPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldViewVithBindingPreviewApp.swift; sourceTree = "<group>"; };
 		2A14A8562A2750450018511E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -4686,6 +4688,7 @@
 			children = (
 				0B71D7A128FD834D00AA1970 /* QRCode.swift */,
 				0B71D7A528FD839300AA1970 /* QRMapping.swift */,
+				2A123A362B21DBDC00E03010 /* QRPaymentType.swift */,
 				0B71D7A328FD837300AA1970 /* QRParameter.swift */,
 				0BE0BE02290F30BA0064549E /* QROperator.swift */,
 				77D0385C2987D66F00FBE5AB /* QRScenarioData.swift */,
@@ -12747,6 +12750,7 @@
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				0B8365DF2926A9C000A11F0A /* QRSearchOperatorViewModel.swift in Sources */,
+				2A123A372B21DBDC00E03010 /* QRPaymentType.swift in Sources */,
 				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */,

@@ -114,6 +114,7 @@ class Model {
 
     //MARK: QR
     let qrMapping: CurrentValueSubject<QRMapping?, Never>
+    let qrPaymentType: CurrentValueSubject<[QRPaymentType], Never>
     
     //MARK: ClientInform show flags
     var clientInformStatus: ClientInformStatus
@@ -215,6 +216,7 @@ class Model {
         self.deepLinkType = nil
         self.subscriptions = .init(nil)
         self.qrMapping = .init(nil)
+        self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
         self.clientInform = .init(.notRecieved)
@@ -896,6 +898,9 @@ class Model {
                         
                     case .qrMapping:
                         handleDictionaryQRMapping(payload.serial)
+                        
+                    case .qrPaymentType:
+                        handleDictionaryQRPaymentType(payload.serial)
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
