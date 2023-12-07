@@ -339,6 +339,7 @@
 		2A0776FC2A0252F100118373 /* getScenarioQRData_1_1_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0776FB2A0252F100118373 /* getScenarioQRData_1_1_1.json */; };
 		2A0801B42B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B32B11D62400C83138 /* PaymentsSuccessTransferNumberViewModelTests.swift */; };
 		2A0801B62B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0801B52B11DE5B00C83138 /* PaymentsSuccessViewModelWithTransferNumberTests.swift */; };
+		2A08F96A2B21B0A800227548 /* SberQR in Frameworks */ = {isa = PBXBuildFile; productRef = 2A08F9692B21B0A800227548 /* SberQR */; };
 		2A118E1F2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E1E2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift */; };
 		2A118E212AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E202AFEAC5E007EF30E /* Model+authLoginViewModelFactory.swift */; };
 		2A118E232AFEACA0007EF30E /* AuthLoginViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A118E222AFEACA0007EF30E /* AuthLoginViewModel+ext.swift */; };
@@ -4420,6 +4421,7 @@
 				2A4630092AC454E400020B73 /* ServerAgent in Frameworks */,
 				2A3011E62A6AB53B00560B98 /* CvvPin in Frameworks */,
 				830C91BB2AAF9051005EC90C /* CodableLanding in Frameworks */,
+				2A08F96A2B21B0A800227548 /* SberQR in Frameworks */,
 				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				2A3947182A19E84500EB9757 /* TextFieldComponent in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
@@ -11649,6 +11651,7 @@
 				2A06DC2F2AFACBDD0049709E /* ServerAgent */,
 				2A4630082AC454E400020B73 /* ServerAgent */,
 				83B2B8832AE7A90500DAD486 /* PhoneNumberWrapper */,
+				2A08F9692B21B0A800227548 /* SberQR */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* ForaBank.app */;
@@ -15906,6 +15909,10 @@
 		2A0702782A19F89B009B704A /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2A08F9692B21B0A800227548 /* SberQR */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SberQR;
 		};
 		2A12674729EFE53200461884 /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
