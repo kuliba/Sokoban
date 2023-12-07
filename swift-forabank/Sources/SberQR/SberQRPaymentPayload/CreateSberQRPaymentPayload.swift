@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-public struct CreateSberQRPaymentPayload {
+public struct CreateSberQRPaymentPayload: Equatable {
     
     public let qrLink: URL
     public let product: Product
@@ -27,7 +27,7 @@ public struct CreateSberQRPaymentPayload {
 
 public extension CreateSberQRPaymentPayload {
     
-    enum Product {
+    enum Product: Equatable {
         
         case card(CardID)
         case account(AccountID)
@@ -39,7 +39,7 @@ public extension CreateSberQRPaymentPayload {
         public enum _AccountID {}
     }
     
-    struct Amount {
+    struct Amount: Equatable {
         
         public let amount: Decimal
         public let currency: Currency
