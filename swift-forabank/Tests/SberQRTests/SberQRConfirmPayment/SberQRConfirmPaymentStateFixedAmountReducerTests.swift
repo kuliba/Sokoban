@@ -19,11 +19,12 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     
     func test_reduce_pay_shouldCallPay() {
         
+        let state = makeFixedAmount()
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .pay)
+        _ = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(spy.callCount, 1)
+        XCTAssertNoDiff(spy.payloads, [state])
     }
     
     func test_reduce_pay_shouldNotChangeState() {

@@ -46,13 +46,14 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )))
     }
     
-    func test_reduce_editableAmount_pay_shouldCallPay() {
+    func test_reduce_editableAmount_pay_shouldCallPayWithState() {
         
+        let state = makeEditableAmount()
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .pay)
+        _ = sut.reduce(.editableAmount(state), .editable(.pay))
         
-        XCTAssertNoDiff(spy.callCount, 1)
+        XCTAssertNoDiff(spy.payloads, [.editableAmount(state)])
     }
     
     func test_reduce_editableAmount_pay_shouldNotChangeState() {
@@ -154,13 +155,14 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
     
     // MARK: - FixedAmount
     
-    func test_reduce_fixedAmount_pay_shouldCallPay() {
+    func test_reduce_fixedAmount_pay_shouldCallPayWithState() {
         
+        let state = makeFixedAmount()
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .pay)
+        _ = sut.reduce(.fixedAmount(state), .fixed(.pay))
         
-        XCTAssertNoDiff(spy.callCount, 1)
+        XCTAssertNoDiff(spy.payloads, [.fixedAmount(state)])
     }
     
     func test_reduce_fixedAmount_pay_shouldNotChangeState() {
