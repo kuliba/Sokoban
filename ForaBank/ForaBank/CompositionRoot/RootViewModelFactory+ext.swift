@@ -34,14 +34,23 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let qrResolver: QRViewModel.QRResolver = QRViewModel.ScanResult.init
+        let qrResolver: QRViewModel.QRResolver = { string in
+            // feature flag: remove `{ _ in false }` to activate SberQR
+            let resolver = QRResolver(isSberQR: { _ in false } /*model.isSberQR*/)
+            return resolver.resolve(string: string)
+        }
         
         let makeQRScannerModel: MakeQRScannerModel = {
             
             .init(closeAction: $0, qrResolver: qrResolver)
         }
         
-        let getSberQRData: GetSberQRData = { _,_ in }
+        let getSberQRDataService = Services.makeGetSberQRDataService(
+            httpClient: httpClient
+            // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
+        )
+        
+        let getSberQRData: GetSberQRData = getSberQRDataService.process
         
         let makeSberQRPaymentViewModel = SberQRPaymentViewModel.init
         

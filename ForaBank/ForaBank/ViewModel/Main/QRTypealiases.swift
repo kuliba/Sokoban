@@ -10,7 +10,7 @@ import SberQR
 
 typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
 
-typealias GetSberQRDataResult = SberQR.ResponseMapper.GetSberQRDataResult
+typealias GetSberQRDataResult = Result<GetSberQRDataResponse, MappingRemoteServiceError<GetSberQRDataError>>
 typealias GetSberQRDataCompletion = (GetSberQRDataResult) -> Void
 typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
 

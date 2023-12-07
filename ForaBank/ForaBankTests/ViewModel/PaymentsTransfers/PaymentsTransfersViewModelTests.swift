@@ -104,7 +104,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.invalid(statusCode: 200, data: anyData()))
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .invalid(statusCode: 200, data: anyData())
+            ))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
@@ -120,7 +122,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.invalid(statusCode: 200, data: anyData()))
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .invalid(statusCode: 200, data: anyData())
+            ))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -137,7 +141,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.server(statusCode: 200, errorMessage: UUID().uuidString))
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .server(statusCode: 200, errorMessage: UUID().uuidString)
+            ))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
@@ -153,7 +159,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(.server(statusCode: 200, errorMessage: UUID().uuidString))
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .server(statusCode: 200, errorMessage: UUID().uuidString)
+            ))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -225,7 +233,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         try sut.scanAndWait(anyURL())
         spy.complete(with: .failure(sberQRError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
+        
         XCTAssertNoDiff(alertMessageSpy.values, [
             nil,
             "Возникла техническая ошибка"
@@ -245,7 +253,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(alertMessageSpy.values, [
             nil,
-            "Возникла техническая ошибка", 
+            "Возникла техническая ошибка",
             nil
         ])
     }

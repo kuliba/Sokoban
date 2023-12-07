@@ -649,6 +649,8 @@
 		2AC2ADBB2B2242A10049EE9B /* RequestFactory+createGetSberQRRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADBA2B2242A10049EE9B /* RequestFactory+createGetSberQRRequest.swift */; };
 		2AC2ADBE2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADBD2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift */; };
 		2AC2ADC02B2248140049EE9B /* RemoteService+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */; };
+		2AC2ADC22B2250C20049EE9B /* Model+isSberQR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */; };
+		2AC2ADC52B2252A50049EE9B /* Model+isSberQRTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC2ADC42B2252A40049EE9B /* Model+isSberQRTests.swift */; };
 		2AC328302ADEF41D00443A84 /* CVVPINServices in Frameworks */ = {isa = PBXBuildFile; productRef = 2AC3282F2ADEF41D00443A84 /* CVVPINServices */; };
 		2AC396A72A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */; };
 		2AC396AA2A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */; };
@@ -2847,6 +2849,8 @@
 		2AC2ADBA2B2242A10049EE9B /* RequestFactory+createGetSberQRRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSberQRRequest.swift"; sourceTree = "<group>"; };
 		2AC2ADBD2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSberQRDataService.swift"; sourceTree = "<group>"; };
 		2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteService+ext.swift"; sourceTree = "<group>"; };
+		2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+isSberQR.swift"; sourceTree = "<group>"; };
+		2AC2ADC42B2252A40049EE9B /* Model+isSberQRTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+isSberQRTests.swift"; sourceTree = "<group>"; };
 		2AC3282E2ADEF2C500443A84 /* CVVPINServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CVVPINServices.xctestplan; sourceTree = "<group>"; };
 		2AC396A62A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationSourceAvtodorCase.swift; sourceTree = "<group>"; };
 		2AC396A92A3CAF3E00A26938 /* Model+PaymentsTransportAvtodor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodor.swift"; sourceTree = "<group>"; };
@@ -6194,6 +6198,7 @@
 			isa = PBXGroup;
 			children = (
 				2A7688D52AF3A73600045293 /* CVVPIN */,
+				2AC2ADC32B2252940049EE9B /* SberQR */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -6560,6 +6565,15 @@
 			isa = PBXGroup;
 			children = (
 				2AC2ADBD2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift */,
+				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
+			);
+			path = SberQR;
+			sourceTree = "<group>";
+		};
+		2AC2ADC32B2252940049EE9B /* SberQR */ = {
+			isa = PBXGroup;
+			children = (
+				2AC2ADC42B2252A40049EE9B /* Model+isSberQRTests.swift */,
 			);
 			path = SberQR;
 			sourceTree = "<group>";
@@ -13163,6 +13177,7 @@
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				774A82C927BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift in Sources */,
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
+				2AC2ADC22B2250C20049EE9B /* Model+isSberQR.swift in Sources */,
 				770DCE9127BBF7F4004099C1 /* RootViewModel.swift in Sources */,
 				6833E0B62732B763004C070F /* DetailOperationTableViewCell.swift in Sources */,
 				774A8B2D2865FC6F00B81140 /* MyProductsSectionViewModel.swift in Sources */,
@@ -14044,6 +14059,7 @@
 				2AE886392AFBC8BD00D86E84 /* Services+makeFormSessionKeyServiceTests.swift in Sources */,
 				2AB5FEA829E6833E0055BE57 /* UIImage+TestHelpers.swift in Sources */,
 				7735E6E52A407D4F0013C8A7 /* PaymentsSuccessViewModelTests.swift in Sources */,
+				2AC2ADC52B2252A50049EE9B /* Model+isSberQRTests.swift in Sources */,
 				77B6B3612852318500E3001B /* PeriodTests.swift in Sources */,
 				2A1D7F5F2A0FF0680066BC02 /* SearchFactoryTests.swift in Sources */,
 				2A58FAA12AD6FB4800BD1967 /* Services+EndpointShowCVVTests.swift in Sources */,

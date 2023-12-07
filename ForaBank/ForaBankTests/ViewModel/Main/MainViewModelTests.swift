@@ -72,9 +72,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _, _) = makeSUT(getSberQRDataResultStub: .failure(
-            .invalid(statusCode: 200, data: anyData())
-        ))
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .invalid(statusCode: 200, data: anyData())
+            ))
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
@@ -88,9 +90,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _, _) = makeSUT(getSberQRDataResultStub: .failure(
-            .invalid(statusCode: 200, data: anyData())
-        ))
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .invalid(statusCode: 200, data: anyData())
+            ))
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait()
@@ -105,9 +109,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _, _) = makeSUT(getSberQRDataResultStub: .failure(
-            .server(statusCode: 200, errorMessage: UUID().uuidString)
-        ))
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .server(statusCode: 200, errorMessage: UUID().uuidString)
+            ))
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
@@ -121,9 +127,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _, _) = makeSUT(getSberQRDataResultStub: .failure(
-            .server(statusCode: 200, errorMessage: UUID().uuidString)
-        ))
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.mapResponse(
+                .server(statusCode: 200, errorMessage: UUID().uuidString)
+            ))
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait()
