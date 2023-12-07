@@ -28,11 +28,11 @@ public extension CreateSberQRPaymentPayload {
                 "id": "currency",
                 "value": $0.currency.rawValue
             ]] }
-            if let amount { parameters.append(contentsOf: amount)}
+            if let amount { parameters.append(contentsOf: amount) }
             
             return try JSONSerialization.data(withJSONObject: [
                 "parameters": parameters
-            ] as [String: Any])
+            ] as [String: [[String: String]]])
         }
     }
     
@@ -58,4 +58,3 @@ public extension CreateSberQRPaymentPayload {
         }
     }
 }
-
