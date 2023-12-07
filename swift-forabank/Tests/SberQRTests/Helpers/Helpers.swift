@@ -113,16 +113,6 @@ extension ProductSelect.Product {
     static let missing: Self = .init(id: "missing", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
 }
 
-final class CallSpy {
-    
-    private(set) var callCount = 0
-    
-    func call() {
-        
-        callCount += 1
-    }
-}
-
 func makeEditableAmount(
     brandName: String = UUID().uuidString,
     productSelect: ProductSelect = .compact(.test),
