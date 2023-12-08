@@ -49,6 +49,28 @@ final class OperationStateViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.scrollParameters, [])
     }
     
+    func test_operationParameters_shouldReturnStickerAndProduct() {
+    
+        let sut = makeSUT(
+            state: .operation,
+            parameters: [
+                .sticker(makeBannerStub()),
+                .productSelector(makeProductStub())
+            ]
+        )
+        
+        XCTAssertNoDiff(sut.scrollParameters.count, 2)
+    }
+    
+    func test_operationWithOutAmountParameter_shouldReturnNil() {
+    
+        let sut = makeSUT(
+            state: .operation
+        )
+        
+        XCTAssertNoDiff(sut.amountParameter, nil)
+    }
+    
     func test_operationWithOutProduct_shouldReturnNil() {
         
         let sut = makeSUT()
