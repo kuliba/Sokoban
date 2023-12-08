@@ -1,5 +1,5 @@
 //
-//  SberQRPaymentViewModel.swift
+//  SberQRConfirmPaymentViewModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 05.12.2023.
@@ -8,7 +8,7 @@
 import Foundation
 import SberQR
 
-final class SberQRPaymentViewModel: ObservableObject {
+final class SberQRConfirmPaymentViewModel: ObservableObject {
     
     typealias Commit = MakeSberQRPaymentCompletion
     

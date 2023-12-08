@@ -33,7 +33,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
     private let getSberQRData: GetSberQRData
-    private let makeSberQRPaymentViewModel: MakeSberQRPaymentViewModel
+    private let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -44,7 +44,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
@@ -53,7 +53,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
-        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+        self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
     }
     
@@ -62,7 +62,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -78,7 +78,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
-        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+        self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -766,7 +766,7 @@ class MainViewModel: ObservableObject, Resetable {
             alert = techErrorAlert()
             
         case let .success(sberQRData):
-            let viewModel = makeSberQRPaymentViewModel(
+            let viewModel = makeSberQRConfirmPaymentViewModel(
                 url,
                 sberQRData
             ) { [weak self] in self?.handleSberQRPaymentResult($0) }
@@ -1118,7 +1118,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case sberQRPayment(SberQRPaymentViewModel)
+        case sberQRPayment(SberQRConfirmPaymentViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
