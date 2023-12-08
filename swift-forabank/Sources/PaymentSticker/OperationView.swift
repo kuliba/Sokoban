@@ -111,12 +111,12 @@ public struct ResultViewConfiguration {
 public struct OperationView<OperationResultView: View>: View {
     
     @StateObject var model: OperationStateViewModel
-    let operationResultView: (OperationStateViewModel.OperationResult) -> OperationResultView
+    let operationResultView: (OperationResult) -> OperationResultView
     let configuration: OperationViewConfiguration
     
     public init(
         model: OperationStateViewModel,
-        operationResultView: @escaping (OperationStateViewModel.OperationResult) -> OperationResultView,
+        operationResultView: @escaping (OperationResult) -> OperationResultView,
         configuration: OperationViewConfiguration
     ) {
         self._model = .init(wrappedValue: model)
@@ -142,21 +142,16 @@ public struct OperationView<OperationResultView: View>: View {
     }
 }
 
-public struct PaymentID {
-    
-    public let id: Int
-}
-
 public struct OperationResultView<ButtonsView: View>: View {
     
-    let model: OperationStateViewModel.OperationResult
-    let buttonsView: (PaymentID) -> ButtonsView
+    let model: OperationResult
+    let buttonsView: (OperationResult.PaymentID) -> ButtonsView
     let configuration: OperationViewConfiguration
     let mainButtonAction: () -> Void
     
     public init(
-        model: OperationStateViewModel.OperationResult,
-        buttonsView: @escaping (PaymentID) -> ButtonsView,
+        model: OperationResult,
+        buttonsView: @escaping (OperationResult.PaymentID) -> ButtonsView,
         mainButtonAction: @escaping () -> Void,
         configuration: OperationViewConfiguration
     ) {
