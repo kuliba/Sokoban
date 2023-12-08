@@ -11,7 +11,6 @@ import GenericRemoteService
 
 final public class BusinessLogic {
     
-    // TODO: simplify remote services error
     public typealias ProcessDictionaryService = (GetJsonAbroadType, @escaping (Result<StickerDictionary, StickerDictionaryError>) -> Void) -> ()
     public typealias ProcessTransferService = (StickerPayment, @escaping (Result<CommissionProductTransfer, CommissionProductTransferError>) -> Void) -> ()
     public typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, MakeTransferError>) -> Void) -> ()
@@ -390,13 +389,15 @@ public extension BusinessLogic {
                        
                         switch result {
                         case let .success(makeTransfer):
-                            completion(.success(.result(OperationStateViewModel.OperationResult(
-                                result: .success,
-                                title: "Успешная заявка",
-                                description: makeTransfer.productOrderingResponseMessage,
-                                amount: amount ?? "",
-                                paymentID: .init(id: makeTransfer.paymentOperationDetailId)
-                            ))))
+                            completion(.success(.result(
+                                PaymentSticker.OperationResult(
+                                    result: .success,
+                                    title: "Успешная заявка",
+                                    description: makeTransfer.productOrderingResponseMessage,
+                                    amount: amount ?? "",
+                                    paymentID: .init(id: makeTransfer.paymentOperationDetailId)
+                                )))
+                            )
 
                         case let .failure(error):
                             
