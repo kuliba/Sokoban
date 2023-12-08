@@ -60,6 +60,25 @@ final class OperationStateViewModelTests: XCTestCase {
         return sut
     }
     
+    private func makeOperationState(
+        state: OperationStateViewModel.OperationStateTests,
+        parameters: [Parameter] = []
+    ) -> OperationStateViewModel.State {
+        
+        switch state {
+        case .operation:
+            return .operation(.init(parameters: parameters))
+        case .result:
+            return .result(.init(
+                result: .success,
+                title: "Title",
+                description: "Description",
+                amount: "Amount",
+                paymentID: .init(id: 1)
+            ))
+        }
+    }
+    
     func makeProductStub() -> Parameter.ProductSelector {
         
         return .init(
