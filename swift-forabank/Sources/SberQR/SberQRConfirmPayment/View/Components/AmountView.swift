@@ -15,3 +15,13 @@ struct AmountView: View {
         Text("AmountView")
     }
 }
+
+// MARK: - Previews
+
+struct AmountView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        AmountView(amount: .preview)
+    }
+}

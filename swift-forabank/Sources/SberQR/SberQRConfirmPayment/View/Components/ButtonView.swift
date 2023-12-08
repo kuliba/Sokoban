@@ -15,3 +15,13 @@ struct ButtonView: View {
         Text("ButtonView")
     }
 }
+
+// MARK: - Previews
+
+struct ButtonView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ButtonView(button: .preview)
+    }
+}

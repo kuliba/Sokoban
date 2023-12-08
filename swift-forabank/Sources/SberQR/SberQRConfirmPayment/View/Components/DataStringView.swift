@@ -15,3 +15,13 @@ struct DataStringView: View {
         Text("DataStringView")
     }
 }
+
+// MARK: - Previews
+
+struct DataStringView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        DataStringView(data: .preview)
+    }
+}

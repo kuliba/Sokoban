@@ -15,3 +15,18 @@ struct InfoView: View {
         Text("InfoView")
     }
 }
+
+// MARK: - Previews
+
+struct InfoView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack(spacing: 32) {
+            
+            InfoView(info: .preview(.amount))
+            InfoView(info: .preview(.brandName))
+            InfoView(info: .preview(.recipientBank))
+        }
+    }
+}

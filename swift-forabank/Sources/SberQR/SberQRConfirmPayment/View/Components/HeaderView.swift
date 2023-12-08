@@ -15,3 +15,13 @@ struct HeaderView: View {
         Text("HeaderView")
     }
 }
+
+// MARK: - Previews
+
+struct HeaderView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        HeaderView(header: .preview)
+    }
+}
