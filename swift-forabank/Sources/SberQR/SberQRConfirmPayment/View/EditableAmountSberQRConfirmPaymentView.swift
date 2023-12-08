@@ -25,7 +25,10 @@ struct EditableAmountSberQRConfirmPaymentView: View {
         Group {
             
             HeaderView(header: state.header)
-            ProductSelectView(productSelect: state.productSelect)
+            ProductSelectView(
+                state: state.productSelect,
+                event: { event(.productSelect($0)) }
+            )
             InfoView(info: state.brandName)
             InfoView(info: state.recipientBank)
             DataStringView(data: state.currency)

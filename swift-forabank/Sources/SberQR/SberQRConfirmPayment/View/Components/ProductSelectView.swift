@@ -9,9 +9,16 @@ import SwiftUI
 
 struct ProductSelectView: View {
     
-    let productSelect: ProductSelect
+    typealias Event = SberQRConfirmPaymentEvent.ProductSelectEvent
+    
+    let state: ProductSelect
+    let event: (Event) -> Void
     
     var body: some View {
+        
         Text("ProductSelect")
+            .onTapGesture {
+                event(.toggleProductSelect)
+            }
     }
 }

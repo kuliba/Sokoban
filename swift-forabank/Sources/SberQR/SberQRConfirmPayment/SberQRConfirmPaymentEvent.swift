@@ -18,15 +18,19 @@ public extension SberQRConfirmPaymentEvent {
     enum EditableAmount: Equatable {
         
         case editAmount(Decimal)
-        case toggleProductSelect
         case pay
-        case select(ProductSelect.Product.ID)
+        case productSelect(ProductSelectEvent)
     }
     
     enum FixedAmount: Equatable {
         
-        case toggleProductSelect
         case pay
+        case productSelect(ProductSelectEvent)
+    }
+    
+    enum ProductSelectEvent: Equatable {
+        
+        case toggleProductSelect
         case select(ProductSelect.Product.ID)
     }
 }

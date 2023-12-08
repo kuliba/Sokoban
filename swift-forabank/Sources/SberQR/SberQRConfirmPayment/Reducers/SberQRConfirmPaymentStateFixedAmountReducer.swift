@@ -9,22 +9,25 @@ public final class SberQRConfirmPaymentStateFixedAmountReducer {
     
     public typealias State = SberQRConfirmPaymentState.FixedAmount
     public typealias Event = SberQRConfirmPaymentEvent.FixedAmount
-    
-    public typealias GetProducts = () -> [ProductSelect.Product]
+    public typealias ProductSelectReduce = (ProductSelect, SberQRConfirmPaymentEvent.ProductSelectEvent) -> ProductSelect
+
     public typealias Pay = (State) -> Void
     
-    private let getProducts: GetProducts
+    private let productSelectReduce: ProductSelectReduce
     private let pay: Pay
     
     public init(
-        getProducts: @escaping GetProducts,
+        productSelectReduce: @escaping ProductSelectReduce,
         pay: @escaping Pay
     ) {
-        self.getProducts = getProducts
+        self.productSelectReduce = productSelectReduce
         self.pay = pay
     }
-    
-    public func reduce(
+}
+
+public extension SberQRConfirmPaymentStateFixedAmountReducer {
+
+    func reduce(
         _ state: State,
         _ event: Event
     ) -> State {
@@ -35,20 +38,11 @@ public final class SberQRConfirmPaymentStateFixedAmountReducer {
         case .pay:
             pay(state)
             
-        case let .select(id):
-            guard let product = getProducts().first(where: { $0.id == id })
-            else { break }
-            
-            newState.productSelect = .compact(product)
-            
-        case .toggleProductSelect:
-            switch state.productSelect {
-            case let .compact(product):
-                newState.productSelect = .expanded(product, getProducts())
-                
-            case let .expanded(selected, _):
-                newState.productSelect = .compact(selected)
-            }
+        case let .productSelect(productSelectEvent):
+            newState.productSelect = productSelectReduce(
+                state.productSelect,
+                productSelectEvent
+            )
         }
         
         return newState

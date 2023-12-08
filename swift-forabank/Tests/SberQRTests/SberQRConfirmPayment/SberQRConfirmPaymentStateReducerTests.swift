@@ -70,7 +70,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .select(.init(100000)))
+        _ = sut.reduce(makeEditableAmount(), .productSelect(.select(.init(100000))))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -84,7 +84,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut.reduce(state, .select(missingProduct.id))
+        let newState = sut.reduce(state, .productSelect(.select(missingProduct.id)))
         
         XCTAssertNoDiff(newState, .editableAmount(state))
     }
@@ -98,7 +98,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut.reduce(state, .select(existingProduct.id))
+        let newState = sut.reduce(state, .productSelect(.select(existingProduct.id)))
         
         XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
@@ -110,7 +110,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .toggleProductSelect)
+        _ = sut.reduce(makeEditableAmount(), .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -126,7 +126,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
+        let newState = sut.reduce(state, .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
@@ -145,7 +145,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
+        let newState = sut.reduce(state, .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: "some brand",
@@ -153,7 +153,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )))
     }
     
-    // MARK: - FixedAmount
+    //    // MARK: - FixedAmount
     
     func test_reduce_fixedAmount_pay_shouldCallPayWithState() {
         
@@ -179,7 +179,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .select(.init(100000)))
+        _ = sut.reduce(makeFixedAmount(), .productSelect(.select(.init(100000))))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -193,7 +193,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut.reduce(state, .select(missingProduct.id))
+        let newState = sut.reduce(state, .productSelect(.select(missingProduct.id)))
         
         XCTAssertNoDiff(newState, .fixedAmount(state))
     }
@@ -207,7 +207,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut.reduce(state, .select(existingProduct.id))
+        let newState = sut.reduce(state, .productSelect(.select(existingProduct.id)))
         
         XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
             brandName: "some brand",
@@ -219,7 +219,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .toggleProductSelect)
+        _ = sut.reduce(makeFixedAmount(), .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -235,7 +235,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
+        let newState = sut.reduce(state, .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
             brandName: "some brand",
@@ -254,7 +254,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
+        let newState = sut.reduce(state, .productSelect(.toggleProductSelect))
         
         XCTAssertNoDiff(newState, .fixedAmount(makeFixedAmount(
             brandName: "some brand",
@@ -266,7 +266,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
     
     typealias SUT = SberQRConfirmPaymentStateReducer
     private typealias Spy = CallSpy<SUT.State>
-
+    
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
         file: StaticString = #file,
@@ -276,7 +276,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         spy: Spy
     ) {
         let spy = Spy()
-        let sut = SUT(
+        let sut = SUT.default(
             getProducts: { products },
             pay: spy.call
         )
