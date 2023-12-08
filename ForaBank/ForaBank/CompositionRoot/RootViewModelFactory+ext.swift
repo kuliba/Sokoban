@@ -11,7 +11,8 @@ extension RootViewModelFactory {
     
     static func make(
         model: Model,
-        logger: LoggerAgentProtocol
+        logger: LoggerAgentProtocol,
+        qrResolverFeatureFlag: QRResolverFeatureFlag = .init(.inactive)
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
@@ -35,8 +36,10 @@ extension RootViewModelFactory {
         )
         
         let qrResolver: QRViewModel.QRResolver = { string in
-            // feature flag: remove `{ _ in false }` to activate SberQR
-            let resolver = QRResolver(isSberQR: { _ in false } /*model.isSberQR*/)
+            
+            let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
+            let resolver = QRResolver(isSberQR: isSberQR)
+            
             return resolver.resolve(string: string)
         }
         
