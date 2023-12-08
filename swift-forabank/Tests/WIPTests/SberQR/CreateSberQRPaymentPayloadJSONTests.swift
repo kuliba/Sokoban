@@ -151,7 +151,7 @@ final class CreateSberQRPaymentPayloadJSONTests: XCTestCase {
             switch self {
             case .card:
                 return .card(.init(id))
-
+                
             case .account:
                 return .account(.init(id))
             }

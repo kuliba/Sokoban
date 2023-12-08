@@ -309,13 +309,12 @@ private extension ResponseMapper._Response._Data {
             case .productSelect:
                 typealias ID = GetSberQRDataResponse.Parameter.ProductSelect.ID
                 
-                guard let id = ID(rawValue: id),
-                      let title,
+                guard let title,
                       let filter = filter?.filter
                 else { throw MappingError() }
                 
                 return .productSelect(.init(
-                    id: id,
+                    id: .init(id),
                     value: value,
                     title: title,
                     filter: filter

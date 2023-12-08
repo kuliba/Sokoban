@@ -6,11 +6,30 @@
 //
 
 import Foundation
+import Tagged
 
 enum SberQRConfirmPaymentState: Equatable {
     
     case fixedAmount(FixedAmount)
     case editableAmount(EditableAmount)
+}
+
+enum ProductSelect: Equatable {
+    
+    case compact(Product)
+    case expanded(Product, [Product])
+    
+    struct Product: Equatable, Identifiable {
+        
+        typealias ID = Tagged<_ID, String>
+        enum _ID {}
+        
+        let id: ID
+        let icon: String
+        let title: String
+        let amountFormatted: String
+        let color: String
+    }
 }
 
 extension SberQRConfirmPaymentState {
@@ -20,12 +39,11 @@ extension SberQRConfirmPaymentState {
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
     typealias Header = GetSberQRDataResponse.Parameter.Header
     typealias Info = GetSberQRDataResponse.Parameter.Info
-    typealias ProductSelect = GetSberQRDataResponse.Parameter.ProductSelect
     
     struct FixedAmount: Equatable {
         
         let header: Header
-        let productSelect: ProductSelect
+        var productSelect: ProductSelect
         let brandName: Info
         let amount: Info
         let recipientBank: Info
@@ -35,35 +53,48 @@ extension SberQRConfirmPaymentState {
     struct EditableAmount: Equatable {
         
         let header: Header
-        let productSelect: ProductSelect
+        var productSelect: ProductSelect
         let brandName: Info
         let recipientBank: Info
         let currency: DataString
-        let bottom: Amount
+        var bottom: Amount
     }
 }
 
 extension SberQRConfirmPaymentState {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         if response.required.contains(.paymentAmount) {
             
-            self = try .editableAmount(.init(response))
+            self = try .editableAmount(.init(
+                product: product,
+                response: response
+            ))
+            
         } else {
             
-            self = try .fixedAmount(.init(response))
+            self = try .fixedAmount(.init(
+                product: product,
+                response: response
+            ))
         }
     }
 }
 
 private extension SberQRConfirmPaymentState.FixedAmount {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: response.parameters.productSelect(),
+            productSelect: .compact(product),
             brandName: response.parameters.info(withID: .brandName),
             amount: response.parameters.info(withID: .amount),
             recipientBank: response.parameters.info(withID: .recipientBank),
@@ -74,11 +105,14 @@ private extension SberQRConfirmPaymentState.FixedAmount {
 
 private extension SberQRConfirmPaymentState.EditableAmount {
     
-    init(_ response: GetSberQRDataResponse) throws {
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: response.parameters.productSelect(),
+            productSelect: .compact(product),
             brandName: response.parameters.info(withID: .brandName),
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),
@@ -94,7 +128,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
-            
+        
         return amount
     }
     
@@ -103,7 +137,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .button(button) = first(where: { $0.case == .button })
         else { throw ParameterError(missing: .button) }
-            
+        
         return button
     }
     
@@ -113,7 +147,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .dataString(dataString) = first(where: { $0.case == .dataString && $0.id == .dataString(id) })
         else { throw ParameterError(missing: .dataString) }
-            
+        
         return dataString
     }
     
@@ -122,7 +156,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .header(header) = first(where: { $0.case == .header })
         else { throw ParameterError(missing: .header) }
-            
+        
         return header
     }
     
@@ -131,7 +165,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .info(info) = first(where: { $0.case == .info })
         else { throw ParameterError(missing: .info) }
-            
+        
         return info
     }
     
@@ -141,7 +175,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .info(info) = first(where: { $0.case == .info && $0.id == .info(id) })
         else { throw ParameterError(missing: .info) }
-            
+        
         return info
     }
     
@@ -150,7 +184,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         
         guard case let .productSelect(productSelect) = first(where: { $0.case == .productSelect })
         else { throw ParameterError(missing: .productSelect) }
-            
+        
         return productSelect
     }
     
@@ -167,19 +201,19 @@ private extension GetSberQRDataResponse.Parameter {
         switch self {
         case let .amount(amount):
             return .amount(amount.id)
-        
+            
         case let .button(button):
             return .button(button.id)
-        
+            
         case let .dataString(dataString):
             return .dataString(dataString.id)
-        
+            
         case let .header(header):
             return .header(header.id)
-        
+            
         case let .info(info):
             return .info(info.id)
-        
+            
         case let .productSelect(productSelect):
             return .productSelect(productSelect.id)
         }
@@ -200,19 +234,19 @@ private extension GetSberQRDataResponse.Parameter {
         switch self {
         case .amount:
             return .amount
-        
+            
         case .button:
             return .button
-        
+            
         case .dataString:
             return .dataString
-        
+            
         case .header:
             return .header
-        
+            
         case .info:
             return .info
-        
+            
         case .productSelect:
             return .productSelect
         }

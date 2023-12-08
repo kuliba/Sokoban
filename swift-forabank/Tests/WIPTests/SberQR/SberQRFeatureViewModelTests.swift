@@ -149,7 +149,7 @@ final class SberQRFeatureViewModelTests: XCTestCase {
     ) -> GetSberQRDataResponse {
         
         .init(
-            qrcID: UUID().uuidString, 
+            qrcID: UUID().uuidString,
             parameters: [],
             required: []
         )

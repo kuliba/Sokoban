@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 03.12.2023.
 //
 
+import Tagged
+
 extension GetSberQRDataResponse.Parameter {
 
     struct ProductSelect: Equatable {
@@ -13,11 +15,9 @@ extension GetSberQRDataResponse.Parameter {
         let value: String?
         let title: String
         let filter: Filter
-        
-        enum ID: String, Equatable {
-            
-            case debitAccount = "debit_account"
-        }
+
+        typealias ID = Tagged<_ID, String>
+        enum _ID {}
         
         struct Filter: Equatable {
             

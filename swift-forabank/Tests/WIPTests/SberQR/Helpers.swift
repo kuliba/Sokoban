@@ -92,7 +92,7 @@ extension GetSberQRDataResponse.Parameter.Info {
 extension GetSberQRDataResponse.Parameter.ProductSelect {
     
     static let debitAccount: Self = .init(
-        id: .debitAccount,
+        id: "debit_account",
         value: nil,
         title: "Счет списания",
         filter: .init(
@@ -100,5 +100,55 @@ extension GetSberQRDataResponse.Parameter.ProductSelect {
             currencies: [.rub],
             additional: false
         )
+    )
+}
+
+extension ProductSelect.Product {
+    
+    static let test: Self = .init(id: "test", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+    
+    static let test2: Self = .init(id: "test2", icon: "", title: "Title", amountFormatted: "4.21 $", color: "blue")
+    
+    static let missing: Self = .init(id: "missing", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+}
+
+final class CallSpy {
+    
+    private(set) var callCount = 0
+    
+    func call() {
+        
+        callCount += 1
+    }
+}
+
+func makeEditableAmount(
+    brandName: String = UUID().uuidString,
+    productSelect: ProductSelect = .compact(.test),
+    amount: Decimal = 123.45
+) -> SberQRConfirmPaymentState.EditableAmount {
+    
+    .init(
+        header: .payQR,
+        productSelect: productSelect,
+        brandName: .brandName(value: brandName),
+        recipientBank: .recipientBank,
+        currency: .rub,
+        bottom: .paymentAmount(value: amount)
+    )
+}
+
+func makeFixedAmount(
+    brandName: String = UUID().uuidString,
+    productSelect: ProductSelect = .compact(.test)
+) -> SberQRConfirmPaymentState.FixedAmount {
+    
+    .init(
+        header: .payQR,
+        productSelect: productSelect,
+        brandName: .brandName(value: brandName),
+        amount: .amount,
+        recipientBank: .recipientBank,
+        bottom: .buttonPay
     )
 }
