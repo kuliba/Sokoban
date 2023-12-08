@@ -49,7 +49,7 @@ final public class OperationStateViewModel: ObservableObject {
         // TODO: setup error
     }
     
-    func updateOperation(with parameters: [Operation.Parameter]) {
+    public func updateOperation(with parameters: [Operation.Parameter]) {
         
         self.state = .operation(.init(parameters: parameters))
     }
@@ -59,7 +59,7 @@ final public class OperationStateViewModel: ObservableObject {
 
 extension OperationStateViewModel {
     
-    var operation: Operation? {
+    public var operation: Operation? {
         
         guard case let .operation(operation) = state else {
             return nil
