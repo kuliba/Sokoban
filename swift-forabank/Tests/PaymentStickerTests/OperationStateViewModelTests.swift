@@ -104,4 +104,22 @@ final class OperationStateViewModelTests: XCTestCase {
         )
     }
 }
+
+private extension OperationStateViewModel {
+    
+    var operationStateTest: OperationStateTests {
+        
+        switch state {
+        case .operation:
+            return .operation
+        case .result:
+            return .result
+        }
+    }
+    
+    enum OperationStateTests: Equatable {
+        
+        case operation
+        case result
+    }
 }
