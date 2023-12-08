@@ -89,4 +89,19 @@ final class OperationStateViewModelTests: XCTestCase {
         )
     }
     
+    func makeTransferTypeStub() -> Parameter.Select {
+        
+        return .init(
+            id: .transferTypeSticker,
+            value: "Value",
+            title: "Title",
+            placeholder: "PlaceHolder",
+            options: [],
+            state: .idle(.init(
+                iconName: "iconName",
+                title: "Title"
+            ))
+        )
+    }
+}
 }
