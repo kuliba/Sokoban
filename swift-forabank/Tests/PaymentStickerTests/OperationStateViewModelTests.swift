@@ -11,6 +11,26 @@ import XCTest
 
 final class OperationStateViewModelTests: XCTestCase {
     
+    func test_operationResult_shouldReturnNil() {
+        
+        let sut = makeSUT(state: .result)
+        
+        XCTAssertNoDiff(sut.operation?.parameters, nil)
+    }
+    
+    func test_operationWithParameter_shouldReturnUpdateParameters() {
+        
+        let sut = makeSUT(state: .operation)
+        XCTAssertNoDiff(sut.operation?.parameters, [])
+        
+        sut.updateOperation(with: [
+            .productSelector(makeProductStub()),
+            .sticker(makeBannerStub())
+        ])
+        
+        XCTAssertNoDiff(sut.operation?.parameters.count, 2)
+    }
+    
     func test_operationWithOutProduct_shouldReturnNil() {
         
         let sut = makeSUT()
