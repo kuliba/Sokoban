@@ -85,6 +85,38 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [initialState, newState])
     }
     
+    func test_event_pay_shouldNorChangeStateTwice_fixed() {
+        
+        let initialState: SUT.State = .fixedAmount(makeFixedAmount())
+        let newState: SUT.State = .editableAmount(makeEditableAmount())
+        let event: SUT.Event = .fixed(.pay)
+        let (sut, spy, _) = makeSUT(
+            initialState: initialState,
+            reducerStub: newState
+        )
+        
+        sut.event(event)
+        sut.event(event)
+        
+        XCTAssertNoDiff(spy.values, [initialState, newState])
+    }
+    
+    func test_event_pay_shouldNorChangeStateTwice_editable() {
+        
+        let initialState: SUT.State = .editableAmount(makeEditableAmount())
+        let newState: SUT.State = .editableAmount(makeEditableAmount())
+        let event: SUT.Event = .editable(.pay)
+        let (sut, spy, _) = makeSUT(
+            initialState: initialState,
+            reducerStub: newState
+        )
+        
+        sut.event(event)
+        sut.event(event)
+        
+        XCTAssertNoDiff(spy.values, [initialState, newState])
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentViewModel

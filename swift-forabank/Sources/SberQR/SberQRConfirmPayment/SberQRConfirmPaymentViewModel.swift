@@ -1,10 +1,12 @@
 //
 //  SberQRConfirmPaymentViewModel.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import Combine
+import CombineSchedulers
 import Foundation
 
 public final class SberQRConfirmPaymentViewModel: ObservableObject {
@@ -16,6 +18,7 @@ public final class SberQRConfirmPaymentViewModel: ObservableObject {
     @Published public private(set) var state: State
     
     private let reduce: Reduce
+    private let stateSubject = PassthroughSubject<State, Never>()
     
     public init(
         initialState: State,
@@ -24,6 +27,11 @@ public final class SberQRConfirmPaymentViewModel: ObservableObject {
     ) {
         self.state = initialState
         self.reduce = reduce
+        
+        stateSubject
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$state)
     }
 }
 
@@ -31,6 +39,6 @@ public extension SberQRConfirmPaymentViewModel {
     
     func event(_ event: Event) {
         
-        self.state = reduce(state, event)
+        stateSubject.send(reduce(state, event))
     }
 }
