@@ -14,9 +14,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
-    typealias GetSberQRData = (URL, @escaping (Result<Data, Error>) -> Void) -> Void
-    typealias MakeSberQRPaymentViewModel = (URL, Data) -> SberQRPaymentViewModel
 
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -937,16 +934,45 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
             DispatchQueue.main.async { [weak self] in
                 
-                guard let self else { return }
+                self?.handleGetSberQRDataResult(url, result)
+            }
+        }
+    }
+    
+    private func handleGetSberQRDataResult(
+        _ url: URL,
+        _ result: Result<Data, Error>
+    ) {
+        switch result {
+        case .failure:
+            alert = techErrorAlert()
+            
+        case let .success(sberQRData):
+            let viewModel = makeSberQRPaymentViewModel(
+                url,
+                sberQRData
+            ) { [weak self] in self?.handleSberQRPaymentResult($0) }
+            
+            link = .sberQRPayment(viewModel)
+        }
+    }
+
+    private func handleSberQRPaymentResult(
+        _ result: Result<Data, Error>
+    ) {
+        link = nil
+        
+        DispatchQueue.main.async {
+            
+            switch result {
+            case .failure:
+                self.alert = self.techErrorAlert()
                 
-                switch result {
-                case .failure:
-                    self.alert = self.techErrorAlert()
-                    
-                case let .success(sberQRData):
-                    let viewModel = makeSberQRPaymentViewModel(url, sberQRData)
-                    self.link = .sberQRPayment(viewModel)
-                }
+            case let .success(success):
+                #warning("add success screen")
+                _ = success
+                // let successViewModel = Payments.Success(with: success)
+                // self.fullScreenSheet = .success(successViewModel)
             }
         }
     }

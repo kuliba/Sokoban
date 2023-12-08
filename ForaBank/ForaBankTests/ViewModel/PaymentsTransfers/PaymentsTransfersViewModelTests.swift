@@ -12,7 +12,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_shouldFailOnEmptyProducts() throws {
         
-        let (sut, model) = makeSUT()
+        let (sut, model, _) = makeSUT()
         
         sut.sendBetweenSelf()
         
@@ -23,7 +23,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_meToMe_shouldDeliverActionOnMeToMeSendSuccess() throws {
         
         let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
+        let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
         
@@ -45,7 +45,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_meToMe_shouldNotDeliverActionsAfterBottomSheetDeallocated() throws {
         
         let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
+        let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
         
@@ -67,7 +67,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -78,7 +78,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -89,7 +89,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -102,45 +102,52 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _, _) = makeSUT(
             getSberQRDataResultStub: .failure(anyError())
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
         try sut.scanAndWait()
-                
-        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка"])
+        
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка"
+        ])
     }
-
+    
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _, _) = makeSUT(
             getSberQRDataResultStub: .failure(anyError())
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait()
         try sut.tapPrimaryAlertButton()
-                
-        XCTAssertNoDiff(alertMessageSpy.values, [nil, "Возникла техническая ошибка", nil])
+        
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка",
+            nil
+        ])
     }
-
+    
     func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait()
-                
+        
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
     }
-
-    func test_sberQR_shouldNavigateToSberQRPaymentWithData() throws {
+    
+    func test_sberQR_shouldNavigateToSberQRPaymentWithURLAndData() throws {
         
         let sberQRURL = anyURL()
         let sberQRData = anyData()
-        let (sut, _) = makeSUT(
+        let (sut, _, _) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
@@ -148,9 +155,67 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.scanAndWait(sberQRURL)
         
-        XCTAssertNoDiff(navigationSpy.values, [nil, .sberQRPayment(sberQRURL, sberQRData)])
+        XCTAssertNoDiff(navigationSpy.values, [
+            nil,
+            .sberQRPayment(sberQRURL, sberQRData)
+        ])
     }
+    
+    func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
+        
+        let sberQRURL = anyURL()
+        let sberQRData = anyData()
+        let sberQRError = anyError("SberQRPayment Failure")
+        let (sut, _, spy) = makeSUT(
+            getSberQRDataResultStub: .success(sberQRData)
+        )
+        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
+        
+        try sut.scanAndWait(sberQRURL)
+        spy.complete(with: .failure(sberQRError))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(navigationSpy.values, [
+            nil,
+            .sberQRPayment(sberQRURL, sberQRData),
+            nil
+        ])
+    }
+    
+    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
+        
+        let sberQRError = anyError("SberQRPayment Failure")
+        let (sut, _, spy) = makeSUT()
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        
+        try sut.scanAndWait(anyURL())
+        spy.complete(with: .failure(sberQRError))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка"
+        ])
+    }
+    
+    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
+        
+        let sberQRError = anyError("SberQRPayment Failure")
+        let (sut, _, spy) = makeSUT()
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        
+        try sut.scanAndWait(anyURL())
+        spy.complete(with: .failure(sberQRError))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        try sut.tapPrimaryAlertButton()
+        
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка", 
+            nil
+        ])
+    }
+    
     // MARK: - Helpers
     
     private func makeTwoProducts() -> (ProductData, ProductData) {
@@ -168,13 +233,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: PaymentsTransfersViewModel,
-        model: Model
+        model: Model,
+        spy: SberQRPaymentSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         if !products.isEmpty {
             model.products.value = [.card: products]
         }
-                
+        
+        let spy = SberQRPaymentSpy()
+        
         let sut = PaymentsTransfersViewModel(
             model: model,
             makeProductProfileViewModel: { product, rootView, dismissAction in
@@ -210,14 +278,15 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 completion(getSberQRDataResultStub)
             },
-            makeSberQRPaymentViewModel: SberQRPaymentViewModel.init
+            makeSberQRPaymentViewModel: spy.make
         )
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, model)
+        return (sut, model, spy)
     }
 }
 
@@ -337,7 +406,7 @@ extension PaymentsTransfersViewModel {
         let qrScanner = try XCTUnwrap(qrScanner, "Expected to have a QR Scanner but got nil.", file: file, line: line)
         let result = QRViewModelAction.Result(result: .sberQR(url))
         qrScanner.action.send(result)
-
+        
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
@@ -370,7 +439,7 @@ private extension PaymentsTransfersViewModel.Link {
     var `case`: Case? {
         
         switch self {
-        case .template: 
+        case .template:
             return .template
             
         case let .sberQRPayment(sberQRPayment):
@@ -378,7 +447,7 @@ private extension PaymentsTransfersViewModel.Link {
                 sberQRPayment.sberQRURL,
                 sberQRPayment.sberQRData
             )
-
+            
         default:
             return .other
         }
