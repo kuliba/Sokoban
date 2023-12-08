@@ -78,6 +78,34 @@ final class OperationStateViewModelTests: XCTestCase {
         ))
     }
     
+    
+    func test_operationWithOutTransferType_shouldReturnNil() {
+        
+        let sut = makeSUT(state: .operation)
+        
+        XCTAssertNoDiff(sut.transferType, nil)
+    }
+    
+    func test_operationWithTransferType_shouldReturnTransferType() {
+        
+        let sut = makeSUT(
+            state: .operation,
+            parameters: [.select(makeTransferTypeStub())]
+        )
+        
+        XCTAssertNoDiff(sut.transferType, .init(
+            id: .transferTypeSticker,
+            value: "Value",
+            title: "Title",
+            placeholder: "PlaceHolder",
+            options: [],
+            state: .idle(.init(
+                iconName: "iconName",
+                title: "Title"
+            ))
+        ))
+    }
+    
     //MARK: Helpers
     
     typealias Parameter = PaymentSticker.Operation.Parameter
