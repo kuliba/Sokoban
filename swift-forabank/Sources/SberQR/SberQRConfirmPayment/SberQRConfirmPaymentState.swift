@@ -9,8 +9,8 @@ import Foundation
 
 public enum SberQRConfirmPaymentState: Equatable {
     
-    case fixedAmount(FixedAmount)
     case editableAmount(EditableAmount)
+    case fixedAmount(FixedAmount)
 }
 
 public extension SberQRConfirmPaymentState {
@@ -20,32 +20,6 @@ public extension SberQRConfirmPaymentState {
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
     typealias Header = GetSberQRDataResponse.Parameter.Header
     typealias Info = GetSberQRDataResponse.Parameter.Info
-    
-    struct FixedAmount: Equatable {
-        
-        public let header: Header
-        public var productSelect: ProductSelect
-        public let brandName: Info
-        public let amount: Info
-        public let recipientBank: Info
-        public let bottom: Button
-        
-        public init(
-            header: Header,
-            productSelect: ProductSelect,
-            brandName: Info,
-            amount: Info,
-            recipientBank: Info,
-            bottom: Button
-        ) {
-            self.header = header
-            self.productSelect = productSelect
-            self.brandName = brandName
-            self.amount = amount
-            self.recipientBank = recipientBank
-            self.bottom = bottom
-        }
-    }
     
     struct EditableAmount: Equatable {
         
@@ -69,6 +43,32 @@ public extension SberQRConfirmPaymentState {
             self.brandName = brandName
             self.recipientBank = recipientBank
             self.currency = currency
+            self.bottom = bottom
+        }
+    }
+    
+    struct FixedAmount: Equatable {
+        
+        public let header: Header
+        public var productSelect: ProductSelect
+        public let brandName: Info
+        public let amount: Info
+        public let recipientBank: Info
+        public let bottom: Button
+        
+        public init(
+            header: Header,
+            productSelect: ProductSelect,
+            brandName: Info,
+            amount: Info,
+            recipientBank: Info,
+            bottom: Button
+        ) {
+            self.header = header
+            self.productSelect = productSelect
+            self.brandName = brandName
+            self.amount = amount
+            self.recipientBank = recipientBank
             self.bottom = bottom
         }
     }
@@ -98,24 +98,6 @@ public extension SberQRConfirmPaymentState {
     }
 }
 
-private extension SberQRConfirmPaymentState.FixedAmount {
-    
-    init(
-        product: ProductSelect.Product,
-        response: GetSberQRDataResponse
-    ) throws {
-        
-        try self.init(
-            header: response.parameters.header(),
-            productSelect: .compact(product),
-            brandName: response.parameters.info(withID: .brandName),
-            amount: response.parameters.info(withID: .amount),
-            recipientBank: response.parameters.info(withID: .recipientBank),
-            bottom: response.parameters.button()
-        )
-    }
-}
-
 private extension SberQRConfirmPaymentState.EditableAmount {
     
     init(
@@ -130,6 +112,24 @@ private extension SberQRConfirmPaymentState.EditableAmount {
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),
             bottom: response.parameters.amount()
+        )
+    }
+}
+
+private extension SberQRConfirmPaymentState.FixedAmount {
+    
+    init(
+        product: ProductSelect.Product,
+        response: GetSberQRDataResponse
+    ) throws {
+        
+        try self.init(
+            header: response.parameters.header(),
+            productSelect: .compact(product),
+            brandName: response.parameters.info(withID: .brandName),
+            amount: response.parameters.info(withID: .amount),
+            recipientBank: response.parameters.info(withID: .recipientBank),
+            bottom: response.parameters.button()
         )
     }
 }
