@@ -71,16 +71,29 @@ final class OperationStateViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.amountParameter, nil)
     }
     
+    func test_operationAmountParameter_shouldReturnAmount() {
+    
+        let sut = makeSUT(
+            state: .operation,
+            parameters: [.amount(.init(value: "Value"))]
+        )
+        
+        XCTAssertNoDiff(sut.amountParameter?.id, .amount)
+    }
+    
     func test_operationWithOutProduct_shouldReturnNil() {
         
-        let sut = makeSUT()
+        let sut = makeSUT(state: .operation)
         
         XCTAssertNoDiff(sut.product, nil)
     }
     
     func test_operationWithProduct_shouldReturnProduct() {
         
-        let sut = makeSUT(parameters: [.productSelector(makeProductStub())])
+        let sut = makeSUT(
+            state: .operation,
+            parameters: [.productSelector(makeProductStub())]
+        )
         
         XCTAssertNoDiff(sut.product, .init(
             state: .select,
@@ -153,14 +166,15 @@ final class OperationStateViewModelTests: XCTestCase {
     
     typealias Parameter = PaymentSticker.Operation.Parameter
     
-    func makeSUT(
+    private func makeSUT(
+        state: OperationStateViewModel.OperationStateTests,
         parameters: [Parameter] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> OperationStateViewModel {
         
         let sut = OperationStateViewModel(
-            state: .operation(.init(parameters: parameters)),
+            state: makeOperationState(state: state, parameters: parameters),
             blackBoxGet: { _,_ in }
         )
         
