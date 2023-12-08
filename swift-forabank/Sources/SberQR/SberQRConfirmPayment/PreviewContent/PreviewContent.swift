@@ -31,16 +31,25 @@ extension SberQRConfirmPaymentState.FixedAmount {
 
 extension ProductSelect {
     
-    static let preview: Self = .compact(.preview)
+    static let preview: Self = .compact(.cardPreview)
 }
 
 extension ProductSelect.Product {
     
-    static let preview: Self = .init(
+    static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
         icon: "",
-        title: "",
+        title: "Card",
+        amountFormatted: "",
+        color: ""
+    )
+    
+    static let accountPreview: Self = .init(
+        id: 234567891,
+        type: .account,
+        icon: "",
+        title: "Account",
         amountFormatted: "",
         color: ""
     )
