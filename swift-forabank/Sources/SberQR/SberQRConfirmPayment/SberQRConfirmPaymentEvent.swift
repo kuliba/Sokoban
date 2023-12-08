@@ -11,6 +11,7 @@ public enum SberQRConfirmPaymentEvent: Equatable {
     
     case editable(EditableAmount)
     case fixed(FixedAmount)
+    case pay(SberQRConfirmPaymentState)
 }
 
 public extension SberQRConfirmPaymentEvent {

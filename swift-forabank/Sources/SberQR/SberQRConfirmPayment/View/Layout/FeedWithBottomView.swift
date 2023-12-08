@@ -10,6 +10,7 @@ import SwiftUI
 struct FeedWithBottomView<Feed: View, Bottom: View>: View {
     
     let feed: () -> Feed
+    // let bottom: (@escaping () -> Void) -> Bottom
     let bottom: () -> Bottom
     
     var body: some View {

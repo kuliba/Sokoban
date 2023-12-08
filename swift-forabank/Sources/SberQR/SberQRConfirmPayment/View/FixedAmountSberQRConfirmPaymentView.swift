@@ -11,12 +11,16 @@ struct FixedAmountSberQRConfirmPaymentView: View {
     
     let state: SberQRConfirmPaymentState.FixedAmount
     let event: (SberQRConfirmPaymentEvent.FixedAmount) -> Void
+    let pay: () -> Void
     
     var body: some View {
         
         FeedWithBottomView(feed: feed) {
             
-            ButtonView(button: state.bottom)
+            ButtonView(
+                button: state.bottom,
+                pay: pay
+            )
         }
         
     }
@@ -52,7 +56,8 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
         
         FixedAmountSberQRConfirmPaymentView(
             state: state,
-            event: { _ in }
+            event: { _ in },
+            pay: {}
         )
     }
 }

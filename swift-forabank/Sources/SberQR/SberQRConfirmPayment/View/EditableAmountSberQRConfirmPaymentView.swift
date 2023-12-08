@@ -11,12 +11,16 @@ struct EditableAmountSberQRConfirmPaymentView: View {
     
     let state: SberQRConfirmPaymentState.EditableAmount
     let event: (SberQRConfirmPaymentEvent.EditableAmount) -> Void
+    let pay: () -> Void
     
     var body: some View {
         
         FeedWithBottomView(feed: feed) {
             
-            AmountView(amount: state.bottom)
+            AmountView(
+                amount: state.bottom,
+                pay: pay
+            )
         }
     }
 
@@ -51,7 +55,8 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
         
         EditableAmountSberQRConfirmPaymentView(
             state: state,
-            event: { _ in }
+            event: { _ in },
+            pay: {}
         )
     }
 }

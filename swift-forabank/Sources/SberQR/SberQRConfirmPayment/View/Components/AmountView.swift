@@ -10,6 +10,7 @@ import SwiftUI
 struct AmountView: View {
     
     let amount: SberQRConfirmPaymentState.Amount
+    let pay: () -> Void
     
     var body: some View {
         Text("AmountView")
@@ -22,6 +23,6 @@ struct AmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AmountView(amount: .preview)
+        AmountView(amount: .preview, pay: {})
     }
 }
