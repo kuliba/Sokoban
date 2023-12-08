@@ -11,10 +11,10 @@ public final class SberQRConfirmPaymentStateReducer {
     public typealias Event = SberQRConfirmPaymentEvent
     
     public typealias EditableState = State.EditableAmount
-    public typealias EditableEvent = Event.EditableAmountEvent
+    public typealias EditableEvent = Event.EditableAmount
     
     public typealias FixedState = State.FixedAmount
-    public typealias FixedEvent = Event.FixedAmountEvent
+    public typealias FixedEvent = Event.FixedAmount
     
     public typealias EditableReduce = (EditableState, EditableEvent) -> EditableState
     public typealias FixedReduce = (FixedState, FixedEvent) -> FixedState

@@ -292,7 +292,7 @@ private extension SberQRConfirmPaymentStateReducer {
     
     func reduce(
         _ editableAmount: SberQRConfirmPaymentState.EditableAmount,
-        _ editableEvent: SberQRConfirmPaymentEvent.EditableAmountEvent
+        _ editableEvent: SberQRConfirmPaymentEvent.EditableAmount
     ) -> State {
         
         reduce(
@@ -303,7 +303,7 @@ private extension SberQRConfirmPaymentStateReducer {
     
     func reduce(
         _ fixedAmount: SberQRConfirmPaymentState.FixedAmount,
-        _ fixedEvent: SberQRConfirmPaymentEvent.FixedAmountEvent
+        _ fixedEvent: SberQRConfirmPaymentEvent.FixedAmount
     ) -> State {
         
         reduce(

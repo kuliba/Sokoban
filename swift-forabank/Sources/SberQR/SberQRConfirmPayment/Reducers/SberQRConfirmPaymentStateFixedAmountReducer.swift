@@ -8,7 +8,7 @@
 public final class SberQRConfirmPaymentStateFixedAmountReducer {
     
     public typealias State = SberQRConfirmPaymentState.FixedAmount
-    public typealias Event = SberQRConfirmPaymentEvent.FixedAmountEvent
+    public typealias Event = SberQRConfirmPaymentEvent.FixedAmount
     
     public typealias GetProducts = () -> [ProductSelect.Product]
     public typealias Pay = (State) -> Void

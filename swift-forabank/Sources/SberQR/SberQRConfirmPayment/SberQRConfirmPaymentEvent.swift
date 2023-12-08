@@ -9,13 +9,13 @@ import Foundation
 
 public enum SberQRConfirmPaymentEvent: Equatable {
     
-    case editable(EditableAmountEvent)
-    case fixed(FixedAmountEvent)
+    case editable(EditableAmount)
+    case fixed(FixedAmount)
 }
 
 public extension SberQRConfirmPaymentEvent {
     
-    enum EditableAmountEvent: Equatable {
+    enum EditableAmount: Equatable {
         
         case editAmount(Decimal)
         case toggleProductSelect
@@ -23,7 +23,7 @@ public extension SberQRConfirmPaymentEvent {
         case select(ProductSelect.Product.ID)
     }
     
-    enum FixedAmountEvent: Equatable {
+    enum FixedAmount: Equatable {
         
         case toggleProductSelect
         case pay
