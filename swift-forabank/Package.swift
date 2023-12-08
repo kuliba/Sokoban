@@ -450,11 +450,21 @@ private extension Target {
     )
     
     static let sberQR = target(
-        name: .sberQR
+        name: .sberQR,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged
+        ]
     )
     static let sberQRTests = testTarget(
         name: .sberQRTests,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
             .sberQR,
         ],
         resources: [
