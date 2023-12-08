@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import CombineSchedulers
 import SberQR
 import XCTest
 
@@ -43,7 +44,10 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         sut: SUT,
         spy: Spy
     ) {
-        let sut = SUT(initialState: initialState)
+        let sut = SUT(
+            initialState: initialState,
+            scheduler: .immediate
+        )
         let spy = ValueSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)

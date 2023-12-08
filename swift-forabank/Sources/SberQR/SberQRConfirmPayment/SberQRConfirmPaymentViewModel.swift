@@ -13,8 +13,10 @@ public final class SberQRConfirmPaymentViewModel: ObservableObject {
     
     @Published public private(set) var state: State
     
-    public init(initialState: State) {
-        
+    public init(
+        initialState: State,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) {
         self.state = initialState
     }
 }
