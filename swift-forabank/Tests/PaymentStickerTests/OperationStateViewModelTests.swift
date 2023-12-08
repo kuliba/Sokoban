@@ -78,4 +78,15 @@ final class OperationStateViewModelTests: XCTestCase {
             allProducts: []
         )
     }
+    
+    func makeBannerStub() -> Parameter.Sticker {
+        
+        return .init(
+            title: "Title",
+            description: "Description",
+            image: .named("image"),
+            options: []
+        )
+    }
+    
 }
