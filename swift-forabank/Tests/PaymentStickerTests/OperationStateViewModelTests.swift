@@ -100,6 +100,27 @@ final class OperationStateViewModelTests: XCTestCase {
         ))
     }
     
+    func test_operationWithOutBanner_shouldReturnNil() {
+        
+        let sut = makeSUT(state: .operation)
+        
+        XCTAssertNoDiff(sut.banner, nil)
+    }
+    
+    func test_operationWithBanner_shouldReturnBanner() {
+        
+        let sut = makeSUT(
+            state: .operation,
+            parameters: [.sticker(makeBannerStub())]
+        )
+        
+        XCTAssertNoDiff(sut.banner, .init(
+            title: "Title",
+            description: "Description",
+            image: .named("image"),
+            options: []
+        ))
+    }
     
     func test_operationWithOutTransferType_shouldReturnNil() {
         
