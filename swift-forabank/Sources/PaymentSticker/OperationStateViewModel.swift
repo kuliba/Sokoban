@@ -70,12 +70,12 @@ extension OperationStateViewModel {
     
     public var scrollParameters: [Operation.Parameter] {
         
-        operation?.parameters.filter({ $0.id != .amount }) ?? []
+        operation?.parameters.filter { $0.id != .amount } ?? []
     }
     
     public var amountParameter: Operation.Parameter? {
         
-        operation?.parameters.first(where: { $0.id == .amount })
+        operation?.parameters.first { $0.id == .amount }
     }
     
     public var product: Operation.Parameter.ProductSelector? {
