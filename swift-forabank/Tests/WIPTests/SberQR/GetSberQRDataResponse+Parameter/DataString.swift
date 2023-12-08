@@ -9,7 +9,12 @@ extension GetSberQRDataResponse.Parameter {
 
     struct DataString: Equatable {
         
-        let id: String
+        let id: ID
         let value: String
+        
+        enum ID: String, Equatable {
+            
+            case currency
+        }
     }
 }

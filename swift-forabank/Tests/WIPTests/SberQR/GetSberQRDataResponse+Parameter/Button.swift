@@ -9,11 +9,16 @@ extension GetSberQRDataResponse.Parameter {
 
     struct Button: Equatable {
         
-        let id: String
+        let id: ID
         let value: String
         let color: Color
         let action: Action
         let placement: Placement
+        
+        enum ID: String, Equatable {
+            
+            case buttonPay = "button_pay"
+        }
         
         enum Color: Equatable {
             
