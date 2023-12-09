@@ -630,6 +630,7 @@
 		2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979E2B2469ED00F0F87B /* SberQRTestHelpers.swift */; };
 		2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */; };
 		2AB197A32B24701C00F0F87B /* Model_SberQRProductIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A22B24701C00F0F87B /* Model_SberQRProductIntegrationTests.swift */; };
+		2AB197A52B24772E00F0F87B /* SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A42B24772E00F0F87B /* SberQRProductTests.swift */; };
 		2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */; };
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
@@ -2840,6 +2841,7 @@
 		2AB1979E2B2469ED00F0F87B /* SberQRTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRTestHelpers.swift; sourceTree = "<group>"; };
 		2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResponse+ext.swift"; sourceTree = "<group>"; };
 		2AB197A22B24701C00F0F87B /* Model_SberQRProductIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model_SberQRProductIntegrationTests.swift; sourceTree = "<group>"; };
+		2AB197A42B24772E00F0F87B /* SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRProductTests.swift; sourceTree = "<group>"; };
 		2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformingReducerTests.swift; sourceTree = "<group>"; };
 		2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingServiceTests.swift"; sourceTree = "<group>"; };
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
@@ -6516,6 +6518,14 @@
 			path = TestHelpers;
 			sourceTree = "<group>";
 		};
+		2AB197A62B24778700F0F87B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2AB197A42B24772E00F0F87B /* SberQRProductTests.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		2AB35DCA2B07F19C0001EC5D /* Reducer */ = {
 			isa = PBXGroup;
 			children = (
@@ -6595,6 +6605,7 @@
 			children = (
 				2AC2ADC42B2252A40049EE9B /* Model+isSberQRTests.swift */,
 				2AB197A22B24701C00F0F87B /* Model_SberQRProductIntegrationTests.swift */,
+				2AB197A62B24778700F0F87B /* Helpers */,
 				2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */,
 				2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */,
 				2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */,
@@ -14080,6 +14091,7 @@
 				77517FD427A98052005CFB77 /* ServerCommandsProductTests.swift in Sources */,
 				2A3F934D2ABEE75A00669C1A /* AuthLoginViewModelTests.swift in Sources */,
 				2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */,
+				2AB197A52B24772E00F0F87B /* SberQRProductTests.swift in Sources */,
 				687F9B1127FED202007A38A5 /* ServerCommandsLoanTests.swift in Sources */,
 				2A2E32F729A39625008B9626 /* Model+PaymentsMobileConnectionTests.swift in Sources */,
 				83B614832B0390E7002EE299 /* ContactsAgent+ContactsListTests.swift in Sources */,
