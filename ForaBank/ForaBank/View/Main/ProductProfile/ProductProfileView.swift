@@ -377,7 +377,7 @@ struct ProfileView_Previews: PreviewProvider {
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension ProductProfileViewModel {
     
@@ -387,13 +387,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
@@ -406,13 +400,7 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         cvvPINServicesClient: SadCVVPINServicesClient(),
@@ -428,4 +416,17 @@ extension NavigationBarView.ViewModel {
         rightItems: [],
         background: .purple, foreground: .iconWhite
     )
+}
+
+extension QRViewModel {
+    
+    static func preview(
+        closeAction: @escaping () -> Void
+    ) -> QRViewModel {
+        
+        .init(
+            closeAction: closeAction,
+            qrResolver: QRViewModel.ScanResult.init
+        )
+    }
 }

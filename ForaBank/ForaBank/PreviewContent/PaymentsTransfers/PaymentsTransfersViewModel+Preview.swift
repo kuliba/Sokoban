@@ -80,13 +80,7 @@ extension PaymentsTransfersViewModel {
                 
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
@@ -95,13 +89,7 @@ extension PaymentsTransfersViewModel {
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 navButtonsRight: [

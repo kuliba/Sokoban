@@ -291,13 +291,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 ProductProfileViewModel(
                     model,
-                    makeQRScannerModel: {
-                        
-                        .init(
-                            closeAction: $0,
-                            qrResolver: QRViewModel.ScanResult.init
-                        )
-                    },
+                    makeQRScannerModel: QRViewModel.preview,
                     getSberQRData: { _, completion in
                         
                         completion(getSberQRDataResultStub)
@@ -309,13 +303,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                     dismissAction: dismissAction
                 )
             },
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
+            makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _, completion in
                 
                 completion(getSberQRDataResultStub)

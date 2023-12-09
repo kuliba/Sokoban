@@ -21,13 +21,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
@@ -53,13 +47,7 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),

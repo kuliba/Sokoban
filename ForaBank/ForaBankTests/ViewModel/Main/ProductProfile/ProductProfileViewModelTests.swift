@@ -552,13 +552,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
         return .init(
             model, 
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
+            makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _,_ in },
             makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
             cvvPINServicesClient: cvvPINServicesClient,
@@ -591,13 +585,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: cvvPINServicesClient,

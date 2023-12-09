@@ -347,14 +347,8 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                }, 
-                getSberQRData: { _,_ in }, 
+                makeQRScannerModel: QRViewModel.preview,
+                getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
@@ -362,13 +356,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}
@@ -389,13 +377,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
@@ -404,13 +386,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}
@@ -432,13 +408,7 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
@@ -447,13 +417,7 @@ extension MainViewModel {
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
+        makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}

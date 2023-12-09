@@ -243,13 +243,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
+            makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _, completion in
                 
                 completion(getSberQRDataResultStub)
@@ -287,13 +281,7 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
+            makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _,_ in },
             makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
             onRegister: {}

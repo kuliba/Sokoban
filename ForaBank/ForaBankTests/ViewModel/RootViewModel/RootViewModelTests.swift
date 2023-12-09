@@ -208,13 +208,7 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 onRegister: {}
@@ -222,13 +216,7 @@ final class RootViewModelTests: XCTestCase {
             paymentsViewModel: .init(
                 model: model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
+                makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init
             ),
