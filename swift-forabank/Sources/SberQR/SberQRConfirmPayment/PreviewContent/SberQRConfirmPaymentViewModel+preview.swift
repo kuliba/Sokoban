@@ -14,15 +14,11 @@ extension SberQRConfirmPaymentViewModel {
         pay: @escaping (State) -> Void = { _ in }
     ) -> SberQRConfirmPaymentViewModel {
         
-        let reducer = SberQRConfirmPaymentStateReducer.default(
-            getProducts: { [.cardPreview, .accountPreview] },
-            pay: pay
-        )
-        
-        return .init(
+        return .`default`(
             initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            scheduler: .immediate
+            getProducts: { [.cardPreview, .accountPreview] },
+            pay: pay,
+            scheduler: .main
         )
     }
 }
