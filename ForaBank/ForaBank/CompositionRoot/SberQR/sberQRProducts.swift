@@ -1,5 +1,5 @@
 //
-//  Model+sberQRProducts.swift
+//  sberQRProducts.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 09.12.2023.
@@ -13,10 +13,7 @@ extension Model {
         response: GetSberQRDataResponse
     ) -> [ProductSelect.Product] {
         
-        sberQRProducts(
-            productTypes: response.productTypes,
-            currencies: response.currencies
-        )
+        allProducts.mapToSberQRProducts(response: response)
     }
     
     func sberQRProducts(
@@ -24,8 +21,31 @@ extension Model {
         currencies: [String]
     ) -> [ProductSelect.Product] {
         
-        allProducts
-            .filter {
+        allProducts.mapToSberQRProducts(
+            productTypes: productTypes,
+            currencies: currencies
+        )
+    }
+}
+
+extension Array where Element == ProductData {
+    
+    func mapToSberQRProducts(
+        response: GetSberQRDataResponse
+    ) -> [ProductSelect.Product] {
+        
+        mapToSberQRProducts(
+            productTypes: response.productTypes,
+            currencies: response.currencies
+        )
+    }
+    
+    func mapToSberQRProducts(
+        productTypes: [ProductType],
+        currencies: [String]
+    ) -> [ProductSelect.Product] {
+        
+        self.filter {
                 productTypes.contains($0.productType)
                 && currencies.contains($0.currency)
             }
