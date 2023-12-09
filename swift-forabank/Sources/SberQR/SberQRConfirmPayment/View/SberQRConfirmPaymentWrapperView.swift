@@ -22,7 +22,6 @@ struct SberQRConfirmPaymentWrapperView: View {
             state: viewModel.state,
             event: viewModel.event(_:)
         )
-        .animation(.easeInOut(duration: 1), value: viewModel.state)
     }
 }
 
