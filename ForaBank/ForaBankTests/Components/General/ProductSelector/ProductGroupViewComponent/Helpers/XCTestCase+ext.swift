@@ -94,7 +94,8 @@ extension XCTestCase {
     
     func makeCardProduct(
         id: Int,
-        status: ProductData.Status = .active
+        status: ProductData.Status = .active,
+        isMain: Bool? = nil
     ) -> ProductCardData {
         
         .init(
@@ -135,7 +136,7 @@ extension XCTestCase {
             paymentSystemImage: nil,
             loanBaseParam: nil,
             statusPc: nil,
-            isMain: nil,
+            isMain: isMain,
             externalId: nil,
             order: 0,
             visibility: true,

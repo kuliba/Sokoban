@@ -194,14 +194,18 @@ final class Model_SberQRProductTests: XCTestCase {
 
 private extension Model {
     
-    var cards: [ProductData] {
+    var cards: [ProductCardData] {
         
-        allProducts.filter { $0.productType == .card }
+        allProducts
+            .filter { $0.productType == .card }
+            .compactMap { $0 as? ProductCardData }
     }
     
-    var accounts: [ProductData] {
+    var accounts: [ProductAccountData] {
         
-        allProducts.filter { $0.productType == .account }
+        allProducts
+            .filter { $0.productType == .account }
+            .compactMap { $0 as? ProductAccountData }
     }
     
     func changeProducts(to products: ProductsData) {
