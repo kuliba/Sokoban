@@ -106,21 +106,11 @@ extension GetSberQRDataResponse.Parameter.ProductSelect {
 
 extension ProductSelect.Product {
     
-    static let test: Self = .init(id: "test", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
+    static let test: Self = .init(id: 12345678, type: .card, icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
     
-    static let test2: Self = .init(id: "test2", icon: "", title: "Title", amountFormatted: "4.21 $", color: "blue")
+    static let test2: Self = .init(id: 23456789, type: .card, icon: "", title: "Title", amountFormatted: "4.21 $", color: "blue")
     
-    static let missing: Self = .init(id: "missing", icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
-}
-
-final class CallSpy {
-    
-    private(set) var callCount = 0
-    
-    func call() {
-        
-        callCount += 1
-    }
+    static let missing: Self = .init(id: 1111111, type: .card, icon: "", title: "Title", amountFormatted: "12.67 $", color: "red")
 }
 
 func makeEditableAmount(

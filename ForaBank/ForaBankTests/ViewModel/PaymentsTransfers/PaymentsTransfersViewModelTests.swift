@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class PaymentsTransfersViewModelTests: XCTestCase {
@@ -100,10 +101,10 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: SBER QR
     
-    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataFailure() throws {
+    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(anyError())
+            getSberQRDataResultStub: .failure(.invalid(statusCode: 200, data: anyData()))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
@@ -116,10 +117,43 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         ])
     }
     
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataFailure() throws {
+    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
         let (sut, _, _) = makeSUT(
-            getSberQRDataResultStub: .failure(anyError())
+            getSberQRDataResultStub: .failure(.invalid(statusCode: 200, data: anyData()))
+        )
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        
+        try sut.scanAndWait()
+        try sut.tapPrimaryAlertButton()
+        
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка",
+            nil
+        ])
+    }
+    
+    func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
+        
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.server(statusCode: 200, errorMessage: UUID().uuidString))
+        )
+        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        try sut.scanAndWait()
+        
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Возникла техническая ошибка"
+        ])
+    }
+    
+    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
+        
+        let (sut, _, _) = makeSUT(
+            getSberQRDataResultStub: .failure(.server(statusCode: 200, errorMessage: UUID().uuidString))
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -146,7 +180,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldNavigateToSberQRPaymentWithURLAndData() throws {
         
         let sberQRURL = anyURL()
-        let sberQRData = anyData()
+        let sberQRData = anyGetSberQRDataResponse()
         let (sut, _, _) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
@@ -164,7 +198,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
         
         let sberQRURL = anyURL()
-        let sberQRData = anyData()
+        let sberQRData = anyGetSberQRDataResponse()
         let sberQRError = anyError("SberQRPayment Failure")
         let (sut, _, spy) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
@@ -226,7 +260,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
-        getSberQRDataResultStub: Result<Data, Error> = .success(.empty),
+        getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
@@ -456,7 +490,7 @@ private extension PaymentsTransfersViewModel.Link {
     enum Case: Equatable {
         
         case template
-        case sberQRPayment(URL, Data)
+        case sberQRPayment(URL, GetSberQRDataResponse)
         case other
     }
 }

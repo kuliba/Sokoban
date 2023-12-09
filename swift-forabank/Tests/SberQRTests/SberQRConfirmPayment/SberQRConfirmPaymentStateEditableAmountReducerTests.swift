@@ -44,13 +44,14 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         ))
     }
     
-    func test_reduce_pay_shouldCallPay() {
+    func test_reduce_pay_shouldCallPayWithState() {
         
+        let state = makeEditableAmount()
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .pay)
+        _ = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(spy.callCount, 1)
+        XCTAssertNoDiff(spy.payloads, [state])
     }
     
     func test_reduce_pay_shouldNotChangeState() {
@@ -67,7 +68,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .select(.init("abcdef")))
+        _ = sut.reduce(makeEditableAmount(), .select(.init(100000)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -153,6 +154,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateEditableAmountReducer
+    private typealias Spy = CallSpy<SUT.State>
     
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
@@ -160,9 +162,9 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: CallSpy
+        spy: Spy
     ) {
-        let spy = CallSpy()
+        let spy = Spy()
         let sut = SUT(
             getProducts: { products },
             pay: spy.call

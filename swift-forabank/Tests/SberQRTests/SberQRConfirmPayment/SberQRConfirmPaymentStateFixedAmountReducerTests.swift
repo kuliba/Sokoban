@@ -19,11 +19,12 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     
     func test_reduce_pay_shouldCallPay() {
         
+        let state = makeFixedAmount()
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .pay)
+        _ = sut.reduce(state, .pay)
         
-        XCTAssertNoDiff(spy.callCount, 1)
+        XCTAssertNoDiff(spy.payloads, [state])
     }
     
     func test_reduce_pay_shouldNotChangeState() {
@@ -40,7 +41,7 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut.reduce(makeFixedAmount(), .select(.init("abcdef")))
+        _ = sut.reduce(makeFixedAmount(), .select(.init(100000)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -126,16 +127,17 @@ final class SberQRConfirmPaymentStateFixedAmountReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateFixedAmountReducer
-    
+    private typealias Spy = CallSpy<SUT.State>
+
     private func makeSUT(
         products: [ProductSelect.Product] = [.test],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: CallSpy
+        spy: Spy
     ) {
-        let spy = CallSpy()
+        let spy = Spy()
         let sut = SUT(
             getProducts: { products },
             pay: spy.call

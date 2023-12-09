@@ -24,10 +24,8 @@ public extension ProductSelect {
     
     struct Product: Equatable, Identifiable {
         
-        public typealias ID = Tagged<_ID, String>
-        public enum _ID {}
-        
         public let id: ID
+        let type: ProductType
         let icon: String
         let title: String
         let amountFormatted: String
@@ -35,17 +33,30 @@ public extension ProductSelect {
         
         public init(
             id: ID,
+            type: ProductType,
             icon: String,
             title: String,
             amountFormatted: String,
             color: String
         ) {
             self.id = id
+            self.type = type
             self.icon = icon
             self.title = title
             self.amountFormatted = amountFormatted
             self.color = color
         }
+    }
+}
+
+public extension ProductSelect.Product {
+    
+    typealias ID = Tagged<_ID, Int>
+    enum _ID {}
+    
+    enum ProductType {
+        
+        case card, account
     }
 }
 

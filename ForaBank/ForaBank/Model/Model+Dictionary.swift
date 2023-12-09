@@ -79,6 +79,7 @@ extension ModelAction {
             .paymentSystemList,
             .fullBankInfoList,
             .qrMapping,
+            .qrPaymentType,
             .prefferedBanks,
             .clientInform
         ]
@@ -164,6 +165,9 @@ extension Model {
         case .qrMapping:
             return localAgent.load(type: QRMapping.self) != nil
             
+        case .qrPaymentType:
+            return localAgent.load(type: QRPaymentType.self) != nil
+            
         case .prefferedBanks:
             return localAgent.load(type: [PrefferedBanksList].self) != nil
             
@@ -247,6 +251,9 @@ extension Model {
         case .qrMapping:
             return localAgent.serial(for: QRMapping.self)
             
+        case .qrPaymentType:
+            return localAgent.serial(for: QRPaymentType.self)
+            
         case .prefferedBanks:
             return localAgent.serial(for: [PrefferedBanksList].self)
             
@@ -329,6 +336,9 @@ extension Model {
             
         case .qrMapping:
             try? localAgent.clear(type: QRMapping.self)
+            
+        case .qrPaymentType:
+            try? localAgent.clear(type: QRPaymentType.self)
             
         case .prefferedBanks:
             try? localAgent.clear(type: [PrefferedBanksList].self)
@@ -1925,6 +1935,54 @@ extension Model {
                     do {
                         
                         try localAgent.store(data.qrMapping, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    // QRPaymentType
+    func handleDictionaryQRPaymentType(_ serial: String?) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.QRController.GetQRPaymentType(
+            token: token, 
+            serial: serial
+        )
+        serverAgent.executeCommand(command: command) { [unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard !data.list.isEmpty else { return }
+
+                    qrPaymentType.value = data.list
+                    
+                    do {
+                        
+                        try localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
                         

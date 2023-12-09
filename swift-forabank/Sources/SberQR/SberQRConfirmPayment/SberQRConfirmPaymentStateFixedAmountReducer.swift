@@ -11,7 +11,7 @@ public final class SberQRConfirmPaymentStateFixedAmountReducer {
     public typealias Event = SberQRConfirmPaymentEvent.FixedAmountEvent
     
     public typealias GetProducts = () -> [ProductSelect.Product]
-    public typealias Pay = () -> Void
+    public typealias Pay = (State) -> Void
     
     private let getProducts: GetProducts
     private let pay: Pay
@@ -33,7 +33,7 @@ public final class SberQRConfirmPaymentStateFixedAmountReducer {
         
         switch event {
         case .pay:
-            pay()
+            pay(state)
             
         case let .select(id):
             guard let product = getProducts().first(where: { $0.id == id })
