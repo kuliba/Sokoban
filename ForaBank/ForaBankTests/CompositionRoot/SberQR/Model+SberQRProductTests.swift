@@ -9,57 +9,13 @@
 import SberQR
 import XCTest
 
-extension Model {
-    
-    func sberQRProducts(
-        productTypes: [ProductType] = ProductType.allCases
-    ) -> [ProductSelect.Product] {
-        
-        allProducts
-            .filter { productTypes.contains($0.productType) }
-            .compactMap(\.sberQRProduct)
-    }
-}
-
-extension ProductData {
-    
-    var sberQRProduct: ProductSelect.Product? {
-        
-        if let card = self as? ProductCardData {
-            
-            return .init(
-                id: .init(card.id),
-                type: .card,
-                icon: "",
-                title: "",
-                amountFormatted: "",
-                color: ""
-            )
-        }
-        
-        if let account = self as? ProductAccountData {
-            
-            return .init(
-                id: .init(account.id),
-                type: .account,
-                icon: "",
-                title: "",
-                amountFormatted: "",
-                color: ""
-            )
-        }
-        
-        return nil
-    }
-}
-
 final class Model_SberQRProductTests: XCTestCase {
     
     func test_sberQRProducts_shouldReturnEmptyOnEmptyAllProducts() {
         
         let sut = makeSUT()
         
-        let products = sut.sberQRProducts()
+        let products = sut.sberQRProducts(productTypes: ProductType.allCases)
         
         XCTAssert(products.isEmpty)
         XCTAssert(sut.allProducts.isEmpty)
