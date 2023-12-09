@@ -1,6 +1,6 @@
 //
 //  ProductSelectView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -20,10 +20,8 @@ struct ProductSelectView: View {
             
             HStack {
                 
-            Text("ProductSelect")
-                .onTapGesture {
-                    event(.toggleProductSelect)
-                }
+                Text(state.product.title)
+                    .onTapGesture { event(.toggleProductSelect) }
                 
                 Spacer()
                 
@@ -39,13 +37,13 @@ struct ProductSelectView: View {
         products: [ProductSelect.Product]
     ) -> some View {
         
-            ScrollView(.horizontal) {
+        ScrollView(.horizontal) {
+            
+            HStack {
                 
-                HStack {
-                    
-                    ForEach(products, content: productCardView)
-                }
+                ForEach(products, content: productCardView)
             }
+        }
     }
     
     private func productCardView(
@@ -59,6 +57,7 @@ struct ProductSelectView: View {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.orange.opacity(0.5)) // product.color
             )
+            .onTapGesture { event(.select(product.id)) }
     }
     
     private func chevron() -> some View {
@@ -68,7 +67,7 @@ struct ProductSelectView: View {
             .onTapGesture { event(.toggleProductSelect) }
     }
 }
-    
+
 private extension ProductSelect {
     
     var isExpanded: Bool {
@@ -76,7 +75,7 @@ private extension ProductSelect {
         switch self {
         case .compact:
             return false
-        
+            
         case .expanded:
             return true
         }
@@ -87,7 +86,7 @@ private extension ProductSelect {
         switch self {
         case let .compact(product):
             return product
-        
+            
         case let .expanded(product, _):
             return product
         }
@@ -98,7 +97,7 @@ private extension ProductSelect {
         switch self {
         case .compact:
             return nil
-        
+            
         case let .expanded(_, products):
             return products
         }
@@ -124,7 +123,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         private let reduce: (ProductSelectReducer.State, ProductSelectReducer.Event) -> ProductSelectReducer.State
         
         init(_ state: ProductSelect) {
-         
+            
             self._state = .init(initialValue: state)
             
             let reducer = ProductSelectReducer(getProducts: { [.cardPreview, .accountPreview] })

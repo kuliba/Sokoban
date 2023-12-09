@@ -19,6 +19,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             
             AmountView(
                 amount: state.bottom,
+                event: { event(.editAmount($0)) },
                 pay: pay
             )
         }

@@ -18,16 +18,21 @@ public final class SberQRConfirmPaymentStateReducer {
     public typealias FixedEvent = Event.FixedAmount
     public typealias FixedReduce = (FixedState, FixedEvent) -> FixedState
     
+    public typealias Pay = (State) -> Void
+
     private let editableReduce: EditableReduce
     private let fixedReduce: FixedReduce
-    
+    private let pay: Pay
+
     public init(
         editableReduce: @escaping EditableReduce,
-        fixedReduce: @escaping FixedReduce
+        fixedReduce: @escaping FixedReduce,
+        pay: @escaping Pay
     ) {
         self.editableReduce = editableReduce
         self.fixedReduce = fixedReduce
-    }
+        self.pay = pay
+   }
 }
 
 public extension SberQRConfirmPaymentStateReducer {
@@ -45,6 +50,9 @@ public extension SberQRConfirmPaymentStateReducer {
             
         case let (.fixedAmount(state), .fixed(event)):
             newState = .fixedAmount(fixedReduce(state, event))
+        
+        case let (state, .pay):
+            pay(state)
             
         default:
             break

@@ -12,17 +12,12 @@ public final class SberQRConfirmPaymentStateEditableAmountReducer {
     
     public typealias ProductSelectReduce = (ProductSelect, SberQRConfirmPaymentEvent.ProductSelectEvent) -> ProductSelect
     
-    public typealias Pay = (State) -> Void
-    
     private let productSelectReduce: ProductSelectReduce
-    private let pay: Pay
     
     public init(
-        productSelectReduce: @escaping ProductSelectReduce,
-        pay: @escaping Pay
+        productSelectReduce: @escaping ProductSelectReduce
     ) {
         self.productSelectReduce = productSelectReduce
-        self.pay = pay
     }
 }
 
@@ -44,9 +39,6 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
                 validationRules: state.bottom.validationRules,
                 button: state.bottom.button
             )
-            
-        case .pay:
-            pay(state)
             
         case let .productSelect(productSelectEvent):
             newState.productSelect = productSelectReduce(

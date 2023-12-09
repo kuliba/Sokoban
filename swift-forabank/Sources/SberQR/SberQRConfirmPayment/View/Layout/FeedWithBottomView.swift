@@ -20,6 +20,7 @@ struct FeedWithBottomView<Feed: View, Bottom: View>: View {
             feedView()
             bottom()
         }
+        .padding(.horizontal)
     }
     
     private func feedView() -> some View {

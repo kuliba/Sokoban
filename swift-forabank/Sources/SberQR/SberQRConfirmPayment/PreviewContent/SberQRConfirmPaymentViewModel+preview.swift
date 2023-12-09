@@ -10,12 +10,13 @@ import Foundation
 extension SberQRConfirmPaymentViewModel {
     
     static func preview(
-        initialState: State
+        initialState: State,
+        pay: @escaping (State) -> Void = { _ in }
     ) -> SberQRConfirmPaymentViewModel {
         
         let reducer = SberQRConfirmPaymentStateReducer.default(
             getProducts: { [.cardPreview, .accountPreview] },
-            pay: { _ in }
+            pay: pay
         )
         
         return .init(

@@ -13,7 +13,16 @@ struct ButtonView: View {
     let pay: () -> Void
     
     var body: some View {
-        Text("ButtonView")
+        
+        Button(button.value, action: pay)
+            .font(.headline.bold())
+            .padding()
+            .frame(maxWidth: .infinity)
+            .foregroundColor(.white)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundColor(.red)
+            )
     }
 }
 

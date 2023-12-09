@@ -11,7 +11,7 @@ public enum SberQRConfirmPaymentEvent: Equatable {
     
     case editable(EditableAmount)
     case fixed(FixedAmount)
-    case pay(SberQRConfirmPaymentState)
+    case pay
 }
 
 public extension SberQRConfirmPaymentEvent {
@@ -19,13 +19,11 @@ public extension SberQRConfirmPaymentEvent {
     enum EditableAmount: Equatable {
         
         case editAmount(Decimal)
-        case pay
         case productSelect(ProductSelectEvent)
     }
     
     enum FixedAmount: Equatable {
         
-        case pay
         case productSelect(ProductSelectEvent)
     }
     

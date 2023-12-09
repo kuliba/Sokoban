@@ -10,10 +10,36 @@ import SwiftUI
 struct AmountView: View {
     
     let amount: SberQRConfirmPaymentState.Amount
+    let event: (Decimal) -> Void
     let pay: () -> Void
     
     var body: some View {
-        Text("AmountView")
+        
+        HStack {
+            
+            TextField(
+                "amount",
+                text: .init(
+                    get: { "\(amount.value)" },
+                    set: {
+                        guard let amount = Decimal(string: $0)
+                        else { return }
+                        
+                        event(amount)
+                    }
+                )
+            )
+            .font(.title.bold())
+            
+            Button("Pay", action: pay)
+                .font(.headline.bold())
+                .padding()
+                .foregroundColor(.white)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(.red)
+                )
+        }
     }
 }
 
@@ -23,6 +49,6 @@ struct AmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AmountView(amount: .preview, pay: {})
+        AmountView(amount: .preview, event: { _ in }, pay: {})
     }
 }
