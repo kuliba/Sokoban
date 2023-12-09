@@ -19,7 +19,7 @@ public extension ProductSelect {
     struct Product: Equatable, Identifiable {
         
         public let id: ID
-        let type: ProductType
+        public let type: ProductType
         let icon: String
         let title: String
         let amountFormatted: String

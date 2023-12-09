@@ -150,7 +150,7 @@ extension XCTestCase {
         
         .init(
             id: id, 
-            productType: .account, 
+            productType: .account,
             number: nil,
             numberMasked: nil,
             accountNumber: nil,
