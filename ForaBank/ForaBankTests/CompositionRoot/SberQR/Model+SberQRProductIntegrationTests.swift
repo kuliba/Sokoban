@@ -1,5 +1,5 @@
 //
-//  Model_SberQRProductIntegrationTests.swift
+//  Model+SberQRProductIntegrationTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 09.12.2023.

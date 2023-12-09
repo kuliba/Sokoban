@@ -9,7 +9,7 @@
 import SberQR
 import XCTest
 
-final class Model_SberQRProductTests: XCTestCase {
+final class Model_SberQRProductTests: SberQRProductTests {
     
     func test_sberQRProducts_shouldReturnEmptyOnEmptyAllProducts() {
         
@@ -212,21 +212,5 @@ final class Model_SberQRProductTests: XCTestCase {
         //    XCTAssertNoDiff(product.title, title)
         //    XCTAssertNoDiff(product.amountFormatted, amountFormatted)
         //    XCTAssertNoDiff(product.color, color)
-    }
-    
-    // MARK: - Helpers
-    
-    private typealias SUT = Model
-    
-    private func makeSUT(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> SUT {
-        
-        let sut: SUT = .mockWithEmptyExcept()
-        
-        trackForMemoryLeaks(sut, file: file, line: line)
-        
-        return sut
     }
 }

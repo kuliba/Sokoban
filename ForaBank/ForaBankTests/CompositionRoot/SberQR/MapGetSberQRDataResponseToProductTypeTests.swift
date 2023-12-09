@@ -9,7 +9,7 @@
 import SberQR
 import XCTest
 
-final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
+final class MapGetSberQRDataResponseToProductTypeTests: SberQRProductTests {
     
     func test_productTypes_shouldReturnEmptyOnEmptyParameters() {
         
@@ -43,7 +43,7 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
         let parametersWithProductSelect: [Parameter] = [
             amount(),
             header(),
-            productSelect(productTypes: filterProductTypes)
+            productSelect(productTypes: filterProductTypes, currencies: [])
         ]
         let response = makeGetSberQRDataResponse(with: parametersWithProductSelect)
         
@@ -60,7 +60,7 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
         let parametersWithProductSelect: [Parameter] = [
             amount(),
             header(),
-            productSelect(productTypes: filterProductTypes)
+            productSelect(productTypes: filterProductTypes, currencies: [])
         ]
         let response = makeGetSberQRDataResponse(with: parametersWithProductSelect)
         
@@ -69,59 +69,5 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
         XCTAssertNoDiff(productTypes, [.account, .card])
         XCTAssertFalse(parametersWithProductSelect.isEmpty)
         XCTAssert(parametersWithProductSelect.hasProductSelect)
-    }
-    
-    // MARK: - Helpers
-    
-    private typealias Parameter = GetSberQRDataResponse.Parameter
-    private typealias FilterProductType = GetSberQRDataResponse.Parameter.ProductSelect.Filter.ProductType
-    private typealias Currency = GetSberQRDataResponse.Parameter.ProductSelect.Filter.Currency
-    
-    private func makeGetSberQRDataResponse(
-        with parameters: [Parameter],
-        required: [GetSberQRDataResponse.Required] = []
-    ) -> GetSberQRDataResponse {
-        
-        .init(
-            qrcID: UUID().uuidString,
-            parameters: parameters,
-            required: required
-        )
-    }
-    
-    private func amount() -> Parameter {
-        
-        .amount(.init(
-            id: .paymentAmount,
-            value: 123.45,
-            title: "Title",
-            validationRules: [],
-            button: .init(
-                title: "Pay",
-                action: .paySberQR,
-                color: .red
-            )
-        ))
-    }
-    
-    private func header() -> Parameter {
-        
-        .header(.init(id: .title, value: "Title"))
-    }
-    
-    private func productSelect(
-        productTypes: [FilterProductType]
-    ) -> Parameter {
-        
-        .productSelect(.init(
-            id: .init(UUID().uuidString),
-            value: nil,
-            title: "Title",
-            filter: .init(
-                productTypes: productTypes,
-                currencies: [],
-                additional: false
-            )
-        ))
     }
 }
