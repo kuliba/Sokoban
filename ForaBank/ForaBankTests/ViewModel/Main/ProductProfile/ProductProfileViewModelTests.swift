@@ -5,10 +5,11 @@
 //  Created by Max Gribov on 06.06.2023.
 //
 
-import XCTest
 @testable import ForaBank
-import SwiftUI
 import PinCodeUI
+import SberQR
+import SwiftUI
+import XCTest
 
 final class ProductProfileViewModelTests: XCTestCase {
     
@@ -554,7 +555,7 @@ final class ProductProfileViewModelTests: XCTestCase {
             model, 
             makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _,_ in },
-            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -587,7 +588,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 model,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

@@ -5,9 +5,10 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
-import SwiftUI
 import Combine
 import PickerWithPreviewComponent
+import SberQR
+import SwiftUI
 
 class PaymentsTransfersViewModel: ObservableObject, Resetable {
     

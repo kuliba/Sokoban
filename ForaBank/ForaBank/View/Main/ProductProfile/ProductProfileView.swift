@@ -5,8 +5,9 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
-import SwiftUI
 import PinCodeUI
+import SberQR
+import SwiftUI
 
 struct ProductProfileView: View {
     
@@ -389,7 +390,7 @@ extension ProductProfileViewModel {
         history: .sampleHistory,
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -402,7 +403,7 @@ extension ProductProfileViewModel {
         history: .sampleHistory,
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

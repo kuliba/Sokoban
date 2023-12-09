@@ -5,8 +5,9 @@
 //  Created by Max Gribov on 24.02.2022.
 //
 
-import Foundation
 import Combine
+import Foundation
+import SberQR
 import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {

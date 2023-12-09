@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 27.10.2023.
 //
 
+import SberQR
+
 extension MyProductsViewModel {
     
     static let sample = MyProductsViewModel(
@@ -23,7 +25,7 @@ extension MyProductsViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -49,7 +51,7 @@ extension MyProductsViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,

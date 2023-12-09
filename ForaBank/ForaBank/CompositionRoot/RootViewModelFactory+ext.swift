@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SberQR
 
 extension RootViewModelFactory {
     
@@ -55,7 +56,8 @@ extension RootViewModelFactory {
         
         let getSberQRData: GetSberQRData = getSberQRDataService.process
         
-        let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.init
+        #warning("STUB!")
+        let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.preview
         
         let makeProductProfileViewModel = {
             

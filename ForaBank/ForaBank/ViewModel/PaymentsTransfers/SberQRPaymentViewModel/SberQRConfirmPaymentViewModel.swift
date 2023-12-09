@@ -8,21 +8,21 @@
 import Foundation
 import SberQR
 
-final class SberQRConfirmPaymentViewModel: ObservableObject {
+extension SberQRConfirmPaymentViewModel {
     
     typealias Commit = MakeSberQRPaymentCompletion
     
-    let sberQRURL: URL
-    let sberQRData: GetSberQRDataResponse
-    let commit: Commit
-    
-    init(
+    static func preview(
         sberQRURL: URL,
         sberQRData: GetSberQRDataResponse,
         commit: @escaping Commit
-    ) {
-        self.sberQRURL = sberQRURL
-        self.sberQRData = sberQRData
-        self.commit = commit
+    ) -> SberQRConfirmPaymentViewModel {
+                
+        return .default(
+            initialState: .editableAmount(.preview),
+            getProducts: { [] },
+            pay: { _ in },
+            scheduler: .main
+        )
     }
 }

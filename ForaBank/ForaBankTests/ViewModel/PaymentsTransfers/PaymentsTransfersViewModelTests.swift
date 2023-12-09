@@ -199,7 +199,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData)
+            .sberQRPayment
         ])
     }
     
@@ -219,7 +219,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData),
+            .sberQRPayment,
             nil
         ])
     }
@@ -296,7 +296,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                         
                         completion(getSberQRDataResultStub)
                     },
-                    makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                    makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
@@ -472,11 +472,8 @@ private extension PaymentsTransfersViewModel.Link {
         case .template:
             return .template
             
-        case let .sberQRPayment(sberQRPayment):
-            return .sberQRPayment(
-                sberQRPayment.sberQRURL,
-                sberQRPayment.sberQRData
-            )
+        case .sberQRPayment:
+            return .sberQRPayment
             
         default:
             return .other
@@ -486,7 +483,7 @@ private extension PaymentsTransfersViewModel.Link {
     enum Case: Equatable {
         
         case template
-        case sberQRPayment(URL, GetSberQRDataResponse)
+        case sberQRPayment
         case other
     }
 }

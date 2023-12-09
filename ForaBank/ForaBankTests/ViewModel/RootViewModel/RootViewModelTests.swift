@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class RootViewModelTests: XCTestCase {
@@ -210,7 +211,7 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_ in nil },
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 onRegister: {}
             ),
             paymentsViewModel: .init(
@@ -218,7 +219,7 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_ in nil },
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

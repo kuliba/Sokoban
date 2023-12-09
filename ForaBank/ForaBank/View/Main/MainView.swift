@@ -5,8 +5,9 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
-import SwiftUI
 import ScrollViewProxy
+import SberQR
+import SwiftUI
 
 struct MainView: View {
     
@@ -349,7 +350,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -358,7 +359,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
     
@@ -379,7 +380,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -388,7 +389,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
     
@@ -410,7 +411,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -419,7 +420,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
 }

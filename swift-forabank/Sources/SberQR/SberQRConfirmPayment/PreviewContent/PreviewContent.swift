@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-extension SberQRConfirmPaymentState.EditableAmount {
+public extension SberQRConfirmPaymentState.EditableAmount {
     
     static let preview: Self = .init(
         header: .preview,

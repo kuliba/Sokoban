@@ -168,7 +168,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData)
+            .sberQRPayment
         ])
     }
     
@@ -188,7 +188,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData),
+            .sberQRPayment,
             nil
         ])
     }
@@ -283,7 +283,7 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _,_ in },
-            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
             onRegister: {}
         )
         
@@ -379,11 +379,8 @@ private extension MainViewModel.Link {
         case .templates:
             return .templates
             
-        case let .sberQRPayment(sberQRPayment):
-            return .sberQRPayment(
-                sberQRPayment.sberQRURL,
-                sberQRPayment.sberQRData
-            )
+        case .sberQRPayment:
+            return .sberQRPayment
             
         default:
             return .other
@@ -393,7 +390,7 @@ private extension MainViewModel.Link {
     enum Case: Equatable {
         
         case templates
-        case sberQRPayment(URL, GetSberQRDataResponse)
+        case sberQRPayment
         case other
     }
 }
