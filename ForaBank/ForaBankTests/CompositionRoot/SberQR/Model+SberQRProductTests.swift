@@ -13,11 +13,11 @@ extension Model {
     
     func sberQRProducts(
         productTypes: [ProductType] = ProductType.allCases
-    ) -> [ProductSelect.Product.ID.RawValue] {
+    ) -> [ProductSelect.Product] {
         
         allProducts
             .filter { productTypes.contains($0.productType) }
-            .map(\.id)
+            .compactMap(\.sberQRProduct)
     }
 }
 
@@ -55,7 +55,7 @@ extension ProductData {
 
 final class Model_SberQRProductTests: XCTestCase {
     
-    func test_sberQRProducts_shouldReturnEmptyOnEmptyProducts() {
+    func test_sberQRProducts_shouldReturnEmptyOnEmptyAllProducts() {
         
         let sut = makeSUT()
         
@@ -67,10 +67,10 @@ final class Model_SberQRProductTests: XCTestCase {
     
     func test_sberQRProducts_shouldReturnEmptyOnEmptyProductTypes() {
         
-        let productTypes: [ProductType] = []
+        let emptyProductTypes: [ProductType] = []
         let sut = makeSUT()
         
-        let products = sut.sberQRProducts(productTypes: productTypes)
+        let products = sut.sberQRProducts(productTypes: emptyProductTypes)
         
         XCTAssert(products.isEmpty)
         XCTAssert(sut.allProducts.isEmpty)
@@ -78,11 +78,13 @@ final class Model_SberQRProductTests: XCTestCase {
     
     func test_sberQRProducts_shouldReturnEmptyOnMissingProductsOfSelectedProductType_card() {
         
-        let productTypes: [ProductType] = [.card]
+        let missingProductType: ProductType = .card
         let sut = makeSUT()
-        sut.products.send(makeProductsData([(.account, 2)]))
+        sut.changeProducts(to: [
+            .account: [makeAccountProduct(id: 10)]
+        ])
         
-        let products = sut.sberQRProducts(productTypes: productTypes)
+        let products = sut.sberQRProducts(productTypes: [missingProductType])
         
         XCTAssert(products.isEmpty)
         XCTAssertFalse(sut.allProducts.isEmpty)
@@ -91,11 +93,16 @@ final class Model_SberQRProductTests: XCTestCase {
     
     func test_sberQRProducts_shouldReturnEmptyOnMissingProductsOfSelectedProductType_account() {
         
-        let productTypes: [ProductType] = [.account]
+        let missingProductType: ProductType = .account
         let sut = makeSUT()
-        sut.products.send(makeProductsData([(.card, 2)]))
+        sut.changeProducts(to: [
+            .card: [
+                makeCardProduct(id: 3),
+                makeCardProduct(id: 4),
+            ],
+        ])
         
-        let products = sut.sberQRProducts(productTypes: productTypes)
+        let products = sut.sberQRProducts(productTypes: [missingProductType])
         
         XCTAssert(products.isEmpty)
         XCTAssertFalse(sut.allProducts.isEmpty)
@@ -106,17 +113,25 @@ final class Model_SberQRProductTests: XCTestCase {
         
         let productTypes: [ProductType] = [.card]
         let sut = makeSUT()
-        sut.products.send(makeProductsData([
-            (.account, 2),
-            (.card, 3)
-        ]))
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(id: 3),
+                makeCardProduct(id: 4),
+                makeCardProduct(id: 5),
+            ],
+        ])
         
         let products = sut.sberQRProducts(productTypes: productTypes)
         
+        XCTAssert(products.allSatisfy { $0.type == .card })
+        XCTAssertNoDiff(sut.cards.map(\.id), [3, 4, 5])
+        XCTAssertNoDiff(products.map(\.id), [3, 4, 5])
         XCTAssertNoDiff(products.count, 3)
         XCTAssertNoDiff(sut.allProducts.count, 5)
-        XCTAssertNoDiff(sut.accounts.count, 2)
-        XCTAssertNoDiff(sut.cards.count, 3)
     }
     
     // MARK: - Mapping
@@ -187,5 +202,10 @@ private extension Model {
     var accounts: [ProductData] {
         
         allProducts.filter { $0.productType == .account }
+    }
+    
+    func changeProducts(to products: ProductsData) {
+        
+        self.products.send(products)
     }
 }
