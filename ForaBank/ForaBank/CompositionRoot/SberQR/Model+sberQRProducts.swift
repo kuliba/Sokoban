@@ -10,6 +10,16 @@ import SberQR
 extension Model {
     
     func sberQRProducts(
+        response: GetSberQRDataResponse
+    ) -> [ProductSelect.Product] {
+        
+        sberQRProducts(
+            productTypes: response.productTypes,
+            currencies: response.currencies
+        )
+    }
+    
+    func sberQRProducts(
         productTypes: [ProductType],
         currencies: [String]
     ) -> [ProductSelect.Product] {

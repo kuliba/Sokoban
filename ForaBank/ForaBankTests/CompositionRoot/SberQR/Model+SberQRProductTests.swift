@@ -230,25 +230,3 @@ final class Model_SberQRProductTests: XCTestCase {
         return sut
     }
 }
-
-private extension Model {
-    
-    var cards: [ProductCardData] {
-        
-        allProducts
-            .filter { $0.productType == .card }
-            .compactMap { $0 as? ProductCardData }
-    }
-    
-    var accounts: [ProductAccountData] {
-        
-        allProducts
-            .filter { $0.productType == .account }
-            .compactMap { $0 as? ProductAccountData }
-    }
-    
-    func changeProducts(to products: ProductsData) {
-        
-        self.products.send(products)
-    }
-}
