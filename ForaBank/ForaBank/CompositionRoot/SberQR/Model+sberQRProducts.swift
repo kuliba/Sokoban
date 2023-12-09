@@ -10,11 +10,15 @@ import SberQR
 extension Model {
     
     func sberQRProducts(
-        productTypes: [ProductType]
+        productTypes: [ProductType],
+        currencies: [String]
     ) -> [ProductSelect.Product] {
         
         allProducts
-            .filter { productTypes.contains($0.productType) }
+            .filter {
+                productTypes.contains($0.productType)
+                && currencies.contains($0.currency)
+            }
             .compactMap(\.sberQRProduct)
     }
 }

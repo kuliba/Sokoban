@@ -94,6 +94,7 @@ extension XCTestCase {
     
     func makeCardProduct(
         id: Int,
+        currency: String = "RUB",
         status: ProductData.Status = .active,
         isMain: Bool? = nil
     ) -> ProductCardData {
@@ -106,7 +107,7 @@ extension XCTestCase {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "RUB",
+            currency: currency,
             mainField: "Card",
             additionalField: nil,
             customName: nil,
@@ -146,6 +147,7 @@ extension XCTestCase {
     
     func makeAccountProduct(
         id: Int,
+        currency: String = "RUB",
         status: ProductData.Status = .active
     ) -> ProductAccountData {
         
@@ -157,7 +159,7 @@ extension XCTestCase {
             accountNumber: nil,
             balance: nil,
             balanceRub: nil,
-            currency: "RUB",
+            currency: currency,
             mainField: "Account",
             additionalField: nil,
             customName: nil,

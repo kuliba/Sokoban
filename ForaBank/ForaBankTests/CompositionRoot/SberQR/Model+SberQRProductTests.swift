@@ -15,7 +15,10 @@ final class Model_SberQRProductTests: XCTestCase {
         
         let sut = makeSUT()
         
-        let products = sut.sberQRProducts(productTypes: ProductType.allCases)
+        let products = sut.sberQRProducts(
+            productTypes: ProductType.allCases,
+            currencies: ["RUB"]
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssert(sut.allProducts.isEmpty)
@@ -26,9 +29,28 @@ final class Model_SberQRProductTests: XCTestCase {
         let emptyProductTypes: [ProductType] = []
         let sut = makeSUT()
         
-        let products = sut.sberQRProducts(productTypes: emptyProductTypes)
+        let products = sut.sberQRProducts(
+            productTypes: emptyProductTypes,
+            currencies: ["RUB"]
+        )
         
         XCTAssert(products.isEmpty)
+        XCTAssert(emptyProductTypes.isEmpty)
+        XCTAssert(sut.allProducts.isEmpty)
+    }
+    
+    func test_sberQRProducts_shouldReturnEmptyOnEmptyCurrencies() {
+        
+        let emptyCurrencies: [String] = []
+        let sut = makeSUT()
+        
+        let products = sut.sberQRProducts(
+            productTypes: ProductType.allCases,
+            currencies: emptyCurrencies
+        )
+        
+        XCTAssert(products.isEmpty)
+        XCTAssert(emptyCurrencies.isEmpty)
         XCTAssert(sut.allProducts.isEmpty)
     }
     
@@ -40,7 +62,10 @@ final class Model_SberQRProductTests: XCTestCase {
             .account: [makeAccountProduct(id: 10)]
         ])
         
-        let products = sut.sberQRProducts(productTypes: [missingProductType])
+        let products = sut.sberQRProducts(
+            productTypes: [missingProductType],
+            currencies: ["RUB"]
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssertFalse(sut.allProducts.isEmpty)
@@ -58,11 +83,40 @@ final class Model_SberQRProductTests: XCTestCase {
             ],
         ])
         
-        let products = sut.sberQRProducts(productTypes: [missingProductType])
+        let products = sut.sberQRProducts(
+            productTypes: [missingProductType],
+            currencies: ["RUB"]
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssertFalse(sut.allProducts.isEmpty)
         XCTAssert(sut.accounts.isEmpty)
+    }
+    
+    func test_sberQRProducts_shouldReturnEmptyOnMissingProductsOfSelectedCurrency() {
+        
+        let missingCurrency = "RUB"
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1, currency: "USD"),
+                makeAccountProduct(id: 2, currency: "USD"),
+            ],
+            .card: [
+                makeCardProduct(id: 3, currency: "USD"),
+                makeCardProduct(id: 4, currency: "USD"),
+                makeCardProduct(id: 5, currency: "USD"),
+            ],
+        ])
+        
+        let products = sut.sberQRProducts(
+            productTypes: ProductType.allCases,
+            currencies: [missingCurrency]
+        )
+        
+        XCTAssert(products.isEmpty)
+        XCTAssertFalse(sut.allProducts.isEmpty)
+        XCTAssert(sut.allProducts.allSatisfy { $0.currency != missingCurrency })
     }
     
     func test_sberQRProducts_shouldReturnProductsOfSelectedProductType() {
@@ -81,11 +135,40 @@ final class Model_SberQRProductTests: XCTestCase {
             ],
         ])
         
-        let products = sut.sberQRProducts(productTypes: productTypes)
+        let products = sut.sberQRProducts(
+            productTypes: productTypes,
+            currencies: ["RUB"]
+        )
         
         XCTAssert(products.allSatisfy { $0.type == .card })
         XCTAssertNoDiff(sut.cards.map(\.id), [3, 4, 5])
         XCTAssertNoDiff(products.map(\.id), [3, 4, 5])
+        XCTAssertNoDiff(products.count, 3)
+        XCTAssertNoDiff(sut.allProducts.count, 5)
+    }
+    
+    func test_sberQRProducts_shouldReturnProductsOfSelectedCurrency() {
+        
+        let currency = "RUB"
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1, currency: "USD"),
+                makeAccountProduct(id: 2, currency: "RUB"),
+            ],
+            .card: [
+                makeCardProduct(id: 3, currency: "RUB"),
+                makeCardProduct(id: 4, currency: "USD"),
+                makeCardProduct(id: 5, currency: "RUB"),
+            ],
+        ])
+        
+        let products = sut.sberQRProducts(
+            productTypes: ProductType.allCases,
+            currencies: [currency]
+        )
+        
+        XCTAssertNoDiff(products.map(\.id), [3, 5, 2], "Expect 3 products, accounts after cards.")
         XCTAssertNoDiff(products.count, 3)
         XCTAssertNoDiff(sut.allProducts.count, 5)
     }
