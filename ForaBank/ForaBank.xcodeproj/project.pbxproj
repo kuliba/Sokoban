@@ -626,6 +626,9 @@
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */; };
 		2AB1979B2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */; };
+		2AB1979D2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */; };
+		2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979E2B2469ED00F0F87B /* SberQRTestHelpers.swift */; };
+		2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */; };
 		2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */; };
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
@@ -2832,6 +2835,9 @@
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
 		2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+log.swift"; sourceTree = "<group>"; };
 		2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGetSberQRDataResponseToProductTypeTests.swift; sourceTree = "<group>"; };
+		2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGetSberQRDataResponseToCurrenciesTests.swift; sourceTree = "<group>"; };
+		2AB1979E2B2469ED00F0F87B /* SberQRTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRTestHelpers.swift; sourceTree = "<group>"; };
+		2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResponse+ext.swift"; sourceTree = "<group>"; };
 		2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformingReducerTests.swift; sourceTree = "<group>"; };
 		2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingServiceTests.swift"; sourceTree = "<group>"; };
 		2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCodeViewComponentTests.swift; sourceTree = "<group>"; };
@@ -6577,6 +6583,7 @@
 				2AC2ADBD2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A5D17922B245CB100597159 /* Model+sberQRProducts.swift */,
+				2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */,
 			);
 			path = SberQR;
 			sourceTree = "<group>";
@@ -6587,6 +6594,8 @@
 				2AC2ADC42B2252A40049EE9B /* Model+isSberQRTests.swift */,
 				2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */,
 				2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */,
+				2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */,
+				2AB1979E2B2469ED00F0F87B /* SberQRTestHelpers.swift */,
 			);
 			path = SberQR;
 			sourceTree = "<group>";
@@ -13608,6 +13617,7 @@
 				0CA79AE229131AB300B6C281 /* OpenNewProductsViewModelComponent.swift in Sources */,
 				77BF27B128467AE6009624BB /* ButtonIconTextRectViewComponent.swift in Sources */,
 				774A8B3D2865FCDD00B81140 /* UserAccountView.swift in Sources */,
+				2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */,
 				2A5D17932B245CB100597159 /* Model+sberQRProducts.swift in Sources */,
 				EDF4F24B277249950030F087 /* ChangePaymentContactDecodableModel.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
@@ -14004,6 +14014,7 @@
 				2AF5E28E29BB4517004D69F3 /* Model+stubbed.swift in Sources */,
 				7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */,
 				2A58FAA72AD705A800BD1967 /* RequestFactory+makeGetPINConfirmationCodeRequestTests.swift in Sources */,
+				2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */,
 				2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */,
 				2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */,
 				C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */,
@@ -14113,6 +14124,7 @@
 				2A8A28442A4089FF000D3807 /* LocalAgentStub+convenience.swift in Sources */,
 				2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */,
 				2A08F96C2B21B77600227548 /* GetSberQRDataResult+emptySuccess.swift in Sources */,
+				2AB1979D2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift in Sources */,
 				2A3599AE2ADA80A700820369 /* KeyChainStoreTestTypes.swift in Sources */,
 				779511A72A6A961500A570F8 /* KeychainSymmetricKeyProviderAdapterTests.swift in Sources */,
 				7757DB552A711E6300745EFF /* KeychainAgentSpy.swift in Sources */,

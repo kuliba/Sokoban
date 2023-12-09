@@ -1,5 +1,5 @@
 //
-//  MapGetSberQRDataResponseToProductTypeTests.swift
+//  MapGetSberQRDataResponseToCurrenciesTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 09.12.2023.
@@ -9,16 +9,16 @@
 import SberQR
 import XCTest
 
-final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
+final class MapGetSberQRDataResponseToCurrenciesTests: XCTestCase {
     
     func test_productTypes_shouldReturnEmptyOnEmptyParameters() {
         
         let emptyParameters: [Parameter] = []
         let response = makeGetSberQRDataResponse(with: emptyParameters)
         
-        let productTypes = response.productTypes
+        let currencies = response.currencies
         
-        XCTAssert(productTypes.isEmpty)
+        XCTAssert(currencies.isEmpty)
         XCTAssert(emptyParameters.isEmpty)
     }
     
@@ -30,43 +30,43 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
         ]
         let response = makeGetSberQRDataResponse(with: parametersWithoutProductSelect)
         
-        let productTypes = response.productTypes
+        let currencies = response.currencies
         
-        XCTAssert(productTypes.isEmpty)
+        XCTAssert(currencies.isEmpty)
         XCTAssertFalse(parametersWithoutProductSelect.isEmpty)
         XCTAssertFalse(parametersWithoutProductSelect.hasProductSelect)
     }
     
     func test_productTypes_shouldReturnEmptyOnEmptyFilterProductTypes() {
         
-        let filterProductTypes: [FilterProductType] = []
+        let filterCurrencies: [Currency] = []
         let parametersWithProductSelect: [Parameter] = [
             amount(),
             header(),
-            productSelect(productTypes: filterProductTypes)
+            productSelect(currencies: filterCurrencies)
         ]
         let response = makeGetSberQRDataResponse(with: parametersWithProductSelect)
         
-        let productTypes = response.productTypes
+        let currencies = response.currencies
         
-        XCTAssert(productTypes.isEmpty)
+        XCTAssert(currencies.isEmpty)
         XCTAssertFalse(parametersWithProductSelect.isEmpty)
         XCTAssert(parametersWithProductSelect.hasProductSelect)
     }
     
-    func test_productTypes_shouldReturnProductTypes() {
+    func test_productTypes_shouldReturn_____() {
         
-        let filterProductTypes: [FilterProductType] = [.account, .card]
+        let filterCurrencies: [Currency] = [.rub]
         let parametersWithProductSelect: [Parameter] = [
             amount(),
             header(),
-            productSelect(productTypes: filterProductTypes)
+            productSelect(currencies: filterCurrencies)
         ]
         let response = makeGetSberQRDataResponse(with: parametersWithProductSelect)
         
-        let productTypes = response.productTypes
+        let currencies = response.currencies
         
-        XCTAssertNoDiff(productTypes, [.account, .card])
+        XCTAssertNoDiff(currencies, ["RUB"])
         XCTAssertFalse(parametersWithProductSelect.isEmpty)
         XCTAssert(parametersWithProductSelect.hasProductSelect)
     }
@@ -88,7 +88,7 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
             required: required
         )
     }
-    
+
     private func amount() -> Parameter {
         
         .amount(.init(
@@ -110,7 +110,7 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
     }
     
     private func productSelect(
-        productTypes: [FilterProductType]
+        currencies: [Currency]
     ) -> Parameter {
         
         .productSelect(.init(
@@ -118,8 +118,8 @@ final class MapGetSberQRDataResponseToProductTypeTests: XCTestCase {
             value: nil,
             title: "Title",
             filter: .init(
-                productTypes: productTypes,
-                currencies: [],
+                productTypes: [],
+                currencies: currencies,
                 additional: false
             )
         ))
