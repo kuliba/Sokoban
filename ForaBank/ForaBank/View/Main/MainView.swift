@@ -223,6 +223,9 @@ struct MainView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(createSberQRPaymentResponse):
+            Text(String(describing: createSberQRPaymentResponse))
         }
     }
 }

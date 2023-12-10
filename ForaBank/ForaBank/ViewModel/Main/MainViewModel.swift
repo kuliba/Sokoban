@@ -771,7 +771,10 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = techErrorAlert()
+            alert = techErrorAlert { [weak self] in
+                
+                self?.alert = nil
+            }
             
         case let .success(getSberQRDataResponse):
             #warning("hide services behind ServiceFactory")
@@ -805,7 +808,10 @@ class MainViewModel: ObservableObject, Resetable {
                 
                 link = .sberQRPayment(viewModel)
             } catch {
-                alert = techErrorAlert()
+                alert = techErrorAlert { [weak self] in
+                    
+                    self?.alert = nil
+                }
             }
         }
     }
@@ -814,7 +820,7 @@ class MainViewModel: ObservableObject, Resetable {
         url: URL,
         state: SberQRConfirmPaymentState
     ) {
-        action.send(MainViewModelAction.Close.Link())
+//        action.send(MainViewModelAction.Close.Link())
         rootActions?.spinner.show()
                 
         let payload = state.makePayload(with: url)
@@ -832,7 +838,9 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func techErrorAlert() -> Alert.ViewModel {
+    private func techErrorAlert(
+        primaryAction: @escaping () -> Void
+    ) -> Alert.ViewModel {
         
         .init(
             title: "Ошибка",
@@ -840,7 +848,7 @@ class MainViewModel: ObservableObject, Resetable {
             primary: .init(
                 type: .default,
                 title: "OK",
-                action: { [weak self] in self?.alert = nil }
+                action: primaryAction
             )
         )
     }
@@ -848,22 +856,23 @@ class MainViewModel: ObservableObject, Resetable {
     private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
-        link = nil
-        
         DispatchQueue.main.async { [weak self] in
             
             guard let self else { return }
             
             switch result {
             case .failure:
-                self.alert = self.techErrorAlert()
+                self.alert = self.techErrorAlert { [weak self] in
+                    
+                    self?.link = nil
+                    self?.alert = nil
+                }
                 
             case let .success(success):
                 
                 #warning("add success screen")
-                _ = success
                 // let successViewModel = Payments.Success(with: success)
-                // self.fullScreenSheet = .success(successViewModel)
+                self.fullScreenSheet = .init(type: .success(success))
             }
         }
     }
@@ -1198,6 +1207,7 @@ extension MainViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
+            case success(CreateSberQRPaymentResponse)
         }
         
         static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {
