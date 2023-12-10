@@ -14,14 +14,14 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         let invalidData = anyData()
         
-        let result = try map(invalidData)
+        let result = map(invalidData)
         
         assert(result, equals: .failure(.invalid(statusCode: 200, data: invalidData)))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverServerErrorOnNilData() throws {
         
-        let result = try map(jsonWithError)
+        let result = map(jsonWithError)
         
         assert(result, equals: .failure(.server(
             statusCode: 102,
@@ -32,7 +32,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     func test_mapGetSberQRDataResponse_shouldDeliverServerErrorOnServerErrorWithNonOkHTTPURLResponseStatusCode() throws {
         
         let nonOkResponse = anyHTTPURLResponse(statusCode: 400)
-        let result = try map(jsonWithError, nonOkResponse)
+        let result = map(jsonWithError, nonOkResponse)
         
         assert(result, equals: .failure(.server(
             statusCode: 102,
@@ -45,21 +45,21 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         let statusCode = 400
         let data = anyData()
         let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
-        let result = try map(data, nonOkResponse)
+        let result = map(data, nonOkResponse)
         
         assert(result, equals: .failure(.invalid(statusCode: statusCode, data: data)))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithAmount() throws {
         
-        let result = try map(jsonWithAmount)
+        let result = map(jsonWithAmount)
         
         assert(result, equals: .success(responseWithFixedAmount()))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithoutAmount() throws {
         
-        let result = try map(jsonWithoutAmount)
+        let result = map(jsonWithoutAmount)
         
         assert(result, equals: .success(responseWithEditableAmount(amount: 0)))
     }
@@ -69,9 +69,9 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) throws -> ResponseMapper.GetSberQRDataResult {
+    ) -> ResponseMapper.GetSberQRDataResult {
         
-        try ResponseMapper.mapGetSberQRDataResponse(
+        ResponseMapper.mapGetSberQRDataResponse(
             data,
             httpURLResponse
         )
@@ -80,9 +80,9 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     private func map(
         _ string: String,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) throws -> ResponseMapper.GetSberQRDataResult {
+    ) -> ResponseMapper.GetSberQRDataResult {
         
-        try ResponseMapper.mapGetSberQRDataResponse(
+        ResponseMapper.mapGetSberQRDataResponse(
             .init(string.utf8),
             httpURLResponse
         )
