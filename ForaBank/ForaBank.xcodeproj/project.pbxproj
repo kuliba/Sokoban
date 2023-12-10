@@ -356,7 +356,6 @@
 		2A14A85C2A2750460018511E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A85B2A2750460018511E /* Preview Assets.xcassets */; };
 		2A14A8622A2751760018511E /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A14A8612A2751760018511E /* TextFieldComponent */; };
 		2A16509E2B1F1A88000DB3B1 /* SberQRConfirmPaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16509D2B1F1A88000DB3B1 /* SberQRConfirmPaymentViewModel.swift */; };
-		2A1650A02B1FA853000DB3B1 /* QRTypealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */; };
 		2A1650A32B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1650A22B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift */; };
 		2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2829E598E000BB460D /* StringReplacingTests.swift */; };
 		2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */; };
@@ -521,7 +520,6 @@
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
-		2A5D17932B245CB100597159 /* Model+sberQRProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17922B245CB100597159 /* Model+sberQRProducts.swift */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
@@ -586,6 +584,7 @@
 		2A81425C2A0B8EED005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A81425B2A0B8EED005CF83F /* SearchBarComponent */; };
 		2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */; };
 		2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8142602A0B9237005CF83F /* SearchBarComponent */; };
+		2A84C4A52B25D90900F314BD /* sberQRProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A84C4A42B25D90900F314BD /* sberQRProducts.swift */; };
 		2A850F4A2A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */; };
 		2A85DEAF29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */; };
 		2A872E8F2B00DE50007A8E72 /* SessionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E8E2B00DE50007A8E72 /* SessionCode.swift */; };
@@ -631,6 +630,7 @@
 		2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */; };
 		2AB197A32B24701C00F0F87B /* Model+SberQRProductIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A22B24701C00F0F87B /* Model+SberQRProductIntegrationTests.swift */; };
 		2AB197A52B24772E00F0F87B /* SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A42B24772E00F0F87B /* SberQRProductTests.swift */; };
+		2AB197AD2B25D6E600F0F87B /* QRTypealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */; };
 		2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */; };
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
@@ -2730,7 +2730,6 @@
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
 		2A5B1B482B1C438300C17A35 /* QRViewModelScanResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelScanResultTests.swift; sourceTree = "<group>"; };
 		2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SberQRProductTests.swift"; sourceTree = "<group>"; };
-		2A5D17922B245CB100597159 /* Model+sberQRProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+sberQRProducts.swift"; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
@@ -2798,6 +2797,7 @@
 		2A80B5682AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCVVPINJSONMakerTests.swift; sourceTree = "<group>"; };
 		2A80D8182AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+publicKeyTransferServiceTests.swift"; sourceTree = "<group>"; };
 		2A81425E2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCancellableSearchBarView.swift; sourceTree = "<group>"; };
+		2A84C4A42B25D90900F314BD /* sberQRProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sberQRProducts.swift; sourceTree = "<group>"; };
 		2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+XCTAssertThrowsAsNSError.swift"; sourceTree = "<group>"; };
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
 		2A872E8E2B00DE50007A8E72 /* SessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCode.swift; sourceTree = "<group>"; };
@@ -6595,7 +6595,7 @@
 			children = (
 				2AC2ADBD2B2243AC0049EE9B /* Services+makeGetSberQRDataService.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
-				2A5D17922B245CB100597159 /* Model+sberQRProducts.swift */,
+				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
 				2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */,
 			);
 			path = SberQR;
@@ -12944,7 +12944,6 @@
 				777167D827CE88E800655D60 /* BiometricAgentMock.swift in Sources */,
 				0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */,
 				5028F76B28DB2A70000DB351 /* CurrencyWalletListViewComponent.swift in Sources */,
-				2A1650A02B1FA853000DB3B1 /* QRTypealiases.swift in Sources */,
 				7789794629CB696100ECF684 /* ProductGroupViewComponent.swift in Sources */,
 				2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */,
 				50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */,
@@ -13026,6 +13025,7 @@
 				2A3EB71C29B1098C002A1309 /* Config.swift in Sources */,
 				7769F5BC27D3A2EA00F80607 /* MainView.swift in Sources */,
 				2A2ECBBB2AE51D6F00F3C946 /* GenericLoaderOf.swift in Sources */,
+				2AB197AD2B25D6E600F0F87B /* QRTypealiases.swift in Sources */,
 				A5C7A1BB275C0A2A003BEF6D /* InternetLatestOpsDO.swift in Sources */,
 				503FBEEF294DEB1600F25630 /* TransfersCoverViewComponent.swift in Sources */,
 				0C5D7D9C2982FE1C00BC0CCF /* NetworkMonitorAgent.swift in Sources */,
@@ -13081,6 +13081,7 @@
 				7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */,
 				F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */,
 				ED5CB97228724501008D8A1E /* UserAccountExitInfoView.swift in Sources */,
+				2A84C4A52B25D90900F314BD /* sberQRProducts.swift in Sources */,
 				830AF2D72AB3236000C2F29C /* Factory.swift in Sources */,
 				2A53F27A2A1B99D1001131EF /* TextFieldView+ext.swift in Sources */,
 				0C5D7DA529894C8800BC0CCF /* ClientInformViewModel.swift in Sources */,
@@ -13632,7 +13633,6 @@
 				77BF27B128467AE6009624BB /* ButtonIconTextRectViewComponent.swift in Sources */,
 				774A8B3D2865FCDD00B81140 /* UserAccountView.swift in Sources */,
 				2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */,
-				2A5D17932B245CB100597159 /* Model+sberQRProducts.swift in Sources */,
 				EDF4F24B277249950030F087 /* ChangePaymentContactDecodableModel.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,

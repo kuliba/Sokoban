@@ -247,7 +247,7 @@ final class MainViewModelTests: XCTestCase {
             getSberQRData: { _, completion in
                 
                 completion(getSberQRDataResultStub)
-            },
+            }, 
             makeSberQRConfirmPaymentViewModel: spy.make,
             onRegister: {}
         )
