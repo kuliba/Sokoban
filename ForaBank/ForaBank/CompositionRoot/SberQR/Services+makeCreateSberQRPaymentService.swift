@@ -14,16 +14,16 @@ extension Services {
     private typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, MappingError>
     
     static func makeCreateSberQRPayment(
-        httpClient: HTTPClient
-        // log: @escaping (LoggerAgentLevel, String, StaticString, UInt) -> Void
+        httpClient: HTTPClient,
+        log: @escaping (String, StaticString, UInt) -> Void
     ) -> CreateSberQRPayment {
         
-        #warning("add logging")
-        // LoggingRemoteServiceDecorator(
-        let createSberQRPaymentService = CreateSberQRPaymentService(            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
+        let createSberQRPaymentService = LoggingRemoteServiceDecorator(
+            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
             performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
-        )
+            mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse,
+            log: log
+        ).remoteService
         
         return createSberQRPaymentService.process(_:completion:)
     }

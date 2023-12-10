@@ -49,14 +49,16 @@ extension RootViewModelFactory {
             .init(closeAction: $0, qrResolver: qrResolver)
         }
         
+        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
+
         let getSberQRData = Services.makeGetSberQRData(
-            httpClient: httpClient
-            // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
+            httpClient: httpClient,
+            log: infoNetworkLog
         )
         
         let createSberQRPayment = Services.makeCreateSberQRPayment(
-            httpClient: httpClient
-            // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
+            httpClient: httpClient,
+            log: infoNetworkLog
         )
         
         #warning("STUB!")
