@@ -59,6 +59,11 @@ extension RootViewModelFactory {
         #warning("STUB!")
         let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.preview
         
+        let createSberQRPaymentService = Services.makeCreateSberQRPaymentService(
+            httpClient: httpClient
+        )
+        let createSberQRPayment: CreateSberQRPayment = createSberQRPaymentService.process
+        
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
@@ -78,6 +83,7 @@ extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
+            createSberQRPayment: createSberQRPayment,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
@@ -118,6 +124,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        createSberQRPayment: @escaping CreateSberQRPayment,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
@@ -126,7 +133,8 @@ private extension RootViewModelFactory {
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData,
+            getSberQRData: getSberQRData, 
+            createSberQRPayment: createSberQRPayment,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: onRegister
         )

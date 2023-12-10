@@ -14,6 +14,12 @@ typealias GetSberQRDataResult = Result<GetSberQRDataResponse, MappingRemoteServi
 typealias GetSberQRDataCompletion = (GetSberQRDataResult) -> Void
 typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
 
-typealias MakeSberQRPaymentResult = (Result<Data, Error>)
-typealias MakeSberQRPaymentCompletion = (MakeSberQRPaymentResult) -> Void
-typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping MakeSberQRPaymentCompletion) -> SberQRConfirmPaymentViewModel
+typealias CreateSberQRPayment = (CreateSberQRPaymentPayload, @escaping CreateSberQRPaymentCompletion) -> Void
+
+#warning("STUB!!")
+typealias CreateSberQRPaymentResponse = Data
+typealias CreateSberQRPaymentError = Error
+
+typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, MappingRemoteServiceError<CreateSberQRPaymentError>>)
+typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
+typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping CreateSberQRPaymentCompletion) -> SberQRConfirmPaymentViewModel

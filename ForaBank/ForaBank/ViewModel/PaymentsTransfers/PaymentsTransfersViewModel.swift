@@ -959,7 +959,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
 
     private func handleSberQRPaymentResult(
-        _ result: MakeSberQRPaymentResult
+        _ result: CreateSberQRPaymentResult
     ) {
         link = nil
         

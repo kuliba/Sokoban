@@ -176,7 +176,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
@@ -195,7 +195,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -211,7 +211,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -228,6 +228,8 @@ final class MainViewModelTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private typealias SberQRError = MappingRemoteServiceError<CreateSberQRPaymentError>
     
     private func makeSUT(
         getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
@@ -248,6 +250,7 @@ final class MainViewModelTests: XCTestCase {
                 
                 completion(getSberQRDataResultStub)
             }, 
+            createSberQRPayment: { _,_ in },
             makeSberQRConfirmPaymentViewModel: spy.make,
             onRegister: {}
         )
@@ -283,6 +286,7 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
             getSberQRData: { _,_ in },
+            createSberQRPayment: { _,_ in },
             makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
             onRegister: {}
         )

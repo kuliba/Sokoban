@@ -207,7 +207,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
@@ -226,7 +226,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -242,7 +242,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError = anyError("SberQRPayment Failure")
+        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -260,6 +260,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias SberQRError = MappingRemoteServiceError<CreateSberQRPaymentError>
+
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
         let product2 = anyProduct(id: 2, productType: .card, currency: "USD")

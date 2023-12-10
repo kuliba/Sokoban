@@ -359,6 +359,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
+        createSberQRPayment: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
@@ -389,6 +390,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
+        createSberQRPayment: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
@@ -420,6 +422,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         getSberQRData: { _,_ in },
+        createSberQRPayment: { _,_ in },
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )

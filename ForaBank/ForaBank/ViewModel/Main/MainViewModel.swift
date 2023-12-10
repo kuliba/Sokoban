@@ -7,6 +7,8 @@
 
 import Combine
 import Foundation
+#warning("remove GenericRemoteService")
+import GenericRemoteService
 import SberQR
 import SwiftUI
 
@@ -34,6 +36,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
     private let getSberQRData: GetSberQRData
+    private let createSberQRPayment: CreateSberQRPayment
     private let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
@@ -45,6 +48,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        createSberQRPayment: @escaping CreateSberQRPayment,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
@@ -54,6 +58,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
+        self.createSberQRPayment = createSberQRPayment
         self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
     }
@@ -63,6 +68,7 @@ class MainViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
+        createSberQRPayment: @escaping CreateSberQRPayment,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
@@ -79,6 +85,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.getSberQRData = getSberQRData
+        self.createSberQRPayment = createSberQRPayment
         self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
         
@@ -766,13 +773,62 @@ class MainViewModel: ObservableObject, Resetable {
         case .failure:
             alert = techErrorAlert()
             
-        case let .success(sberQRData):
-            let viewModel = makeSberQRConfirmPaymentViewModel(
-                url,
-                sberQRData
-            ) { [weak self] in self?.handleSberQRPaymentResult($0) }
+        case let .success(getSberQRDataResponse):
+            #warning("hide services behind ServiceFactory")
+            #warning("hide viewModel factories behind ViewModelFactory")
             
-            link = .sberQRPayment(viewModel)
+            #warning("adapt `makeSberQRConfirmPaymentViewModel`")
+            let viewModel0 = makeSberQRConfirmPaymentViewModel(
+                url,
+                getSberQRDataResponse
+            ) { [weak self] in self?.handleCreateSberQRPaymentResult($0) }
+            
+            do {
+                let getProducts = { [weak model] in
+                    
+                    (model?.allProducts ?? [])
+                        .mapToSberQRProducts(response: getSberQRDataResponse)
+                }
+                struct EmptySberQRProductsError: Error {}
+                let product = try getProducts().first
+                    .get(orThrow: EmptySberQRProductsError())
+                let initialState = try SberQRConfirmPaymentState(
+                    product: product,
+                    response: getSberQRDataResponse
+                )
+                let viewModel: SberQRConfirmPaymentViewModel = .default(
+                    initialState: initialState,
+                    getProducts: getProducts,
+                    pay: { [weak self] in self?.sberQRPay(url: url, state: $0) },
+                    scheduler: .makeMain()
+                )
+                
+                link = .sberQRPayment(viewModel)
+            } catch {
+                alert = techErrorAlert()
+            }
+        }
+    }
+    
+    private func sberQRPay(
+        url: URL,
+        state: SberQRConfirmPaymentState
+    ) {
+        action.send(MainViewModelAction.Close.Link())
+        rootActions?.spinner.show()
+                
+        let payload = state.makePayload(with: url)
+        
+        createSberQRPayment(payload) { [weak self] result in
+            
+            guard let self else { return }
+            
+            self.rootActions?.spinner.hide()
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.handleCreateSberQRPaymentResult(result)
+            }
         }
     }
     
@@ -789,8 +845,8 @@ class MainViewModel: ObservableObject, Resetable {
         )
     }
     
-    private func handleSberQRPaymentResult(
-        _ result: MakeSberQRPaymentResult
+    private func handleCreateSberQRPaymentResult(
+        _ result: CreateSberQRPaymentResult
     ) {
         link = nil
         

@@ -11,7 +11,7 @@ import SberQR
 
 final class SberQRPaymentSpy {
     
-    typealias Completion = MakeSberQRPaymentCompletion
+    typealias Completion = CreateSberQRPaymentCompletion
     typealias Message = (URL, GetSberQRDataResponse, completion: Completion)
     
     private(set) var messages = [Message]()
@@ -32,7 +32,7 @@ final class SberQRPaymentSpy {
     }
     
     func complete(
-        with result: Result<Data, Error>,
+        with result: CreateSberQRPaymentResult,
         at index: Int = 0
     ) {
         messages.map(\.completion)[index](result)

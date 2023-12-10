@@ -211,6 +211,7 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_ in nil },
                 makeQRScannerModel: QRViewModel.preview,
                 getSberQRData: { _,_ in },
+                createSberQRPayment: { _,_ in },
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 onRegister: {}
             ),

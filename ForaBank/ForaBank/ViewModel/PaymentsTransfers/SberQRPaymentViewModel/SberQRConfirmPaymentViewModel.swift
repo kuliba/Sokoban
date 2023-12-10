@@ -10,7 +10,7 @@ import SberQR
 
 extension SberQRConfirmPaymentViewModel {
     
-    typealias Commit = MakeSberQRPaymentCompletion
+    typealias Commit = CreateSberQRPaymentCompletion
     
     static func preview(
         sberQRURL: URL,
