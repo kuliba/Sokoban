@@ -11,7 +11,7 @@ import SberQR
 
 extension Services {
     
-    typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, CreateSberQRPaymentError>
+    typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, MappingError>
     
     static func makeCreateSberQRPaymentService(
         httpClient: HTTPClient

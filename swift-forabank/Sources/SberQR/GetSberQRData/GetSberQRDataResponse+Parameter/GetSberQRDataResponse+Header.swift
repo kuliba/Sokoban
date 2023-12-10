@@ -1,5 +1,5 @@
 //
-//  DataString.swift
+//  GetSberQRDataResponse+Header.swift
 //
 //
 //  Created by Igor Malyarov on 03.12.2023.
@@ -7,7 +7,7 @@
 
 public extension GetSberQRDataResponse.Parameter {
     
-    struct DataString: Equatable {
+    struct Header: Equatable {
         
         let id: ID
         let value: String
@@ -22,10 +22,10 @@ public extension GetSberQRDataResponse.Parameter {
     }
 }
 
-public extension GetSberQRDataResponse.Parameter.DataString {
-    
+public extension GetSberQRDataResponse.Parameter.Header {
+ 
     enum ID: String, Equatable {
         
-        case currency
+        case title
     }
 }

@@ -9,68 +9,39 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias GetSberQRDataResult = Result<GetSberQRDataResponse, GetSberQRDataError>
+    typealias GetSberQRDataResult = Result<GetSberQRDataResponse, MappingError>
     
     static func mapGetSberQRDataResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> GetSberQRDataResult {
         
-        do {
-            
-            let response = try JSONDecoder().decode(_Response.self, from: data)
-            
-            switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
-            case let (200, .none, .some(data)):
-                return try .success(data.response())
-                
-            case let (_, .some(errorMessage), .none):
-                return .failure(.server(
-                    statusCode: response.statusCode,
-                    errorMessage: errorMessage
-                ))
-                
-            default:
-                struct InvalidResponseError: Error {}
-                throw InvalidResponseError()
-            }
-            
-        } catch {
-            return .failure(.invalid(statusCode: httpURLResponse.statusCode, data: data))
-        }
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> GetSberQRDataResponse {
+        
+        try .init(
+            qrcID: data.qrcId,
+            parameters: data.parameters.map { try $0.parameter() },
+            required: data.required.map(\.required)
+        )
     }
 }
 
 private extension ResponseMapper {
     
-    struct _Response: Decodable {
+    struct _Data: Decodable {
         
-        let statusCode: Int
-        let errorMessage: String?
-        let data: _Data?
-        
-        struct _Data: Decodable {
-            
-            let qrcId: String
-            let parameters: [Parameter]
-            let required: [Required]
-        }
+        let qrcId: String
+        let parameters: [Parameter]
+        let required: [Required]
     }
 }
 
-private extension ResponseMapper._Response._Data {
-    
-    func response() throws -> GetSberQRDataResponse {
-        
-        try .init(
-            qrcID: qrcId,
-            parameters: parameters.map { try $0.parameter() },
-            required: required.map(\.required)
-        )
-    }
-}
-
-private extension ResponseMapper._Response._Data {
+private extension ResponseMapper._Data {
     
     struct Parameter: Decodable {
         

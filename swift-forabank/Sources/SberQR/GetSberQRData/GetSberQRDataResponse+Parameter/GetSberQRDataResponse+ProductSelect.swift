@@ -1,5 +1,5 @@
 //
-//  Parameter+ProductSelect.swift
+//  GetSberQRDataResponse+ProductSelect.swift
 //
 //
 //  Created by Igor Malyarov on 03.12.2023.

@@ -11,7 +11,7 @@ import SberQR
 
 extension Services {
     
-    typealias GetSberQRDataService = MappingRemoteService<URL, GetSberQRDataResponse, GetSberQRDataError>
+    typealias GetSberQRDataService = MappingRemoteService<URL, GetSberQRDataResponse, MappingError>
     
     static func makeGetSberQRData(
         httpClient: HTTPClient

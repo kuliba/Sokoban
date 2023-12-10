@@ -229,7 +229,7 @@ final class MainViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SberQRError = MappingRemoteServiceError<CreateSberQRPaymentError>
+    private typealias SberQRError = MappingRemoteServiceError<MappingError>
     
     private func makeSUT(
         getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,

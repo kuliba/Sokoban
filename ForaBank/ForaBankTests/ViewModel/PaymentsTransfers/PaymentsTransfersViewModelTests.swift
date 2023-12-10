@@ -260,7 +260,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SberQRError = MappingRemoteServiceError<CreateSberQRPaymentError>
+    private typealias SberQRError = MappingRemoteServiceError<MappingError>
 
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")

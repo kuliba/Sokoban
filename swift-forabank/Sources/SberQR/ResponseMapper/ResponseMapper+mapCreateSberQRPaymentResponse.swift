@@ -9,75 +9,46 @@ import Foundation
 
 public extension ResponseMapper {
     
-    typealias CreateSberQRPaymentResult = Result<CreateSberQRPaymentResponse, CreateSberQRPaymentError>
+    typealias CreateSberQRPaymentResult = Result<CreateSberQRPaymentResponse, MappingError>
     
     static func mapCreateSberQRPaymentResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> CreateSberQRPaymentResult {
         
-        do {
-            
-            let response = try JSONDecoder().decode(_Response.self, from: data)
-            
-            switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
-            case let (200, .none, .some(data)):
-                return try .success(data.response())
-                
-            case let (_, .some(errorMessage), .none):
-                return .failure(.server(
-                    statusCode: response.statusCode,
-                    errorMessage: errorMessage
-                ))
-                
-            default:
-                struct InvalidResponseError: Error {}
-                throw InvalidResponseError()
-            }
-            
-        } catch {
-            return .failure(.invalid(statusCode: httpURLResponse.statusCode, data: data))
-        }
+        map(data, httpURLResponse, map: map)
+    }
+    
+    private static func map(
+        _ data: _Data
+    ) throws -> CreateSberQRPaymentResponse {
+        
+        try .init(parameters: data.parameters.map { try $0.parameter() })
     }
 }
 
 private extension ResponseMapper {
     
-    struct _Response: Decodable {
+    struct _Data: Decodable {
         
-        let statusCode: Int
-        let errorMessage: String?
-        let data: _Data?
+        let parameters: [Parameter]
         
-        struct _Data: Decodable {
+        struct Parameter: Decodable {
             
-            let parameters: [Parameter]
-            
-            struct Parameter: Decodable {
-                
-                let id: ID
-                let type: ParameterType
-                let value: Value
-                let style: Style?
-                let color: Color?
-                let action: Action?
-                let icon: String?
-                let subscriptionPurpose: SubscriptionPurpose?
-                let placement: Placement?
-            }
+            let id: ID
+            let type: ParameterType
+            let value: Value
+            let style: Style?
+            let color: Color?
+            let action: Action?
+            let icon: String?
+            let subscriptionPurpose: SubscriptionPurpose?
+            let placement: Placement?
         }
     }
 }
 
-private extension ResponseMapper._Response._Data {
-    
-    func response() throws -> CreateSberQRPaymentResponse {
-        
-        try .init(parameters: parameters.map { try $0.parameter() })
-    }
-}
-
-private extension ResponseMapper._Response._Data.Parameter {
+private extension ResponseMapper._Data.Parameter {
     
     enum Action: String, Decodable {
         
