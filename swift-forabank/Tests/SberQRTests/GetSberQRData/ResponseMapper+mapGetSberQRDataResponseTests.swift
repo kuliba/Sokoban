@@ -16,7 +16,10 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         let result = map(invalidData)
         
-        assert(result, equals: .failure(.invalid(statusCode: 200, data: invalidData)))
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverServerErrorOnNilData() throws {
@@ -47,7 +50,10 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
         let result = map(data, nonOkResponse)
         
-        assert(result, equals: .failure(.invalid(statusCode: statusCode, data: data)))
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: data
+        )))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithAmount() throws {
@@ -82,10 +88,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> ResponseMapper.GetSberQRDataResult {
         
-        ResponseMapper.mapGetSberQRDataResponse(
-            .init(string.utf8),
-            httpURLResponse
-        )
+        map(Data(string.utf8), httpURLResponse)
     }
     
     private func assert(
