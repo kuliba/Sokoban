@@ -180,13 +180,13 @@ extension Services.Endpoint {
         serviceName: .getProcessingSessionCode
     )
     
-    static let getSberQRDataRequest: Self = .init(
+    static let getSberQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getSberQRData
     )
     
-    static let getScenarioQRDataRequest: Self = .init(
+    static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getScenarioQRData
