@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     static func make(
         model: Model,
         logger: LoggerAgentProtocol,
-        qrResolverFeatureFlag: QRResolverFeatureFlag = .init(.inactive)
+        qrResolverFeatureFlag: QRResolverFeatureFlag
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
@@ -54,13 +54,13 @@ extension RootViewModelFactory {
             // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
         )
         
+        let createSberQRPayment = Services.makeCreateSberQRPayment(
+            httpClient: httpClient
+            // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
+        )
+        
         #warning("STUB!")
         let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.preview
-        
-        let createSberQRPaymentService = Services.makeCreateSberQRPaymentService(
-            httpClient: httpClient
-        )
-        let createSberQRPayment: CreateSberQRPayment = createSberQRPaymentService.process
         
         let makeProductProfileViewModel = {
             

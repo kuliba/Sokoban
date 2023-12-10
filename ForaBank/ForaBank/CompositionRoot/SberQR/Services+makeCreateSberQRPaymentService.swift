@@ -11,16 +11,20 @@ import SberQR
 
 extension Services {
     
-    typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, MappingError>
+    private typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, MappingError>
     
-    static func makeCreateSberQRPaymentService(
+    static func makeCreateSberQRPayment(
         httpClient: HTTPClient
-    ) -> CreateSberQRPaymentService {
+        // log: @escaping (LoggerAgentLevel, String, StaticString, UInt) -> Void
+    ) -> CreateSberQRPayment {
         
-        .init(
-            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
+        #warning("add logging")
+        // LoggingRemoteServiceDecorator(
+        let createSberQRPaymentService = CreateSberQRPaymentService(            createRequest: RequestFactory.createCreateSberQRPaymentRequest,
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: SberQR.ResponseMapper.mapCreateSberQRPaymentResponse
         )
+        
+        return createSberQRPaymentService.process(_:completion:)
     }
 }
