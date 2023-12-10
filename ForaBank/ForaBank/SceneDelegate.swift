@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewModel = RootViewModelFactory.make(
         model: model,
         logger: logger,
-        qrResolverFeatureFlag: .init(.active)
+        qrResolverFeatureFlag: .init(.inactive)
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
