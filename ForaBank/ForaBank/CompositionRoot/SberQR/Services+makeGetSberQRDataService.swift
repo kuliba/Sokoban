@@ -13,16 +13,19 @@ extension Services {
     
     typealias GetSberQRDataService = MappingRemoteService<URL, GetSberQRDataResponse, GetSberQRDataError>
     
-    static func makeGetSberQRDataService(
+    static func makeGetSberQRData(
         httpClient: HTTPClient
         // log: @escaping (LoggerAgentLevel, String, StaticString, UInt) -> Void
-    ) -> GetSberQRDataService {
+    ) -> GetSberQRData {
         
-        //LoggingRemoteServiceDecorator(
-        .init(
+        #warning("add logging")
+        // LoggingRemoteServiceDecorator(
+        let getSberQRDataService = GetSberQRDataService(
             createRequest: RequestFactory.createGetSberQRRequest(_:),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: SberQR.ResponseMapper.mapGetSberQRDataResponse
         )
+        
+        return getSberQRDataService.process
     }
 }

@@ -49,12 +49,10 @@ extension RootViewModelFactory {
             .init(closeAction: $0, qrResolver: qrResolver)
         }
         
-        let getSberQRDataService = Services.makeGetSberQRDataService(
+        let getSberQRData = Services.makeGetSberQRData(
             httpClient: httpClient
             // log: { logger.log(level: $0, category: .network, message: $1, file: $2, line: $3) }
         )
-        
-        let getSberQRData: GetSberQRData = getSberQRDataService.process
         
         #warning("STUB!")
         let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.preview

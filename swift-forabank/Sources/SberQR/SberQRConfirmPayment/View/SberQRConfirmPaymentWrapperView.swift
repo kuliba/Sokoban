@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct SberQRConfirmPaymentWrapperView: View {
+public struct SberQRConfirmPaymentWrapperView: View {
     
     @ObservedObject private var viewModel: SberQRConfirmPaymentViewModel
     
-    init(viewModel: SberQRConfirmPaymentViewModel) {
+    public init(viewModel: SberQRConfirmPaymentViewModel) {
         
         self.viewModel = viewModel
     }
     
-    var body: some View {
+    public var body: some View {
         
         SberQRConfirmPaymentView(
             state: viewModel.state,

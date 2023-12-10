@@ -17,7 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var rootViewModel = RootViewModelFactory.make(
         model: model,
-        logger: logger
+        logger: logger,
+        qrResolverFeatureFlag: .init(.active)
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

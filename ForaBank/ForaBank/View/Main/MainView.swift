@@ -171,7 +171,7 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
+            SberQRConfirmPaymentWrapperView(viewModel: sberQRPaymentViewModel)
         }
     }
     

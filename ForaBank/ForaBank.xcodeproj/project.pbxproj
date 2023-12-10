@@ -631,10 +631,10 @@
 		2AB197A12B246A6100F0F87B /* GetSberQRDataResponse+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */; };
 		2AB197A32B24701C00F0F87B /* Model+SberQRProductIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A22B24701C00F0F87B /* Model+SberQRProductIntegrationTests.swift */; };
 		2AB197A52B24772E00F0F87B /* SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A42B24772E00F0F87B /* SberQRProductTests.swift */; };
-		2AB197AD2B25D6E600F0F87B /* QRTypealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */; };
 		2AB197A82B24A4B300F0F87B /* Services+makeCreateSberQRPaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A72B24A4B300F0F87B /* Services+makeCreateSberQRPaymentService.swift */; };
 		2AB197AA2B24A93E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197A92B24A93E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequest.swift */; };
 		2AB197AC2B24A98E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB197AB2B24A98E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequestTests.swift */; };
+		2AB197AD2B25D6E600F0F87B /* QRTypealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */; };
 		2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB35DCB2B07F1CD0001EC5D /* TransformingReducerTests.swift */; };
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
@@ -6784,8 +6784,8 @@
 			isa = PBXGroup;
 			children = (
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
-				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
+				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 				2AC2ADBC2B2243780049EE9B /* SberQR */,
