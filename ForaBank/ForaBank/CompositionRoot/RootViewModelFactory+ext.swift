@@ -36,7 +36,7 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let qrResolver: QRViewModel.QRResolver = { string in
+        let qrResolve: QRViewModel.QRResolve = { string in
             
             let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
             let resolver = QRResolver(isSberQR: isSberQR)
@@ -46,11 +46,11 @@ extension RootViewModelFactory {
         
         let makeQRScannerModel: MakeQRScannerModel = {
             
-            .init(closeAction: $0, qrResolver: qrResolver)
+            .init(closeAction: $0, qrResolve: qrResolve)
         }
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
-
+        
         let getSberQRData = Services.makeGetSberQRData(
             httpClient: httpClient,
             log: infoNetworkLog
@@ -133,7 +133,7 @@ private extension RootViewModelFactory {
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData, 
+            getSberQRData: getSberQRData,
             createSberQRPayment: createSberQRPayment,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: onRegister

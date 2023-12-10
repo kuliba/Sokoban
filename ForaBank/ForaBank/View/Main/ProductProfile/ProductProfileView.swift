@@ -427,7 +427,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolver: QRViewModel.ScanResult.init
+            qrResolve: QRViewModel.ScanResult.init
         )
     }
 }
