@@ -72,6 +72,20 @@ private extension ResponseMapper._Data.Parameter {
             case .red: return .red
             }
         }
+        
+        init(from decoder: Decoder) throws {
+            
+            let container = try decoder.singleValueContainer()
+            let stringValue = try container.decode(String.self)
+            
+            switch stringValue.lowercased() {
+            case "red":
+                self = .red
+                
+            default:
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid color value")
+            }
+        }
     }
     
     enum ID: String, Decodable {
@@ -114,7 +128,7 @@ private extension ResponseMapper._Data.Parameter {
         case dataString =          "DATA_STRING"
         case successStatusIcon =   "SUCCESS_STATUS_ICON"
         case successText =         "SUCCESS_TEXT"
-        case subscriber =           "SUBSCRIBER"
+        case subscriber =          "SUBSCRIBER"
         case successOptionButton = "SUCCESS_OPTION_BUTTONS"
         case button =              "BUTTON"
     }
@@ -134,8 +148,8 @@ private extension ResponseMapper._Data.Parameter {
     enum Style: String, Decodable {
         
         case amount = "AMOUNT"
-        case title = "TITLE"
-        case small = "SMALL"
+        case title =  "TITLE"
+        case small =  "SMALL"
         
         var style: CreateSberQRPaymentResponse.Parameter.Style {
             
@@ -158,18 +172,21 @@ private extension ResponseMapper._Data.Parameter {
     enum SuccessStatusIcon: String, Decodable {
         
         case complete = "COMPLETE"
+        case inProgress = "IN_PROGRESS"
+        case rejected = "REJECTED"
         
         var icon: CreateSberQRPaymentResponse.Parameter.SuccessStatusIcon.StatusIcon {
             
             switch self {
             case .complete: return .complete
+            case .inProgress: return .inProgress
+            case .rejected: return .rejected
             }
         }
     }
     
     enum Value: Decodable {
         
-        case int(Int)
         case options([Option])
         case string(String)
         
@@ -178,7 +195,7 @@ private extension ResponseMapper._Data.Parameter {
             let container = try decoder.singleValueContainer()
             
             if let int = try? container.decode(Int.self) {
-                self = .int(int)
+                self = .string("\(int)")
                 return
             }
             if let options = try? container.decode([Option].self) {
@@ -230,7 +247,9 @@ private extension ResponseMapper._Data.Parameter {
             ))
             
         case .dataLong:
-            guard case let .int(value) = value
+            guard
+                case let .string(value) = value,
+                let value = Int(value)
             else { throw MappingError() }
             
             return .dataLong(.init(

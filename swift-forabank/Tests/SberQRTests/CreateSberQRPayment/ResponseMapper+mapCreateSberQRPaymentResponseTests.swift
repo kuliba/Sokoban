@@ -144,6 +144,55 @@ final class ResponseMapper_mapCreateSberQRPaymentResponseTests: XCTestCase {
         ])))
     }
     
+    func test_createSberQRPayment_IN_PROGRESS() throws {
+        
+        let result = try map(createSberQRPayment_IN_PROGRESSURL)
+        
+        assert(result, equals: .success(.init(parameters: [
+            makePaymentOperationDetailId(value: 43511),
+            makeSuccessStatus(value: .inProgress),
+            makeSuccessTitle(value: "Платеж принят в обработку"),
+            makeSuccessAmount(value: "10 000 ₽"),
+            makeBrandName(
+                value: "Кофейня у Артема",
+                icon: "c896aba73a67de2bfc69de70209eb3f3"
+            ),
+            makeSuccessOptionButtons(values: [.details]),
+            makeButtonMain(),
+        ])))
+    }
+    
+    func test_createSberQRPayment_rejected() throws {
+        
+        let result = try map(createSberQRPayment_rejectedURL)
+        
+        assert(result, equals: .success(.init(parameters: [
+            makePaymentOperationDetailId(value: 81109),
+            makeSuccessStatus(value: .rejected),
+            makeSuccessTitle(value: "Платеж отклонен"),
+            makeSuccessAmount(value: "114 ₽"),
+            makeBrandName(value: "РТК"),
+            makeSuccessOptionButtons(values: [.details]),
+            makeButtonMain(),
+        ])))
+    }
+    
+    func test_createSberQRPayment() throws {
+        
+        let result = try map(createSberQRPaymentURL)
+        
+        assert(result, equals: .success(.init(parameters: [
+            makePaymentOperationDetailId(value: 81094),
+            makePrintFormType(),
+            makeSuccessStatus(),
+            makeSuccessTitle(),
+            makeSuccessAmount(value: "100 ₽"),
+            makeBrandName(value: "Тест Макусов. Кутуза_07"),
+            makeSuccessOptionButtons(),
+            makeButtonMain(),
+        ])))
+    }
+    
     // MARK: - Helpers
     
     private typealias Parameter = CreateSberQRPaymentResponse.Parameter
@@ -167,11 +216,25 @@ final class ResponseMapper_mapCreateSberQRPaymentResponseTests: XCTestCase {
         map(Data(string.utf8), httpURLResponse)
     }
     
-    private func makePaymentOperationDetailId() -> Parameter {
+    private func map(
+        _ filename: URL?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> ResponseMapper.CreateSberQRPaymentResult {
+        
+        let url = try XCTUnwrap(filename, file: file, line: line)
+        let contents = try Data(contentsOf: url)
+        
+        return map(contents, anyHTTPURLResponse())
+    }
+    
+    private func makePaymentOperationDetailId(
+        value: Int = 81396
+    ) -> Parameter {
         
         .dataLong(.init(
             id: .paymentOperationDetailId,
-            value: 81396
+            value: value
         ))
     }
 
@@ -183,48 +246,59 @@ final class ResponseMapper_mapCreateSberQRPaymentResponseTests: XCTestCase {
         ))
     }
     
-    private func makeSuccessStatus() -> Parameter {
+    private func makeSuccessStatus(
+        value: Parameter.SuccessStatusIcon.StatusIcon = .complete
+    ) -> Parameter {
         
         .successStatusIcon(.init(
             id: .successStatus,
-            value: .complete
+            value: value
         ))
     }
 
-    private func makeSuccessTitle() -> Parameter {
+    private func makeSuccessTitle(
+        value: String = "Покупка оплачена"
+    ) -> Parameter {
         
         .successText(.init(
             id: .successTitle,
-            value: "Покупка оплачена",
+            value: value,
             style: .title
         ))
     }
 
-    private func makeSuccessAmount() -> Parameter {
+    private func makeSuccessAmount(
+        value: String = "220 ₽"
+    ) -> Parameter {
         
         .successText(.init(
             id: .successAmount,
-            value: "220 ₽",
+            value: value,
             style: .amount
         ))
     }
     
-    private func makeBrandName() -> Parameter {
+    private func makeBrandName(
+        value: String = "сббол енот_QR",
+        icon: String = "b6e5b5b8673544184896724799e50384"
+    ) -> Parameter {
         
         .subscriber(.init(
             id: .brandName,
-            value: "сббол енот_QR",
+            value: value,
             style: .small,
-            icon: "b6e5b5b8673544184896724799e50384",
+            icon: icon,
             subscriptionPurpose: nil
         ))
     }
     
-    private func makeSuccessOptionButtons() -> Parameter {
+    private func makeSuccessOptionButtons(
+        values: [Parameter.SuccessOptionButton.Value] = [.document, .details]
+    ) -> Parameter {
         
         .successOptionButton(.init(
             id: .successOptionButtons,
-            values: [.document, .details]
+            values: values
         ))
     }
     

@@ -21,6 +21,8 @@ public extension CreateSberQRPaymentResponse.Parameter {
         public enum StatusIcon: Equatable {
             
             case complete
+            case inProgress
+            case rejected
         }
     }
 }
