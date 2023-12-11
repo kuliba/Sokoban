@@ -227,7 +227,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
         
         let (sut, _,_) = makeSUT(
-            createSberQRPaymentStub: .failure(anySberQRError())
+            createSberQRPaymentResultStub: .failure(anySberQRError())
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -243,7 +243,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
         
         let (sut, _,_) = makeSUT(
-            createSberQRPaymentStub: .failure(anySberQRError())
+            createSberQRPaymentResultStub: .failure(anySberQRError())
         )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
@@ -271,7 +271,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
-        createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
+        createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
@@ -288,8 +288,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         }
         
         let sberQRServices = SberQRServices.preview(
-            createSberQRPaymentStub: createSberQRPaymentStub,
-            getSberQRDataStub: getSberQRDataResultStub
+            createSberQRPaymentResultStub: createSberQRPaymentResultStub,
+            getSberQRDataResultStub: getSberQRDataResultStub
         )
         
         let spy = SberQRPaymentSpy()

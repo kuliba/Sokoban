@@ -25,26 +25,26 @@ struct SberQRServices {
 extension SberQRServices {
     
     static func empty() -> Self {
-    
+        
         .preview(
-            createSberQRPaymentStub: .success(.empty()),
-            getSberQRDataStub: .success(.empty())
+            createSberQRPaymentResultStub: .success(.empty()),
+            getSberQRDataResultStub: .success(.empty())
         )
     }
     
     static func preview(
-        createSberQRPaymentStub: CreateSberQRPaymentResult,
-        getSberQRDataStub: GetSberQRDataResult
+        createSberQRPaymentResultStub: CreateSberQRPaymentResult,
+        getSberQRDataResultStub: GetSberQRDataResult
     ) -> Self {
         
         .init(
             createSberQRPayment: { _, completion in
                 
-                completion(createSberQRPaymentStub)
+                completion(createSberQRPaymentResultStub)
             },
             getSberQRData: { _, completion in
                 
-                completion(getSberQRDataStub)
+                completion(getSberQRDataResultStub)
             }
         )
     }

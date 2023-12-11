@@ -244,8 +244,8 @@ final class MainViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         
         let sberQRServices = SberQRServices.preview(
-            createSberQRPaymentStub: createSberQRPaymentStub,
-            getSberQRDataStub: getSberQRDataResultStub
+            createSberQRPaymentResultStub: createSberQRPaymentStub,
+            getSberQRDataResultStub: getSberQRDataResultStub
         )
         
         let spy = SberQRPaymentSpy()
