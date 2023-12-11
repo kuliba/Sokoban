@@ -9,8 +9,8 @@ public extension CreateSberQRPaymentResponse.Parameter {
     
     struct DataString: Equatable {
         
-        let id: ID
-        let value: String
+        public let id: ID
+        public let value: String
         
         public init(id: ID, value: String) {
             

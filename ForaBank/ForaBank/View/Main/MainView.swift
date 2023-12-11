@@ -224,8 +224,9 @@ struct MainView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             
-        case let .success(createSberQRPaymentResponse):
-            Text(String(describing: createSberQRPaymentResponse))
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }

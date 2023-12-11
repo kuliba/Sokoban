@@ -9,11 +9,11 @@ public extension CreateSberQRPaymentResponse.Parameter {
     
     struct Subscriber: Equatable {
         
-        let id: ID
-        let value: String
-        let style: Style
-        let icon: String
-        let subscriptionPurpose: SubscriptionPurpose?
+        public let id: ID
+        public let value: String
+        public let style: Style
+        public let icon: String
+        public let subscriptionPurpose: SubscriptionPurpose?
         
         public init(
             id: ID,

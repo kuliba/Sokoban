@@ -23,6 +23,9 @@ extension RootViewModelFactory {
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(
                 model: model,
                 logger: logger
+            ),
+            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(
+                model: model
             )
         )
     }

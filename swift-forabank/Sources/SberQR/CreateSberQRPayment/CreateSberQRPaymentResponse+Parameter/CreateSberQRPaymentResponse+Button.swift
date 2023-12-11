@@ -10,10 +10,10 @@ public extension CreateSberQRPaymentResponse.Parameter {
     struct Button: Equatable {
         
         let id: ID
-        let value: String
-        let color: Color
-        let action: Action
-        let placement: Placement
+        public let value: String
+        public let color: Color
+        public let action: Action
+        public let placement: Placement
         
         public init(
             id: ID,

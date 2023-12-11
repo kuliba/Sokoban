@@ -10,8 +10,8 @@ public extension CreateSberQRPaymentResponse.Parameter {
     struct SuccessText: Equatable {
         
         let id: ID
-        let value: String
-        let style: Style
+        public let value: String
+        public let style: Style
         
         public init(id: ID, value: String, style: Style) {
             

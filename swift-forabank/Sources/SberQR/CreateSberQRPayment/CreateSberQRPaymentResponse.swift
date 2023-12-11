@@ -46,7 +46,7 @@ public extension CreateSberQRPaymentResponse.Parameter {
         case red
     }
     
-    enum ID: Equatable {
+    enum ID: String, Equatable {
         
         case paymentOperationDetailId
         case printFormType

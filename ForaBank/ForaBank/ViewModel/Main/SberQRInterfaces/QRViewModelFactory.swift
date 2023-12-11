@@ -9,8 +9,11 @@ import SberQR
 
 struct QRViewModelFactory {
     
+    typealias MakePaymentsSuccessViewModel = (CreateSberQRPaymentResponse) -> PaymentsSuccessViewModel
+    
     let makeQRScannerModel: MakeQRScannerModel
     let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
+    let makePaymentsSuccessViewModel: MakePaymentsSuccessViewModel
 }
 
 // MARK: - Preview Content
@@ -28,7 +31,8 @@ extension QRViewModelFactory {
                     reduce: { state, _ in state },
                     scheduler: .makeMain()
                 )
-            }
+            },
+            makePaymentsSuccessViewModel: { _ in .sampleC2BSub }
         )
     }
 }

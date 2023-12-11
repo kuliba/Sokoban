@@ -805,10 +805,8 @@ class MainViewModel: ObservableObject, Resetable {
             self.alert = .techError { [weak self] in self?.alert = nil }
             
         case let .success(success):
-            
-            #warning("add success screen")
-            // let successViewModel = Payments.Success(with: success)
-            self.fullScreenSheet = .init(type: .success(success))
+            let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
+            self.fullScreenSheet = .init(type: .success(successViewModel))
         }
     }
     
@@ -1142,7 +1140,7 @@ extension MainViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
-            case success(CreateSberQRPaymentResponse)
+            case success(PaymentsSuccessViewModel)
         }
         
         static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {

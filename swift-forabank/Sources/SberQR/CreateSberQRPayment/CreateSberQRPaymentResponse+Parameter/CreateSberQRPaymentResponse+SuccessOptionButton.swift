@@ -10,7 +10,7 @@ public extension CreateSberQRPaymentResponse.Parameter {
     struct SuccessOptionButton: Equatable {
         
         let id: ID
-        let values: [Value]
+        public let values: [Value]
         
         public init(id: ID, values: [Value]) {
             
