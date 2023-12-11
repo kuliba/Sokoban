@@ -766,13 +766,11 @@ class MainViewModel: ObservableObject, Resetable {
         case let .success(getSberQRDataResponse):
             do {
                 let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
-                    url,
                     getSberQRDataResponse,
-                    { [weak self] in self?.handleCreateSberQRPaymentResult($0) },
                     { [weak self] in self?.sberQRPay(url: url, state: $0) }
                 )
-
                 link = .sberQRPayment(viewModel)
+                
             } catch {
                 alert = .techError { [weak self] in self?.alert = nil }
             }
@@ -783,7 +781,7 @@ class MainViewModel: ObservableObject, Resetable {
         url: URL,
         state: SberQRConfirmPaymentState
     ) {
-//        action.send(MainViewModelAction.Close.Link())
+        // action.send(MainViewModelAction.Close.Link())
         rootActions?.spinner.show()
                 
         let payload = state.makePayload(with: url)
@@ -804,24 +802,19 @@ class MainViewModel: ObservableObject, Resetable {
     private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
-        DispatchQueue.main.async { [weak self] in
-            
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                self.alert = .techError { [weak self] in
-                    
-                    self?.link = nil
-                    self?.alert = nil
-                }
+        switch result {
+        case .failure:
+            self.alert = .techError { [weak self] in
                 
-            case let .success(success):
-                
-                #warning("add success screen")
-                // let successViewModel = Payments.Success(with: success)
-                self.fullScreenSheet = .init(type: .success(success))
+                self?.link = nil
+                self?.alert = nil
             }
+            
+        case let .success(success):
+            
+            #warning("add success screen")
+            // let successViewModel = Payments.Success(with: success)
+            self.fullScreenSheet = .init(type: .success(success))
         }
     }
     

@@ -941,58 +941,27 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = .techError { [weak self] in
-                
-                self?.alert = nil
-            }
+            alert = .techError { [weak self] in self?.alert = nil }
             
         case let .success(getSberQRDataResponse):
             do {
                 let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
-                    url,
                     getSberQRDataResponse,
-                    { [weak self] in self?.handleCreateSberQRPaymentResult($0) },
                     { [weak self] in self?.sberQRPay(url: url, state: $0) }
                 )
-
                 link = .sberQRPayment(viewModel)
+                
             } catch {
-                alert = .techError { [weak self] in
-                    
-                    self?.alert = nil
-                }
+                alert = .techError { [weak self] in self?.alert = nil }
             }
         }
     }
 
-    private func handleCreateSberQRPaymentResult(
-        _ result: CreateSberQRPaymentResult
-    ) {
-        link = nil
-        
-        DispatchQueue.main.async {
-            
-            switch result {
-            case .failure:
-                self.alert = .techError { [weak self] in
-                    
-                    self?.alert = nil
-                }
-                
-            case let .success(success):
-                #warning("add success screen")
-                _ = success
-                // let successViewModel = Payments.Success(with: success)
-                // self.fullScreenSheet = .success(successViewModel)
-            }
-        }
-    }
-    
     private func sberQRPay(
         url: URL,
         state: SberQRConfirmPaymentState
     ) {
-//        action.send(MainViewModelAction.Close.Link())
+        // action.send(MainViewModelAction.Close.Link())
         rootActions?.spinner.show()
                 
         let payload = state.makePayload(with: url)
@@ -1007,6 +976,24 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                 
                 self?.handleCreateSberQRPaymentResult(result)
             }
+        }
+    }
+    
+    private func handleCreateSberQRPaymentResult(
+        _ result: CreateSberQRPaymentResult
+    ) {
+        switch result {
+        case .failure:
+            self.alert = .techError { [weak self] in
+                
+                self?.alert = nil
+            }
+            
+        case let .success(success):
+            #warning("add success screen")
+            _ = success
+            // let successViewModel = Payments.Success(with: success)
+            // self.fullScreenSheet = .success(successViewModel)
         }
     }
     

@@ -15,7 +15,7 @@ extension RootViewModelFactory {
         logger: LoggerAgentProtocol
     ) -> MakeSberQRConfirmPaymentViewModel {
         
-        return { url, response, completion, pay in
+        return { response, pay in
             
             let getProducts = { [weak model] in
                 
