@@ -744,10 +744,6 @@ class MainViewModel: ObservableObject, Resetable {
         
         sberQRServices.getSberQRData(url) { [weak self] result in
             
-            guard let self else { return }
-            
-            self.rootActions?.spinner.hide()
-            
             DispatchQueue.main.async { [weak self] in
                 
                 self?.handleGetSberQRDataResult(url, result)
@@ -759,6 +755,8 @@ class MainViewModel: ObservableObject, Resetable {
         _ url: URL,
         _ result: SberQRServices.GetSberQRDataResult
     ) {
+        rootActions?.spinner.hide()
+        
         switch result {
         case .failure:
             alert = .techError { [weak self] in self?.alert = nil }
@@ -783,14 +781,11 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         // action.send(MainViewModelAction.Close.Link())
         rootActions?.spinner.show()
-                
+        
+        // TODO: move conversion to factory
         let payload = state.makePayload(with: url)
         
         sberQRServices.createSberQRPayment(payload) { [weak self] result in
-            
-            guard let self else { return }
-            
-            self.rootActions?.spinner.hide()
             
             DispatchQueue.main.async { [weak self] in
                 
@@ -802,13 +797,12 @@ class MainViewModel: ObservableObject, Resetable {
     private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
+        rootActions?.spinner.hide()
+        link = nil
+
         switch result {
         case .failure:
-            self.alert = .techError { [weak self] in
-                
-                self?.link = nil
-                self?.alert = nil
-            }
+            self.alert = .techError { [weak self] in self?.alert = nil }
             
         case let .success(success):
             
