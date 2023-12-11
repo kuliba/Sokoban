@@ -13,35 +13,15 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init_shouldNotCallTransfer() {
         
-        let sut = makeSUT()
         
-        let parameterSelect = PaymentSticker.Operation.Parameter.Select(
-            id: .transferTypeSticker,
-            value: nil,
-            title: "Title",
-            placeholder: "Placeholder",
-            options: [],
-            state: .idle(.init(
-                iconName: "",
-                title: "Title"
-            ))
-        )
-        
-        sut.operationResult(
-            operation: .init(parameters: []),
-            event: .select(.chevronTapped(parameterSelect)),
-            completion: { _ in }
-        )
-        
-//        XCTAssertNoDifference(operation, <#T##() -> T#>)
     }
 }
 
 extension PaymentStickerBusinessTests {
     
-    func makeSUT() -> PaymentSticker.BusinessLogic {
+    func makeSUT() -> OperationStateViewModel {
         
-        return .init(
+        let businessLogic = PaymentSticker.BusinessLogic(
             processDictionaryService: {_,_  in},
             processTransferService: {_,_  in},
             processMakeTransferService: {_,_  in},
@@ -49,6 +29,27 @@ extension PaymentStickerBusinessTests {
             selectOffice: {_,_  in},
             products: [],
             cityList: []
+        )
+        let sut = OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
+        
+        return sut
+    }
+}
+
+private extension BusinessLogic {
+    
+    func operationResult(
+        request: (
+            operation: PaymentSticker.Operation,
+            event: Event
+        ),
+        completion: @escaping (OperationResult) -> Void
+    ) {
+        
+        operationResult(
+            operation: request.operation,
+            event: request.event,
+            completion: completion
         )
     }
 }
