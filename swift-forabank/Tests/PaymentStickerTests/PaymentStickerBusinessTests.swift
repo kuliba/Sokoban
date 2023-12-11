@@ -24,21 +24,18 @@ private extension PaymentStickerBusinessTests {
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (OperationStateViewModel, Spy) {
+    ) -> (BusinessLogic, Spy) {
         
-        let businessLogic = PaymentSticker.BusinessLogic(
-            processDictionaryService: {_,_  in},
-            processTransferService: {_,_  in},
-            processMakeTransferService: {_,_  in},
-            processImageLoaderService: {_,_  in},
-            selectOffice: {_,_  in},
+        let sut = PaymentSticker.BusinessLogic(
+            processDictionaryService: {_,_  in }, //TODO: setup SPY
+            processTransferService: {_,_  in },
+            processMakeTransferService: {_,_  in },
+            processImageLoaderService: {_,_  in },
+            selectOffice: {_,_  in },
             products: [],
             cityList: []
         )
-        
-        let sut = OperationStateViewModel(
-            blackBoxGet: businessLogic.operationResult
-        )
+    
         let spy = Spy()
         
         trackForMemoryLeaks(spy, file: file, line: line)
