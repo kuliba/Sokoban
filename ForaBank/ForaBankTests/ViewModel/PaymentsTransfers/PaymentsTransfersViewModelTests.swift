@@ -261,6 +261,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SberQRError = MappingRemoteServiceError<MappingError>
+    private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
 
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
@@ -287,6 +288,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let spy = SberQRPaymentSpy()
         
+        let sberQRServices = SberQRServices.preview(
+        createSberQRPaymentStub: .success(.empty()),
+        getSberQRDataStub: getSberQRDataResultStub
+    )
+        
         let sut = PaymentsTransfersViewModel(
             model: model,
             makeProductProfileViewModel: { product, rootView, dismissAction in
@@ -294,10 +300,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 ProductProfileViewModel(
                     model,
                     makeQRScannerModel: QRViewModel.preview,
-                    getSberQRData: { _, completion in
-                        
-                        completion(getSberQRDataResultStub)
-                    },
+                    sberQRServices: sberQRServices,
                     makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
@@ -306,10 +309,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 )
             },
             makeQRScannerModel: QRViewModel.preview,
-            getSberQRData: { _, completion in
-                
-                completion(getSberQRDataResultStub)
-            },
+            sberQRServices: sberQRServices,
             makeSberQRConfirmPaymentViewModel: spy.make
         )
         

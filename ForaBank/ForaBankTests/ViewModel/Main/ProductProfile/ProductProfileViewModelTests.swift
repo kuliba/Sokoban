@@ -554,7 +554,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         return .init(
             model, 
             makeQRScannerModel: QRViewModel.preview,
-            getSberQRData: { _,_ in },
+            sberQRServices: .empty(),
             makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
@@ -587,7 +587,7 @@ final class ProductProfileViewModelTests: XCTestCase {
             ProductProfileViewModel(
                 model,
                 makeQRScannerModel: QRViewModel.preview,
-                getSberQRData: { _,_ in },
+                sberQRServices: .empty(),
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,

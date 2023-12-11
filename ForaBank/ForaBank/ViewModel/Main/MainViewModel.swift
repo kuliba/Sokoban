@@ -35,8 +35,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
-    private let getSberQRData: GetSberQRData
-    private let createSberQRPayment: CreateSberQRPayment
+    private let sberQRServices: SberQRServices
     private let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
@@ -47,8 +46,7 @@ class MainViewModel: ObservableObject, Resetable {
         model: Model = .emptyMock,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        createSberQRPayment: @escaping CreateSberQRPayment,
+        sberQRServices: SberQRServices,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
@@ -57,8 +55,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
-        self.getSberQRData = getSberQRData
-        self.createSberQRPayment = createSberQRPayment
+        self.sberQRServices = sberQRServices
         self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
     }
@@ -67,8 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        createSberQRPayment: @escaping CreateSberQRPayment,
+        sberQRServices: SberQRServices,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping () -> Void
     ) {
@@ -84,8 +80,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
-        self.getSberQRData = getSberQRData
-        self.createSberQRPayment = createSberQRPayment
+        self.sberQRServices = sberQRServices
         self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
         self.onRegister = onRegister
         
@@ -752,7 +747,7 @@ class MainViewModel: ObservableObject, Resetable {
         action.send(MainViewModelAction.Close.FullScreenSheet())
         rootActions?.spinner.show()
         
-        getSberQRData(url) { [weak self] result in
+        sberQRServices.getSberQRData(url) { [weak self] result in
             
             guard let self else { return }
             
@@ -767,7 +762,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func handleGetSberQRDataResult(
         _ url: URL,
-        _ result: GetSberQRDataResult
+        _ result: SberQRServices.GetSberQRDataResult
     ) {
         switch result {
         case .failure:
@@ -825,7 +820,7 @@ class MainViewModel: ObservableObject, Resetable {
                 
         let payload = state.makePayload(with: url)
         
-        createSberQRPayment(payload) { [weak self] result in
+        sberQRServices.createSberQRPayment(payload) { [weak self] result in
             
             guard let self else { return }
             

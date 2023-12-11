@@ -1,5 +1,5 @@
 //
-//  Services+makeCreateSberQRPaymentService.swift
+//  Services+makeSberQRServices.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 09.12.2023.
@@ -11,12 +11,10 @@ import SberQR
 
 extension Services {
     
-    private typealias CreateSberQRPaymentService = MappingRemoteService<CreateSberQRPaymentPayload, CreateSberQRPaymentResponse, MappingError>
-    
-    static func makeCreateSberQRPayment(
+    static func makeSberQRServices(
         httpClient: HTTPClient,
         log: @escaping (String, StaticString, UInt) -> Void
-    ) -> CreateSberQRPayment {
+    ) -> SberQRServices {
         
         let createSberQRPaymentService = LoggingRemoteServiceDecorator(
             createRequest: RequestFactory.createCreateSberQRPaymentRequest,
@@ -25,6 +23,16 @@ extension Services {
             log: log
         ).remoteService
         
-        return createSberQRPaymentService.process(_:completion:)
+        let getSberQRDataService = LoggingRemoteServiceDecorator(
+            createRequest: RequestFactory.createGetSberQRRequest(_:),
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: SberQR.ResponseMapper.mapGetSberQRDataResponse,
+            log: log
+        ).remoteService
+
+        return .init(
+            createSberQRPayment: createSberQRPaymentService.process(_:completion:),
+            getSberQRData: getSberQRDataService.process(_:completion:)
+        )
     }
 }

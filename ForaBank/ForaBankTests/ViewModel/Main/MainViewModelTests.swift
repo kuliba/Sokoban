@@ -230,7 +230,8 @@ final class MainViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SberQRError = MappingRemoteServiceError<MappingError>
-    
+    private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+
     private func makeSUT(
         getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
         file: StaticString = #file,
@@ -246,11 +247,10 @@ final class MainViewModelTests: XCTestCase {
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
-            getSberQRData: { _, completion in
-                
-                completion(getSberQRDataResultStub)
-            }, 
-            createSberQRPayment: { _,_ in },
+            sberQRServices: .preview(
+                createSberQRPaymentStub: .success(.empty()),
+                getSberQRDataStub: getSberQRDataResultStub
+            ),
             makeSberQRConfirmPaymentViewModel: spy.make,
             onRegister: {}
         )
@@ -285,8 +285,7 @@ final class MainViewModelTests: XCTestCase {
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
-            getSberQRData: { _,_ in },
-            createSberQRPayment: { _,_ in },
+            sberQRServices: .empty(),
             makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
             onRegister: {}
         )

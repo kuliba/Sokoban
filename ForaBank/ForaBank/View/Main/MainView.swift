@@ -352,7 +352,7 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
-                getSberQRData: { _,_ in },
+                sberQRServices: .empty(),
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
@@ -361,8 +361,7 @@ extension MainViewModel {
             )
         },
         makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        createSberQRPayment: { _,_ in },
+        sberQRServices: .empty(),
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
@@ -383,7 +382,7 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
-                getSberQRData: { _,_ in },
+                sberQRServices: .empty(),
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
@@ -392,8 +391,7 @@ extension MainViewModel {
             )
         },
         makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        createSberQRPayment: { _,_ in },
+        sberQRServices: .empty(),
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )
@@ -415,7 +413,7 @@ extension MainViewModel {
             ProductProfileViewModel(
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
-                getSberQRData: { _,_ in },
+                sberQRServices: .empty(),
                 makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
@@ -424,8 +422,7 @@ extension MainViewModel {
             )
         },
         makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        createSberQRPayment: { _,_ in },
+        sberQRServices: .empty(),
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         onRegister: {}
     )

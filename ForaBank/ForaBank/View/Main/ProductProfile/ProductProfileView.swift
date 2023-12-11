@@ -389,7 +389,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
+        sberQRServices: .empty(),
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
@@ -402,7 +402,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
+        sberQRServices: .empty(),
         makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""

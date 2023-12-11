@@ -51,12 +51,7 @@ extension RootViewModelFactory {
         
         let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
         
-        let getSberQRData = Services.makeGetSberQRData(
-            httpClient: httpClient,
-            log: infoNetworkLog
-        )
-        
-        let createSberQRPayment = Services.makeCreateSberQRPayment(
+        let sberQRServices = Services.makeSberQRServices(
             httpClient: httpClient,
             log: infoNetworkLog
         )
@@ -69,7 +64,7 @@ extension RootViewModelFactory {
             ProductProfileViewModel(
                 model,
                 makeQRScannerModel: makeQRScannerModel,
-                getSberQRData: getSberQRData,
+                sberQRServices: sberQRServices,
                 makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
@@ -82,8 +77,7 @@ extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData,
-            createSberQRPayment: createSberQRPayment,
+            sberQRServices: sberQRServices,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
@@ -123,8 +117,7 @@ private extension RootViewModelFactory {
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        createSberQRPayment: @escaping CreateSberQRPayment,
+        sberQRServices: SberQRServices,
         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
@@ -133,8 +126,7 @@ private extension RootViewModelFactory {
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData,
-            createSberQRPayment: createSberQRPayment,
+            sberQRServices: sberQRServices,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: onRegister
         )
@@ -143,7 +135,7 @@ private extension RootViewModelFactory {
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData,
+            sberQRServices: sberQRServices,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel
         )
         
