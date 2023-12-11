@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct OperationResult {
+public struct OperationResult: Hashable {
     
     public let result: Result
     public let title: String
@@ -36,7 +36,7 @@ public struct OperationResult {
         case failed
     }
     
-    public struct PaymentID {
+    public struct PaymentID: Hashable {
         
         public let id: Int
         

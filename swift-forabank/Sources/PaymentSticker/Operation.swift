@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Operation {
+public struct Operation: Hashable {
     
     let state: State
     public var parameters: [Parameter]
