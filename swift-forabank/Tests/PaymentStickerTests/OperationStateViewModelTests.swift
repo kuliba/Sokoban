@@ -20,20 +20,16 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationWithParameter_shouldReturnUpdateParameters() {
         
-        let sut = makeSUT(state: .operation)
-        XCTAssertNoDiff(sut.operation?.parameters, [])
+    func test_operationResult_shouldReturnNil() {
         
-        sut.updateOperation(with: [
-            .productSelector(makeProductStub()),
-            .sticker(makeBannerStub())
-        ])
+        let (sut, _) = makeSUT(state: .result)
         
-        XCTAssertNoDiff(sut.operation?.parameters.count, 2)
+        XCTAssertNoDiff(sut.operation?.parameters, nil)
     }
     
     func test_operationStateResult_shouldReturnEmptyScrollParameter() {
     
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .result
         )
         
@@ -42,7 +38,7 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationParametersEmpty_shouldReturnEmptyScrollParameter() {
     
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation
         )
         
@@ -51,7 +47,7 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationParameters_shouldReturnStickerAndProduct() {
     
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation,
             parameters: [
                 .sticker(makeBannerStub()),
@@ -64,7 +60,7 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationWithOutAmountParameter_shouldReturnNil() {
     
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation
         )
         
@@ -73,7 +69,7 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationAmountParameter_shouldReturnAmount() {
     
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation,
             parameters: [.amount(.init(value: "Value"))]
         )
@@ -83,14 +79,14 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationWithOutProduct_shouldReturnNil() {
         
-        let sut = makeSUT(state: .operation)
+        let (sut, _) = makeSUT(state: .operation)
         
         XCTAssertNoDiff(sut.product, nil)
     }
     
     func test_operationWithProduct_shouldReturnProduct() {
         
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation,
             parameters: [.productSelector(makeProductStub())]
         )
@@ -115,14 +111,14 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationWithOutBanner_shouldReturnNil() {
         
-        let sut = makeSUT(state: .operation)
+        let (sut, _) = makeSUT(state: .operation)
         
         XCTAssertNoDiff(sut.banner, nil)
     }
     
     func test_operationWithBanner_shouldReturnBanner() {
         
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation,
             parameters: [.sticker(makeBannerStub())]
         )
@@ -137,14 +133,14 @@ final class OperationStateViewModelTests: XCTestCase {
     
     func test_operationWithOutTransferType_shouldReturnNil() {
         
-        let sut = makeSUT(state: .operation)
+        let (sut, _) = makeSUT(state: .operation)
         
         XCTAssertNoDiff(sut.transferType, nil)
     }
     
     func test_operationWithTransferType_shouldReturnTransferType() {
         
-        let sut = makeSUT(
+        let (sut, _) = makeSUT(
             state: .operation,
             parameters: [.select(makeTransferTypeStub())]
         )
