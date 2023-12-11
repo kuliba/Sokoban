@@ -43,15 +43,10 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let qrViewModelFactory = QRViewModelFactory(
-            makeQRScannerModel: makeMakeQRScannerModel(
-                model: model,
-                qrResolverFeatureFlag: qrResolverFeatureFlag
-            ),
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(
-                model: model,
-                logger: logger
-            )
+        let qrViewModelFactory = makeQRViewModelFactory(
+            model: model,
+            logger: logger,
+            qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
         let makeProductProfileViewModel = {
