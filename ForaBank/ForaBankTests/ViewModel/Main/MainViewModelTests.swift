@@ -233,7 +233,7 @@ final class MainViewModelTests: XCTestCase {
 
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
-        getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
+        getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

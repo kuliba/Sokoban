@@ -272,7 +272,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeSUT(
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
-        getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
+        getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,

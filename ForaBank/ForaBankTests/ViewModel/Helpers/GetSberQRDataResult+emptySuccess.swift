@@ -9,11 +9,6 @@
 import Foundation
 import SberQR
 
-extension SberQRServices.GetSberQRDataResult {
-    
-    static let emptySuccess: Self = .success(.empty())
-}
-
 func anyGetSberQRDataResponse(
     qrcID: String = UUID().uuidString
 ) -> GetSberQRDataResponse {
