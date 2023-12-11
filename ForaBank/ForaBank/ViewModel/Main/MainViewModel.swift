@@ -774,10 +774,7 @@ class MainViewModel: ObservableObject, Resetable {
 
                 link = .sberQRPayment(viewModel)
             } catch {
-                alert = .techError { [weak self] in
-                    
-                    self?.alert = nil
-                }
+                alert = .techError { [weak self] in self?.alert = nil }
             }
         }
     }
