@@ -469,6 +469,11 @@ private extension Target {
         ],
         resources: [
             .copy("Resources/QRPaymentType.json"),
+            .copy("Resources/Responses/getSberQRData_any_sum.json"),
+            .copy("Resources/Responses/getSberQRData_fix_sum.json"),
+            .copy("Resources/Responses/createSberQRPayment_IN_PROGRESS.json"),
+            .copy("Resources/Responses/createSberQRPayment_rejected.json"),
+            .copy("Resources/Responses/createSberQRPayment.json"),
         ]
     )
     
