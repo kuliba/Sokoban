@@ -43,27 +43,15 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let qrResolve: QRViewModel.QRResolve = { string in
-            
-            let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
-            let resolver = QRResolver(isSberQR: isSberQR)
-            
-            return resolver.resolve(string: string)
-        }
-        
-        let makeQRScannerModel: MakeQRScannerModel = {
-            
-            .init(closeAction: $0, qrResolve: qrResolve)
-        }
-        
-        let makeSberQRConfirmPaymentViewModel = RootViewModelFactory.makeSberQRConfirmPaymentViewModel(
-            model: model,
-            logger: logger
-        )
-        
         let qrViewModelFactory = QRViewModelFactory(
-            makeQRScannerModel: makeQRScannerModel,
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel
+            makeQRScannerModel: makeMakeQRScannerModel(
+                model: model,
+                qrResolverFeatureFlag: qrResolverFeatureFlag
+            ),
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel(
+                model: model,
+                logger: logger
+            )
         )
         
         let makeProductProfileViewModel = {

@@ -135,7 +135,6 @@ struct MyProductsView: View {
             }
         }
     }
-    
 }
 
 extension MyProductsView {
@@ -165,7 +164,5 @@ struct MyProductsView_Previews: PreviewProvider {
                 MyProductsView(viewModel: .sampleOpenProduct)
             }
         }
-        
     }
 }
-
