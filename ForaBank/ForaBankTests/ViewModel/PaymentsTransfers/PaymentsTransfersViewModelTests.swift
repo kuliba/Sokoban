@@ -207,7 +207,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
+        let sberQRError = anySberQRError()
         let (sut, _, spy) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
@@ -226,12 +226,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
-        let (sut, _, spy) = makeSUT()
+        let (sut, _,_) = makeSUT(
+            createSberQRPaymentStub: .failure(anySberQRError())
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(alertMessageSpy.values, [
@@ -242,12 +242,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
-        let (sut, _, spy) = makeSUT()
+        let (sut, _,_) = makeSUT(
+            createSberQRPaymentStub: .failure(anySberQRError())
+        )
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         try sut.tapPrimaryAlertButton()
         
@@ -260,9 +260,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SberQRError = MappingRemoteServiceError<MappingError>
+    fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
-
+    
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
         let product2 = anyProduct(id: 2, productType: .card, currency: "USD")
@@ -271,6 +271,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
+        createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
@@ -286,12 +287,15 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             model.products.value = [.card: products]
         }
         
-        let spy = SberQRPaymentSpy()
-        
         let sberQRServices = SberQRServices.preview(
-        createSberQRPaymentStub: .success(.empty()),
-        getSberQRDataStub: getSberQRDataResultStub
-    )
+            createSberQRPaymentStub: createSberQRPaymentStub,
+            getSberQRDataStub: getSberQRDataResultStub
+        )
+        
+        let spy = SberQRPaymentSpy()
+        let sberQRViewModelFactory = SberQRViewModelFactory(
+            makeSberQRConfirmPaymentViewModel: spy.make
+        )
         
         let sut = PaymentsTransfersViewModel(
             model: model,
@@ -301,7 +305,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                     model,
                     makeQRScannerModel: QRViewModel.preview,
                     sberQRServices: sberQRServices,
-                    makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                    sberQRViewModelFactory: sberQRViewModelFactory,
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
@@ -310,7 +314,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             },
             makeQRScannerModel: QRViewModel.preview,
             sberQRServices: sberQRServices,
-            makeSberQRConfirmPaymentViewModel: spy.make
+            sberQRViewModelFactory: sberQRViewModelFactory
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -320,6 +324,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         return (sut, model, spy)
     }
+}
+
+private func anySberQRError() -> PaymentsTransfersViewModelTests.SberQRError {
+    
+    .createRequest(anyError("SberQRPayment Failure"))
 }
 
 // MARK: - DSL

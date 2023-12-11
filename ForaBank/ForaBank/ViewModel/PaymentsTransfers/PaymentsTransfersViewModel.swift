@@ -53,7 +53,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeQRScannerModel: MakeQRScannerModel
     private let sberQRServices: SberQRServices
-    private let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
+    private let sberQRViewModelFactory: SberQRViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -61,7 +61,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
+        sberQRViewModelFactory: SberQRViewModelFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -77,7 +77,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
+        self.sberQRViewModelFactory = sberQRViewModelFactory
 
         self.navButtonsRight = createNavButtonsRight()
         
@@ -93,7 +93,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
+        sberQRViewModelFactory: SberQRViewModelFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -105,7 +105,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
+        self.sberQRViewModelFactory = sberQRViewModelFactory
 
         self.navButtonsRight = navButtonsRight
         
@@ -946,19 +946,31 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = techErrorAlert()
+            alert = techErrorAlert { [weak self] in
+                
+                self?.alert = nil
+            }
             
-        case let .success(sberQRData):
-            let viewModel = makeSberQRConfirmPaymentViewModel(
-                url,
-                sberQRData
-            ) { [weak self] in self?.handleSberQRPaymentResult($0) }
-            
-            link = .sberQRPayment(viewModel)
+        case let .success(getSberQRDataResponse):
+            do {
+                let viewModel = try sberQRViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                    url,
+                    getSberQRDataResponse,
+                    { [weak self] in self?.handleCreateSberQRPaymentResult($0) },
+                    { [weak self] in self?.sberQRPay(url: url, state: $0) }
+                )
+
+                link = .sberQRPayment(viewModel)
+            } catch {
+                alert = techErrorAlert { [weak self] in
+                    
+                    self?.alert = nil
+                }
+            }
         }
     }
 
-    private func handleSberQRPaymentResult(
+    private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
         link = nil
@@ -967,7 +979,10 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
             switch result {
             case .failure:
-                self.alert = self.techErrorAlert()
+                self.alert = self.techErrorAlert { [weak self] in
+                    
+                    self?.alert = nil
+                }
                 
             case let .success(success):
                 #warning("add success screen")
@@ -978,7 +993,9 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func techErrorAlert() -> Alert.ViewModel {
+    private func techErrorAlert(
+        primaryAction: @escaping () -> Void
+    ) -> Alert.ViewModel {
         
         .init(
             title: "Ошибка",
@@ -986,9 +1003,31 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             primary: .init(
                 type: .default,
                 title: "OK",
-                action: { [weak self] in self?.alert = nil }
+                action: primaryAction
             )
         )
+    }
+
+    private func sberQRPay(
+        url: URL,
+        state: SberQRConfirmPaymentState
+    ) {
+//        action.send(MainViewModelAction.Close.Link())
+        rootActions?.spinner.show()
+                
+        let payload = state.makePayload(with: url)
+        
+        sberQRServices.createSberQRPayment(payload) { [weak self] result in
+            
+            guard let self else { return }
+            
+            self.rootActions?.spinner.hide()
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.handleCreateSberQRPaymentResult(result)
+            }
+        }
     }
     
     private func handleURL() {

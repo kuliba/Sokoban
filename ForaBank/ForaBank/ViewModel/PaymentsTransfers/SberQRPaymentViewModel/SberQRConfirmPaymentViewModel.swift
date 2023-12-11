@@ -15,13 +15,14 @@ extension SberQRConfirmPaymentViewModel {
     static func preview(
         sberQRURL: URL,
         sberQRData: GetSberQRDataResponse,
-        commit: @escaping Commit
+        commit: @escaping Commit,
+        pay: @escaping (SberQRConfirmPaymentState) -> Void = { _ in }
     ) -> SberQRConfirmPaymentViewModel {
                 
         return .default(
             initialState: .editableAmount(.preview),
             getProducts: { [] },
-            pay: { _ in },
+            pay: pay,
             scheduler: .main
         )
     }

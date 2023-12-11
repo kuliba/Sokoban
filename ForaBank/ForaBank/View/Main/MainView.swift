@@ -353,7 +353,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                sberQRViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -362,7 +362,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -383,7 +383,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                sberQRViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -392,7 +392,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -414,7 +414,7 @@ extension MainViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                sberQRViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -423,7 +423,7 @@ extension MainViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRViewModelFactory: .preview(),
         onRegister: {}
     )
 }

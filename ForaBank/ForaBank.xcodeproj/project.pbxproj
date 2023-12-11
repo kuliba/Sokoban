@@ -359,6 +359,8 @@
 		2A1650A32B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1650A22B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift */; };
 		2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2829E598E000BB460D /* StringReplacingTests.swift */; };
 		2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */; };
+		2A1A8E522B26FCBE008B896D /* SberQRViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A8E512B26FCBE008B896D /* SberQRViewModelFactory.swift */; };
+		2A1A8E542B26FE5F008B896D /* Services+makeSberQRViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A8E532B26FE5F008B896D /* Services+makeSberQRViewModelFactory.swift */; };
 		2A1C3F862A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C3F852A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift */; };
 		2A1D7F5D2A0FF00C0066BC02 /* SearchFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1D7F5C2A0FF00C0066BC02 /* SearchFactory.swift */; };
 		2A1D7F5F2A0FF0680066BC02 /* SearchFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1D7F5E2A0FF0680066BC02 /* SearchFactoryTests.swift */; };
@@ -2579,6 +2581,8 @@
 		2A1650A22B1FB0F6000DB3B1 /* SberQRPaymentSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPaymentSpy.swift; sourceTree = "<group>"; };
 		2A18BB2829E598E000BB460D /* StringReplacingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringReplacingTests.swift; sourceTree = "<group>"; };
 		2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRestrictedTests.swift; sourceTree = "<group>"; };
+		2A1A8E512B26FCBE008B896D /* SberQRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRViewModelFactory.swift; sourceTree = "<group>"; };
+		2A1A8E532B26FE5F008B896D /* Services+makeSberQRViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeSberQRViewModelFactory.swift"; sourceTree = "<group>"; };
 		2A1C3F852A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModelTests.swift; sourceTree = "<group>"; };
 		2A1D7F5C2A0FF00C0066BC02 /* SearchFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactory.swift; sourceTree = "<group>"; };
 		2A1D7F5E2A0FF0680066BC02 /* SearchFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryTests.swift; sourceTree = "<group>"; };
@@ -6580,6 +6584,7 @@
 			isa = PBXGroup;
 			children = (
 				2AB63F362B26E22A0086B5EB /* SberQRServices.swift */,
+				2A1A8E512B26FCBE008B896D /* SberQRViewModelFactory.swift */,
 			);
 			path = SberQRInterfaces;
 			sourceTree = "<group>";
@@ -6610,6 +6615,7 @@
 			isa = PBXGroup;
 			children = (
 				2AB197A72B24A4B300F0F87B /* Services+makeSberQRServices.swift */,
+				2A1A8E532B26FE5F008B896D /* Services+makeSberQRViewModelFactory.swift */,
 				2AC2ADC12B2250C20049EE9B /* Model+isSberQR.swift */,
 				2A84C4A42B25D90900F314BD /* sberQRProducts.swift */,
 				2AB197A02B246A6100F0F87B /* GetSberQRDataResponse+ext.swift */,
@@ -13361,6 +13367,7 @@
 				C1097D9029438242002459F6 /* PaymentCheckViewComponent.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
+				2A1A8E542B26FE5F008B896D /* Services+makeSberQRViewModelFactory.swift in Sources */,
 				2A1F08432A7902BF00C5B11B /* TokenProvider.swift in Sources */,
 				774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */,
 				2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */,
@@ -13782,6 +13789,7 @@
 				2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */,
 				2A649E0C2A1CE2F900B7EA8B /* RegularTextFieldView.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
+				2A1A8E522B26FCBE008B896D /* SberQRViewModelFactory.swift in Sources */,
 				5066506B28577C260039A745 /* DateComponentsFormatter+Ext.swift in Sources */,
 				83E455E42AC2E0DB0045BEC1 /* C2BFactory.swift in Sources */,
 				0BB24A9426EFCC5800DDA4F6 /* GetProductTemplateListSaved.swift in Sources */,

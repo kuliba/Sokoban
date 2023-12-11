@@ -19,7 +19,8 @@ final class SberQRPaymentSpy {
     func make(
         _ url: URL,
         _ data: GetSberQRDataResponse,
-        completion: @escaping Completion
+        completion: @escaping Completion,
+        pay: @escaping (SberQRConfirmPaymentState) -> Void
     ) -> SberQRConfirmPaymentViewModel {
         
         messages.append((url, data, completion))

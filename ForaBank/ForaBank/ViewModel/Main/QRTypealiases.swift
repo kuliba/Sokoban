@@ -12,4 +12,4 @@ typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
 
 typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, MappingRemoteServiceError<MappingError>>)
 typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
-typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping CreateSberQRPaymentCompletion) -> SberQRConfirmPaymentViewModel
+typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping CreateSberQRPaymentCompletion, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel

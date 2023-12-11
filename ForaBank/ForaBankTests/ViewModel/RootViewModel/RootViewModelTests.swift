@@ -211,7 +211,7 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_ in nil },
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                sberQRViewModelFactory: .preview(),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
@@ -219,7 +219,7 @@ final class RootViewModelTests: XCTestCase {
                 makeProductProfileViewModel: { _,_,_ in nil },
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview
+                sberQRViewModelFactory: .preview()
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

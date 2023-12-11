@@ -48,7 +48,7 @@ class ProductProfileViewModel: ObservableObject {
     private let model: Model
     private let makeQRScannerModel: MakeQRScannerModel
     private let sberQRServices: SberQRServices
-    private let makeSberQRConfirmPaymentViewModel: MakeSberQRConfirmPaymentViewModel
+    private let sberQRViewModelFactory: SberQRViewModelFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -69,7 +69,7 @@ class ProductProfileViewModel: ObservableObject {
          model: Model = .emptyMock,
          makeQRScannerModel: @escaping MakeQRScannerModel,
          sberQRServices: SberQRServices,
-         makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
+         sberQRViewModelFactory: SberQRViewModelFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -84,7 +84,7 @@ class ProductProfileViewModel: ObservableObject {
         self.model = model
         self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel
+        self.sberQRViewModelFactory = sberQRViewModelFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -101,7 +101,7 @@ class ProductProfileViewModel: ObservableObject {
         _ model: Model,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
+        sberQRViewModelFactory: SberQRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -119,7 +119,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, makeQRScannerModel: makeQRScannerModel, sberQRServices: sberQRServices, makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, makeQRScannerModel: makeQRScannerModel, sberQRServices: sberQRServices, sberQRViewModelFactory: sberQRViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -346,7 +346,7 @@ private extension ProductProfileViewModel {
                     makeProductProfileViewModel: makeProductProfileViewModel,
                     makeQRScannerModel: makeQRScannerModel,
                     sberQRServices: sberQRServices,
-                    makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
+                    sberQRViewModelFactory: sberQRViewModelFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1473,7 +1473,7 @@ private extension ProductProfileViewModel {
             model,
             makeQRScannerModel: makeQRScannerModel,
             sberQRServices: sberQRServices,
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
+            sberQRViewModelFactory: sberQRViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,

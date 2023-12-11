@@ -172,35 +172,35 @@ final class MainViewModelTests: XCTestCase {
         ])
     }
     
-    func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
+    func test_sberQR_shouldNotResetNavigationLinkOnSberQRPaymentFailure() throws {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
-        let (sut, _, spy) = makeSUT(
+        let sberQRError: SberQRError = .createRequest(
+            anyError("SberQRPayment Failure")
+        )
+        let (sut, _,_) = makeSUT(
+            createSberQRPaymentStub: .failure(sberQRError),
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
         
         try sut.scanAndWait(sberQRURL)
-        spy.complete(with: .failure(sberQRError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment,
-            nil
+            .sberQRPayment
         ])
     }
     
     func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
+        spy.complete(with: .failure(anySberQRError()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(alertMessageSpy.values, [
@@ -211,12 +211,11 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
         
-        let sberQRError: SberQRError = .createRequest(anyError("SberQRPayment Failure"))
         let (sut, _, spy) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
+        spy.complete(with: .failure(anySberQRError()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         try sut.tapPrimaryAlertButton()
         
@@ -229,10 +228,11 @@ final class MainViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SberQRError = MappingRemoteServiceError<MappingError>
+    fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
 
     private func makeSUT(
+        createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
         file: StaticString = #file,
         line: UInt = #line
@@ -243,15 +243,18 @@ final class MainViewModelTests: XCTestCase {
     ) {
         let model: Model = .mockWithEmptyExcept()
         let spy = SberQRPaymentSpy()
+        let sberQRViewModelFactory = SberQRViewModelFactory(
+            makeSberQRConfirmPaymentViewModel: spy.make
+        )
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
             sberQRServices: .preview(
-                createSberQRPaymentStub: .success(.empty()),
+                createSberQRPaymentStub: createSberQRPaymentStub,
                 getSberQRDataStub: getSberQRDataResultStub
             ),
-            makeSberQRConfirmPaymentViewModel: spy.make,
+            sberQRViewModelFactory: sberQRViewModelFactory,
             onRegister: {}
         )
         
@@ -286,7 +289,7 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_  in nil },
             makeQRScannerModel: QRViewModel.preview,
             sberQRServices: .empty(),
-            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+            sberQRViewModelFactory: .preview(),
             onRegister: {}
         )
         
@@ -339,6 +342,11 @@ final class MainViewModelTests: XCTestCase {
             customName: "customName"
         )
     }
+}
+
+private func anySberQRError() -> MainViewModelTests.SberQRError {
+    
+    .createRequest(anyError("SberQRPayment Failure"))
 }
 
 // MARK: - DSL

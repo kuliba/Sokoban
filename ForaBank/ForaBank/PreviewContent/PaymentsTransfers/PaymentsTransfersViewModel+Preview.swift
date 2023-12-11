@@ -83,7 +83,7 @@ extension PaymentsTransfersViewModel {
                 .emptyMock,
                 makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+                sberQRViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -92,7 +92,7 @@ extension PaymentsTransfersViewModel {
         },
         makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRViewModelFactory: .preview(),
                 navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
