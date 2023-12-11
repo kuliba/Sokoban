@@ -51,17 +51,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
-    private let makeQRScannerModel: MakeQRScannerModel
     private let sberQRServices: SberQRServices
-    private let sberQRViewModelFactory: SberQRViewModelFactory
+    private let qrViewModelFactory: QRViewModelFactory
     private var bindings = Set<AnyCancellable>()
     
     init(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        sberQRViewModelFactory: SberQRViewModelFactory,
+        qrViewModelFactory: QRViewModelFactory,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
     ) {
@@ -75,9 +73,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.sberQRViewModelFactory = sberQRViewModelFactory
+        self.qrViewModelFactory = qrViewModelFactory
 
         self.navButtonsRight = createNavButtonsRight()
         
@@ -91,9 +88,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        sberQRViewModelFactory: SberQRViewModelFactory,
+        qrViewModelFactory: QRViewModelFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
         isTabBarHidden: Bool = false,
         mode: Mode = .normal
@@ -103,9 +99,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.sberQRViewModelFactory = sberQRViewModelFactory
+        self.qrViewModelFactory = qrViewModelFactory
 
         self.navButtonsRight = navButtonsRight
         
@@ -132,7 +127,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     private func openScanner() {
         
-        let qrScannerModel = makeQRScannerModel { [weak self] in
+        let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
             self?.action.send(PaymentsTransfersViewModelAction.Close.FullScreenSheet())
         }
@@ -953,7 +948,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
         case let .success(getSberQRDataResponse):
             do {
-                let viewModel = try sberQRViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
                     url,
                     getSberQRDataResponse,
                     { [weak self] in self?.handleCreateSberQRPaymentResult($0) },

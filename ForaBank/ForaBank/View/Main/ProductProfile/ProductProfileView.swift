@@ -388,9 +388,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        sberQRViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(),
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -401,9 +400,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        sberQRViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(),
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )

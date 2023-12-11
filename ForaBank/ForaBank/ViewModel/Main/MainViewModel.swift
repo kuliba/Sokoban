@@ -34,9 +34,8 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
-    private let makeQRScannerModel: MakeQRScannerModel
     private let sberQRServices: SberQRServices
-    private let sberQRViewModelFactory: SberQRViewModelFactory
+    private let qrViewModelFactory: QRViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -45,27 +44,24 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        sberQRViewModelFactory: SberQRViewModelFactory,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.sberQRViewModelFactory = sberQRViewModelFactory
+        self.qrViewModelFactory = qrViewModelFactory
         self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        sberQRViewModelFactory: SberQRViewModelFactory,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -79,9 +75,8 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
         self.sberQRServices = sberQRServices
-        self.sberQRViewModelFactory = sberQRViewModelFactory
+        self.qrViewModelFactory = qrViewModelFactory
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -110,7 +105,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func openScanner() {
         
-        let qrScannerModel = makeQRScannerModel { [weak self] in
+        let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
             self?.action.send(MainViewModelAction.Close.FullScreenSheet())
         }
@@ -773,7 +768,7 @@ class MainViewModel: ObservableObject, Resetable {
             
         case let .success(getSberQRDataResponse):
             do {
-                let viewModel = try sberQRViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
                     url,
                     getSberQRDataResponse,
                     { [weak self] in self?.handleCreateSberQRPaymentResult($0) },

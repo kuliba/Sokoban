@@ -351,18 +351,16 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        sberQRViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -381,18 +379,16 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        sberQRViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -412,18 +408,16 @@ extension MainViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
         },
-        makeQRScannerModel: QRViewModel.preview,
         sberQRServices: .empty(),
-        sberQRViewModelFactory: .preview(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
 }

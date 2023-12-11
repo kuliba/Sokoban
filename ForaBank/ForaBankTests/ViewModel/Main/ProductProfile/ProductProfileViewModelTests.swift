@@ -553,9 +553,8 @@ final class ProductProfileViewModelTests: XCTestCase {
 
         return .init(
             model, 
-            makeQRScannerModel: QRViewModel.preview,
             sberQRServices: .empty(),
-            sberQRViewModelFactory: .preview(),
+            qrViewModelFactory: .preview(),
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -586,9 +585,8 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

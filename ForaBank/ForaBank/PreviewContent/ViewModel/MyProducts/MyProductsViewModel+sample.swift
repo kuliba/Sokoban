@@ -23,9 +23,8 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -49,9 +48,8 @@ extension MyProductsViewModel {
             
             ProductProfileViewModel(
                 .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,

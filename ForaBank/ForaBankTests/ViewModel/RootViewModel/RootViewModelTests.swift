@@ -13,7 +13,7 @@ final class RootViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialValues() {
         
-        let (sut, _, _, _) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
         XCTAssertNoDiff(sut.selected, .main)
         XCTAssertNil(sut.alert)
@@ -209,17 +209,15 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview(),
+                qrViewModelFactory: .preview(),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: QRViewModel.preview,
                 sberQRServices: .empty(),
-                sberQRViewModelFactory: .preview()
+                qrViewModelFactory: .preview()
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

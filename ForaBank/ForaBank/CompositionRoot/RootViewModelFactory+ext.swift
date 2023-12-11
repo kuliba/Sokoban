@@ -36,6 +36,13 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
+        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
+        
+        let sberQRServices = Services.makeSberQRServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
         let qrResolve: QRViewModel.QRResolve = { string in
             
             let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
@@ -49,26 +56,22 @@ extension RootViewModelFactory {
             .init(closeAction: $0, qrResolve: qrResolve)
         }
         
-        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
-        
-        let sberQRServices = Services.makeSberQRServices(
-            httpClient: httpClient,
-            log: infoNetworkLog
-        )
-        
-#warning("STUB!")
-        let sberQRViewModelFactory = Services.makeSberQRViewModelFactory(
+        let makeSberQRConfirmPaymentViewModel = RootViewModelFactory.makeSberQRConfirmPaymentViewModel(
             model: model,
             logger: logger
+        )
+        
+        let qrViewModelFactory = QRViewModelFactory(
+            makeQRScannerModel: makeQRScannerModel,
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel
         )
         
         let makeProductProfileViewModel = {
             
             ProductProfileViewModel(
                 model,
-                makeQRScannerModel: makeQRScannerModel,
                 sberQRServices: sberQRServices,
-                sberQRViewModelFactory: sberQRViewModelFactory,
+                qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
                 rootView: $1,
@@ -79,9 +82,8 @@ extension RootViewModelFactory {
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeQRScannerModel: makeQRScannerModel,
             sberQRServices: sberQRServices,
-            sberQRViewModelFactory: sberQRViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
         )
     }
@@ -119,27 +121,24 @@ private extension RootViewModelFactory {
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
         sberQRServices: SberQRServices,
-        sberQRViewModelFactory: SberQRViewModelFactory,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeQRScannerModel: makeQRScannerModel,
             sberQRServices: sberQRServices,
-            sberQRViewModelFactory: sberQRViewModelFactory,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeQRScannerModel: makeQRScannerModel,
             sberQRServices: sberQRServices,
-            sberQRViewModelFactory: sberQRViewModelFactory
+            qrViewModelFactory: qrViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()

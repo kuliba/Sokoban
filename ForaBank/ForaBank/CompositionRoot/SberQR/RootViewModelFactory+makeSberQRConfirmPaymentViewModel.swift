@@ -1,5 +1,5 @@
 //
-//  Services+makeSberQRViewModelFactory.swift
+//  RootViewModelFactory+makeSberQRConfirmPaymentViewModel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 11.12.2023.
@@ -8,24 +8,9 @@
 import Foundation
 import SberQR
 
-extension Services {
+extension RootViewModelFactory {
     
-    static func makeSberQRViewModelFactory(
-        model: Model,
-        logger: LoggerAgentProtocol
-    ) -> SberQRViewModelFactory {
-        
-        let makeSberQRConfirmPaymentViewModel = makeSberQRConfirmPaymentViewModel(
-            model: model,
-            logger: logger
-        )
-        
-        return .init(
-            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel
-        )
-    }
-    
-    private static func makeSberQRConfirmPaymentViewModel(
+    static func makeSberQRConfirmPaymentViewModel(
         model: Model,
         logger: LoggerAgentProtocol
     ) -> MakeSberQRConfirmPaymentViewModel {

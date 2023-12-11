@@ -293,7 +293,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         )
         
         let spy = SberQRPaymentSpy()
-        let sberQRViewModelFactory = SberQRViewModelFactory(
+        let qrViewModelFactory = QRViewModelFactory(
+            makeQRScannerModel: QRViewModel.preview,
             makeSberQRConfirmPaymentViewModel: spy.make
         )
         
@@ -303,18 +304,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 ProductProfileViewModel(
                     model,
-                    makeQRScannerModel: QRViewModel.preview,
                     sberQRServices: sberQRServices,
-                    sberQRViewModelFactory: sberQRViewModelFactory,
+                    qrViewModelFactory: qrViewModelFactory,
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
                     dismissAction: dismissAction
                 )
             },
-            makeQRScannerModel: QRViewModel.preview,
             sberQRServices: sberQRServices,
-            sberQRViewModelFactory: sberQRViewModelFactory
+            qrViewModelFactory: qrViewModelFactory
         )
         
         // TODO: restore memory leaks tracking after Model fix
