@@ -761,7 +761,7 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = techErrorAlert { [weak self] in
+            alert = .techError { [weak self] in
                 
                 self?.alert = nil
             }
@@ -777,7 +777,7 @@ class MainViewModel: ObservableObject, Resetable {
 
                 link = .sberQRPayment(viewModel)
             } catch {
-                alert = techErrorAlert { [weak self] in
+                alert = .techError { [weak self] in
                     
                     self?.alert = nil
                 }
@@ -807,21 +807,6 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func techErrorAlert(
-        primaryAction: @escaping () -> Void
-    ) -> Alert.ViewModel {
-        
-        .init(
-            title: "Ошибка",
-            message: "Возникла техническая ошибка",
-            primary: .init(
-                type: .default,
-                title: "OK",
-                action: primaryAction
-            )
-        )
-    }
-    
     private func handleCreateSberQRPaymentResult(
         _ result: CreateSberQRPaymentResult
     ) {
@@ -831,7 +816,7 @@ class MainViewModel: ObservableObject, Resetable {
             
             switch result {
             case .failure:
-                self.alert = self.techErrorAlert { [weak self] in
+                self.alert = .techError { [weak self] in
                     
                     self?.link = nil
                     self?.alert = nil

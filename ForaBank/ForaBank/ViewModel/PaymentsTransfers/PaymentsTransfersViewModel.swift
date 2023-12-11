@@ -941,7 +941,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = techErrorAlert { [weak self] in
+            alert = .techError { [weak self] in
                 
                 self?.alert = nil
             }
@@ -957,7 +957,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
                 link = .sberQRPayment(viewModel)
             } catch {
-                alert = techErrorAlert { [weak self] in
+                alert = .techError { [weak self] in
                     
                     self?.alert = nil
                 }
@@ -974,7 +974,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
             
             switch result {
             case .failure:
-                self.alert = self.techErrorAlert { [weak self] in
+                self.alert = .techError { [weak self] in
                     
                     self?.alert = nil
                 }
@@ -988,21 +988,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         }
     }
     
-    private func techErrorAlert(
-        primaryAction: @escaping () -> Void
-    ) -> Alert.ViewModel {
-        
-        .init(
-            title: "Ошибка",
-            message: "Возникла техническая ошибка",
-            primary: .init(
-                type: .default,
-                title: "OK",
-                action: primaryAction
-            )
-        )
-    }
-
     private func sberQRPay(
         url: URL,
         state: SberQRConfirmPaymentState
