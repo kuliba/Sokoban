@@ -160,7 +160,7 @@ extension OperationStateViewModel {
 
 extension OperationStateViewModel {
     
-    public enum State {
+    public enum State: Equatable {
         
         case operation(Operation)
         case result(OperationResult)
