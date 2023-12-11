@@ -48,11 +48,6 @@ final public class OperationStateViewModel: ObservableObject {
         
         // TODO: setup error
     }
-    
-    public func updateOperation(with parameters: [Operation.Parameter]) {
-        
-        self.state = .operation(.init(parameters: parameters))
-    }
 }
 
 //MARK: Helpers
