@@ -239,7 +239,7 @@ final class MainViewModelTests: XCTestCase {
     ) -> (
         sut: MainViewModel,
         model: Model,
-        spy: SberQRPaymentSpy
+        spy: MakeSberQRConfirmPaymentViewModelSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         
@@ -248,7 +248,7 @@ final class MainViewModelTests: XCTestCase {
             getSberQRDataResultStub: getSberQRDataResultStub
         )
         
-        let spy = SberQRPaymentSpy()
+        let spy = MakeSberQRConfirmPaymentViewModelSpy()
         let qrViewModelFactory = QRViewModelFactory(
             makeQRScannerModel: QRViewModel.preview,
             makeSberQRConfirmPaymentViewModel: spy.make

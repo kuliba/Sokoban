@@ -1,5 +1,5 @@
 //
-//  SberQRPaymentSpy.swift
+//  MakeSberQRConfirmPaymentViewModelSpy.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 05.12.2023.
@@ -9,7 +9,7 @@
 import Foundation
 import SberQR
 
-final class SberQRPaymentSpy {
+final class MakeSberQRConfirmPaymentViewModelSpy {
     
     typealias Completion = CreateSberQRPaymentCompletion
     typealias Message = (URL, GetSberQRDataResponse, completion: Completion)
