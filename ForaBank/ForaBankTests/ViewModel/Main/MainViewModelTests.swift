@@ -242,18 +242,22 @@ final class MainViewModelTests: XCTestCase {
         spy: SberQRPaymentSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
+        
+        let sberQRServices = SberQRServices.preview(
+            createSberQRPaymentStub: createSberQRPaymentStub,
+            getSberQRDataStub: getSberQRDataResultStub
+        )
+        
         let spy = SberQRPaymentSpy()
         let qrViewModelFactory = QRViewModelFactory(
             makeQRScannerModel: QRViewModel.preview,
             makeSberQRConfirmPaymentViewModel: spy.make
         )
+        
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            sberQRServices: .preview(
-                createSberQRPaymentStub: createSberQRPaymentStub,
-                getSberQRDataStub: getSberQRDataResultStub
-            ),
+            sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: {}
         )
