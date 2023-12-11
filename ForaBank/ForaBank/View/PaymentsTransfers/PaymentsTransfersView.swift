@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import SberQR
 import SwiftUI
 
 struct PaymentsTransfersView: View {
@@ -35,7 +36,6 @@ struct PaymentsTransfersView: View {
                             EmptyView()
                         }
                     }
-                    
                 } //mainVerticalScrollView
             } //mainVStack
             
@@ -70,10 +70,11 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .bottomSheet(
+            item: $viewModel.bottomSheet, 
+            content: bottomSheetView
+        )
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
     
@@ -186,7 +187,7 @@ struct PaymentsTransfersView: View {
             OpenDepositView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
+            SberQRConfirmPaymentWrapperView(viewModel: sberQRPaymentViewModel)
         }
     }
     
@@ -307,6 +308,10 @@ struct PaymentsTransfersView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -327,7 +332,6 @@ extension PaymentsTransfersView {
     }
 }
 
-
 extension PaymentsTransfersView {
     
     //MARK: - ViewBarButton
@@ -346,13 +350,14 @@ extension PaymentsTransfersView {
             }
         }
     }
-    
 }
 
 //MARK: - Preview
 
 struct Payments_TransfersView_Previews: PreviewProvider {
+    
     static var previews: some View {
+        
         PaymentsTransfersView(viewModel: .sample)
             .previewDevice(PreviewDevice(rawValue: "iPhone X 15.4"))
             .previewDisplayName("iPhone X")
@@ -372,9 +377,5 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(viewModel: .sample)
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
-        
     }
 }
-
-
-
