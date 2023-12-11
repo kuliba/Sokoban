@@ -179,8 +179,33 @@ final class OperationStateViewModelTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+    private final class Spy {
+        
+        private(set) var messages = [(request: Request, completion: Completion)]()
 
-        return sut
+        var callCount: Int { messages.count }
+        var requests: [Request] { messages.map(\.request) }
+        
+        func process(
+            _ request: Request,
+            _ completion: @escaping Completion
+        ) {
+         
+            messages.append((request, completion))
+        }
+        
+        func complete(
+            with result: BlackBoxAPI.Result,
+            at index: Int = 0
+        ) {
+            
+            messages[index].completion(result)
+        }
+    }
+    
+    func anyEvent() -> Event {
+        
+        Event.continueButtonTapped(.continue)
     }
     
     private func makeOperationState(
