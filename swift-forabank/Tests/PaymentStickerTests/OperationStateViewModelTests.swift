@@ -165,20 +165,28 @@ final class OperationStateViewModelTests: XCTestCase {
     //MARK: Helpers
     
     typealias Parameter = PaymentSticker.Operation.Parameter
+    private typealias Request = BlackBoxAPI.Request
+    private typealias Completion = BlackBoxAPI.Completion
     
     private func makeSUT(
         state: OperationStateViewModel.OperationStateTests,
         parameters: [Parameter] = [],
         file: StaticString = #file,
         line: UInt = #line
-    ) -> OperationStateViewModel {
+    ) -> (OperationStateViewModel, Spy) {
         
+        let spy = Spy()
         let sut = OperationStateViewModel(
             state: makeOperationState(state: state, parameters: parameters),
-            blackBoxGet: { _,_ in }
+            blackBoxGet: spy.process
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+
+        return (sut, spy)
+    }
+    
     private final class Spy {
         
         private(set) var messages = [(request: Request, completion: Completion)]()
