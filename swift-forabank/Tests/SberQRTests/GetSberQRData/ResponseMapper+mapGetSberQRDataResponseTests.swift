@@ -70,6 +70,26 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         assert(result, equals: .success(responseWithEditableAmount(amount: 0)))
     }
     
+    func test_mapGetSberQRDataResponse_getSberQRData_any_sum() throws {
+        
+        let result = try map(getSberQRData_any_sumURL)
+        
+        assert(result, equals: .success(responseWithEditableAmount(
+            qrcID: "fa0926661ff048658407b4b57a35fc66",
+            brand: "Тест Макусов. Кутуза_07",
+            amount: 0
+        )))
+    }
+    
+    func test_mapGetSberQRDataResponse_getSberQRData_fix_sum() throws {
+        
+        let result = try map(getSberQRData_fix_sumURL)
+        
+        assert(result, equals: .success(responseWithFixedAmount(
+            qrcID: "48b1446882844284bc6bac9bb3e5062d"
+        )))
+    }
+    
     // MARK: - Helpers
     
     private func map(
@@ -89,6 +109,18 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     ) -> ResponseMapper.GetSberQRDataResult {
         
         map(Data(string.utf8), httpURLResponse)
+    }
+    
+    private func map(
+        _ filename: URL?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> ResponseMapper.GetSberQRDataResult {
+        
+        let url = try XCTUnwrap(filename, file: file, line: line)
+        let contents = try Data(contentsOf: url)
+        
+        return map(contents, anyHTTPURLResponse())
     }
     
     private func assert(
