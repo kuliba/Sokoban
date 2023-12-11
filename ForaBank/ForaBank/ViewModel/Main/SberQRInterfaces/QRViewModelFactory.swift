@@ -21,7 +21,14 @@ extension QRViewModelFactory {
         
         .init(
             makeQRScannerModel: QRViewModel.preview,
-            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview
+            makeSberQRConfirmPaymentViewModel: { _,_,_,_ in
+                
+                SberQRConfirmPaymentViewModel(
+                    initialState: .editableAmount(.preview),
+                    reduce: { state, _ in state },
+                    scheduler: .makeMain()
+                )
+            }
         )
     }
 }

@@ -25,10 +25,10 @@ final class MakeSberQRConfirmPaymentViewModelSpy {
         
         messages.append((url, data, completion))
         
-        return SberQRConfirmPaymentViewModel.preview(
-            sberQRURL: url, 
-            sberQRData: data, 
-            commit: completion
+        return SberQRConfirmPaymentViewModel(
+            initialState: <#T##State#>,
+            reduce: <#T##Reduce#>,
+            scheduler: .immediate
         )
     }
     
