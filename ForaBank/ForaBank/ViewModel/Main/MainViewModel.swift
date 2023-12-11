@@ -761,10 +761,7 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         switch result {
         case .failure:
-            alert = .techError { [weak self] in
-                
-                self?.alert = nil
-            }
+            alert = .techError { [weak self] in self?.alert = nil }
             
         case let .success(getSberQRDataResponse):
             do {
