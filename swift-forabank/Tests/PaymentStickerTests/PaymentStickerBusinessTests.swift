@@ -11,15 +11,20 @@ import XCTest
 
 final class PaymentStickerBusinessTests: XCTestCase {
     
-    func test_init_shouldNotCallTransfer() {
+    func test_init() {
         
+        let (sut, spy) = makeSUT()
+        spy.events
         
     }
 }
 
-extension PaymentStickerBusinessTests {
+private extension PaymentStickerBusinessTests {
     
-    func makeSUT() -> OperationStateViewModel {
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (OperationStateViewModel, Spy) {
         
         let businessLogic = PaymentSticker.BusinessLogic(
             processDictionaryService: {_,_  in},
@@ -30,10 +35,28 @@ extension PaymentStickerBusinessTests {
             products: [],
             cityList: []
         )
-        let sut = OperationStateViewModel(blackBoxGet: businessLogic.operationResult)
         
-        return sut
+        let sut = OperationStateViewModel(
+            blackBoxGet: businessLogic.operationResult
+        )
+        let spy = Spy()
+        
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+
+        return (sut, spy)
     }
+    
+    class Spy {
+        
+        private (set) var events = [Event]()
+        
+        func event(event: Event) {
+            
+            events.append(event)
+        }
+    }
+
 }
 
 private extension BusinessLogic {
