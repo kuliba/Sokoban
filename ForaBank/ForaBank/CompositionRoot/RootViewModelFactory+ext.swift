@@ -49,18 +49,12 @@ extension RootViewModelFactory {
             qrResolverFeatureFlag: qrResolverFeatureFlag
         )
         
-        let makeProductProfileViewModel = {
-            
-            ProductProfileViewModel(
-                model,
-                sberQRServices: sberQRServices,
-                qrViewModelFactory: qrViewModelFactory,
-                cvvPINServicesClient: cvvPINServicesClient,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
+        let makeProductProfileViewModel = ProductProfileViewModel.make(
+            with: model,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
+            cvvPINServicesClient: cvvPINServicesClient
+        )
         
         return make(
             model: model,
@@ -69,6 +63,31 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
         )
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+
+    static func make(
+        with model: Model,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
+        cvvPINServicesClient: CVVPINServicesClient
+    ) -> MakeProductProfileViewModel {
+        
+        return { product, rootView, dismissAction in
+                .init(
+                    model,
+                    sberQRServices: sberQRServices,
+                    qrViewModelFactory: qrViewModelFactory,
+                    cvvPINServicesClient: cvvPINServicesClient,
+                    product: product,
+                    rootView: rootView,
+                    dismissAction: dismissAction
+                )
+        }
     }
 }
 

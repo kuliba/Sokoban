@@ -300,18 +300,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sut = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: { product, rootView, dismissAction in
-                
-                ProductProfileViewModel(
-                    model,
-                    sberQRServices: sberQRServices,
-                    qrViewModelFactory: qrViewModelFactory,
-                    cvvPINServicesClient: cvvPINServicesClient,
-                    product: product,
-                    rootView: rootView,
-                    dismissAction: dismissAction
-                )
-            },
+            makeProductProfileViewModel: ProductProfileViewModel.make(
+                with: model,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                cvvPINServicesClient: cvvPINServicesClient
+            ),
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory
         )

@@ -77,18 +77,12 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         navButtonsRight: [

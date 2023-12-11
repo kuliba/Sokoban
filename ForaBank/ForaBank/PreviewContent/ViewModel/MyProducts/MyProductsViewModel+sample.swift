@@ -19,18 +19,12 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
         refreshingIndicator: .init(isActive: true)
     )
     
@@ -44,18 +38,12 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                sberQRServices: .empty(),
-                qrViewModelFactory: .preview(),
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false]
     )
