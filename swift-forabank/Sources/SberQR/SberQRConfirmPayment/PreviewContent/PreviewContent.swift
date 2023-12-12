@@ -10,8 +10,8 @@ public extension SberQRConfirmPaymentState.EditableAmount {
     static let preview: Self = .init(
         header: .preview,
         productSelect: .preview,
-        brandName: .preview(.brandName),
-        recipientBank: .preview(.recipientBank),
+        brandName: .brandName,
+        recipientBank: .recipientBank,
         currency: .preview,
         bottom: .preview
     )
@@ -22,9 +22,9 @@ extension SberQRConfirmPaymentState.FixedAmount {
     static let preview: Self = .init(
         header: .preview,
         productSelect: .preview,
-        brandName: .preview(.brandName),
-        amount: .preview(.amount),
-        recipientBank: .preview(.recipientBank),
+        brandName: .brandName,
+        amount: .amount,
+        recipientBank: .recipientBank,
         bottom: .preview
     )
 }
@@ -138,22 +138,4 @@ extension SberQRConfirmPaymentState.Header {
         id: .title,
         value: "Title"
     )
-}
-
-extension SberQRConfirmPaymentState.Info {
-    
-    static func preview(
-        _ id: SberQRConfirmPaymentState.Info.ID
-    ) -> Self {
-        
-        .init(
-            id: id,
-            value: "",
-            title: "",
-            icon: .init(
-                type: .local,
-                value: ""
-            )
-        )
-    }
 }

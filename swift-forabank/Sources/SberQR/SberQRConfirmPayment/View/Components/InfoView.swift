@@ -25,9 +25,9 @@ struct InfoView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            InfoView(info: .preview(.amount))
-            InfoView(info: .preview(.brandName))
-            InfoView(info: .preview(.recipientBank))
+            InfoView(info: .amount)
+            InfoView(info: .brandName)
+            InfoView(info: .recipientBank)
         }
     }
 }
