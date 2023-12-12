@@ -50,6 +50,15 @@ final public class OperationStateViewModel: ObservableObject {
     }
 }
 
+extension OperationStateViewModel {
+    
+    public enum State: Equatable {
+        
+        case operation(Operation)
+        case result(OperationResult)
+    }
+}
+
 //MARK: Helpers
 
 extension OperationStateViewModel {
@@ -61,15 +70,6 @@ extension OperationStateViewModel {
         }
         
         return operation
-    }
-}
-
-extension OperationStateViewModel {
-    
-    public enum State: Equatable {
-        
-        case operation(Operation)
-        case result(OperationResult)
     }
 }
 
