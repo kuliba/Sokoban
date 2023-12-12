@@ -34,7 +34,36 @@ extension ProductSelect {
     static let preview: Self = .compact(.cardPreview)
 }
 
+extension Array where Element == ProductSelect.Product {
+    
+    static let allProducts: Self = [
+        .accountPreview,
+        .account2Preview,
+        .cardPreview,
+        .card2Preview,
+        .card3Preview,
+    ]
+}
+
 extension ProductSelect.Product {
+    
+    static let accountPreview: Self = .init(
+        id: 234567891,
+        type: .account,
+        icon: "",
+        title: "Account",
+        amountFormatted: "",
+        color: ""
+    )
+    
+    static let account2Preview: Self = .init(
+        id: 2345678912,
+        type: .account,
+        icon: "",
+        title: "Account 2",
+        amountFormatted: "",
+        color: ""
+    )
     
     static let cardPreview: Self = .init(
         id: 123456789,
@@ -45,11 +74,20 @@ extension ProductSelect.Product {
         color: ""
     )
     
-    static let accountPreview: Self = .init(
-        id: 234567891,
-        type: .account,
+    static let card2Preview: Self = .init(
+        id: 1234567892,
+        type: .card,
         icon: "",
-        title: "Account",
+        title: "Card 2",
+        amountFormatted: "",
+        color: ""
+    )
+    
+    static let card3Preview: Self = .init(
+        id: 1234567893,
+        type: .card,
+        icon: "",
+        title: "Card 3",
         amountFormatted: "",
         color: ""
     )

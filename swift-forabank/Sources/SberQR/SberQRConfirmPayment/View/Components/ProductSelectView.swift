@@ -117,7 +117,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         VStack(spacing: 32) {
             
             ProductSelectView_Demo(.compact(.cardPreview))
-            ProductSelectView_Demo(.expanded(.cardPreview, [.cardPreview, .accountPreview]))
+            ProductSelectView_Demo(.expanded(.cardPreview, .allProducts))
         }
         .padding()
     }
@@ -132,7 +132,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             
             self._state = .init(initialValue: state)
             
-            let reducer = ProductSelectReducer(getProducts: { [.cardPreview, .accountPreview] })
+            let reducer = ProductSelectReducer(getProducts: { .allProducts })
             self.reduce = reducer.reduce(_:_:)
         }
         
