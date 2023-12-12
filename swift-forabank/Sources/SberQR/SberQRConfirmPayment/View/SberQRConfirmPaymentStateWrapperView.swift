@@ -1,6 +1,6 @@
 //
 //  SberQRConfirmPaymentStateWrapperView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -11,14 +11,22 @@ struct SberQRConfirmPaymentStateWrapperView: View {
     
     @StateObject private var viewModel: SberQRConfirmPaymentViewModel
     
-    init(viewModel: SberQRConfirmPaymentViewModel) {
-     
+    private let config: Config
+    
+    init(
+        viewModel: SberQRConfirmPaymentViewModel,
+        config: Config
+    ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.config = config
     }
     
     var body: some View {
         
-        SberQRConfirmPaymentWrapperView(viewModel: viewModel)
+        SberQRConfirmPaymentWrapperView(
+            viewModel: viewModel,
+            config: config
+        )
     }
 }
 
@@ -30,13 +38,19 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
         
         Group {
             
-            SberQRConfirmPaymentStateWrapperView(viewModel: .preview(
-                initialState: .fixedAmount(.preview)
-            ))
+            SberQRConfirmPaymentStateWrapperView(
+                viewModel: .preview(
+                    initialState: .fixedAmount(.preview)
+                ),
+                config: .default
+            )
             
-            SberQRConfirmPaymentStateWrapperView(viewModel: .preview(
-                initialState: .editableAmount(.preview)
-            ))
+            SberQRConfirmPaymentStateWrapperView(
+                viewModel: .preview(
+                    initialState: .editableAmount(.preview)
+                ),
+                config: .default
+            )
         }
     }
 }
