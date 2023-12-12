@@ -14,7 +14,7 @@ struct DecoratedProductSelectView: View {
     let state: ProductSelect
     let event: (Event) -> Void
     let backgroundColor: Color
-    let config: Config.ProductSelectViewConfig
+    let config: ProductSelectViewConfig
     
     var body: some View {
         

@@ -13,7 +13,7 @@ struct ProductSelectView: View {
     
     let state: ProductSelect
     let event: (Event) -> Void
-    let config: Config.ProductSelectViewConfig
+    let config: ProductSelectViewConfig
     
     var body: some View {
         
@@ -46,7 +46,7 @@ struct ProductSelectView: View {
     
     private func productTitle(
         _ product: ProductSelect.Product,
-        config: Config.ProductSelectViewConfig
+        config: ProductSelectViewConfig
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 0) {
@@ -65,12 +65,13 @@ struct ProductSelectView: View {
             }
             
             text(product.footer, config: config.footer)
+                .padding(.top, 4)
         }
     }
     
     private func text(
         _ text: String,
-        config: Config.ProductSelectViewConfig.TextConfig
+        config: ProductSelectViewConfig.TextConfig
     ) -> some View {
         
         Text(text)
@@ -182,10 +183,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             
             ProductSelectView(
                 state: state,
-                event: { event in
-                    
-                    self.state = reduce(state, event)
-                },
+                event: { state = reduce(state, $0) },
                 config: .default
             )
             .border(.red)
