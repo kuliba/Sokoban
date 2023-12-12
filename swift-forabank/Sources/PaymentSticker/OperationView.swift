@@ -427,14 +427,14 @@ extension OperationStateViewModel {
                 if transferType?.value == "typeDeliveryCourier" {
                     
                     if let maxAmount = self.banner?.options.map({ $0.price }).max(),
-                       Double(self.product?.selectedProduct.balance ?? "0") ?? 0 < maxAmount {
+                       self.product?.selectedProduct.balance ?? 0 < maxAmount {
                         
                         return false
                     }
                 } else if transferType?.value == "typeDeliveryOffice" {
                     
                     if let minAmount = self.banner?.options.map({ $0.price }).min(),
-                       Double(self.product?.selectedProduct.balance ?? "0") ?? 0 < minAmount {
+                       self.product?.selectedProduct.balance ?? 0 < minAmount {
                         
                         complete = false
                     }
