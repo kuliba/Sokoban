@@ -63,10 +63,10 @@ extension ProductData {
                 id: .init(card.id),
                 type: .card,
                 icon: "",
-                title: "",
-                footer: "",
+                title: card.displayName,
+                footer: card.displayNumber ?? "",
                 amountFormatted: "",
-                color: ""
+                color: card.backgroundColor.description
             )
         }
         
@@ -76,10 +76,10 @@ extension ProductData {
                 id: .init(account.id),
                 type: .account,
                 icon: "",
-                title: "",
-                footer: "",
+                title: account.displayName,
+                footer: account.displayNumber ?? "",
                 amountFormatted: "",
-                color: ""
+                color: account.backgroundColor.description
             )
         }
         
