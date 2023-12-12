@@ -12,6 +12,16 @@ public struct Config {
     let background: Background
     let info: InfoConfig
     let productSelectView: ProductSelectViewConfig
+    
+    public init(
+        background: Background,
+        info: InfoConfig,
+        productSelectView: ProductSelectViewConfig
+    ) {
+        self.background = background
+        self.info = info
+        self.productSelectView = productSelectView
+    }
 }
 
 public extension Config {
@@ -19,5 +29,10 @@ public extension Config {
     struct Background {
         
         let color: Color
+        
+        public init(color: Color) {
+         
+            self.color = color
+        }
     }
 }

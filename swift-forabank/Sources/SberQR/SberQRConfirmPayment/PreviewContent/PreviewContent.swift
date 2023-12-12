@@ -17,7 +17,7 @@ public extension SberQRConfirmPaymentState.EditableAmount {
     )
 }
 
-extension SberQRConfirmPaymentState.FixedAmount {
+public extension SberQRConfirmPaymentState.FixedAmount {
     
     static let preview: Self = .init(
         header: .preview,
@@ -35,7 +35,7 @@ extension ProductSelect {
     static let previewExpanded: Self = .expanded(.accountPreview, .allProducts)
 }
 
-extension Array where Element == ProductSelect.Product {
+public extension Array where Element == ProductSelect.Product {
     
     static let allProducts: Self = [
         .accountPreview,
@@ -48,7 +48,7 @@ extension Array where Element == ProductSelect.Product {
 
 extension ProductSelect.Product {
     
-    static let accountPreview: Self = .init(
+    public static let accountPreview: Self = .init(
         id: 234567891,
         type: .account,
         icon: "",
@@ -68,7 +68,7 @@ extension ProductSelect.Product {
         color: ""
     )
     
-    static let cardPreview: Self = .init(
+    public static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
         icon: "",

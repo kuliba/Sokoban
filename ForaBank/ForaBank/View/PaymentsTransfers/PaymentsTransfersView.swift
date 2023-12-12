@@ -187,7 +187,10 @@ struct PaymentsTransfersView: View {
             OpenDepositView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            SberQRConfirmPaymentWrapperView(viewModel: sberQRPaymentViewModel)
+            SberQRConfirmPaymentWrapperView(
+                viewModel: sberQRPaymentViewModel,
+                config: .iFora
+            )
         }
     }
     

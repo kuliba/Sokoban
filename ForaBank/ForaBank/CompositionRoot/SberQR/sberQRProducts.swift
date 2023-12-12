@@ -64,6 +64,7 @@ extension ProductData {
                 type: .card,
                 icon: "",
                 title: "",
+                footer: "",
                 amountFormatted: "",
                 color: ""
             )
@@ -76,6 +77,7 @@ extension ProductData {
                 type: .account,
                 icon: "",
                 title: "",
+                footer: "",
                 amountFormatted: "",
                 color: ""
             )
