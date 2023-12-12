@@ -20,6 +20,8 @@ extension RootViewModelFactory {
             let getProducts = { [weak model] in
                 
                 (model?.allProducts ?? [])
+                    .filter(\.allowDebit)
+                    .filter(\.isMain)
                     .mapToSberQRProducts(response: response)
             }
             
@@ -42,5 +44,23 @@ extension RootViewModelFactory {
             
             return viewModel
         }
+    }
+}
+
+private extension ProductData {
+    
+    var isMain: Bool {
+        
+        if let card = self as? ProductCardData {
+            
+            return card.isMain
+        }
+        
+        if self is ProductAccountData {
+            
+            return true
+        }
+        
+        return false
     }
 }
