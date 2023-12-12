@@ -71,7 +71,7 @@ struct ProductSelectView: View {
     
     private func text(
         _ text: String,
-        config: ProductSelectViewConfig.TextConfig
+        config: TextConfig
     ) -> some View {
         
         Text(text)
@@ -108,7 +108,7 @@ struct ProductSelectView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-             
+                
                 text(product.title, config: config.card.title)
                 
                 text(product.amountFormatted, config: config.card.amount)

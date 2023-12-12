@@ -14,20 +14,38 @@ public struct ProductSelectViewConfig {
     let footer: TextConfig
     let header: TextConfig
     let title: TextConfig
+    
+    public init(
+        amount: TextConfig,
+        card: Card,
+        footer: TextConfig,
+        header: TextConfig,
+        title: TextConfig
+    ) {
+        self.amount = amount
+        self.card = card
+        self.footer = footer
+        self.header = header
+        self.title = title
+    }
 }
 
 public extension ProductSelectViewConfig {
     
-    struct TextConfig {
-        
-        let textFont: Font
-        let textColor: Color
-    }
-
     struct Card {
         
         let amount: TextConfig
         let number: TextConfig
         let title: TextConfig
+        
+        public init(
+            amount: TextConfig,
+            number: TextConfig,
+            title: TextConfig
+        ) {
+            self.amount = amount
+            self.number = number
+            self.title = title
+        }
     }
 }

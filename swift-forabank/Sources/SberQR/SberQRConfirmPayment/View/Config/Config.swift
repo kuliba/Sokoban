@@ -10,6 +10,7 @@ import SwiftUI
 public struct Config {
     
     let background: Background
+    let infoConfig: InfoConfig
     let productSelectViewConfig: ProductSelectViewConfig
 }
 

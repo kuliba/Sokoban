@@ -39,8 +39,16 @@ struct EditableAmountSberQRConfirmPaymentView: View {
                 config: config.productSelectViewConfig
             )
 
-            InfoView(info: state.brandName)
-            InfoView(info: state.recipientBank)
+            InfoView(
+                info: state.brandName,
+                config: config.infoConfig
+            )
+            
+            InfoView(
+                info: state.recipientBank,
+                config: config.infoConfig
+            )
+            
             DataStringView(data: state.currency)
         }
     }
