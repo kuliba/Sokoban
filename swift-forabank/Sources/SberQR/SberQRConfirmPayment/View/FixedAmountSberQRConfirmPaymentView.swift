@@ -35,6 +35,7 @@ struct FixedAmountSberQRConfirmPaymentView: View {
                 state: state.productSelect,
                 event: { event(.productSelect($0)) }
             )
+            .animation(.easeInOut, value: state.productSelect)
             .padding(10)
             .background(config.background.color)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))

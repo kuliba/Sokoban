@@ -12,7 +12,8 @@ struct EditableAmountSberQRConfirmPaymentView: View {
     let state: SberQRConfirmPaymentState.EditableAmount
     let event: (SberQRConfirmPaymentEvent.EditableAmount) -> Void
     let pay: () -> Void
-    
+    let config: Config
+
     var body: some View {
         
         FeedWithBottomView(feed: feed) {
@@ -30,10 +31,16 @@ struct EditableAmountSberQRConfirmPaymentView: View {
         Group {
             
             HeaderView(header: state.header)
+
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) }
             )
+            .animation(.easeInOut, value: state.productSelect)
+            .padding(10)
+            .background(config.background.color)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
+
             InfoView(info: state.brandName)
             InfoView(info: state.recipientBank)
             DataStringView(data: state.currency)
@@ -57,7 +64,8 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
         EditableAmountSberQRConfirmPaymentView(
             state: state,
             event: { _ in },
-            pay: {}
+            pay: {},
+            config: .default
         )
     }
 }

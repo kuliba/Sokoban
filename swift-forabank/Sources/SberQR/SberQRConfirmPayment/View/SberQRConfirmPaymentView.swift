@@ -20,7 +20,8 @@ struct SberQRConfirmPaymentView: View {
             EditableAmountSberQRConfirmPaymentView(
                 state: editableAmount,
                 event: { event(.editable($0)) }, 
-                pay: { event(.pay) }
+                pay: { event(.pay) },
+                config: config
             )
             
         case let .fixedAmount(fixedAmount):
