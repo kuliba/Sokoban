@@ -29,7 +29,7 @@ public extension Operation.Parameter {
             let id: Int
             let title: String
             let nameProduct: String
-            let balance: String
+            let balance: Double
             let balanceFormatted: String
             let description: String
             let cardImage: ImageData
@@ -41,7 +41,7 @@ public extension Operation.Parameter {
                 id: Int,
                 title: String,
                 nameProduct: String,
-                balance: String,
+                balance: Double,
                 balanceFormatted: String,
                 description: String,
                 cardImage: ImageData,
