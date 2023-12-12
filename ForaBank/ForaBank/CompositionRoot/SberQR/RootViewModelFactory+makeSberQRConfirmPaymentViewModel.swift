@@ -19,10 +19,7 @@ extension RootViewModelFactory {
             
             let getProducts = { [weak model] in
                 
-                (model?.allProducts ?? [])
-                    .filter(\.allowDebit)
-                    .filter(\.isMain)
-                    .mapToSberQRProducts(response: response)
+                model?.sberQRProducts(response) ?? []
             }
             
             struct EmptySberQRProductsError: Error {}
@@ -44,6 +41,19 @@ extension RootViewModelFactory {
             
             return viewModel
         }
+    }
+}
+
+private extension Model {
+    
+    func sberQRProducts(
+        _ response: GetSberQRDataResponse
+    ) -> [ProductSelect.Product] {
+        
+        allProducts
+            .filter(\.allowDebit)
+            .filter(\.isMain)
+            .mapToSberQRProducts(response: response)
     }
 }
 
