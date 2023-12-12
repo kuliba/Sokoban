@@ -37,17 +37,17 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelectViewConfig
+                config: config.productSelectView
             )
 
             InfoView(
                 info: state.brandName,
-                config: config.infoConfig
+                config: config.info
             )
             
             InfoView(
                 info: state.recipientBank,
-                config: config.infoConfig
+                config: config.info
             )
             
             // DataStringView(data: state.currency)

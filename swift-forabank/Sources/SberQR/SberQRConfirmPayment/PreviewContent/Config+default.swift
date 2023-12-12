@@ -11,8 +11,8 @@ extension Config {
     
     static let `default`: Self = .init(
         background: .default,
-        infoConfig: .default,
-        productSelectViewConfig: .default
+        info: .default,
+        productSelectView: .default
     )
 }
 
