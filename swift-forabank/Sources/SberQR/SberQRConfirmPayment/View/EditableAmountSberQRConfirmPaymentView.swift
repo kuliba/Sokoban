@@ -35,7 +35,8 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             DecoratedProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                backgroundColor: config.background.color
+                backgroundColor: config.background.color,
+                config: config.productSelectViewConfig
             )
 
             InfoView(info: state.brandName)

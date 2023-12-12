@@ -13,6 +13,7 @@ struct ProductSelectView: View {
     
     let state: ProductSelect
     let event: (Event) -> Void
+    let config: Config.ProductSelectViewConfig
     
     var body: some View {
         
@@ -27,15 +28,23 @@ struct ProductSelectView: View {
         _ product: ProductSelect.Product
     ) -> some View {
         
-        HStack {
+        HStack(spacing: 12) {
+            
+            Image(product.icon)
+                .resizable()
+                .frame(width: 32, height: 32)
             
             Text(state.product.title)
-                .onTapGesture { event(.toggleProductSelect) }
+                .font(config.title.textFont)
+                .foregroundColor(config.title.textColor)
+            
             
             Spacer()
             
             chevron()
         }
+        .contentShape(Rectangle())
+        .onTapGesture { event(.toggleProductSelect) }
     }
     
     @ViewBuilder
@@ -43,9 +52,9 @@ struct ProductSelectView: View {
         products: [ProductSelect.Product]
     ) -> some View {
         
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            HStack {
+            HStack(spacing: 10) {
                 
                 ForEach(products, content: productCardView)
             }
@@ -110,6 +119,8 @@ private extension ProductSelect {
     }
 }
 
+// MARK: - Previews
+
 struct ProductSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -143,7 +154,8 @@ struct ProductSelectView_Previews: PreviewProvider {
                 event: { event in
                     
                     self.state = reduce(state, event)
-                }
+                },
+                config: .default
             )
             .border(.red)
         }

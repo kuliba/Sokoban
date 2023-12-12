@@ -10,8 +10,24 @@ import SwiftUI
 extension Config {
     
     static let `default`: Self = .init(
-        background: .init(
-            color: .gray.opacity(0.2)
+        background: .default,
+        productSelectViewConfig: .default
+    )
+}
+
+extension Config.Background {
+    
+    static let `default`: Self = .init(
+        color: .gray.opacity(0.2)
+    )
+}
+
+extension Config.ProductSelectViewConfig {
+    
+    static let `default`: Self = .init(
+        title: .init(
+            textFont: .headline,
+            textColor: .green
         )
     )
 }

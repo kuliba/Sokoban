@@ -14,10 +14,11 @@ struct DecoratedProductSelectView: View {
     let state: ProductSelect
     let event: (Event) -> Void
     let backgroundColor: Color
+    let config: Config.ProductSelectViewConfig
     
     var body: some View {
         
-        ProductSelectView(state: state, event: event)
+        ProductSelectView(state: state, event: event, config: config)
             .animation(.easeInOut, value: state)
             .padding(10)
             .background(backgroundColor)
@@ -55,7 +56,8 @@ struct DecoratedProductSelectView_Previews: PreviewProvider {
         DecoratedProductSelectView(
             state: state,
             event: { _ in },
-            backgroundColor: .pink.opacity(0.1)
+            backgroundColor: .pink.opacity(0.1),
+            config: .default
         )
     }
 }
