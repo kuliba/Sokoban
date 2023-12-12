@@ -31,15 +31,12 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             
             HeaderView(header: state.header)
 
-            ProductSelectView(
+            DecoratedProductSelectView(
                 state: state.productSelect,
-                event: { event(.productSelect($0)) }
+                event: { event(.productSelect($0)) },
+                backgroundColor: config.background.color
             )
-            .animation(.easeInOut, value: state.productSelect)
-            .padding(10)
-            .background(config.background.color)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .circular))
-            
+
             InfoView(info: state.brandName)
             InfoView(info: state.amount)
             InfoView(info: state.recipientBank)
