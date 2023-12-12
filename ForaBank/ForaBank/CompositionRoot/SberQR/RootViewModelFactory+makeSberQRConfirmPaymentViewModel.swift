@@ -52,18 +52,53 @@ private extension Model {
         
         allProducts
             .filter(\.allowDebit)
-            .filter(\.isMain)
-            .mapToSberQRProducts(response: response)
+            .filter(\.isMainProduct)
+            .mapToSberQRProducts(
+                response: response,
+                formatBalance: { [weak self] in
+                    
+                    self?.formattedBalance(of: $0) ?? ""
+                }
+            )
+    }
+}
+
+extension Model {
+    
+    func formattedBalance(
+        of product: ProductData
+    ) -> String? {
+        
+        if let card = product as? ProductCardData {
+            
+            return amountFormatted(
+                amount: card.balanceValue,
+                currencyCode: card.currency,
+                style: .clipped
+            )
+        }
+        
+        if let account = product as? ProductAccountData {
+            
+            return amountFormatted(
+                amount: account.balanceValue,
+                currencyCode: account.currency,
+                style: .clipped
+            )
+        }
+        
+        return nil
     }
 }
 
 private extension ProductData {
     
-    var isMain: Bool {
+    var isMainProduct: Bool {
         
-        if let card = self as? ProductCardData {
+        if let card = self as? ProductCardData,
+           let isMain = card.isMain {
             
-            return card.isMain
+            return isMain
         }
         
         if self is ProductAccountData {

@@ -10,31 +10,36 @@ import SberQR
 extension Array where Element == ProductData {
     
     func mapToSberQRProducts(
-        response: GetSberQRDataResponse
+        response: GetSberQRDataResponse,
+        formatBalance: @escaping (ProductData) -> String
     ) -> [ProductSelect.Product] {
         
         mapToSberQRProducts(
             productTypes: response.productTypes,
-            currencies: response.currencies
+            currencies: response.currencies,
+            formatBalance: formatBalance
         )
     }
     
     func mapToSberQRProducts(
         productTypes: [ProductType],
-        currencies: [String]
+        currencies: [String],
+        formatBalance: @escaping (ProductData) -> String
     ) -> [ProductSelect.Product] {
         
         self.filter {
                 productTypes.contains($0.productType)
                 && currencies.contains($0.currency)
             }
-            .compactMap(\.sberQRProduct)
+        .compactMap { $0.sberQRProduct(formatBalance: formatBalance) }
     }
 }
 
 extension ProductData {
     
-    var sberQRProduct: ProductSelect.Product? {
+    func sberQRProduct(
+        formatBalance: @escaping (ProductData) -> String
+    ) -> ProductSelect.Product? {
         
         if let card = self as? ProductCardData {
             
@@ -44,7 +49,7 @@ extension ProductData {
                 icon: "",
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
-                amountFormatted: "",
+                amountFormatted: formatBalance(card),
                 color: card.backgroundColor.description
             )
         }
@@ -57,7 +62,7 @@ extension ProductData {
                 icon: "",
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
-                amountFormatted: "",
+                amountFormatted: formatBalance(account),
                 color: account.backgroundColor.description
             )
         }
