@@ -12,7 +12,8 @@ struct HeaderView: View {
     let header: SberQRConfirmPaymentState.Header
     
     var body: some View {
-        Text("HeaderView")
+        
+        Text(String(describing: header))
     }
 }
 

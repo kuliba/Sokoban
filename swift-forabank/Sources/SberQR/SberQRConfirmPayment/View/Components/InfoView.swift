@@ -12,7 +12,8 @@ struct InfoView: View {
     let info: SberQRConfirmPaymentState.Info
     
     var body: some View {
-        Text("InfoView")
+        
+        Text(String(describing: info))
     }
 }
 
