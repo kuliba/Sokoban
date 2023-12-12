@@ -16,19 +16,25 @@ struct ProductSelectView: View {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 10) {
             
-            HStack {
-                
-                Text(state.product.title)
-                    .onTapGesture { event(.toggleProductSelect) }
-                
-                Spacer()
-                
-                chevron()
-            }
-            
+            selectedProductView(state.product)  
             state.products.map(productsView)
+        }
+    }
+    
+    private func selectedProductView(
+        _ product: ProductSelect.Product
+    ) -> some View {
+        
+        HStack {
+            
+            Text(state.product.title)
+                .onTapGesture { event(.toggleProductSelect) }
+            
+            Spacer()
+            
+            chevron()
         }
     }
     

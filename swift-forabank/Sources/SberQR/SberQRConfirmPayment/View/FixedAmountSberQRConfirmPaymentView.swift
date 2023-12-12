@@ -22,7 +22,6 @@ struct FixedAmountSberQRConfirmPaymentView: View {
                 pay: pay
             )
         }
-        
     }
     
     private func feed() -> some View {
