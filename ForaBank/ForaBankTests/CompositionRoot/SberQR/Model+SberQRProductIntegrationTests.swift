@@ -25,7 +25,10 @@ final class Model_SberQRProductIntegrationTests: SberQRProductTests {
         ])
         let sut = makeSUT()
         
-        let products = sut.sberQRProducts(response: response)
+        let products = sut.sberQRProducts(
+            response: response,
+            formatBalance: { _ in "" }
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssert(sut.allProducts.isEmpty)
@@ -56,7 +59,10 @@ final class Model_SberQRProductIntegrationTests: SberQRProductTests {
             ],
         ])
         
-        let products = sut.sberQRProducts(response: response)
+        let products = sut.sberQRProducts(
+            response: response,
+            formatBalance: { _ in "" }
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssert(filterProductTypes.isEmpty)
@@ -88,7 +94,10 @@ final class Model_SberQRProductIntegrationTests: SberQRProductTests {
             ],
         ])
         
-        let products = sut.sberQRProducts(response: response)
+        let products = sut.sberQRProducts(
+            response: response,
+            formatBalance: { _ in "" }
+        )
         
         XCTAssert(products.isEmpty)
         XCTAssert(currencies.isEmpty)
@@ -120,7 +129,10 @@ final class Model_SberQRProductIntegrationTests: SberQRProductTests {
             ],
         ])
         
-        let products = sut.sberQRProducts(response: response)
+        let products = sut.sberQRProducts(
+            response: response,
+            formatBalance: { _ in "" }
+        )
         
         XCTAssert(products.allSatisfy { $0.type == .card })
         XCTAssertNoDiff(sut.cards.map(\.id), [3, 4, 5])
@@ -154,7 +166,10 @@ final class Model_SberQRProductIntegrationTests: SberQRProductTests {
             ],
         ])
         
-        let products = sut.sberQRProducts(response: response)
+        let products = sut.sberQRProducts(
+            response: response,
+            formatBalance: { _ in "" }
+        )
         
         XCTAssertNoDiff(products.map(\.id), [3, 5])
         XCTAssertNoDiff(products.count, 2)
