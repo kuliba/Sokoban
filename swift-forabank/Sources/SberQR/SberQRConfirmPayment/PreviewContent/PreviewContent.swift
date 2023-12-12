@@ -21,7 +21,7 @@ extension SberQRConfirmPaymentState.FixedAmount {
     
     static let preview: Self = .init(
         header: .preview,
-        productSelect: .preview,
+        productSelect: .previewExpanded,
         brandName: .brandName,
         amount: .amount,
         recipientBank: .recipientBank,
@@ -32,6 +32,7 @@ extension SberQRConfirmPaymentState.FixedAmount {
 extension ProductSelect {
     
     static let preview: Self = .compact(.cardPreview)
+    static let previewExpanded: Self = .expanded(.accountPreview, .allProducts)
 }
 
 extension Array where Element == ProductSelect.Product {
@@ -51,7 +52,7 @@ extension ProductSelect.Product {
         id: 234567891,
         type: .account,
         icon: "",
-        title: "Account",
+        title: "Текущий счет",
         footer: "- 7891",
         amountFormatted: "123 456 ₽",
         color: ""
