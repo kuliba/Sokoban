@@ -20,23 +20,29 @@ public extension ProductSelect {
         
         public let id: ID
         public let type: ProductType
+        let header: String
         let icon: String
         let title: String
+        let footer: String
         let amountFormatted: String
         let color: String
         
         public init(
             id: ID,
             type: ProductType,
+            header: String = "Счет списания",
             icon: String,
             title: String,
+            footer: String,
             amountFormatted: String,
             color: String
         ) {
             self.id = id
             self.type = type
+            self.header = header
             self.icon = icon
             self.title = title
+            self.footer = footer
             self.amountFormatted = amountFormatted
             self.color = color
         }

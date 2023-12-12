@@ -22,13 +22,16 @@ public extension Config {
     
     struct ProductSelectViewConfig {
         
-        let title: Title
+        let amount: TextConfig
+        let footer: TextConfig
+        let header: TextConfig
+        let title: TextConfig
     }
 }
 
 public extension Config.ProductSelectViewConfig {
     
-    struct Title {
+    struct TextConfig {
         
         let textFont: Font
         let textColor: Color

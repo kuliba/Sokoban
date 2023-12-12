@@ -19,7 +19,7 @@ struct ProductSelectView: View {
         
         VStack(spacing: 10) {
             
-            selectedProductView(state.product)  
+            selectedProductView(state.product)
             state.products.map(productsView)
         }
     }
@@ -30,21 +30,52 @@ struct ProductSelectView: View {
         
         HStack(spacing: 12) {
             
-            Image(product.icon)
-                .resizable()
-                .frame(width: 32, height: 32)
-            
-            Text(state.product.title)
-                .font(config.title.textFont)
-                .foregroundColor(config.title.textColor)
-            
-            
-            Spacer()
-            
-            chevron()
+            productIcon(product.icon)
+            productTitle(product, config: config)
         }
         .contentShape(Rectangle())
         .onTapGesture { event(.toggleProductSelect) }
+    }
+    
+    private func productIcon(_ icon: String) -> some View {
+        
+        Image(icon)
+            .resizable()
+            .frame(width: 32, height: 32)
+    }
+    
+    private func productTitle(
+        _ product: ProductSelect.Product,
+        config: Config.ProductSelectViewConfig
+    ) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            text(product.header, config: config.header)
+            
+            HStack(alignment: .center, spacing: 8) {
+                
+                text(product.title, config: config.title)
+                
+                Spacer()
+                
+                text(product.amountFormatted, config: config.amount)
+                
+                chevron()
+            }
+            
+            text(product.footer, config: config.footer)
+        }
+    }
+    
+    private func text(
+        _ text: String,
+        config: Config.ProductSelectViewConfig.TextConfig
+    ) -> some View {
+        
+        Text(text)
+            .font(config.textFont)
+            .foregroundColor(config.textColor)
     }
     
     @ViewBuilder

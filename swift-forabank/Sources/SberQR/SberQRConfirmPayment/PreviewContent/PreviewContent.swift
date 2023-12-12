@@ -52,7 +52,8 @@ extension ProductSelect.Product {
         type: .account,
         icon: "",
         title: "Account",
-        amountFormatted: "",
+        footer: "- 7891",
+        amountFormatted: "123 456 ₽",
         color: ""
     )
     
@@ -61,7 +62,8 @@ extension ProductSelect.Product {
         type: .account,
         icon: "",
         title: "Account 2",
-        amountFormatted: "",
+        footer: "- 8912",
+        amountFormatted: "678.09 ₽",
         color: ""
     )
     
@@ -70,7 +72,8 @@ extension ProductSelect.Product {
         type: .card,
         icon: "",
         title: "Card",
-        amountFormatted: "",
+        footer: "- 6789",
+        amountFormatted: "1 234.56 ₽",
         color: ""
     )
     
@@ -79,7 +82,8 @@ extension ProductSelect.Product {
         type: .card,
         icon: "",
         title: "Card 2",
-        amountFormatted: "",
+        footer: "- 7892",
+        amountFormatted: "12 345 ₽",
         color: ""
     )
     
@@ -88,7 +92,8 @@ extension ProductSelect.Product {
         type: .card,
         icon: "",
         title: "Card 3",
-        amountFormatted: "",
+        footer: "- 7893",
+        amountFormatted: "123 456.78 ₽",
         color: ""
     )
 }
