@@ -31,7 +31,7 @@ struct FixedAmountSberQRConfirmPaymentView: View {
         
         Group {
             
-            HeaderView(header: state.header)
+            // HeaderView(header: state.header)
             
             ProductSelectView(
                 state: state.productSelect,

@@ -32,7 +32,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
         
         Group {
             
-            HeaderView(header: state.header)
+            // HeaderView(header: state.header)
 
             ProductSelectView(
                 state: state.productSelect,
@@ -50,7 +50,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
                 config: config.infoConfig
             )
             
-            DataStringView(data: state.currency)
+            // DataStringView(data: state.currency)
         }
     }
 }
