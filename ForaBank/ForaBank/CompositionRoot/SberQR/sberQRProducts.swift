@@ -7,27 +7,6 @@
 
 import SberQR
 
-extension Model {
-    
-    func sberQRProducts(
-        response: GetSberQRDataResponse
-    ) -> [ProductSelect.Product] {
-        
-        allProducts.mapToSberQRProducts(response: response)
-    }
-    
-    func sberQRProducts(
-        productTypes: [ProductType],
-        currencies: [String]
-    ) -> [ProductSelect.Product] {
-        
-        allProducts.mapToSberQRProducts(
-            productTypes: productTypes,
-            currencies: currencies
-        )
-    }
-}
-
 extension Array where Element == ProductData {
     
     func mapToSberQRProducts(
