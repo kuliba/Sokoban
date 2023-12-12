@@ -22,6 +22,7 @@ struct ProductSelectView: View {
             selectedProductView(state.product)
             state.products.map(productsView)
         }
+        .animation(.easeInOut, value: state)
     }
     
     private func selectedProductView(
@@ -116,7 +117,7 @@ struct ProductSelectView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .font(.caption.bold())
-        .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+        .padding(.card)
         .frame(width: 112, height: 71)
         .background(Color.orange.opacity(0.5)) // product.color
         .cornerRadius(8)
@@ -126,6 +127,8 @@ struct ProductSelectView: View {
     private func chevron() -> some View {
         
         Image(systemName: "chevron.up")
+            .foregroundColor(config.chevronColor)
+            .frame(width: 24, height: 24)
             .rotationEffect(.degrees(state.isExpanded ? 0 : 180))
             .onTapGesture { event(.toggleProductSelect) }
     }

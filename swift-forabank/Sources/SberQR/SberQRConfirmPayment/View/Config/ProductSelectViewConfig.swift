@@ -11,6 +11,7 @@ public struct ProductSelectViewConfig {
     
     let amount: TextConfig
     let card: Card
+    let chevronColor: Color
     let footer: TextConfig
     let header: TextConfig
     let title: TextConfig
@@ -18,12 +19,14 @@ public struct ProductSelectViewConfig {
     public init(
         amount: TextConfig,
         card: Card,
+        chevronColor: Color,
         footer: TextConfig,
         header: TextConfig,
         title: TextConfig
     ) {
         self.amount = amount
         self.card = card
+        self.chevronColor = chevronColor
         self.footer = footer
         self.header = header
         self.title = title

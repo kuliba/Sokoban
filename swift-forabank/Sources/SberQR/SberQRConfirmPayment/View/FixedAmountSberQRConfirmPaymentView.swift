@@ -16,8 +16,10 @@ struct FixedAmountSberQRConfirmPaymentView: View {
     
     var body: some View {
         
-        FeedWithBottomView(feed: feed) {
-            
+        FeedWithBottomView(
+            feed: feed,
+            backgroundColor: config.background.color
+        ) {
             ButtonView(
                 button: state.bottom,
                 pay: pay
@@ -30,14 +32,13 @@ struct FixedAmountSberQRConfirmPaymentView: View {
         Group {
             
             HeaderView(header: state.header)
-
-            DecoratedProductSelectView(
+            
+            ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                backgroundColor: config.background.color,
                 config: config.productSelectViewConfig
             )
-
+            
             InfoView(
                 info: state.brandName,
                 config: config.infoConfig

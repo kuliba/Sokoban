@@ -15,6 +15,7 @@ extension ProductSelectViewConfig {
             textColor: .purple
         ),
         card: .`default`,
+        chevronColor: .gray.opacity(0.4),
         footer: .init(
             textFont: .caption,
             textColor: .gray.opacity(0.5)

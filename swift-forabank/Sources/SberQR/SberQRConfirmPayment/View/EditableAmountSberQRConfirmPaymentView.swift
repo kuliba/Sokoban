@@ -16,8 +16,10 @@ struct EditableAmountSberQRConfirmPaymentView: View {
 
     var body: some View {
         
-        FeedWithBottomView(feed: feed) {
-            
+        FeedWithBottomView(
+            feed: feed,
+            backgroundColor: config.background.color
+        ) {
             AmountView(
                 amount: state.bottom,
                 event: { event(.editAmount($0)) },
@@ -32,10 +34,9 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             
             HeaderView(header: state.header)
 
-            DecoratedProductSelectView(
+            ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                backgroundColor: config.background.color,
                 config: config.productSelectViewConfig
             )
 
