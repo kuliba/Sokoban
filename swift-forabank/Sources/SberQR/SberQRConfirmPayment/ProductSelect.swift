@@ -23,7 +23,7 @@ public extension ProductSelect {
         let header: String
         let icon: String
         let title: String
-        let footer: String
+        let number: String
         let amountFormatted: String
         let color: String
         
@@ -42,7 +42,7 @@ public extension ProductSelect {
             self.header = header
             self.icon = icon
             self.title = title
-            self.footer = footer
+            self.number = footer
             self.amountFormatted = amountFormatted
             self.color = color
         }

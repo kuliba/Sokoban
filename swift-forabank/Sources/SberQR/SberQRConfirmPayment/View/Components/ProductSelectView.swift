@@ -64,7 +64,7 @@ struct ProductSelectView: View {
                 chevron()
             }
             
-            text(product.footer, config: config.footer)
+            text(product.number, config: config.footer)
                 .padding(.top, 4)
         }
     }
@@ -97,14 +97,30 @@ struct ProductSelectView: View {
         product: ProductSelect.Product
     ) -> some View {
         
-        Text(product.title)
-            .font(.caption.bold())
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.orange.opacity(0.5)) // product.color
-            )
-            .onTapGesture { event(.select(product.id)) }
+        VStack(spacing: 8) {
+            
+            HStack {
+                
+                Color.clear
+                    .frame(width: 20, height: 20)
+                
+                text(product.number, config: config.card.number)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+             
+                text(product.title, config: config.card.title)
+                
+                text(product.amountFormatted, config: config.card.amount)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .font(.caption.bold())
+        .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+        .frame(width: 112, height: 71)
+        .background(Color.orange.opacity(0.5)) // product.color
+        .cornerRadius(8)
+        .onTapGesture { event(.select(product.id)) }
     }
     
     private func chevron() -> some View {

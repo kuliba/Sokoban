@@ -10,6 +10,7 @@ import SwiftUI
 public struct ProductSelectViewConfig {
     
     let amount: TextConfig
+    let card: Card
     let footer: TextConfig
     let header: TextConfig
     let title: TextConfig
@@ -21,5 +22,12 @@ public extension ProductSelectViewConfig {
         
         let textFont: Font
         let textColor: Color
+    }
+
+    struct Card {
+        
+        let amount: TextConfig
+        let number: TextConfig
+        let title: TextConfig
     }
 }

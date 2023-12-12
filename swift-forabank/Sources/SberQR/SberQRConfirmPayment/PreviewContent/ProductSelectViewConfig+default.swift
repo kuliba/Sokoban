@@ -14,6 +14,7 @@ extension ProductSelectViewConfig {
             textFont: .body,
             textColor: .purple
         ),
+        card: .`default`,
         footer: .init(
             textFont: .caption,
             textColor: .gray.opacity(0.5)
@@ -25,6 +26,24 @@ extension ProductSelectViewConfig {
         title: .init(
             textFont: .headline,
             textColor: .green
+        )
+    )
+}
+
+extension ProductSelectViewConfig.Card {
+    
+    static let `default`: Self = .init(
+        amount: .init(
+            textFont: .body,
+            textColor: .gray
+        ),
+        number: .init(
+            textFont: .caption,
+            textColor: .pink
+        ),
+        title: .init(
+            textFont: .body,
+            textColor: .purple
         )
     )
 }
