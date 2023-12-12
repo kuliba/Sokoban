@@ -29,7 +29,6 @@ struct InfoView: View {
             icon(info.icon)
                 .frame(info.size)
                 .frame(width: 32, height: 32)
-                .border(.red)
             
             VStack(alignment: .leading, spacing: 4) {
                 
