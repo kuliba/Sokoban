@@ -42,7 +42,7 @@ private extension Model {
         .init(
             requestImages: {
                 
-                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0))
+                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0.map(\.rawValue)))
             },
             imagesPublisher: images
         )

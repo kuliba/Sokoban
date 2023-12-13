@@ -14,8 +14,8 @@ final class ImageCache {
     typealias ImageKey = Tagged<_ImageKey, String>
     enum _ImageKey {}
     
-    typealias RequestImages = ([String]) -> Void
-    // TODO: replace with better polymorphic interface
+    typealias RequestImages = ([ImageKey]) -> Void
+    // TODO: replace with better polymorphic interface instead of CurrentValueSubject and ImageKey as key
     typealias ImagesPublisher = CurrentValueSubject<[String: ImageData], Never>
 
     private let requestImages: RequestImages
@@ -42,7 +42,7 @@ final class ImageCache {
             
         } else {
             // TODO: add queue to remove duplicated inflight requests
-            requestImages([imageID])
+            requestImages([imageKey])
             
             return imagesPublisher
                 .compactMap { $0[imageID] }
