@@ -9,8 +9,11 @@ import SwiftUI
 
 struct FixedAmountSberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState.FixedAmount
-    let event: (SberQRConfirmPaymentEvent.FixedAmount) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>.FixedAmount
+    typealias Event = SberQRConfirmPaymentEvent.FixedAmount
+    
+    let state: State
+    let event: (Event) -> Void
     let pay: () -> Void
     let config: Config
     
@@ -67,7 +70,7 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState.FixedAmount
+        _ state: FixedAmountSberQRConfirmPaymentView.State
     ) -> some View {
         
         FixedAmountSberQRConfirmPaymentView(

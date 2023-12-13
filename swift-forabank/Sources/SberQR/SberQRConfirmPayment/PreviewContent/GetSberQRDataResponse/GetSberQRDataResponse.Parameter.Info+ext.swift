@@ -1,11 +1,11 @@
 //
-//  SberQRConfirmPaymentState.Info+ext.swift
-//  
+//  GetSberQRDataResponse.Parameter.Info+ext.swift
+//
 //
 //  Created by Igor Malyarov on 12.12.2023.
 //
 
-extension SberQRConfirmPaymentState.Info {
+extension GetSberQRDataResponse.Parameter.Info {
     
     static let amount: Self = .init(
         id: .amount,

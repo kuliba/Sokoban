@@ -7,17 +7,27 @@
 
 import SwiftUI
 
-extension View {
+public struct Info: Equatable {
     
-    func frame(_ size: CGSize) -> some View {
-        
-        frame(width: size.width, height: size.height)
+    let id: GetSberQRDataResponse.Parameter.Info.ID
+    let value: String
+    let title: String
+    let image: Image
+    
+    public init(
+        id: GetSberQRDataResponse.Parameter.Info.ID,
+        value: String,
+        title: String,
+        image: Image
+    ) {
+        self.id = id
+        self.value = value
+        self.title = title
+        self.image = image
     }
 }
 
 struct InfoView: View {
-    
-    typealias Info = SberQRConfirmPaymentState.Info
     
     let info: Info
     let config: InfoConfig
@@ -26,7 +36,8 @@ struct InfoView: View {
         
         HStack(spacing: 12) {
             
-            icon(info.icon)
+            info.image
+                .resizable()
                 .frame(info.size)
                 .frame(width: 32, height: 32)
             
@@ -37,18 +48,6 @@ struct InfoView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-    
-    @ViewBuilder
-    private func icon(_ icon: Info.Icon) -> some View {
-            #warning("use type")
-        //        switch icon.type {
-        //        case .local:
-        //        case .remote:
-        //        }
-        
-        Image(icon.value)
-            .resizable()
     }
     
     private func text(
@@ -62,7 +61,7 @@ struct InfoView: View {
     }
 }
 
-private extension SberQRConfirmPaymentState.Info {
+private extension Info {
     
     var size: CGSize {
         
@@ -92,7 +91,7 @@ struct InfoView_Previews: PreviewProvider {
     }
     
     private static func infoView(
-        info: SberQRConfirmPaymentState.Info
+        info: Info
     ) -> some View {
         
         InfoView(info: info, config: .default)

@@ -5,28 +5,64 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+    
+    static var preview: Self {
+        
+        .init(
+            header: .preview,
+            productSelect: .preview,
+            brandName: .brandName,
+            recipientBank: .recipientBank,
+            currency: .preview,
+            bottom: .preview
+        )
+    }
+}
+
+extension SberQRConfirmPaymentStateOf<Info>.FixedAmount {
+    
+    static var preview: Self {
+        
+        .init(
+            header: .preview,
+            productSelect: .previewExpanded,
+            brandName: .brandName,
+            amount: .amount,
+            recipientBank: .recipientBank,
+            bottom: .preview
+        )
+    }
+}
+
 public extension SberQRConfirmPaymentState.EditableAmount {
     
-    static let preview: Self = .init(
-        header: .preview,
-        productSelect: .preview,
-        brandName: .brandName,
-        recipientBank: .recipientBank,
-        currency: .preview,
-        bottom: .preview
-    )
+    static var preview: Self {
+        
+        .init(
+            header: .preview,
+            productSelect: .preview,
+            brandName: .brandName,
+            recipientBank: .recipientBank,
+            currency: .preview,
+            bottom: .preview
+        )
+    }
 }
 
 public extension SberQRConfirmPaymentState.FixedAmount {
     
-    static let preview: Self = .init(
-        header: .preview,
-        productSelect: .previewExpanded,
-        brandName: .brandName,
-        amount: .amount,
-        recipientBank: .recipientBank,
-        bottom: .preview
-    )
+    static var preview: Self {
+        
+        .init(
+            header: .preview,
+            productSelect: .previewExpanded,
+            brandName: .brandName,
+            amount: .amount,
+            recipientBank: .recipientBank,
+            bottom: .preview
+        )
+    }
 }
 
 extension ProductSelect {

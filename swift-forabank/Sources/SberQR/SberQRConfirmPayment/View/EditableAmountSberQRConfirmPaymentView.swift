@@ -9,8 +9,11 @@ import SwiftUI
 
 struct EditableAmountSberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState.EditableAmount
-    let event: (SberQRConfirmPaymentEvent.EditableAmount) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>.EditableAmount
+    typealias Event = SberQRConfirmPaymentEvent.EditableAmount
+    
+    let state: State
+    let event: (Event) -> Void
     let pay: () -> Void
     let config: Config
 
@@ -65,7 +68,7 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState.EditableAmount
+        _ state: EditableAmountSberQRConfirmPaymentView.State
     ) -> some View {
         
         EditableAmountSberQRConfirmPaymentView(
