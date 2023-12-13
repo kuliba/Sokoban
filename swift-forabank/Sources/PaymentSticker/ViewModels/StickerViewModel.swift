@@ -43,3 +43,26 @@ extension StickerViewModel {
         public let iconColor: String
     }
 }
+
+//MARK: Helpers
+
+extension StickerViewModel {
+    
+    public init(parameter: Operation.Parameter.Sticker) {
+        self.header = .init(
+            title: parameter.title,
+            detailTitle: parameter.description
+        )
+        
+        self.sticker = .named("StickerPreview")
+        self.options = parameter.options.map {
+            
+            .init(
+                title: $0.title,
+                icon: .named("Arrow Circle"),
+                description: "\($0.description.dropLast(2)) ₽",
+                iconColor: ""
+            )
+        }
+    }
+}
