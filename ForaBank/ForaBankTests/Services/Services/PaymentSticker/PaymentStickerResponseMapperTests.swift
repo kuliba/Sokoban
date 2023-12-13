@@ -49,7 +49,7 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         
         XCTAssertEqual(
             result,
-            .success(.deliveryOffice(.init(
+            .success(.deliveryType(.init(
                 main: [
                     .separator,
                     .citySelector,
@@ -71,7 +71,7 @@ final class PaymentStickerResponseMapperTests: XCTestCase {
         
         XCTAssertEqual(
             result,
-            .success(.deliveryOffice(.init(
+            .success(.deliveryType(.init(
                 main: [
                     .separator,
                     .citySelector,

@@ -72,15 +72,3 @@ extension OperationStateViewModel {
         return operation
     }
 }
-
-/// A namespace.
-public enum BlackBoxAPI {}
-
-public extension BlackBoxAPI {
-    
-    typealias Request = (Operation, Event)
-    typealias Success = OperationStateViewModel.State
-    typealias Result = Swift.Result<Success, Error>
-    typealias Completion = (Result) -> Void
-    typealias AsyncGet = (Request, @escaping Completion) -> Void
-}
