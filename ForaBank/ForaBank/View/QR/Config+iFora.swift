@@ -24,7 +24,7 @@ extension SberQR.Config {
                 textColor: .textSecondary
             )
         ),
-        productSelectView: .iFora
+        productSelect: .iFora
     )
 }
 
@@ -55,7 +55,7 @@ private extension SberQR.AmountConfig {
     )
 }
 
-private extension SberQR.ProductSelectViewConfig {
+private extension SberQR.ProductSelectConfig {
     
     static let iFora: Self = .init(
         amount: .init(

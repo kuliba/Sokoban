@@ -41,7 +41,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelectView
+                config: config.productSelect
             )
 
             InfoView(

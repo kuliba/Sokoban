@@ -12,18 +12,18 @@ public struct Config {
     let amount: AmountConfig
     let background: Background
     let info: InfoConfig
-    let productSelectView: ProductSelectViewConfig
+    let productSelect: ProductSelectConfig
     
     public init(
         amount: AmountConfig,
         background: Background,
         info: InfoConfig,
-        productSelectView: ProductSelectViewConfig
+        productSelect: ProductSelectConfig
     ) {
         self.amount = amount
         self.background = background
         self.info = info
-        self.productSelectView = productSelectView
+        self.productSelect = productSelect
     }
 }
 

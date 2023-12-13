@@ -13,7 +13,7 @@ extension Config {
         amount: .default,
         background: .default,
         info: .default,
-        productSelectView: .default
+        productSelect: .default
     )
 }
 
