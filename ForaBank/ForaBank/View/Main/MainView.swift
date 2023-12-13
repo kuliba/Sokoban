@@ -423,6 +423,13 @@ extension PaymentSticker.OperationViewConfiguration {
             optionConfig: .init(
                 nameFont: .textH4M16240(),
                 nameForeground: .textSecondary
+            ), 
+            textFieldConfig: .init(
+                font: .textH4M16240(),
+                textColor: .textSecondary,
+                tintColor: .textSecondary,
+                backgroundColor: .clear,
+                placeholderColor: .textTertiary
             )
         ),
         productViewConfig: .init(

@@ -151,7 +151,7 @@ final class OperationStateViewModelTests: XCTestCase {
                 id: 1,
                 title: "title",
                 nameProduct: "nameProduct",
-                balance: "100.0",
+                balance: 100.0,
                 balanceFormatted: "100 R",
                 description: "description",
                 cardImage: .named("cardImage"),
@@ -205,6 +205,7 @@ final class OperationStateViewModelTests: XCTestCase {
             title: "Title",
             placeholder: "PlaceHolder",
             options: [],
+            staticOptions: [],
             state: .idle(.init(
                 iconName: "iconName",
                 title: "Title"
@@ -294,7 +295,7 @@ final class OperationStateViewModelTests: XCTestCase {
                 id: 1,
                 title: "title",
                 nameProduct: "nameProduct",
-                balance: "100.0",
+                balance: 100.0,
                 balanceFormatted: "100 R",
                 description: "description",
                 cardImage: .named("cardImage"),
@@ -323,6 +324,7 @@ final class OperationStateViewModelTests: XCTestCase {
             title: "Title",
             placeholder: "PlaceHolder",
             options: [],
+            staticOptions: [],
             state: .idle(.init(
                 iconName: "iconName",
                 title: "Title"
