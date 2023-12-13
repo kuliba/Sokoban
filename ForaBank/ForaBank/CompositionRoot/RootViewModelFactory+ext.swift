@@ -11,7 +11,8 @@ extension RootViewModelFactory {
     
     static func make(
         model: Model,
-        logger: LoggerAgentProtocol
+        logger: LoggerAgentProtocol,
+        qrResolverFeatureFlag: QRResolverFeatureFlag = .init(.inactive)
     ) -> RootViewModel {
         
         let httpClient = model.authenticatedHTTPClient()
@@ -35,8 +36,10 @@ extension RootViewModelFactory {
         )
         
         let qrResolver: QRViewModel.QRResolver = { string in
-            // feature flag: remove `{ _ in false }` to activate SberQR
-            let resolver = QRResolver(isSberQR: { _ in false } /*model.isSberQR*/)
+            
+            let isSberQR = qrResolverFeatureFlag.isActive ? model.isSberQR : { _ in false }
+            let resolver = QRResolver(isSberQR: isSberQR)
+            
             return resolver.resolve(string: string)
         }
         
@@ -52,7 +55,7 @@ extension RootViewModelFactory {
         
         let getSberQRData: GetSberQRData = getSberQRDataService.process
         
-        let makeSberQRPaymentViewModel = SberQRPaymentViewModel.init
+        let makeSberQRConfirmPaymentViewModel = SberQRConfirmPaymentViewModel.init
         
         let makeProductProfileViewModel = {
             
@@ -60,7 +63,7 @@ extension RootViewModelFactory {
                 model,
                 makeQRScannerModel: makeQRScannerModel,
                 getSberQRData: getSberQRData,
-                makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
+                makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: $0,
                 rootView: $1,
@@ -73,7 +76,7 @@ extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
-            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: resetCVVPINActivation
         )
     }
@@ -113,7 +116,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeQRScannerModel: @escaping MakeQRScannerModel,
         getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        makeSberQRConfirmPaymentViewModel: @escaping MakeSberQRConfirmPaymentViewModel,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
@@ -122,7 +125,7 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
-            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             onRegister: onRegister
         )
         
@@ -131,7 +134,7 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeQRScannerModel: makeQRScannerModel,
             getSberQRData: getSberQRData,
-            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel
+            makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel
         )
         
         let chatViewModel = ChatViewModel()

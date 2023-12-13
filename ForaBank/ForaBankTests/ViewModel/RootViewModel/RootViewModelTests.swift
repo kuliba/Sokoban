@@ -216,7 +216,7 @@ final class RootViewModelTests: XCTestCase {
                     )
                 },
                 getSberQRData: { _,_ in },
-                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 onRegister: {}
             ),
             paymentsViewModel: .init(
@@ -230,7 +230,7 @@ final class RootViewModelTests: XCTestCase {
                     )
                 },
                 getSberQRData: { _,_ in },
-                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

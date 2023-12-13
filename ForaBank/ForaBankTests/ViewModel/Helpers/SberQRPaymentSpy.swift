@@ -20,11 +20,11 @@ final class SberQRPaymentSpy {
     _ url: URL,
     _ data: GetSberQRDataResponse,
     completion: @escaping MakeSberQRPaymentCompletion
-    ) -> SberQRPaymentViewModel {
+    ) -> ForaBank.SberQRConfirmPaymentViewModel {
         
         messages.append((url, data, completion))
         
-        return SberQRPaymentViewModel(sberQRURL: url, sberQRData: data, commit: completion)
+        return SberQRConfirmPaymentViewModel(sberQRURL: url, sberQRData: data, commit: completion)
     }
     
     func complete(

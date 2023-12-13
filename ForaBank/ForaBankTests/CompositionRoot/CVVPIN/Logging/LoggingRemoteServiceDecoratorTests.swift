@@ -19,19 +19,23 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
     
     func test_shouldLogURLRequestCreation() {
         
-        let (sut, spy, _) = makeSUT()
+        let url = anyURL()
+        let (sut, spy, _) = makeSUT(
+            createRequestStub: .success(.init(url: url))
+        )
         let remoteService = sut.remoteService
         
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\".")
+            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\".")
         ])
     }
     
     func test_shouldLogURLRequestNonNilBodyCreation() throws {
         
-        var urlRequest = URLRequest(url: anyURL())
+        let url = anyURL()
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpBody = try anyJSON("abcdef")
         let (sut, spy, _) = makeSUT(
             createRequestStub: .success(urlRequest)
@@ -41,14 +45,17 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
             .init(.debug, .cache, "RemoteService: request body: {\"data\":\"abcdef\"}")
         ])
     }
     
     func test_shouldLogShouldLogMapResponseSuccess() {
         
-        let (sut, spy, perform) = makeSUT()
+        let url = anyURL()
+        let (sut, spy, perform) = makeSUT(
+            createRequestStub: .success(.init(url: url))
+        )
         let remoteService = sut.remoteService
         let exp = expectation(description: "wait for completion")
         
@@ -60,14 +67,18 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
             .init(.debug, .cache, "RemoteService: mapResponse success: abc.")
         ])
     }
     
     func test_shouldLogShouldLogMapResponseFailure() {
         
-        let (sut, spy, perform) = makeSUT(mapResponseStub: .failure(anyError("any")))
+        let url = anyURL()
+        let (sut, spy, perform) = makeSUT(
+            createRequestStub: .success(.init(url: url)),
+            mapResponseStub: .failure(anyError("any"))
+        )
         let remoteService = sut.remoteService
         let exp = expectation(description: "wait for completion")
         
@@ -79,7 +90,7 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request any.url for input \"1\"."),
+            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
             .init(.debug, .cache, "RemoteService: mapResponse failure: any: statusCode: 200, data: nil.")
         ])
     }

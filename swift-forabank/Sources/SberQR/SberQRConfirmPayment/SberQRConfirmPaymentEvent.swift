@@ -5,8 +5,32 @@
 //  Created by Igor Malyarov on 07.12.2023.
 //
 
-public enum SberQRConfirmPaymentEvent {
+import Foundation
+
+public enum SberQRConfirmPaymentEvent: Equatable {
     
-    case editable(EditableAmountEvent)
-    case fixed(FixedAmountEvent)
+    case editable(EditableAmount)
+    case fixed(FixedAmount)
+}
+
+public extension SberQRConfirmPaymentEvent {
+    
+    enum EditableAmount: Equatable {
+        
+        case editAmount(Decimal)
+        case pay
+        case productSelect(ProductSelectEvent)
+    }
+    
+    enum FixedAmount: Equatable {
+        
+        case pay
+        case productSelect(ProductSelectEvent)
+    }
+    
+    enum ProductSelectEvent: Equatable {
+        
+        case toggleProductSelect
+        case select(ProductSelect.Product.ID)
+    }
 }

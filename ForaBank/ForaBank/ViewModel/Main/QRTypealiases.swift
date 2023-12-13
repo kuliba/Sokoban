@@ -16,4 +16,4 @@ typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
 
 typealias MakeSberQRPaymentResult = (Result<Data, Error>)
 typealias MakeSberQRPaymentCompletion = (MakeSberQRPaymentResult) -> Void
-typealias MakeSberQRPaymentViewModel = (URL, GetSberQRDataResponse, @escaping MakeSberQRPaymentCompletion) -> SberQRPaymentViewModel
+typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping MakeSberQRPaymentCompletion) -> SberQRConfirmPaymentViewModel

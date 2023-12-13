@@ -12,14 +12,21 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     
     func test_init_shouldNotCallPay() {
         
-        let (_, spy) = makeSUT()
+        let (_, spy, _) = makeSUT()
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
+    func test_init_shouldNotCallProductSelect() {
+        
+        let (_,_, productSelectSpy) = makeSUT()
+        
+        XCTAssertNoDiff(productSelectSpy.callCount, 0)
+    }
+    
     func test_reduce_editAmount_shouldNotCallPayOnEditAmount() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, spy, _) = makeSUT()
         
         _ = sut.reduce(makeEditableAmount(amount: 123.45), .editAmount(3_456.78))
         
@@ -30,7 +37,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let amount: Decimal = 123.45
         let brandName = "Some Brand Name"
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let state = makeEditableAmount(
             brandName: brandName,
             amount: amount
@@ -47,7 +54,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     func test_reduce_pay_shouldCallPayWithState() {
         
         let state = makeEditableAmount()
-        let (sut, spy) = makeSUT()
+        let (sut, spy, _) = makeSUT()
         
         _ = sut.reduce(state, .pay)
         
@@ -56,7 +63,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     
     func test_reduce_pay_shouldNotChangeState() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let state = makeEditableAmount()
         
         let newState = sut.reduce(state, .pay)
@@ -66,113 +73,73 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     
     func test_reduce_select_shouldNotCallPay() {
         
-        let (sut, spy) = makeSUT()
+        let (sut, spy, _) = makeSUT()
         
-        _ = sut.reduce(makeEditableAmount(), .select(.init(100000)))
-        
-        XCTAssertNoDiff(spy.callCount, 0)
-    }
-    
-    func test_reduce_select_shouldNotChangeProductIfProductIsMissing() {
-        
-        let (sut, _) = makeSUT(products: [.test, .test2])
-        let missingProduct: ProductSelect.Product = .missing
-        let state = makeEditableAmount(
-            brandName: "some brand"
-        )
-        XCTAssertNoDiff(state.productSelect, .compact(.test))
-        
-        let newState = sut.reduce(state, .select(missingProduct.id))
-        
-        XCTAssertNoDiff(newState, state)
-    }
-    
-    func test_reduce_select_shouldChangeProductIfProductExists() {
-        
-        let (sut, _) = makeSUT(products: [.test, .test2])
-        let existingProduct: ProductSelect.Product = .test2
-        let state = makeEditableAmount(
-            brandName: "some brand"
-        )
-        XCTAssertNoDiff(state.productSelect, .compact(.test))
-        
-        let newState = sut.reduce(state, .select(existingProduct.id))
-        
-        XCTAssertNoDiff(newState, makeEditableAmount(
-            brandName: "some brand",
-            productSelect: .compact(existingProduct)
-        ))
-    }
-    
-    func test_reduce_toggleProductSelect_shouldNotCallPay() {
-        
-        let (sut, spy) = makeSUT()
-        
-        _ = sut.reduce(makeEditableAmount(), .toggleProductSelect)
+        _ = sut.reduce(makeEditableAmount(), .productSelect(.select(.init(100000))))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_toggleProductSelect_shouldExpandProductSelectWithSameProduct() {
+    func test_reduce_productSelect_shouldCallProductSelectReduce() {
         
-        let products: [ProductSelect.Product] = [.test, .test2]
-        let (sut, _) = makeSUT(products: products)
-        let selectedProduct: ProductSelect.Product = .test2
-        let state = makeEditableAmount(
-            brandName: "some brand",
-            productSelect: .compact(selectedProduct)
+        let current = ProductSelect.Product.test2
+        let selectedProduct = ProductSelect.Product.test
+        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let (sut, _, productSelectSpy) = makeSUT()
+        
+        _ = sut.reduce(
+            makeEditableAmount(productSelect: .compact(current)),
+            .productSelect(.select(selectedProduct.id))
         )
-        XCTAssertNoDiff(state.productSelect, .compact(selectedProduct))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
-        
-        XCTAssertNoDiff(newState, makeEditableAmount(
-            brandName: "some brand",
-            productSelect: .expanded(selectedProduct, products)
-        ))
+        XCTAssertNoDiff(productSelectSpy.states, [.compact(current)])
+        XCTAssertNoDiff(productSelectSpy.events, [event])
     }
     
-    func test_reduce_toggleProductSelect_shouldCollapseProductSelectWithSameProduct() {
+    func test_reduce_productSelect_shouldDeliverResultOfProductSelectReduce() {
         
-        let products: [ProductSelect.Product] = [.test, .test2]
-        let (sut, _) = makeSUT(products: products)
-        let selectedProduct: ProductSelect.Product = .test2
-        let state = makeEditableAmount(
-            brandName: "some brand",
-            productSelect: .expanded(selectedProduct, products)
+        let current = ProductSelect.Product.test2
+        let productSelect: ProductSelect = .expanded(.test2, [.test, .test2])
+        let selectedProduct = ProductSelect.Product.test
+        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let (sut, _,_) = makeSUT(
+            productSelectStub: productSelect
         )
-        XCTAssertNoDiff(state.productSelect, .expanded(selectedProduct, products))
         
-        let newState = sut.reduce(state, .toggleProductSelect)
+        let newState = sut.reduce(
+            makeEditableAmount(productSelect: .compact(current)),
+            .productSelect(event)
+        )
         
-        XCTAssertNoDiff(newState, makeEditableAmount(
-            brandName: "some brand",
-            productSelect: .compact(selectedProduct)
-        ))
+        XCTAssertNoDiff(newState.productSelect, productSelect)
     }
     
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateEditableAmountReducer
     private typealias Spy = CallSpy<SUT.State>
+    private typealias ProductSelectSpy = ReducerSpy<ProductSelectReducer.State, ProductSelectReducer.Event>
     
     private func makeSUT(
-        products: [ProductSelect.Product] = [.test],
+        productSelectStub: ProductSelectReducer.State = .compact(.test2),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: Spy
+        spy: Spy,
+        productSelectSpy: ProductSelectSpy
     ) {
         let spy = Spy()
+        let productSelectSpy = ProductSelectSpy(stub: productSelectStub)
         let sut = SUT(
-            getProducts: { products },
+            productSelectReduce: productSelectSpy.reduce,
             pay: spy.call
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(productSelectSpy, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, spy, productSelectSpy)
     }
 }

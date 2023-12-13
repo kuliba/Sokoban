@@ -355,7 +355,7 @@ extension MainViewModel {
                     )
                 }, 
                 getSberQRData: { _,_ in }, 
-                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -370,7 +370,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
-        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -397,7 +397,7 @@ extension MainViewModel {
                     )
                 },
                 getSberQRData: { _,_ in },
-                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -412,7 +412,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
-        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}
     )
     
@@ -440,7 +440,7 @@ extension MainViewModel {
                     )
                 },
                 getSberQRData: { _,_ in },
-                makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: product,
                 rootView: rootView,
@@ -455,7 +455,7 @@ extension MainViewModel {
             )
         },
         getSberQRData: { _,_ in },
-        makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
         onRegister: {}
     )
 }

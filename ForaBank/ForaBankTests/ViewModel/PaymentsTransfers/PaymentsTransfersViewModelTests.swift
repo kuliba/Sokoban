@@ -302,7 +302,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                         
                         completion(getSberQRDataResultStub)
                     },
-                    makeSberQRPaymentViewModel: SberQRPaymentViewModel.init,
+                    makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
                     cvvPINServicesClient: cvvPINServicesClient,
                     product: product,
                     rootView: rootView,
@@ -320,7 +320,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 completion(getSberQRDataResultStub)
             },
-            makeSberQRPaymentViewModel: spy.make
+            makeSberQRConfirmPaymentViewModel: spy.make
         )
         
         // TODO: restore memory leaks tracking after Model fix
