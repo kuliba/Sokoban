@@ -10,38 +10,6 @@ import SwiftUI
 
 // MARK: - View
 
-public struct AmountViewConfiguration {
-    
-    let amountFont: Font
-    let amountColor: Color
-    let buttonTextFont: Font
-    let buttonTextColor: Color
-    let buttonColor: Color
-    let hintFont: Font
-    let hintColor: Color
-    let background: Color
-    
-    public init(
-        amountFont: Font,
-        amountColor: Color,
-        buttonTextFont: Font,
-        buttonTextColor: Color,
-        buttonColor: Color,
-        hintFont: Font,
-        hintColor: Color,
-        background: Color
-    ) {
-        self.amountFont = amountFont
-        self.amountColor = amountColor
-        self.buttonTextFont = buttonTextFont
-        self.buttonTextColor = buttonTextColor
-        self.buttonColor = buttonColor
-        self.hintFont = hintFont
-        self.hintColor = hintColor
-        self.background = background
-    }
-}
-
 struct AmountView: View {
     
     let viewModel: AmountViewModel
