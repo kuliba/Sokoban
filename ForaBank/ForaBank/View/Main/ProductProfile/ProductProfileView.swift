@@ -14,7 +14,7 @@ struct ProductProfileView: View {
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
 
     var accentColor: some View {
         

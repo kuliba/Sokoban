@@ -7,9 +7,9 @@
 
 import SberQR
 
-typealias MakeSberQRConfirmPaymentWrapperView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
+typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 
 struct RootViewFactory {
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
 }

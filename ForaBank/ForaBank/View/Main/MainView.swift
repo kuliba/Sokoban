@@ -13,7 +13,7 @@ struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
     var body: some View {
         

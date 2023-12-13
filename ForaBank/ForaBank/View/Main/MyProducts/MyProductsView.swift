@@ -16,7 +16,7 @@ struct MyProductsView: View {
     
     @ObservedObject var viewModel: MyProductsViewModel
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
     var body: some View {
         
