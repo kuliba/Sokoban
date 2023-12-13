@@ -190,8 +190,12 @@ struct PaymentsTransfersView: View {
         case let .openDepositsList(openDepositViewModel):
             OpenDepositView(viewModel: openDepositViewModel)
             
-        case let .sberQRPayment(viewModel):
-            makeSberQRConfirmPaymentView(viewModel)
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.closeSberQRPaymentViewModel
+                )
         }
     }
     
