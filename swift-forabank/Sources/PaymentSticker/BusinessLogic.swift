@@ -11,10 +11,17 @@ import GenericRemoteService
 
 final public class BusinessLogic {
     
-    public typealias ProcessDictionaryService = (GetJsonAbroadType, @escaping (Result<StickerDictionary, StickerDictionaryError>) -> Void) -> ()
-    public typealias ProcessTransferService = (StickerPayment, @escaping (Result<CommissionProductTransfer, CommissionProductTransferError>) -> Void) -> ()
-    public typealias ProcessMakeTransferService = (String, @escaping (Result<MakeTransferResponse, MakeTransferError>) -> Void) -> ()
-    public typealias ProcessImageLoaderService = ([String], @escaping (Result<[ImageData], GetImageListError>) -> Void) -> ()
+    public typealias DictionaryCompletion = (Result<StickerDictionary, StickerDictionaryError>) -> Void
+    public typealias ProcessDictionaryService = (GetJsonAbroadType, @escaping DictionaryCompletion) -> ()
+    
+    public typealias TransferCompletion = (Result<CommissionProductTransfer, CommissionProductTransferError>) -> Void
+    public typealias ProcessTransferService = (StickerPayment, @escaping TransferCompletion) -> ()
+    
+    public typealias MakeTransferCompletion = (Result<MakeTransferResponse, MakeTransferError>) -> Void
+    public typealias ProcessMakeTransferService = (String, @escaping MakeTransferCompletion) -> ()
+    
+    public typealias ImageLoaderCompletion = (Result<[ImageData], GetImageListError>) -> Void
+    public typealias ProcessImageLoaderService = ([String], @escaping ImageLoaderCompletion) -> ()
     
     public typealias Product = Operation.Parameter.ProductSelector.Product
     public typealias OperationResult = Result<OperationStateViewModel.State, Error>
@@ -26,7 +33,7 @@ final public class BusinessLogic {
     let processMakeTransferService: ProcessMakeTransferService
     let processImageLoaderService: ProcessImageLoaderService
     let selectOffice: SelectOffice
-    let products: [Product] //() -> [Products]
+    let products: [Product]
     let cityList: [City]
     
     public init(
@@ -78,6 +85,9 @@ public extension BusinessLogic {
         case let .select(selectEvent):
             
             switch selectEvent {
+            case let .search(text, parameter):
+                return reduceSearchAction(parameter, text, operation)
+                
             case let .selectOption(id, parameter):
                 
                 let operation = selectOption(
@@ -85,16 +95,15 @@ public extension BusinessLogic {
                     operation: operation,
                     parameter: parameter
                 )
-                 
-                if parameter.id == .officeSelector {
                 
+                if parameter.id == .officeSelector {
+                    
                     let newOperation = operation.updateOperation(
                         operation: operation,
                         newParameter: .select(parameter)
                     )
-                    completion(.success(.operation(newOperation)))
                     return .success(.operation(newOperation))
-
+                    
                 }
                 
                 switch parameter.id {
@@ -133,7 +142,7 @@ public extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
-
+                        
                     case "Доставка курьером":
                         processDictionaryService(.stickerOrderDeliveryCourier) { result in
                             
@@ -151,7 +160,7 @@ public extension BusinessLogic {
                                     case let .operation(operation):
                                         
                                         let operationBack = operation.parameters.filter({ $0.id != .input })
-                                    
+                                        
                                         completion(.success(.operation(.init(parameters: operationBack))))
                                         
                                     default:
@@ -169,7 +178,7 @@ public extension BusinessLogic {
                                 completion(.failure(error))
                             }
                         }
-                
+                        
                     default:
                         break
                     }
@@ -193,15 +202,8 @@ public extension BusinessLogic {
                                 
                                 let filterOperation = newOperation.updateOperation(
                                     operation: newOperation,
-                                    newParameter: .select(.init(
-                                        id: .officeSelector,
-                                        value: nil,
-                                        title: "Выберите отделение",
-                                        placeholder: "",
-                                        options: [],
-                                        state: .idle(.init(iconName: "ic24Bank", title: "Выберите отделение")))
-                                    ))
-                                
+                                    newParameter: .select(.branchSelect)
+                                )
                                 
                                 let operation = selectOption(
                                     id: id.name,
@@ -209,8 +211,8 @@ public extension BusinessLogic {
                                     parameter: parameter
                                 )
                                 
-                                completion(.success(.operation(operation)))
                                 return .success(.operation(operation))
+                                
                             } else {
                                 
                                 let operation = selectOption(
@@ -219,27 +221,22 @@ public extension BusinessLogic {
                                     parameter: parameter
                                 )
                                 
-                                completion(.success(.operation(operation)))
                                 return .success(.operation(operation))
                             }
                             
                         default:
-                            completion(.success(.operation(newOperation)))
                             return .success(.operation(newOperation))
                         }
                     }
-
-                    completion(.success(.operation(newOperation)))
+                    
                     return .success(.operation(newOperation))
                     
                 default:
-                    completion(.success(.operation(operation)))
                     return .success(.operation(operation))
                 }
                 
-                completion(.success(.operation(operation)))
                 return .success(.operation(operation))
-            
+                
             case let .openBranch(location):
                 
                 let location = Location(id: location.id)
@@ -250,18 +247,8 @@ public extension BusinessLogic {
                         
                         let newOperation = operation.updateOperation(
                             operation: operation,
-                            newParameter: .select(.init(
-                                id: .officeSelector,
-                                value: office.id,
-                                title: "Выберите отделение",
-                                placeholder: "",
-                                options: [],
-                                state: .selected(.init(
-                                    title: "Выберите отделение",
-                                    placeholder: "",
-                                    name: office.name,
-                                    iconName: ""
-                                )))))
+                            newParameter: .select(.officeSelect(office: office))
+                        )
                         
                         completion(.success(.operation(newOperation)))
                         
@@ -271,63 +258,23 @@ public extension BusinessLogic {
                 }
                 
                 return .success(.operation(operation))
-
+                
             case let .chevronTapped(select):
-                switch select.state {
-                case let .idle(idleViewModel):
-                    
-                    let updateSelect = select.updateSelect(
-                        parameter: select,
-                        idleViewModel: idleViewModel
-                    )
-                    
-                    return .success(.operation(operation.updateOperation(
-                        operation: operation,
-                        newParameter: .select(updateSelect)
-                    )))
-                    
-                case let .selected(selectedViewModel):
-                    
-                    let parameter = select.updatedState(
-                        iconName: selectedViewModel.iconName
-                    )
-                    
-                    return .success(.operation(operation.updateOperation(
-                        operation: operation,
-                        newParameter: .select(parameter)
-                    )))
-                    
-                case let .list(listViewModel):
-                    
-                    let parameter = select.updatedState(
-                        iconName: listViewModel.iconName,
-                        title: listViewModel.title
-                    )
-                    
-                    return .success(.operation(operation.updateOperation(
-                        operation: operation,
-                        newParameter: .select(parameter)
-                    )))
-                }
+                return resultChevronTapped(select, operation)
             }
-        
+            
         case let .input(events):
             switch events {
-            case .getOtpCode:
+            case .getCode:
                 return .success(.operation(operation))
-
+                
             case let .valueUpdate(value):
-                guard let title = operation.parameters.inputTitle else {
-                    // TODO: error missing input
-                    struct MissingInputError: Error {}
-                    return .failure(MissingInputError())
-                }
                 
                 let parametersUpdate = operation.updateOperation(
                     operation: operation,
                     newParameter: .input(.init(
                         value: value,
-                        title: title,
+                        title: .code,
                         warning: nil
                     ))
                 )
@@ -335,8 +282,9 @@ public extension BusinessLogic {
             }
             
         case .continueButtonTapped:
-           
-            if operation.parameters.count == 0 {
+            
+            switch operation.operationStage {
+            case .start:
                 
                 processDictionaryService(.stickerOrderForm) { result in
                     
@@ -378,132 +326,21 @@ public extension BusinessLogic {
                 
                 return .success(.operation(.init(state: .process, parameters: operation.parameters)))
                 
-            } else if let input = operation.parameters.first(where: { $0.id == .input }) {
-                
-                let amount = operation.parameters.amountSticker
-                
-                switch input {
-                case let .input(input):
+            case .process:
                     
-                    processMakeTransferService(input.value) { result in
-                       
-                        switch result {
-                        case let .success(makeTransfer):
-                            completion(.success(.result(
-                                PaymentSticker.OperationResult(
-                                    result: .success,
-                                    title: "Успешная заявка",
-                                    description: makeTransfer.productOrderingResponseMessage,
-                                    amount: amount ?? "",
-                                    paymentID: .init(id: makeTransfer.paymentOperationDetailId)
-                                )))
-                            )
-
-                        case let .failure(error):
-                            
-                            if case let .error(_, errorMessage) = error {
-
-                                let newOperation = operation.updateOperation(
-                                    operation: operation,
-                                    newParameter: .input(.init(
-                                        value: "",
-                                        title: "Введите код",
-                                        warning: errorMessage
-                                    ))
-                                )
-                                completion(.success(.operation(newOperation)))
-
-                            }
-                        }
-                    }
+                    let stickerPayment = StickerPayment(
+                        currencyAmount: "RUB",
+                        amount: operation.parameters.amount ?? 0,
+                        check: false,
+                        payer: .init(cardId: operation.parameters.productID ?? ""),
+                        productToOrderInfo: .init(
+                            type: "STICKER",
+                            deliverToOffice: operation.parameters.deliveryToOffice ?? false,
+                            officeId: operation.parameters.officeID,
+                            cityId: operation.parameters.cityID
+                        ))
                     
-                    let amount =  operation.parameters.first(where: { $0.id == .amount })
-                    
-                    switch amount {
-                    case let .amount(amount):
-                        
-                        let newOperation = operation.updateOperation(
-                            operation: operation,
-                            newParameter: .amount(.init(
-                                state: .loading,
-                                value: amount.value
-                            ))
-                        )
-                        
-                        return .success(.operation(.init(state: .process, parameters: newOperation.parameters)))
-                    default:
-                        return .success(.operation(.init(parameters: operation.parameters)))
-                    }
-
-                default:
-                    return .success(.operation(operation))
-                }
-                
-            } else {
-             
-                let productSelector = operation.parameters.first(where: {$0.id == .productSelector })
-                
-                var cardId: String? = nil
-                
-                switch productSelector {
-                case let .productSelector(product):
-                    cardId = product.selectedProduct.id.description
-                default:
-                    break
-                }
-                
-                var deliverToOffice: Bool?
-                var officeId: String?
-                var cityId: Int?
-                var amount: Decimal = 0
-                
-                let transferType = operation.parameters.first(where: { $0.id == .transferType })
-                switch transferType {
-                case let .select(select):
-                    if select.value == "typeDeliveryOffice" {
-                        deliverToOffice = true
-                        cityId = nil
-                        amount = 790
-                        
-                        let branches = operation.parameters.first(where: { $0.id == .branches })
-                        switch branches {
-                        case let .select(select):
-                            officeId = select.value
-                        default:
-                            break
-                        }
-                        
-                    } else {
-                        
-                        deliverToOffice = false
-                        officeId = nil
-                        amount = 1500
-                        
-                        let city = operation.parameters.first(where: { $0.id == .city })
-                        switch city {
-                        case let .select(select):
-                            cityId = Int(select.value ?? "")
-                        default:
-                            break
-                        }
-                    }
-                    
-                default: break
-                }
-                
-                let stickerPayment = StickerPayment(
-                    currencyAmount: "RUB",
-                    amount: amount,
-                    check: false,
-                    payer: .init(cardId: cardId ?? ""),
-                    productToOrderInfo: .init(
-                        type: "STICKER",
-                        deliverToOffice: deliverToOffice ?? false,
-                        officeId: officeId,
-                        cityId: cityId
-                    ))
-                
-                processTransferService(stickerPayment) { result in
+                    processTransferService(stickerPayment) { result in
                         
                         switch result {
                         case let .success(success):
@@ -513,7 +350,7 @@ public extension BusinessLogic {
                                 operation: newOperation,
                                 newParameter: .input(.init(
                                     value: "",
-                                    title: "Введите код из смс",
+                                    title: .code,
                                     warning: nil
                                 ))
                             )
@@ -524,15 +361,84 @@ public extension BusinessLogic {
                             )
                             
                             completion(.success(.operation(newOperation)))
-
+                            
                         case let .failure(error):
                             completion(.failure(error))
                         }
                     }
-                
-                return .success(.operation(.init(state: .process, parameters: operation.parameters)))
+                    
+                    return .success(.operation(.init(
+                        state: .process,
+                        parameters: operation.parameters
+                    )))
+            case .code:
+                if let input = operation.parameters.first(where: { $0.id == .input }) {
+                    
+                    switch input {
+                    case let .input(input):
+                        
+                        processMakeTransferService(input.value) { result in
+                            
+                            switch result {
+                            case let .success(makeTransfer):
+                                completion(.success(.result(
+                                    PaymentSticker.OperationResult(
+                                        result: .success,
+                                        title: "Успешная заявка",
+                                        description: makeTransfer.productOrderingResponseMessage,
+                                        amount: operation.parameters.amountSticker ?? "",
+                                        paymentID: .init(id: makeTransfer.paymentOperationDetailId)
+                                    )))
+                                )
+                                
+                            case let .failure(error):
+                                
+                                if case let .error(_, errorMessage) = error {
+                                    
+                                    let newOperation = operation.updateOperation(
+                                        operation: operation,
+                                        newParameter: .input(.init(
+                                            value: "",
+                                            title: .code,
+                                            warning: errorMessage
+                                        ))
+                                    )
+                                    completion(.success(.operation(newOperation)))
+                                    
+                                }
+                            }
+                        }
+                        
+                        let amount =  operation.parameters.first(where: { $0.id == .amount })
+                        
+                        switch amount {
+                        case let .amount(amount):
+                            
+                            let newOperation = operation.updateOperation(
+                                operation: operation,
+                                newParameter: .amount(.init(
+                                    state: .loading,
+                                    value: amount.value
+                                ))
+                            )
+                            
+                            return .success(.operation(.init(
+                                state: .process,
+                                parameters: newOperation.parameters
+                            )))
+                            
+                        default:
+                            return .success(.operation(operation))
+                        }
+                        
+                    default:
+                        return .success(.operation(operation))
+                    }
+                }
             }
             
+            return .success(.operation(operation))
+
         case let .product(productEvents):
             return reduceProductEvent(productEvents, operation)
         }
@@ -609,7 +515,7 @@ public extension BusinessLogic {
         case let .orderForm(orderForm):
             
             let parameters = orderForm.main.map { main in
-            
+                
                 switch main.data {
                 case let .citySelector(citySelector):
                     return Operation.Parameter.select(.init(
@@ -618,11 +524,12 @@ public extension BusinessLogic {
                         title: citySelector.title,
                         placeholder: citySelector.subtitle,
                         options: [],
+                        staticOptions: [],
                         state: .idle(.init(iconName: "", title: citySelector.title)))
                     )
                     
                 case let .banner(banner):
-                    return Operation.Parameter.sticker(.init(
+                    return .sticker(.init(
                         title: banner.title,
                         description: banner.subtitle,
                         image: PaymentSticker.ImageData.named(""),
@@ -634,21 +541,22 @@ public extension BusinessLogic {
                                 description: "\($0.description) \($0.value)")
                         })
                     ))
-                      
+                    
                 case let .officeSelector(officeSelector):
-                    return Operation.Parameter.select(.init(
+                    return .select(.init(
                         id: .officeSelector,
                         value: "",
                         title: officeSelector.title,
                         placeholder: officeSelector.subtitle,
                         options: [],
+                        staticOptions: [],
                         state: .idle(.init(iconName: "", title: officeSelector.title)))
                     )
                     
                 case .product:
                     if let product = self.products.first {
                         
-                        return Operation.Parameter.productSelector(.init(
+                        return .productSelector(.init(
                             state: .select,
                             selectedProduct: product,
                             allProducts: self.products
@@ -657,9 +565,9 @@ public extension BusinessLogic {
                         
                         return nil
                     }
-                
+                    
                 case let .selector(selector):
-                    return Operation.Parameter.select(.init(
+                    return .select(.init(
                         id: .transferTypeSticker,
                         value: nil,
                         title: selector.title,
@@ -671,35 +579,29 @@ public extension BusinessLogic {
                                 iconName: ""
                             )
                         }),
+                        staticOptions: selector.list.map({
+                            Operation.Parameter.Select.Option(
+                                id: $0.type.rawValue,
+                                name: $0.title,
+                                iconName: ""
+                            )
+                        }),
                         state: .idle(.init(iconName: "", title: selector.title)))
                     )
-                
+                    
                 case let .hint(hint):
-                    return Operation.Parameter.tip(.init(title: hint.title))
-                  
-                case .separator:
-                    return nil
-
-                case .separatorGroup:
-                    return nil
-
-                case .pageTitle:
-                    return nil
-
-                case .noValid:
-                    return nil
+                    return .tip(.init(title: hint.title))
+                    
+                default: return nil
                 }
+                
             }.compactMap{ $0 }
             
             return .operation(.init(parameters: parameters))
-
-        case let .deliveryCourier(deliveryCourier):
-
-            return .operation(.init(parameters: []))
-
-        case let .deliveryOffice(deliveryOffice):
             
-            let parameters = deliveryOffice.main.map { main in
+        case let .deliveryType(deliveryType):
+            
+            let parameters = deliveryType.main.map { main in
                 
                 switch main.data {
                 case let .citySelector(citySelector):
@@ -713,16 +615,22 @@ public extension BusinessLogic {
                             name: $0.name,
                             iconName: ""
                         )}),
+                        staticOptions: self.cityList.map({ Operation.Parameter.Select.Option(
+                            id: $0.id,
+                            name: $0.name,
+                            iconName: ""
+                        )}),
                         state: .idle(.init(iconName: "", title: citySelector.title)))
                     )
                     
-              case let .officeSelector(officeSelector):
+                case let .officeSelector(officeSelector):
                     return Operation.Parameter.select(.init(
                         id: .officeSelector,
                         value: nil,
                         title: officeSelector.title,
                         placeholder: officeSelector.subtitle,
                         options: [],
+                        staticOptions: [],
                         state: .idle(.init(iconName: "", title: officeSelector.title)))
                     )
                     
@@ -761,7 +669,7 @@ public extension BusinessLogic {
             
             switch result {
             case let .success(images):
-                    
+                
                 let newOperation = operation.updateOperation(
                     operation: operation,
                     newParameter: .sticker(.init(
@@ -784,6 +692,74 @@ public extension BusinessLogic {
             case let .failure(error):
                 completion(.failure(error))
             }
+        }
+    }
+}
+
+extension BusinessLogic {
+    
+    fileprivate func reduceSearchAction(
+        _ parameter: Event.ParameterSelect,
+        _ text: String,
+        _ operation: Operation
+    ) -> BusinessLogic.OperationResult {
+        
+        let newOptions = parameter.staticOptions.filter({ $0.name.localizedCaseInsensitiveContains(text) })
+        let newOperation: Operation = operation.updateOperation(
+            operation: operation,
+            newParameter: .select(.init(
+                id: parameter.id,
+                value: parameter.value,
+                title: parameter.title,
+                placeholder: parameter.placeholder,
+                options: text != "" ? newOptions : parameter.staticOptions,
+                staticOptions: parameter.staticOptions,
+                state: parameter.state
+            ))
+        )
+        
+        return .success(.operation(newOperation))
+    }
+    
+    fileprivate func resultChevronTapped(
+        _ select: (Event.ParameterSelect),
+        _ operation: Operation
+    ) -> BusinessLogic.OperationResult {
+        
+        switch select.state {
+        case let .idle(idleViewModel):
+            
+            let updateSelect = select.updateSelect(
+                parameter: select,
+                idleViewModel: idleViewModel)
+            
+            return .success(.operation(operation.updateOperation(
+                operation: operation,
+                newParameter: .select(updateSelect)
+            )))
+            
+        case let .selected(selectedViewModel):
+            
+            let parameter = select.updatedStateToList(
+                iconName: selectedViewModel.iconName
+            )
+            
+            return .success(.operation(operation.updateOperation(
+                operation: operation,
+                newParameter: .select(parameter)
+            )))
+            
+        case let .list(listViewModel):
+            
+            let parameter = select.updatedStateToIdle(
+                iconName: listViewModel.iconName,
+                title: listViewModel.title
+            )
+            
+            return .success(.operation(operation.updateOperation(
+                operation: operation,
+                newParameter: .select(parameter)
+            )))
         }
     }
 }
@@ -815,26 +791,6 @@ extension PaymentSticker.ParameterViewModel {
         }
         
         return title
-    }
-}
-
-extension PaymentSticker.Operation.Parameter {
-
-    var inputTitle: String? {
-        
-        guard case let .input(input) = self else {
-            return nil
-        }
-        
-        return input.title
-    }
-}
-
-extension Array where Element == PaymentSticker.Operation.Parameter {
-    
-    var inputTitle: String? {
-        
-        first(where: { $0.id == .input })?.inputTitle
     }
 }
 
