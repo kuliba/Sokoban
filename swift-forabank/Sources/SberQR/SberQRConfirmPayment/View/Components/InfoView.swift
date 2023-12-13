@@ -7,26 +7,6 @@
 
 import SwiftUI
 
-public struct Info {
-    
-    let id: GetSberQRDataResponse.Parameter.Info.ID
-    let value: String
-    let title: String
-    let image: Image
-    
-    public init(
-        id: GetSberQRDataResponse.Parameter.Info.ID,
-        value: String,
-        title: String,
-        image: Image
-    ) {
-        self.id = id
-        self.value = value
-        self.title = title
-        self.image = image
-    }
-}
-
 struct InfoView: View {
     
     let info: Info
