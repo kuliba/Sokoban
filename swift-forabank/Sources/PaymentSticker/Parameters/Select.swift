@@ -14,6 +14,7 @@ extension Operation.Parameter {
         public let title: String
         let placeholder: String
         public let options: [Option]
+        public let staticOptions: [Option]
         public let state: State
         
         public enum ParameterID: String {
@@ -30,6 +31,7 @@ extension Operation.Parameter {
             title: String,
             placeholder: String,
             options: [Operation.Parameter.Select.Option],
+            staticOptions: [Operation.Parameter.Select.Option],
             state: Operation.Parameter.Select.State
         ) {
             self.id = id
@@ -37,14 +39,14 @@ extension Operation.Parameter {
             self.title = title
             self.placeholder = placeholder
             self.options = options
+            self.staticOptions = staticOptions
             self.state = state
         }
         
-        public struct Option: Hashable {
+        public struct Option: Hashable, Identifiable {
             
             public let id: String
             let name: String
-            //TODO: setup ImageData 
             public let iconName: String
             
             public init(
@@ -72,7 +74,7 @@ extension Operation.Parameter {
                 public init(
                     iconName: String,
                     title: String
-                ) {
+                ) { 
                     self.iconName = iconName
                     self.title = title
                 }
@@ -153,12 +155,15 @@ extension Operation.Parameter.Select {
             title: parameter.title,
             placeholder: parameter.title,
             options: parameter.options,
+            staticOptions: parameter.staticOptions,
             state: .list(
                 .init(
                     iconName: idleViewModel.iconName,
                     title: parameter.title,
                     placeholder: parameter.placeholder,
-                    options: parameter.options.map(Option.optionViewModelMapper(option:))
+                    options: parameter.options.map(
+                        Option.optionViewModelMapper(option:)
+                    )
                 )
             )
         )
@@ -181,6 +186,7 @@ extension Operation.Parameter.Select {
             title: self.title,
             placeholder: self.placeholder,
             options: options,
+            staticOptions: parameter.staticOptions,
             state: self.state
         )
     }
@@ -191,5 +197,37 @@ extension Operation.Parameter.Select.Option {
     static func optionViewModelMapper(option: Select.Option) -> OptionViewModel {
         
         return .init(iconName: option.iconName, name: option.name)
+    }
+}
+
+extension Operation.Parameter.Select {
+    
+    static let branchSelect: Self = .init(
+        id: .officeSelector,
+        value: nil,
+        title: "Выберите отделение",
+        placeholder: "",
+        options: [],
+        staticOptions: [],
+        state: .idle(.init(
+            iconName: "ic24Bank",
+            title: "Выберите отделение"
+        )))
+    
+    static func officeSelect(office: Office) -> Self {
+        
+        .init(
+            id: .officeSelector,
+            value: office.id,
+            title: "Выберите отделение",
+            placeholder: "",
+            options: [],
+            staticOptions: [],
+            state: .selected(.init(
+                title: "Выберите отделение",
+                placeholder: "",
+                name: office.name,
+                iconName: ""
+            )))
     }
 }
