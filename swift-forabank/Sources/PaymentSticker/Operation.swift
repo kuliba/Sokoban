@@ -42,22 +42,106 @@ public extension Operation {
 
 //MARK: Helpers
 
-extension [Operation.Parameter] {
+extension Operation {
+    
+    enum OperationStage {
+        
+        case start
+        case process
+        case code
+    }
+    
+    var operationStage: OperationStage {
+        
+        if self.parameters.count == 0 {
+            return .start
+            
+        } else if let _ = self.parameters.first(where: { $0.id == .input }) {
+            
+            return .code
+        } else {
+            
+            return .process
+        }
+    }
+}
 
+extension [Operation.Parameter] {
+    
     var amountSticker: String? {
         
-        var amount: String?
-        
-        switch self.first(where: {$0.id == .amount}) {
+        switch self.first(where: { $0.id == .amount }) {
         case let .amount(amount):
-            
             return amount.value
             
         default:
-            break
+            return nil
         }
+    }
+    
+    var amount: Decimal? {
         
-        return amount
+        switch self.first(where: { $0.id == .amount }) {
+        case let .amount(amount):
+            return Decimal.init(string: amount.value)
+            
+        default:
+            return nil
+        }
+    }
+    
+    var productID: String? {
+        
+        let productSelector = self.first(where: { $0.id == .productSelector })
+        
+        switch productSelector {
+        case let .productSelector(product):
+            return product.selectedProduct.id.description
+        default:
+            return nil
+        }
+    }
+    
+    var deliveryToOffice: Bool? {
+        
+        let transferType = self.first(where: { $0.id == .transferType })
+        switch transferType {
+        case let .select(select):
+            if select.value == "typeDeliveryOffice" {
+                return true
+                
+            } else {
+                
+                return false
+            }
+            
+        default:
+            return nil
+        }
+    }
+    
+    var officeID: String? {
+        
+        let branches = self.first(where: { $0.id == .branches })
+        
+        switch branches {
+        case let .select(select):
+            return select.value ?? nil
+        default:
+            return nil
+        }
+    }
+    
+    var cityID: Int? {
+        
+        let city = self.first(where: { $0.id == .city })
+        
+        switch city {
+        case let .select(select):
+            return Int(select.value ?? "")
+        default:
+            return nil
+        }
     }
 }
 
@@ -83,7 +167,7 @@ extension Operation {
                 case let .sticker(banner):
                     
                     if let minAmount = banner.options.map({ $0.price }).min(),
-                       Double(product.selectedProduct.balance) ?? 0 < minAmount {
+                       product.selectedProduct.balance < minAmount {
 
                         complete = false
                     }
@@ -200,6 +284,7 @@ public extension Operation.Parameter.Select {
             title: parameter.title,
             placeholder: parameter.placeholder,
             options: parameter.options,
+            staticOptions: parameter.staticOptions,
             state: .selected(.init(
                 title: parameter.title,
                 placeholder: option.name,
