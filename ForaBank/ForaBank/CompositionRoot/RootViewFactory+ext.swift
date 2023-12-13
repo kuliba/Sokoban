@@ -35,7 +35,12 @@ private extension Model {
             id: info.id,
             value: info.value,
             title: info.title,
-            image: image(info.icon)
+            image: { [weak self] completion in
+                
+                guard let self else { return }
+                
+                completion(self.image(info.icon))
+            }
         )
     }
     

@@ -12,12 +12,13 @@ struct InfoView: View {
     let info: Info
     let config: InfoConfig
     
+    @State private var image: Image?
+    
     var body: some View {
         
         HStack(spacing: 12) {
             
-            info.image
-                .resizable()
+            icon()
                 .frame(info.size)
                 .frame(width: 32, height: 32)
             
@@ -27,6 +28,18 @@ struct InfoView: View {
                 text(info.value, config: config.value)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .onAppear { info.image { self.image = $0 }}
+    }
+    
+    @ViewBuilder
+    private func icon() -> some View {
+        
+        if let image {
+            image.resizable()
+        } else {
+            // TODO: add shimmering
+            Color.clear
         }
     }
     

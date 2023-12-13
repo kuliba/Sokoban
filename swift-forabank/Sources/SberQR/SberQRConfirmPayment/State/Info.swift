@@ -14,13 +14,13 @@ public struct Info {
     let id: ID
     let value: String
     let title: String
-    let image: Image
+    let image: (@escaping (Image) -> Void) -> Void
     
     public init(
         id: ID,
         value: String,
         title: String,
-        image: Image
+        image: @escaping (@escaping (Image) -> Void) -> Void
     ) {
         self.id = id
         self.value = value

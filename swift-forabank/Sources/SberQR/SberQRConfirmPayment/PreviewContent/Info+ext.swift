@@ -15,7 +15,7 @@ extension Info {
             id: info.id,
             value: info.value,
             title: info.title,
-            image: .init(systemName: "sparkles.tv")
+            image: { $0(.init(systemName: "sparkles.tv")) }
         )
     }
     
@@ -23,20 +23,20 @@ extension Info {
         id: .amount,
         value: "220 ₽",
         title: "Сумма",
-        image: .init(systemName: "dollarsign.circle.fill")
+        image: { $0(.init(systemName: "dollarsign.circle.fill")) }
     )
     
     static let brandName: Self = .init(
         id: .brandName,
         value: "сббол енот_QR",
         title: "Получатель",
-        image: .init(systemName: "house")
+        image: { $0(.init(systemName: "house")) }
     )
     
     static let recipientBank: Self = .init(
         id: .recipientBank,
         value: "Сбербанк",
         title: "Банк получателя",
-        image: .init(systemName: "building.columns")
+        image: { $0(.init(systemName: "building.columns")) }
     )
 }
