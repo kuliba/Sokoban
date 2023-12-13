@@ -13,7 +13,9 @@ struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    
+
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+
     var accentColor: some View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
@@ -160,10 +162,16 @@ struct ProductProfileView: View {
                 )
             
         case let .myProducts(viewModel):
-            MyProductsView(viewModel: viewModel)
+            MyProductsView(
+                viewModel: viewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .paymentsTransfers(viewModel):
-            PaymentsTransfersView(viewModel: viewModel)
+            PaymentsTransfersView(
+                viewModel: viewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
         }
     }
     
@@ -372,9 +380,26 @@ struct ProfileView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileView(viewModel: .sample)
-            ProductProfileView(viewModel: .sadSample)
+            productProfileView(viewModel: .sample)
+            productProfileView(viewModel: .sadSample)
         }
+    }
+    
+    private static func productProfileView(
+        viewModel: ProductProfileViewModel
+    ) -> some View {
+        
+        ProductProfileView(
+            viewModel: viewModel,
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            }
+        )
     }
 }
 

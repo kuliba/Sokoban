@@ -7,7 +7,7 @@
 
 extension Info {
     
-    static func preview(
+    public static func preview(
         info: GetSberQRDataResponse.Parameter.Info
     ) -> Self {
         

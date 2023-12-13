@@ -13,6 +13,8 @@ struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
     
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentWrapperView
+    
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -115,7 +117,10 @@ struct MainView: View {
             UserAccountView(viewModel: userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
@@ -136,7 +141,10 @@ struct MainView: View {
             CurrencyWalletView(viewModel: viewModel)
             
         case let .myProducts(myProductsViewModel):
-            MyProductsView(viewModel: myProductsViewModel)
+            MyProductsView(
+                viewModel: myProductsViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .country(countyViewModel):
             CountryPaymentView(viewModel: countyViewModel)
@@ -170,11 +178,8 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .sberQRPayment(sberQRPaymentViewModel):
-            SberQRConfirmPaymentWrapperView(
-                viewModel: sberQRPaymentViewModel, 
-                config: .iFora
-            )
+        case let .sberQRPayment(viewModel):
+            makeSberQRConfirmPaymentView(viewModel)
         }
     }
     
@@ -185,7 +190,10 @@ struct MainView: View {
         
         switch sheet.type {
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
@@ -326,14 +334,26 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            MainView(viewModel: .sample)
             
-            NavigationView {
-                
-                MainView(viewModel: .sample)
-            }
+            mainView()
+            
+            NavigationView(content: mainView)
         }
-        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func mainView() -> some View {
+        
+        MainView(
+            viewModel: .sample,
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            }
+        )
     }
 }
 

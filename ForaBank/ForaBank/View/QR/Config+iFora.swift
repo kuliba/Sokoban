@@ -71,6 +71,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
             
             sberQRConfirmPaymentWrapperView(.fixedAmount(.preview))
                 .previewDisplayName("SberQRConfirmPayment: Fixed")
+            
             sberQRConfirmPaymentWrapperView(.editableAmount(.preview))
                 .previewDisplayName("SberQRConfirmPayment: Editable")
         }
@@ -86,6 +87,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 getProducts: { .allProducts },
                 pay: { _ in }
             ),
+            map: Info.preview,
             config: .iFora
         )
     }

@@ -18,13 +18,21 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     private var spinner: UIViewController?
     private var bindings = Set<AnyCancellable>()
 
-    init(with viewModel: RootViewModel) {
+    init(
+        with viewModel: RootViewModel,
+        rootViewFactory: RootViewFactory
+    ) {
         
         self.viewModel = viewModel
         self.cover = nil
         self.informer = nil
         self.isCoverDismissing = false
-        super.init(rootView: RootView(viewModel: viewModel))
+        super.init(
+            rootView: RootView(
+                viewModel: viewModel,
+                rootViewFactory: rootViewFactory
+            )
+        )
         
         bind()
     }
