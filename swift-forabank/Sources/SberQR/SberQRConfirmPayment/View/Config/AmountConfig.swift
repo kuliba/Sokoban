@@ -11,23 +11,20 @@ public struct AmountConfig {
     
     let amount: TextConfig
     let backgroundColor: Color
-    let button: TextConfig
-    let buttonColor: Color
+    let button: ButtonConfig
     let dividerColor: Color
     let title: TextConfig
     
     public init(
         amount: TextConfig, 
         backgroundColor: Color, 
-        button: TextConfig,
-        buttonColor: Color,
+        button: ButtonConfig,
         dividerColor: Color,
         title: TextConfig
     ) {
         self.amount = amount
         self.backgroundColor = backgroundColor
         self.button = button
-        self.buttonColor = buttonColor
         self.dividerColor = dividerColor
         self.title = title
     }

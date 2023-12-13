@@ -1,6 +1,6 @@
 //
 //  ButtonConfig.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 13.12.2023.
 //
@@ -9,14 +9,14 @@ import SwiftUI
 
 public struct ButtonConfig {
     
-    let backgroundColor: Color
-    let text: TextConfig
+    let active: ButtonStateConfig
+    let inactive: ButtonStateConfig
     
     public init(
-        backgroundColor: Color,
-        text: TextConfig
+        active: ButtonStateConfig,
+        inactive: ButtonStateConfig
     ) {
-        self.backgroundColor = backgroundColor
-        self.text = text
+        self.active = active
+        self.inactive = inactive
     }
 }

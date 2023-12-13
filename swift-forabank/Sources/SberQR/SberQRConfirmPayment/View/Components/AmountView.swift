@@ -63,14 +63,14 @@ struct AmountView: View {
         
         ZStack {
             
-            config.buttonColor
+            config.button.active.backgroundColor
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
             #warning("add button state")
             Button(action: pay) {
                 
-                text(amount.button.title, config: config.button)
+                text(amount.button.title, config: config.button.active.text)
             }
         }
     }

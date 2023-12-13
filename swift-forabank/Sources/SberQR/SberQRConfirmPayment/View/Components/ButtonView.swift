@@ -20,11 +20,11 @@ struct ButtonView: View {
         
         ZStack {
             
-            config.backgroundColor
+            config.active.backgroundColor
             
             Button(action: pay) {
                 
-                text(button.value, config: config.text)
+                text(button.value, config: config.active.text)
             }
         }
         .frame(height: buttonHeight)
@@ -47,6 +47,13 @@ struct ButtonView: View {
 struct ButtonView_Previews: PreviewProvider {
     
     static var previews: some View {
+    
+        buttonView(.preview)
+    }
+    
+    private static func buttonView(
+        _ button: SberQRConfirmPaymentState.Button
+    ) -> some View {
         
         ButtonView(button: .preview, pay: {}, config: .default)
     }

@@ -15,11 +15,7 @@ extension AmountConfig {
             textColor: .white
         ),
         backgroundColor: .black.opacity(0.8),
-        button: .init(
-            textFont: .headline.bold(),
-            textColor: .white
-        ),
-        buttonColor: .pink,
+        button: .default,
         dividerColor: .white.opacity(0.8),
         title: .init(
             textFont: .caption,

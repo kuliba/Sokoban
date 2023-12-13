@@ -10,10 +10,7 @@ import SwiftUI
 extension ButtonConfig {
     
     static let `default`: Self = .init(
-        backgroundColor: .green,
-        text: .init(
-            textFont: .headline.weight(.black),
-            textColor: .pink
-        )
+        active: .active,
+        inactive: .inactive
     )
 }
