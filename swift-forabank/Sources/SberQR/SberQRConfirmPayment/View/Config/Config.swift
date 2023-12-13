@@ -8,16 +8,19 @@
 import SwiftUI
 
 public struct Config {
-    
+
+    let amount: AmountConfig
     let background: Background
     let info: InfoConfig
     let productSelectView: ProductSelectViewConfig
     
     public init(
+        amount: AmountConfig,
         background: Background,
         info: InfoConfig,
         productSelectView: ProductSelectViewConfig
     ) {
+        self.amount = amount
         self.background = background
         self.info = info
         self.productSelectView = productSelectView

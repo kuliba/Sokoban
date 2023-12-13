@@ -10,6 +10,7 @@ import SwiftUI
 extension Config {
     
     static let `default`: Self = .init(
+        amount: .default,
         background: .default,
         info: .default,
         productSelectView: .default

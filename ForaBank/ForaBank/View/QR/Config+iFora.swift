@@ -10,6 +10,7 @@ import SberQR
 extension SberQR.Config {
     
     static let iFora: Self = .init(
+        amount: .iFora,
         background: .init(
             color: .mainColorsGrayLightest
         ),
@@ -23,38 +24,70 @@ extension SberQR.Config {
                 textColor: .textSecondary
             )
         ),
-        productSelectView: .init(
+        productSelectView: .iFora
+    )
+}
+
+private extension SberQR.AmountConfig {
+    
+    static let iFora: Self = .init(
+        amount: .init(
+            textFont: .textH1Sb24322(),
+            textColor: .white
+        ),
+        backgroundColor: .mainColorsBlackMedium,
+        button: .init(
+//                active: .init(
+                textFont: .textH4R16240(),
+                textColor: .textWhite
+//                ),
+//                inactive: .init(
+//                    textFont: .textH4R16240(),
+//                    textColor: .mainColorsWhite.opacity(0.5)
+//                )
+        ),
+        buttonColor: .init(hex: "#FF3636"),
+        dividerColor: .bordersDivider,
+        title: .init(
+            textFont: .textBodySR12160(),
+            textColor: .textPlaceholder
+        )
+    )
+}
+
+private extension SberQR.ProductSelectViewConfig {
+    
+    static let iFora: Self = .init(
+        amount: .init(
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
+        ),
+        card: .init(
             amount: .init(
-                textFont: .textH4M16240(),
-                textColor: .textSecondary
+                textFont: .textBodyXsSb11140(),
+                textColor: .textWhite
             ),
-            card: .init(
-                amount: .init(
-                    textFont: .textBodyXsSb11140(),
-                    textColor: .textWhite
-                ),
-                number: .init(
-                    textFont: .textBodyXsR11140(),
-                    textColor: .textWhite
-                ),
-                title: .init(
-                    textFont: .textBodyXsR11140(),
-                    textColor: .textWhite.opacity(0.4)
-                )
-            ),
-            chevronColor: .iconGray,
-            footer: .init(
-                textFont: .textBodyMR14180(),
-                textColor: .textPlaceholder
-            ),
-            header: .init(
-                textFont: .textBodyMR14180(),
-                textColor: .textPlaceholder
+            number: .init(
+                textFont: .textBodyXsR11140(),
+                textColor: .textWhite
             ),
             title: .init(
-                textFont: .textH4M16240(),
-                textColor: .textSecondary
+                textFont: .textBodyXsR11140(),
+                textColor: .textWhite.opacity(0.4)
             )
+        ),
+        chevronColor: .iconGray,
+        footer: .init(
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
+        ),
+        header: .init(
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
+        ),
+        title: .init(
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
         )
     )
 }
