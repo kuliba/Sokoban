@@ -45,6 +45,12 @@ private extension Model {
     
     func imageCache() -> ImageCache {
         
-        .init(model: self)
+        .init(
+            requestImages: {
+                
+                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0))
+            },
+            imagesPublisher: images
+        )
     }
 }
