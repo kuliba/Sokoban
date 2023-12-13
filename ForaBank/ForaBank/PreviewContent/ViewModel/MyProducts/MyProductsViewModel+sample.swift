@@ -27,7 +27,8 @@ extension MyProductsViewModel {
                 dismissAction: dismissAction
             )
         },
-        refreshingIndicator: .init(isActive: true)
+        refreshingIndicator: .init(isActive: true),
+        openOrderSticker: {}
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -51,6 +52,7 @@ extension MyProductsViewModel {
             )
         },
         refreshingIndicator: .init(isActive: true),
-        showOnboarding: [.hide: true, .ordered: false]
+        showOnboarding: [.hide: true, .ordered: false],
+        openOrderSticker: {}
     )
 }

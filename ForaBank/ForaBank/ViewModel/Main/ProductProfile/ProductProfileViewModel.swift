@@ -823,7 +823,8 @@ private extension ProductProfileViewModel {
                         let myProductsViewModel = MyProductsViewModel(
                             model,
                             cardAction: cardAction,
-                            makeProductProfileViewModel: makeProductProfileViewModel
+                            makeProductProfileViewModel: makeProductProfileViewModel,
+                            openOrderSticker: {}
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)

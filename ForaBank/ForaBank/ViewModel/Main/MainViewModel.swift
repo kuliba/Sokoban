@@ -459,7 +459,17 @@ private extension MainViewModel {
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel = MyProductsViewModel(
                             model,
-                            makeProductProfileViewModel: makeProductProfileViewModel
+                            makeProductProfileViewModel: makeProductProfileViewModel,
+                            openOrderSticker: {
+                                
+                                self.route = .empty
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                                    
+                                    handleLandingAction(.sticker)
+                                    
+                                }
+                            }
                         )
                         myProductsViewModel.rootActions = rootActions
                         route.destination = .myProducts(myProductsViewModel)
