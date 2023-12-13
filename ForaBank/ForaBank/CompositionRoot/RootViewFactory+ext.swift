@@ -12,12 +12,28 @@ extension RootViewFactory {
     
     init(with model: Model) {
         
+        let imageCache = model.imageCache()
+        
         self.init(
-            makeSberQRConfirmPaymentView: {
+            makeSberQRConfirmPaymentView: { viewModel in
                 
                 .init(
-                    viewModel: $0,
-                    map: model.map,
+                    viewModel: viewModel,
+                    map: { info in
+                        
+                        .init(
+                            id: info.id,
+                            value: info.value,
+                            title: info.title,
+                            image: { completion in
+                            
+                                imageCache.image(
+                                    forKey: .init(info.value),
+                                    completion: completion
+                                )
+                            }
+                        )
+                    },
                     config: .iFora
                 )
             }
@@ -27,36 +43,8 @@ extension RootViewFactory {
 
 private extension Model {
     
-    func map(
-        _ info: GetSberQRDataResponse.Parameter.Info
-    ) -> Info {
+    func imageCache() -> ImageCache {
         
-        .init(
-            id: info.id,
-            value: info.value,
-            title: info.title,
-            image: { [weak self] in self?.image(info.icon, $0) }
-        )
-    }
-    
-    func image(
-        _ icon: GetSberQRDataResponse.Parameter.Info.Icon,
-        _ completion: @escaping (Image) -> Void
-    ) {
-        switch icon.type {
-        case .local:
-            completion(.init(icon.value))
-            
-        case .remote:
-            let imageCache = ImageCache(model: self)
-            imageCache.image(
-                for: .init(icon.value),
-                completion: {
-                    
-                    completion($0)
-//                    _ = imageCache
-                }
-            )
-        }
+        .init(model: self)
     }
 }

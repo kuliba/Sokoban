@@ -19,17 +19,12 @@ final class ImageCache {
     private var cancellable: AnyCancellable?
     
     init(model: Model) {
-     
+        
         self.model = model
     }
     
-    deinit {
-        
-        print("### ImageCache deinit")
-    }
-    
     func image(
-        for imageKey: ImageKey,
+        forKey imageKey: ImageKey,
         completion: @escaping (Image) -> Void
     ) {
         let imageID = imageKey.rawValue
@@ -44,10 +39,8 @@ final class ImageCache {
             model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [imageID]))
             
             cancellable = model.images
-                .handleEvents(receiveOutput: { print("###", $0) })
                 .compactMap { $0[imageID] }
                 .compactMap(\.image)
-//                .handleEvents(receiveOutput: { print("###", $0) })
                 .sink(receiveValue: completion)
         }
     }
