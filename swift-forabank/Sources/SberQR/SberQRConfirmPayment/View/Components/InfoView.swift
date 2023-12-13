@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct Info: Equatable {
+public struct Info {
     
     let id: GetSberQRDataResponse.Parameter.Info.ID
     let value: String
