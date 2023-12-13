@@ -23,14 +23,14 @@ public enum Event: Equatable {
     public enum ContinueEvent: Hashable {
     
         case `continue`
-        case getOTPCode
+        case getCode
         case makeTransfer
     }
     
     public enum InputEvent: Hashable {
         
         case valueUpdate(String)
-        case getOtpCode
+        case getCode
     }
     
     public enum ProductEvent: Hashable {
@@ -44,15 +44,6 @@ public enum Event: Equatable {
         case selectOption(SelectOptionID, ParameterSelect)
         case chevronTapped(ParameterSelect)
         case openBranch(Location)
-    }
-    
-    public struct Location: Hashable {
-        
-        public let id: String
-        
-        public init(id: String) {
-            
-            self.id = id
-        }
+        case search(String, ParameterSelect)
     }
 }

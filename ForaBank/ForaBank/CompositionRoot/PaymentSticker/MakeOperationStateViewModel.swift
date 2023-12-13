@@ -399,7 +399,7 @@ private extension Model {
             id: $0.id,
             title: "Счет списания",
             nameProduct: $0.displayName,
-            balance: $0.balanceValue.description,
+            balance: $0.balanceValue,
             balanceFormatted: amountFormatted(
                 amount: $0.balanceValue,
                 currencyCode: $0.currency,
