@@ -9,7 +9,7 @@ import Foundation
 
 extension Operation.Parameter.Select {
     
-    public func updatedState(
+    public func updatedStateToList(
         iconName: String
     ) -> Self {
         
@@ -19,6 +19,7 @@ extension Operation.Parameter.Select {
             title: title,
             placeholder: placeholder,
             options: options,
+            staticOptions: staticOptions,
             state: .list(
                 .init(
                     iconName: iconName,
@@ -30,7 +31,7 @@ extension Operation.Parameter.Select {
         )
     }
     
-    public func updatedState(
+    public func updatedStateToIdle(
         iconName: String,
         title: String
     ) -> Self {
@@ -41,6 +42,7 @@ extension Operation.Parameter.Select {
             title: title,
             placeholder: placeholder,
             options: options,
+            staticOptions: staticOptions,
             state: .idle(
                 .init(
                     iconName: iconName,
