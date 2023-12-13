@@ -605,6 +605,8 @@
 		2A8CC23F2B299CC200191B8E /* RootViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */; };
 		2A8CC2432B29B4C100191B8E /* RootViewFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2422B29B4C100191B8E /* RootViewFactory+ext.swift */; };
 		2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2442B29D44D00191B8E /* ImageCache.swift */; };
+		2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2462B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift */; };
+		2A8CC2492B29FA5A00191B8E /* View+navigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */; };
 		2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
@@ -2828,6 +2830,8 @@
 		2A8CC23E2B299CC200191B8E /* RootViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewFactory.swift; sourceTree = "<group>"; };
 		2A8CC2422B29B4C100191B8E /* RootViewFactory+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+ext.swift"; sourceTree = "<group>"; };
 		2A8CC2442B29D44D00191B8E /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		2A8CC2462B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SberQRConfirmPaymentViewModel+ext.swift"; sourceTree = "<group>"; };
+		2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+navigationBar.swift"; sourceTree = "<group>"; };
 		2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodorTests.swift"; sourceTree = "<group>"; };
 		2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicServerSessionKeyMapper.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
@@ -5156,6 +5160,7 @@
 				0B8365DE2926A9C000A11F0A /* QRSearchOperatorViewModel.swift */,
 				0B40C3BB2947CB2100B9C9F8 /* QRSearchOperatorComponent.swift */,
 				0B87167D294A8003005B8C0A /* QRSearchCityViewModel.swift */,
+				2A8CC2462B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -9309,6 +9314,7 @@
 				ED0AF88E286B68B900F86B68 /* UIImage+Extensions.swift */,
 				509EE0E3285F8599002281BF /* Publishers+Extension.swift */,
 				509EE0DA285F820E002281BF /* View+Extension.swift */,
+				2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */,
 				509EE0DC285F8313002281BF /* Notification+Extension.swift */,
 				77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */,
 				5066506A28577C260039A745 /* DateComponentsFormatter+Ext.swift */,
@@ -12950,6 +12956,7 @@
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,
+				2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
 				77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */,
@@ -13411,6 +13418,7 @@
 				A5ECD4C727ECB77F008FBEEC /* C2BSuccessView.swift in Sources */,
 				7767049C27FD9D1000996A07 /* PlacesControlView.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
+				2A8CC2492B29FA5A00191B8E /* View+navigationBar.swift in Sources */,
 				0B8C1C64273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift in Sources */,
 				A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */,
 				77178A6F27C1F07F0095CF8C /* Payments+Service.swift in Sources */,

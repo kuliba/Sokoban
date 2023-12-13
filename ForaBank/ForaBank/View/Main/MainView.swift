@@ -178,8 +178,12 @@ struct MainView: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
-        case let .sberQRPayment(viewModel):
-            makeSberQRConfirmPaymentView(viewModel)
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.closeSberQRPaymentViewModel
+                )
         }
     }
     
