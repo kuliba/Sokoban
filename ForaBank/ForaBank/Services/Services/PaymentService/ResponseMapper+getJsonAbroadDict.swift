@@ -58,20 +58,12 @@ extension ResponseMapper {
     ) -> StickerDictionaryResponse {
         
         switch stickerDecodable {
-        case let .deliveryCourier(deliveryCourier):
-            return .deliveryCourier(.init(
-                main: deliveryCourier.main.map({
+        case let .deliveryType(deliveryType):
+            return .deliveryType(.init(
+                main: deliveryType.main.map({
                     StickerDictionaryResponse.Main(type: .init(componentType: $0.type), data: .init(dataType: $0.data))
                 }),
-                serial: deliveryCourier.serial
-            ))
-            
-        case let .deliveryOffice(deliveryOffice):
-            return .deliveryOffice(.init(
-                main: deliveryOffice.main.map({
-                    StickerDictionaryResponse.Main(type: .init(componentType: $0.type), data: .init(dataType: $0.data))
-                }),
-                serial: deliveryOffice.serial
+                serial: deliveryType.serial
             ))
         case let .orderForm(orderForm):
             return .orderForm(.init(

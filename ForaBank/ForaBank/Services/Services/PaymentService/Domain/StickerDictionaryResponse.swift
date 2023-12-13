@@ -10,27 +10,12 @@ import Foundation
 enum StickerDictionaryResponse: Equatable {
     
     case orderForm(StickerOrderForm)
-    case deliveryOffice(DeliveryOffice)
-    case deliveryCourier(DeliveryCourier)
+    case deliveryType(DeliveryType)
 }
 
 extension StickerDictionaryResponse {
     
-    public struct DeliveryOffice: Equatable {
-        
-        let main: [Main]
-        let serial: String
-        
-        public init(
-            main: [Main],
-            serial: String
-        ) {
-            self.main = main
-            self.serial = serial
-        }
-    }
-    
-    public struct DeliveryCourier: Equatable {
+    public struct DeliveryType: Equatable {
         
         let main: [Main]
         let serial: String

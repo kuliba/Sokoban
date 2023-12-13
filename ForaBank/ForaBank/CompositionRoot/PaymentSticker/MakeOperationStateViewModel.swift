@@ -265,13 +265,9 @@ private extension StickerDictionary {
                 serial: stickerOrderForm.serial
             ))
             
-        case let .deliveryOffice(deliveryOffice):
-            let main = componentMapper(deliveryOffice.main)
-            self = .deliveryOffice(.init(main: main, serial: deliveryOffice.serial))
-            
-        case let .deliveryCourier(deliveryCourier):
-            let main = componentMapper(deliveryCourier.main)
-            self = .deliveryCourier(.init(main: main, serial: deliveryCourier.serial))
+        case let .deliveryType(deliveryType):
+            let main = componentMapper(deliveryType.main)
+            self = .deliveryType(.init(main: main, serial: deliveryType.serial))
         }
     }
 }
@@ -376,7 +372,7 @@ private func componentMapper(
                 ))
             )
             
-        case let .noValid(error):
+        case .noValid(_):
             return .init(type: .separator, data: .separatorGroup)
         }
     }

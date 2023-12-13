@@ -1,6 +1,6 @@
 //
 //  _StickerDictionary.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 19.11.2023.
 //
