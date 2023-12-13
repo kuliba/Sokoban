@@ -12,6 +12,7 @@ extension Config {
     static let `default`: Self = .init(
         amount: .default,
         background: .default,
+        button: .default,
         info: .default,
         productSelect: .default
     )

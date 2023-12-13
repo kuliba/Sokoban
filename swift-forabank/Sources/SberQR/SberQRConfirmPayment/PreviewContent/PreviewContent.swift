@@ -154,7 +154,7 @@ extension SberQRConfirmPaymentState.Button {
     
     static let preview: Self = .init(
         id: .buttonPay,
-        value: "PAY",
+        value: "Оплатить",
         color: .red,
         action: .pay,
         placement: .bottom

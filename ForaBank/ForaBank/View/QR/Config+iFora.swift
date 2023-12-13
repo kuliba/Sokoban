@@ -14,17 +14,20 @@ extension SberQR.Config {
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        info: .init(
-            title: .init(
-                textFont: .textBodyMR14180(),
-                textColor: .textPlaceholder
-            ),
-            value: .init(
-                textFont: .textH4M16240(),
-                textColor: .textSecondary
-            )
-        ),
+        button: .iFora,
+        info: .iFora,
         productSelect: .iFora
+    )
+}
+
+private extension SberQR.ButtonConfig {
+    
+    static let iFora: Self = .init(
+        backgroundColor: .init(hex: "#FF3636"),
+        text: .init(
+            textFont: .textH4R16240(),
+            textColor: .textWhite
+        )
     )
 }
 
@@ -51,6 +54,20 @@ private extension SberQR.AmountConfig {
         title: .init(
             textFont: .textBodySR12160(),
             textColor: .textPlaceholder
+        )
+    )
+}
+
+private extension SberQR.InfoConfig {
+    
+    static let iFora: Self = .init(
+        title: .init(
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
+        ),
+        value: .init(
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
         )
     )
 }
