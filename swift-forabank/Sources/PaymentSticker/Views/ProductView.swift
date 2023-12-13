@@ -21,11 +21,13 @@ public struct ProductView: View {
             
             switch viewModel.state {
             case let .selected(productViewModel):
-                selectProductView(productViewModel)
+                selectProductView(productViewModel, state: viewModel.state)
                 
             case let .list(productViewModel, productList):
                 
-                selectProductView(productViewModel)
+                selectProductView(productViewModel, state: viewModel.state)
+                    .onTapGesture(perform: viewModel.chevronTapped)
+                
                 optionsList(
                     productList,
                     viewModel: viewModel,
@@ -94,7 +96,8 @@ public struct ProductView: View {
     }
     
     private func selectProductView(
-        _ productViewModel: ProductViewModel
+        _ productViewModel: ProductViewModel,
+        state: ProductStateViewModel.State
     ) -> some View {
         
         HStack(spacing: 12) {
@@ -114,7 +117,8 @@ public struct ProductView: View {
                 Spacer()
                 
                 mainView(
-                    productViewModel
+                    productViewModel,
+                    state: state
                 )
             }
         }
@@ -123,7 +127,8 @@ public struct ProductView: View {
     }
     
     private func mainView(
-        _ viewModel: ProductViewModel
+        _ viewModel: ProductViewModel,
+        state: ProductStateViewModel.State
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 4) {
@@ -149,7 +154,19 @@ public struct ProductView: View {
                     .font(appearance.textFont)
                     .foregroundColor(appearance.textColor)
                 
-                Image(systemName: "chevron.down")
+                if case .selected = state {
+                    
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.gray)
+                        .frame(width: 24, height: 24, alignment: .center)
+                    
+                } else {
+                    
+                    Image(systemName: "chevron.up")
+                        .foregroundColor(.gray)
+                        .frame(width: 24, height: 24, alignment: .center)
+                }
+
             }
             
             ProductView.FooterView(

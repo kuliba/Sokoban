@@ -104,7 +104,7 @@ private extension ModelToViewModelMapper {
         case .amount:
             return .amount(.init(value: ""))
         case .input:
-            return .input(.init(value: "", title: "", warning: nil))
+            return .input(.init(value: "", title: .code, warning: nil))
         case .product:
             return .productSelector(.init(
                 state: .select,
@@ -112,7 +112,7 @@ private extension ModelToViewModelMapper {
                     id: 1,
                     title: "title",
                     nameProduct: "nameProduct",
-                    balance: "balance",
+                    balance: 0,
                     balanceFormatted: "balanceFormatted",
                     description: "description",
                     cardImage: .named(""),
@@ -130,6 +130,7 @@ private extension ModelToViewModelMapper {
                 title: "title",
                 placeholder: "placeholder",
                 options: [],
+                staticOptions: [],
                 state: .idle(.init(
                     iconName: "",
                     title: "Title"
