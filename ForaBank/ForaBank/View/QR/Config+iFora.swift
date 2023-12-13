@@ -60,24 +60,15 @@ private extension SberQR.AmountConfig {
 private extension SberQR.InfoConfig {
     
     static let iFora: Self = .init(
-        title: .init(
-            textFont: .textBodyMR14180(),
-            textColor: .textPlaceholder
-        ),
-        value: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        )
+        title: .placeholder,
+        value: .secondary
     )
 }
 
 private extension SberQR.ProductSelectConfig {
     
     static let iFora: Self = .init(
-        amount: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        ),
+        amount: .secondary,
         card: .init(
             amount: .init(
                 textFont: .textBodyXsSb11140(),
@@ -93,18 +84,22 @@ private extension SberQR.ProductSelectConfig {
             )
         ),
         chevronColor: .iconGray,
-        footer: .init(
-            textFont: .textBodyMR14180(),
-            textColor: .textPlaceholder
-        ),
-        header: .init(
-            textFont: .textBodyMR14180(),
-            textColor: .textPlaceholder
-        ),
-        title: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        )
+        footer: .placeholder,
+        header: .placeholder,
+        title: .secondary
+    )
+}
+
+private extension SberQR.TextConfig {
+    
+    static let secondary: Self = .init(
+        textFont: .textH4M16240(),
+        textColor: .textSecondary
+    )
+    
+    static let placeholder: Self = .init(
+        textFont: .textBodyMR14180(),
+        textColor: .textPlaceholder
     )
 }
 
