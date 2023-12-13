@@ -7,8 +7,7 @@
 
 import Foundation
 import SwiftUI
-//import TextFieldComponent
-//import TextFieldModel
+import TextFieldComponent
 
 struct SelectView: View {
     
@@ -40,9 +39,11 @@ struct SelectView: View {
             case let .list(optionsListViewModel):
                 OptionsListView(
                     icon: .init(viewModel.icon.name ?? ""),
+                    selectViewModel: viewModel,
                     viewModel: optionsListViewModel,
                     config: config,
-                    selected: viewModel.select
+                    selected: viewModel.select,
+                    isSearching: viewModel.isSearching
                 )
                 .padding(.vertical, 15)
             }
@@ -133,21 +134,63 @@ extension SelectView {
     struct OptionsListView: View {
         
         let icon: Image
+        let selectViewModel: SelectViewModel
         let viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel
         let config: SelectViewConfiguration
         let selected: (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel) -> Void
-        
+        @StateObject private var regularFieldViewModel: RegularFieldViewModel
+        let isSearching: Bool
+
+        init(
+            icon: Image,
+            selectViewModel: SelectViewModel,
+            viewModel: SelectViewModel.ParameterSelect.State.OptionsListViewModel,
+            config: SelectViewConfiguration,
+            selected: @escaping (SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel) -> Void,
+            isSearching: Bool
+        ) {
+            self.icon = icon
+            self.selectViewModel = selectViewModel
+            self.viewModel = viewModel
+            self.config = config
+            self.selected = selected
+            self.isSearching = isSearching
+            
+            let regularFieldViewModel: RegularFieldViewModel = .make(
+                code: selectViewModel.parameter.options.first(where: { $0.id == selectViewModel.parameter.value })?.name,
+                placeholderText: viewModel.placeholder,
+                limit: 226
+            )
+            
+            self._regularFieldViewModel = .init(
+                wrappedValue: regularFieldViewModel
+            )
+
+        }
         var body: some View {
+            
+            let textField = TextFieldView(
+                viewModel: regularFieldViewModel,
+                textFieldConfig: config.textFieldConfig
+            )
             
             VStack {
                 
-                select(viewModel.options.first)
+                select(
+                    with: selectViewModel.isSearching,
+                    viewModel.options.first,
+                    textField: textField
+                )
+                .onChange(of: regularFieldViewModel.text ?? "", perform: selectViewModel.search)
                 
                 ScrollView(.vertical) {
                     
                     VStack(spacing: 16) {
                         
-                        ForEach(viewModel.options, content: option(option:))
+                        ForEach(selectViewModel.parameter.options) { option in
+                        
+                            optionView(option: .init(iconName: option.iconName, name: option.name))
+                        }
                     }
                     .padding(.vertical, 8)
                 }
@@ -156,7 +199,10 @@ extension SelectView {
         }
         
         @ViewBuilder
-        private func select(_ option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel?
+        private func select(
+            with isSearching: Bool,
+            _ option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel?,
+            textField: TextFieldView
         ) -> some View {
             
             HStack(alignment: .center, spacing: 16) {
@@ -173,10 +219,18 @@ extension SelectView {
                         .font(config.selectOptionConfig.placeholderFont)
                         .foregroundColor(config.selectOptionConfig.placeholderForeground)
                     
-                    Text(viewModel.placeholder)
-                        .lineLimit(1)
-                        .font(config.selectOptionConfig.placeholderFont)
-                        .foregroundColor(config.selectOptionConfig.placeholderForeground)
+                    if isSearching {
+                        
+                        textField
+                        
+                    } else {
+                        
+                        Text(viewModel.placeholder)
+                            .lineLimit(1)
+                            .font(config.selectOptionConfig.placeholderFont)
+                            .foregroundColor(config.selectOptionConfig.placeholderForeground)
+                  
+                    }
                 }
                 
                 Spacer()
@@ -184,11 +238,12 @@ extension SelectView {
                 Image(systemName: "chevron.up")
                     .foregroundColor(.gray)
                     .frame(width: 24, height: 24, alignment: .center)
+                    .onTapGesture(perform: selectViewModel.tapAction)
             }
         }
         
         @ViewBuilder
-        private func option(
+        private func optionView(
             option: SelectViewModel.ParameterSelect.State.OptionsListViewModel.OptionViewModel
         ) -> some View {
             
@@ -245,41 +300,36 @@ extension SelectView {
 
 struct ParameterSelectView_Previews: PreviewProvider {
     
-//    private static func textField() -> TextFieldView {
-//
-//        let textFieldConfig: TextFieldView.TextFieldConfig = .init(
-//            font: .systemFont(ofSize: 19, weight: .regular),
-//            textColor: .orange,
-//            tintColor: .black,
-//            backgroundColor: .clear,
-//            placeholderColor: .gray
-//        )
-//
-//        return .init(
-//            state: .constant(.placeholder("Выберите значение")),
-//            keyboardType: .default,
-//            toolbar: nil,
-//            send: { _ in },
-//            textFieldConfig: textFieldConfig
-//        )
-//    }
-    
     static var previews: some View {
         
         SelectView(
-            viewModel: .init(parameter: .init(
-                id: .transferTypeSticker,
-                value: "value",
-                title: "Выберите способ доставки",
-                placeholder: "Выберите значение",
-                options: [
-                    .init(id: "option1", name: "option1", iconName: ""),
-                    .init(id: "option2", name: "option2", iconName: "")
-                ],
-                state: .idle(.init(iconName: "", title: "Выберите значение"))),
-                             icon: .named(""),
-                             tapAction: { },
-                             select: { id in }
+            viewModel: .init(
+                parameter: .init(
+                    id: .transferTypeSticker,
+                    value: "value",
+                    title: "Выберите способ доставки",
+                    placeholder: "Выберите значение",
+                    options: [
+                        .init(
+                            id: "option1",
+                            name: "option1",
+                            iconName: ""
+                        ),
+                        .init(
+                            id: "option2",
+                            name: "option2",
+                            iconName: ""
+                        )
+                    ],
+                    staticOptions: [],
+                    state: .idle(.init(
+                        iconName: "",
+                        title: "Выберите значение"
+                    ))),
+                isSearching: false,
+                tapAction: { },
+                select: { id in },
+                search: { _ in}
             ),
             config: .default
         )
@@ -302,6 +352,13 @@ extension SelectViewConfiguration {
         optionConfig: .init(
             nameFont: .body,
             nameForeground: .accentColor
+        ), 
+        textFieldConfig: .init(
+            font: .systemFont(ofSize: 14),
+            textColor: .black,
+            tintColor: .black,
+            backgroundColor: .clear,
+            placeholderColor: .gray
         )
     )
 }
