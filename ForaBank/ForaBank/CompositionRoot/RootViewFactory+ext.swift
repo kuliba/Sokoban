@@ -35,33 +35,28 @@ private extension Model {
             id: info.id,
             value: info.value,
             title: info.title,
-            image: { [weak self] completion in
-                
-                guard let self else { return }
-                
-                completion(self.image(info.icon))
-            }
+            image: { [weak self] in self?.image(info.icon, $0) }
         )
     }
     
     func image(
-        _ icon: GetSberQRDataResponse.Parameter.Info.Icon
-    ) -> Image {
-        
+        _ icon: GetSberQRDataResponse.Parameter.Info.Icon,
+        _ completion: @escaping (Image) -> Void
+    ) {
         switch icon.type {
         case .local:
-            return Image(icon.value)
+            completion(.init(icon.value))
             
         case .remote:
-            guard 
-                let imageData = images.value[icon.value],
-                let image = imageData.image
-            else {
-                // TODO: rethink failure case
-                return Image(.avatar)
-            }
-            
-            return image
+            let imageCache = ImageCache(model: self)
+            imageCache.image(
+                for: .init(icon.value),
+                completion: {
+                    
+                    completion($0)
+//                    _ = imageCache
+                }
+            )
         }
     }
 }
