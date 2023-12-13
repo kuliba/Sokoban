@@ -13,8 +13,9 @@ struct AmountView: View {
     let event: (Decimal) -> Void
     let pay: () -> Void
     
+    let currencySymbol: String
     let config: AmountConfig
-    
+        
     private let buttonSize = CGSize(width: 114, height: 40)
     private let frameInsets = EdgeInsets(top: 4, leading: 20, bottom: 16, trailing: 19)
     
@@ -40,13 +41,12 @@ struct AmountView: View {
         }
     }
     
-    #warning("add currency to text field")
     private func textField() -> some View {
         
         TextField(
             "amount",
             text: .init(
-                get: { "\(amount.value)" },
+                get: { "\(amount.value) \(currencySymbol)" },
                 set: {
                     guard let amount = Decimal(string: $0)
                     else { return }
@@ -96,6 +96,7 @@ struct AmountView_Previews: PreviewProvider {
             amount: .preview,
             event: { _ in },
             pay: {},
+            currencySymbol: "$",
             config: .default
         )
     }
