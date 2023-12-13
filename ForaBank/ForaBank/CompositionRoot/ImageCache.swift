@@ -21,8 +21,6 @@ final class ImageCache {
     private let requestImages: RequestImages
     private let imagesPublisher: ImagesPublisher
     
-    private var cancellable: AnyCancellable?
-    
     init(
         requestImages: @escaping RequestImages,
         imagesPublisher: ImagesPublisher
@@ -32,24 +30,24 @@ final class ImageCache {
     }
     
     func image(
-        forKey imageKey: ImageKey,
-        completion: @escaping (Image) -> Void
-    ) {
+        forKey imageKey: ImageKey
+    ) -> AnyPublisher<Image, Never> {
+        
         let imageID = imageKey.rawValue
         
         if let imageData = imagesPublisher.value[imageID],
            let image = imageData.image {
             
-            completion(image)
+            return Just(image).eraseToAnyPublisher()
             
         } else {
             // TODO: add queue to remove duplicated inflight requests
             requestImages([imageID])
             
-            cancellable = imagesPublisher
+            return imagesPublisher
                 .compactMap { $0[imageID] }
                 .compactMap(\.image)
-                .sink(receiveValue: completion)
+                .eraseToAnyPublisher()
         }
     }
 }

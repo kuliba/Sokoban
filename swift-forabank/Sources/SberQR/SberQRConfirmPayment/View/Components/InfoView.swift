@@ -29,7 +29,7 @@ struct InfoView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .onAppear { info.image { self.image = $0 }}
+        .onReceive(info.image, perform: { self.image = $0 })
     }
     
     @ViewBuilder

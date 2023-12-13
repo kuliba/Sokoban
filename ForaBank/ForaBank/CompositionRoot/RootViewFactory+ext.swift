@@ -25,13 +25,7 @@ extension RootViewFactory {
                             id: info.id,
                             value: info.value,
                             title: info.title,
-                            image: { completion in
-                            
-                                imageCache.image(
-                                    forKey: .init(info.value),
-                                    completion: completion
-                                )
-                            }
+                            image: imageCache.image(forKey: .init(info.value))
                         )
                     },
                     config: .iFora
