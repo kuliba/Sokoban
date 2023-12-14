@@ -19,23 +19,28 @@ struct ProductCardView: View {
     
     private var offsetY: CGFloat {
         
-        (cardSize.height - shadowSize.height) / 2 + 4
+        (cardSize.height - shadowSize.height) + 4
     }
     
     var body: some View {
         
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .top) {
             
-            ZStack(alignment: .topTrailing) {
+            shadow
+            
+            ZStack(alignment: .bottomTrailing) {
                 
-                cardView()
-                    .frame(cardSize)
-                    .background(shadow)
+                ZStack(alignment: .topTrailing) {
+                    
+                    cardView()
+                        .frame(cardSize)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    
+                    mainCardMarkView()
+                }
                 
-                mainCardMarkView()
+                paymentSystemLogoView()
             }
-            
-            paymentSystemLogoView()
         }
     }
     
@@ -92,7 +97,7 @@ struct ProductCardView: View {
     
     private func cardTitle() -> some View {
         
-        text(productCard.data.title, config: config.type)
+        text(productCard.data.title, config: config.title)
     }
     
     private func balanceView() -> some View {
@@ -136,7 +141,8 @@ struct ProductCardView: View {
         config.shadowColor
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .frame(shadowSize)
-            .offset(y: offsetY)
+            .padding(.top, offsetY)
+            .padding(.bottom, 4)
             .blur(radius: 12)
     }
     

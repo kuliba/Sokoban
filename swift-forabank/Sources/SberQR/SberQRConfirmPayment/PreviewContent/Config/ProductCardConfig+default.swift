@@ -18,7 +18,7 @@ extension ProductCardConfig {
             textFont: .caption.bold(),
             textColor: .blue
         ),
-        type: .init(
+        title: .init(
             textFont: .caption.weight(.thin),
             textColor: .white
         ),

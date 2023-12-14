@@ -21,6 +21,28 @@ public struct ProductCard: Equatable {
     }
 }
 
+extension ProductCard {
+    
+    init(product: ProductSelect.Product) {
+        
+        self.init(
+            data: .init(
+                balanceFormatted: product.amountFormatted,
+                number: product.number,
+                title: product.title
+            ),
+            look: .init(
+                background: product.look.background,
+                backgroundColor: Color(product.look.color),
+                cardIcon: product.look.icon,
+                logo: product.look.logo,
+                mainCardMark: .svg(""),
+                paymentSystemLogo: product.look.paymentSystemLogo
+            )
+        )
+    }
+}
+
 public extension ProductCard {
     
     struct CardData: Equatable {

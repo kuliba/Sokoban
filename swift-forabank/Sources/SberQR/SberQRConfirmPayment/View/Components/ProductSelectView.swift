@@ -33,7 +33,7 @@ struct ProductSelectView: View {
         
         HStack(spacing: 12) {
             
-            productIcon(product.icon)
+            productIcon(product.look.icon)
             productTitle(product, config: config)
         }
         .contentShape(Rectangle())
@@ -42,19 +42,8 @@ struct ProductSelectView: View {
     
     private func productIcon(_ icon: Icon) -> some View {
         
-        Group {
-     
-            if let image = icon.image {
-                
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } else {
-                
-                Color.clear
-            }
-        }
-        .frame(width: 32, height: 32)
+        icon.image(orColor: .clear)
+            .frame(width: 32, height: 32)
     }
     
     private func productTitle(
@@ -110,30 +99,10 @@ struct ProductSelectView: View {
         product: ProductSelect.Product
     ) -> some View {
         
-        VStack(spacing: 8) {
-            
-            HStack {
-                
-                Color.clear
-                    .frame(width: 20, height: 20)
-                
-                text(product.number, config: config.card.number)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                
-                text(product.title, config: config.card.title)
-                
-                text(product.amountFormatted, config: config.card.amount)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .font(.caption.bold())
-        .padding(.card)
-        .frame(cardSize)
-        .background(Color.orange.opacity(0.5)) // product.color
-        .cornerRadius(8)
-        .onTapGesture { event(.select(product.id)) }
+        ProductCardView(
+            productCard: .init(product: product),
+            config: config.card.productCardConfig
+        )
     }
     
     private func chevron() -> some View {

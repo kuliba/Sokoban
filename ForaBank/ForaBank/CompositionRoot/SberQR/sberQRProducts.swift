@@ -47,11 +47,16 @@ extension ProductData {
                 id: .init(card.id),
                 type: .card,
                 header: "Счет списания",
-                icon: .svg(card.smallDesign.description),
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
                 amountFormatted: formatBalance(card),
-                color: card.backgroundColor.description
+                look: .init(
+                    background: .svg(card.largeDesign.description),
+                    color: card.backgroundColor.description,
+                    icon: .svg(card.smallDesign.description),
+                    logo: .svg(""),
+                    paymentSystemLogo: .svg(card.paymentSystemImage?.description ?? "")
+                )
             )
         }
         
@@ -61,11 +66,16 @@ extension ProductData {
                 id: .init(account.id),
                 type: .account,
                 header: "Счет списания",
-                icon: .svg(account.smallDesign.description),
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
                 amountFormatted: formatBalance(account),
-                color: account.backgroundColor.description
+                look: .init(
+                    background: .svg(account.largeDesign.description),
+                    color: account.backgroundColor.description,
+                    icon: .svg(account.smallDesign.description),
+                    logo: .svg(""),
+                    paymentSystemLogo: .svg("")
+                )
             )
         }
         

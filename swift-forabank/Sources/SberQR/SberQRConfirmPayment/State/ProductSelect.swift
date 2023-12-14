@@ -21,30 +21,49 @@ public extension ProductSelect {
         public let id: ID
         public let type: ProductType
         let header: String
-        let icon: Icon
         let title: String
         let number: String
         let amountFormatted: String
-        let color: String
+        let look: Look
         
         public init(
             id: ID,
             type: ProductType,
             header: String,
-            icon: Icon,
             title: String,
             footer: String,
             amountFormatted: String,
-            color: String
+            look: Look
         ) {
             self.id = id
             self.type = type
             self.header = header
-            self.icon = icon
             self.title = title
             self.number = footer
             self.amountFormatted = amountFormatted
+            self.look = look
+        }
+    }
+}
+
+public extension ProductSelect.Product {
+    
+    struct Look: Equatable {
+        
+        let background: Icon
+        let color: String
+        let icon: Icon
+        let logo: Icon
+        let paymentSystemLogo: Icon
+        
+        public init(background: Icon,
+                    color: String,
+                    icon: Icon, logo: Icon, paymentSystemLogo: Icon) {
+            self.background = background
             self.color = color
+            self.icon = icon
+            self.logo = logo
+            self.paymentSystemLogo = paymentSystemLogo
         }
     }
 }
