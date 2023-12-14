@@ -126,7 +126,8 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
         .init(
             id: .init(id),
             type: type,
-            icon: "",
+            header: "Счет списания",
+            icon: .svg(""),
             title: "",
             footer: "",
             amountFormatted: "",
