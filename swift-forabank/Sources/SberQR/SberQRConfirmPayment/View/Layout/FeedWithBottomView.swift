@@ -20,9 +20,9 @@ struct FeedWithBottomView<Feed: View, Bottom: View>: View {
         VStack {
             
             feedView()
+                .padding(.horizontal)
             bottom()
         }
-        .padding(.horizontal)
     }
     
     private func feedView() -> some View {

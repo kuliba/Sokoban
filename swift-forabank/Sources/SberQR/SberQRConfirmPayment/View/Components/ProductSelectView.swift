@@ -13,7 +13,7 @@ struct ProductSelectView: View {
     
     let state: ProductSelect
     let event: (Event) -> Void
-    let config: ProductSelectViewConfig
+    let config: ProductSelectConfig
     
     var body: some View {
         
@@ -47,7 +47,7 @@ struct ProductSelectView: View {
     
     private func productTitle(
         _ product: ProductSelect.Product,
-        config: ProductSelectViewConfig
+        config: ProductSelectConfig
     ) -> some View {
         
         VStack(alignment: .leading, spacing: 0) {

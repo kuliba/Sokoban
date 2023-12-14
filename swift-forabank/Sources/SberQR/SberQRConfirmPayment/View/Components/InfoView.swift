@@ -7,26 +7,18 @@
 
 import SwiftUI
 
-extension View {
-    
-    func frame(_ size: CGSize) -> some View {
-        
-        frame(width: size.width, height: size.height)
-    }
-}
-
 struct InfoView: View {
-    
-    typealias Info = SberQRConfirmPaymentState.Info
     
     let info: Info
     let config: InfoConfig
+    
+    @State private var image: Image?
     
     var body: some View {
         
         HStack(spacing: 12) {
             
-            icon(info.icon)
+            icon()
                 .frame(info.size)
                 .frame(width: 32, height: 32)
             
@@ -37,18 +29,18 @@ struct InfoView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .onReceive(info.image, perform: { self.image = $0 })
     }
     
     @ViewBuilder
-    private func icon(_ icon: Info.Icon) -> some View {
-            #warning("use type")
-        //        switch icon.type {
-        //        case .local:
-        //        case .remote:
-        //        }
+    private func icon() -> some View {
         
-        Image(icon.value)
-            .resizable()
+        if let image {
+            image.resizable()
+        } else {
+            // TODO: add shimmering
+            Color.clear
+        }
     }
     
     private func text(
@@ -62,7 +54,7 @@ struct InfoView: View {
     }
 }
 
-private extension SberQRConfirmPaymentState.Info {
+private extension Info {
     
     var size: CGSize {
         
@@ -92,7 +84,7 @@ struct InfoView_Previews: PreviewProvider {
     }
     
     private static func infoView(
-        info: SberQRConfirmPaymentState.Info
+        info: Info
     ) -> some View {
         
         InfoView(info: info, config: .default)

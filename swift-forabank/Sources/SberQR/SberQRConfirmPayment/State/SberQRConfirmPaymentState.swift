@@ -7,21 +7,22 @@
 
 import Foundation
 
-public enum SberQRConfirmPaymentState: Equatable {
+public typealias SberQRConfirmPaymentState = SberQRConfirmPaymentStateOf<GetSberQRDataResponse.Parameter.Info>
+
+public enum SberQRConfirmPaymentStateOf<Info> {
     
     case editableAmount(EditableAmount)
     case fixedAmount(FixedAmount)
 }
 
-public extension SberQRConfirmPaymentState {
+public extension SberQRConfirmPaymentStateOf {
     
     typealias Amount = GetSberQRDataResponse.Parameter.Amount
     typealias Button = GetSberQRDataResponse.Parameter.Button
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
     typealias Header = GetSberQRDataResponse.Parameter.Header
-    typealias Info = GetSberQRDataResponse.Parameter.Info
     
-    struct EditableAmount: Equatable {
+    struct EditableAmount {
         
         public let header: Header
         public var productSelect: ProductSelect
@@ -47,7 +48,7 @@ public extension SberQRConfirmPaymentState {
         }
     }
     
-    struct FixedAmount: Equatable {
+    struct FixedAmount {
         
         public let header: Header
         public var productSelect: ProductSelect
@@ -73,6 +74,10 @@ public extension SberQRConfirmPaymentState {
         }
     }
 }
+
+extension SberQRConfirmPaymentStateOf: Equatable where Info: Equatable {}
+extension SberQRConfirmPaymentStateOf.EditableAmount: Equatable where Info: Equatable {}
+extension SberQRConfirmPaymentStateOf.FixedAmount: Equatable where Info: Equatable {}
 
 public extension SberQRConfirmPaymentState {
     

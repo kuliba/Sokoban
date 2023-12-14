@@ -9,15 +9,20 @@ import SwiftUI
 
 struct SberQRConfirmPaymentStateWrapperView: View {
     
+    public typealias Map = (GetSberQRDataResponse.Parameter.Info) -> Info
+    
     @StateObject private var viewModel: SberQRConfirmPaymentViewModel
     
+    private let map: Map
     private let config: Config
     
-    init(
+    public init(
         viewModel: SberQRConfirmPaymentViewModel,
+        map: @escaping Map,
         config: Config
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.map = map
         self.config = config
     }
     
@@ -25,6 +30,7 @@ struct SberQRConfirmPaymentStateWrapperView: View {
         
         SberQRConfirmPaymentWrapperView(
             viewModel: viewModel,
+            map: map,
             config: config
         )
     }
@@ -42,6 +48,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
                 viewModel: .preview(
                     initialState: .fixedAmount(.preview)
                 ),
+                map: Info.preview,
                 config: .default
             )
             
@@ -49,6 +56,7 @@ struct SberQRConfirmPaymentStateWrapperView_Previews: PreviewProvider {
                 viewModel: .preview(
                     initialState: .editableAmount(.preview)
                 ),
+                map: Info.preview,
                 config: .default
             )
         }

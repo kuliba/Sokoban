@@ -10,7 +10,7 @@ public extension GetSberQRDataResponse.Parameter {
     struct Header: Equatable {
         
         let id: ID
-        let value: String
+        public let value: String
         
         public init(
             id: ID,

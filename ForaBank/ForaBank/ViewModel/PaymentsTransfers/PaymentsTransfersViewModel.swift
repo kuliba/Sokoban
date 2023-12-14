@@ -1087,6 +1087,14 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     }
 }
 
+extension PaymentsTransfersViewModel {
+
+    func closeSberQRPaymentViewModel() {
+        
+        self.link = nil
+    }
+}
+
 // MARK: - Helpers
 
 extension PaymentsTransfersViewModel {

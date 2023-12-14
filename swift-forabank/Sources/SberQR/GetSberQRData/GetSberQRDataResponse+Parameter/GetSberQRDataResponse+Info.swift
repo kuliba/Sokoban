@@ -9,10 +9,10 @@ public extension GetSberQRDataResponse.Parameter {
     
     struct Info: Equatable {
         
-        let id: ID
-        let value: String
-        let title: String
-        let icon: Icon
+        public let id: ID
+        public let value: String
+        public let title: String
+        public let icon: Icon
         
         public init(
             id: ID,
@@ -37,8 +37,8 @@ public extension GetSberQRDataResponse.Parameter.Info {
     
     struct Icon: Equatable {
         
-        let type: IconType
-        let value: String
+        public let type: IconType
+        public let value: String
         
         public init(
             type: IconType,

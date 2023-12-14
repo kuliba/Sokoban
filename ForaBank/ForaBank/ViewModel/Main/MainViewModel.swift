@@ -1059,6 +1059,14 @@ class MainViewModel: ObservableObject, Resetable {
 }
 
 extension MainViewModel {
+
+    func closeSberQRPaymentViewModel() {
+        
+        self.link = nil
+    }
+}
+
+extension MainViewModel {
     
     class UserAccountButtonViewModel: ObservableObject {
         

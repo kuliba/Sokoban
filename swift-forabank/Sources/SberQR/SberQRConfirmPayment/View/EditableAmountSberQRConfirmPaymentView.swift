@@ -9,8 +9,11 @@ import SwiftUI
 
 struct EditableAmountSberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState.EditableAmount
-    let event: (SberQRConfirmPaymentEvent.EditableAmount) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>.EditableAmount
+    typealias Event = SberQRConfirmPaymentEvent.EditableAmount
+    
+    let state: State
+    let event: (Event) -> Void
     let pay: () -> Void
     let config: Config
 
@@ -23,7 +26,9 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             AmountView(
                 amount: state.bottom,
                 event: { event(.editAmount($0)) },
-                pay: pay
+                pay: pay,
+                currencySymbol: state.currencySymbol,
+                config: config.amount
             )
         }
     }
@@ -37,7 +42,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelectView
+                config: config.productSelect
             )
 
             InfoView(
@@ -55,6 +60,17 @@ struct EditableAmountSberQRConfirmPaymentView: View {
     }
 }
 
+private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+    
+    var currencySymbol: String {
+        
+        switch currency.value {
+        case "RUB": return "₽"
+        default:    return " "
+        }
+    }
+}
+
 // MARK: - Previews
 
 struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
@@ -65,7 +81,7 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState.EditableAmount
+        _ state: EditableAmountSberQRConfirmPaymentView.State
     ) -> some View {
         
         EditableAmountSberQRConfirmPaymentView(
