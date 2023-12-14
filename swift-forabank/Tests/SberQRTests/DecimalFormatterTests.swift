@@ -14,7 +14,7 @@ final class DecimalFormatterTests: XCTestCase {
         
         let sut = SUT(currencySymbol: "RUB")
 
-        let number = sut.number(nil)
+        let number = sut.number(from: nil)
         
         XCTAssertNoDiff(number, 0)
     }
@@ -24,7 +24,7 @@ final class DecimalFormatterTests: XCTestCase {
         let nonNumber = " 123"
         let sut = SUT(currencySymbol: "RUB")
 
-        let number = sut.number(nonNumber)
+        let number = sut.number(from: nonNumber)
         
         XCTAssertNoDiff(number, 0)
     }
@@ -34,7 +34,7 @@ final class DecimalFormatterTests: XCTestCase {
         let nonFormatted = "123"
         let sut = SUT(currencySymbol: "RUB")
 
-        let number = sut.number(nonFormatted)
+        let number = sut.number(from: nonFormatted)
         
         XCTAssertNoDiff(number, 0)
     }
@@ -44,7 +44,7 @@ final class DecimalFormatterTests: XCTestCase {
         let nonFormatted = "123 RUB"
         let sut = SUT(currencySymbol: "RUB")
 
-        let number = sut.number(nonFormatted)
+        let number = sut.number(from: nonFormatted)
         
         XCTAssertNoDiff(number, 123)
     }
@@ -78,7 +78,7 @@ final class DecimalFormatterTests: XCTestCase {
         let string = "123"
         let sut = SUT(currencySymbol: "RUB")
         
-        let reversed = sut.format(sut.number(string))
+        let reversed = sut.format(sut.number(from: string))
         
         XCTAssertNoDiff(reversed, "0 RUB")
     }
@@ -88,7 +88,7 @@ final class DecimalFormatterTests: XCTestCase {
         let string = "123 RUB"
         let sut = SUT(currencySymbol: "RUB")
         
-        let reversed = sut.format(sut.number(string))
+        let reversed = sut.format(sut.number(from: string))
         
         XCTAssertNoDiff(reversed, "123 RUB")
     }
@@ -107,7 +107,7 @@ final class DecimalFormatterTests: XCTestCase {
         let sut = SUT(currencySymbol: currencySymbol)
         
         let formatted = sut.format(decimal)
-        let reversed = sut.number(formatted)
+        let reversed = sut.number(from: formatted)
         
         XCTAssertNoDiff(formatted, expected, file: file, line: line)
         XCTAssertNoDiff(reversed, decimal, file: file, line: line)

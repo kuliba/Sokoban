@@ -11,42 +11,41 @@ import Foundation
 // model.dictionaryCurrencySymbol(productData.currency)
 public struct DecimalFormatter {
     
-    public let format: (Decimal) -> String?
-    public let number: (String?) -> Decimal
+    private let formatter: NumberFormatter
     
     public init(currencySymbol: String) {
         
-        let formatter = NumberFormatter.currency(with: currencySymbol)
+        self.formatter = .currency(with: currencySymbol)
+    }
+    
+    public func format(_ decimal: Decimal) -> String? {
         
-        self.format = {
-            
-            let double = NSDecimalNumber(decimal: $0).doubleValue
-            return formatter.string(from: NSNumber(value: double))
-        }
+        formatter.string(from: NSDecimalNumber(decimal: decimal))
+    }
+    
+    public func number(from string: String?) -> Decimal {
         
-        self.number = { text in
-            
-            guard let text,
-                  let value = formatter.number(from: text)
-            else { return 0 }
-            
-            return value.decimalValue
-        }
+        guard let string = string,
+                let number = formatter.number(from: string)
+        else { return .zero }
+        
+        return number.decimalValue
     }
 }
 
 private extension NumberFormatter {
     
     // NumberFormatter+Extensions.swift:21
-    static func currency(with currencySymbol: String) -> NumberFormatter {
+    static func currency(
+        with currencySymbol: String
+    ) -> NumberFormatter {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencySymbol = currencySymbol
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
-        formatter.locale = Locale(identifier: "ru_RU")
-        
+        formatter.locale = Locale.current
         return formatter
     }
 }
