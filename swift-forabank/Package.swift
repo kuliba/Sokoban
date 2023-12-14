@@ -472,6 +472,7 @@ private extension Target {
             .tagged,
             // internal modules
             .foraTools,
+            .textFieldComponent
         ]
     )
     static let sberQRTests = testTarget(
