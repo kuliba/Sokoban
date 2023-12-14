@@ -24,17 +24,28 @@ private extension PaymentStickerBusinessTests {
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (BusinessLogic, Spy) {
+    ) -> (BusinessLogic, DictionarySpy, TransferSpy, MakeSpy, ImageLoaderSpy) {
+        
+        let dictinarySpy = DictionarySpy()
+        let transferSpy = TransferSpy()
+        let makeSpy = MakeSpy()
+        let imageLoaderSpy = ImageLoaderSpy()
         
         let sut = PaymentSticker.BusinessLogic(
-            processDictionaryService: {_,_  in }, //TODO: setup SPY
-            processTransferService: {_,_  in },
-            processMakeTransferService: {_,_  in },
-            processImageLoaderService: {_,_  in },
+            processDictionaryService: dictinarySpy.process(_:_:),
+            processTransferService: transferSpy.process(_:_:),
+            processMakeTransferService: makeSpy.process(_:_:),
+            processImageLoaderService: imageLoaderSpy.process(_:_:),
             selectOffice: {_,_  in },
             products: [],
             cityList: []
         )
+        
+//        trackForMemoryLeaks(spyDictionary, file: file, line: line)
+//        trackForMemoryLeaks(sut, file: file, line: line)
+
+        return (sut, dictinarySpy, transferSpy, makeSpy, imageLoaderSpy)
+    }
 
     private final class ImageLoaderSpy {
         
