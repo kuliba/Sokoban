@@ -95,8 +95,7 @@ extension ProductSelect.Product {
             background: .svg(""),
             color: "orange",
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     )
     
@@ -111,8 +110,7 @@ extension ProductSelect.Product {
             background: .svg(""),
             color: "orange",
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     )
     
@@ -127,8 +125,7 @@ extension ProductSelect.Product {
             background: .svg(""),
             color: "orange",
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     )
     
@@ -143,8 +140,7 @@ extension ProductSelect.Product {
             background: .svg(""),
             color: "orange",
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     )
     
@@ -159,8 +155,7 @@ extension ProductSelect.Product {
             background: .svg(""),
             color: "orange",
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     )
 }

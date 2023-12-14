@@ -28,18 +28,13 @@ struct ProductCardView: View {
             
             shadow
             
-            ZStack(alignment: .bottomTrailing) {
+            ZStack(alignment: .topTrailing) {
                 
-                ZStack(alignment: .topTrailing) {
-                    
-                    cardView()
-                        .frame(cardSize)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                    
-                    mainCardMarkView()
-                }
+                cardView()
+                    .frame(cardSize)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 
-                paymentSystemLogoView()
+                selectedCardMarkView()
             }
         }
     }
@@ -62,18 +57,12 @@ struct ProductCardView: View {
         
         VStack(alignment: .leading) {
             
-            HStack(spacing: 0) {
+            HStack(spacing: 9) {
                 
                 cardIcon()
                     .frame(.size16)
                     .frame(.size20)
-                
-                Circle()
-                    .foregroundColor(.white)
-                    .frame(.size2)
-                    .padding(.leading, 3)
-                    .padding(.trailing, 5)
-                
+                                
                 cardNumber()
             }
             
@@ -111,21 +100,12 @@ struct ProductCardView: View {
             .frame(logoSize)
     }
     
-    private func mainCardMarkView() -> some View {
+    private func selectedCardMarkView() -> some View {
         
         productCard.look.mainCardMark.image(orColor: .clear)
             .frame(.size16)
             .padding(.top, 10)
             .padding(.trailing, 10)
-    }
-    
-    private func paymentSystemLogoView() -> some View {
-        
-        productCard.look.paymentSystemLogo
-            .image(orColor: .clear)
-            .frame(.size20)
-            .padding(.trailing, 8)
-            .padding(.bottom, 3)
     }
     
     @ViewBuilder

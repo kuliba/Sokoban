@@ -28,9 +28,9 @@ extension Array where Element == ProductData {
     ) -> [ProductSelect.Product] {
         
         self.filter {
-                productTypes.contains($0.productType)
-                && currencies.contains($0.currency)
-            }
+            productTypes.contains($0.productType)
+            && currencies.contains($0.currency)
+        }
         .compactMap { $0.sberQRProduct(formatBalance: formatBalance) }
     }
 }
@@ -54,8 +54,7 @@ extension ProductData {
                     background: .svg(card.largeDesign.description),
                     color: card.backgroundColor.description,
                     icon: .svg(card.smallDesign.description),
-                    logo: .svg(""),
-                    paymentSystemLogo: .svg(card.paymentSystemImage?.description ?? "")
+                    logo: .svg("")
                 )
             )
         }
@@ -73,8 +72,7 @@ extension ProductData {
                     background: .svg(account.largeDesign.description),
                     color: account.backgroundColor.description,
                     icon: .svg(account.smallDesign.description),
-                    logo: .svg(""),
-                    paymentSystemLogo: .svg("")
+                    logo: .svg("")
                 )
             )
         }

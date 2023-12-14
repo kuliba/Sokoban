@@ -1,6 +1,6 @@
 //
 //  ProductSelect.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -54,16 +54,17 @@ public extension ProductSelect.Product {
         let color: String
         let icon: Icon
         let logo: Icon
-        let paymentSystemLogo: Icon
         
-        public init(background: Icon,
-                    color: String,
-                    icon: Icon, logo: Icon, paymentSystemLogo: Icon) {
+        public init(
+            background: Icon,
+            color: String,
+            icon: Icon,
+            logo: Icon
+        ) {
             self.background = background
             self.color = color
             self.icon = icon
             self.logo = logo
-            self.paymentSystemLogo = paymentSystemLogo
         }
     }
 }

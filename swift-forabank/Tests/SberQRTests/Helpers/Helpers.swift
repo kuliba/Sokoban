@@ -145,8 +145,7 @@ extension ProductSelect.Product.Look {
             background: .svg(""),
             color: color,
             icon: .svg(""),
-            logo: .svg(""),
-            paymentSystemLogo: .svg("")
+            logo: .svg("")
         )
     }
 }
