@@ -112,7 +112,7 @@ private extension ModelToViewModelMapper {
                     id: 1,
                     title: "title",
                     nameProduct: "nameProduct",
-                    balance: 0,
+                    balance: 1,
                     balanceFormatted: "balanceFormatted",
                     description: "description",
                     cardImage: .named(""),
