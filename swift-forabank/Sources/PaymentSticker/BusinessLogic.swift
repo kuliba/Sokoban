@@ -450,7 +450,7 @@ public extension BusinessLogic {
             ))
     }
     
-    fileprivate func reduceProductEvent(
+    func reduceProductEvent(
         _ productEvents: (Event.ProductEvent),
         _ operation: PaymentSticker.Operation
     ) -> BusinessLogic.OperationResult {
@@ -487,7 +487,7 @@ public extension BusinessLogic {
         }
     }
     
-    fileprivate func selectOption(
+    func selectOption(
         id: String,
         operation: PaymentSticker.Operation,
         parameter: PaymentSticker.Operation.Parameter.Select
@@ -704,7 +704,7 @@ public extension BusinessLogic {
 
 extension BusinessLogic {
     
-    fileprivate func reduceSearchAction(
+    func reduceSearchAction(
         _ parameter: Event.ParameterSelect,
         _ text: String,
         _ operation: Operation
@@ -727,7 +727,7 @@ extension BusinessLogic {
         return .success(.operation(newOperation))
     }
     
-    fileprivate func resultChevronTapped(
+    func resultChevronTapped(
         _ select: (Event.ParameterSelect),
         _ operation: Operation
     ) -> BusinessLogic.OperationResult {
