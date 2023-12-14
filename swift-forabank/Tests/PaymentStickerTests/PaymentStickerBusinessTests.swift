@@ -37,11 +37,28 @@ private extension PaymentStickerBusinessTests {
         )
     
         let spy = Spy()
+    private final class MakeSpy {
         
-        trackForMemoryLeaks(spy, file: file, line: line)
-        trackForMemoryLeaks(sut, file: file, line: line)
+        private(set) var messages = [(request: String, completion: BusinessLogic.MakeTransferCompletion)]()
 
-        return (sut, spy)
+        var callCount: Int { messages.count }
+        var requests: [String] { messages.map(\.request) }
+        
+        func process(
+            _ request: String,
+            _ completion: @escaping BusinessLogic.MakeTransferCompletion
+        ) {
+         
+            messages.append((request, completion))
+        }
+        
+        func complete(
+            with result: Result<MakeTransferResponse, MakeTransferError>,
+            at index: Int = 0
+        ) {
+            
+            messages[index].completion(result)
+        }
     }
     
     private final class TransferSpy {
