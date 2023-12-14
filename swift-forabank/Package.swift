@@ -57,6 +57,7 @@ let package = Package(
         .phoneNumberKit,
         .tagged,
         .shimmer,
+        .svgKit,
     ],
     targets: [
         .loadableModel,
@@ -927,6 +928,7 @@ private extension Target {
     static let foraTools = target(
         name: .foraTools,
         dependencies: [
+            .svgKit
         ]
     )
     static let foraToolsTests = testTarget(
@@ -1198,6 +1200,30 @@ private extension String {
     
     static let foraTools = "ForaTools"
     static let foraToolsTests = "ForaToolsTests"
+}
+
+// MARK: - Third-Party Packages
+
+private extension Package.Dependency {
+    
+    static let svgKit = Package.Dependency.package(
+        url: .svg_kit,
+        .upToNextMajor(from: .init(3, 0, 0))
+    )
+}
+
+private extension Target.Dependency {
+    
+    static let svgKit = product(
+        name: .svgKit,
+        package: .svgKit
+    )
+}
+
+private extension String {
+    
+    static let svgKit = "SVGKit"
+    static let svg_kit = "https://github.com/\(svgKit)/\(svgKit)"
 }
 
 // MARK: - Point-Free
