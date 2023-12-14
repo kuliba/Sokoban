@@ -44,14 +44,30 @@ private extension PaymentStickerBusinessTests {
         return (sut, spy)
     }
     
-    class Spy {
+    private final class TransferSpy {
         
-        private (set) var events = [Event]()
+        private(set) var messages = [(request: StickerPayment, completion: BusinessLogic.TransferCompletion)]()
+
+        var callCount: Int { messages.count }
+        var requests: [StickerPayment] { messages.map(\.request) }
         
-        func event(event: Event) {
-            
-            events.append(event)
+        func process(
+            _ request: StickerPayment,
+            _ completion: @escaping BusinessLogic.TransferCompletion
+        ) {
+         
+            messages.append((request, completion))
         }
+        
+        func complete(
+            with result: Result<CommissionProductTransfer, CommissionProductTransferError>,
+            at index: Int = 0
+        ) {
+            
+            messages[index].completion(result)
+        }
+    }
+    
     private final class DictionarySpy {
         
         private(set) var messages = [(request: GetJsonAbroadType, completion: BusinessLogic.DictionaryCompletion)]()
