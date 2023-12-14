@@ -13,6 +13,21 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
         
+    
+    // MARK: Helpers
+    
+    private func getOperation(
+        transferTypeValue: String
+    ) -> PaymentSticker.Operation {
+        
+        return .init(parameters: [
+            getProductParameterStub(),
+            getTransferTypeParameter(value: transferTypeValue),
+            getCitySelectorParameter(),
+            getOfficeSelectorParameter()
+        ])
+    }
+    
     private func getTransferTypeParameter(
         value: String
     ) -> PaymentSticker.Operation.Parameter {
