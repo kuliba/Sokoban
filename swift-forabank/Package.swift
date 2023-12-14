@@ -469,6 +469,7 @@ private extension Target {
         dependencies: [
             // external packages
             .combineSchedulers,
+            .svgKit,
             .tagged
         ]
     )
