@@ -46,6 +46,8 @@ let package = Package(
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        // tools
+        .foraTools,
         // WIP: Explorations
         .userModel,
     ],
@@ -55,6 +57,7 @@ let package = Package(
         .phoneNumberKit,
         .tagged,
         .shimmer,
+        .svgKit,
     ],
     targets: [
         .loadableModel,
@@ -125,6 +128,9 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        // tools
+        .foraTools,
+        .foraToolsTests,
         // WIP: Explorations
         .wipTests,
         .userModel,
@@ -373,6 +379,15 @@ private extension Product {
         name: .transferPublicKey,
         targets: [
             .transferPublicKey,
+        ]
+    )
+    
+    // MARK: - Tools
+    
+    static let foraTools = library(
+        name: .foraTools,
+        targets: [
+            .foraTools,
         ]
     )
 }
@@ -908,6 +923,21 @@ private extension Target {
             .userModel
         ]
     )
+    
+    // MARK: - Tools
+    
+    static let foraTools = target(
+        name: .foraTools,
+        dependencies: [
+            .svgKit
+        ]
+    )
+    static let foraToolsTests = testTarget(
+        name: .foraToolsTests,
+        dependencies: [
+            .foraTools
+        ]
+    )
 }
 
 private extension Target.Dependency {
@@ -1047,6 +1077,12 @@ private extension Target.Dependency {
     static let urlRequestFactory = byName(
         name: .urlRequestFactory
     )
+    
+    // MARK: - Tools
+    
+    static let foraTools = byName(
+        name: .foraTools
+    )
 }
 
 private extension String {
@@ -1160,6 +1196,35 @@ private extension String {
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
+
+    // MARK: - Tools
+    
+    static let foraTools = "ForaTools"
+    static let foraToolsTests = "ForaToolsTests"
+}
+
+// MARK: - Third-Party Packages
+
+private extension Package.Dependency {
+    
+    static let svgKit = Package.Dependency.package(
+        url: .svg_kit,
+        .upToNextMajor(from: .init(3, 0, 0))
+    )
+}
+
+private extension Target.Dependency {
+    
+    static let svgKit = product(
+        name: .svgKit,
+        package: .svgKit
+    )
+}
+
+private extension String {
+    
+    static let svgKit = "SVGKit"
+    static let svg_kit = "https://github.com/\(svgKit)/\(svgKit)"
 }
 
 // MARK: - Point-Free
