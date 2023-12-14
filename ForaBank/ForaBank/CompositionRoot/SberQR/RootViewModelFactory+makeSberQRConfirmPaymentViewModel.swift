@@ -52,6 +52,7 @@ private extension Model {
         
         allProducts
             .filter(\.allowDebit)
+            .filter(\.isActive)
             .filter(\.isMainProduct)
             .mapToSberQRProducts(
                 response: response,
@@ -99,6 +100,21 @@ private extension ProductData {
            let isMain = card.isMain {
             
             return isMain
+        }
+        
+        if self is ProductAccountData {
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    var isActive: Bool {
+        
+        if let card = self as? ProductCardData {
+            
+            return card.statusPc == .active
         }
         
         if self is ProductAccountData {
