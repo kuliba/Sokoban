@@ -13,6 +13,13 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
     
+    func test_init_shouldNotCallImageProcess() {
+        
+        let (_, dictionarySpy, _, _, _) = makeSUT()
+        
+        XCTAssertNoDiff(dictionarySpy.callCount, 0)
+    }
+    
     // MARK: Get Payment Sticker
     
     func test_getStickerPayment_shouldReturnDeliveryTypeOffice() {
