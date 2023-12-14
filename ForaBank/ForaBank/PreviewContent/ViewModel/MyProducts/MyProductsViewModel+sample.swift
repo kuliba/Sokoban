@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 27.10.2023.
 //
 
+import SberQR
+
 extension MyProductsViewModel {
     
     static let sample = MyProductsViewModel(
@@ -17,25 +19,12 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
         refreshingIndicator: .init(isActive: true)
     )
     
@@ -49,25 +38,12 @@ extension MyProductsViewModel {
         productSections: [.sample2, .sample3],
         openProductVM: .previewSample,
         cardAction: { _ in },
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false]
     )

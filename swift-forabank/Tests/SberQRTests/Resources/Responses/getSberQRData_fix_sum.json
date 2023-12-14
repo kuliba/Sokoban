@@ -1,0 +1,71 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "qrcId": "48b1446882844284bc6bac9bb3e5062d",
+        "parameters": [
+            {
+                "id": "title",
+                "type": "HEADER",
+                "value": "Оплата по QR-коду"
+            },
+            {
+                "id": "debit_account",
+                "type": "PRODUCT_SELECT",
+                "value": null,
+                "title": "Счет списания",
+                "filter": {
+                    "productTypes": [
+                        "CARD",
+                        "ACCOUNT"
+                    ],
+                    "currencies": [
+                        "RUB"
+                    ],
+                    "additional": false
+                }
+            },
+            {
+                "id": "brandName",
+                "type": "INFO",
+                "value": "сббол енот_QR",
+                "title": "Получатель",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "b6e5b5b8673544184896724799e50384"
+                }
+            },
+            {
+                "id": "amount",
+                "type": "INFO",
+                "value": "220 ₽",
+                "title": "Сумма",
+                "icon": {
+                    "type": "LOCAL",
+                    "value": "ic24IconMessage"
+                }
+            },
+            {
+                "id": "recipientBank",
+                "type": "INFO",
+                "value": "Сбербанк",
+                "title": "Банк получателя",
+                "icon": {
+                    "type": "REMOTE",
+                    "value": "c37971b7264d55c3c467d2127ed600aa"
+                }
+            },
+            {
+                "id": "button_pay",
+                "type": "BUTTON",
+                "value": "Оплатить",
+                "color": "red",
+                "action": "PAY",
+                "placement": "BOTTOM"
+            }
+        ],
+        "required": [
+            "debit_account"
+        ]
+    }
+}

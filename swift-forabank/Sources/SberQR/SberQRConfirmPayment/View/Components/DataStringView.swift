@@ -12,6 +12,17 @@ struct DataStringView: View {
     let data: SberQRConfirmPaymentState.DataString
     
     var body: some View {
-        Text("DataStringView")
+        
+        Text(String(describing: data))
+    }
+}
+
+// MARK: - Previews
+
+struct DataStringView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        DataStringView(data: .preview)
     }
 }

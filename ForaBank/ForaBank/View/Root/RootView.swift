@@ -5,11 +5,14 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import SberQR
 import SwiftUI
 
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
+    
+    let rootViewFactory: RootViewFactory
     
     var body: some View {
         
@@ -41,7 +44,10 @@ struct RootView: View {
         
         NavigationView {
             
-            MainView(viewModel: viewModel.mainViewModel)
+            MainView(
+                viewModel: viewModel.mainViewModel,
+                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
+            )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
         .accessibilityIdentifier("tabBarMainButton")
@@ -51,7 +57,10 @@ struct RootView: View {
         
         NavigationView {
             
-            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+            PaymentsTransfersView(
+                viewModel: viewModel.paymentsViewModel,
+                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
+            )
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
         .accessibilityIdentifier("tabBarTransferButton")
@@ -164,10 +173,25 @@ struct RootView_Previews: PreviewProvider {
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
-                
+                    
                         .init(viewModel: .init(authLoginViewModel: .preview))
                 }
-            )
+            ),
+            rootViewFactory: .preview
         )
     }
+}
+
+private extension RootViewFactory {
+    
+    static let preview: Self = .init(
+        makeSberQRConfirmPaymentView: {
+            
+            .init(
+                viewModel: $0,
+                map: Info.preview(info:),
+                config: .iFora
+            )
+        }
+    )
 }

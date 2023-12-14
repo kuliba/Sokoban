@@ -92,6 +92,104 @@ extension XCTestCase {
         )
     }
     
+    func makeCardProduct(
+        id: Int,
+        currency: String = "RUB",
+        status: ProductData.Status = .active,
+        isMain: Bool? = nil
+    ) -> ProductCardData {
+        
+        .init(
+            id: id,
+            productType: .card,
+            number: "1111",
+            numberMasked: "****",
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: currency,
+            mainField: "Card",
+            additionalField: nil,
+            customName: nil,
+            productName: "Card",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: anySVGImageData(), 
+            largeDesign: anySVGImageData(), 
+            mediumDesign: anySVGImageData(),
+            smallDesign: anySVGImageData(),
+            fontDesignColor: anyColorData(),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "CARD",
+            validThru: Date(),
+            status: status,
+            expireDate: "01/01/01",
+            holderName: "Иванов",
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: nil,
+            statusPc: nil,
+            isMain: isMain,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "")
+    }
+    
+    func makeAccountProduct(
+        id: Int,
+        currency: String = "RUB",
+        status: ProductData.Status = .active
+    ) -> ProductAccountData {
+        
+        .init(
+            id: id, 
+            productType: .account,
+            number: nil,
+            numberMasked: nil,
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: currency,
+            mainField: "Account",
+            additionalField: nil,
+            customName: nil,
+            productName: "Account",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: anySVGImageData(),
+            largeDesign: anySVGImageData(),
+            mediumDesign: anySVGImageData(),
+            smallDesign: anySVGImageData(),
+            fontDesignColor: anyColorData(),
+            background: [],
+            externalId: 0,
+            name: "Ivanov",
+            dateOpen: .distantPast,
+            status: status,
+            branchName: nil,
+            miniStatement: [],
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            detailedRatesUrl: "",
+            detailedConditionUrl: ""
+        )
+    }
+    
     private func anySVGImageData(
         description: String = ""
     ) -> SVGImageData {

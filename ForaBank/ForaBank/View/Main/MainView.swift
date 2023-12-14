@@ -5,12 +5,15 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
-import SwiftUI
 import ScrollViewProxy
+import SberQR
+import SwiftUI
 
 struct MainView: View {
     
     @ObservedObject var viewModel: MainViewModel
+    
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
     var body: some View {
         
@@ -114,7 +117,10 @@ struct MainView: View {
             UserAccountView(viewModel: userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
@@ -135,7 +141,10 @@ struct MainView: View {
             CurrencyWalletView(viewModel: viewModel)
             
         case let .myProducts(myProductsViewModel):
-            MyProductsView(viewModel: myProductsViewModel)
+            MyProductsView(
+                viewModel: myProductsViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .country(countyViewModel):
             CountryPaymentView(viewModel: countyViewModel)
@@ -170,7 +179,11 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
+            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.closeSberQRPaymentViewModel
+                )
         }
     }
     
@@ -181,7 +194,10 @@ struct MainView: View {
         
         switch sheet.type {
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
@@ -222,6 +238,10 @@ struct MainView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -318,14 +338,26 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            MainView(viewModel: .sample)
             
-            NavigationView {
-                
-                MainView(viewModel: .sample)
-            }
+            mainView()
+            
+            NavigationView(content: mainView)
         }
-        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func mainView() -> some View {
+        
+        MainView(
+            viewModel: .sample,
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            }
+        )
     }
 }
 
@@ -343,34 +375,14 @@ extension MainViewModel {
             MainSectionCurrencyMetallView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                }, 
-                getSberQRData: { _,_ in }, 
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -385,34 +397,14 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
     
@@ -428,34 +420,14 @@ extension MainViewModel {
             MainSectionCurrencyView.ViewModel.sample,
             MainSectionOpenProductView.ViewModel.sample
         ],
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-            
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        makeQRScannerModel: {
-            
-            .init(
-                closeAction: $0,
-                qrResolver: QRViewModel.ScanResult.init
-            )
-        },
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         onRegister: {}
     )
 }

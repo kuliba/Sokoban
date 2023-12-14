@@ -10,7 +10,6 @@ import Foundation
 
 // MARK: - Lifespans
 
-#warning("fix lifespans before release")
 private extension TimeInterval {
     
     static var cvvPINActivationLifespan: Self {

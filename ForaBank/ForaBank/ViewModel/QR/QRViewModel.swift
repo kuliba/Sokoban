@@ -46,11 +46,11 @@ class QRViewModel: ObservableObject {
         self.model = model
     }
     
-    typealias QRResolver = (String) -> ScanResult
+    typealias QRResolve = (String) -> ScanResult
     
     convenience init(
         closeAction: @escaping () -> Void,
-        qrResolver: @escaping QRResolver
+        qrResolve: @escaping QRResolve
     ) {
         let closeButton = ButtonSimpleView.ViewModel(
             title: "Отмена",
@@ -69,11 +69,11 @@ class QRViewModel: ObservableObject {
         
         self.buttons = createButtons()
         
-        bind(qrResolver: qrResolver)
+        bind(qrResolve: qrResolve)
         cameraAccess()
     }
     
-    func bind(qrResolver: @escaping QRResolver) {
+    func bind(qrResolve: @escaping QRResolve) {
         
         action
             .receive(on: DispatchQueue.main)
@@ -167,7 +167,7 @@ class QRViewModel: ObservableObject {
                             
                             if let qrData = self?.string(from: image) {
                                 
-                                let result = qrResolver(qrData)
+                                let result = qrResolve(qrData)
                                 
                                 self?.action.send(QRViewModelAction.Result(result: result))
                             }
@@ -194,7 +194,7 @@ class QRViewModel: ObservableObject {
                         if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
-                            let result = qrResolver(qrData)
+                            let result = qrResolve(qrData)
                             
                             self?.action.send(QRViewModelAction.Result(result: result))
                             
@@ -221,7 +221,7 @@ class QRViewModel: ObservableObject {
         scanner.action
             .compactMap { $0 as? QRScannerViewAction.Scanned }
             .map(\.value)
-            .map(qrResolver)
+            .map(qrResolve)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] result in
                 

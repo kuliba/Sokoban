@@ -14,14 +14,17 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         
         let invalidData = anyData()
         
-        let result = try map(invalidData)
+        let result = map(invalidData)
         
-        assert(result, equals: .failure(.invalid(statusCode: 200, data: invalidData)))
+        assert(result, equals: .failure(.invalid(
+            statusCode: 200,
+            data: invalidData
+        )))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverServerErrorOnNilData() throws {
         
-        let result = try map(jsonWithError)
+        let result = map(jsonWithError)
         
         assert(result, equals: .failure(.server(
             statusCode: 102,
@@ -32,7 +35,7 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     func test_mapGetSberQRDataResponse_shouldDeliverServerErrorOnServerErrorWithNonOkHTTPURLResponseStatusCode() throws {
         
         let nonOkResponse = anyHTTPURLResponse(statusCode: 400)
-        let result = try map(jsonWithError, nonOkResponse)
+        let result = map(jsonWithError, nonOkResponse)
         
         assert(result, equals: .failure(.server(
             statusCode: 102,
@@ -45,23 +48,46 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
         let statusCode = 400
         let data = anyData()
         let nonOkResponse = anyHTTPURLResponse(statusCode: statusCode)
-        let result = try map(data, nonOkResponse)
+        let result = map(data, nonOkResponse)
         
-        assert(result, equals: .failure(.invalid(statusCode: statusCode, data: data)))
+        assert(result, equals: .failure(.invalid(
+            statusCode: statusCode,
+            data: data
+        )))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithAmount() throws {
         
-        let result = try map(jsonWithAmount)
+        let result = map(jsonWithAmount)
         
         assert(result, equals: .success(responseWithFixedAmount()))
     }
     
     func test_mapGetSberQRDataResponse_shouldDeliverResponseWithoutAmount() throws {
         
-        let result = try map(jsonWithoutAmount)
+        let result = map(jsonWithoutAmount)
         
         assert(result, equals: .success(responseWithEditableAmount(amount: 0)))
+    }
+    
+    func test_mapGetSberQRDataResponse_getSberQRData_any_sum() throws {
+        
+        let result = try map(getSberQRData_any_sumURL)
+        
+        assert(result, equals: .success(responseWithEditableAmount(
+            qrcID: "fa0926661ff048658407b4b57a35fc66",
+            brand: "Тест Макусов. Кутуза_07",
+            amount: 0
+        )))
+    }
+    
+    func test_mapGetSberQRDataResponse_getSberQRData_fix_sum() throws {
+        
+        let result = try map(getSberQRData_fix_sumURL)
+        
+        assert(result, equals: .success(responseWithFixedAmount(
+            qrcID: "48b1446882844284bc6bac9bb3e5062d"
+        )))
     }
     
     // MARK: - Helpers
@@ -69,9 +95,9 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) throws -> ResponseMapper.GetSberQRDataResult {
+    ) -> ResponseMapper.GetSberQRDataResult {
         
-        try ResponseMapper.mapGetSberQRDataResponse(
+        ResponseMapper.mapGetSberQRDataResponse(
             data,
             httpURLResponse
         )
@@ -80,12 +106,21 @@ final class ResponseMapper_mapGetSberQRDataResponseTests: GetSberQRDataResponseT
     private func map(
         _ string: String,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
+    ) -> ResponseMapper.GetSberQRDataResult {
+        
+        map(Data(string.utf8), httpURLResponse)
+    }
+    
+    private func map(
+        _ filename: URL?,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws -> ResponseMapper.GetSberQRDataResult {
         
-        try ResponseMapper.mapGetSberQRDataResponse(
-            .init(string.utf8),
-            httpURLResponse
-        )
+        let url = try XCTUnwrap(filename, file: file, line: line)
+        let contents = try Data(contentsOf: url)
+        
+        return map(contents, anyHTTPURLResponse())
     }
     
     private func assert(

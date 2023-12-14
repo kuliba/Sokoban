@@ -6,13 +6,14 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class RootViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialValues() {
         
-        let (sut, _, _, _) = makeSUT()
+        let (sut, _,_,_) = makeSUT()
         
         XCTAssertNoDiff(sut.selected, .main)
         XCTAssertNil(sut.alert)
@@ -208,29 +209,15 @@ final class RootViewModelTests: XCTestCase {
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+                sberQRServices: .empty(),
+                qrViewModelFactory: .preview(),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
                 makeProductProfileViewModel: { _,_,_ in nil },
-                makeQRScannerModel: {
-                    
-                    .init(
-                        closeAction: $0,
-                        qrResolver: QRViewModel.ScanResult.init
-                    )
-                },
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init
+                sberQRServices: .empty(),
+                qrViewModelFactory: .preview()
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

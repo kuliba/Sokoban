@@ -9,14 +9,27 @@ import SwiftUI
 
 struct EditableAmountSberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState.EditableAmount
-    let event: (SberQRConfirmPaymentEvent.EditableAmount) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>.EditableAmount
+    typealias Event = SberQRConfirmPaymentEvent.EditableAmount
     
+    let state: State
+    let event: (Event) -> Void
+    let pay: () -> Void
+    let config: Config
+
     var body: some View {
         
-        FeedWithBottomView(feed: feed) {
-            
-            AmountView(amount: state.bottom)
+        FeedWithBottomView(
+            feed: feed,
+            backgroundColor: config.background.color
+        ) {
+            AmountView(
+                amount: state.bottom,
+                event: { event(.editAmount($0)) },
+                pay: pay,
+                currencySymbol: state.currencySymbol,
+                config: config.amount
+            )
         }
     }
 
@@ -24,14 +37,36 @@ struct EditableAmountSberQRConfirmPaymentView: View {
         
         Group {
             
-            HeaderView(header: state.header)
+            // HeaderView(header: state.header)
+
             ProductSelectView(
                 state: state.productSelect,
-                event: { event(.productSelect($0)) }
+                event: { event(.productSelect($0)) },
+                config: config.productSelect
             )
-            InfoView(info: state.brandName)
-            InfoView(info: state.recipientBank)
-            DataStringView(data: state.currency)
+
+            InfoView(
+                info: state.brandName,
+                config: config.info
+            )
+            
+            InfoView(
+                info: state.recipientBank,
+                config: config.info
+            )
+            
+            // DataStringView(data: state.currency)
+        }
+    }
+}
+
+private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+    
+    var currencySymbol: String {
+        
+        switch currency.value {
+        case "RUB": return "₽"
+        default:    return " "
         }
     }
 }
@@ -46,12 +81,14 @@ struct EditableAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState.EditableAmount
+        _ state: EditableAmountSberQRConfirmPaymentView.State
     ) -> some View {
         
         EditableAmountSberQRConfirmPaymentView(
             state: state,
-            event: { _ in }
+            event: { _ in },
+            pay: {},
+            config: .default
         )
     }
 }

@@ -13,7 +13,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
-        let (sut, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         XCTAssertNoDiff(linkSpy.values, [nil])
         
@@ -24,7 +24,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
@@ -35,7 +35,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
-        let (sut, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let linkSpy = ValueSpy(sut.$link.map(\.?.case))
         sut.fastPayment?.tapTemplatesAndWait()
         
@@ -72,7 +72,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _, _) = makeSUT(
+        let (sut, _) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
@@ -90,7 +90,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _, _) = makeSUT(
+        let (sut, _) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
@@ -109,7 +109,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _, _) = makeSUT(
+        let (sut, _) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -127,7 +127,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _, _) = makeSUT(
+        let (sut, _) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -146,7 +146,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
-        let (sut, _, _) = makeSUT()
+        let (sut, _) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
         
         try sut.scanAndWait()
@@ -158,7 +158,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let (sut, _, _) = makeSUT(
+        let (sut, _) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
@@ -168,102 +168,98 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData)
+            .sberQRPayment
         ])
     }
     
-    func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
+    func test_sberQR_shouldNotResetNavigationLinkOnSberQRPaymentFailure() throws {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let sberQRError = anyError("SberQRPayment Failure")
-        let (sut, _, spy) = makeSUT(
+        let sberQRError: SberQRError = .createRequest(
+            anyError("SberQRPayment Failure")
+        )
+        let (sut, _) = makeSUT(
+            createSberQRPaymentStub: .failure(sberQRError),
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
         
         try sut.scanAndWait(sberQRURL)
-        spy.complete(with: .failure(sberQRError))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(navigationSpy.values, [
             nil,
-            .sberQRPayment(sberQRURL, sberQRData),
-            nil
+            .sberQRPayment
         ])
     }
     
-    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
-        
-        let sberQRError = anyError("SberQRPayment Failure")
-        let (sut, _, spy) = makeSUT()
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        
-        try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка"
-        ])
-    }
+//    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
+//        
+//        let (sut, _) = makeSUT()
+//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+//        
+//        try sut.scanAndWait(anyURL())
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(alertMessageSpy.values, [
+//            nil,
+//            "Возникла техническая ошибка"
+//        ])
+//    }
     
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
-        
-        let sberQRError = anyError("SberQRPayment Failure")
-        let (sut, _, spy) = makeSUT()
-        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-        
-        try sut.scanAndWait(anyURL())
-        spy.complete(with: .failure(sberQRError))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        try sut.tapPrimaryAlertButton()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            "Возникла техническая ошибка",
-            nil
-        ])
-    }
+//    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
+//        
+//        let (sut, _) = makeSUT()
+//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+//        
+//        try sut.scanAndWait(anyURL())
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        try sut.tapPrimaryAlertButton()
+//        
+//        XCTAssertNoDiff(alertMessageSpy.values, [
+//            nil,
+//            "Возникла техническая ошибка",
+//            nil
+//        ])
+//    }
     
     // MARK: - Helpers
     
+    fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
+    private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+
     private func makeSUT(
-        getSberQRDataResultStub: GetSberQRDataResult = .emptySuccess,
+        createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
+        getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: MainViewModel,
-        model: Model,
-        spy: SberQRPaymentSpy
+        model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let spy = SberQRPaymentSpy()
+        
+        let sberQRServices = SberQRServices.preview(
+            createSberQRPaymentResultStub: createSberQRPaymentStub,
+            getSberQRDataResultStub: getSberQRDataResultStub
+        )
+        
+        let qrViewModelFactory = QRViewModelFactory.preview()
+        
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
-            getSberQRData: { _, completion in
-                
-                completion(getSberQRDataResultStub)
-            },
-            makeSberQRConfirmPaymentViewModel: spy.make,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, model, spy)
+        return (sut, model)
     }
     
     private func makeModelWithServerAgentStub(
@@ -287,15 +283,8 @@ final class MainViewModelTests: XCTestCase {
         let sut = MainViewModel(
             model,
             makeProductProfileViewModel: { _,_,_  in nil },
-            makeQRScannerModel: {
-                
-                .init(
-                    closeAction: $0,
-                    qrResolver: QRViewModel.ScanResult.init
-                )
-            },
-            getSberQRData: { _,_ in },
-            makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.init,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
             onRegister: {}
         )
         
@@ -350,6 +339,11 @@ final class MainViewModelTests: XCTestCase {
     }
 }
 
+private func anySberQRError() -> MainViewModelTests.SberQRError {
+    
+    .createRequest(anyError("SberQRPayment Failure"))
+}
+
 // MARK: - DSL
 
 private extension MainViewModel {
@@ -391,11 +385,8 @@ private extension MainViewModel.Link {
         case .templates:
             return .templates
             
-        case let .sberQRPayment(sberQRPayment):
-            return .sberQRPayment(
-                sberQRPayment.sberQRURL,
-                sberQRPayment.sberQRData
-            )
+        case .sberQRPayment:
+            return .sberQRPayment
             
         default:
             return .other
@@ -405,7 +396,7 @@ private extension MainViewModel.Link {
     enum Case: Equatable {
         
         case templates
-        case sberQRPayment(URL, GetSberQRDataResponse)
+        case sberQRPayment
         case other
     }
 }

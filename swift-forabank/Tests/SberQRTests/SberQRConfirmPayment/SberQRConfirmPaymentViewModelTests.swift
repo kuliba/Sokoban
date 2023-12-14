@@ -34,7 +34,7 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     func test_event_pay_shouldCallReducerWithEvent_fixed() {
         
         let initialState: SUT.State = .fixedAmount(makeFixedAmount())
-        let event: SUT.Event = .fixed(.pay)
+        let event: SUT.Event = .pay
         let (sut, _, reducerSpy) = makeSUT(initialState: initialState)
         
         sut.event(event)
@@ -46,7 +46,7 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     func test_event_pay_shouldCallReducerWithEvent_editable() {
         
         let initialState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .editable(.pay)
+        let event: SUT.Event = .pay
         let (sut, _, reducerSpy) = makeSUT(initialState: initialState)
         
         sut.event(event)
@@ -59,7 +59,7 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         
         let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .fixed(.pay)
+        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -74,7 +74,7 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         
         let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .editable(.pay)
+        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -85,11 +85,11 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [initialState, newState])
     }
     
-    func test_event_pay_shouldNorChangeStateTwice_fixed() {
+    func test_event_pay_shouldNotChangeStateTwice_fixed() {
         
         let initialState: SUT.State = .fixedAmount(makeFixedAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .fixed(.pay)
+        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -101,11 +101,11 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [initialState, newState])
     }
     
-    func test_event_pay_shouldNorChangeStateTwice_editable() {
+    func test_event_pay_shouldNotChangeStateTwice_editable() {
         
         let initialState: SUT.State = .editableAmount(makeEditableAmount())
         let newState: SUT.State = .editableAmount(makeEditableAmount())
-        let event: SUT.Event = .editable(.pay)
+        let event: SUT.Event = .pay
         let (sut, spy, _) = makeSUT(
             initialState: initialState,
             reducerStub: newState
@@ -121,6 +121,7 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     
     private typealias SUT = SberQRConfirmPaymentViewModel
     private typealias Spy = ValueSpy<SUT.State>
+    private typealias ReduceSpy = ReducerSpy<SUT.State, SUT.Event>
     
     private func makeSUT(
         initialState: SUT.State = .fixedAmount(makeFixedAmount()),
@@ -130,9 +131,9 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
     ) -> (
         sut: SUT,
         spy: Spy,
-        reducerSpy: ReducerSpy
+        reducerSpy: ReduceSpy
     ) {
-        let reducerSpy = ReducerSpy(stub: reducerStub)
+        let reducerSpy = ReduceSpy(stub: reducerStub)
         let sut = SUT(
             initialState: initialState,
             reduce: reducerSpy.reduce(state:event:),
@@ -144,29 +145,5 @@ final class SberQRConfirmPaymentViewModelTests: XCTestCase {
         trackForMemoryLeaks(spy, file: file, line: line)
         
         return (sut, spy, reducerSpy)
-    }
-    
-    private final class ReducerSpy {
-        
-        private(set) var payloads = [(state: SUT.State, event: SUT.Event)]()
-        private let stub: SUT.State
-        
-        var states: [SUT.State] { payloads.map(\.state) }
-        var events: [SUT.Event] { payloads.map(\.event) }
-        
-        init(stub: SUT.State) {
-            
-            self.stub = stub
-        }
-        
-        func reduce(
-            state: SUT.State,
-            event: SUT.Event
-        ) -> SUT.State {
-            
-            payloads.append((state, event))
-            
-            return stub
-        }
     }
 }

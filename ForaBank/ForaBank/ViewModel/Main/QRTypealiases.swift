@@ -10,10 +10,6 @@ import SberQR
 
 typealias MakeQRScannerModel = (@escaping () -> Void) -> QRViewModel
 
-typealias GetSberQRDataResult = Result<GetSberQRDataResponse, MappingRemoteServiceError<GetSberQRDataError>>
-typealias GetSberQRDataCompletion = (GetSberQRDataResult) -> Void
-typealias GetSberQRData = (URL, @escaping GetSberQRDataCompletion) -> Void
-
-typealias MakeSberQRPaymentResult = (Result<Data, Error>)
-typealias MakeSberQRPaymentCompletion = (MakeSberQRPaymentResult) -> Void
-typealias MakeSberQRConfirmPaymentViewModel = (URL, GetSberQRDataResponse, @escaping MakeSberQRPaymentCompletion) -> SberQRConfirmPaymentViewModel
+typealias CreateSberQRPaymentResult = (Result<CreateSberQRPaymentResponse, MappingRemoteServiceError<MappingError>>)
+typealias CreateSberQRPaymentCompletion = (CreateSberQRPaymentResult) -> Void
+typealias MakeSberQRConfirmPaymentViewModel = (GetSberQRDataResponse, @escaping (SberQRConfirmPaymentState) -> Void) throws -> SberQRConfirmPaymentViewModel

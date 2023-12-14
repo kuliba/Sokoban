@@ -1,6 +1,6 @@
 //
 //  ProductSelectReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //

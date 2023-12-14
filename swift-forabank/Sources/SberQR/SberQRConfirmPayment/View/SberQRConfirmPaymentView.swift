@@ -9,8 +9,12 @@ import SwiftUI
 
 struct SberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState
-    let event: (SberQRConfirmPaymentEvent) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>
+    typealias Event = SberQRConfirmPaymentEvent
+
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
     
     var body: some View {
         
@@ -18,13 +22,17 @@ struct SberQRConfirmPaymentView: View {
         case let .editableAmount(editableAmount):
             EditableAmountSberQRConfirmPaymentView(
                 state: editableAmount,
-                event: { event(.editable($0)) }
+                event: { event(.editable($0)) }, 
+                pay: { event(.pay) },
+                config: config
             )
             
         case let .fixedAmount(fixedAmount):
             FixedAmountSberQRConfirmPaymentView(
                 state: fixedAmount,
-                event: { event(.fixed($0)) }
+                event: { event(.fixed($0)) }, 
+                pay: { event(.pay) },
+                config: config
             )
         }
     }
@@ -41,9 +49,13 @@ struct SberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState
+        _ state: SberQRConfirmPaymentView.State
     ) -> some View {
         
-        SberQRConfirmPaymentView(state: state, event: { _ in })
+        SberQRConfirmPaymentView(
+            state: state,
+            event: { _ in },
+            config: .default
+        )
     }
 }

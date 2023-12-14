@@ -14,7 +14,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.getSberQRDataRequest
+        let endpoint = Services.Endpoint.getSberQRData
         let endpointURL = try! endpoint.url(withBase: base)
         
         var request = URLRequest(url: endpointURL)
