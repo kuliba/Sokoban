@@ -157,7 +157,8 @@ extension SelectView {
             self.isSearching = isSearching
             
             let regularFieldViewModel: RegularFieldViewModel = .make(
-                code: selectViewModel.parameter.options.first(where: { $0.id == selectViewModel.parameter.value })?.name,
+                keyboardType: .default,
+                text: selectViewModel.parameter.options.first(where: { $0.id == selectViewModel.parameter.value })?.name,
                 placeholderText: viewModel.placeholder,
                 limit: 226
             )

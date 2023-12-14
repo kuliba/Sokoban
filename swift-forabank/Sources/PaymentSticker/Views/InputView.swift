@@ -30,7 +30,8 @@ struct InputView: View {
         configuration: InputConfiguration
     ) {
         let regularFieldViewModel: RegularFieldViewModel = .make(
-            code: code,
+            keyboardType: .decimal,
+            text: code,
             placeholderText: "Введите код из смс",
             limit: 6
         )
