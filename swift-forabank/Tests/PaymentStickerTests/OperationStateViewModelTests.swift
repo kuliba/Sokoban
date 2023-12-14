@@ -15,26 +15,23 @@ final class OperationStateViewModelTests: XCTestCase {
         
         let (_, spy) = makeSUT(state: .operation)
         
-        XCTAssertNoDiff(spy.callCount, 0)
-    }  
+        XCTAssertNoDiff(spy.callCount, 1)
+    }
     
-    func test_event_shouldCallWithEvent() {
+    func test_event_continueButtonTapped_shouldCallWithEvent() {
         
         let event = anyEvent()
         let (sut, spy) = makeSUT(state: .operation)
         
         sut.event(event)
         
-        XCTAssertNoDiff(spy.requests.map(\.1), [event])
-        XCTAssertNoDiff(spy.requests.map(\.0), [.init(parameters: [])])
+        XCTAssertNoDiff(spy.requests.map(\.1), [event, event])
+        XCTAssertNoDiff(spy.requests.map(\.0), [.init(parameters: []), .init(parameters: [])])
     }
     
-    func test_event_failure() {
+    func test_event_shouldFailOnBusinessLogicFailure() {
      
-        let state = OperationStateViewModel.State.operation(.init(
-            state: .userInteraction,
-            parameters: []
-        ))
+        let state = emptyOperation()
 
         let (sut, spy) = makeSUT(state: .operation)
         let stateSpy = ValueSpy(sut.$state)
@@ -53,9 +50,9 @@ final class OperationStateViewModelTests: XCTestCase {
         )
     }
     
-    func test_event_success() {
+    func test_event_shouldSuccessOnBusinessLogicSuccess() {
      
-        let state = OperationStateViewModel.State.operation(.init(parameters: []))
+        let state = emptyOperation()
 
         let (sut, spy) = makeSUT(state: .operation)
         let stateSpy = ValueSpy(sut.$state)
@@ -151,7 +148,7 @@ final class OperationStateViewModelTests: XCTestCase {
                 id: 1,
                 title: "title",
                 nameProduct: "nameProduct",
-                balance: "100.0",
+                balance: 100.0,
                 balanceFormatted: "100 R",
                 description: "description",
                 cardImage: .named("cardImage"),
@@ -262,6 +259,14 @@ final class OperationStateViewModelTests: XCTestCase {
         }
     }
     
+    func emptyOperation() -> OperationStateViewModel.State {
+    
+        OperationStateViewModel.State.operation(.init(
+           state: .userInteraction,
+           parameters: []
+       ))
+    }
+    
     func anyEvent() -> Event {
         
         Event.continueButtonTapped(.continue)
@@ -294,7 +299,7 @@ final class OperationStateViewModelTests: XCTestCase {
                 id: 1,
                 title: "title",
                 nameProduct: "nameProduct",
-                balance: "100.0",
+                balance: 100.0,
                 balanceFormatted: "100 R",
                 description: "description",
                 cardImage: .named("cardImage"),
