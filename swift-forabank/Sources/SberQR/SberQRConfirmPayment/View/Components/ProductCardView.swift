@@ -93,7 +93,7 @@ struct ProductCardView: View {
             .frame(shadowSize)
             .padding(.top, offsetY)
             .padding(.bottom, 4)
-            .blur(radius: 12)
+            .blur(radius: 4)
     }
     
     private func text(
