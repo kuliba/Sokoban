@@ -126,7 +126,14 @@ extension [Operation.Parameter] {
         
         switch branches {
         case let .select(select):
-            return select.value ?? nil
+            if select.id == .officeSelector,
+               let value = select.value {
+            
+                return value
+            } else {
+                return nil
+            }
+            
         default:
             return nil
         }
@@ -138,7 +145,15 @@ extension [Operation.Parameter] {
         
         switch city {
         case let .select(select):
-            return Int(select.value ?? "")
+            
+            if select.id == .citySelector,
+               let value = select.value {
+            
+                return Int(value)
+            } else {
+                return nil
+            }
+        
         default:
             return nil
         }
