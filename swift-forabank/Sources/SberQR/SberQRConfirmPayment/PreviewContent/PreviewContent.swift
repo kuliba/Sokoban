@@ -94,8 +94,7 @@ extension ProductSelect.Product {
         look: .init(
             background: .svg(""),
             color: "orange",
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     )
     
@@ -109,8 +108,7 @@ extension ProductSelect.Product {
         look: .init(
             background: .svg(""),
             color: "orange",
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     )
     
@@ -124,8 +122,7 @@ extension ProductSelect.Product {
         look: .init(
             background: .svg(""),
             color: "orange",
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     )
     
@@ -139,8 +136,7 @@ extension ProductSelect.Product {
         look: .init(
             background: .svg(""),
             color: "orange",
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     )
     
@@ -154,8 +150,7 @@ extension ProductSelect.Product {
         look: .init(
             background: .svg(""),
             color: "orange",
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     )
 }

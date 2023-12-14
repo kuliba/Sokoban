@@ -53,18 +53,15 @@ public extension ProductSelect.Product {
         let background: Icon
         let color: String
         let icon: Icon
-        let logo: Icon
         
         public init(
             background: Icon,
             color: String,
-            icon: Icon,
-            logo: Icon
+            icon: Icon
         ) {
             self.background = background
             self.color = color
             self.icon = icon
-            self.logo = logo
         }
     }
 }

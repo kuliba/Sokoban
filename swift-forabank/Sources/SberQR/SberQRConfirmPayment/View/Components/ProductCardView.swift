@@ -31,6 +31,9 @@ struct ProductCardView: View {
             ZStack(alignment: .topTrailing) {
                 
                 cardView()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(cardInsets)
+                    .background(background)
                     .frame(cardSize)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 
@@ -40,20 +43,6 @@ struct ProductCardView: View {
     }
     
     private func cardView() -> some View {
-        
-        HStack(alignment: .top) {
-            
-            cardDataView()
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            logoView()
-                .padding(.top, 4)
-        }
-        .padding(cardInsets)
-        .background(background)
-    }
-    
-    private func cardDataView() -> some View {
         
         VStack(alignment: .leading) {
             
@@ -92,12 +81,6 @@ struct ProductCardView: View {
     private func balanceView() -> some View {
         
         text(productCard.data.balanceFormatted, config: config.balance)
-    }
-    
-    private func logoView() -> some View {
-        
-        productCard.look.logo.image(orColor: .clear)
-            .frame(logoSize)
     }
     
     private func selectedCardMarkView() -> some View {

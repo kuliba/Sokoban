@@ -53,8 +53,7 @@ extension ProductData {
                 look: .init(
                     background: .svg(card.largeDesign.description),
                     color: card.backgroundColor.description,
-                    icon: .svg(card.smallDesign.description),
-                    logo: .svg("")
+                    icon: .svg(card.smallDesign.description)
                 )
             )
         }
@@ -71,8 +70,7 @@ extension ProductData {
                 look: .init(
                     background: .svg(account.largeDesign.description),
                     color: account.backgroundColor.description,
-                    icon: .svg(account.smallDesign.description),
-                    logo: .svg("")
+                    icon: .svg(account.smallDesign.description)
                 )
             )
         }

@@ -144,8 +144,7 @@ extension ProductSelect.Product.Look {
         .init(
             background: .svg(""),
             color: color,
-            icon: .svg(""),
-            logo: .svg("")
+            icon: .svg("")
         )
     }
 }
