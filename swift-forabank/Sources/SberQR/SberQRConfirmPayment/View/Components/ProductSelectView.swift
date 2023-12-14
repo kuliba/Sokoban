@@ -162,7 +162,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             ProductSelectView_Demo(.compact(.cardPreview))
             ProductSelectView_Demo(.expanded(.cardPreview, .allProducts))
         }
-        .padding()
+//        .padding()
     }
     
     private struct ProductSelectView_Demo: View {
