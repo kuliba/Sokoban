@@ -171,7 +171,10 @@ struct MainView: View {
                 .navigationBarBackButtonHidden(true)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            SberQRConfirmPaymentWrapperView(viewModel: sberQRPaymentViewModel)
+            SberQRConfirmPaymentWrapperView(
+                viewModel: sberQRPaymentViewModel, 
+                config: .iFora
+            )
         }
     }
     

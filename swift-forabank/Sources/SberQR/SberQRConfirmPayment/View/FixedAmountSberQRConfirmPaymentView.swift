@@ -12,31 +12,47 @@ struct FixedAmountSberQRConfirmPaymentView: View {
     let state: SberQRConfirmPaymentState.FixedAmount
     let event: (SberQRConfirmPaymentEvent.FixedAmount) -> Void
     let pay: () -> Void
+    let config: Config
     
     var body: some View {
         
-        FeedWithBottomView(feed: feed) {
-            
+        FeedWithBottomView(
+            feed: feed,
+            backgroundColor: config.background.color
+        ) {
             ButtonView(
                 button: state.bottom,
                 pay: pay
             )
         }
-        
     }
     
     private func feed() -> some View {
         
         Group {
             
-            HeaderView(header: state.header)
+            // HeaderView(header: state.header)
+            
             ProductSelectView(
                 state: state.productSelect,
-                event: { event(.productSelect($0)) }
+                event: { event(.productSelect($0)) },
+                config: config.productSelectView
             )
-            InfoView(info: state.brandName)
-            InfoView(info: state.amount)
-            InfoView(info: state.recipientBank)
+            
+            InfoView(
+                info: state.brandName,
+                config: config.info
+            )
+            
+            InfoView(
+                info: state.amount,
+                config: config.info
+            )
+            
+            InfoView(
+                info: state.recipientBank,
+                config: config.info
+            )
         }
     }
 }
@@ -57,7 +73,8 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
         FixedAmountSberQRConfirmPaymentView(
             state: state,
             event: { _ in },
-            pay: {}
+            pay: {},
+            config: .default
         )
     }
 }

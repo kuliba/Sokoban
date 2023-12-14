@@ -12,7 +12,8 @@ struct DataStringView: View {
     let data: SberQRConfirmPaymentState.DataString
     
     var body: some View {
-        Text("DataStringView")
+        
+        Text(String(describing: data))
     }
 }
 

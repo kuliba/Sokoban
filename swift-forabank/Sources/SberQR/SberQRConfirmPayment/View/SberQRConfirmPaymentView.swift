@@ -11,6 +11,7 @@ struct SberQRConfirmPaymentView: View {
     
     let state: SberQRConfirmPaymentState
     let event: (SberQRConfirmPaymentEvent) -> Void
+    let config: Config
     
     var body: some View {
         
@@ -19,14 +20,16 @@ struct SberQRConfirmPaymentView: View {
             EditableAmountSberQRConfirmPaymentView(
                 state: editableAmount,
                 event: { event(.editable($0)) }, 
-                pay: { event(.pay) }
+                pay: { event(.pay) },
+                config: config
             )
             
         case let .fixedAmount(fixedAmount):
             FixedAmountSberQRConfirmPaymentView(
                 state: fixedAmount,
                 event: { event(.fixed($0)) }, 
-                pay: { event(.pay) }
+                pay: { event(.pay) },
+                config: config
             )
         }
     }
@@ -46,6 +49,10 @@ struct SberQRConfirmPaymentView_Previews: PreviewProvider {
         _ state: SberQRConfirmPaymentState
     ) -> some View {
         
-        SberQRConfirmPaymentView(state: state, event: { _ in })
+        SberQRConfirmPaymentView(
+            state: state,
+            event: { _ in },
+            config: .default
+        )
     }
 }

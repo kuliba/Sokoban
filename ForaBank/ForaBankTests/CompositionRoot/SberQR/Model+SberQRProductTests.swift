@@ -9,6 +9,33 @@
 import SberQR
 import XCTest
 
+extension Model {
+    
+    func sberQRProducts(
+        response: GetSberQRDataResponse,
+        formatBalance: @escaping (ProductData) -> String
+    ) -> [ProductSelect.Product] {
+        
+        allProducts.mapToSberQRProducts(
+            response: response,
+            formatBalance: formatBalance
+        )
+    }
+    
+    func sberQRProducts(
+        productTypes: [ProductType],
+        currencies: [String],
+        formatBalance: @escaping (ProductData) -> String
+    ) -> [ProductSelect.Product] {
+        
+        allProducts.mapToSberQRProducts(
+            productTypes: productTypes,
+            currencies: currencies, 
+            formatBalance: formatBalance
+        )
+    }
+}
+
 final class Model_SberQRProductTests: SberQRProductTests {
     
     func test_sberQRProducts_shouldReturnEmptyOnEmptyAllProducts() {
@@ -179,7 +206,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         
         let loan = anyProduct(id: 1234, productType: .loan)
         
-        XCTAssertNil(loan.sberQRProduct)
+        XCTAssertNil(loan.sberQRProduct { _ in "" })
     }
     
     func test_sberQRProduct_shouldReturnCardFromCard() throws {
@@ -187,7 +214,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeCardProduct(id: id)
         
-        let product = try XCTUnwrap(card.sberQRProduct)
+        let product = try XCTUnwrap(card.sberQRProduct { _ in "" })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .card)
@@ -203,7 +230,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeAccountProduct(id: id)
         
-        let product = try XCTUnwrap(card.sberQRProduct)
+            let product = try XCTUnwrap(card.sberQRProduct { _ in "" })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .account)
@@ -212,5 +239,20 @@ final class Model_SberQRProductTests: SberQRProductTests {
         //    XCTAssertNoDiff(product.title, title)
         //    XCTAssertNoDiff(product.amountFormatted, amountFormatted)
         //    XCTAssertNoDiff(product.color, color)
+    }
+}
+
+private extension Model {
+    
+    func sberQRProducts(
+        productTypes: [ProductType],
+        currencies: [String]
+    ) -> [ProductSelect.Product] {
+        
+        allProducts.mapToSberQRProducts(
+            productTypes: productTypes,
+            currencies: currencies,
+            formatBalance: { _ in "" }
+        )
     }
 }

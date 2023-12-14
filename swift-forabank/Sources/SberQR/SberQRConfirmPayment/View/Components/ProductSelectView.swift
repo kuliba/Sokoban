@@ -13,23 +13,71 @@ struct ProductSelectView: View {
     
     let state: ProductSelect
     let event: (Event) -> Void
+    let config: ProductSelectViewConfig
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 10) {
             
-            HStack {
+            selectedProductView(state.product)
+            state.products.map(productsView)
+        }
+        .animation(.easeInOut, value: state)
+    }
+    
+    private func selectedProductView(
+        _ product: ProductSelect.Product
+    ) -> some View {
+        
+        HStack(spacing: 12) {
+            
+            productIcon(product.icon)
+            productTitle(product, config: config)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { event(.toggleProductSelect) }
+    }
+    
+    private func productIcon(_ icon: String) -> some View {
+        
+        Image(icon)
+            .resizable()
+            .frame(width: 32, height: 32)
+    }
+    
+    private func productTitle(
+        _ product: ProductSelect.Product,
+        config: ProductSelectViewConfig
+    ) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            text(product.header, config: config.header)
+            
+            HStack(alignment: .center, spacing: 8) {
                 
-                Text(state.product.title)
-                    .onTapGesture { event(.toggleProductSelect) }
+                text(product.title, config: config.title)
                 
                 Spacer()
+                
+                text(product.amountFormatted, config: config.amount)
                 
                 chevron()
             }
             
-            state.products.map(productsView)
+            text(product.number, config: config.footer)
+                .padding(.top, 4)
         }
+    }
+    
+    private func text(
+        _ text: String,
+        config: TextConfig
+    ) -> some View {
+        
+        Text(text)
+            .font(config.textFont)
+            .foregroundColor(config.textColor)
     }
     
     @ViewBuilder
@@ -37,9 +85,9 @@ struct ProductSelectView: View {
         products: [ProductSelect.Product]
     ) -> some View {
         
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            HStack {
+            HStack(spacing: 10) {
                 
                 ForEach(products, content: productCardView)
             }
@@ -50,19 +98,37 @@ struct ProductSelectView: View {
         product: ProductSelect.Product
     ) -> some View {
         
-        Text(product.title)
-            .font(.caption.bold())
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.orange.opacity(0.5)) // product.color
-            )
-            .onTapGesture { event(.select(product.id)) }
+        VStack(spacing: 8) {
+            
+            HStack {
+                
+                Color.clear
+                    .frame(width: 20, height: 20)
+                
+                text(product.number, config: config.card.number)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                text(product.title, config: config.card.title)
+                
+                text(product.amountFormatted, config: config.card.amount)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .font(.caption.bold())
+        .padding(.card)
+        .frame(width: 112, height: 71)
+        .background(Color.orange.opacity(0.5)) // product.color
+        .cornerRadius(8)
+        .onTapGesture { event(.select(product.id)) }
     }
     
     private func chevron() -> some View {
         
         Image(systemName: "chevron.up")
+            .foregroundColor(config.chevronColor)
+            .frame(width: 24, height: 24)
             .rotationEffect(.degrees(state.isExpanded ? 0 : 180))
             .onTapGesture { event(.toggleProductSelect) }
     }
@@ -104,6 +170,8 @@ private extension ProductSelect {
     }
 }
 
+// MARK: - Previews
+
 struct ProductSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -111,7 +179,7 @@ struct ProductSelectView_Previews: PreviewProvider {
         VStack(spacing: 32) {
             
             ProductSelectView_Demo(.compact(.cardPreview))
-            ProductSelectView_Demo(.expanded(.cardPreview, [.cardPreview, .accountPreview]))
+            ProductSelectView_Demo(.expanded(.cardPreview, .allProducts))
         }
         .padding()
     }
@@ -126,7 +194,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             
             self._state = .init(initialValue: state)
             
-            let reducer = ProductSelectReducer(getProducts: { [.cardPreview, .accountPreview] })
+            let reducer = ProductSelectReducer(getProducts: { .allProducts })
             self.reduce = reducer.reduce(_:_:)
         }
         
@@ -134,10 +202,8 @@ struct ProductSelectView_Previews: PreviewProvider {
             
             ProductSelectView(
                 state: state,
-                event: { event in
-                    
-                    self.state = reduce(state, event)
-                }
+                event: { state = reduce(state, $0) },
+                config: .default
             )
             .border(.red)
         }

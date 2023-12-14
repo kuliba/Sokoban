@@ -11,17 +11,59 @@ public struct SberQRConfirmPaymentWrapperView: View {
     
     @ObservedObject private var viewModel: SberQRConfirmPaymentViewModel
     
-    public init(viewModel: SberQRConfirmPaymentViewModel) {
-        
+    private let config: Config
+    
+    public init(
+        viewModel: SberQRConfirmPaymentViewModel,
+        config: Config
+    ) {
         self.viewModel = viewModel
+        self.config = config
     }
     
     public var body: some View {
         
         SberQRConfirmPaymentView(
             state: viewModel.state,
-            event: viewModel.event(_:)
+            event: viewModel.event(_:),
+            config: config
         )
+    }
+}
+
+private extension SberQRConfirmPaymentState {
+    
+    var amount: Decimal? {
+        
+        guard case let .editableAmount(editableAmount) = self
+        else { return nil }
+        
+        return editableAmount.bottom.value
+    }
+    
+    var product: ProductSelect.Product {
+        
+        switch self {
+        case let .editableAmount(editableAmount):
+            return editableAmount.productSelect.product
+            
+        case let .fixedAmount(fixedAmount):
+            return fixedAmount.productSelect.product
+        }
+    }
+}
+
+private extension ProductSelect {
+    
+    var product: ProductSelect.Product {
+        
+        switch self {
+        case let .compact(product):
+            return product
+            
+        case let .expanded(product, _):
+            return product
+        }
     }
 }
 
@@ -42,45 +84,12 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
         initialState: SberQRConfirmPaymentState
     ) -> some View {
         
-        SberQRConfirmPaymentWrapperView(viewModel: .preview(
-            initialState: initialState,
-            pay: { print("pay!", String(describing: $0.amount), $0.product.type, $0.product.id) }
-        ))
-    }
-}
-
-private extension SberQRConfirmPaymentState {
-    
-    var amount: Decimal? {
-        
-        guard case let .editableAmount(editableAmount) = self 
-        else { return nil }
-
-        return editableAmount.bottom.value
-    }
-    
-    var product: ProductSelect.Product {
-        
-        switch self {
-        case let .editableAmount(editableAmount):
-            return editableAmount.productSelect.product
-        
-        case let .fixedAmount(fixedAmount):
-            return fixedAmount.productSelect.product
-        }
-    }
-}
-
-private extension ProductSelect {
-    
-    var product: ProductSelect.Product {
-        
-        switch self {
-        case let .compact(product):
-            return product
-            
-        case let .expanded(product, _):
-            return product
-        }
+        SberQRConfirmPaymentWrapperView(
+            viewModel: .preview(
+                initialState: initialState,
+                pay: { print("pay!", String(describing: $0.amount), $0.product.type, $0.product.id) }
+            ),
+            config: .default
+        )
     }
 }
