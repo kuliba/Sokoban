@@ -12,6 +12,13 @@ import XCTest
 final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
+    func test_init_shouldNotCallTransferProcess() {
+        
+        let (_, dictionarySpy, _, _, _) = makeSUT()
+        
+        XCTAssertNoDiff(dictionarySpy.callCount, 0)
+    }
+    
     func test_init_shouldNotCallMakeProcess() {
         
         let (_, dictionarySpy, _, _, _) = makeSUT()
