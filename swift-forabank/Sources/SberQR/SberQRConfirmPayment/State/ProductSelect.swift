@@ -54,7 +54,7 @@ public extension ProductSelect.Product {
     typealias ID = Tagged<_ID, Int>
     enum _ID {}
     
-    enum ProductType {
+    enum ProductType: Equatable {
         
         case card, account
     }

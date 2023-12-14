@@ -74,7 +74,7 @@ struct ProductCardView: View {
             
             Spacer()
             
-            cardType()
+            cardTitle()
             balanceView()
         }
     }
@@ -90,9 +90,9 @@ struct ProductCardView: View {
         text(productCard.data.number, config: config.number)
     }
     
-    private func cardType() -> some View {
+    private func cardTitle() -> some View {
         
-        text(productCard.data.type, config: config.type)
+        text(productCard.data.title, config: config.type)
     }
     
     private func balanceView() -> some View {

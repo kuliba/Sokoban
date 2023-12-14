@@ -13,7 +13,7 @@ extension ProductCard {
         data: .init(
             balanceFormatted: "123 456 ₽",
             number: "7891",
-            type: "Platinum"
+            title: "Platinum"
         ),
         look: .init(
             background: .svg(""),
@@ -29,7 +29,7 @@ extension ProductCard {
         data: .init(
             balanceFormatted: "123 456 ₽",
             number: "7891",
-            type: "Gold"
+            title: "Gold"
         ),
         look: .init(
             background: .svg(""),

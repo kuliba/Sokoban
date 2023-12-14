@@ -27,16 +27,16 @@ public extension ProductCard {
         
         let balanceFormatted: String
         let number: String
-        let type: String
+        let title: String
         
         public init(
             balanceFormatted: String,
             number: String,
-            type: String
+            title: String
         ) {
             self.balanceFormatted = balanceFormatted
             self.number = number
-            self.type = type
+            self.title = title
         }
     }
     
