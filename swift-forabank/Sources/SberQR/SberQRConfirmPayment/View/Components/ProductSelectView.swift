@@ -48,6 +48,7 @@ struct ProductSelectView: View {
                 
                 image
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
             } else {
                 
                 Color.clear

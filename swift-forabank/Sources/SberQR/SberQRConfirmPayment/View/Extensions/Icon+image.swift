@@ -19,6 +19,18 @@ extension Icon {
     }
     
     @ViewBuilder
+    func image(orColor color: Color) -> some View {
+        
+        if let image {
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            color
+        }
+    }
+    
+    @ViewBuilder
     func image(with fallback: Image) -> Image {
         
         switch self {
