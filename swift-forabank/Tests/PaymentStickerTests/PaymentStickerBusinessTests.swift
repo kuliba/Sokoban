@@ -13,6 +13,50 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
         
+    private func getTransferTypeParameter(
+        value: String
+    ) -> PaymentSticker.Operation.Parameter {
+        return .select(.ParameterSelect(
+            id: .transferTypeSticker,
+            value: value,
+            title: "title",
+            placeholder: "placeholder",
+            options: [],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            ))))
+    }
+    
+    private func getCitySelectorParameter() -> PaymentSticker.Operation.Parameter{
+        return .select(.ParameterSelect(
+            id: .citySelector,
+            value: "1",
+            title: "title",
+            placeholder: "placeholder",
+            options: [],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "iconName",
+                title: "title"
+            ))))
+    }
+    
+    private func getOfficeSelectorParameter() -> PaymentSticker.Operation.Parameter{
+        return .select(.ParameterSelect(
+            id: .officeSelector,
+            value: "1",
+            title: "title",
+            placeholder: "placeholder",
+            options: [],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            ))))
+    }
+    
     func getProductParameterStub() -> PaymentSticker.Operation.Parameter {
         
         .productSelector(.init(
