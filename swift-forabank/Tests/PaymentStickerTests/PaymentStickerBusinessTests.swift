@@ -52,6 +52,29 @@ private extension PaymentStickerBusinessTests {
             
             events.append(event)
         }
+    private final class DictionarySpy {
+        
+        private(set) var messages = [(request: GetJsonAbroadType, completion: BusinessLogic.DictionaryCompletion)]()
+
+        var callCount: Int { messages.count }
+        var requests: [GetJsonAbroadType] { messages.map(\.request) }
+        
+        func process(
+            _ request: GetJsonAbroadType,
+            _ completion: @escaping BusinessLogic.DictionaryCompletion
+        ) {
+         
+            messages.append((request, completion))
+        }
+        
+        func complete(
+            with result: Result<StickerDictionary, StickerDictionaryError>,
+            at index: Int = 0
+        ) {
+            
+            messages[index].completion(result)
+        }
+    }
     }
 
 }
