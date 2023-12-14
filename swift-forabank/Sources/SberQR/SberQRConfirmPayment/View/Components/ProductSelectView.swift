@@ -15,6 +15,8 @@ struct ProductSelectView: View {
     let event: (Event) -> Void
     let config: ProductSelectConfig
     
+    private let cardSize = CGSize(width: 112, height: 71)
+    
     var body: some View {
         
         VStack(spacing: 10) {
@@ -127,7 +129,7 @@ struct ProductSelectView: View {
         }
         .font(.caption.bold())
         .padding(.card)
-        .frame(width: 112, height: 71)
+        .frame(cardSize)
         .background(Color.orange.opacity(0.5)) // product.color
         .cornerRadius(8)
         .onTapGesture { event(.select(product.id)) }
