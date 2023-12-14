@@ -130,6 +130,7 @@ let package = Package(
         .uiKitHelpers,
         // tools
         .foraTools,
+        .foraToolsTests,
         // WIP: Explorations
         .wipTests,
         .userModel,
