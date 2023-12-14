@@ -35,8 +35,31 @@ private extension PaymentStickerBusinessTests {
             products: [],
             cityList: []
         )
+
+    private final class ImageLoaderSpy {
+        
+        private(set) var messages = [(request: [String], completion: BusinessLogic.ImageLoaderCompletion)]()
+
+        var callCount: Int { messages.count }
+        var requests: [[String]] { messages.map(\.request) }
+        
+        func process(
+            _ request: [String],
+            _ completion: @escaping BusinessLogic.ImageLoaderCompletion
+        ) {
+         
+            messages.append((request, completion))
+        }
+        
+        func complete(
+            with result: Result<[ImageData], GetImageListError>,
+            at index: Int = 0
+        ) {
+            
+            messages[index].completion(result)
+        }
+    }
     
-        let spy = Spy()
     private final class MakeSpy {
         
         private(set) var messages = [(request: String, completion: BusinessLogic.MakeTransferCompletion)]()
