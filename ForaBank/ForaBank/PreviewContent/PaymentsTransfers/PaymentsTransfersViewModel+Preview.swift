@@ -77,23 +77,15 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-                
-            ProductProfileViewModel(
-                .emptyMock,
-                makeQRScannerModel: QRViewModel.preview,
-                getSberQRData: { _,_ in },
-                makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
-        makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
-                navButtonsRight: [
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
+        navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]
     )

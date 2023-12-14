@@ -17,15 +17,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var rootViewModel = RootViewModelFactory.make(
         model: model,
-        logger: logger
+        logger: logger,
+        qrResolverFeatureFlag: .init(.inactive)
     )
+    private lazy var rootViewFactory = RootViewFactory(with: model)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = RootViewHostingViewController(with: rootViewModel)
+        let rootViewController = RootViewHostingViewController(
+            with: rootViewModel,
+            rootViewFactory: rootViewFactory
+        )
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         

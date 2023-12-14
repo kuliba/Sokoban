@@ -9,34 +9,56 @@ import SwiftUI
 
 struct FixedAmountSberQRConfirmPaymentView: View {
     
-    let state: SberQRConfirmPaymentState.FixedAmount
-    let event: (SberQRConfirmPaymentEvent.FixedAmount) -> Void
+    typealias State = SberQRConfirmPaymentStateOf<Info>.FixedAmount
+    typealias Event = SberQRConfirmPaymentEvent.FixedAmount
+    
+    let state: State
+    let event: (Event) -> Void
     let pay: () -> Void
+    let config: Config
     
     var body: some View {
         
-        FeedWithBottomView(feed: feed) {
-            
+        FeedWithBottomView(
+            feed: feed,
+            backgroundColor: config.background.color
+        ) {
             ButtonView(
                 button: state.bottom,
-                pay: pay
+                pay: pay,
+                config: config.button
             )
+            .padding(.leading, 16)
+            .padding(.trailing, 15)
         }
-        
     }
     
     private func feed() -> some View {
         
         Group {
             
-            HeaderView(header: state.header)
+            // HeaderView(header: state.header)
+            
             ProductSelectView(
                 state: state.productSelect,
-                event: { event(.productSelect($0)) }
+                event: { event(.productSelect($0)) },
+                config: config.productSelect
             )
-            InfoView(info: state.brandName)
-            InfoView(info: state.amount)
-            InfoView(info: state.recipientBank)
+            
+            InfoView(
+                info: state.brandName,
+                config: config.info
+            )
+            
+            InfoView(
+                info: state.amount,
+                config: config.info
+            )
+            
+            InfoView(
+                info: state.recipientBank,
+                config: config.info
+            )
         }
     }
 }
@@ -51,13 +73,14 @@ struct FixedAmountSberQRConfirmPaymentView_Previews: PreviewProvider {
     }
     
     private static func sberQRConfirmPaymentView(
-        _ state: SberQRConfirmPaymentState.FixedAmount
+        _ state: FixedAmountSberQRConfirmPaymentView.State
     ) -> some View {
         
         FixedAmountSberQRConfirmPaymentView(
             state: state,
             event: { _ in },
-            pay: {}
+            pay: {},
+            config: .default
         )
     }
 }

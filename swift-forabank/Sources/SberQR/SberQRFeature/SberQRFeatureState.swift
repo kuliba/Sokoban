@@ -9,5 +9,5 @@ public enum SberQRFeatureState: Equatable {
     
     case loading
     case getSberQRDataResponse(GetSberQRDataResponse)
-    case getSberQRDataError(GetSberQRDataError)
+    case getSberQRDataError(MappingError)
 }

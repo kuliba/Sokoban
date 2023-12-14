@@ -10,24 +10,32 @@ import SwiftUI
 struct FeedWithBottomView<Feed: View, Bottom: View>: View {
     
     let feed: () -> Feed
-    // let bottom: (@escaping () -> Void) -> Bottom
+    let backgroundColor: Color
     let bottom: () -> Bottom
+    
+    private let shape = RoundedRectangle(cornerRadius: 8, style: .circular)
     
     var body: some View {
         
         VStack {
             
             feedView()
+                .padding(.horizontal)
             bottom()
         }
-        .padding(.horizontal)
     }
     
     private func feedView() -> some View {
         
-        VStack {
+        ScrollView(showsIndicators: false) {
             
-            ScrollView(showsIndicators: false, content: feed)
+            VStack(spacing: 16) {
+                
+                feed()
+                    .padding(.default)
+                    .background(backgroundColor)
+                    .clipShape(shape)
+            }
         }
     }
 }
@@ -39,28 +47,27 @@ struct FeedWithBottomView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        FeedWithBottomView {
-            
-            ForEach(0..<20) {
+        FeedWithBottomView(
+            feed: {
                 
-                Text("Item #\($0)")
+                ForEach(0..<20) {
+                    
+                    Text("Item #\($0)")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
+            },
+            backgroundColor: Color.blue.opacity(0.1),
+            bottom: {
+                
+                Text("Bottom View")
+                    .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(.gray.opacity(0.2))
-                    )
+                    .background(.green)
+                    .clipShape(Capsule())
             }
-            
-        } bottom: {
-            
-            Text("Bottom View")
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(.green)
-                .clipShape(Capsule())
-        }
+        )
         .padding(.horizontal)
     }
 }

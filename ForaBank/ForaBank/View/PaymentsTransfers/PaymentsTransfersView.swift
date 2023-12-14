@@ -5,12 +5,14 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import SberQR
 import SwiftUI
 
 struct PaymentsTransfersView: View {
     
-    @ObservedObject
-    var viewModel: PaymentsTransfersViewModel
+    @ObservedObject var viewModel: PaymentsTransfersViewModel
+    
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
     var body: some View {
         
@@ -35,7 +37,6 @@ struct PaymentsTransfersView: View {
                             EmptyView()
                         }
                     }
-                    
                 } //mainVerticalScrollView
             } //mainVStack
             
@@ -70,10 +71,11 @@ struct PaymentsTransfersView: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
-        .bottomSheet(item: $viewModel.bottomSheet, content: bottomSheetView)
-        .alert(item: $viewModel.alert, content: { alertViewModel in
-            Alert(with: alertViewModel)
-        })
+        .bottomSheet(
+            item: $viewModel.bottomSheet, 
+            content: bottomSheetView
+        )
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
     
@@ -177,7 +179,10 @@ struct PaymentsTransfersView: View {
             )
             
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .openDeposit(depositListViewModel):
             OpenDepositDetailView(viewModel: depositListViewModel)
@@ -186,7 +191,11 @@ struct PaymentsTransfersView: View {
             OpenDepositView(viewModel: openDepositViewModel)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
-            Text("WIP: \(String(describing: sberQRPaymentViewModel))")
+            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.closeSberQRPaymentViewModel
+                )
         }
     }
     
@@ -307,6 +316,10 @@ struct PaymentsTransfersView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -327,7 +340,6 @@ extension PaymentsTransfersView {
     }
 }
 
-
 extension PaymentsTransfersView {
     
     //MARK: - ViewBarButton
@@ -346,35 +358,47 @@ extension PaymentsTransfersView {
             }
         }
     }
-    
 }
 
 //MARK: - Preview
 
 struct Payments_TransfersView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        PaymentsTransfersView(viewModel: .sample)
+        
+        paymentsTransfersView()
             .previewDevice(PreviewDevice(rawValue: "iPhone X 15.4"))
             .previewDisplayName("iPhone X")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice(PreviewDevice(rawValue: "iPhone 13 Pro Max"))
             .previewDisplayName("iPhone 13 Pro Max")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("iPhone SE (3rd generation)")
             .previewDisplayName("iPhone SE (3rd generation)")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("iPhone 13 mini")
             .previewDisplayName("iPhone 13 mini")
         
-        PaymentsTransfersView(viewModel: .sample)
+        paymentsTransfersView()
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
+    }
+    
+    private static func paymentsTransfersView() -> some View {
         
+        PaymentsTransfersView(
+            viewModel: .sample,
+            makeSberQRConfirmPaymentView: { 
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            }
+        )
     }
 }
-
-
-

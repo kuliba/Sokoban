@@ -1,0 +1,53 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "parameters": [
+            {
+                "id": "paymentOperationDetailId",
+                "type": "DATA_LONG",
+                "value": 81109
+            },
+            {
+                "id": "success_status",
+                "type": "SUCCESS_STATUS_ICON",
+                "value": "REJECTED"
+            },
+            {
+                "id": "success_title",
+                "type": "SUCCESS_TEXT",
+                "value": "Платеж отклонен",
+                "style": "TITLE"
+            },
+            {
+                "id": "success_amount",
+                "type": "SUCCESS_TEXT",
+                "value": "114 ₽",
+                "style": "AMOUNT"
+            },
+            {
+                "id": "brandName",
+                "type": "SUBSCRIBER",
+                "value": "РТК",
+                "style": "SMALL",
+                "icon": "b6e5b5b8673544184896724799e50384",
+                "subscriptionPurpose": null
+            },
+            {
+                "id": "success_option_buttons",
+                "type": "SUCCESS_OPTION_BUTTONS",
+                "value": [
+                    "DETAILS"
+                ]
+            },
+            {
+                "id": "button_main",
+                "type": "BUTTON",
+                "value": "На главный",
+                "color": "red",
+                "action": "MAIN",
+                "placement": "BOTTOM"
+            }
+        ]
+    }
+}

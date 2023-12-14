@@ -59,6 +59,7 @@ extension Services {
             case bindPublicKeyWithEventId
             case changePIN
             case createStickerPayment
+            case createSberQRPayment
             case formSessionKey
             case getJsonAbroad
             case getSberQRData
@@ -155,6 +156,12 @@ extension Services.Endpoint {
         serviceName: .createStickerPayment
     )
     
+    static let createSberQRPayment: Self = .init(
+        pathPrefix: .binding,
+        version: .v1,
+        serviceName: .createSberQRPayment
+    )
+    
     static let formSessionKey: Self = .init(
         pathPrefix: .processing(.registration),
         version: .v1,
@@ -173,13 +180,13 @@ extension Services.Endpoint {
         serviceName: .getProcessingSessionCode
     )
     
-    static let getSberQRDataRequest: Self = .init(
+    static let getSberQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getSberQRData
     )
     
-    static let getScenarioQRDataRequest: Self = .init(
+    static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
         serviceName: .getScenarioQRData

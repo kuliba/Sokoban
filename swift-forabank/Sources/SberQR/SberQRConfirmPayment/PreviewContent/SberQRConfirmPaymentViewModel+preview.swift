@@ -16,7 +16,7 @@ extension SberQRConfirmPaymentViewModel {
         
         return .`default`(
             initialState: initialState,
-            getProducts: { [.cardPreview, .accountPreview] },
+            getProducts: { .allProducts },
             pay: pay,
             scheduler: .main
         )

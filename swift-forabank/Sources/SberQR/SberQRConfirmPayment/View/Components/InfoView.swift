@@ -1,6 +1,6 @@
 //
 //  InfoView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -9,10 +9,62 @@ import SwiftUI
 
 struct InfoView: View {
     
-    let info: SberQRConfirmPaymentState.Info
+    let info: Info
+    let config: InfoConfig
+    
+    @State private var image: Image?
     
     var body: some View {
-        Text("InfoView")
+        
+        HStack(spacing: 12) {
+            
+            icon()
+                .frame(info.size)
+                .frame(width: 32, height: 32)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                
+                text(info.title, config: config.title)
+                text(info.value, config: config.value)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .onReceive(info.image, perform: { self.image = $0 })
+    }
+    
+    @ViewBuilder
+    private func icon() -> some View {
+        
+        if let image {
+            image.resizable()
+        } else {
+            // TODO: add shimmering
+            Color.clear
+        }
+    }
+    
+    private func text(
+        _ text: String,
+        config: TextConfig
+    ) -> some View {
+        
+        Text(text)
+            .foregroundColor(config.textColor)
+            .font(config.textFont)
+    }
+}
+
+private extension Info {
+    
+    var size: CGSize {
+        
+        switch id {
+        case .amount:
+            return .init(width: 24, height: 24)
+            
+        case .brandName, .recipientBank:
+            return .init(width: 32, height: 32)
+        }
     }
 }
 
@@ -24,9 +76,17 @@ struct InfoView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            InfoView(info: .preview(.amount))
-            InfoView(info: .preview(.brandName))
-            InfoView(info: .preview(.recipientBank))
+            infoView(info: .amount)
+            infoView(info: .brandName)
+            infoView(info: .recipientBank)
         }
+        .previewLayout(.sizeThatFits)
+    }
+    
+    private static func infoView(
+        info: Info
+    ) -> some View {
+        
+        InfoView(info: info, config: .default)
     }
 }

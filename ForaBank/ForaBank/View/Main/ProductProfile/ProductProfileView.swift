@@ -13,7 +13,9 @@ struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    
+
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
+
     var accentColor: some View {
         
         return viewModel.accentColor.overlay(Color(hex: "1с1с1с").opacity(0.3))
@@ -160,10 +162,16 @@ struct ProductProfileView: View {
                 )
             
         case let .myProducts(viewModel):
-            MyProductsView(viewModel: viewModel)
+            MyProductsView(
+                viewModel: viewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .paymentsTransfers(viewModel):
-            PaymentsTransfersView(viewModel: viewModel)
+            PaymentsTransfersView(
+                viewModel: viewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
         }
     }
     
@@ -268,7 +276,7 @@ struct ProductProfileView: View {
         resendRequestAfterClose: @escaping (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void
     ) -> some View {
         
-        let buttonConfig: ButtonConfig = .init(
+        let buttonConfig: PinCodeUI.ButtonConfig = .init(
             font: .textH1R24322(),
             textColor: .textSecondary,
             buttonColor: .mainColorsGrayLightest
@@ -372,9 +380,26 @@ struct ProfileView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileView(viewModel: .sample)
-            ProductProfileView(viewModel: .sadSample)
+            productProfileView(viewModel: .sample)
+            productProfileView(viewModel: .sadSample)
         }
+    }
+    
+    private static func productProfileView(
+        viewModel: ProductProfileViewModel
+    ) -> some View {
+        
+        ProductProfileView(
+            viewModel: viewModel,
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            }
+        )
     }
 }
 
@@ -388,9 +413,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -401,9 +425,8 @@ extension ProductProfileViewModel {
         buttons: .sample,
         detail: .sample,
         history: .sampleHistory,
-        makeQRScannerModel: QRViewModel.preview,
-        getSberQRData: { _,_ in },
-        makeSberQRConfirmPaymentViewModel: SberQRConfirmPaymentViewModel.preview,
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
@@ -427,7 +450,7 @@ extension QRViewModel {
         
         .init(
             closeAction: closeAction,
-            qrResolver: QRViewModel.ScanResult.init
+            qrResolve: QRViewModel.ScanResult.init
         )
     }
 }

@@ -18,7 +18,7 @@ extension RequestFactory {
         }
 
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.getScenarioQRDataRequest
+        let endpoint = Services.Endpoint.getScenarioQRData
         let url = try! endpoint.url(withBase: base)
         
         var request = URLRequest(url: url)
