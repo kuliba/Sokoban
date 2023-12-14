@@ -18,7 +18,6 @@ extension ProductCard {
         look: .init(
             background: .svg(""),
             backgroundColor: .black.opacity(0.7),
-            cardIcon: .smallDesign,
             mainCardMark: .svg("")
         )
     )
@@ -32,7 +31,6 @@ extension ProductCard {
         look: .init(
             background: .largeDesign,
             backgroundColor: .orange.opacity(0.2),
-            cardIcon: .svg(""),
             mainCardMark: .svg("")
         )
     )

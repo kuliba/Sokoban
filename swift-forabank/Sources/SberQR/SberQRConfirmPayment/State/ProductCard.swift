@@ -34,7 +34,6 @@ extension ProductCard {
             look: .init(
                 background: product.look.background,
                 backgroundColor: Color(product.look.color),
-                cardIcon: product.look.icon,
                 mainCardMark: .svg("")
             )
         )
@@ -64,18 +63,15 @@ public extension ProductCard {
         
         let background: Icon
         let backgroundColor: Color
-        let cardIcon: Icon
         let mainCardMark: Icon
         
         public init(
             background: Icon,
             backgroundColor: Color,
-            cardIcon: Icon,
             mainCardMark: Icon
         ) {
             self.background = background
             self.backgroundColor = backgroundColor
-            self.cardIcon = cardIcon
             self.mainCardMark = mainCardMark
         }
     }

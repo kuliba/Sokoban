@@ -15,7 +15,7 @@ struct ProductCardView: View {
     private let cardSize = CGSize(width: 112, height: 71)
     private let logoSize = CGSize(width: 22, height: 36)
     private let shadowSize = CGSize(width: 88, height: 54)
-    private let cardInsets = EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+    private let cardInsets = EdgeInsets(top: 12, leading: 8, bottom: 8, trailing: 8)
     
     private var offsetY: CGFloat {
         
@@ -31,11 +31,6 @@ struct ProductCardView: View {
             ZStack(alignment: .topTrailing) {
                 
                 cardView()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(cardInsets)
-                    .background(background)
-                    .frame(cardSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 
                 selectedCardMarkView()
             }
@@ -44,28 +39,20 @@ struct ProductCardView: View {
     
     private func cardView() -> some View {
         
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 4) {
             
-            HStack(spacing: 9) {
-                
-                cardIcon()
-                    .frame(.size16)
-                    .frame(.size20)
-                                
-                cardNumber()
-            }
-            
-            Spacer()
+            cardNumber()
+                .padding(.leading, 29)
             
             cardTitle()
+                .frame(maxHeight: .infinity, alignment: .bottom)
             balanceView()
         }
-    }
-    
-    @ViewBuilder
-    private func cardIcon() -> some View {
-        
-        productCard.look.cardIcon.image(orColor: .clear)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(cardInsets)
+        .background(background)
+        .frame(cardSize)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     
     private func cardNumber() -> some View {
