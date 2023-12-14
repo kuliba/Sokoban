@@ -9,12 +9,12 @@ import Foundation
 
 // model.dictionaryCurrencySymbol(for code: String) -> String?
 // model.dictionaryCurrencySymbol(productData.currency)
-struct DecimalFormatter {
+public struct DecimalFormatter {
     
-    let format: (Decimal) -> String?
-    let number: (String?) -> Decimal
+    public let format: (Decimal) -> String?
+    public let number: (String?) -> Decimal
     
-    init(currencySymbol: String) {
+    public init(currencySymbol: String) {
         
         let formatter = NumberFormatter.currency(with: currencySymbol)
         
