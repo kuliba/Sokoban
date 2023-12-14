@@ -13,9 +13,24 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
         
-        let (sut, spy) = makeSUT()
-        spy.events
+    func getProductParameterStub() -> PaymentSticker.Operation.Parameter {
         
+        .productSelector(.init(
+            state: .select,
+            selectedProduct: .init(
+                id: 1,
+                title: "",
+                nameProduct: "nameProduct",
+                balance: 10,
+                balanceFormatted: "10",
+                description: "description",
+                cardImage: .named(""),
+                paymentSystem: .named(""),
+                backgroundImage: .named(""),
+                backgroundColor: "color"
+            ), 
+            allProducts: []
+        ))
     }
 }
 
