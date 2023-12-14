@@ -140,10 +140,10 @@ extension SberQRConfirmPaymentState.Amount {
     static let preview: Self = .init(
         id: .paymentAmount,
         value: 123.45,
-        title: "",
+        title: "Сумма перевода",
         validationRules: [],
         button: .init(
-            title: "Pay",
+            title: "Оплатить",
             action: .paySberQR,
             color: .red
         )
@@ -154,7 +154,7 @@ extension SberQRConfirmPaymentState.Button {
     
     static let preview: Self = .init(
         id: .buttonPay,
-        value: "PAY",
+        value: "Оплатить",
         color: .red,
         action: .pay,
         placement: .bottom

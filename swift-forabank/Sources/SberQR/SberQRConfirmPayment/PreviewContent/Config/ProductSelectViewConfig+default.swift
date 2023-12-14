@@ -1,5 +1,5 @@
 //
-//  ProductSelectViewConfig+default.swift
+//  ProductSelectConfig+default.swift
 //
 //
 //  Created by Igor Malyarov on 12.12.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension ProductSelectViewConfig {
+extension ProductSelectConfig {
     
     static let `default`: Self = .init(
         amount: .init(
@@ -31,7 +31,7 @@ extension ProductSelectViewConfig {
     )
 }
 
-extension ProductSelectViewConfig.Card {
+extension ProductSelectConfig.Card {
     
     static let `default`: Self = .init(
         amount: .init(

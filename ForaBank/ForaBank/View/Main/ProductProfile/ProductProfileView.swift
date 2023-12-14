@@ -276,7 +276,7 @@ struct ProductProfileView: View {
         resendRequestAfterClose: @escaping (CardDomain.CardId, ConfirmViewModel.CVVPinAction) -> Void
     ) -> some View {
         
-        let buttonConfig: ButtonConfig = .init(
+        let buttonConfig: PinCodeUI.ButtonConfig = .init(
             font: .textH1R24322(),
             textColor: .textSecondary,
             buttonColor: .mainColorsGrayLightest

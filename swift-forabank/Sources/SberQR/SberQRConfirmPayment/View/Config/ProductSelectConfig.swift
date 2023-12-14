@@ -1,5 +1,5 @@
 //
-//  ProductSelectViewConfig.swift
+//  ProductSelectConfig.swift
 //
 //
 //  Created by Igor Malyarov on 12.12.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ProductSelectViewConfig {
+public struct ProductSelectConfig {
     
     let amount: TextConfig
     let card: Card
@@ -33,7 +33,7 @@ public struct ProductSelectViewConfig {
     }
 }
 
-public extension ProductSelectViewConfig {
+public extension ProductSelectConfig {
     
     struct Card {
         

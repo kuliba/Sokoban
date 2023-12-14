@@ -26,7 +26,9 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             AmountView(
                 amount: state.bottom,
                 event: { event(.editAmount($0)) },
-                pay: pay
+                pay: pay,
+                currencySymbol: state.currencySymbol,
+                config: config.amount
             )
         }
     }
@@ -40,7 +42,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelectView
+                config: config.productSelect
             )
 
             InfoView(
@@ -54,6 +56,17 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             )
             
             // DataStringView(data: state.currency)
+        }
+    }
+}
+
+private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
+    
+    var currencySymbol: String {
+        
+        switch currency.value {
+        case "RUB": return "₽"
+        default:    return " "
         }
     }
 }
