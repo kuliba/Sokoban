@@ -406,9 +406,9 @@ private extension Model {
                 style: .clipped
             ) ?? "",
             description: $0.displayNumber ?? "",
-            cardImage: PaymentSticker.ImageData.data($0.smallDesign.uiImage?.pngData()),
-            paymentSystem: PaymentSticker.ImageData.data($0.paymentSystemData),
-            backgroundImage: PaymentSticker.ImageData.data($0.largeDesign.uiImage?.pngData()),
+            cardImage: .data($0.smallDesign.uiImage?.pngData()),
+            paymentSystem: .data($0.paymentSystemData),
+            backgroundImage: .data($0.largeDesign.uiImage?.pngData()),
             backgroundColor: $0.backgroundColor.description
         )})
         
