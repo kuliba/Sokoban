@@ -328,49 +328,40 @@ public extension BusinessLogic {
                 
             case .process:
                     
-                    let stickerPayment = StickerPayment(
-                        currencyAmount: "RUB",
-                        amount: operation.parameters.amount ?? 0,
-                        check: false,
-                        payer: .init(cardId: operation.parameters.productID ?? ""),
-                        productToOrderInfo: .init(
-                            type: "STICKER",
-                            deliverToOffice: operation.parameters.deliveryToOffice ?? false,
-                            officeId: operation.parameters.officeID,
-                            cityId: operation.parameters.cityID
-                        ))
+                let stickerPayment = getStickerPayment(parameters: operation.parameters)
+                
+                processTransferService(stickerPayment) { result in
                     
-                    processTransferService(stickerPayment) { result in
+                    switch result {
+                    case let .success(success):
                         
-                        switch result {
-                        case let .success(success):
-                            
-                            var newOperation = operation
-                            newOperation = newOperation.updateOperation(
-                                operation: newOperation,
-                                newParameter: .input(.init(
-                                    value: "",
-                                    title: .code,
-                                    warning: nil
-                                ))
-                            )
-                            
-                            newOperation = newOperation.updateOperation(
-                                operation: newOperation,
-                                newParameter: .amount(.init(value: success.amount.description))
-                            )
-                            
-                            completion(.success(.operation(newOperation)))
-                            
-                        case let .failure(error):
-                            completion(.failure(error))
-                        }
+                        var newOperation = operation
+                        newOperation = newOperation.updateOperation(
+                            operation: newOperation,
+                            newParameter: .input(.init(
+                                value: "",
+                                title: .code,
+                                warning: nil
+                            ))
+                        )
+                        
+                        newOperation = newOperation.updateOperation(
+                            operation: newOperation,
+                            newParameter: .amount(.init(value: success.amount.description))
+                        )
+                        
+                        completion(.success(.operation(newOperation)))
+                        
+                    case let .failure(error):
+                        completion(.failure(error))
                     }
-                    
-                    return .success(.operation(.init(
-                        state: .process,
-                        parameters: operation.parameters
-                    )))
+                }
+                
+                return .success(.operation(.init(
+                    state: .process,
+                    parameters: operation.parameters
+                )))
+                
             case .code:
                 if let input = operation.parameters.first(where: { $0.id == .input }) {
                     
@@ -442,6 +433,21 @@ public extension BusinessLogic {
         case let .product(productEvents):
             return reduceProductEvent(productEvents, operation)
         }
+    }
+    
+    func getStickerPayment(parameters: [Operation.Parameter]) -> StickerPayment {
+    
+        .init(
+            currencyAmount: "RUB",
+            amount: parameters.deliveryToOffice == true ? 790 : 1500,
+            check: false,
+            payer: .init(cardId: parameters.productID ?? ""),
+            productToOrderInfo: .init(
+                type: "STICKER",
+                deliverToOffice: parameters.deliveryToOffice ?? false,
+                officeId: parameters.officeID,
+                cityId: parameters.cityID
+            ))
     }
     
     fileprivate func reduceProductEvent(
