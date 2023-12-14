@@ -12,6 +12,28 @@ import XCTest
 final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init() {
+    func test_getStickerPayment_shouldReturnDeliveryTypeCourier() {
+        
+        let (sut, _, _, _, _) = makeSUT()
+        
+        let result = sut.getStickerPayment(
+            parameters: getOperation(transferTypeValue: "typeDeliveryCourier").parameters
+        )
+        
+        let expect = PaymentSticker.StickerPayment(
+            currencyAmount: "RUB",
+            amount: 1500,
+            check: false,
+            payer: .init(cardId: "1"),
+            productToOrderInfo: .init(
+                type: "STICKER",
+                deliverToOffice: false,
+                officeId: "1",
+                cityId: 1
+        ))
+        
+        XCTAssertNoDiff(result, expect)
+    }
         
     
     // MARK: Helpers
