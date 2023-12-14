@@ -86,7 +86,6 @@ final class PaymentStickerBusinessTests: XCTestCase {
         
         XCTAssertNoDiff(result, expect)
     }
-        
     
     // MARK: Helpers
     
@@ -290,8 +289,6 @@ private extension PaymentStickerBusinessTests {
             messages[index].completion(result)
         }
     }
-    }
-
 }
 
 private extension BusinessLogic {
