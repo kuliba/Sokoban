@@ -17,7 +17,7 @@ public extension CreateSberQRPaymentPayload {
                 "id": "QRLink",
                 "value": qrLink.absoluteString
             ],[
-                "id": idID,
+                "id": productID,
                 "value": "\(idValue)"
             ]]
             
@@ -36,7 +36,7 @@ public extension CreateSberQRPaymentPayload {
         }
     }
     
-    private var idID: String {
+    private var productID: String {
         
         switch product {
         case .card:

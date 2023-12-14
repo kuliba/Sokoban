@@ -27,7 +27,7 @@ func anyHTTPURLResponse(
     .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
 }
 
-func anyURL(string: String = "any.url") -> URL {
+func anyURL(string: String = UUID().uuidString) -> URL {
     
     .init(string: string)!
 }

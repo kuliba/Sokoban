@@ -5,8 +5,11 @@
 //  Created by Max Gribov on 24.02.2022.
 //
 
-import Foundation
 import Combine
+import Foundation
+#warning("remove GenericRemoteService")
+import GenericRemoteService
+import SberQR
 import SwiftUI
 
 class MainViewModel: ObservableObject, Resetable {
@@ -31,9 +34,8 @@ class MainViewModel: ObservableObject, Resetable {
     
     private let model: Model
     private let makeProductProfileViewModel: MakeProductProfileViewModel
-    private let makeQRScannerModel: MakeQRScannerModel
-    private let getSberQRData: GetSberQRData
-    private let makeSberQRPaymentViewModel: MakeSberQRPaymentViewModel
+    private let sberQRServices: SberQRServices
+    private let qrViewModelFactory: QRViewModelFactory
     private let onRegister: () -> Void
     private var bindings = Set<AnyCancellable>()
     
@@ -42,27 +44,24 @@ class MainViewModel: ObservableObject, Resetable {
         sections: [MainSectionViewModel],
         model: Model = .emptyMock,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
-        self.getSberQRData = getSberQRData
-        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+        self.sberQRServices = sberQRServices
+        self.qrViewModelFactory = qrViewModelFactory
         self.onRegister = onRegister
     }
     
     init(
         _ model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping () -> Void
     ) {
         self.navButtonsRight = []
@@ -76,9 +75,8 @@ class MainViewModel: ObservableObject, Resetable {
         ]
         self.model = model
         self.makeProductProfileViewModel = makeProductProfileViewModel
-        self.makeQRScannerModel = makeQRScannerModel
-        self.getSberQRData = getSberQRData
-        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+        self.sberQRServices = sberQRServices
+        self.qrViewModelFactory = qrViewModelFactory
         self.onRegister = onRegister
         
         navButtonsRight = createNavButtonsRight()
@@ -107,7 +105,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func openScanner() {
         
-        let qrScannerModel = makeQRScannerModel { [weak self] in
+        let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
             self?.action.send(MainViewModelAction.Close.FullScreenSheet())
         }
@@ -744,11 +742,7 @@ class MainViewModel: ObservableObject, Resetable {
         action.send(MainViewModelAction.Close.FullScreenSheet())
         rootActions?.spinner.show()
         
-        getSberQRData(url) { [weak self] result in
-            
-            guard let self else { return }
-            
-            self.rootActions?.spinner.hide()
+        sberQRServices.getSberQRData(url) { [weak self] result in
             
             DispatchQueue.main.async { [weak self] in
                 
@@ -759,55 +753,60 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func handleGetSberQRDataResult(
         _ url: URL,
-        _ result: GetSberQRDataResult
+        _ result: SberQRServices.GetSberQRDataResult
     ) {
+        rootActions?.spinner.hide()
+        
         switch result {
         case .failure:
-            alert = techErrorAlert()
+            alert = .techError { [weak self] in self?.alert = nil }
             
-        case let .success(sberQRData):
-            let viewModel = makeSberQRPaymentViewModel(
-                url,
-                sberQRData
-            ) { [weak self] in self?.handleSberQRPaymentResult($0) }
-            
-            link = .sberQRPayment(viewModel)
+        case let .success(getSberQRDataResponse):
+            do {
+                let viewModel = try qrViewModelFactory.makeSberQRConfirmPaymentViewModel(
+                    getSberQRDataResponse,
+                    { [weak self] in self?.sberQRPay(url: url, state: $0) }
+                )
+                link = .sberQRPayment(viewModel)
+                
+            } catch {
+                alert = .techError { [weak self] in self?.alert = nil }
+            }
         }
     }
     
-    private func techErrorAlert() -> Alert.ViewModel {
+    private func sberQRPay(
+        url: URL,
+        state: SberQRConfirmPaymentState
+    ) {
+        // action.send(MainViewModelAction.Close.Link())
+        rootActions?.spinner.show()
         
-        .init(
-            title: "Ошибка",
-            message: "Возникла техническая ошибка",
-            primary: .init(
-                type: .default,
-                title: "OK",
-                action: { [weak self] in self?.alert = nil }
-            )
-        )
+        // TODO: move conversion to factory
+        let payload = state.makePayload(with: url)
+        
+        sberQRServices.createSberQRPayment(payload) { [weak self] result in
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.handleCreateSberQRPaymentResult(result)
+            }
+        }
     }
     
-    private func handleSberQRPaymentResult(
-        _ result: MakeSberQRPaymentResult
+    private func handleCreateSberQRPaymentResult(
+        _ result: CreateSberQRPaymentResult
     ) {
+        rootActions?.spinner.hide()
         link = nil
-        
-        DispatchQueue.main.async { [weak self] in
+
+        switch result {
+        case .failure:
+            self.alert = .techError { [weak self] in self?.alert = nil }
             
-            guard let self else { return }
-            
-            switch result {
-            case .failure:
-                self.alert = self.techErrorAlert()
-                
-            case let .success(success):
-                
-                #warning("add success screen")
-                _ = success
-                // let successViewModel = Payments.Success(with: success)
-                // self.fullScreenSheet = .success(successViewModel)
-            }
+        case let .success(success):
+            let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
+            self.fullScreenSheet = .init(type: .success(successViewModel))
         }
     }
     
@@ -1060,6 +1059,14 @@ class MainViewModel: ObservableObject, Resetable {
 }
 
 extension MainViewModel {
+
+    func closeSberQRPaymentViewModel() {
+        
+        self.link = nil
+    }
+}
+
+extension MainViewModel {
     
     class UserAccountButtonViewModel: ObservableObject {
         
@@ -1118,7 +1125,7 @@ extension MainViewModel {
         case payments(PaymentsViewModel)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
-        case sberQRPayment(SberQRPaymentViewModel)
+        case sberQRPayment(SberQRConfirmPaymentViewModel)
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -1141,6 +1148,7 @@ extension MainViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
+            case success(PaymentsSuccessViewModel)
         }
         
         static func == (lhs: MainViewModel.FullScreenSheet, rhs: MainViewModel.FullScreenSheet) -> Bool {

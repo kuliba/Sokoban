@@ -665,7 +665,7 @@ private extension Model {
 
 private extension ServerAgentStub.EssenceStub {
     
-    static let test: Self = .preview
+    static let test: Self = .cardPreview
 }
 
 private extension TransferAnywayData.Additional {

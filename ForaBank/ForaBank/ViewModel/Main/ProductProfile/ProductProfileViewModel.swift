@@ -46,9 +46,8 @@ class ProductProfileViewModel: ObservableObject {
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
-    private let makeQRScannerModel: MakeQRScannerModel
-    private let getSberQRData: GetSberQRData
-    private let makeSberQRPaymentViewModel: MakeSberQRPaymentViewModel
+    private let sberQRServices: SberQRServices
+    private let qrViewModelFactory: QRViewModelFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
@@ -67,9 +66,8 @@ class ProductProfileViewModel: ObservableObject {
          accentColor: Color = .purple,
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
-         makeQRScannerModel: @escaping MakeQRScannerModel,
-         getSberQRData: @escaping GetSberQRData,
-         makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+         sberQRServices: SberQRServices,
+         qrViewModelFactory: QRViewModelFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -82,9 +80,8 @@ class ProductProfileViewModel: ObservableObject {
         self.accentColor = accentColor
         self.historyPool = historyPool
         self.model = model
-        self.makeQRScannerModel = makeQRScannerModel
-        self.getSberQRData = getSberQRData
-        self.makeSberQRPaymentViewModel = makeSberQRPaymentViewModel
+        self.sberQRServices = sberQRServices
+        self.qrViewModelFactory = qrViewModelFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.cardAction = createCardAction(cvvPINServicesClient, model)
@@ -99,9 +96,8 @@ class ProductProfileViewModel: ObservableObject {
     
     convenience init?(
         _ model: Model,
-        makeQRScannerModel: @escaping MakeQRScannerModel,
-        getSberQRData: @escaping GetSberQRData,
-        makeSberQRPaymentViewModel: @escaping MakeSberQRPaymentViewModel,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         rootView: String,
@@ -119,7 +115,7 @@ class ProductProfileViewModel: ObservableObject {
         let buttons = ProductProfileButtonsView.ViewModel(with: product, depositInfo: model.depositsInfo.value[product.id])
         let accentColor = Self.accentColor(with: product)
         
-        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, makeQRScannerModel: makeQRScannerModel, getSberQRData: getSberQRData, makeSberQRPaymentViewModel: makeSberQRPaymentViewModel, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
+        self.init(navigationBar: navigationBar, product: productViewModel, buttons: buttons, detail: nil, history: nil, accentColor: accentColor, model: model, sberQRServices: sberQRServices, qrViewModelFactory: qrViewModelFactory, cvvPINServicesClient: cvvPINServicesClient, rootView: rootView)
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -344,9 +340,8 @@ private extension ProductProfileViewModel {
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
                     makeProductProfileViewModel: makeProductProfileViewModel,
-                    makeQRScannerModel: makeQRScannerModel,
-                    getSberQRData: getSberQRData,
-                    makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
+                    sberQRServices: sberQRServices,
+                    qrViewModelFactory: qrViewModelFactory,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1471,9 +1466,8 @@ private extension ProductProfileViewModel {
         
         .init(
             model,
-            makeQRScannerModel: makeQRScannerModel,
-            getSberQRData: getSberQRData,
-            makeSberQRPaymentViewModel: makeSberQRPaymentViewModel,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,

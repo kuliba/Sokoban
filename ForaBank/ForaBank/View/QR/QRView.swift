@@ -265,7 +265,9 @@ struct QRView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        QRView(viewModel: .init(closeAction: {}, qrResolver: QRViewModel.ScanResult.init))
+        QRView(viewModel: .init(
+            closeAction: {},
+            qrResolve: QRViewModel.ScanResult.init))
     }
 }
 

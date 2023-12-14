@@ -128,6 +128,7 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
             type: type,
             icon: "",
             title: "",
+            footer: "",
             amountFormatted: "",
             color: ""
         )

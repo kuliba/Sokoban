@@ -229,9 +229,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SberQRTests",
         "name" : "SberQRTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
       }
     }
   ],

@@ -10,10 +10,12 @@ import XCTest
 
 class GetSberQRDataResponseTests: XCTestCase {
     
-    func responseWithFixedAmount() -> GetSberQRDataResponse {
+    func responseWithFixedAmount(
+        qrcID: String = "04a7ae2bee8f4f13ab151c1e6066d304"
+    ) -> GetSberQRDataResponse {
         
         .init(
-            qrcID: "04a7ae2bee8f4f13ab151c1e6066d304",
+            qrcID: qrcID,
             parameters: fixedAmountParameters(),
             required: [
                 .debitAccount
@@ -22,12 +24,17 @@ class GetSberQRDataResponseTests: XCTestCase {
     }
     
     func responseWithEditableAmount(
+        qrcID: String = "a6a05778867f439b822e7632036a9b45",
+        brand: String = "Тест Макусов. Кутуза_QR",
         amount: Decimal
     ) -> GetSberQRDataResponse {
         
         .init(
-            qrcID: "a6a05778867f439b822e7632036a9b45",
-            parameters: editableAmountParameters(amount: amount),
+            qrcID: qrcID,
+            parameters: editableAmountParameters(
+                brand: brand,
+                amount: amount
+            ),
             required: [
                 .debitAccount,
                 .paymentAmount,
@@ -49,13 +56,14 @@ class GetSberQRDataResponseTests: XCTestCase {
     }
     
     func editableAmountParameters(
+        brand: String = "Тест Макусов. Кутуза_QR",
         amount: Decimal
     ) -> [GetSberQRDataResponse.Parameter] {
         
         return [
             header(),
             debitAccount(),
-            brandName(value: "Тест Макусов. Кутуза_QR"),
+            brandName(value: brand),
             recipientBank(),
             paymentAmount(value: amount),
             currency(),

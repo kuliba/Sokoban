@@ -46,3 +46,34 @@ public extension GetSberQRDataResponse {
         case currency
     }
 }
+
+public extension GetSberQRDataResponse {
+    
+    var filterProductTypes: [GetSberQRDataResponse.Parameter.ProductSelect.Filter.ProductType] {
+        
+        parameters
+            .flatMap {
+                switch $0 {
+                case let .productSelect(productSelect):
+                    return productSelect.filter.productTypes
+                    
+                default:
+                    return []
+                }
+            }
+    }
+    
+    var filterCurrencies: [GetSberQRDataResponse.Parameter.ProductSelect.Filter.Currency] {
+        
+        parameters
+            .flatMap {
+                switch $0 {
+                case let .productSelect(productSelect):
+                    return productSelect.filter.currencies
+                    
+                default:
+                    return []
+                }
+            }
+    }
+}
