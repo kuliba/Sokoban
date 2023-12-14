@@ -21,7 +21,7 @@ public extension ProductSelect {
         public let id: ID
         public let type: ProductType
         let header: String
-        let icon: String
+        let icon: Icon
         let title: String
         let number: String
         let amountFormatted: String
@@ -30,8 +30,8 @@ public extension ProductSelect {
         public init(
             id: ID,
             type: ProductType,
-            header: String = "Счет списания",
-            icon: String,
+            header: String,
+            icon: Icon,
             title: String,
             footer: String,
             amountFormatted: String,

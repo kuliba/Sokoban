@@ -38,11 +38,20 @@ struct ProductSelectView: View {
         .onTapGesture { event(.toggleProductSelect) }
     }
     
-    private func productIcon(_ icon: String) -> some View {
+    private func productIcon(_ icon: Icon) -> some View {
         
-        Image(icon)
-            .resizable()
-            .frame(width: 32, height: 32)
+        Group {
+     
+            if let image = icon.image {
+                
+                image
+                    .resizable()
+            } else {
+                
+                Color.clear
+            }
+        }
+        .frame(width: 32, height: 32)
     }
     
     private func productTitle(

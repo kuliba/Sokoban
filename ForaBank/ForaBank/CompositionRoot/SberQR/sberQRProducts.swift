@@ -46,7 +46,8 @@ extension ProductData {
             return .init(
                 id: .init(card.id),
                 type: .card,
-                icon: "",
+                header: "Счет списания",
+                icon: .svg(card.smallDesign.description),
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
                 amountFormatted: formatBalance(card),
@@ -59,7 +60,8 @@ extension ProductData {
             return .init(
                 id: .init(account.id),
                 type: .account,
-                icon: "",
+                header: "Счет списания",
+                icon: .svg(account.smallDesign.description),
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
                 amountFormatted: formatBalance(account),

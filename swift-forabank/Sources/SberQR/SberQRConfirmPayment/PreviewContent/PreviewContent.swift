@@ -1,6 +1,6 @@
 //
 //  PreviewContent.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -87,7 +87,8 @@ extension ProductSelect.Product {
     public static let accountPreview: Self = .init(
         id: 234567891,
         type: .account,
-        icon: "",
+        header: "Счет списания",
+        icon: .svg(""),
         title: "Текущий счет",
         footer: "- 7891",
         amountFormatted: "123 456 ₽",
@@ -97,7 +98,8 @@ extension ProductSelect.Product {
     static let account2Preview: Self = .init(
         id: 2345678912,
         type: .account,
-        icon: "",
+        header: "Счет списания",
+        icon: .svg(""),
         title: "Account 2",
         footer: "- 8912",
         amountFormatted: "678.09 ₽",
@@ -107,7 +109,8 @@ extension ProductSelect.Product {
     public static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
-        icon: "",
+        header: "Счет списания",
+        icon: .svg(""),
         title: "Card",
         footer: "- 6789",
         amountFormatted: "1 234.56 ₽",
@@ -117,7 +120,8 @@ extension ProductSelect.Product {
     static let card2Preview: Self = .init(
         id: 1234567892,
         type: .card,
-        icon: "",
+        header: "Счет списания",
+        icon: .svg(""),
         title: "Card 2",
         footer: "- 7892",
         amountFormatted: "12 345 ₽",
@@ -127,7 +131,8 @@ extension ProductSelect.Product {
     static let card3Preview: Self = .init(
         id: 1234567893,
         type: .card,
-        icon: "",
+        header: "Счет списания",
+        icon: .svg(""),
         title: "Card 3",
         footer: "- 7893",
         amountFormatted: "123 456.78 ₽",
