@@ -41,12 +41,21 @@ public extension ChangingReducer {
                 range: range,
                 with: replacementText
             )
-            let d = formatter.filter(
-                text: changed, 
-                allowDecimalSeparator: true
-            )
-            let decimal = Decimal(string: d, locale: locale) ?? 0
-            let text = formatter.format(decimal) ?? ""
+            
+            let text = {
+                if formatter.isDecimalSeparator(replacementText) {
+                    return changed
+                } else {
+                    let d = formatter.filter(
+                        text: changed,
+                        allowDecimalSeparator: true
+                    )
+                    let decimal = Decimal(string: d, locale: locale) ?? 0
+                    
+                    return formatter.format(decimal) ?? ""
+                }
+            }()
+            
             let cursorPosition = text.count - cursorPositionFromEnd
             
             return .init(

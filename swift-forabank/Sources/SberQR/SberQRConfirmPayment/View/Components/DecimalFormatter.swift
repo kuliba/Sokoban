@@ -68,6 +68,14 @@ public struct DecimalFormatter {
         
         text.contains(formatter.decimalSeparator)
     }
+    
+    /// Returns `true` if `text` is `decimalSeparator`.
+    public func isDecimalSeparator(
+        _ text: String
+    ) -> Bool {
+        
+        text == formatter.decimalSeparator
+    }
 }
 
 private extension NumberFormatter {
