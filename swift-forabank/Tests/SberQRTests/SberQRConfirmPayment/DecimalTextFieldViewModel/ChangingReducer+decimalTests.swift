@@ -211,9 +211,15 @@ final class ChangingReducer_decimalTests: XCTestCase {
     
     private typealias SUT = ChangingReducer
     
-    private func makeSUT(currencySymbol: String = "₽") -> SUT {
+    private func makeSUT(
+        currencySymbol: String = "₽",
+        locale: Locale = .init(identifier: "ru_RU")
+    ) -> SUT {
         
-        return .decimal(currencySymbol: currencySymbol)
+        return .decimal(
+            currencySymbol: currencySymbol,
+            locale: locale
+        )
     }
     
     private func change(
@@ -221,7 +227,8 @@ final class ChangingReducer_decimalTests: XCTestCase {
         with replacementText: String,
         at cursorPosition: Int,
         selected rangeLength: Int = 0,
-        currency currencySymbol: String = "₽"
+        currency currencySymbol: String = "₽",
+        locale: Locale = .init(identifier: "ru_RU")
     ) throws -> TextFieldState {
         
         let state: TextFieldState = .editing(.init(
@@ -233,7 +240,10 @@ final class ChangingReducer_decimalTests: XCTestCase {
             in: .init(location: cursorPosition, length: rangeLength)
         )
         
-        let sut = makeSUT(currencySymbol: currencySymbol)
+        let sut = makeSUT(
+            currencySymbol: currencySymbol,
+            locale: locale
+        )
         
         return try sut.reduce(state, with: action)
     }
