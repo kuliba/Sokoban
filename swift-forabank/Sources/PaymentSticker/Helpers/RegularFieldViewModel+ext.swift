@@ -50,7 +50,7 @@ extension RegularFieldViewModel {
             return .init(
                 initialState: .placeholder(placeholderText),
                 reducer: reducer,
-                keyboardType: .number,
+                keyboardType: keyboardType,
                 toolbar: toolbar
             )
         }
