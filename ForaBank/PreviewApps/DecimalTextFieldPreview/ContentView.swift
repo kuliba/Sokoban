@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 15.12.2023.
 //
 
+import SberQR
 import SwiftUI
 
 struct ContentView: View {

@@ -620,6 +620,8 @@
 		2A95CBA52B2C80560041F5EC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A95CBA42B2C80560041F5EC /* ContentView.swift */; };
 		2A95CBA72B2C80580041F5EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A95CBA62B2C80580041F5EC /* Assets.xcassets */; };
 		2A95CBAA2B2C80580041F5EC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A95CBA92B2C80580041F5EC /* Preview Assets.xcassets */; };
+		2A95CBB12B2C80C80041F5EC /* SberQR in Frameworks */ = {isa = PBXBuildFile; productRef = 2A95CBB02B2C80C80041F5EC /* SberQR */; };
+		2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A95CBB22B2C818A0041F5EC /* TextFieldComponent */; };
 		2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1BB7A2AEB7F1F0027347C /* MyProductsViewModel+sample.swift */; };
 		2AA2A55F2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA2A55E2A54B685004410C2 /* PaymentsTransfersViewModelTests.swift */; };
 		2AA429052AC1D54E00919C4A /* PaymentsProductViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA429042AC1D54D00919C4A /* PaymentsProductViewModelTests.swift */; };
@@ -4407,6 +4409,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */,
+				2A95CBB12B2C80C80041F5EC /* SberQR in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11644,6 +11648,10 @@
 			dependencies = (
 			);
 			name = DecimalTextFieldPreview;
+			packageProductDependencies = (
+				2A95CBB02B2C80C80041F5EC /* SberQR */,
+				2A95CBB22B2C818A0041F5EC /* TextFieldComponent */,
+			);
 			productName = DecimalTextFieldPreview;
 			productReference = 2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -16400,6 +16408,14 @@
 		2A8142602A0B9237005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		2A95CBB02B2C80C80041F5EC /* SberQR */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SberQR;
+		};
+		2A95CBB22B2C818A0041F5EC /* TextFieldComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TextFieldComponent;
 		};
 		2AA7EDB82A783C8A00F5B00D /* SharedAPIInfra */ = {
 			isa = XCSwiftPackageProductDependency;
