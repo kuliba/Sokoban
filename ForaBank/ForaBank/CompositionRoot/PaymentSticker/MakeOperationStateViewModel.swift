@@ -56,8 +56,7 @@ private extension BusinessLogic {
         ),
         completion: @escaping (OperationResult) -> Void
     ) {
-        
-        operationResult(
+        process(
             operation: request.operation,
             event: request.event,
             completion: completion
