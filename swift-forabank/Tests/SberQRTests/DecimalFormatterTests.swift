@@ -12,7 +12,7 @@ final class DecimalFormatterTests: XCTestCase {
     
     func test_number_shouldDeliverZeroFromNil() {
         
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
 
         let number = sut.number(from: nil)
         
@@ -22,7 +22,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_number_shouldDeliverZeroFromNonNumber() {
         
         let nonNumber = " 123"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
 
         let number = sut.number(from: nonNumber)
         
@@ -32,7 +32,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_number_shouldDeliverZeroForNonFormatted() {
         
         let nonFormatted = "123"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
 
         let number = sut.number(from: nonFormatted)
         
@@ -42,7 +42,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_number_shouldDeliver___() {
         
         let nonFormatted = "123 RUB"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
 
         let number = sut.number(from: nonFormatted)
         
@@ -76,7 +76,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_shouldReturnZeroFromUnformatted() {
         
         let string = "123"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
         
         let reversed = sut.format(sut.number(from: string))
         
@@ -86,7 +86,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_reverse() {
         
         let string = "123 RUB"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
         
         let reversed = sut.format(sut.number(from: string))
         
@@ -96,7 +96,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_number() {
         
         let formatted = "12 345 RUB"
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
         
         let number = sut.number(from: formatted)
         
@@ -106,7 +106,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_filter_allowDecimalSeparator_true() throws {
         
         let decimal: Decimal = 12_345.67
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
         
         let filtered = try sut.filter(
             text: XCTUnwrap(sut.format(decimal)),
@@ -119,7 +119,7 @@ final class DecimalFormatterTests: XCTestCase {
     func test_filter_allowDecimalSeparator_false() throws {
         
         let decimal: Decimal = 12_345.67
-        let sut = SUT(currencySymbol: "RUB")
+        let sut = makeSUT(currencySymbol: "RUB")
         
         let filtered = try sut.filter(
             text: XCTUnwrap(sut.format(decimal)),
@@ -133,6 +133,20 @@ final class DecimalFormatterTests: XCTestCase {
     
     private typealias SUT = DecimalFormatter
     
+    private func makeSUT(
+        currencySymbol: String = "₽",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let locale = Locale(identifier: "ru_RU@currency=\(currencySymbol)")
+       
+        return SUT(
+            currencySymbol: currencySymbol,
+            locale: locale
+        )
+    }
+    
     private func assert(
         _ decimal: Decimal,
         _ expected: String,
@@ -140,7 +154,7 @@ final class DecimalFormatterTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = SUT(currencySymbol: currencySymbol)
+        let sut = makeSUT(currencySymbol: currencySymbol)
         
         let formatted = sut.format(decimal)
         let reversed = sut.number(from: formatted)
