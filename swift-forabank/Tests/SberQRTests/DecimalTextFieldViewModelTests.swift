@@ -42,6 +42,7 @@ final class DecimalTextFieldViewModelTests: XCTestCase {
     
     private func makeSUT(
         currencySymbol: String = "₽",
+        locale: Locale = .init(identifier: "ru_RU"),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -51,6 +52,7 @@ final class DecimalTextFieldViewModelTests: XCTestCase {
     ) {
         let sut = SUT.decimal(
             currencySymbol: currencySymbol,
+            locale: locale,
             scheduler: .immediate
         )
         let textSpy = TextSpy(sut.$state.map(\.text))
