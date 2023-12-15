@@ -49,7 +49,7 @@ final class DecimalTextFieldViewModelTests: XCTestCase {
         textSpy: TextSpy,
         decimalSpy: DecimalSpy
     ) {
-        let locale = Locale(identifier: "ru_RU@currency=\(currencySymbol)")
+        let locale = Locale(identifier: "en_US@currency=\(currencySymbol)")
         let sut = SUT.decimal(
             currencySymbol: currencySymbol,
             locale: locale,
