@@ -83,12 +83,14 @@ private extension NumberFormatter {
     // NumberFormatter+Extensions.swift:21
     static func currency(
         with currencySymbol: String,
+        internationalCurrencySymbol: String? = nil,
         locale: Locale = .current
     ) -> NumberFormatter {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencySymbol = currencySymbol
+        formatter.internationalCurrencySymbol = internationalCurrencySymbol ?? currencySymbol
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.locale = locale
