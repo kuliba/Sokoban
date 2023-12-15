@@ -1,13 +1,42 @@
 //
 //  AmountView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import TextFieldComponent
 import SwiftUI
 
+typealias TextFieldViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
+
+public extension TextFieldState {
+    
+    var decimal: Decimal {
+        
+        let formatter = DecimalFormatter(currencySymbol: "₽")
+        
+        return formatter.number(from: text)
+    }
+    
+    var text: String? {
+        
+        switch self {
+        case .placeholder:
+            return nil
+            
+        case let .noFocus(text):
+            return text
+            
+        case let .editing(state):
+            return state.text
+        }
+    }
+}
+
 struct AmountView: View {
+    
+    @StateObject private var textFieldModel: TextFieldViewModel
     
     let amount: SberQRConfirmPaymentState.Amount
     let event: (Decimal) -> Void
@@ -15,7 +44,27 @@ struct AmountView: View {
     
     let currencySymbol: String
     let config: AmountConfig
+    
+    init(
+        amount: SberQRConfirmPaymentState.Amount,
+        event: @escaping (Decimal) -> Void,
+        pay: @escaping () -> Void,
+        currencySymbol: String,
+        config: AmountConfig
+    ) {
+        #warning("inject currency symbol")
+        let textField = DecimalTextFieldViewModel.decimal(
+            currencySymbol: "₽"
+        )
         
+        self._textFieldModel = .init(wrappedValue: textField)
+        self.amount = amount
+        self.event = event
+        self.pay = pay
+        self.currencySymbol = currencySymbol
+        self.config = config
+    }
+    
     private let buttonSize = CGSize(width: 114, height: 40)
     private let frameInsets = EdgeInsets(top: 4, leading: 20, bottom: 16, trailing: 19)
     
@@ -43,22 +92,29 @@ struct AmountView: View {
     
     private func textField() -> some View {
         
-        TextField(
-            "amount",
-            text: .init(
-                get: { "\(amount.value) \(currencySymbol)" },
-                set: {
-                    guard let amount = Decimal(string: $0)
-                    else { return }
-                    
-                    event(amount)
-                }
+        TextFieldView(
+            viewModel: textFieldModel,
+            textFieldConfig: .init(
+                font: .boldSystemFont(ofSize: 24),
+                textColor: config.amount.textColor,
+                tintColor: .accentColor,
+                backgroundColor: .clear,
+                placeholderColor: .clear
             )
         )
-        .foregroundColor(config.amount.textColor)
-        .font(config.amount.textFont)
+//        .onReceive(textFieldModel.$state.map(\.decimal)) {
+//            
+//            print("### onReceive", $0)
+//            event($0)
+//        }
+        .onChange(of: textFieldModel.state.decimal) {
+            
+            print("### onChange", $0)
+            event($0)
+        }
+        // .font(config.amount.textFont)
     }
-        
+    
     private func buttonView() -> some View {
         
         ZStack {
@@ -67,7 +123,7 @@ struct AmountView: View {
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
-            #warning("add button state")
+#warning("add button state")
             Button(action: pay) {
                 
                 text(amount.button.title, config: config.button.active.text)
