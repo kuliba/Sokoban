@@ -83,7 +83,7 @@ final class DecimalFormatterTests: XCTestCase {
         XCTAssertNoDiff(reversed, "0 RUB")
     }
     
-    func test_reverse__() {
+    func test_reverse() {
         
         let string = "123 RUB"
         let sut = SUT(currencySymbol: "RUB")
@@ -91,6 +91,42 @@ final class DecimalFormatterTests: XCTestCase {
         let reversed = sut.format(sut.number(from: string))
         
         XCTAssertNoDiff(reversed, "123 RUB")
+    }
+    
+    func test_number() {
+        
+        let formatted = "12 345 RUB"
+        let sut = SUT(currencySymbol: "RUB")
+        
+        let number = sut.number(from: formatted)
+        
+        XCTAssertNoDiff(number, 12_345)
+    }
+    
+    func test_filter_allowDecimalSeparator_true() throws {
+        
+        let decimal: Decimal = 12_345.67
+        let sut = SUT(currencySymbol: "RUB")
+        
+        let filtered = try sut.filter(
+            text: XCTUnwrap(sut.format(decimal)),
+            allowDecimalSeparator: true
+        )
+        
+        XCTAssertNoDiff(filtered, "12345,67")
+    }
+    
+    func test_filter_allowDecimalSeparator_false() throws {
+        
+        let decimal: Decimal = 12_345.67
+        let sut = SUT(currencySymbol: "RUB")
+        
+        let filtered = try sut.filter(
+            text: XCTUnwrap(sut.format(decimal)),
+            allowDecimalSeparator: false
+        )
+        
+        XCTAssertNoDiff(filtered, "1234567")
     }
     
     // MARK: - Helpers

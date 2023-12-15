@@ -31,6 +31,30 @@ public struct DecimalFormatter {
         
         return number.decimalValue
     }
+    
+    /// Remove all characters from a string except digits and the decimal separator.
+    public func filter(
+        text: String,
+        allowDecimalSeparator: Bool
+    ) -> String {
+        
+        let decimalSeparator = formatter.decimalSeparator
+
+        var allowedCharacterSet = CharacterSet.decimalDigits
+        
+        if allowDecimalSeparator, let decimalSeparator {
+            
+            allowedCharacterSet.insert(charactersIn: decimalSeparator)
+        }
+        
+        return .init(text.filter {
+            
+            guard let first = $0.unicodeScalars.first
+            else { return false }
+            
+            return allowedCharacterSet.contains(first)
+        })
+    }
 }
 
 private extension NumberFormatter {
