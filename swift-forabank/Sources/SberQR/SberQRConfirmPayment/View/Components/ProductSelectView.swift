@@ -22,6 +22,8 @@ struct ProductSelectView: View {
         VStack(spacing: 10) {
             
             selectedProductView(state.product)
+                .padding(.default)
+            
             state.products.map(productsView)
         }
         .animation(.easeInOut, value: state)
@@ -92,6 +94,8 @@ struct ProductSelectView: View {
                 
                 ForEach(products, content: productCardView)
             }
+            .padding(.horizontal)
+            .padding(.bottom, 8)
         }
     }
     
