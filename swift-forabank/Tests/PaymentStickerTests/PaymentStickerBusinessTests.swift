@@ -13,30 +13,552 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     func test_init_shouldNotCallDictionaryProcess() {
         
-        let (_, dictionarySpy, _, _, _) = makeSUT()
+        let (_, dictionarySpy, transferSpy, makeSpy, imageLoaderSpy) = makeSUT()
         
         XCTAssertNoDiff(dictionarySpy.callCount, 0)
+        XCTAssertNoDiff(transferSpy.callCount, 0)
+        XCTAssertNoDiff(makeSpy.callCount, 0)
+        XCTAssertNoDiff(imageLoaderSpy.callCount, 0)
+    }  
+    
+    //MARK: Input Event Process
+    
+    func test_process_valueUpdate_shouldReturnUpdateOperation() throws {
+        
+        let (sut, _, _, _, _) = makeSUT()
+
+        let inputParameter = Operation.Parameter.Input(
+            value: "value",
+            title: .code,
+            warning: nil
+        )
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.input(inputParameter)]
+            )),
+            event: .input(.valueUpdate("value"))
+        )
     }
     
-    func test_init_shouldNotCallTransferProcess() {
+    //MARK: Select Event Process
+    
+    func test_process_selectOption_transferTypeStickerCourier_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .transferTypeSticker,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [.init(
+                id: "id",
+                name: "Доставка курьером",
+                iconName: "iconName"
+            )],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
         
-        let (_, dictionarySpy, _, _, _) = makeSUT()
-        
-        XCTAssertNoDiff(dictionarySpy.callCount, 0)
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .transferTypeSticker,
+                    value: "id",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [.init(
+                        id: "id",
+                        name: "Доставка курьером",
+                        iconName: "iconName"
+                    )],
+                    staticOptions: [],
+                    state: .selected(.init(
+                        title: "title",
+                        placeholder: "Доставка курьером",
+                        name: "Доставка курьером",
+                        iconName: "iconName"
+                    ))))]
+            )),
+            event: .select(.selectOption(
+                .init(iconName: "iconName", name: "Доставка курьером"),
+                selectParameter
+            ))
+        )
     }
     
-    func test_init_shouldNotCallMakeProcess() {
+    func test_process_selectOption_transferTypeStickerOffice_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .transferTypeSticker,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [.init(
+                id: "id",
+                name: "Получить в офисе",
+                iconName: "iconName"
+            )],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
         
-        let (_, dictionarySpy, _, _, _) = makeSUT()
-        
-        XCTAssertNoDiff(dictionarySpy.callCount, 0)
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .transferTypeSticker,
+                    value: "id",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [.init(
+                        id: "id",
+                        name: "Получить в офисе",
+                        iconName: "iconName"
+                    )],
+                    staticOptions: [],
+                    state: .selected(.init(
+                        title: "title",
+                        placeholder: "Получить в офисе",
+                        name: "Получить в офисе",
+                        iconName: "iconName"
+                    ))))]
+            )),
+            event: .select(.selectOption(
+                .init(iconName: "iconName", name: "Получить в офисе"),
+                selectParameter
+            ))
+        )
     }
     
-    func test_init_shouldNotCallImageProcess() {
+    func test_process_selectOption_officeSelector_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .officeSelector,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [.init(id: "id", name: "name", iconName: "iconName")],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
         
-        let (_, dictionarySpy, _, _, _) = makeSUT()
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .officeSelector,
+                    value: "value",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [.init(id: "id", name: "name", iconName: "iconName")],
+                    staticOptions: [],
+                    state: .idle(.init(
+                        iconName: "",
+                        title: "title"
+                    ))))]
+            )),
+            event: .select(.selectOption(
+                .init(iconName: "iconName", name: "name"),
+                selectParameter
+            ))
+        )
+    }
+    
+    func test_process_selectOption_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .citySelector,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [.init(id: "id", name: "name", iconName: "iconName")],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
         
-        XCTAssertNoDiff(dictionarySpy.callCount, 0)
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .citySelector,
+                    value: "value",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [.init(id: "id", name: "name", iconName: "iconName")],
+                    staticOptions: [],
+                    state: .idle(.init(
+                        iconName: "",
+                        title: "title"
+                    ))))]
+            )),
+            event: .select(.selectOption(
+                .init(iconName: "iconName", name: "name"),
+                selectParameter
+            ))
+        )
+    }
+    
+    func test_process_search_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .citySelector,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .citySelector,
+                    value: "value",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [],
+                    staticOptions: [],
+                    state: .idle(.init(
+                        iconName: "",
+                        title: "title"
+                    ))))]
+            )),
+            event: .select(.search("text", selectParameter))
+        )
+    }
+    
+    func test_process_chevronTapped_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        let selectParameter = Operation.Parameter.Select(
+            id: .citySelector,
+            value: "value",
+            title: "title",
+            placeholder: "placeholder",
+            options: [],
+            staticOptions: [],
+            state: .idle(.init(
+                iconName: "",
+                title: "title"
+            )))
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                parameters: [.select(.init(
+                    id: .citySelector,
+                    value: "value",
+                    title: "title",
+                    placeholder: "placeholder",
+                    options: [],
+                    staticOptions: [],
+                    state: .list(.init(
+                        iconName: "",
+                        title: "title",
+                        placeholder: "placeholder",
+                        options: []
+                    ))))]
+            )),
+            event: .select(.chevronTapped(selectParameter))
+        )
+    }
+    
+    func test_process_openBranch_shouldReturnUpdateOperation() throws {
+    
+        let (sut, _, _, _, _) = makeSUT()
+
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation()),
+            event: .select(.openBranch(.init(id: "")))
+        )
+    }
+    
+    //MARK: Dictionary Service Tests
+    func test_init_shouldNotCallDictionaryProcess1() throws {
+        
+        let (sut, _, _, _, _) = makeSUT()
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                state: .process
+            )),
+            event: .continueButtonTapped(.continue)
+        )
+    }
+    
+    func test_process_shouldCallDictionaryServiceWithPayload() throws {
+        
+        let payload: [GetJsonAbroadType] = [.stickerOrderForm]
+        let (sut, dict, _, _, _) = makeSUT()
+
+        _ = try process(
+            sut,
+            operation: emptyOperation(),
+            event: .continueButtonTapped(.continue)
+        )
+        
+        XCTAssertNoDiff(dict.requests, payload)
+    }
+    
+    func test_process_shouldDeliverFailureOnDictionaryProcessFailure() throws {
+        
+        let (sut, dict, _, _, _) = makeSUT()
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                state: .process
+            )),
+            event: .continueButtonTapped(.continue),
+            action: {
+                
+                dict.complete(with: .failure(.error(
+                    statusCode: 1,
+                    errorMessage: ""
+                )))
+            }
+        )
+    }
+    
+    //MARK: Continue Button Tapped Event
+    
+    func test_process_continueButtonTapped_startStage_shouldDeliverResultOnDictionaryProcessSuccess() throws {
+        
+        let (sut, dict, _, _, _) = makeSUT()
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation(
+                state: .process
+            )),
+            event: .continueButtonTapped(.continue),
+            action: {
+                
+                dict.complete(with: .success(
+                    .deliveryType(.init(
+                        main: [],
+                        serial: ""
+                    ))))
+            }
+        )
+    }
+    
+    //MARK: Product Event
+    
+    func test_process_product_selectOption_withNilOption_shouldUpdateOperationState() throws {
+        
+        let (sut, _, _, _, _) = makeSUT()
+        
+        let product = Event.ParameterProduct(
+            state: .list,
+            selectedProduct: .init(
+                id: 1,
+                title: "title",
+                nameProduct: "nameProduce",
+                balance: 1,
+                balanceFormatted: "1",
+                description: "description",
+                cardImage: .named(""),
+                paymentSystem: .named(""),
+                backgroundImage: nil,
+                backgroundColor: ""
+            ),
+            allProducts: []
+        )
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(emptyOperation()),
+            event: .product(.selectProduct(nil, product))
+        )
+    }
+    
+    func test_process_product_selectOption_shouldUpdateOperationState() throws {
+        
+        let (sut, _, _, _, _) = makeSUT()
+        
+        let product = Event.ParameterProduct(
+            state: .list,
+            selectedProduct: .init(
+                id: 1,
+                title: "title",
+                nameProduct: "nameProduce",
+                balance: 1,
+                balanceFormatted: "1",
+                description: "description",
+                cardImage: .named(""),
+                paymentSystem: .named(""),
+                backgroundImage: nil,
+                backgroundColor: ""
+            ),
+            allProducts: []
+        )
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(.init(parameters: [
+                .productSelector(.init(
+                    state: .select,
+                    selectedProduct: .init(
+                        id: 1,
+                        title: "title",
+                        nameProduct: "nameProduce",
+                        balance: 1,
+                        balanceFormatted: "1",
+                        description: "description",
+                        cardImage: .named(""),
+                        paymentSystem: .named(""),
+                        backgroundImage: nil,
+                        backgroundColor: ""
+                    ), allProducts: []
+                ))
+            ])),
+            event: .product(.selectProduct(.init(
+                id: 1,
+                title: "title",
+                nameProduct: "nameProduce",
+                balance: 1,
+                balanceFormatted: "1",
+                description: "description",
+                cardImage: .named(""),
+                paymentSystem: .named(""),
+                backgroundImage: nil,
+                backgroundColor: ""
+            ), product))
+        )
+    }
+    
+    func test_process_product_shouldUpdateOperationState() throws {
+        
+        let (sut, _, _, _, _) = makeSUT()
+        
+        let product = Event.ParameterProduct(
+            state: .list,
+            selectedProduct: .init(
+                id: 1,
+                title: "title",
+                nameProduct: "nameProduce",
+                balance: 1,
+                balanceFormatted: "1",
+                description: "description",
+                cardImage: .named(""),
+                paymentSystem: .named(""),
+                backgroundImage: nil,
+                backgroundColor: ""
+            ),
+            allProducts: []
+        )
+        
+        try expect(
+            sut,
+            operation: emptyOperation(),
+            expectedResult: .operation(.init(parameters: [
+                .productSelector(.init(
+                    state: .select,
+                    selectedProduct: .init(
+                        id: 1,
+                        title: "title",
+                        nameProduct: "nameProduce",
+                        balance: 1,
+                        balanceFormatted: "1",
+                        description: "description",
+                        cardImage: .named(""),
+                        paymentSystem: .named(""),
+                        backgroundImage: nil,
+                        backgroundColor: ""
+                    ), allProducts: []
+                ))
+            ])),
+            event: .product(.chevronTapped(product, .select))
+        )
+    }
+    
+    typealias SUT = BusinessLogic
+    typealias State = OperationStateViewModel.State
+    
+    func process(
+        _ sut: SUT,
+        operation: PaymentSticker.Operation,
+        event: Event,
+        action: @escaping () -> Void = {}
+    ) throws -> BusinessLogic.OperationResult {
+        
+        var result: BusinessLogic.OperationResult?
+        let exp = expectation(description: "wait for completion")
+        
+        sut.process(
+            operation: operation,
+            event: event) {
+                
+                result = $0
+                exp.fulfill()
+            }
+        
+        action()
+        
+        wait(for: [exp], timeout: 0.05)
+        
+        return try XCTUnwrap(result)
+    }
+    
+    private func expect(
+        _ sut: SUT,
+        operation: PaymentSticker.Operation,
+        expectedResult: OperationStateViewModel.State,
+        event: Event,
+        action: @escaping () -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+
+        let result = try process(
+            sut,
+            operation: operation,
+            event: event,
+            action: action
+        )
+        
+        XCTAssertNoDiff(try result.get(), expectedResult, file: file, line: line)
     }
     
     // MARK: Get Payment Sticker
@@ -89,6 +611,14 @@ final class PaymentStickerBusinessTests: XCTestCase {
     
     // MARK: Helpers
     
+    private func emptyOperation(
+        state: PaymentSticker.Operation.State = .userInteraction,
+        parameters: [PaymentSticker.Operation.Parameter] = []
+    ) -> PaymentSticker.Operation {
+        
+        .init(state: state, parameters: parameters)
+    }
+    
     private func getOperation(
         transferTypeValue: String
     ) -> PaymentSticker.Operation {
@@ -117,7 +647,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
             ))))
     }
     
-    private func getCitySelectorParameter() -> PaymentSticker.Operation.Parameter{
+    private func getCitySelectorParameter(
+    ) -> PaymentSticker.Operation.Parameter {
         return .select(.ParameterSelect(
             id: .citySelector,
             value: "1",
@@ -131,7 +662,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
             ))))
     }
     
-    private func getOfficeSelectorParameter() -> PaymentSticker.Operation.Parameter{
+    private func getOfficeSelectorParameter(
+    ) -> PaymentSticker.Operation.Parameter {
         return .select(.ParameterSelect(
             id: .officeSelector,
             value: "1",
@@ -173,13 +705,13 @@ private extension PaymentStickerBusinessTests {
         line: UInt = #line
     ) -> (BusinessLogic, DictionarySpy, TransferSpy, MakeSpy, ImageLoaderSpy) {
         
-        let dictinarySpy = DictionarySpy()
+        let dictionarySpy = DictionarySpy()
         let transferSpy = TransferSpy()
         let makeSpy = MakeSpy()
         let imageLoaderSpy = ImageLoaderSpy()
         
         let sut = PaymentSticker.BusinessLogic(
-            processDictionaryService: dictinarySpy.process(_:_:),
+            processDictionaryService: dictionarySpy.process(_:_:),
             processTransferService: transferSpy.process(_:_:),
             processMakeTransferService: makeSpy.process(_:_:),
             processImageLoaderService: imageLoaderSpy.process(_:_:),
@@ -191,7 +723,7 @@ private extension PaymentStickerBusinessTests {
 //        trackForMemoryLeaks(spyDictionary, file: file, line: line)
 //        trackForMemoryLeaks(sut, file: file, line: line)
 
-        return (sut, dictinarySpy, transferSpy, makeSpy, imageLoaderSpy)
+        return (sut, dictionarySpy, transferSpy, makeSpy, imageLoaderSpy)
     }
 
     private final class ImageLoaderSpy {
@@ -288,23 +820,5 @@ private extension PaymentStickerBusinessTests {
             
             messages[index].completion(result)
         }
-    }
-}
-
-private extension BusinessLogic {
-    
-    func operationResult(
-        request: (
-            operation: PaymentSticker.Operation,
-            event: Event
-        ),
-        completion: @escaping (OperationResult) -> Void
-    ) {
-        
-        operationResult(
-            operation: request.operation,
-            event: request.event,
-            completion: completion
-        )
     }
 }
