@@ -7,19 +7,43 @@
 
 import SberQR
 import SwiftUI
+import TextFieldComponent
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel: DecimalTextFieldViewModel
+    
+    init() {
+        
+        self._viewModel = .init(wrappedValue: .decimal())
+    }
+    
     var body: some View {
+        
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            
+            Text("Decimal Text Field")
+                .font(.title.bold())
+            
+            TextFieldView(
+                viewModel: viewModel,
+                textFieldConfig: .init(
+                    font: .boldSystemFont(ofSize: 32),
+                    textColor: .green,
+                    tintColor: .accentColor,
+                    backgroundColor: .clear,
+                    placeholderColor: .clear
+                )
+            )
         }
         .padding()
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ContentView()
+    }
 }
