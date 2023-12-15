@@ -153,7 +153,7 @@ extension Operation.Parameter.Select {
             id: parameter.id,
             value: parameter.value,
             title: parameter.title,
-            placeholder: parameter.title,
+            placeholder: parameter.placeholder,
             options: parameter.options,
             staticOptions: parameter.staticOptions,
             state: .list(
