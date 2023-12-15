@@ -9,6 +9,27 @@ import Foundation
 
 extension Operation.Parameter.Select {
     
+    
+    public func updatedStateToSelect(
+        iconName: String
+    ) -> Self {
+        
+        .init(
+            id: id,
+            value: value,
+            title: title,
+            placeholder: placeholder,
+            options: options,
+            staticOptions: staticOptions,
+            state: .selected(.init(
+                title: title,
+                placeholder: placeholder,
+                name: options.first(where: { $0.id == value })?.name ?? "",
+                iconName: iconName
+            ))
+        )
+    }
+    
     public func updatedStateToList(
         iconName: String
     ) -> Self {
