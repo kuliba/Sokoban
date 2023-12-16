@@ -170,7 +170,7 @@ extension SberQRConfirmPaymentState.Amount {
     )
 }
 
-extension SberQRConfirmPaymentState.Button {
+extension SberQRConfirmPaymentState.Button where ID == GetSberQRDataButtonID {
     
     static let preview: Self = .init(
         id: .buttonPay,

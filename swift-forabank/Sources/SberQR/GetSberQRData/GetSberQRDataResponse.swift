@@ -29,7 +29,7 @@ public extension GetSberQRDataResponse {
     enum Parameter: Equatable {
         
         case amount(Amount)
-        case button(Button)
+        case button(Parameters.Button<GetSberQRDataButtonID>)
         case dataString(DataString)
         case header(Header)
         case info(Info)

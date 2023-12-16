@@ -61,7 +61,7 @@ private extension ResponseMapper._Data {
             
             case pay = "PAY"
             
-            var action: GetSberQRDataResponse.Parameter.Button.Action {
+            var action: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Action {
                 
                 switch self {
                 case .pay: return .pay
@@ -73,7 +73,7 @@ private extension ResponseMapper._Data {
             
             case red
             
-            var buttonColor: GetSberQRDataResponse.Parameter.Button.Color {
+            var buttonColor: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Color {
                 
                 switch self {
                 case .red: return .red
@@ -202,7 +202,7 @@ private extension ResponseMapper._Data {
             
             case bottom = "BOTTOM"
             
-            var placement: GetSberQRDataResponse.Parameter.Button.Placement {
+            var placement: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Placement {
                 
                 switch self {
                 case .bottom: return .bottom
@@ -242,9 +242,7 @@ private extension ResponseMapper._Data {
                 ))
                 
             case .button:
-                typealias ID = GetSberQRDataResponse.Parameter.Button.ID
-                
-                guard let id = ID(rawValue: id),
+                guard let id = GetSberQRDataButtonID(rawValue: id),
                       let value,
                       let color = color?.buttonColor,
                       let placement = placement?.placement,

@@ -7,7 +7,7 @@
 
 public extension Parameters {
     
-    struct Button: Equatable {
+    struct Button<ID: Equatable>: Equatable {
         
         let id: ID
         let value: String
@@ -31,12 +31,13 @@ public extension Parameters {
     }
 }
 
-public extension Parameters.Button {
+#warning("move to a namespace")
+public enum GetSberQRDataButtonID: String, Equatable {
     
-    enum ID: String, Equatable {
-        
-        case buttonPay = "button_pay"
-    }
+    case buttonPay = "button_pay"
+}
+
+public extension Parameters.Button {
     
     enum Color: Equatable {
         

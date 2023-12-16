@@ -55,7 +55,7 @@ public extension SberQRConfirmPaymentStateOf {
         public let brandName: Info
         public let amount: Info
         public let recipientBank: Info
-        public let bottom: Button
+        public let bottom: Button<GetSberQRDataButtonID>
         
         public init(
             header: Header,
@@ -63,7 +63,7 @@ public extension SberQRConfirmPaymentStateOf {
             brandName: Info,
             amount: Info,
             recipientBank: Info,
-            bottom: Button
+            bottom: Button<GetSberQRDataButtonID>
         ) {
             self.header = header
             self.productSelect = productSelect
@@ -151,7 +151,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
     }
     
     func button(
-    ) throws -> GetSberQRDataResponse.Parameter.Button {
+    ) throws -> GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID> {
         
         guard case let .button(button) = first(where: { $0.case == .button })
         else { throw ParameterError(missing: .button) }
@@ -240,7 +240,7 @@ private extension GetSberQRDataResponse.Parameter {
     enum ID: Equatable {
         
         case amount(Amount.ID)
-        case button(Button.ID)
+        case button(GetSberQRDataButtonID)
         case dataString(DataString.ID)
         case header(Header.ID)
         case info(Info.ID)
