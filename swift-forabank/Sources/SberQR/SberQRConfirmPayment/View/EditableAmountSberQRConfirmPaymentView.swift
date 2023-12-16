@@ -62,7 +62,11 @@ struct EditableAmountSberQRConfirmPaymentView: View {
 
 private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     
-    var currencySymbol: String { "₽" }
+    var currencySymbol: String {
+        
+        #warning("move to state as stored property + inject dictionary or define at call site")
+        return "₽"
+    }
 }
 
 // MARK: - Previews

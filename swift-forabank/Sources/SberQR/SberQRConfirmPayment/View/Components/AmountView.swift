@@ -8,8 +8,6 @@
 import TextFieldComponent
 import SwiftUI
 
-typealias TextFieldViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
-
 public extension TextFieldState {
     
     var decimal: Decimal {
@@ -36,13 +34,12 @@ public extension TextFieldState {
 
 struct AmountView: View {
     
-    @StateObject private var textFieldModel: TextFieldViewModel
+    @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
     let amount: SberQRConfirmPaymentState.Amount
     let event: (Decimal) -> Void
     let pay: () -> Void
     
-    let currencySymbol: String
     let config: AmountConfig
     
     init(
@@ -52,16 +49,14 @@ struct AmountView: View {
         currencySymbol: String,
         config: AmountConfig
     ) {
-        #warning("inject currency symbol")
         let textField = DecimalTextFieldViewModel.decimal(
-            currencySymbol: "₽"
+            currencySymbol: currencySymbol
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
         self.amount = amount
         self.event = event
         self.pay = pay
-        self.currencySymbol = currencySymbol
         self.config = config
     }
     
