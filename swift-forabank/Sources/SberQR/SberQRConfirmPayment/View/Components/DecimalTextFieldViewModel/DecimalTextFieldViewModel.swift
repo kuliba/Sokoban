@@ -18,9 +18,12 @@ public extension DecimalTextFieldViewModel {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> DecimalTextFieldViewModel {
         
-        let reducer = ChangingReducer.decimal(
+        let formatter = DecimalFormatter(
             currencySymbol: currencySymbol,
             locale: locale
+        )
+        let reducer = ChangingReducer.decimal(
+            formatter: formatter
         )
         let initialState = reducer.setToZero()
         

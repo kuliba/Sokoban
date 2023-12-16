@@ -11,14 +11,9 @@ import TextFieldComponent
 public extension ChangingReducer {
 
     static func decimal(
-        currencySymbol: String = "₽",
-        locale: Locale = .current
+        formatter: DecimalFormatter
     ) -> Self {
         
-        let formatter = DecimalFormatter(
-            currencySymbol: currencySymbol,
-            locale: locale
-        )
         let change: ChangingReducer.Change = { textState, replacementText, range in
             
             // remove non-digits and repeating decimalSeparator from replacementText
@@ -31,7 +26,7 @@ public extension ChangingReducer {
             // clamp range up to the space before currencySymbol
             let range = range.clamped(
                 to: textState.text,
-                droppingLast: 1 + currencySymbol.count
+                droppingLast: 1 + formatter.currencySymbol.count
             )
             
             // memo cursor position from the end of text
@@ -46,13 +41,16 @@ public extension ChangingReducer {
                 if formatter.isDecimalSeparator(replacementText) {
                     return changed
                 } else {
-                    let d = formatter.filter(
+                    let filtered = formatter.filter(
                         text: changed,
                         allowDecimalSeparator: true
                     )
-                    let decimal = Decimal(string: d, locale: locale) ?? 0
+                    let decimal = Decimal(
+                        string: filtered,
+                        locale: formatter.locale
+                    )
                     
-                    return formatter.format(decimal) ?? ""
+                    return formatter.format(decimal ?? 0) ?? ""
                 }
             }()
             

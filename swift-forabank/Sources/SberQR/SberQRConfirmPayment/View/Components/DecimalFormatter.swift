@@ -11,12 +11,15 @@ import Foundation
 // model.dictionaryCurrencySymbol(productData.currency)
 public struct DecimalFormatter {
     
+    public let locale: Locale
+    
     private let formatter: NumberFormatter
     
     public init(
         currencySymbol: String,
         locale: Locale = .current
     ) {
+        self.locale = locale
         self.formatter = .currency(
             with: currencySymbol,
             locale: locale

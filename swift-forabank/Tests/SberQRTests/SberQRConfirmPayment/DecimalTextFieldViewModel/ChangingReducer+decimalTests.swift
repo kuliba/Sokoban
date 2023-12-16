@@ -215,11 +215,13 @@ final class ChangingReducer_decimalTests: XCTestCase {
         currencySymbol: String = "₽",
         locale: Locale = .init(identifier: "ru_RU")
     ) -> SUT {
-        
-        return .decimal(
+
+        let formatter = DecimalFormatter(
             currencySymbol: currencySymbol,
             locale: locale
         )
+        
+        return .decimal(formatter: formatter)
     }
     
     private func change(
