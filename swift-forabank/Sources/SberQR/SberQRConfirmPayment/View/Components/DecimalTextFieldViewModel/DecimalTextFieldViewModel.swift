@@ -12,11 +12,13 @@ public typealias DecimalTextFieldViewModel = ReducerTextFieldViewModel<ToolbarVi
 
 public extension DecimalTextFieldViewModel {
     
+    typealias GetDecimal = (TextFieldState) -> Decimal
+    
     static func decimal(
         currencySymbol: String,
         locale: Locale = .autoupdatingCurrent,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> DecimalTextFieldViewModel {
+    ) -> (DecimalTextFieldViewModel, GetDecimal) {
         
         let formatter = DecimalFormatter(
             currencySymbol: currencySymbol,
@@ -27,12 +29,32 @@ public extension DecimalTextFieldViewModel {
         )
         let initialState = reducer.setToZero()
         
-        return .init(
+        let textField = DecimalTextFieldViewModel(
             initialState: initialState,
             reducer: reducer,
             keyboardType: .decimal,
             scheduler: scheduler
         )
+        
+        return (textField, formatter.getDecimal)
+    }
+}
+
+private extension DecimalFormatter {
+    
+    func getDecimal(_ textFieldState: TextFieldState) -> Decimal {
+        
+        switch textFieldState {
+        
+        case .placeholder:
+            return 0
+
+        case let .noFocus(text):
+            return number(from: text)
+            
+        case let .editing(textState):
+            return number(from: textState.text)
+        }
     }
 }
 

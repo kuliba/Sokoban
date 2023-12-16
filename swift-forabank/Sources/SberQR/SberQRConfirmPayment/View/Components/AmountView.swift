@@ -8,30 +8,6 @@
 import TextFieldComponent
 import SwiftUI
 
-public extension TextFieldState {
-    
-    var decimal: Decimal {
-        
-        let formatter = DecimalFormatter(currencySymbol: "₽")
-        
-        return formatter.number(from: text)
-    }
-    
-    var text: String? {
-        
-        switch self {
-        case .placeholder:
-            return nil
-            
-        case let .noFocus(text):
-            return text
-            
-        case let .editing(state):
-            return state.text
-        }
-    }
-}
-
 struct AmountView: View {
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
@@ -42,6 +18,8 @@ struct AmountView: View {
     
     let config: AmountConfig
     
+    private let getDecimal: (TextFieldState) -> Decimal
+    
     init(
         amount: SberQRConfirmPaymentState.Amount,
         event: @escaping (Decimal) -> Void,
@@ -49,11 +27,12 @@ struct AmountView: View {
         currencySymbol: String,
         config: AmountConfig
     ) {
-        let textField = DecimalTextFieldViewModel.decimal(
+        let (textField, getDecimal) = DecimalTextFieldViewModel.decimal(
             currencySymbol: currencySymbol
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
+        self.getDecimal = getDecimal
         self.amount = amount
         self.event = event
         self.pay = pay
@@ -97,17 +76,7 @@ struct AmountView: View {
                 placeholderColor: .clear
             )
         )
-//        .onReceive(textFieldModel.$state.map(\.decimal)) {
-//            
-//            print("### onReceive", $0)
-//            event($0)
-//        }
-        .onChange(of: textFieldModel.state.decimal) {
-            
-            print("### onChange", $0)
-            event($0)
-        }
-        // .font(config.amount.textFont)
+        .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
     }
     
     private func buttonView() -> some View {

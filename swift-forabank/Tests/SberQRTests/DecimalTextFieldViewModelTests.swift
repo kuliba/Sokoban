@@ -6,6 +6,7 @@
 //
 
 import SberQR
+import TextFieldComponent
 import XCTest
 
 final class DecimalTextFieldViewModelTests: XCTestCase {
@@ -50,18 +51,35 @@ final class DecimalTextFieldViewModelTests: XCTestCase {
         decimalSpy: DecimalSpy
     ) {
         let locale = Locale(identifier: "ru_RU")
-        let sut = SUT.decimal(
+        let (sut, getDecimal) = SUT.decimal(
             currencySymbol: currencySymbol,
             locale: locale,
             scheduler: .immediate
         )
         let textSpy = TextSpy(sut.$state.map(\.text))
-        let decimalSpy = DecimalSpy(sut.$state.map(\.decimal))
+        let decimalSpy = DecimalSpy(sut.$state.map(getDecimal))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(textSpy, file: file, line: line)
         trackForMemoryLeaks(decimalSpy, file: file, line: line)
         
         return (sut, textSpy, decimalSpy)
+    }
+}
+
+private extension TextFieldState {
+    
+    var text: String? {
+        
+        switch self {
+        case .placeholder:
+            return nil
+            
+        case let .noFocus(text):
+            return text
+            
+        case let .editing(state):
+            return state.text
+        }
     }
 }
