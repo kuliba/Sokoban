@@ -13,7 +13,7 @@ public typealias DecimalTextFieldViewModel = ReducerTextFieldViewModel<ToolbarVi
 public extension DecimalTextFieldViewModel {
     
     static func decimal(
-        currencySymbol: String = "₽",
+        currencySymbol: String,
         locale: Locale = .autoupdatingCurrent,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> DecimalTextFieldViewModel {
