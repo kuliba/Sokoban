@@ -7,23 +7,23 @@
 
 import Foundation
 
-extension MainViewModel {
-    
-    static let sample = MainViewModel(
-        .emptyMock,
-        makeProductProfileViewModel: { _,_,_ in nil },
-        onRegister: {}
-    )
-    
-    static let sampleProducts = MainViewModel(
-        .emptyMock,
-        makeProductProfileViewModel: { _,_,_ in nil },
-        onRegister: {}
-    )
-    
-    static let sampleOldCurrency = MainViewModel(
-        .emptyMock,
-        makeProductProfileViewModel: { _,_,_ in nil },
-        onRegister: {}
-    )
-}
+//extension MainViewModel {
+//    
+//    static let sample = MainViewModel(
+//        .emptyMock,
+//        makeProductProfileViewModel: { _,_,_ in nil },
+//        onRegister: {}
+//    )
+//    
+//    static let sampleProducts = MainViewModel(
+//        .emptyMock,
+//        makeProductProfileViewModel: { _,_,_ in nil },
+//        onRegister: {}
+//    )
+//    
+//    static let sampleOldCurrency = MainViewModel(
+//        .emptyMock,
+//        makeProductProfileViewModel: { _,_,_ in nil },
+//        onRegister: {}
+//    )
+//}

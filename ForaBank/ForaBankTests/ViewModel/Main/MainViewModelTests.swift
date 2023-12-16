@@ -223,6 +223,11 @@ final class MainViewModelTests: XCTestCase {
     }
 }
 
+private func anySberQRError() -> MainViewModelTests.SberQRError {
+    
+    .createRequest(anyError("SberQRPayment Failure"))
+}
+
 // MARK: - DSL
 
 private extension MainViewModel {

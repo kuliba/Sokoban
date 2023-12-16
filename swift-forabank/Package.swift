@@ -47,6 +47,8 @@ let package = Package(
         .searchBarComponent,
         .textFieldComponent,
         .uiKitHelpers,
+        // tools
+        .foraTools,
         // WIP: Explorations
         .userModel,
     ],
@@ -56,6 +58,7 @@ let package = Package(
         .phoneNumberKit,
         .tagged,
         .shimmer,
+        .svgKit,
     ],
     targets: [
         .loadableModel,
@@ -127,6 +130,9 @@ let package = Package(
         .textFieldUI,
         .textFieldUITests,
         .uiKitHelpers,
+        // tools
+        .foraTools,
+        .foraToolsTests,
         // WIP: Explorations
         .wipTests,
         .userModel,
@@ -384,6 +390,15 @@ private extension Product {
             .transferPublicKey,
         ]
     )
+    
+    // MARK: - Tools
+    
+    static let foraTools = library(
+        name: .foraTools,
+        targets: [
+            .foraTools,
+        ]
+    )
 }
 
 private extension Target {
@@ -460,12 +475,30 @@ private extension Target {
     )
     
     static let sberQR = target(
-        name: .sberQR
+        name: .sberQR,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged
+        ]
     )
     static let sberQRTests = testTarget(
         name: .sberQRTests,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
             .sberQR,
+        ],
+        resources: [
+            .copy("Resources/QRPaymentType.json"),
+            .copy("Resources/Responses/getSberQRData_any_sum.json"),
+            .copy("Resources/Responses/getSberQRData_fix_sum.json"),
+            .copy("Resources/Responses/createSberQRPayment_IN_PROGRESS.json"),
+            .copy("Resources/Responses/createSberQRPayment_rejected.json"),
+            .copy("Resources/Responses/createSberQRPayment.json"),
         ]
     )
     
@@ -887,6 +920,7 @@ private extension Target {
             // external packages
             .combineSchedulers,
             .customDump,
+            .tagged,
             // internal modules
             .cvvPin,
             .genericRemoteService,
@@ -902,6 +936,21 @@ private extension Target {
         name: .userModelTests,
         dependencies: [
             .userModel
+        ]
+    )
+    
+    // MARK: - Tools
+    
+    static let foraTools = target(
+        name: .foraTools,
+        dependencies: [
+            .svgKit
+        ]
+    )
+    static let foraToolsTests = testTarget(
+        name: .foraToolsTests,
+        dependencies: [
+            .foraTools
         ]
     )
 }
@@ -1047,6 +1096,12 @@ private extension Target.Dependency {
     static let urlRequestFactory = byName(
         name: .urlRequestFactory
     )
+    
+    // MARK: - Tools
+    
+    static let foraTools = byName(
+        name: .foraTools
+    )
 }
 
 private extension String {
@@ -1099,7 +1154,7 @@ private extension String {
     // MARK: - UI
     
     static let buttonWithSheet = "ButtonWithSheet"
-    
+
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
     
@@ -1162,6 +1217,35 @@ private extension String {
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
+
+    // MARK: - Tools
+    
+    static let foraTools = "ForaTools"
+    static let foraToolsTests = "ForaToolsTests"
+}
+
+// MARK: - Third-Party Packages
+
+private extension Package.Dependency {
+    
+    static let svgKit = Package.Dependency.package(
+        url: .svg_kit,
+        .upToNextMajor(from: .init(3, 0, 0))
+    )
+}
+
+private extension Target.Dependency {
+    
+    static let svgKit = product(
+        name: .svgKit,
+        package: .svgKit
+    )
+}
+
+private extension String {
+    
+    static let svgKit = "SVGKit"
+    static let svg_kit = "https://github.com/\(svgKit)/\(svgKit)"
 }
 
 // MARK: - Point-Free

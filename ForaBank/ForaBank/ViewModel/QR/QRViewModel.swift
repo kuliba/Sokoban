@@ -20,7 +20,7 @@ class QRViewModel: ObservableObject {
     
     var flashLight: FlashLight = .on
     @Published var buttons: [ButtonIconTextView.ViewModel]
-    @Published var clouseButton: ButtonSimpleView.ViewModel
+    @Published var closeButton: ButtonSimpleView.ViewModel
     
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -30,29 +30,50 @@ class QRViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     
-    
-    init(scanner: QRScannerView.ViewModel, title: String, subTitle: String, buttons: [ButtonIconTextView.ViewModel], clouseButton: ButtonSimpleView.ViewModel, model: Model) {
+    init(
+        scanner: QRScannerView.ViewModel,
+        title: String,
+        subTitle: String,
+        buttons: [ButtonIconTextView.ViewModel],
+        closeButton: ButtonSimpleView.ViewModel,
+        model: Model
+    ) {
         self.scanner = scanner
         self.title = title
         self.subTitle = subTitle
         self.buttons = buttons
-        self.clouseButton = clouseButton
+        self.closeButton = closeButton
         self.model = model
     }
     
-    convenience init(closeAction: @escaping () -> Void) {
+    typealias QRResolve = (String) -> ScanResult
+    
+    convenience init(
+        closeAction: @escaping () -> Void,
+        qrResolve: @escaping QRResolve
+    ) {
+        let closeButton = ButtonSimpleView.ViewModel(
+            title: "Отмена",
+            style: .gray,
+            action: closeAction
+        )
         
-        let clouseButton = ButtonSimpleView.ViewModel(title: "Отмена", style: .gray, action: closeAction)
-        
-        self.init(scanner: QRScannerView.ViewModel(), title: "Наведите камеру", subTitle: "на QR-код", buttons: [], clouseButton: clouseButton, model: Model.shared)
+        self.init(
+            scanner: QRScannerView.ViewModel(),
+            title: "Наведите камеру",
+            subTitle: "на QR-код",
+            buttons: [],
+            closeButton: closeButton,
+            model: Model.shared
+        )
         
         self.buttons = createButtons()
         
-        bind()
+        bind(qrResolve: qrResolve)
         cameraAccess()
     }
     
-    func bind() {
+    func bind(qrResolve: @escaping QRResolve) {
         
         action
             .receive(on: DispatchQueue.main)
@@ -61,37 +82,56 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.OpenDocument:
                     
-                    self.bottomSheet = .init(sheetType: .choiseDocument(.init(buttons: [
-                        .init(icon: .init(image: .ic24Image, background: .circle), title: .init(text: "Из фото", style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.bottomSheet = nil
-                            self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                        }),
-                        .init(icon: .init(image: .ic24FileText, background: .circle), title: .init(text: "Из Документов", style: .bold), orientation: .horizontal, action: { [weak self] in
-                            self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
-                        })
-                    ])))
+                    self.bottomSheet = .init(sheetType: .choiseDocument(
+                        .init(buttons: [
+                            .init(
+                                icon: .init(image: .ic24Image, background: .circle),
+                                title: .init(text: "Из фото", style: .bold),
+                                orientation: .horizontal, action: { [weak self] in
+                                    
+                                    self?.bottomSheet = nil
+                                    self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                                }),
+                            .init(
+                                icon: .init(image: .ic24FileText, background: .circle),
+                                title: .init(text: "Из Документов", style: .bold),
+                                orientation: .horizontal,
+                                action: { [weak self] in
+                                    
+                                    self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
+                                })
+                        ])
+                    ))
                     
                 case _ as QRViewModelAction.Info:
-                    self.bottomSheet = .init(sheetType: .info(.init(icon: .ic48Info,
-                                                                                     title: "Сканировать QR-код",
-                                                                                     content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
-                                                                                               "\tПеред оплатой проверьте, что все поля заполнены правильно.",
-                                                                                               "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."])))
+                    self.bottomSheet = .init(sheetType: .info(
+                        .init(icon: .ic48Info,
+                              title: "Сканировать QR-код",
+                              content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                                        "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                                        "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
+                             )
+                    ))
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
                         
-                        self.bottomSheet = .init(sheetType: .qRAccessViewComponent(.init(viewModel: .init(input: .camera, closeAction: {[weak self] in
-                            self?.sheet = nil
-                        }))))
+                        self.bottomSheet = .init(sheetType: .qRAccessViewComponent(
+                            .init(viewModel: .init(
+                                input: .camera,
+                                closeAction: { [weak self] in self?.sheet = nil }
+                            ))))
                     }
                     
                 case _ as QRViewModelAction.AccessPhotoGallery:
                     
-                    self.bottomSheet = .init(sheetType: .photoAccessViewComponent(.init(viewModel: .init(input: .photo, closeAction: {[weak self] in
-                        self?.sheet = nil
-                    }))))
+                    self.bottomSheet = .init(sheetType: .photoAccessViewComponent(
+                        .init(viewModel: .init(
+                            input: .photo,
+                            closeAction: { [weak self] in
+                                self?.sheet = nil
+                            }))))
                     
                 case _ as QRViewModelAction.Flashlight:
                     self.flashLightTorch(on: self.flashLight.result.0)
@@ -127,7 +167,7 @@ class QRViewModel: ObservableObject {
                             
                             if let qrData = self?.string(from: image) {
                                 
-                                let result = Self.resolve(data: qrData)
+                                let result = qrResolve(qrData)
                                 
                                 self?.action.send(QRViewModelAction.Result(result: result))
                             }
@@ -154,7 +194,7 @@ class QRViewModel: ObservableObject {
                         if let image = self?.qrFromPDF(path: url),
                            let qrData = self?.string(from: image) {
                             
-                            let result = Self.resolve(data: qrData)
+                            let result = qrResolve(qrData)
                             
                             self?.action.send(QRViewModelAction.Result(result: result))
                             
@@ -179,28 +219,22 @@ class QRViewModel: ObservableObject {
             }.store(in: &bindings)
         
         scanner.action
+            .compactMap { $0 as? QRScannerViewAction.Scanned }
+            .map(\.value)
+            .map(qrResolve)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
+            .sink { [unowned self] result in
                 
-                switch action {
-                case let payload as QRScannerViewAction.Scanned:
-                    let result = Self.resolve(data: payload.value)
-                    
-                    self.action.send(QRViewModelAction.Result(result: result))
-                    
-                    guard case .qrCode(let qrCode) = result,
-                          let mapping = model.qrMapping.value,
-                          let failData = qrCode.check(mapping: mapping) else {
-                        
-                        return
-                    }
+                self.action.send(QRViewModelAction.Result(result: result))
+                
+                if case let .qrCode(qrCode) = result,
+                   let mapping = model.qrMapping.value,
+                   let failData = qrCode.check(mapping: mapping) {
                     
                     self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
-                          
-                default:
-                    break
                 }
-            } .store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
 }
 
@@ -240,47 +274,51 @@ extension QRViewModel {
         case failedView(QRFailedViewModel)
     }
     
-    enum Result {
+    enum ScanResult {
         
         case qrCode(QRCode)
         case c2bURL(URL)
         case c2bSubscribeURL(URL)
+        case sberQR(URL)
         case url(URL)
         case unknown
     }
 }
 
-//MARK: - Resovers
+// MARK: - Resolvers
 
-extension QRViewModel {
+extension QRViewModel.ScanResult {
     
-    //TODO: tests
-    static func resolve(data: String) -> Result {
+    // TODO: add tests
+    init(string: String) {
         
-        if let url = URL(string: data) {
+        if let url = URL(string: string) {
             
             if url.absoluteString.contains("qr.nspk.ru") {
                 
-                return .c2bURL(url)
+                self = .c2bURL(url)
                 
             } else if url.absoluteString.contains("sub.nspk.ru") {
                 
-                return .c2bSubscribeURL(url)
+                self = .c2bSubscribeURL(url)
                 
             } else {
                 
-                return .url(url)
+                self = .url(url)
             }
             
-        } else if let qrCode = QRCode(string: data) {
+        } else if let qrCode = QRCode(string: string) {
             
-            return .qrCode(qrCode)
+            self = .qrCode(qrCode)
             
         } else {
             
-            return .unknown
+            self = .unknown
         }
     }
+}
+
+extension QRViewModel {
     
     func qrFromPDF(path: URL) -> UIImage? {
         
@@ -428,7 +466,7 @@ enum QRViewModelAction {
     struct Flashlight: Action {}
     struct Result: Action {
         
-        let result: QRViewModel.Result
+        let result: QRViewModel.ScanResult
     }
     struct CloseLink: Action {}
     struct CloseBottomSheet: Action {}

@@ -233,6 +233,13 @@
         "identifier" : "SberQRTests",
         "name" : "SberQRTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
+      }
     }
   ],
   "version" : 1

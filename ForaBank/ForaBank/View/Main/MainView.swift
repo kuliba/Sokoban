@@ -5,8 +5,9 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
-import SwiftUI
 import ScrollViewProxy
+import SberQR
+import SwiftUI
 import LandingUIComponent
 import PaymentSticker
 
@@ -14,6 +15,8 @@ struct MainView<NavigationOperationView: View>: View {
     
     @ObservedObject var viewModel: MainViewModel
     let navigationOperationView: () -> NavigationOperationView
+    
+    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     
     var body: some View {
         
@@ -141,7 +144,10 @@ struct MainView<NavigationOperationView: View>: View {
             UserAccountView(viewModel: userAccountViewModel)
             
         case let .productProfile(productProfileViewModel):
-            ProductProfileView(viewModel: productProfileViewModel)
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
@@ -162,7 +168,10 @@ struct MainView<NavigationOperationView: View>: View {
             CurrencyWalletView(viewModel: viewModel)
             
         case let .myProducts(myProductsViewModel):
-            MyProductsView(viewModel: myProductsViewModel)
+            MyProductsView(
+                viewModel: myProductsViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
             
         case let .country(countyViewModel):
             CountryPaymentView(viewModel: countyViewModel)
@@ -196,6 +205,12 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
             
+        case let .sberQRPayment(sberQRPaymentViewModel):
+            makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
+                .navigationBar(
+                    sberQRPaymentViewModel.navTitle,
+                    dismiss: viewModel.resetDestination
+                )
         case let .landing(viewModel):
                 LandingWrapperView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -216,6 +231,15 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch sheet.type {
+        case let .productProfile(productProfileViewModel):
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView
+            )
+            
+        case let .messages(messagesHistoryViewModel):
+            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            
         case let .places(placesViewModel):
             PlacesView(viewModel: placesViewModel)
             
@@ -252,6 +276,10 @@ struct MainView<NavigationOperationView: View>: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
@@ -354,21 +382,70 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            MainView(
-                viewModel: .sample,
-                navigationOperationView: NavigationOperationView.preview
-            )
             
-            NavigationView {
+            mainView()
+            
+            NavigationView(content: mainView)
+        }
+    }
+    
+    private static func mainView() -> some View {
+        
+        MainView(
+            viewModel: .sample,
+            navigationOperationView: EmptyView.init,
+            makeSberQRConfirmPaymentView: {
                 
-                MainView(
-                    viewModel: .sample,
-                    navigationOperationView: NavigationOperationView.preview
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
                 )
             }
-        }
-        .previewLayout(.sizeThatFits)
+        )
     }
+}
+
+extension MainViewModel {
+    
+    static let sample = MainViewModel(
+        .emptyMock,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
+        onRegister: {}
+    )
+    
+    static let sampleProducts = MainViewModel(
+        .emptyMock,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
+        onRegister: {}
+    )
+    
+    static let sampleOldCurrency = MainViewModel(
+        .emptyMock,
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
+        onRegister: {}
+    )
 }
 
 private extension NavigationOperationView

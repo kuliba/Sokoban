@@ -20,8 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewModel = RootViewModelFactory.make(
         httpClient: httpClient,
         model: model,
-        logger: logger
+        logger: logger,
+        qrResolverFeatureFlag: .init(.inactive)
     )
+    private lazy var rootViewFactory = RootViewFactory(with: model)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -30,8 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         let rootViewController = RootViewHostingViewController(
             with: rootViewModel,
-            model: model,
-            httpClient: httpClient
+            rootViewFactory: rootViewFactory
         )
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()

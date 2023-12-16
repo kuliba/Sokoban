@@ -100,6 +100,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
+    fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
+    private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+    
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
         let product2 = anyProduct(id: 2, productType: .card, currency: "USD")
@@ -108,6 +111,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
+        createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
+        getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
@@ -121,18 +126,24 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             model.products.value = [.card: products]
         }
                 
+        
+        let sberQRServices = SberQRServices.preview(
+            createSberQRPaymentResultStub: createSberQRPaymentResultStub,
+            getSberQRDataResultStub: getSberQRDataResultStub
+        )
+        
+        let qrViewModelFactory = QRViewModelFactory.preview()
+        
         let sut = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: { product, rootView, dismissAction in
-                
-                ProductProfileViewModel(
-                    model,
-                    cvvPINServicesClient: cvvPINServicesClient,
-                    product: product,
-                    rootView: rootView,
-                    dismissAction: dismissAction
-                )
-            }
+            makeProductProfileViewModel: ProductProfileViewModel.make(
+                with: model,
+                sberQRServices: sberQRServices,
+                qrViewModelFactory: qrViewModelFactory,
+                cvvPINServicesClient: cvvPINServicesClient
+            ),
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory
         )
         
         // TODO: restore memory leaks tracking after Model fix
@@ -141,6 +152,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         return (sut, model)
     }
+}
+
+private func anySberQRError() -> PaymentsTransfersViewModelTests.SberQRError {
+    
+    .createRequest(anyError("SberQRPayment Failure"))
 }
 
 // MARK: - DSL
@@ -239,12 +255,22 @@ private extension PaymentsTransfersViewModel.Route {
         case .none:      return .none
         case .template:  return .template
         default:         return .other
+        switch self {
+        case .template:
+            return .template
+            
+        case .sberQRPayment:
+            return .sberQRPayment
+            
+        default:
+            return .other
         }
     }
     
     enum Case: Equatable {
         
         case template
+        case sberQRPayment
         case other
     }
 }

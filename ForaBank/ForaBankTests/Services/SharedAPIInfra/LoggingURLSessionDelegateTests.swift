@@ -35,25 +35,27 @@ final class LoggingURLSessionDelegateTests: XCTestCase {
     func test_didCompleteWithError_shouldLogEvent() {
         
         let (sut, spy, session) = makeSUT()
-        let task = session.dataTask(with: .init(url: anyURL()))
+        let url = anyURL()
+        let task = session.dataTask(with: .init(url: url))
         
         sut.urlSession?(session, task: task, didCompleteWithError: URLSessionDelegateError())
         
         XCTAssertNoDiff(spy.events.map(\.level), [.error])
         XCTAssertNoDiff(spy.events.map(\.category), [.network])
-        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any.url) did complete with error: session error"])
+        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(\(url.absoluteString)) did complete with error: session error"])
     }
     
     func test_didCompleteWithError_nil_shouldLogEvent() {
         
         let (sut, spy, session) = makeSUT()
-        let task = session.dataTask(with: .init(url: anyURL()))
+        let url = anyURL()
+        let task = session.dataTask(with: .init(url: url))
         
         sut.urlSession?(session, task: task, didCompleteWithError: nil)
 
         XCTAssertNoDiff(spy.events.map(\.level), [.error])
         XCTAssertNoDiff(spy.events.map(\.category), [.network])
-        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(any.url) did complete with error: no error"])
+        XCTAssertNoDiff(spy.events.map(\.message), ["URLSessionTask: Optional(\(url.absoluteString)) did complete with error: no error"])
     }
     
     // MARK: - Helpers

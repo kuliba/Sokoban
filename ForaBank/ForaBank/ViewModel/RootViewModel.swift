@@ -26,7 +26,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     var coverPresented: RootViewHostingViewController.Cover.Kind?
     
-    private let model: Model
+    let model: Model
     private let infoDictionary: [String : Any]?
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()

@@ -21,18 +21,19 @@ class RootViewHostingViewController: UIHostingController<RootView> {
 
     init(
         with viewModel: RootViewModel,
-        model: Model,
-        httpClient: HTTPClient
+        rootViewFactory: RootViewFactory
     ) {
+        
         self.viewModel = viewModel
         self.cover = nil
         self.informer = nil
         self.isCoverDismissing = false
-        super.init(rootView: RootView(
-            viewModel: viewModel,
-            model: model,
-            httpClient: httpClient
-        ))
+        super.init(
+            rootView: RootView(
+                viewModel: viewModel,
+                rootViewFactory: rootViewFactory
+            )
+        )
         
         bind()
     }

@@ -5,10 +5,11 @@
 //  Created by Max Gribov on 06.06.2023.
 //
 
-import XCTest
 @testable import ForaBank
-import SwiftUI
 import PinCodeUI
+import SberQR
+import SwiftUI
+import XCTest
 
 final class ProductProfileViewModelTests: XCTestCase {
     
@@ -551,7 +552,9 @@ final class ProductProfileViewModelTests: XCTestCase {
         trackForMemoryLeaks(model, file: file, line: line)
 
         return .init(
-            model,
+            model, 
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
             cvvPINServicesClient: cvvPINServicesClient,
             product: product,
             rootView: rootView,
@@ -582,6 +585,8 @@ final class ProductProfileViewModelTests: XCTestCase {
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
+                sberQRServices: .empty(),
+                qrViewModelFactory: .preview(),
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
                 rootView: "",

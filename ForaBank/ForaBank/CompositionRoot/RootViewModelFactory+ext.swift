@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SberQR
 import PaymentSticker
 import SwiftUI
 
@@ -16,7 +17,8 @@ extension RootViewModelFactory {
     static func make(
         httpClient: HTTPClient,
         model: Model,
-        logger: LoggerAgentProtocol
+        logger: LoggerAgentProtocol,
+        qrResolverFeatureFlag: QRResolverFeatureFlag
     ) -> RootViewModel {
         
         let rsaKeyPairStore = makeLoggingStore(
@@ -37,20 +39,31 @@ extension RootViewModelFactory {
             rsaKeyPairStore: rsaKeyPairStore
         )
         
-        let makeProductProfileViewModel = {
-            
-            ProductProfileViewModel(
-                model,
-                cvvPINServicesClient: cvvPINServicesClient,
-                product: $0,
-                rootView: $1,
-                dismissAction: $2
-            )
-        }
+        let infoNetworkLog = { logger.log(level: .info, category: .network, message: $0, file: $1, line: $2) }
+        
+        let sberQRServices = Services.makeSberQRServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let qrViewModelFactory = makeQRViewModelFactory(
+            model: model,
+            logger: logger,
+            qrResolverFeatureFlag: qrResolverFeatureFlag
+        )
+        
+        let makeProductProfileViewModel = ProductProfileViewModel.make(
+            with: model,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
+            cvvPINServicesClient: cvvPINServicesClient
+        )
         
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
         )
     }
@@ -178,6 +191,31 @@ extension RootViewModelFactory {
     }
 }
 
+extension ProductProfileViewModel {
+    
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+
+    static func make(
+        with model: Model,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
+        cvvPINServicesClient: CVVPINServicesClient
+    ) -> MakeProductProfileViewModel {
+        
+        return { product, rootView, dismissAction in
+                .init(
+                    model,
+                    sberQRServices: sberQRServices,
+                    qrViewModelFactory: qrViewModelFactory,
+                    cvvPINServicesClient: cvvPINServicesClient,
+                    product: product,
+                    rootView: rootView,
+                    dismissAction: dismissAction
+                )
+        }
+    }
+}
+
 // TODO: needs better naming
 private extension RootViewModelFactory {
     
@@ -210,18 +248,24 @@ private extension RootViewModelFactory {
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        sberQRServices: SberQRServices,
+        qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: onRegister
         )
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            makeProductProfileViewModel: makeProductProfileViewModel
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory
         )
         
         let chatViewModel = ChatViewModel()

@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 15.05.2022.
 //
 
+import SberQR
 import SwiftUI
 
 extension LatestPaymentsView.ViewModel {
@@ -76,16 +77,14 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        makeProductProfileViewModel: { product, rootView, dismissAction in
-                
-            ProductProfileViewModel(
-                .emptyMock,
-                cvvPINServicesClient: HappyCVVPINServicesClient(),
-                product: product,
-                rootView: rootView,
-                dismissAction: dismissAction
-            )
-        },
+        makeProductProfileViewModel: ProductProfileViewModel.make(
+            with: .emptyMock,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        ),
+        sberQRServices: .empty(),
+        qrViewModelFactory: .preview(),
         navButtonsRight: [
             .init(icon: .ic24BarcodeScanner2, action: {})
         ]

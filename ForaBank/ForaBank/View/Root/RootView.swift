@@ -5,16 +5,16 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import SberQR
 import SwiftUI
 import PaymentSticker
 
 struct RootView: View {
     
     @ObservedObject var viewModel: RootViewModel
-    //TODO: think composition to remove model, httpClient
-    let model: Model
-    let httpClient: HTTPClient
-
+    
+    let rootViewFactory: RootViewFactory
+    
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -49,10 +49,11 @@ struct RootView: View {
             MainView(
                 viewModel: viewModel.mainViewModel,
                 navigationOperationView: RootViewModelFactory.makeNavigationOperationView(
-                    httpClient: httpClient,
-                    model: model,
+                    httpClient: viewModel.model.authenticatedHTTPClient(),
+                    model: viewModel.model,
                     dismissAll: viewModel.rootActions.dismissAll
-                )
+                ),
+                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
@@ -64,7 +65,10 @@ struct RootView: View {
         
         NavigationView {
             
-            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+            PaymentsTransfersView(
+                viewModel: viewModel.paymentsViewModel,
+                makeSberQRConfirmPaymentView: rootViewFactory.makeSberQRConfirmPaymentView
+            )
         }
         .taggedTabItem(.payments, selected: viewModel.selected)
         .navigationViewStyle(StackNavigationViewStyle())
@@ -178,12 +182,25 @@ struct RootView_Previews: PreviewProvider {
                 informerViewModel: .init(.emptyMock),
                 .emptyMock,
                 showLoginAction: { _ in
-                
+                    
                         .init(viewModel: .init(authLoginViewModel: .preview))
                 }
             ),
-            model: .emptyMock,
-            httpClient: Model.emptyMock.authenticatedHTTPClient()
+            rootViewFactory: .preview
         )
     }
+}
+
+private extension RootViewFactory {
+    
+    static let preview: Self = .init(
+        makeSberQRConfirmPaymentView: {
+            
+            .init(
+                viewModel: $0,
+                map: Info.preview(info:),
+                config: .iFora
+            )
+        }
+    )
 }

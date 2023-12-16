@@ -82,6 +82,38 @@ extension ServerCommands {
                 }
             }
         }
+        
+        struct GetQRPaymentType: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/QRPaymentType"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+
+            struct Payload: Encodable {}
+
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: QRPaymentTypeData?
+
+                struct QRPaymentTypeData: Decodable, Equatable {
+
+                    let serial: String
+                    let list: [QRPaymentType]
+                }
+            }
+
+            init(token: String, serial: String?) {
+
+                self.token = token
+                self.parameters = serial.map {
+                    
+                    [.init(name: "serial", value: $0)]
+                }
+            }
+        }
     }
-    
 }
