@@ -7,51 +7,5 @@
 
 public extension GetSberQRDataResponse.Parameter {
     
-    struct Info: Equatable {
-        
-        public let id: ID
-        public let value: String
-        public let title: String
-        public let icon: Icon
-        
-        public init(
-            id: ID,
-            value: String,
-            title: String,
-            icon: Icon
-        ) {
-            self.id = id
-            self.value = value
-            self.title = title
-            self.icon = icon
-        }
-    }
-}
-
-public extension GetSberQRDataResponse.Parameter.Info {
-    
-    enum ID: String, Equatable {
-        
-        case amount, brandName, recipientBank
-    }
-    
-    struct Icon: Equatable {
-        
-        public let type: IconType
-        public let value: String
-        
-        public init(
-            type: IconType,
-            value: String
-        ) {
-            self.type = type
-            self.value = value
-        }
-        
-        public enum IconType: Equatable {
-            
-            case local
-            case remote
-        }
-    }
+    typealias Info = Parameters.Info
 }
