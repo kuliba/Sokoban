@@ -7,25 +7,5 @@
 
 public extension GetSberQRDataResponse.Parameter {
     
-    struct Header: Equatable {
-        
-        let id: ID
-        public let value: String
-        
-        public init(
-            id: ID,
-            value: String
-        ) {
-            self.id = id
-            self.value = value
-        }
-    }
-}
-
-public extension GetSberQRDataResponse.Parameter.Header {
- 
-    enum ID: String, Equatable {
-        
-        case title
-    }
+    typealias Header = Parameters.Header
 }
