@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import TextFieldComponent
+import TextFieldDomain
 
 public extension DecimalFormatter {
     

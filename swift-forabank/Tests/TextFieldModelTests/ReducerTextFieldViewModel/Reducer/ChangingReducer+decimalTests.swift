@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 15.12.2023.
 //
 
-import SberQR
-import TextFieldComponent
+import TextFieldDomain
+import TextFieldModel
 import XCTest
 
 final class ChangingReducer_decimalTests: XCTestCase {

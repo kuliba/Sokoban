@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import TextFieldComponent
+import TextFieldDomain
+import TextFieldUI
 
 public typealias DecimalTextFieldViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
 
