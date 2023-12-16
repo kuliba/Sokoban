@@ -10,7 +10,7 @@ import SwiftUI
 
 public struct Info {
     
-    public typealias ID = GetSberQRDataResponse.Parameter.Info.ID
+    public typealias ID = GetSberQRDataIDs.InfoID
     public typealias ImagePublisher = AnyPublisher<Image, Never>
     
     let id: ID

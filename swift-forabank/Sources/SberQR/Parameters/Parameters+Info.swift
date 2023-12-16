@@ -7,7 +7,7 @@
 
 public extension Parameters {
     
-    struct Info: Equatable {
+    struct Info<ID> {
         
         public let id: ID
         public let value: String
@@ -28,12 +28,9 @@ public extension Parameters {
     }
 }
 
+extension Parameters.Info: Equatable where ID: Equatable {}
+
 public extension Parameters.Info {
-    
-    enum ID: String, Equatable {
-        
-        case amount, brandName, recipientBank
-    }
     
     struct Icon: Equatable {
         

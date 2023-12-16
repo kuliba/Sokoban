@@ -66,7 +66,7 @@ private extension ResponseMapper._Data.Parameter {
         
         case red
         
-        var color: CreateSberQRPaymentResponse.Parameter.Color {
+        var color: Parameters.Color {
             
             switch self {
             case .red: return .red
@@ -137,7 +137,7 @@ private extension ResponseMapper._Data.Parameter {
         
         case bottom = "BOTTOM"
         
-        var placement: CreateSberQRPaymentResponse.Parameter.Placement {
+        var placement: Parameters.Placement {
             
             switch self {
             case .bottom: return .bottom

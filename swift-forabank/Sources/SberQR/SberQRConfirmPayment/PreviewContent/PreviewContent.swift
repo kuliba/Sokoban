@@ -155,7 +155,7 @@ extension ProductSelect.Product {
     )
 }
 
-extension SberQRConfirmPaymentState.Amount {
+extension GetSberQRDataResponse.Parameter.Amount {
     
     static let preview: Self = .init(
         id: .paymentAmount,
@@ -170,7 +170,7 @@ extension SberQRConfirmPaymentState.Amount {
     )
 }
 
-extension SberQRConfirmPaymentState.Button where ID == GetSberQRDataButtonID {
+extension GetSberQRDataResponse.Parameter.Button {
     
     static let preview: Self = .init(
         id: .buttonPay,
@@ -181,7 +181,7 @@ extension SberQRConfirmPaymentState.Button where ID == GetSberQRDataButtonID {
     )
 }
 
-extension SberQRConfirmPaymentState.DataString {
+extension GetSberQRDataResponse.Parameter.DataString {
     
     static let preview: Self = .init(
         id: .currency,

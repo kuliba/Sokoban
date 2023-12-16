@@ -10,9 +10,11 @@ import SwiftUI
 
 struct AmountView: View {
     
+    typealias Amount = SberQRConfirmPaymentState.EditableAmount.Amount
+    
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
-    let amount: SberQRConfirmPaymentState.Amount
+    let amount: Amount
     let event: (Decimal) -> Void
     let pay: () -> Void
     
@@ -21,7 +23,7 @@ struct AmountView: View {
     private let getDecimal: (TextFieldState) -> Decimal
     
     init(
-        amount: SberQRConfirmPaymentState.Amount,
+        amount: Amount,
         event: @escaping (Decimal) -> Void,
         pay: @escaping () -> Void,
         currencySymbol: String,
@@ -90,7 +92,7 @@ struct AmountView: View {
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
-#warning("add button state")
+            #warning("add button state")
             Button(action: pay) {
                 
                 text(amount.button.title, config: config.button.active.text)

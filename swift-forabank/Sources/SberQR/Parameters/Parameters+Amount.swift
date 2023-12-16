@@ -9,7 +9,7 @@ import Foundation
 
 public extension Parameters {
     
-    struct Amount: Equatable {
+    struct Amount<ID> {
         
         public let id: ID
         public let value: Decimal
@@ -33,23 +33,20 @@ public extension Parameters {
     }
 }
 
+extension Parameters.Amount: Equatable where ID: Equatable {}
+
 public extension Parameters.Amount {
-    
-    enum ID: String, Equatable {
-        
-        case paymentAmount = "payment_amount"
-    }
     
     struct Button: Equatable {
         
         let title: String
         let action: Action
-        let color: Color
+        let color: Parameters.Color
         
         public init(
             title: String,
             action: Action,
-            color: Color
+            color: Parameters.Color
         ) {
             self.title = title
             self.action = action
@@ -60,11 +57,6 @@ public extension Parameters.Amount {
     enum Action: Equatable {
         
         case paySberQR
-    }
-    
-    enum Color: Equatable {
-        
-        case red
     }
     
     struct ValidationRule: Equatable {}

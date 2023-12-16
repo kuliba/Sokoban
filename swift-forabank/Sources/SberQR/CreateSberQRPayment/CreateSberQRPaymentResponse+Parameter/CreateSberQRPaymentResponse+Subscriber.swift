@@ -7,16 +7,17 @@
 
 public extension CreateSberQRPaymentResponse.Parameter {
     
+#warning("move to Parameters, replace with typealias")
     struct Subscriber: Equatable {
         
-        public let id: ID
+        public let id: CreateSberQRPaymentIDs.ID
         public let value: String
         public let style: Style
         public let icon: String
         public let subscriptionPurpose: SubscriptionPurpose?
         
         public init(
-            id: ID,
+            id: CreateSberQRPaymentIDs.ID,
             value: String,
             style: Style,
             icon: String,

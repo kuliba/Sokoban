@@ -7,7 +7,7 @@
 
 public extension Parameters {
     
-    struct DataString: Equatable {
+    struct DataString<ID> {
         
         let id: ID
         let value: String
@@ -22,10 +22,4 @@ public extension Parameters {
     }
 }
 
-public extension Parameters.DataString {
-    
-    enum ID: String, Equatable {
-        
-        case currency
-    }
-}
+extension Parameters.DataString: Equatable where ID: Equatable {}

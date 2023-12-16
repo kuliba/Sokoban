@@ -9,7 +9,7 @@ import Tagged
 
 public extension Parameters {
     
-    struct ProductSelect: Equatable {
+    struct ProductSelect<ID> {
         
         let id: ID
         let value: String?
@@ -30,10 +30,9 @@ public extension Parameters {
     }
 }
 
+extension Parameters.ProductSelect: Equatable where ID: Equatable {}
+
 public extension Parameters.ProductSelect {
-    
-    typealias ID = Tagged<_ID, String>
-    enum _ID {}
     
     struct Filter: Equatable {
         

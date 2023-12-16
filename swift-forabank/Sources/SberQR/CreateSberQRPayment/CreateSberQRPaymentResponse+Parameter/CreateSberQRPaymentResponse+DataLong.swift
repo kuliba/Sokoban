@@ -7,13 +7,14 @@
 
 public extension CreateSberQRPaymentResponse.Parameter {
     
+    #warning("move to Parameters, replace with typealias")
     struct DataLong: Equatable {
         
-        public let id: ID
+        public let id: CreateSberQRPaymentIDs.ID
         public let value: Int
         
-        public init(id: ID, value: Int) {
-
+        public init(id: CreateSberQRPaymentIDs.ID, value: Int) {
+            
             self.id = id
             self.value = value
         }

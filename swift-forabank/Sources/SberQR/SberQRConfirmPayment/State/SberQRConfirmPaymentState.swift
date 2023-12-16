@@ -17,12 +17,12 @@ public enum SberQRConfirmPaymentStateOf<Info> {
 
 public extension SberQRConfirmPaymentStateOf {
     
-    typealias Amount = GetSberQRDataResponse.Parameter.Amount
-    typealias Button = GetSberQRDataResponse.Parameter.Button
-    typealias DataString = GetSberQRDataResponse.Parameter.DataString
     typealias Header = GetSberQRDataResponse.Parameter.Header
     
     struct EditableAmount {
+    
+        public typealias Amount = GetSberQRDataResponse.Parameter.Amount
+        public typealias DataString = GetSberQRDataResponse.Parameter.DataString
         
         public let header: Header
         public var productSelect: ProductSelect
@@ -50,12 +50,14 @@ public extension SberQRConfirmPaymentStateOf {
     
     struct FixedAmount {
         
+        public typealias Button = GetSberQRDataResponse.Parameter.Button
+
         public let header: Header
         public var productSelect: ProductSelect
         public let brandName: Info
         public let amount: Info
         public let recipientBank: Info
-        public let bottom: Button<GetSberQRDataButtonID>
+        public let bottom: Button
         
         public init(
             header: Header,
@@ -63,7 +65,7 @@ public extension SberQRConfirmPaymentStateOf {
             brandName: Info,
             amount: Info,
             recipientBank: Info,
-            bottom: Button<GetSberQRDataButtonID>
+            bottom: Button
         ) {
             self.header = header
             self.productSelect = productSelect
@@ -151,7 +153,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
     }
     
     func button(
-    ) throws -> GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID> {
+    ) throws -> GetSberQRDataResponse.Parameter.Button {
         
         guard case let .button(button) = first(where: { $0.case == .button })
         else { throw ParameterError(missing: .button) }
@@ -160,7 +162,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
     }
     
     func dataString(
-        withID id: GetSberQRDataResponse.Parameter.DataString.ID
+        withID id: GetSberQRDataIDs.DataStringID
     ) throws -> GetSberQRDataResponse.Parameter.DataString {
         
         guard case let .dataString(dataString) = first(where: { $0.case == .dataString && $0.id == .dataString(id) })
@@ -188,7 +190,7 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
     }
     
     func info(
-        withID id: GetSberQRDataResponse.Parameter.Info.ID
+        withID id: GetSberQRDataIDs.InfoID
     ) throws -> GetSberQRDataResponse.Parameter.Info {
         
         guard case let .info(info) = first(where: { $0.case == .info && $0.id == .info(id) })
@@ -239,12 +241,12 @@ private extension GetSberQRDataResponse.Parameter {
     
     enum ID: Equatable {
         
-        case amount(Amount.ID)
-        case button(GetSberQRDataButtonID)
-        case dataString(DataString.ID)
-        case header(Header.ID)
-        case info(Info.ID)
-        case productSelect(ProductSelect.ID)
+        case amount(GetSberQRDataIDs.AmountID)
+        case button(GetSberQRDataIDs.ButtonID)
+        case dataString(GetSberQRDataIDs.DataStringID)
+        case header(GetSberQRDataIDs.HeaderID)
+        case info(GetSberQRDataIDs.InfoID)
+        case productSelect(GetSberQRDataIDs.ProductSelectID)
     }
     
     var `case`: Case {

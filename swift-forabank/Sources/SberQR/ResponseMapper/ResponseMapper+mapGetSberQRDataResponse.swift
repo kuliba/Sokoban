@@ -61,7 +61,7 @@ private extension ResponseMapper._Data {
             
             case pay = "PAY"
             
-            var action: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Action {
+            var action: GetSberQRDataButtonAction {
                 
                 switch self {
                 case .pay: return .pay
@@ -73,7 +73,7 @@ private extension ResponseMapper._Data {
             
             case red
             
-            var buttonColor: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Color {
+            var buttonColor: Parameters.Color {
                 
                 switch self {
                 case .red: return .red
@@ -122,7 +122,7 @@ private extension ResponseMapper._Data {
                 
                 case red
                 
-                var amountColor: GetSberQRDataResponse.Parameter.Amount.Color {
+                var amountColor: Parameters.Color {
                     
                     switch self {
                     case .red: return .red
@@ -137,7 +137,9 @@ private extension ResponseMapper._Data {
             let currencies: [Currency]
             let additional: Bool
             
-            var filter: GetSberQRDataResponse.Parameter.ProductSelect.Filter {
+            typealias Filter = GetSberQRDataResponse.Parameter.ProductSelect.Filter
+            
+            var filter: Filter {
                 
                 .init(
                     productTypes: productTypes.map(\.productType),
@@ -150,7 +152,7 @@ private extension ResponseMapper._Data {
                 
                 case rub = "RUB"
                 
-                var currency: GetSberQRDataResponse.Parameter.ProductSelect.Filter.Currency {
+                var currency: Filter.Currency {
                     
                     switch self {
                     case .rub: return .rub
@@ -163,7 +165,7 @@ private extension ResponseMapper._Data {
                 case card = "CARD"
                 case account = "ACCOUNT"
                 
-                var productType: GetSberQRDataResponse.Parameter.ProductSelect.Filter.ProductType {
+                var productType: Filter.ProductType {
                     
                     switch self {
                     case .card:    return .card
@@ -202,7 +204,7 @@ private extension ResponseMapper._Data {
             
             case bottom = "BOTTOM"
             
-            var placement: GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID>.Placement {
+            var placement: Parameters.Placement {
                 
                 switch self {
                 case .bottom: return .bottom
@@ -224,7 +226,7 @@ private extension ResponseMapper._Data {
             
             switch type {
             case .amount:
-                typealias ID = GetSberQRDataResponse.Parameter.Amount.ID
+                typealias ID = GetSberQRDataIDs.AmountID
                 
                 guard let id = ID(rawValue: id),
                       let title,
@@ -242,7 +244,9 @@ private extension ResponseMapper._Data {
                 ))
                 
             case .button:
-                guard let id = GetSberQRDataButtonID(rawValue: id),
+                typealias ID = GetSberQRDataIDs.ButtonID
+                
+                guard let id = ID(rawValue: id),
                       let value,
                       let color = color?.buttonColor,
                       let placement = placement?.placement,
@@ -259,7 +263,7 @@ private extension ResponseMapper._Data {
                     ))
                 
             case .dataString:
-                typealias ID = GetSberQRDataResponse.Parameter.DataString.ID
+                typealias ID = GetSberQRDataIDs.DataStringID
                 
                 guard let id = ID(rawValue: id),
                       let value else { throw MappingError() }
@@ -267,7 +271,7 @@ private extension ResponseMapper._Data {
                 return .dataString(.init(id: id, value: value))
                 
             case .header:
-                typealias ID = GetSberQRDataResponse.Parameter.Header.ID
+                typealias ID = GetSberQRDataIDs.HeaderID
                 
                 guard let id = ID(rawValue: id),
                       let value
@@ -275,22 +279,8 @@ private extension ResponseMapper._Data {
                 
                 return .header(.init(id: id, value: value))
                 
-            case .productSelect:
-                typealias ID = GetSberQRDataResponse.Parameter.ProductSelect.ID
-                
-                guard let title,
-                      let filter = filter?.filter
-                else { throw MappingError() }
-                
-                return .productSelect(.init(
-                    id: .init(id),
-                    value: value,
-                    title: title,
-                    filter: filter
-                ))
-                
             case .info:
-                typealias ID = GetSberQRDataResponse.Parameter.Info.ID
+                typealias ID = GetSberQRDataIDs.InfoID
                 
                 guard let id = ID(rawValue: id),
                       let value,
@@ -303,6 +293,20 @@ private extension ResponseMapper._Data {
                     value: value,
                     title: title,
                     icon: icon
+                ))
+                
+            case .productSelect:
+                typealias ID = GetSberQRDataIDs.ProductSelectID
+                
+                guard let title,
+                      let filter = filter?.filter
+                else { throw MappingError() }
+                
+                return .productSelect(.init(
+                    id: .init(id),
+                    value: value,
+                    title: title,
+                    filter: filter
                 ))
             }
         }

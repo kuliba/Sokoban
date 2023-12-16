@@ -7,13 +7,14 @@
 
 public extension CreateSberQRPaymentResponse.Parameter {
     
+#warning("move to Parameters, replace with typealias")
     struct SuccessText: Equatable {
         
-        let id: ID
+        let id: CreateSberQRPaymentIDs.ID
         public let value: String
         public let style: Style
         
-        public init(id: ID, value: String, style: Style) {
+        public init(id: CreateSberQRPaymentIDs.ID, value: String, style: Style) {
             
             self.id = id
             self.value = value

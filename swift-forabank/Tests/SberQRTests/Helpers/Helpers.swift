@@ -28,7 +28,7 @@ extension GetSberQRDataResponse.Parameter.Amount {
     }
 }
 
-extension GetSberQRDataResponse.Parameter.Button<GetSberQRDataButtonID> {
+extension GetSberQRDataResponse.Parameter.Button {
     
     static let buttonPay: Self = .init(
         id: .buttonPay,

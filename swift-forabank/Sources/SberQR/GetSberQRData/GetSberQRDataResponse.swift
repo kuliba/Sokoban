@@ -14,7 +14,7 @@ public struct GetSberQRDataResponse: Equatable {
     let required: [Required]
     
     public init(
-        qrcID: String, 
+        qrcID: String,
         parameters: [Parameter],
         required: [Required]
     ) {
@@ -29,12 +29,22 @@ public extension GetSberQRDataResponse {
     enum Parameter: Equatable {
         
         case amount(Amount)
-        case button(Parameters.Button<GetSberQRDataButtonID>)
+        case button(Button)
         case dataString(DataString)
         case header(Header)
         case info(Info)
         case productSelect(ProductSelect)
     }
+}
+
+public extension GetSberQRDataResponse.Parameter {
+    
+    typealias Amount = Parameters.Amount<GetSberQRDataIDs.AmountID>
+    typealias Button = Parameters.Button<GetSberQRDataButtonAction, GetSberQRDataIDs.ButtonID>
+    typealias DataString = Parameters.DataString<GetSberQRDataIDs.DataStringID>
+    typealias Header = Parameters.Header<GetSberQRDataIDs.HeaderID>
+    typealias Info = Parameters.Info<GetSberQRDataIDs.InfoID>
+    typealias ProductSelect = Parameters.ProductSelect<GetSberQRDataIDs.ProductSelectID>
 }
 
 public extension GetSberQRDataResponse {
@@ -49,7 +59,9 @@ public extension GetSberQRDataResponse {
 
 public extension GetSberQRDataResponse {
     
-    var filterProductTypes: [GetSberQRDataResponse.Parameter.ProductSelect.Filter.ProductType] {
+    typealias Filter = GetSberQRDataResponse.Parameter.ProductSelect.Filter
+    
+    var filterProductTypes: [Filter.ProductType] {
         
         parameters
             .flatMap {
@@ -63,7 +75,7 @@ public extension GetSberQRDataResponse {
             }
     }
     
-    var filterCurrencies: [GetSberQRDataResponse.Parameter.ProductSelect.Filter.Currency] {
+    var filterCurrencies: [Filter.Currency] {
         
         parameters
             .flatMap {

@@ -13,7 +13,7 @@ public struct CreateSberQRPaymentResponse: Equatable {
     public let parameters: [Parameter]
     
     public init(parameters: [Parameter]) {
-     
+        
         self.parameters = parameters
     }
 }
@@ -31,7 +31,19 @@ public extension CreateSberQRPaymentResponse {
         case successOptionButton(SuccessOptionButton)
     }
 }
- 
+
+public extension CreateSberQRPaymentResponse.Parameter {
+    
+    typealias Button = Parameters.Button<CreateSberQRPaymentResponse.Parameter.Action, CreateSberQRPaymentIDs.ID>
+    typealias DataString = Parameters.DataString<CreateSberQRPaymentIDs.ID>
+    typealias ID = CreateSberQRPaymentIDs.ID
+}
+
+public enum CreateSberQRPaymentButtonAction: Equatable {
+    
+    case pay
+}
+
 public extension CreateSberQRPaymentResponse.Parameter {
     
     // MARK: - Common Types
@@ -39,28 +51,6 @@ public extension CreateSberQRPaymentResponse.Parameter {
     enum Action: Equatable {
         
         case main
-    }
-    
-    enum Color: Equatable {
-        
-        case red
-    }
-    
-    enum ID: String, Equatable {
-        
-        case paymentOperationDetailId
-        case printFormType
-        case successStatus
-        case successTitle
-        case successAmount
-        case brandName
-        case successOptionButtons
-        case buttonMain
-    }
-    
-    enum Placement: Equatable {
-        
-        case bottom
     }
     
     enum Style: Equatable {

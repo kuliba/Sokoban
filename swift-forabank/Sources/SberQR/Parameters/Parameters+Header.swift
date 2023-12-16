@@ -7,7 +7,7 @@
 
 public extension Parameters {
     
-    struct Header: Equatable {
+    struct Header<ID> {
         
         let id: ID
         public let value: String
@@ -22,10 +22,4 @@ public extension Parameters {
     }
 }
 
-public extension Parameters.Header {
- 
-    enum ID: String, Equatable {
-        
-        case title
-    }
-}
+extension Parameters.Header: Equatable where ID: Equatable {}
