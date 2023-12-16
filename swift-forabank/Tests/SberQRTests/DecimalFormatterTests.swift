@@ -139,7 +139,7 @@ final class DecimalFormatterTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let locale = Locale(identifier: "ru_RU@currency=\(currencySymbol)")
+        let locale = Locale(identifier: "ru_RU")
        
         return SUT(
             currencySymbol: currencySymbol,
