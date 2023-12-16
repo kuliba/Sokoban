@@ -108,12 +108,12 @@ final class DecimalFormatterTests: XCTestCase {
         let decimal: Decimal = 12_345.67
         let sut = makeSUT(currencySymbol: "RUB")
         
-        let filtered = try sut.filter(
+        let clean = try sut.clean(
             text: XCTUnwrap(sut.format(decimal)),
             allowDecimalSeparator: true
         )
         
-        XCTAssertNoDiff(filtered, "12345,67")
+        XCTAssertNoDiff(clean, "12345,67")
     }
     
     func test_filter_allowDecimalSeparator_false() throws {
@@ -121,12 +121,12 @@ final class DecimalFormatterTests: XCTestCase {
         let decimal: Decimal = 12_345.67
         let sut = makeSUT(currencySymbol: "RUB")
         
-        let filtered = try sut.filter(
+        let clean = try sut.clean(
             text: XCTUnwrap(sut.format(decimal)),
             allowDecimalSeparator: false
         )
         
-        XCTAssertNoDiff(filtered, "1234567")
+        XCTAssertNoDiff(clean, "1234567")
     }
     
     // MARK: - Helpers

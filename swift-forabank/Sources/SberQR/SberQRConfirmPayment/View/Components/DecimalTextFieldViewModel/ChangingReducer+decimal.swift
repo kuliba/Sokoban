@@ -18,7 +18,7 @@ public extension ChangingReducer {
             
             // remove non-digits and repeating decimalSeparator from replacementText
             let hasDecimalSeparator = formatter.hasDecimalSeparator(textState.text)
-            let replacementText = formatter.filter(
+            let replacementText = formatter.clean(
                 text: replacementText,
                 allowDecimalSeparator: !hasDecimalSeparator
             )
@@ -41,7 +41,7 @@ public extension ChangingReducer {
                 if formatter.isDecimalSeparator(replacementText) {
                     return changed
                 } else {
-                    let filtered = formatter.filter(
+                    let filtered = formatter.clean(
                         text: changed,
                         allowDecimalSeparator: true
                     )

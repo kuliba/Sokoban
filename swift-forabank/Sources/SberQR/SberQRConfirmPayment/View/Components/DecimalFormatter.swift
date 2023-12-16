@@ -43,7 +43,7 @@ public struct DecimalFormatter {
     }
     
     /// Remove all characters from a string except digits and the decimal separator.
-    public func filter(
+    public func clean(
         text: String,
         allowDecimalSeparator: Bool
     ) -> String {
