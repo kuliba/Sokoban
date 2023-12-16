@@ -133,7 +133,7 @@ private extension Parameter.SuccessText {
     }
 }
 
-private extension Parameter.Style {
+private extension SberQR.Parameters.Style {
     
     var textStyle: Payments.ParameterSuccessText.Style {
         
@@ -198,7 +198,7 @@ private extension Parameter.SuccessOptionButton.Value {
     }
 }
 
-extension Parameter.Placement {
+extension SberQR.Parameters.Placement {
     
     var buttonPlacement: Payments.Parameter.Placement {
         

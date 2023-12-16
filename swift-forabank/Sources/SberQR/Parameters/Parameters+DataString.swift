@@ -9,8 +9,8 @@ public extension Parameters {
     
     struct DataString<ID> {
         
-        let id: ID
-        let value: String
+        public let id: ID
+        public let value: String
         
         public init(
             id: ID,

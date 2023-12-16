@@ -1,13 +1,12 @@
 //
-//  CreateSberQRPaymentResponse+Subscriber.swift
+//  Parameters+Subscriber.swift
+//  
 //
-//
-//  Created by Igor Malyarov on 10.12.2023.
+//  Created by Igor Malyarov on 16.12.2023.
 //
 
-public extension CreateSberQRPaymentResponse.Parameter {
+public extension Parameters {
     
-#warning("move to Parameters, replace with typealias")
     struct Subscriber: Equatable {
         
         public let id: CreateSberQRPaymentIDs.ID

@@ -151,7 +151,7 @@ private extension ResponseMapper._Data.Parameter {
         case title =  "TITLE"
         case small =  "SMALL"
         
-        var style: CreateSberQRPaymentResponse.Parameter.Style {
+        var style: Parameters.Style {
             
             switch self {
             case .amount: return .amount

@@ -36,7 +36,12 @@ public extension CreateSberQRPaymentResponse.Parameter {
     
     typealias Button = Parameters.Button<CreateSberQRPaymentResponse.Parameter.Action, CreateSberQRPaymentIDs.ID>
     typealias DataString = Parameters.DataString<CreateSberQRPaymentIDs.ID>
+    typealias DataLong = Parameters.DataLong
     typealias ID = CreateSberQRPaymentIDs.ID
+    typealias Subscriber = Parameters.Subscriber
+    typealias SuccessOptionButton = Parameters.SuccessOptionButton
+    typealias SuccessStatusIcon = Parameters.SuccessStatusIcon
+    typealias SuccessText = Parameters.SuccessText
 }
 
 public enum CreateSberQRPaymentButtonAction: Equatable {
@@ -51,12 +56,5 @@ public extension CreateSberQRPaymentResponse.Parameter {
     enum Action: Equatable {
         
         case main
-    }
-    
-    enum Style: Equatable {
-        
-        case amount
-        case title
-        case small
     }
 }
