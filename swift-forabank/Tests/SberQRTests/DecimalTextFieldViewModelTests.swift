@@ -51,13 +51,16 @@ final class DecimalTextFieldViewModelTests: XCTestCase {
         decimalSpy: DecimalSpy
     ) {
         let locale = Locale(identifier: "ru_RU")
-        let (sut, getDecimal) = SUT.decimal(
+        let formatter = DecimalFormatter(
             currencySymbol: currencySymbol,
-            locale: locale,
+            locale: locale
+        )
+        let sut = SUT.decimal(
+            formatter: formatter,
             scheduler: .immediate
         )
         let textSpy = TextSpy(sut.$state.map(\.text))
-        let decimalSpy = DecimalSpy(sut.$state.map(getDecimal))
+        let decimalSpy = DecimalSpy(sut.$state.map(formatter.getDecimal))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(textSpy, file: file, line: line)

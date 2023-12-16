@@ -17,7 +17,7 @@ public struct DecimalFormatter {
     
     public init(
         currencySymbol: String,
-        locale: Locale = .current
+        locale: Locale = .autoupdatingCurrent
     ) {
         self.locale = locale
         self.formatter = .currency(

@@ -27,12 +27,15 @@ struct AmountView: View {
         currencySymbol: String,
         config: AmountConfig
     ) {
-        let (textField, getDecimal) = DecimalTextFieldViewModel.decimal(
+        let formatter = DecimalFormatter(
             currencySymbol: currencySymbol
+        )
+        let textField = DecimalTextFieldViewModel.decimal(
+            formatter: formatter
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
-        self.getDecimal = getDecimal
+        self.getDecimal = formatter.getDecimal
         self.amount = amount
         self.event = event
         self.pay = pay

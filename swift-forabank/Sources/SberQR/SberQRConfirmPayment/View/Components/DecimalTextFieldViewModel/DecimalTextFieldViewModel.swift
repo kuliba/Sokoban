@@ -15,46 +15,21 @@ public extension DecimalTextFieldViewModel {
     typealias GetDecimal = (TextFieldState) -> Decimal
     
     static func decimal(
-        currencySymbol: String,
-        locale: Locale = .autoupdatingCurrent,
+        formatter: DecimalFormatter,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> (DecimalTextFieldViewModel, GetDecimal) {
+    ) -> DecimalTextFieldViewModel {
         
-        let formatter = DecimalFormatter(
-            currencySymbol: currencySymbol,
-            locale: locale
-        )
         let reducer = ChangingReducer.decimal(
             formatter: formatter
         )
         let initialState = reducer.setToZero()
         
-        let textField = DecimalTextFieldViewModel(
+        return .init(
             initialState: initialState,
             reducer: reducer,
             keyboardType: .decimal,
             scheduler: scheduler
         )
-        
-        return (textField, formatter.getDecimal)
-    }
-}
-
-private extension DecimalFormatter {
-    
-    func getDecimal(_ textFieldState: TextFieldState) -> Decimal {
-        
-        switch textFieldState {
-        
-        case .placeholder:
-            return 0
-
-        case let .noFocus(text):
-            return number(from: text)
-            
-        case let .editing(textState):
-            return number(from: textState.text)
-        }
     }
 }
 
