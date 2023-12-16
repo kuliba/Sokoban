@@ -23,6 +23,8 @@ public struct DecimalFormatter {
         )
     }
     
+    public var currencySymbol: String { formatter.currencySymbol }
+    
     public func format(_ decimal: Decimal) -> String? {
         
         formatter.string(from: NSDecimalNumber(decimal: decimal))
