@@ -102,25 +102,11 @@ private extension ResponseMapper._Data.Parameter {
         case successAmount = "success_amount"
         case successOptionButtons = "success_option_buttons"
         
-        var id: CreateSberQRPaymentResponse.Parameter.ID {
+        var buttonID: CreateSberQRPaymentIDs.ButtonID? {
             
             switch self {
-            case .brandName:
-                fatalError()
-            case .buttonMain:
-                return .buttonMain
-            case .paymentOperationDetailId:
-               fatalError()
-            case .printFormType:
-                fatalError()
-            case .successStatus:
-                fatalError()
-            case .successTitle:
-                fatalError()
-            case .successAmount:
-                fatalError()
-            case .successOptionButtons:
-                return .successOptionButtons
+            case .buttonMain: return .buttonMain
+            default:          return nil
             }
         }
         
@@ -147,6 +133,16 @@ private extension ResponseMapper._Data.Parameter {
             switch self {
             case .brandName: return .brandName
             default:         return nil
+            }
+        }
+        
+        var successOptionButtonsID: CreateSberQRPaymentIDs.SuccessOptionButtonsID? {
+            
+            switch self {
+            case .successOptionButtons:
+                return .successOptionButtons
+            default:
+                return nil
             }
         }
         
@@ -281,6 +277,7 @@ private extension ResponseMapper._Data.Parameter {
         switch type {
         case .button:
             guard
+                let id = id.buttonID,
                 case let .string(value) = value,
                 let color = color?.color,
                 let action = action?.action,
@@ -288,7 +285,7 @@ private extension ResponseMapper._Data.Parameter {
             else { throw MappingError() }
             
             return .button(.init(
-                id: id.id,
+                id: id,
                 value: value,
                 color: color,
                 action: action,
@@ -360,11 +357,13 @@ private extension ResponseMapper._Data.Parameter {
             ))
             
         case .successOptionButton:
-            guard case let .options(values) = value
+            guard
+                let id = id.successOptionButtonsID,
+                case let .options(values) = value
             else { throw MappingError() }
             
             return .successOptionButton(.init(
-                id: id.id,
+                id: id,
                 values: values.map(\.value)
             ))
         }

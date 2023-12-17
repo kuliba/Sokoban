@@ -34,10 +34,9 @@ public extension CreateSberQRPaymentResponse {
 
 public extension CreateSberQRPaymentResponse.Parameter {
     
-    typealias Button = Parameters.Button<CreateSberQRPaymentResponse.Parameter.Action, CreateSberQRPaymentIDs.ID>
+    typealias Button = Parameters.Button<CreateSberQRPaymentResponse.Parameter.Action, CreateSberQRPaymentIDs.ButtonID>
     typealias DataString = Parameters.DataString<CreateSberQRPaymentIDs.DataStringID>
     typealias DataLong = Parameters.DataLong
-    typealias ID = CreateSberQRPaymentIDs.ID
     typealias Subscriber = Parameters.Subscriber
     typealias SuccessOptionButton = Parameters.SuccessOptionButton
     typealias SuccessStatusIcon = Parameters.SuccessStatusIcon

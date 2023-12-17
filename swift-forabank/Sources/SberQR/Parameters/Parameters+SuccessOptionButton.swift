@@ -9,10 +9,12 @@ public extension Parameters {
     
     struct SuccessOptionButton: Equatable {
         
-        let id: CreateSberQRPaymentIDs.ID
+        public typealias ID = CreateSberQRPaymentIDs.SuccessOptionButtonsID
+        
+        let id: ID
         public let values: [Value]
         
-        public init(id: CreateSberQRPaymentIDs.ID, values: [Value]) {
+        public init(id: ID, values: [Value]) {
             
             self.id = id
             self.values = values

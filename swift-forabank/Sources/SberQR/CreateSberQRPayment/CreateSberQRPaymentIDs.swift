@@ -10,6 +10,11 @@ public enum CreateSberQRPaymentIDs {}
 
 public extension CreateSberQRPaymentIDs {
     
+    enum ButtonID: Equatable {
+        
+        case buttonMain
+    }
+    
     enum DataLongID: Equatable {
         
         case paymentOperationDetailId
@@ -18,6 +23,16 @@ public extension CreateSberQRPaymentIDs {
     enum DataStringID: Equatable {
         
         case printFormType
+    }
+    
+    enum SubscriberID: Equatable {
+        
+        case brandName
+    }
+    
+    enum SuccessOptionButtonsID: Equatable {
+        
+        case successOptionButtons
     }
     
     enum SuccessStatusID: Equatable {
@@ -29,16 +44,5 @@ public extension CreateSberQRPaymentIDs {
         
         case successAmount
         case successTitle
-    }
-    
-    enum SubscriberID: Equatable {
-        
-        case brandName
-    }
-    
-    enum ID: Equatable {
-        
-        case successOptionButtons
-        case buttonMain
     }
 }
