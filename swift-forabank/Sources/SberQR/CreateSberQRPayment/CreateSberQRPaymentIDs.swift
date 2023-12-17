@@ -10,9 +10,13 @@ public enum CreateSberQRPaymentIDs {}
 
 public extension CreateSberQRPaymentIDs {
     
-    enum ID: Equatable {
+    enum DataLongID: Equatable {
         
         case paymentOperationDetailId
+    }
+    
+    enum ID: Equatable {
+        
         case printFormType
         case successStatus
         case successTitle
