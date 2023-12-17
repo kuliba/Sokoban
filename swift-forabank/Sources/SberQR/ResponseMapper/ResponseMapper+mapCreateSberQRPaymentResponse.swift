@@ -32,19 +32,22 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let parameters: [Parameter]
+    }
+}
+
+private extension ResponseMapper._Data {
+    
+    struct Parameter: Decodable {
         
-        struct Parameter: Decodable {
-            
-            let id: ID
-            let type: ParameterType
-            let value: Value
-            let style: Style?
-            let color: Color?
-            let action: Action?
-            let icon: String?
-            let subscriptionPurpose: SubscriptionPurpose?
-            let placement: Placement?
-        }
+        let id: ID
+        let type: ParameterType
+        let value: Value
+        let style: Style?
+        let color: Color?
+        let action: Action?
+        let icon: String?
+        let subscriptionPurpose: SubscriptionPurpose?
+        let placement: Placement?
     }
 }
 

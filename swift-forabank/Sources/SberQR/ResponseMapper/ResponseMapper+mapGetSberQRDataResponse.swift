@@ -56,260 +56,6 @@ private extension ResponseMapper._Data {
         let validationRules: [ValidationRule]?
         let button: Button?
         let placement: Placement?
-        
-        enum Action: String, Decodable {
-            
-            case pay = "PAY"
-            
-            var action: GetSberQRDataButtonAction {
-                
-                switch self {
-                case .pay: return .pay
-                }
-            }
-        }
-        
-        enum Color: String, Decodable {
-            
-            case red
-            
-            var buttonColor: Parameters.Color {
-                
-                switch self {
-                case .red: return .red
-                }
-            }
-        }
-        
-        enum ParameterType: String, Decodable {
-            
-            case amount        = "AMOUNT"
-            case button        = "BUTTON"
-            case dataString    = "DATA_STRING"
-            case header        = "HEADER"
-            case info          = "INFO"
-            case productSelect = "PRODUCT_SELECT"
-        }
-        
-        struct Button: Decodable {
-            
-            let title: String
-            let action: Action
-            let color: Color
-            
-            var amountButton: GetSberQRDataResponse.Parameter.Amount.Button {
-                
-                .init(
-                    title: title,
-                    action: action.action,
-                    color: color.amountColor
-                )
-            }
-            
-            enum Action: String, Decodable {
-                
-                case paySberQR = "PAY_SBER_QR"
-                
-                var action: GetSberQRDataResponse.Parameter.Amount.Action {
-                    
-                    switch self {
-                    case .paySberQR: return .paySberQR
-                    }
-                }
-            }
-            
-            enum Color: String, Decodable {
-                
-                case red
-                
-                var amountColor: Parameters.Color {
-                    
-                    switch self {
-                    case .red: return .red
-                    }
-                }
-            }
-        }
-        
-        struct Filter: Decodable {
-            
-            let productTypes: [ProductType]
-            let currencies: [Currency]
-            let additional: Bool
-            
-            typealias Filter = GetSberQRDataResponse.Parameter.ProductSelect.Filter
-            
-            var filter: Filter {
-                
-                .init(
-                    productTypes: productTypes.map(\.productType),
-                    currencies: currencies.map(\.currency),
-                    additional: additional
-                )
-            }
-            
-            enum Currency: String, Decodable {
-                
-                case rub = "RUB"
-                
-                var currency: Filter.Currency {
-                    
-                    switch self {
-                    case .rub: return .rub
-                    }
-                }
-            }
-            
-            enum ProductType: String, Decodable {
-                
-                case card = "CARD"
-                case account = "ACCOUNT"
-                
-                var productType: Filter.ProductType {
-                    
-                    switch self {
-                    case .card:    return .card
-                    case .account: return .account
-                    }
-                }
-            }
-        }
-        
-        struct Icon: Decodable {
-            
-            let type: IconType
-            let value: String
-            
-            var icon: GetSberQRDataResponse.Parameter.Info.Icon {
-                
-                .init(type: type.type, value: value)
-            }
-            
-            enum IconType: String, Decodable {
-                
-                case local  = "LOCAL"
-                case remote = "REMOTE"
-                
-                var type: GetSberQRDataResponse.Parameter.Info.Icon.IconType {
-                    
-                    switch self {
-                    case .local:  return .local
-                    case .remote: return .remote
-                    }
-                }
-            }
-        }
-        
-        enum Placement: String, Decodable {
-            
-            case bottom = "BOTTOM"
-            
-            var placement: Parameters.Placement {
-                
-                switch self {
-                case .bottom: return .bottom
-                }
-            }
-        }
-        
-        struct ValidationRule: Decodable {
-            
-            var rule: GetSberQRDataResponse.Parameter.Amount.ValidationRule {
-                
-                .init()
-            }
-        }
-        
-        struct MappingError: Error {}
-        
-        func parameter() throws -> GetSberQRDataResponse.Parameter {
-            
-            switch type {
-            case .amount:
-                typealias ID = GetSberQRDataIDs.AmountID
-                
-                guard let id = ID(rawValue: id),
-                      let title,
-                      let value = Decimal(string: value ?? "0"),
-                      let validationRules,
-                      let amountButton = button?.amountButton
-                else { throw MappingError() }
-                
-                return .amount(.init(
-                    id: id,
-                    value: value,
-                    title: title,
-                    validationRules: validationRules.map(\.rule),
-                    button: amountButton
-                ))
-                
-            case .button:
-                typealias ID = GetSberQRDataIDs.ButtonID
-                
-                guard let id = ID(rawValue: id),
-                      let value,
-                      let color = color?.buttonColor,
-                      let placement = placement?.placement,
-                      let action = action?.action
-                else { throw MappingError() }
-                
-                return
-                    .button(.init(
-                        id: id,
-                        value: value,
-                        color: color,
-                        action: action,
-                        placement: placement
-                    ))
-                
-            case .dataString:
-                typealias ID = GetSberQRDataIDs.DataStringID
-                
-                guard let id = ID(rawValue: id),
-                      let value else { throw MappingError() }
-                
-                return .dataString(.init(id: id, value: value))
-                
-            case .header:
-                typealias ID = GetSberQRDataIDs.HeaderID
-                
-                guard let id = ID(rawValue: id),
-                      let value
-                else { throw MappingError() }
-                
-                return .header(.init(id: id, value: value))
-                
-            case .info:
-                typealias ID = GetSberQRDataIDs.InfoID
-                
-                guard let id = ID(rawValue: id),
-                      let value,
-                      let title,
-                      let icon = icon?.icon
-                else { throw MappingError() }
-                
-                return .info(.init(
-                    id: id,
-                    value: value,
-                    title: title,
-                    icon: icon
-                ))
-                
-            case .productSelect:
-                typealias ID = GetSberQRDataIDs.ProductSelectID
-                
-                guard let title,
-                      let filter = filter?.filter
-                else { throw MappingError() }
-                
-                return .productSelect(.init(
-                    id: .init(id),
-                    value: value,
-                    title: title,
-                    filter: filter
-                ))
-            }
-        }
     }
     
     enum Required: String, Decodable {
@@ -330,6 +76,263 @@ private extension ResponseMapper._Data {
             case .currency:
                 return .currency
             }
+        }
+    }
+}
+
+private extension ResponseMapper._Data.Parameter {
+    
+    enum Action: String, Decodable {
+        
+        case pay = "PAY"
+        
+        var action: GetSberQRDataButtonAction {
+            
+            switch self {
+            case .pay: return .pay
+            }
+        }
+    }
+    
+    enum Color: String, Decodable {
+        
+        case red
+        
+        var buttonColor: Parameters.Color {
+            
+            switch self {
+            case .red: return .red
+            }
+        }
+    }
+    
+    enum ParameterType: String, Decodable {
+        
+        case amount        = "AMOUNT"
+        case button        = "BUTTON"
+        case dataString    = "DATA_STRING"
+        case header        = "HEADER"
+        case info          = "INFO"
+        case productSelect = "PRODUCT_SELECT"
+    }
+    
+    struct Button: Decodable {
+        
+        let title: String
+        let action: Action
+        let color: Color
+        
+        var amountButton: GetSberQRDataResponse.Parameter.Amount.Button {
+            
+            .init(
+                title: title,
+                action: action.action,
+                color: color.amountColor
+            )
+        }
+        
+        enum Action: String, Decodable {
+            
+            case paySberQR = "PAY_SBER_QR"
+            
+            var action: GetSberQRDataResponse.Parameter.Amount.Action {
+                
+                switch self {
+                case .paySberQR: return .paySberQR
+                }
+            }
+        }
+        
+        enum Color: String, Decodable {
+            
+            case red
+            
+            var amountColor: Parameters.Color {
+                
+                switch self {
+                case .red: return .red
+                }
+            }
+        }
+    }
+    
+    struct Filter: Decodable {
+        
+        let productTypes: [ProductType]
+        let currencies: [Currency]
+        let additional: Bool
+        
+        typealias Filter = GetSberQRDataResponse.Parameter.ProductSelect.Filter
+        
+        var filter: Filter {
+            
+            .init(
+                productTypes: productTypes.map(\.productType),
+                currencies: currencies.map(\.currency),
+                additional: additional
+            )
+        }
+        
+        enum Currency: String, Decodable {
+            
+            case rub = "RUB"
+            
+            var currency: Filter.Currency {
+                
+                switch self {
+                case .rub: return .rub
+                }
+            }
+        }
+        
+        enum ProductType: String, Decodable {
+            
+            case card = "CARD"
+            case account = "ACCOUNT"
+            
+            var productType: Filter.ProductType {
+                
+                switch self {
+                case .card:    return .card
+                case .account: return .account
+                }
+            }
+        }
+    }
+    
+    struct Icon: Decodable {
+        
+        let type: IconType
+        let value: String
+        
+        var icon: GetSberQRDataResponse.Parameter.Info.Icon {
+            
+            .init(type: type.type, value: value)
+        }
+        
+        enum IconType: String, Decodable {
+            
+            case local  = "LOCAL"
+            case remote = "REMOTE"
+            
+            var type: GetSberQRDataResponse.Parameter.Info.Icon.IconType {
+                
+                switch self {
+                case .local:  return .local
+                case .remote: return .remote
+                }
+            }
+        }
+    }
+    
+    enum Placement: String, Decodable {
+        
+        case bottom = "BOTTOM"
+        
+        var placement: Parameters.Placement {
+            
+            switch self {
+            case .bottom: return .bottom
+            }
+        }
+    }
+    
+    struct ValidationRule: Decodable {
+        
+        var rule: GetSberQRDataResponse.Parameter.Amount.ValidationRule {
+            
+            .init()
+        }
+    }
+    
+    struct MappingError: Error {}
+    
+    func parameter() throws -> GetSberQRDataResponse.Parameter {
+        
+        switch type {
+        case .amount:
+            typealias ID = GetSberQRDataIDs.AmountID
+            
+            guard let id = ID(rawValue: id),
+                  let title,
+                  let value = Decimal(string: value ?? "0"),
+                  let validationRules,
+                  let amountButton = button?.amountButton
+            else { throw MappingError() }
+            
+            return .amount(.init(
+                id: id,
+                value: value,
+                title: title,
+                validationRules: validationRules.map(\.rule),
+                button: amountButton
+            ))
+            
+        case .button:
+            typealias ID = GetSberQRDataIDs.ButtonID
+            
+            guard let id = ID(rawValue: id),
+                  let value,
+                  let color = color?.buttonColor,
+                  let placement = placement?.placement,
+                  let action = action?.action
+            else { throw MappingError() }
+            
+            return
+                .button(.init(
+                    id: id,
+                    value: value,
+                    color: color,
+                    action: action,
+                    placement: placement
+                ))
+            
+        case .dataString:
+            typealias ID = GetSberQRDataIDs.DataStringID
+            
+            guard let id = ID(rawValue: id),
+                  let value else { throw MappingError() }
+            
+            return .dataString(.init(id: id, value: value))
+            
+        case .header:
+            typealias ID = GetSberQRDataIDs.HeaderID
+            
+            guard let id = ID(rawValue: id),
+                  let value
+            else { throw MappingError() }
+            
+            return .header(.init(id: id, value: value))
+            
+        case .info:
+            typealias ID = GetSberQRDataIDs.InfoID
+            
+            guard let id = ID(rawValue: id),
+                  let value,
+                  let title,
+                  let icon = icon?.icon
+            else { throw MappingError() }
+            
+            return .info(.init(
+                id: id,
+                value: value,
+                title: title,
+                icon: icon
+            ))
+            
+        case .productSelect:
+            typealias ID = GetSberQRDataIDs.ProductSelectID
+            
+            guard let title,
+                  let filter = filter?.filter
+            else { throw MappingError() }
+            
+            return .productSelect(.init(
+                id: .init(id),
+                value: value,
+                title: title,
+                filter: filter
+            ))
         }
     }
 }
