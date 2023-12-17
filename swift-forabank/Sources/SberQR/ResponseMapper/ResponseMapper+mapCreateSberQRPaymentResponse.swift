@@ -227,6 +227,9 @@ private extension ResponseMapper._Data.Parameter {
             }
         }
     }
+}
+
+private extension ResponseMapper._Data.Parameter {
     
     struct MappingError: Error {}
     

@@ -82,66 +82,6 @@ private extension ResponseMapper._Data {
 
 private extension ResponseMapper._Data.Parameter {
     
-    enum ID: String, Decodable {
-     
-        case paymentAmount = "payment_amount"
-        case buttonPay = "button_pay"
-        case currency
-        case title
-        case amount, brandName, recipientBank
-        case debit_account
-        
-        var amountID: GetSberQRDataIDs.AmountID? {
-            
-            switch self {
-            case .paymentAmount: return .paymentAmount
-            default:             return .none
-            }
-        }
-        
-        var buttonID: GetSberQRDataIDs.ButtonID? {
-            
-            switch self {
-            case .buttonPay: return .buttonPay
-            default:         return .none
-            }
-        }
-        
-        var dataStringID: GetSberQRDataIDs.DataStringID? {
-            
-            switch self {
-            case .currency: return .currency
-            default:        return .none
-            }
-        }
-        
-        var headerID: GetSberQRDataIDs.HeaderID? {
-            
-            switch self {
-            case .title: return .title
-            default:     return .none
-            }
-        }
-        
-        var infoID: GetSberQRDataIDs.InfoID? {
-            
-            switch self {
-            case .amount:        return .amount
-            case .brandName:     return .brandName
-            case .recipientBank: return .recipientBank
-            default:             return .none
-            }
-        }
-        
-        var productSelectID: GetSberQRDataIDs.ProductSelectID? {
-            
-            switch self {
-            case .debit_account: return .debit_account
-            default:             return .none
-            }
-        }
-    }
-    
     enum Action: String, Decodable {
         
         case pay = "PAY"
@@ -152,28 +92,6 @@ private extension ResponseMapper._Data.Parameter {
             case .pay: return .pay
             }
         }
-    }
-    
-    enum Color: String, Decodable {
-        
-        case red
-        
-        var buttonColor: Parameters.Color {
-            
-            switch self {
-            case .red: return .red
-            }
-        }
-    }
-    
-    enum ParameterType: String, Decodable {
-        
-        case amount        = "AMOUNT"
-        case button        = "BUTTON"
-        case dataString    = "DATA_STRING"
-        case header        = "HEADER"
-        case info          = "INFO"
-        case productSelect = "PRODUCT_SELECT"
     }
     
     struct Button: Decodable {
@@ -212,6 +130,18 @@ private extension ResponseMapper._Data.Parameter {
                 switch self {
                 case .red: return .red
                 }
+            }
+        }
+    }
+    
+    enum Color: String, Decodable {
+        
+        case red
+        
+        var buttonColor: Parameters.Color {
+            
+            switch self {
+            case .red: return .red
             }
         }
     }
@@ -285,6 +215,76 @@ private extension ResponseMapper._Data.Parameter {
         }
     }
     
+    enum ID: String, Decodable {
+        
+        case paymentAmount = "payment_amount"
+        case buttonPay = "button_pay"
+        case currency
+        case title
+        case amount, brandName, recipientBank
+        case debit_account
+        
+        var amountID: GetSberQRDataIDs.AmountID? {
+            
+            switch self {
+            case .paymentAmount: return .paymentAmount
+            default:             return .none
+            }
+        }
+        
+        var buttonID: GetSberQRDataIDs.ButtonID? {
+            
+            switch self {
+            case .buttonPay: return .buttonPay
+            default:         return .none
+            }
+        }
+        
+        var dataStringID: GetSberQRDataIDs.DataStringID? {
+            
+            switch self {
+            case .currency: return .currency
+            default:        return .none
+            }
+        }
+        
+        var headerID: GetSberQRDataIDs.HeaderID? {
+            
+            switch self {
+            case .title: return .title
+            default:     return .none
+            }
+        }
+        
+        var infoID: GetSberQRDataIDs.InfoID? {
+            
+            switch self {
+            case .amount:        return .amount
+            case .brandName:     return .brandName
+            case .recipientBank: return .recipientBank
+            default:             return .none
+            }
+        }
+        
+        var productSelectID: GetSberQRDataIDs.ProductSelectID? {
+            
+            switch self {
+            case .debit_account: return .debit_account
+            default:             return .none
+            }
+        }
+    }
+    
+    enum ParameterType: String, Decodable {
+        
+        case amount        = "AMOUNT"
+        case button        = "BUTTON"
+        case dataString    = "DATA_STRING"
+        case header        = "HEADER"
+        case info          = "INFO"
+        case productSelect = "PRODUCT_SELECT"
+    }
+    
     enum Placement: String, Decodable {
         
         case bottom = "BOTTOM"
@@ -304,6 +304,9 @@ private extension ResponseMapper._Data.Parameter {
             .init()
         }
     }
+}
+
+private extension ResponseMapper._Data.Parameter {
     
     struct MappingError: Error {}
     
