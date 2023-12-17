@@ -31,9 +31,13 @@ public extension CreateSberQRPaymentIDs {
         case successTitle
     }
     
-    enum ID: Equatable {
+    enum SubscriberID: Equatable {
         
         case brandName
+    }
+    
+    enum ID: Equatable {
+        
         case successOptionButtons
         case buttonMain
     }

@@ -9,14 +9,16 @@ public extension Parameters {
     
     struct Subscriber: Equatable {
         
-        public let id: CreateSberQRPaymentIDs.ID
+        public typealias ID = CreateSberQRPaymentIDs.SubscriberID
+        
+        public let id: ID
         public let value: String
         public let style: Style
         public let icon: String
         public let subscriptionPurpose: SubscriptionPurpose?
         
         public init(
-            id: CreateSberQRPaymentIDs.ID,
+            id: ID,
             value: String,
             style: Style,
             icon: String,

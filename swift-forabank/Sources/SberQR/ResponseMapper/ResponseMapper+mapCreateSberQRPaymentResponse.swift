@@ -106,7 +106,7 @@ private extension ResponseMapper._Data.Parameter {
             
             switch self {
             case .brandName:
-                return .brandName
+                fatalError()
             case .buttonMain:
                 return .buttonMain
             case .paymentOperationDetailId:
@@ -139,6 +139,14 @@ private extension ResponseMapper._Data.Parameter {
             switch self {
             case .printFormType: return .printFormType
             default:             return nil
+            }
+        }
+        
+        var subscriberID: CreateSberQRPaymentIDs.SubscriberID? {
+            
+            switch self {
+            case .brandName: return .brandName
+            default:         return nil
             }
         }
         
@@ -337,13 +345,14 @@ private extension ResponseMapper._Data.Parameter {
             
         case .subscriber:
             guard
+                let id = id.subscriberID,
                 case let .string(value) = value,
                 let style = style?.style,
                 let icon
             else { throw MappingError() }
             
             return .subscriber(.init(
-                id: id.id,
+                id: id,
                 value: value,
                 style: style,
                 icon: icon,
