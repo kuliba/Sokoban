@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 16.12.2023.
 //
 
-import Foundation
 import Tagged
 
 /// A namespace.
@@ -40,5 +39,4 @@ public extension GetSberQRDataIDs {
     
     typealias ProductSelectID = Tagged<_ProductSelectID, String>
     enum _ProductSelectID {}
-
 }
