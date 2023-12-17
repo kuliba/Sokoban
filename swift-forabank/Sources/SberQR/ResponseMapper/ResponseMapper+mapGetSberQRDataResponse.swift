@@ -86,7 +86,7 @@ private extension ResponseMapper._Data.Parameter {
         
         case pay = "PAY"
         
-        var action: GetSberQRDataButtonAction {
+        var action: GetSberQRDataResponse.Parameter.Action {
             
             switch self {
             case .pay: return .pay

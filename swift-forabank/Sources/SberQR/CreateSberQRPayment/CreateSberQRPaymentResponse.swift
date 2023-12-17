@@ -34,7 +34,7 @@ public extension CreateSberQRPaymentResponse {
 
 public extension CreateSberQRPaymentResponse.Parameter {
     
-    typealias Button = Parameters.Button<CreateSberQRPaymentResponse.Parameter.Action, CreateSberQRPaymentIDs.ButtonID>
+    typealias Button = Parameters.Button<Action, CreateSberQRPaymentIDs.ButtonID>
     typealias DataString = Parameters.DataString<CreateSberQRPaymentIDs.DataStringID>
     typealias DataLong = Parameters.DataLong
     typealias Subscriber = Parameters.Subscriber
@@ -43,14 +43,7 @@ public extension CreateSberQRPaymentResponse.Parameter {
     typealias SuccessText = Parameters.SuccessText
 }
 
-public enum CreateSberQRPaymentButtonAction: Equatable {
-    
-    case pay
-}
-
 public extension CreateSberQRPaymentResponse.Parameter {
-    
-    // MARK: - Common Types
     
     enum Action: Equatable {
         

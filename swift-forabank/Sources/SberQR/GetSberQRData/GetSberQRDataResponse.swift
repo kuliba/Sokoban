@@ -40,11 +40,19 @@ public extension GetSberQRDataResponse {
 public extension GetSberQRDataResponse.Parameter {
     
     typealias Amount = Parameters.Amount<GetSberQRDataIDs.AmountID>
-    typealias Button = Parameters.Button<GetSberQRDataButtonAction, GetSberQRDataIDs.ButtonID>
+    typealias Button = Parameters.Button<Action, GetSberQRDataIDs.ButtonID>
     typealias DataString = Parameters.DataString<GetSberQRDataIDs.DataStringID>
     typealias Header = Parameters.Header<GetSberQRDataIDs.HeaderID>
     typealias Info = Parameters.Info<GetSberQRDataIDs.InfoID>
     typealias ProductSelect = Parameters.ProductSelect<GetSberQRDataIDs.ProductSelectID>
+}
+
+public extension GetSberQRDataResponse.Parameter {
+    
+    enum Action: Equatable {
+        
+        case pay
+    }
 }
 
 public extension GetSberQRDataResponse {

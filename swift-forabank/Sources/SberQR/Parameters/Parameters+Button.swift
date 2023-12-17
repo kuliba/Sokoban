@@ -32,15 +32,3 @@ public extension Parameters {
 }
 
 extension Parameters.Button: Equatable where Action: Equatable, ID: Equatable {}
-
-#warning("move to a namespace")
-public enum GetSberQRDataButtonID: String, Equatable {
-    
-    case buttonPay = "button_pay"
-}
-
-#warning("move to a namespace")
-public enum GetSberQRDataButtonAction: Equatable {
-    
-    case pay
-}
