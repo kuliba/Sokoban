@@ -68,7 +68,7 @@ class SberQRProductTests: XCTestCase {
     ) -> Parameter {
         
         .productSelect(.init(
-            id: .init(UUID().uuidString),
+            id: .debit_account,
             value: nil,
             title: "Title",
             filter: .init(
