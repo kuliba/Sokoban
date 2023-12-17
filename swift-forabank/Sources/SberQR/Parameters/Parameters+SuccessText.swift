@@ -9,11 +9,13 @@ public extension Parameters {
     
     struct SuccessText: Equatable {
         
-        let id: CreateSberQRPaymentIDs.ID
+        public typealias ID = CreateSberQRPaymentIDs.SuccessTextID
+        
+        let id: ID
         public let value: String
         public let style: Style
         
-        public init(id: CreateSberQRPaymentIDs.ID, value: String, style: Style) {
+        public init(id: ID, value: String, style: Style) {
             
             self.id = id
             self.value = value

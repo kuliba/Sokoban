@@ -25,10 +25,14 @@ public extension CreateSberQRPaymentIDs {
         case successStatus
     }
     
+    enum SuccessTextID: Equatable {
+        
+        case successAmount
+        case successTitle
+    }
+    
     enum ID: Equatable {
         
-        case successTitle
-        case successAmount
         case brandName
         case successOptionButtons
         case buttonMain
