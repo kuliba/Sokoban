@@ -45,7 +45,7 @@ private extension ResponseMapper._Data {
     
     struct Parameter: Decodable {
         
-        let id: String
+        let id: ID
         let type: ParameterType
         let value: String?
         let color: Color?
@@ -81,6 +81,66 @@ private extension ResponseMapper._Data {
 }
 
 private extension ResponseMapper._Data.Parameter {
+    
+    enum ID: String, Decodable {
+     
+        case paymentAmount = "payment_amount"
+        case buttonPay = "button_pay"
+        case currency
+        case title
+        case amount, brandName, recipientBank
+        case debit_account
+        
+        var amountID: GetSberQRDataIDs.AmountID? {
+            
+            switch self {
+            case .paymentAmount: return .paymentAmount
+            default:             return .none
+            }
+        }
+        
+        var buttonID: GetSberQRDataIDs.ButtonID? {
+            
+            switch self {
+            case .buttonPay: return .buttonPay
+            default:         return .none
+            }
+        }
+        
+        var dataStringID: GetSberQRDataIDs.DataStringID? {
+            
+            switch self {
+            case .currency: return .currency
+            default:        return .none
+            }
+        }
+        
+        var headerID: GetSberQRDataIDs.HeaderID? {
+            
+            switch self {
+            case .title: return .title
+            default:     return .none
+            }
+        }
+        
+        var infoID: GetSberQRDataIDs.InfoID? {
+            
+            switch self {
+            case .amount:        return .amount
+            case .brandName:     return .brandName
+            case .recipientBank: return .recipientBank
+            default:             return .none
+            }
+        }
+        
+        var productSelectID: GetSberQRDataIDs.ProductSelectID? {
+            
+            switch self {
+            case .debit_account: return .debit_account
+            default:             return .none
+            }
+        }
+    }
     
     enum Action: String, Decodable {
         
@@ -253,7 +313,7 @@ private extension ResponseMapper._Data.Parameter {
         case .amount:
             typealias ID = GetSberQRDataIDs.AmountID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.amountID,
                   let title,
                   let value = Decimal(string: value ?? "0"),
                   let validationRules,
@@ -271,7 +331,7 @@ private extension ResponseMapper._Data.Parameter {
         case .button:
             typealias ID = GetSberQRDataIDs.ButtonID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.buttonID,
                   let value,
                   let color = color?.buttonColor,
                   let placement = placement?.placement,
@@ -290,7 +350,7 @@ private extension ResponseMapper._Data.Parameter {
         case .dataString:
             typealias ID = GetSberQRDataIDs.DataStringID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.dataStringID,
                   let value else { throw MappingError() }
             
             return .dataString(.init(id: id, value: value))
@@ -298,7 +358,7 @@ private extension ResponseMapper._Data.Parameter {
         case .header:
             typealias ID = GetSberQRDataIDs.HeaderID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.headerID,
                   let value
             else { throw MappingError() }
             
@@ -307,7 +367,7 @@ private extension ResponseMapper._Data.Parameter {
         case .info:
             typealias ID = GetSberQRDataIDs.InfoID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.infoID,
                   let value,
                   let title,
                   let icon = icon?.icon
@@ -323,7 +383,7 @@ private extension ResponseMapper._Data.Parameter {
         case .productSelect:
             typealias ID = GetSberQRDataIDs.ProductSelectID
             
-            guard let id = ID(rawValue: id),
+            guard let id = id.productSelectID,
                   let title,
                   let filter = filter?.filter
             else { throw MappingError() }

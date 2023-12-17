@@ -12,32 +12,32 @@ public enum GetSberQRDataIDs {}
 
 public extension GetSberQRDataIDs {
     
-    enum AmountID: String, Equatable {
+    enum AmountID: Equatable {
         
-        case paymentAmount = "payment_amount"
+        case paymentAmount
     }
     
-    enum ButtonID: String, Equatable {
+    enum ButtonID: Equatable {
         
-        case buttonPay = "button_pay"
+        case buttonPay
     }
     
-    enum DataStringID: String, Equatable {
+    enum DataStringID: Equatable {
         
         case currency
     }
     
-    enum HeaderID: String, Equatable {
+    enum HeaderID: Equatable {
         
         case title
     }
     
-    enum InfoID: String, Equatable {
+    enum InfoID: Equatable {
         
         case amount, brandName, recipientBank
     }
     
-    enum ProductSelectID: String, Equatable {
+    enum ProductSelectID: Equatable {
         
         case debit_account
     }
