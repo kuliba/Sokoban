@@ -293,7 +293,7 @@ final class ResponseMapper_mapCreateSberQRPaymentResponseTests: XCTestCase {
     }
     
     private func makeSuccessOptionButtons(
-        values: [Parameter.SuccessOptionButton.Value] = [.document, .details]
+        values: [Parameter.SuccessOptionButtons.Value] = [.document, .details]
     ) -> Parameter {
         
         .successOptionButton(.init(

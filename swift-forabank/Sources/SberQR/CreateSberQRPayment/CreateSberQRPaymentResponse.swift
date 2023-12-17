@@ -28,7 +28,7 @@ public extension CreateSberQRPaymentResponse {
         case successStatusIcon(SuccessStatusIcon)
         case successText(SuccessText)
         case subscriber(Subscriber)
-        case successOptionButton(SuccessOptionButton)
+        case successOptionButton(SuccessOptionButtons)
     }
 }
 
@@ -38,7 +38,7 @@ public extension CreateSberQRPaymentResponse.Parameter {
     typealias DataString = Parameters.DataString<CreateSberQRPaymentIDs.DataStringID>
     typealias DataLong = Parameters.DataLong
     typealias Subscriber = Parameters.Subscriber
-    typealias SuccessOptionButton = Parameters.SuccessOptionButton
+    typealias SuccessOptionButtons = Parameters.SuccessOptionButtons
     typealias SuccessStatusIcon = Parameters.SuccessStatusIcon
     typealias SuccessText = Parameters.SuccessText
 }

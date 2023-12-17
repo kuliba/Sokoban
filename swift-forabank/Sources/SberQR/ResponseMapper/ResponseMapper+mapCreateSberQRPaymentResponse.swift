@@ -257,7 +257,7 @@ private extension ResponseMapper._Data.Parameter {
             case details = "DETAILS"
             case document = "DOCUMENT"
             
-            var value: CreateSberQRPaymentResponse.Parameter.SuccessOptionButton.Value {
+            var value: CreateSberQRPaymentResponse.Parameter.SuccessOptionButtons.Value {
                 
                 switch self {
                 case .details:  return .details

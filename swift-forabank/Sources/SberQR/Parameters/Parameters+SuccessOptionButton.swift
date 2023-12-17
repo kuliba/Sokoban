@@ -1,5 +1,5 @@
 //
-//  Parameters+SuccessOptionButton.swift
+//  Parameters+SuccessOptionButtons.swift
 //  
 //
 //  Created by Igor Malyarov on 16.12.2023.
@@ -7,7 +7,7 @@
 
 public extension Parameters {
     
-    struct SuccessOptionButton: Equatable {
+    struct SuccessOptionButtons: Equatable {
         
         public typealias ID = CreateSberQRPaymentIDs.SuccessOptionButtonsID
         
