@@ -112,7 +112,7 @@ private extension ResponseMapper._Data.Parameter {
             case .paymentOperationDetailId:
                fatalError()
             case .printFormType:
-                return .printFormType
+                fatalError()
             case .successStatus:
                 fatalError()
             case .successTitle:
@@ -134,15 +134,20 @@ private extension ResponseMapper._Data.Parameter {
             }
         }
         
+        var dataStringID: CreateSberQRPaymentIDs.DataStringID? {
+            
+            switch self {
+            case .printFormType: return .printFormType
+            default:             return nil
+            }
+        }
+        
         var successStatusID: CreateSberQRPaymentIDs.SuccessStatusID? {
             
             switch self {
-            case .successStatus:
-                return .successStatus
-            default:
-                return nil
+            case .successStatus: return .successStatus
+            default:             return nil
             }
-
         }
     }
     
@@ -286,11 +291,13 @@ private extension ResponseMapper._Data.Parameter {
             ))
             
         case .dataString:
-            guard case let .string(value) = value
+            guard
+                let id = id.dataStringID,
+                case let .string(value) = value
             else { throw MappingError() }
             
             return .dataString(.init(
-                id: id.id,
+                id: id,
                 value: value
             ))
             
