@@ -9,10 +9,12 @@ public extension Parameters {
     
     struct SuccessStatusIcon: Equatable {
         
-        let id: CreateSberQRPaymentIDs.ID
+        public typealias ID = CreateSberQRPaymentIDs.SuccessStatusID
+        
+        let id: ID
         public let value: StatusIcon
         
-        public init(id: CreateSberQRPaymentIDs.ID, value: StatusIcon) {
+        public init(id: ID, value: StatusIcon) {
             
             self.id = id
             self.value = value
