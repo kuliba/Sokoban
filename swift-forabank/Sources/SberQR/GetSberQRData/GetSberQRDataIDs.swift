@@ -37,6 +37,8 @@ public extension GetSberQRDataIDs {
         case amount, brandName, recipientBank
     }
     
-    typealias ProductSelectID = Tagged<_ProductSelectID, String>
-    enum _ProductSelectID {}
+    enum ProductSelectID: String, Equatable {
+        
+        case debit_account
+    }
 }
