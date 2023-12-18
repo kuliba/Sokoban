@@ -1409,35 +1409,41 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             ]
             
-            if let formattedAmount = self.model.amountFormatted(amount: operation.amount,
-                                                                currencyCode: operation.currencyAmount,
-                                                                style: .normal) {
+            if let formattedAmount = self.model.amountFormatted(
+                amount: operation.amount,
+                currencyCode: operation.currencyAmount,
+                style: .normal) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма перевода",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 3)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма перевода",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 3)
             }
             
             if let payeeAmount = operation.payeeAmount,
                let payeeCurrency = operation.payeeCurrency,
-               let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                           currencyCode: payeeCurrency,
-                                                           style: .fraction) {
+               let formattedAmount = model.amountFormatted(
+                amount: payeeAmount,
+                currencyCode: payeeCurrency,
+                style: .fraction) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма зачисления в валюте",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 5)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма зачисления в валюте",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 5)
             }
             
             let payeeAmount = operation.payerAmount
             let payeeCurrency = operation.payerCurrency
-            if let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                           currencyCode: payeeCurrency,
-                                                           style: .fraction) {
+            if let formattedAmount = model.amountFormatted(
+                amount: payeeAmount,
+                currencyCode: payeeCurrency,
+                style: .fraction) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма списания",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 6)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма списания",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 6)
             }
             
             return directCells.compactMap {$0}
