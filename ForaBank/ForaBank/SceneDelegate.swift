@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewModel = RootViewModelFactory.make(
         model: model,
         logger: logger,
-        qrResolverFeatureFlag: .init(.inactive)
+        qrResolverFeatureFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactory(with: model)
 

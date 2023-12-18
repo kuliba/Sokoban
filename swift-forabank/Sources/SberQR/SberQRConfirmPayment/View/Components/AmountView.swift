@@ -1,21 +1,49 @@
 //
 //  AmountView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
+import TextFieldComponent
 import SwiftUI
 
 struct AmountView: View {
     
-    let amount: SberQRConfirmPaymentState.Amount
+    typealias Amount = SberQRConfirmPaymentState.EditableAmount.Amount
+    
+    @StateObject private var textFieldModel: DecimalTextFieldViewModel
+    
+    let amount: Amount
     let event: (Decimal) -> Void
     let pay: () -> Void
     
-    let currencySymbol: String
     let config: AmountConfig
+    
+    private let getDecimal: (TextFieldState) -> Decimal
+    
+    init(
+        amount: Amount,
+        event: @escaping (Decimal) -> Void,
+        pay: @escaping () -> Void,
+        currencySymbol: String,
+        config: AmountConfig
+    ) {
+        let formatter = DecimalFormatter(
+            currencySymbol: currencySymbol
+        )
+        let textField = DecimalTextFieldViewModel.decimal(
+            formatter: formatter
+        )
         
+        self._textFieldModel = .init(wrappedValue: textField)
+        self.getDecimal = formatter.getDecimal
+        self.amount = amount
+        self.event = event
+        self.pay = pay
+        self.config = config
+    }
+    
     private let buttonSize = CGSize(width: 114, height: 40)
     private let frameInsets = EdgeInsets(top: 4, leading: 20, bottom: 16, trailing: 19)
     
@@ -43,22 +71,19 @@ struct AmountView: View {
     
     private func textField() -> some View {
         
-        TextField(
-            "amount",
-            text: .init(
-                get: { "\(amount.value) \(currencySymbol)" },
-                set: {
-                    guard let amount = Decimal(string: $0)
-                    else { return }
-                    
-                    event(amount)
-                }
+        TextFieldView(
+            viewModel: textFieldModel,
+            textFieldConfig: .init(
+                font: .boldSystemFont(ofSize: 24),
+                textColor: config.amount.textColor,
+                tintColor: .accentColor,
+                backgroundColor: .clear,
+                placeholderColor: .clear
             )
         )
-        .foregroundColor(config.amount.textColor)
-        .font(config.amount.textFont)
+        .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
     }
-        
+    
     private func buttonView() -> some View {
         
         ZStack {

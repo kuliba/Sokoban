@@ -10,17 +10,19 @@ import TextFieldDomain
 
 public struct ChangingReducer {
     
+    public typealias Change = (TextState, String, NSRange) throws -> TextState
+    
     @usableFromInline
     let placeholderText: String
     
     @usableFromInline
-    let change: (TextState, String, NSRange) throws -> TextState
+    let change: Change
     
     /// Create Text State `Reducer` with change of the text in the range.
     @inlinable
     public init(
         placeholderText: String,
-        change: @escaping (TextState, String, NSRange) throws -> TextState
+        change: @escaping Change
     ) {
         self.placeholderText = placeholderText
         self.change = change

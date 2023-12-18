@@ -32,7 +32,6 @@ struct FeedWithBottomView<Feed: View, Bottom: View>: View {
             VStack(spacing: 16) {
                 
                 feed()
-                    .padding(.default)
                     .background(backgroundColor)
                     .clipShape(shape)
             }
