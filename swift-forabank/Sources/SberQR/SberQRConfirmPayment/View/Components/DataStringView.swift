@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct DataStringView: View {
+struct DataStringView<ID: Equatable>: View {
     
-    let data: SberQRConfirmPaymentState.DataString
+    let data: Parameters.DataString<ID>
     
     var body: some View {
         
