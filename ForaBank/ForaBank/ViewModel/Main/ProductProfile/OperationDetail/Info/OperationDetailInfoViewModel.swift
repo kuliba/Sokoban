@@ -1537,9 +1537,10 @@ extension OperationDetailInfoViewModel {
                let account = operation.account {
                 
                 let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                let numberViewModel = PropertyCellViewModel(title: "Номер счета получателя",
-                                                            iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
-                                                            value: account)
+                let numberViewModel = PropertyCellViewModel(
+                    title: "Номер счета получателя",
+                    iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                    value: account)
                 
                 cells.insert(numberViewModel, at: 0)
             }
@@ -1549,9 +1550,10 @@ extension OperationDetailInfoViewModel {
                let payeeFullName = operation.payeeFullName {
                 
                 let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
-                                                              iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
-                                                              value: payeeFullName)
+                let operatorViewModel = PropertyCellViewModel(
+                    title: "Наименование получателя",
+                    iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                    value: payeeFullName)
                 cells.insert(operatorViewModel, at: 0)
             }
             
@@ -1609,9 +1611,10 @@ extension OperationDetailInfoViewModel {
             ]
             
             if let payeeProductNumber {
-                let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
-                                                               iconType: Image("otherCard"),
-                                                               value: payeeProductNumber)
+                let payeeCellViewModel = PropertyCellViewModel(
+                    title: "Номер карты получателя",
+                    iconType: Image("otherCard"),
+                    value: payeeProductNumber)
                 cells.insert(payeeCellViewModel, at: 0)
             }
             
