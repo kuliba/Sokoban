@@ -1631,20 +1631,9 @@ extension OperationDetailInfoViewModel {
             
         case .c2bPayment, .sberQRPayment:
             
-            let nameCompany: DefaultCellViewModel? = {
-                
-                if let icon = operation.merchantIcon {
-                    
-                    let image = ImageData(with: .init(description: icon))?.image
-                    return nameCompanyC2B(operation: operation, image: image)
-                }
-                
-                return nil
-            }()
-            
             let cells = [
                 amountViewModel,
-                nameCompany,
+                operation.merchant,
                 dateViewModel,
                 operationDetailStatus(status: operation.operationStatus),
                 payerViewModel,
@@ -2101,6 +2090,23 @@ extension OperationDetailInfoViewModel {
                                      icon: Image("BankIcon"),
                                      name: bankName)
         }
+    }
+}
+
+extension OperationDetailData {
+    
+    var merchant: OperationDetailInfoViewModel.BankCellViewModel? {
+        
+        guard let icon = merchantIcon,
+              let image = ImageData(with: .init(description: icon))?.image,
+              let name = merchantSubName
+        else { return nil }
+        
+        return .init(
+            title: "Наименование ТСП",
+            icon: image,
+            name: name
+        )
     }
 }
 
