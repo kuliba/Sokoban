@@ -1645,9 +1645,9 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             )
             
-        case .c2bPayment, .sberQRPayment:
+        case .c2bPayment:
             
-            let cells = [
+            return [
                 amountViewModel,
                 operation.merchant,
                 dateViewModel,
@@ -1658,8 +1658,21 @@ extension OperationDetailInfoViewModel {
                 purposeViewModel,
                 operationNumberViewModel
             ].compactMap { $0 }
+                        
+        case .sberQRPayment:
             
-            return cells
+            return [
+                amountViewModel,
+                operation.merchant,
+                dateViewModel,
+                operationDetailStatus(status: operation.operationStatus),
+                payerViewModel,
+                payeeViewModel,
+                operation.payeeName,
+                payeeBankViewModel,
+                purposeViewModel,
+                operationNumberViewModel
+            ].compactMap { $0 }
             
         default:
             
@@ -2087,8 +2100,8 @@ extension OperationDetailInfoViewModel {
             icon: icon,
             name: name,
             iconPaymentService: productData.paymentSystem,
-                                                    balance: formattedBalance,
-                                                    description: "\(lastNumber)\(description)")
+            balance: formattedBalance,
+            description: "\(lastNumber)\(description)")
         
         return viewModel
     }
@@ -2139,6 +2152,20 @@ extension OperationDetailData {
             icon: image,
             name: name
         )
+    }
+    
+    var payeeName: OperationDetailInfoViewModel.PropertyCellViewModel? {
+        
+        let iconType = OperationDetailInfoViewModel.IconType.user.icon
+        
+        return payeeFullName.map { name in
+            
+                .init(
+                    title: "Получатель",
+                    iconType: iconType,
+                    value: name
+                )
+        }
     }
 }
 

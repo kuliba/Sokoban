@@ -8,15 +8,148 @@
 @testable import ForaBank
 import XCTest
 
+// TODO: move to prod after finishing up with tests after model decoupling
+extension OperationDetailData {
+    
+    typealias CurrencyCode = String
+    typealias FormatAmount = (Double, CurrencyCode) -> String?
+    typealias IconType = OperationDetailInfoViewModel.IconType
+    typealias BankCell = OperationDetailInfoViewModel.BankCellViewModel
+    typealias PropertyCell = OperationDetailInfoViewModel.PropertyCellViewModel
+    
+    var payerProductId: Int? {
+        
+        [payerCardId, payerAccountId].compactMap { $0 }.first
+    }
+    
+    var payerProductNumber: String? {
+        
+        [payerCardNumber, payerAccountNumber].compactMap {$0}.first
+    }
+    
+    func balance(
+        formatAmount: @escaping FormatAmount
+    ) -> PropertyCell? {
+        
+        let amount = transferEnum == .external ? payerAmount - payerFee : payerAmount
+        let formattedAmount = formatAmount(amount, payerCurrency)
+        
+        guard let formattedAmount = formattedAmount else {
+            return nil
+        }
+        
+        return .init(
+            title: "Сумма перевода",
+            iconType: IconType.balance.icon,
+            value: formattedAmount)
+    }
+    
+    func operationDate() -> PropertyCell? {
+        
+        switch transferEnum {
+        case .depositClose:
+            return .init(
+                title: "Тип платежа",
+                iconType: IconType.date.icon,
+                value: "Закрытие вклада"
+            )
+        default:
+            return .init(
+                title: "Дата и время операции (МСК)",
+                iconType: IconType.date.icon,
+                value: responseDate
+            )
+        }
+    }
+    
+    func operationDetailStatus() -> BankCell? {
+        
+        let title = "Статус операции"
+        switch operationStatus {
+            
+        case .complete:
+            return BankCell(
+                title: title,
+                icon: .init("OkOperators"),
+                name: "Успешно")
+            
+        case .inProgress:
+            return BankCell(
+                title: title,
+                icon: .init("waiting"),
+                name: "В обработке")
+            
+        case .rejected:
+            return BankCell(
+                title: title,
+                icon: .init("rejected"),
+                name: "Отказ")
+            
+        case .unknown:
+            return nil
+            
+        case .none:
+            return nil
+        }
+    }
+}
+
+// TODO: move to prod after finishing up with tests after model decoupling
+extension OperationDetailData {
+    
+    typealias DefaultCell = OperationDetailInfoViewModel.DefaultCellViewModel
+    
+    func sberQRPayment(
+        formatAmount: @escaping FormatAmount
+    ) -> [DefaultCell] {
+        
+        [balance(formatAmount: formatAmount),
+         merchant,
+         operationDate(),
+         operationDetailStatus(),
+        ].compactMap { $0 }
+    }
+}
+
 final class OperationDetailDataComputedPropertyTests: XCTestCase {
     
-    func test_init_sberQR() throws {
+    // MARK: - sberQRPayment
+    
+    // TODO: complete after splitting Model
+    func test_sberQRPayment_shouldReturnViewModelsWithTitles() throws {
+        
+        try XCTAssertNoDiff(mapTitles(), [
+            "Сумма перевода",
+            // "Наименование ТСП",
+            "Дата и время операции (МСК)",
+            "Статус операции",
+            // "Счет списания",
+            // "Получатель",
+            // "Банк получателя"
+        ], "Merchant Icon cannot be produced due to SVG dance.")
+    }
+    
+    func test_init_fromJSON_sberQR() throws {
         
         let data = try XCTUnwrap(String.sberQRWithOperationDetailData.data(using: .utf8))
         let response = try JSONDecoder().decode(SberQRResponse.self, from: data)
+        
+        try XCTAssertNoThrow(XCTUnwrap(response.data))
     }
     
     // MARKL: - Helpers
+    
+    private func mapTitles(
+        operationStatus: OperationDetailData.OperationStatus = .complete
+    ) throws -> [String] {
+        
+        let data: OperationDetailData = .stub(
+            operationStatus: operationStatus
+        )
+        let models = data.sberQRPayment(formatAmount: { "\($1) \($0)" })
+        
+        return models.map(\.title)
+    }
     
     private struct SberQRResponse: Decodable {
         
@@ -41,7 +174,7 @@ private extension String {
     "payerCardNumber": "**** **** **28 7435",
     "payerAccountId": 10005054701,
     "payerAccountNumber": "40817810811005025164",
-    "payerFullName": "Маляров Игорь Александрович",
+    "payerFullName": "Самвел Петрович",
     "payerAddress": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 108803, Москва г, Воскресенское п, Воскресенское п,  д. 40,  корп. 2,  кв. 228",
     "payerAmount": 220,
     "cursivePayerAmount": null,
