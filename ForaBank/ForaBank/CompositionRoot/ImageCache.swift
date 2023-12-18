@@ -47,6 +47,7 @@ final class ImageCache {
             return imagesPublisher
                 .compactMap { $0[imageID] }
                 .compactMap(\.image)
+                .removeDuplicates()
                 .eraseToAnyPublisher()
         }
     }

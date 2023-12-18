@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import Combine
 import SberQR
 import SwiftUI
 
@@ -25,7 +26,7 @@ extension RootViewFactory {
                             id: info.id,
                             value: info.value,
                             title: info.title,
-                            image: imageCache.image(forKey: .init(info.value))
+                            image: imageCache.imagePublisher(for: info.icon)
                         )
                     },
                     config: .iFora
@@ -33,6 +34,27 @@ extension RootViewFactory {
             }
         )
     }
+}
+
+private extension ImageCache {
+    
+    func imagePublisher(
+        for icon: GetSberQRDataResponse.Parameter.Info.Icon
+    ) -> AnyPublisher<Image, Never> {
+        
+        switch icon.type {
+        case .local:
+            return Just(.init(icon.value)).eraseToAnyPublisher()
+            
+        case .remote:
+            return image(forKey: icon.imageKey)
+        }
+    }
+}
+
+private extension GetSberQRDataResponse.Parameter.Info.Icon {
+    
+    var imageKey: ImageCache.ImageKey { .init(value) }
 }
 
 private extension Model {
