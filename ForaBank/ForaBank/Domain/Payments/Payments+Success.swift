@@ -373,7 +373,7 @@ extension Payments.Success {
             parameters.append(logoParam)
             
             // amount
-            let amount = amountFormatter(operationDetail.amount, operationDetail.currencyAmount, .fraction)
+            let amount = amountFormatter(operationDetail.amount, operationDetail.currencyAmount ?? "", .fraction)
             let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
             parameters.append(amountParam)
             
@@ -384,7 +384,7 @@ extension Payments.Success {
             parameters.append(logoParam)
             
             // amount
-            let amount = amountFormatter(operationDetail.payerAmount, operationDetail.currencyAmount, .fraction)
+            let amount = amountFormatter(operationDetail.payerAmount, operationDetail.currencyAmount ?? "", .fraction)
             let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
             parameters.append(amountParam)
             
@@ -397,7 +397,7 @@ extension Payments.Success {
             // amount
             if let payeeAmount = operationDetail.payeeAmount {
                 
-                let amount = amountFormatter(payeeAmount, operationDetail.currencyAmount, .fraction)
+                let amount = amountFormatter(payeeAmount, operationDetail.currencyAmount ?? "", .fraction)
                 let amountParam = Payments.ParameterSuccessText.amount(amount: amount)
                 parameters.append(amountParam)
             }
@@ -455,6 +455,8 @@ extension Payments.ParameterSuccessText {
                 
             case .change, .refund:
                 return .init(id: paramId, value: "Операция успешно завершена", style: .title)
+            case .sberQR:
+                return .init(id: paramId, value: "Покупка оплачена", style: .title)
             }
             
         case .inProgress:
@@ -463,7 +465,7 @@ extension Payments.ParameterSuccessText {
             case .normal, .meToMe, .changePin:
                 return .init(id: paramId, value: "Операция в обработке!", style: .title)
                 
-            case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit:
+            case .closeAccount, .closeDeposit, .closeAccountEmpty, .makePaymentToDeposit, .makePaymentFromDeposit, .sberQR:
                 return .init(id: paramId, value: "Платеж принят в обработку", style: .title)
     
             case .change:
@@ -490,6 +492,9 @@ extension Payments.ParameterSuccessText {
                 
             case .refund:
                 return .init(id: paramId, value: "Не удалось вернуть перевод", style: .title)
+                
+            case .sberQR:
+                return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
         }
     }
@@ -646,6 +651,14 @@ extension Payments.ParameterSuccessOptionButtons {
                 operationDetail: operationDetail,
                 meToMePayment: meToMePayment
             )
+            
+        case .sberQR:
+            return optionButtons(
+                operation: operation,
+                options: [.document, .details],
+                operationDetail: operationDetail,
+                meToMePayment: meToMePayment
+            )
         }
     }
     
@@ -673,7 +686,7 @@ extension Payments.ParameterSuccessOptionButtons {
                 operation: operation
             )
             
-        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund:
+        case .closeAccount, .closeAccountEmpty, .changePin, .change, .refund, .sberQR:
             return nil
         }
     }

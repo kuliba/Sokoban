@@ -352,7 +352,7 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                 case .document:
                     
                     switch mode {
-                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund:
+                    case .normal, .meToMe, .closeDeposit, .makePaymentToDeposit, .makePaymentFromDeposit, .change, .refund, .sberQR:
                         guard
                             let operationDetailData,
                             let paymentOperationDetailID
@@ -541,6 +541,7 @@ extension PaymentsSuccessViewModel {
         case makePaymentFromDeposit(from: ProductData.ID?, to: ProductData.ID?, TransferResponseData)
         case changePin
         case change, refund
+        case sberQR
     }
     
     struct FullScreenCover: Identifiable {
