@@ -117,6 +117,16 @@ struct AmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
+        VStack(spacing: 32) {
+            
+            amountView(amount: .preview)
+        }
+    }
+    
+    private static func amountView(
+        amount: SberQRConfirmPaymentState.EditableAmount.Amount
+    ) -> some View {
+        
         AmountView(
             amount: .preview,
             event: { _ in },
