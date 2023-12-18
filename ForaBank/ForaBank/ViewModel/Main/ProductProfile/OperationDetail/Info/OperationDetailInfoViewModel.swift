@@ -1948,31 +1948,35 @@ extension OperationDetailInfoViewModel {
         case .balance:
             
             let amount = operation.transferEnum == .external ? operation.payerAmount - operation.payerFee : operation.payerAmount
-            let formattedAmount = model.amountFormatted(amount: amount,
-                                                        currencyCode: operation.payerCurrency,
-                                                        style: .fraction)
+            let formattedAmount = model.amountFormatted(
+                amount: amount,
+                currencyCode: operation.payerCurrency,
+                style: .fraction)
             
             guard let formattedAmount = formattedAmount else {
                 return nil
             }
             
-            return .init(title: "Сумма перевода",
-                         iconType: IconType.balance.icon,
-                         value: formattedAmount)
+            return .init(
+                title: "Сумма перевода",
+                iconType: IconType.balance.icon,
+                value: formattedAmount)
             
         case .commission:
             
-            let payerFee = model.amountFormatted(amount: operation.payerFee,
-                                                 currencyCode: productData.currency,
-                                                 style: .fraction)
+            let payerFee = model.amountFormatted(
+                amount: operation.payerFee,
+                currencyCode: productData.currency,
+                style: .fraction)
             
             guard let payerFee = payerFee else {
                 return nil
             }
             
-            return .init(title: "Комиссия",
-                         iconType: IconType.commission.icon,
-                         value: payerFee)
+            return .init(
+                title: "Комиссия",
+                iconType: IconType.commission.icon,
+                value: payerFee)
             
         case .purpose:
             //FIXME: backend send "" if comment nil
@@ -1981,20 +1985,23 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Назначение платежа",
-                         iconType: IconType.purpose.icon,
-                         value: comment)
+            return .init(
+                title: "Назначение платежа",
+                iconType: IconType.purpose.icon,
+                value: comment)
             
         case .date:
             switch operation.transferEnum {
             case .depositClose:
-                return .init(title: "Тип платежа",
-                             iconType: IconType.date.icon,
-                             value: "Закрытие вклада")
+                return .init(
+                    title: "Тип платежа",
+                    iconType: IconType.date.icon,
+                    value: "Закрытие вклада")
             default:
-                return .init(title: "Дата и время операции (МСК)",
-                             iconType: IconType.date.icon,
-                             value: operation.responseDate)
+                return .init(
+                    title: "Дата и время операции (МСК)",
+                    iconType: IconType.date.icon,
+                    value: operation.responseDate)
             }
             
         case .phone:
@@ -2008,16 +2015,20 @@ extension OperationDetailInfoViewModel {
             if operation.transferEnum == .sfp {
                 
                 let formattedPhone = phoneFormatter.format(payeePhone.count == 10 ? "7\(payeePhone)" : payeePhone)
-                return .init(title: "Номер телефона получателя",
-                             iconType: IconType.phone.icon,
-                             value: formattedPhone)
+                
+                return .init(
+                    title: "Номер телефона получателя",
+                    iconType: IconType.phone.icon,
+                    value: formattedPhone)
                 
             } else {
                 
                 let formattedPhone = phoneFormatter.format(payeePhone)
-                return .init(title: "Номер телефона получателя",
-                             iconType: IconType.phone.icon,
-                             value: formattedPhone)
+                
+                return .init(
+                    title: "Номер телефона получателя",
+                    iconType: IconType.phone.icon,
+                    value: formattedPhone)
             }
             
         case .user:
@@ -2026,9 +2037,10 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Получатель",
-                         iconType: IconType.user.icon,
-                         value: payeeName)
+            return .init(
+                title: "Получатель",
+                iconType: IconType.user.icon,
+                value: payeeName)
             
         case .operationNumber:
             
@@ -2036,9 +2048,10 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Номер операции СБП",
-                         iconType: IconType.operationNumber.icon,
-                         value: transferNumber)
+            return .init(
+                title: "Номер операции СБП",
+                iconType: IconType.operationNumber.icon,
+                value: transferNumber)
             
         default:
             return nil
