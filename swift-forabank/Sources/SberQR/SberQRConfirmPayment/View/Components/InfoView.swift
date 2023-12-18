@@ -36,7 +36,9 @@ struct InfoView: View {
     private func icon() -> some View {
         
         if let image {
-            image.resizable()
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
         } else {
             // TODO: add shimmering
             Color.clear

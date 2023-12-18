@@ -120,17 +120,18 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
     
     private func anyProduct(
         id: Int,
-        type: ProductSelect.Product.ProductType
+        type: ProductSelect.Product.ProductType,
+        color: String = "red"
     ) -> ProductSelect.Product {
         
         .init(
             id: .init(id),
             type: type,
-            icon: "",
+            header: "Счет списания",
             title: "",
             footer: "",
             amountFormatted: "",
-            color: ""
+            look: .test(color: color)
         )
     }
 }

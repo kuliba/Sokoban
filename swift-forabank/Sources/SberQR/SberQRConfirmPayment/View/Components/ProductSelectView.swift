@@ -15,6 +15,8 @@ struct ProductSelectView: View {
     let event: (Event) -> Void
     let config: ProductSelectConfig
     
+    private let cardSize = CGSize(width: 112, height: 71)
+    
     var body: some View {
         
         VStack(spacing: 10) {
@@ -31,17 +33,16 @@ struct ProductSelectView: View {
         
         HStack(spacing: 12) {
             
-            productIcon(product.icon)
+            productIcon(product.look.icon)
             productTitle(product, config: config)
         }
         .contentShape(Rectangle())
         .onTapGesture { event(.toggleProductSelect) }
     }
     
-    private func productIcon(_ icon: String) -> some View {
+    private func productIcon(_ icon: Icon) -> some View {
         
-        Image(icon)
-            .resizable()
+        icon.image(orColor: .clear)
             .frame(width: 32, height: 32)
     }
     
@@ -98,30 +99,10 @@ struct ProductSelectView: View {
         product: ProductSelect.Product
     ) -> some View {
         
-        VStack(spacing: 8) {
-            
-            HStack {
-                
-                Color.clear
-                    .frame(width: 20, height: 20)
-                
-                text(product.number, config: config.card.number)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                
-                text(product.title, config: config.card.title)
-                
-                text(product.amountFormatted, config: config.card.amount)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .font(.caption.bold())
-        .padding(.card)
-        .frame(width: 112, height: 71)
-        .background(Color.orange.opacity(0.5)) // product.color
-        .cornerRadius(8)
-        .onTapGesture { event(.select(product.id)) }
+        ProductCardView(
+            productCard: .init(product: product),
+            config: config.card.productCardConfig
+        )
     }
     
     private func chevron() -> some View {
@@ -181,7 +162,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             ProductSelectView_Demo(.compact(.cardPreview))
             ProductSelectView_Demo(.expanded(.cardPreview, .allProducts))
         }
-        .padding()
+//        .padding()
     }
     
     private struct ProductSelectView_Demo: View {

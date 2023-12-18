@@ -62,13 +62,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
 
 private extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
     
-    var currencySymbol: String {
-        
-        switch currency.value {
-        case "RUB": return "₽"
-        default:    return " "
-        }
-    }
+    var currencySymbol: String { "₽" }
 }
 
 // MARK: - Previews

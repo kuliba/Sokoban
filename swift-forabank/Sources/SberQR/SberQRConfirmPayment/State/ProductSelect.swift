@@ -1,6 +1,6 @@
 //
 //  ProductSelect.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -21,30 +21,47 @@ public extension ProductSelect {
         public let id: ID
         public let type: ProductType
         let header: String
-        let icon: String
         let title: String
         let number: String
         let amountFormatted: String
-        let color: String
+        let look: Look
         
         public init(
             id: ID,
             type: ProductType,
-            header: String = "Счет списания",
-            icon: String,
+            header: String,
             title: String,
             footer: String,
             amountFormatted: String,
-            color: String
+            look: Look
         ) {
             self.id = id
             self.type = type
             self.header = header
-            self.icon = icon
             self.title = title
             self.number = footer
             self.amountFormatted = amountFormatted
+            self.look = look
+        }
+    }
+}
+
+public extension ProductSelect.Product {
+    
+    struct Look: Equatable {
+        
+        let background: Icon
+        let color: String
+        let icon: Icon
+        
+        public init(
+            background: Icon,
+            color: String,
+            icon: Icon
+        ) {
+            self.background = background
             self.color = color
+            self.icon = icon
         }
     }
 }
@@ -54,7 +71,7 @@ public extension ProductSelect.Product {
     typealias ID = Tagged<_ID, Int>
     enum _ID {}
     
-    enum ProductType {
+    enum ProductType: Equatable {
         
         case card, account
     }

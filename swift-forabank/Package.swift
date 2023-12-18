@@ -469,7 +469,9 @@ private extension Target {
         dependencies: [
             // external packages
             .combineSchedulers,
-            .tagged
+            .tagged,
+            // internal modules
+            .foraTools,
         ]
     )
     static let sberQRTests = testTarget(
