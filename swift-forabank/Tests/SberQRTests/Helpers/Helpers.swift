@@ -31,28 +31,18 @@ extension GetSberQRDataResponse.Parameter.Amount {
 extension SberQRConfirmPaymentState.Amount {
     
     static func paymentAmount(
-        value: Decimal
+        value: Decimal,
+        isEnabled: Bool = false
     ) -> Self {
         
         .init(
             title: "Сумма перевода",
             value: value,
             button: .init(
-                title: "Оплатить"
+                title: "Оплатить",
+                isEnabled: isEnabled
             )
         )
-        
-//        .init(
-//            id: .paymentAmount,
-//            value: value,
-//            title: "Сумма перевода",
-//            validationRules: [],
-//            button: .init(
-//                title: "Оплатить",
-//                action: .paySberQR,
-//                color: .red
-//            )
-//        )
     }
 }
 

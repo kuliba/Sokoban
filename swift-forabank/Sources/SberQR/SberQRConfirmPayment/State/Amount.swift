@@ -32,9 +32,14 @@ public extension SberQRConfirmPaymentState.Amount {
     struct AmountButton: Equatable {
         
         let title: String
+        let isEnabled: Bool
         
-        public init(title: String) {
+        public init(
+            title: String,
+            isEnabled: Bool
+        ) {
             self.title = title
+            self.isEnabled = isEnabled
         }
     }
 }

@@ -120,6 +120,7 @@ struct AmountView_Previews: PreviewProvider {
         VStack(spacing: 32) {
             
             amountView(amount: .preview)
+            amountView(amount: .disabled)
         }
     }
     
