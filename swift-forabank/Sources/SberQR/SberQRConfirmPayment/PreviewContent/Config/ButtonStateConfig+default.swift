@@ -13,14 +13,15 @@ extension ButtonStateConfig {
         backgroundColor: .green,
         text: .init(
             textFont: .headline.weight(.black),
-            textColor: .pink
+            textColor: .white
         )
     )
+    
     static let inactive: Self = .init(
-        backgroundColor: .green.opacity(0.5),
+        backgroundColor: .orange.opacity(0.3),
         text: .init(
             textFont: .headline.weight(.light),
-            textColor: .black
+            textColor: .white.opacity(0.7)
         )
     )
 }

@@ -84,19 +84,30 @@ struct AmountView: View {
         .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
     }
     
+    @ViewBuilder
     private func buttonView() -> some View {
+        
+        if amount.button.isEnabled {
+            
+            Button(action: pay) { buttonLabel(config: config.button.active) }
+            
+        } else {
+            
+            buttonLabel(config: config.button.inactive)
+        }
+    }
+
+    private func buttonLabel(
+        config: ButtonStateConfig
+    ) -> some View {
         
         ZStack {
             
-            config.button.active.backgroundColor
+            config.backgroundColor
                 .frame(buttonSize)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
-            #warning("add button state")
-            Button(action: pay) {
-                
-                text(amount.button.title, config: config.button.active.text)
-            }
+            text(amount.button.title, config: config.text)
         }
     }
     
