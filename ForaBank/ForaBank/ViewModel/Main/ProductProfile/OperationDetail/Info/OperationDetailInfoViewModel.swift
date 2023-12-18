@@ -1448,33 +1448,40 @@ extension OperationDetailInfoViewModel {
                let transferReference = operation.transferReference,
                let countryName = operation.countryName {
                 
-                let methodViewModel = PropertyCellViewModel(title: "Способ выплаты",
-                                                            iconType: IconType.cash.icon,
-                                                            value: method.rawValue)
+                let methodViewModel = PropertyCellViewModel(
+                    title: "Способ выплаты",
+                    iconType: IconType.cash.icon,
+                    value: method.rawValue)
                 
-                let transferReferenceViewModel = PropertyCellViewModel(title: "Номер перевода",
-                                                                       iconType: IconType.operationNumber.icon,
-                                                                       value: transferReference)
+                let transferReferenceViewModel = PropertyCellViewModel(
+                    title: "Номер перевода",
+                    iconType: IconType.operationNumber.icon,
+                    value: transferReference)
                 
-                let countryViewModel = PropertyCellViewModel(title: "Страна",
-                                                             iconType: IconType.geo.icon,
-                                                             value: countryName)
+                let countryViewModel = PropertyCellViewModel(
+                    title: "Страна",
+                    iconType: IconType.geo.icon,
+                    value: countryName)
                 
-                if let formattedAmount = model.amountFormatted(amount: operation.payerAmount,
-                                                               currencyCode: operation.payerCurrency,
-                                                               style: .fraction),
+                if let formattedAmount = model.amountFormatted(
+                    amount: operation.payerAmount,
+                    currencyCode: operation.payerCurrency,
+                    style: .fraction),
                    let amount = operation.payeeAmount,
-                   let payeeAmount = model.amountFormatted(amount: amount,
-                                                           currencyCode: operation.payeeCurrency,
-                                                           style: .fraction) {
+                   let payeeAmount = model.amountFormatted(
+                    amount: amount,
+                    currencyCode: operation.payeeCurrency,
+                    style: .fraction) {
                     
-                    let transferAmount = PropertyCellViewModel(title: "Сумма списания",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)
+                    let transferAmount = PropertyCellViewModel(
+                        title: "Сумма списания",
+                        iconType: IconType.balance.icon,
+                        value: formattedAmount)
                     
-                    let amount = PropertyCellViewModel(title: "Сумма перевода",
-                                                       iconType: IconType.balance.icon,
-                                                       value: payeeAmount)
+                    let amount = PropertyCellViewModel(
+                        title: "Сумма перевода",
+                        iconType: IconType.balance.icon,
+                        value: payeeAmount)
                     
                     return [
                         payeeNumberPhone,
