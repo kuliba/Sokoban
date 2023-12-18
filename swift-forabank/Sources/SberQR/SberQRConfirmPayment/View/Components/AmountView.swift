@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AmountView: View {
     
-    typealias Amount = SberQRConfirmPaymentState.EditableAmount.Amount
+    typealias Amount = SberQRConfirmPaymentState.Amount
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
@@ -124,11 +124,11 @@ struct AmountView_Previews: PreviewProvider {
     }
     
     private static func amountView(
-        amount: SberQRConfirmPaymentState.EditableAmount.Amount
+        amount: SberQRConfirmPaymentState.Amount
     ) -> some View {
         
         AmountView(
-            amount: .preview,
+            amount: amount,
             event: { _ in },
             pay: {},
             currencySymbol: "$",

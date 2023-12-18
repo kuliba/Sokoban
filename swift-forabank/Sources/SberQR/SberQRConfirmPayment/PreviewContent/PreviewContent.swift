@@ -15,7 +15,7 @@ extension SberQRConfirmPaymentStateOf<Info>.EditableAmount {
             brandName: .brandName,
             recipientBank: .recipientBank,
             currency: .preview,
-            bottom: .preview
+            amount: .preview
         )
     }
 }
@@ -45,7 +45,7 @@ public extension SberQRConfirmPaymentState.EditableAmount {
             brandName: .brandName,
             recipientBank: .recipientBank,
             currency: .preview,
-            bottom: .preview
+            amount: .preview
         )
     }
 }

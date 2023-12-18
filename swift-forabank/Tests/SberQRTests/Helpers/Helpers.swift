@@ -28,6 +28,34 @@ extension GetSberQRDataResponse.Parameter.Amount {
     }
 }
 
+extension SberQRConfirmPaymentState.Amount {
+    
+    static func paymentAmount(
+        value: Decimal
+    ) -> Self {
+        
+        .init(
+            title: "Сумма перевода",
+            value: value,
+            button: .init(
+                title: "Оплатить"
+            )
+        )
+        
+//        .init(
+//            id: .paymentAmount,
+//            value: value,
+//            title: "Сумма перевода",
+//            validationRules: [],
+//            button: .init(
+//                title: "Оплатить",
+//                action: .paySberQR,
+//                color: .red
+//            )
+//        )
+    }
+}
+
 extension GetSberQRDataResponse.Parameter.Button {
     
     static let buttonPay: Self = .init(
@@ -161,7 +189,7 @@ func makeEditableAmount(
         brandName: .brandName(value: brandName),
         recipientBank: .recipientBank,
         currency: .rub,
-        bottom: .paymentAmount(value: amount)
+        amount: .paymentAmount(value: amount)
     )
 }
 
