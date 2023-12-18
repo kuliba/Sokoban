@@ -486,7 +486,8 @@ extension OperationDetailData {
         transferEnum: OperationDetailData.TransferEnum? = .accountClose,
         payeeFullName: String? = nil,
         payeePhone: String? = nil,
-        payeeAccountNumber: String = "payeeAccountNumber"
+        payeeAccountNumber: String = "payeeAccountNumber",
+        operationStatus: OperationStatus = .complete
     ) -> OperationDetailData {
         
         return .init(
@@ -560,7 +561,7 @@ extension OperationDetailData {
             serviceName: nil,
             merchantSubName: nil,
             merchantIcon: nil,
-            operationStatus: nil,
+            operationStatus: operationStatus,
             shopLink: nil,
             payeeCheckAccount: nil,
             depositNumber: nil,
