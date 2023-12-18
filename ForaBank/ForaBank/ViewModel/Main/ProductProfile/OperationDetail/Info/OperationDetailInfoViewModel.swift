@@ -2058,9 +2058,11 @@ extension OperationDetailInfoViewModel {
         }
     }
     
-    private func makeProductViewModel(title: String,
-                                      productId: Int?,
-                                      productNumber: String?) -> ProductCellViewModel? {
+    private func makeProductViewModel(
+        title: String,
+        productId: Int?,
+        productNumber: String?
+    ) -> ProductCellViewModel? {
         
         guard let productId = productId,
               let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
@@ -2080,10 +2082,11 @@ extension OperationDetailInfoViewModel {
                                               style: .main)
         let description = productData.additionalField ?? ""
         
-        let viewModel: ProductCellViewModel = .init(title: title,
-                                                    icon: icon,
-                                                    name: name,
-                                                    iconPaymentService: productData.paymentSystem,
+        let viewModel: ProductCellViewModel = .init(
+            title: title,
+            icon: icon,
+            name: name,
+            iconPaymentService: productData.paymentSystem,
                                                     balance: formattedBalance,
                                                     description: "\(lastNumber)\(description)")
         
