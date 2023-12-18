@@ -89,19 +89,39 @@ private extension Parameter.Button {
     }
 }
 
+private extension CreateSberQRPaymentIDs.DataStringID {
+ 
+    var rawID: String {
+        
+        switch self {
+        case .printFormType: return "printFormType"
+        }
+    }
+}
+    
 private extension Parameter.DataString {
     
     var parameterDataValue: Payments.ParameterDataValue {
         
-        .init(parameter: .init(id: id.rawValue, value: "\(value)"))
+        .init(parameter: .init(id: id.rawID, value: "\(value)"))
     }
 }
 
+private extension CreateSberQRPaymentIDs.DataLongID {
+ 
+    var rawID: String {
+        
+        switch self {
+        case .paymentOperationDetailId: return "paymentOperationDetailId"
+        }
+    }
+}
+    
 private extension Parameter.DataLong {
     
     var parameterDataValue: Payments.ParameterDataValue {
         
-        .init(parameter: .init(id: id.rawValue, value: "\(value)"))
+        .init(parameter: .init(id: id.rawID, value: "\(value)"))
     }
 }
 
@@ -133,7 +153,7 @@ private extension Parameter.SuccessText {
     }
 }
 
-private extension Parameter.Style {
+private extension SberQR.Parameters.Style {
     
     var textStyle: Payments.ParameterSuccessText.Style {
         
@@ -146,12 +166,22 @@ private extension Parameter.Style {
     }
 }
 
+private extension CreateSberQRPaymentIDs.SubscriberID {
+    
+    var rawID: String {
+        
+        switch self {
+        case .brandName: return "brandName"
+        }
+    }
+}
+
 private extension Parameter.Subscriber {
     
     var parameterSubscriber: Payments.ParameterSubscriber {
         
         .init(
-            .init(id: id.rawValue, value: value),
+            .init(id: id.rawID, value: value),
             icon: icon,
             description: description,
             style: subscriberStyle
@@ -174,7 +204,7 @@ private extension Parameter.Subscriber {
     }
 }
 
-private extension Parameter.SuccessOptionButton {
+private extension Parameter.SuccessOptionButtons {
     
     var options: Payments.ParameterSuccessOptionButtons {
         
@@ -187,7 +217,7 @@ private extension Parameter.SuccessOptionButton {
     }
 }
 
-private extension Parameter.SuccessOptionButton.Value {
+private extension Parameter.SuccessOptionButtons.Value {
     
     var option: Payments.ParameterSuccessOptionButtons.Option {
         
@@ -198,7 +228,7 @@ private extension Parameter.SuccessOptionButton.Value {
     }
 }
 
-extension Parameter.Placement {
+extension SberQR.Parameters.Placement {
     
     var buttonPlacement: Payments.Parameter.Placement {
         

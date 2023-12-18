@@ -1,6 +1,6 @@
 //
 //  PreviewContent.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 08.12.2023.
 //
@@ -87,55 +87,75 @@ extension ProductSelect.Product {
     public static let accountPreview: Self = .init(
         id: 234567891,
         type: .account,
-        icon: "",
+        header: "Счет списания",
         title: "Текущий счет",
-        footer: "- 7891",
+        footer: "7891",
         amountFormatted: "123 456 ₽",
-        color: ""
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
     )
     
     static let account2Preview: Self = .init(
         id: 2345678912,
         type: .account,
-        icon: "",
+        header: "Счет списания",
         title: "Account 2",
-        footer: "- 8912",
+        footer: "8912",
         amountFormatted: "678.09 ₽",
-        color: ""
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
     )
     
     public static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
-        icon: "",
+        header: "Счет списания",
         title: "Card",
-        footer: "- 6789",
+        footer: "6789",
         amountFormatted: "1 234.56 ₽",
-        color: ""
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
     )
     
     static let card2Preview: Self = .init(
         id: 1234567892,
         type: .card,
-        icon: "",
+        header: "Счет списания",
         title: "Card 2",
-        footer: "- 7892",
+        footer: "7892",
         amountFormatted: "12 345 ₽",
-        color: ""
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
     )
     
     static let card3Preview: Self = .init(
         id: 1234567893,
         type: .card,
-        icon: "",
+        header: "Счет списания",
         title: "Card 3",
-        footer: "- 7893",
+        footer: "7893",
         amountFormatted: "123 456.78 ₽",
-        color: ""
+        look: .init(
+            background: .svg(""),
+            color: "orange",
+            icon: .svg("")
+        )
     )
 }
 
-extension SberQRConfirmPaymentState.Amount {
+extension GetSberQRDataResponse.Parameter.Amount {
     
     static let preview: Self = .init(
         id: .paymentAmount,
@@ -150,7 +170,7 @@ extension SberQRConfirmPaymentState.Amount {
     )
 }
 
-extension SberQRConfirmPaymentState.Button {
+extension GetSberQRDataResponse.Parameter.Button {
     
     static let preview: Self = .init(
         id: .buttonPay,
@@ -161,7 +181,7 @@ extension SberQRConfirmPaymentState.Button {
     )
 }
 
-extension SberQRConfirmPaymentState.DataString {
+extension GetSberQRDataResponse.Parameter.DataString {
     
     static let preview: Self = .init(
         id: .currency,

@@ -93,7 +93,7 @@ extension GetSberQRDataResponse.Parameter.Info {
 extension GetSberQRDataResponse.Parameter.ProductSelect {
     
     static let debitAccount: Self = .init(
-        id: "debit_account",
+        id: .debit_account,
         value: nil,
         title: "Счет списания",
         filter: .init(
@@ -106,11 +106,47 @@ extension GetSberQRDataResponse.Parameter.ProductSelect {
 
 extension ProductSelect.Product {
     
-    static let test: Self = .init(id: 12345678, type: .card, icon: "", title: "Title", footer: "5678", amountFormatted: "12.67 $", color: "red")
+    static let test: Self = .init(
+        id: 12345678,
+        type: .card,
+        header: "Счет списания",
+        title: "Title",
+        footer: "5678",
+        amountFormatted: "12.67 $",
+        look: .test(color: "red")
+    )
     
-    static let test2: Self = .init(id: 23456789, type: .card, icon: "", title: "Title", footer: "6789", amountFormatted: "4.21 $", color: "blue")
+    static let test2: Self = .init(
+        id: 23456789,
+        type: .card,
+        header: "Счет списания",
+        title: "Title",
+        footer: "6789",
+        amountFormatted: "4.21 $",
+        look: .test(color: "blue")
+    )
     
-    static let missing: Self = .init(id: 1111111, type: .card, icon: "", title: "Title", footer: "1111", amountFormatted: "12.67 $", color: "red")
+    static let missing: Self = .init(
+        id: 1111111,
+        type: .card,
+        header: "Счет списания",
+        title: "Title",
+        footer: "1111",
+        amountFormatted: "12.67 $",
+        look: .test(color: "red")
+    )
+}
+
+extension ProductSelect.Product.Look {
+    
+    static func test(color: String = "red") -> Self {
+        
+        .init(
+            background: .svg(""),
+            color: color,
+            icon: .svg("")
+        )
+    }
 }
 
 func makeEditableAmount(

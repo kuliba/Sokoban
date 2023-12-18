@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         httpClient: httpClient,
         model: model,
         logger: logger,
-        qrResolverFeatureFlag: .init(.inactive)
+        qrResolverFeatureFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactory(with: model)
 

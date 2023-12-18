@@ -28,9 +28,9 @@ extension Array where Element == ProductData {
     ) -> [ProductSelect.Product] {
         
         self.filter {
-                productTypes.contains($0.productType)
-                && currencies.contains($0.currency)
-            }
+            productTypes.contains($0.productType)
+            && currencies.contains($0.currency)
+        }
         .compactMap { $0.sberQRProduct(formatBalance: formatBalance) }
     }
 }
@@ -46,11 +46,15 @@ extension ProductData {
             return .init(
                 id: .init(card.id),
                 type: .card,
-                icon: "",
+                header: "Счет списания",
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
                 amountFormatted: formatBalance(card),
-                color: card.backgroundColor.description
+                look: .init(
+                    background: .svg(card.largeDesign.description),
+                    color: card.backgroundColor.description,
+                    icon: .svg(card.smallDesign.description)
+                )
             )
         }
         
@@ -59,11 +63,15 @@ extension ProductData {
             return .init(
                 id: .init(account.id),
                 type: .account,
-                icon: "",
+                header: "Счет списания",
                 title: account.displayName,
                 footer: account.displayNumber ?? "",
                 amountFormatted: formatBalance(account),
-                color: account.backgroundColor.description
+                look: .init(
+                    background: .svg(account.largeDesign.description),
+                    color: account.backgroundColor.description,
+                    icon: .svg(account.smallDesign.description)
+                )
             )
         }
         

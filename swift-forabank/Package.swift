@@ -479,7 +479,10 @@ private extension Target {
         dependencies: [
             // external packages
             .combineSchedulers,
-            .tagged
+            .tagged,
+            // internal modules
+            .foraTools,
+            .textFieldComponent
         ]
     )
     static let sberQRTests = testTarget(
@@ -493,12 +496,12 @@ private extension Target {
             .sberQR,
         ],
         resources: [
-            .copy("Resources/QRPaymentType.json"),
-            .copy("Resources/Responses/getSberQRData_any_sum.json"),
-            .copy("Resources/Responses/getSberQRData_fix_sum.json"),
-            .copy("Resources/Responses/createSberQRPayment_IN_PROGRESS.json"),
-            .copy("Resources/Responses/createSberQRPayment_rejected.json"),
-            .copy("Resources/Responses/createSberQRPayment.json"),
+            .copy("QRPaymentTypeDictionary/Resources/QRPaymentType.json"),
+            .copy("BackendDomain/Responses/getSberQRData_any_sum.json"),
+            .copy("BackendDomain/Responses/getSberQRData_fix_sum.json"),
+            .copy("BackendDomain/Responses/createSberQRPayment_IN_PROGRESS.json"),
+            .copy("BackendDomain/Responses/createSberQRPayment_rejected.json"),
+            .copy("BackendDomain/Responses/createSberQRPayment.json"),
         ]
     )
     
