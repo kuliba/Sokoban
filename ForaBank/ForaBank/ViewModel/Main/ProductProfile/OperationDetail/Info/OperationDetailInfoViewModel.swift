@@ -1672,16 +1672,14 @@ extension OperationDetailInfoViewModel {
         image: Image? = .ic24Bank
     ) -> BankCellViewModel? {
         
-        if  let image,
-            let name = operation.merchantSubName {
-            
-            return BankCellViewModel(title: "Наименование ТСП",
-                                     icon: image,
-                                     name: name)
-        } else {
-            
-            return nil
-        }
+        guard let image,
+              let name = operation.merchantSubName
+        else { return nil }
+        
+        return BankCellViewModel(
+            title: "Наименование ТСП",
+            icon: image,
+            name: name)
     }
     
     func operationDetailStatus(
