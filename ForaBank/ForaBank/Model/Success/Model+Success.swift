@@ -257,7 +257,7 @@ extension TemplateButton {
             amount: Decimal(string: operationDetail.amount.description),
             check: false,
             comment: nil,
-            currencyAmount: operationDetail.currencyAmount,
+            currencyAmount: operationDetail.currencyAmount ?? "",
             payer: payer,
             payeeExternal: nil,
             payeeInternal: .init(productData: payee)
@@ -277,7 +277,7 @@ extension TemplateButton {
                     amount: Decimal(string: operationDetail.amount.description),
                     check: false,
                     comment: nil,
-                    currencyAmount: operationDetail.currencyAmount,
+                    currencyAmount: operationDetail.currencyAmount ?? "",
                     payer: operationDetail.payerTransferData,
                     payeeExternal: nil,
                     payeeInternal: operationDetail.payeeInternal
@@ -295,7 +295,7 @@ extension TemplateButton {
                         amount: Decimal(string: operationDetail.amount.description),
                         check: false,
                         comment: operationDetail.comment,
-                        currencyAmount: operationDetail.currencyAmount,
+                        currencyAmount: operationDetail.currencyAmount ?? "",
                         payer: operationDetail.payerTransferData,
                         payeeExternal: payeeExternal,
                         payeeInternal: nil
@@ -322,7 +322,7 @@ extension TemplateButton {
                     amount: Decimal(string: operationDetail.amount.description),
                     check: false,
                     comment: operationDetail.comment,
-                    currencyAmount: operationDetail.currencyAmount,
+                    currencyAmount: operationDetail.currencyAmount ?? "",
                     payer: operationDetail.payerTransferData,
                     additional: additional,
                     puref: operationDetail.puref

@@ -18,7 +18,7 @@ struct OperationDetailData: Codable, Hashable {
     let claimId: String
     let comment: String?
     let countryName: String?
-    let currencyAmount: String
+    let currencyAmount: String?
     let dateForDetail: String
     let division: String?
     let driverLicense: String?
@@ -151,6 +151,7 @@ struct OperationDetailData: Codable, Hashable {
         case c2bQrData = "C2B_QR_DATA"
         case c2bPayment = "C2B_PAYMENT"
         case interestDeposit = "INTEREST_DEPOSIT"
+        case sberQRPayment = "SBER_QR_PAYMENT"
         case productPaymentOffice = "PRODUCT_PAYMENT_OFFICE"
         case productPaymentCourier = "PRODUCT_PAYMENT_COURIER"
         case unknown

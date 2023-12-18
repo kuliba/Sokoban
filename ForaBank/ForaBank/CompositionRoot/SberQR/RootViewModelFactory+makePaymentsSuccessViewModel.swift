@@ -23,9 +23,30 @@ private extension CreateSberQRPaymentResponse {
     
     var success: Payments.Success {
         
-        .init(
-            operation: nil,
-            parameters: parameters.map(\.representable)
+        var parameters = parameters.map(\.representable)
+        parameters.append(Payments.ParameterSuccessMode(mode: .sberQR))
+        
+        #warning("using not SberQR specific `service: .c2b, source: .qr`")
+        let operation = Payments.Operation(
+            service: .c2b,
+            source: .qr,
+            steps: [
+                .init(
+                    parameters: parameters,
+                    front: .init(visible: [], isCompleted: true),
+                    back: .init(
+                        stage: .local,
+                        required: parameters.map(\.id),
+                        processed: nil
+                    )
+                )
+            ],
+            visible: []
+        )
+        
+        return .init(
+            operation: operation,
+            parameters: parameters
         )
     }
 }
@@ -106,22 +127,20 @@ private extension Parameter.DataString {
         .init(parameter: .init(id: id.rawID, value: "\(value)"))
     }
 }
-
-private extension CreateSberQRPaymentIDs.DataLongID {
- 
-    var rawID: String {
-        
-        switch self {
-        case .paymentOperationDetailId: return "paymentOperationDetailId"
-        }
-    }
-}
     
 private extension Parameter.DataLong {
     
     var parameterDataValue: Payments.ParameterDataValue {
         
-        .init(parameter: .init(id: id.rawID, value: "\(value)"))
+        switch id {
+        case .paymentOperationDetailId:
+            let identifier: Payments.Parameter.Identifier = .successOperationDetailID
+            
+            return .init(parameter: .init(
+                id: identifier.rawValue,
+                value: "\(value)"
+            ))
+        }
     }
 }
 

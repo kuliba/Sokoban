@@ -27,6 +27,7 @@ enum PrintFormType: String, Codable, Hashable, Unknownable {
     case closeAccount
     case returnOutgoing
     case changeOutgoing
+    case sberQR
     case sticker
     case unknown
 }

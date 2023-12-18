@@ -1491,7 +1491,7 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             )
             
-        case .c2bPayment:
+        case .c2bPayment, .sberQRPayment:
             
             let nameCompany: DefaultCellViewModel? = {
                 
