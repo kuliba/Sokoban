@@ -1409,35 +1409,41 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             ]
             
-            if let formattedAmount = self.model.amountFormatted(amount: operation.amount,
-                                                                currencyCode: operation.currencyAmount,
-                                                                style: .normal) {
+            if let formattedAmount = self.model.amountFormatted(
+                amount: operation.amount,
+                currencyCode: operation.currencyAmount,
+                style: .normal) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма перевода",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 3)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма перевода",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 3)
             }
             
             if let payeeAmount = operation.payeeAmount,
                let payeeCurrency = operation.payeeCurrency,
-               let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                           currencyCode: payeeCurrency,
-                                                           style: .fraction) {
+               let formattedAmount = model.amountFormatted(
+                amount: payeeAmount,
+                currencyCode: payeeCurrency,
+                style: .fraction) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма зачисления в валюте",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 5)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма зачисления в валюте",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 5)
             }
             
             let payeeAmount = operation.payerAmount
             let payeeCurrency = operation.payerCurrency
-            if let formattedAmount = model.amountFormatted(amount: payeeAmount,
-                                                           currencyCode: payeeCurrency,
-                                                           style: .fraction) {
+            if let formattedAmount = model.amountFormatted(
+                amount: payeeAmount,
+                currencyCode: payeeCurrency,
+                style: .fraction) {
                 
-                directCells.insert((PropertyCellViewModel.init(title: "Сумма списания",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)), at: 6)
+                directCells.insert((PropertyCellViewModel(
+                    title: "Сумма списания",
+                    iconType: IconType.balance.icon,
+                    value: formattedAmount)), at: 6)
             }
             
             return directCells.compactMap {$0}
@@ -1448,33 +1454,40 @@ extension OperationDetailInfoViewModel {
                let transferReference = operation.transferReference,
                let countryName = operation.countryName {
                 
-                let methodViewModel = PropertyCellViewModel(title: "Способ выплаты",
-                                                            iconType: IconType.cash.icon,
-                                                            value: method.rawValue)
+                let methodViewModel = PropertyCellViewModel(
+                    title: "Способ выплаты",
+                    iconType: IconType.cash.icon,
+                    value: method.rawValue)
                 
-                let transferReferenceViewModel = PropertyCellViewModel(title: "Номер перевода",
-                                                                       iconType: IconType.operationNumber.icon,
-                                                                       value: transferReference)
+                let transferReferenceViewModel = PropertyCellViewModel(
+                    title: "Номер перевода",
+                    iconType: IconType.operationNumber.icon,
+                    value: transferReference)
                 
-                let countryViewModel = PropertyCellViewModel(title: "Страна",
-                                                             iconType: IconType.geo.icon,
-                                                             value: countryName)
+                let countryViewModel = PropertyCellViewModel(
+                    title: "Страна",
+                    iconType: IconType.geo.icon,
+                    value: countryName)
                 
-                if let formattedAmount = model.amountFormatted(amount: operation.payerAmount,
-                                                               currencyCode: operation.payerCurrency,
-                                                               style: .fraction),
+                if let formattedAmount = model.amountFormatted(
+                    amount: operation.payerAmount,
+                    currencyCode: operation.payerCurrency,
+                    style: .fraction),
                    let amount = operation.payeeAmount,
-                   let payeeAmount = model.amountFormatted(amount: amount,
-                                                           currencyCode: operation.payeeCurrency,
-                                                           style: .fraction) {
+                   let payeeAmount = model.amountFormatted(
+                    amount: amount,
+                    currencyCode: operation.payeeCurrency,
+                    style: .fraction) {
                     
-                    let transferAmount = PropertyCellViewModel(title: "Сумма списания",
-                                                               iconType: IconType.balance.icon,
-                                                               value: formattedAmount)
+                    let transferAmount = PropertyCellViewModel(
+                        title: "Сумма списания",
+                        iconType: IconType.balance.icon,
+                        value: formattedAmount)
                     
-                    let amount = PropertyCellViewModel(title: "Сумма перевода",
-                                                       iconType: IconType.balance.icon,
-                                                       value: payeeAmount)
+                    let amount = PropertyCellViewModel(
+                        title: "Сумма перевода",
+                        iconType: IconType.balance.icon,
+                        value: payeeAmount)
                     
                     return [
                         payeeNumberPhone,
@@ -1537,9 +1550,10 @@ extension OperationDetailInfoViewModel {
                let account = operation.account {
                 
                 let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                let numberViewModel = PropertyCellViewModel(title: "Номер счета получателя",
-                                                            iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
-                                                            value: account)
+                let numberViewModel = PropertyCellViewModel(
+                    title: "Номер счета получателя",
+                    iconType: operatorValue?.parameterList.first?.svgImage?.image ?? PropertyIconType.account.icon,
+                    value: account)
                 
                 cells.insert(numberViewModel, at: 0)
             }
@@ -1549,9 +1563,10 @@ extension OperationDetailInfoViewModel {
                let payeeFullName = operation.payeeFullName {
                 
                 let operatorValue = model.dictionaryAnywayOperator(for: puref)
-                let operatorViewModel = PropertyCellViewModel(title: "Наименование получателя",
-                                                              iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
-                                                              value: payeeFullName)
+                let operatorViewModel = PropertyCellViewModel(
+                    title: "Наименование получателя",
+                    iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                    value: payeeFullName)
                 cells.insert(operatorViewModel, at: 0)
             }
             
@@ -1609,9 +1624,10 @@ extension OperationDetailInfoViewModel {
             ]
             
             if let payeeProductNumber {
-                let payeeCellViewModel = PropertyCellViewModel(title: "Номер карты получателя",
-                                                               iconType: Image("otherCard"),
-                                                               value: payeeProductNumber)
+                let payeeCellViewModel = PropertyCellViewModel(
+                    title: "Номер карты получателя",
+                    iconType: Image("otherCard"),
+                    value: payeeProductNumber)
                 cells.insert(payeeCellViewModel, at: 0)
             }
             
@@ -1629,22 +1645,11 @@ extension OperationDetailInfoViewModel {
                 dateViewModel
             )
             
-        case .c2bPayment, .sberQRPayment:
+        case .c2bPayment:
             
-            let nameCompany: DefaultCellViewModel? = {
-                
-                if let icon = operation.merchantIcon {
-                    
-                    let image = ImageData(with: .init(description: icon))?.image
-                    return nameCompanyC2B(operation: operation, image: image)
-                }
-                
-                return nil
-            }()
-            
-            let cells = [
+            return [
                 amountViewModel,
-                nameCompany,
+                operation.merchant,
                 dateViewModel,
                 operationDetailStatus(status: operation.operationStatus),
                 payerViewModel,
@@ -1653,8 +1658,21 @@ extension OperationDetailInfoViewModel {
                 purposeViewModel,
                 operationNumberViewModel
             ].compactMap { $0 }
+                        
+        case .sberQRPayment:
             
-            return cells
+            return [
+                amountViewModel,
+                operation.merchant,
+                dateViewModel,
+                operationDetailStatus(status: operation.operationStatus),
+                payerViewModel,
+                payeeViewModel,
+                operation.payeeName,
+                payeeBankViewModel,
+                purposeViewModel,
+                operationNumberViewModel
+            ].compactMap { $0 }
             
         default:
             
@@ -1672,16 +1690,14 @@ extension OperationDetailInfoViewModel {
         image: Image? = .ic24Bank
     ) -> BankCellViewModel? {
         
-        if  let image,
-            let name = operation.merchantSubName {
-            
-            return BankCellViewModel(title: "Наименование ТСП",
-                                     icon: image,
-                                     name: name)
-        } else {
-            
-            return nil
-        }
+        guard let image,
+              let name = operation.merchantSubName
+        else { return nil }
+        
+        return BankCellViewModel(
+            title: "Наименование ТСП",
+            icon: image,
+            name: name)
     }
     
     func operationDetailStatus(
@@ -1945,31 +1961,35 @@ extension OperationDetailInfoViewModel {
         case .balance:
             
             let amount = operation.transferEnum == .external ? operation.payerAmount - operation.payerFee : operation.payerAmount
-            let formattedAmount = model.amountFormatted(amount: amount,
-                                                        currencyCode: operation.payerCurrency,
-                                                        style: .fraction)
+            let formattedAmount = model.amountFormatted(
+                amount: amount,
+                currencyCode: operation.payerCurrency,
+                style: .fraction)
             
             guard let formattedAmount = formattedAmount else {
                 return nil
             }
             
-            return .init(title: "Сумма перевода",
-                         iconType: IconType.balance.icon,
-                         value: formattedAmount)
+            return .init(
+                title: "Сумма перевода",
+                iconType: IconType.balance.icon,
+                value: formattedAmount)
             
         case .commission:
             
-            let payerFee = model.amountFormatted(amount: operation.payerFee,
-                                                 currencyCode: productData.currency,
-                                                 style: .fraction)
+            let payerFee = model.amountFormatted(
+                amount: operation.payerFee,
+                currencyCode: productData.currency,
+                style: .fraction)
             
             guard let payerFee = payerFee else {
                 return nil
             }
             
-            return .init(title: "Комиссия",
-                         iconType: IconType.commission.icon,
-                         value: payerFee)
+            return .init(
+                title: "Комиссия",
+                iconType: IconType.commission.icon,
+                value: payerFee)
             
         case .purpose:
             //FIXME: backend send "" if comment nil
@@ -1978,20 +1998,23 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Назначение платежа",
-                         iconType: IconType.purpose.icon,
-                         value: comment)
+            return .init(
+                title: "Назначение платежа",
+                iconType: IconType.purpose.icon,
+                value: comment)
             
         case .date:
             switch operation.transferEnum {
             case .depositClose:
-                return .init(title: "Тип платежа",
-                             iconType: IconType.date.icon,
-                             value: "Закрытие вклада")
+                return .init(
+                    title: "Тип платежа",
+                    iconType: IconType.date.icon,
+                    value: "Закрытие вклада")
             default:
-                return .init(title: "Дата и время операции (МСК)",
-                             iconType: IconType.date.icon,
-                             value: operation.responseDate)
+                return .init(
+                    title: "Дата и время операции (МСК)",
+                    iconType: IconType.date.icon,
+                    value: operation.responseDate)
             }
             
         case .phone:
@@ -2005,16 +2028,20 @@ extension OperationDetailInfoViewModel {
             if operation.transferEnum == .sfp {
                 
                 let formattedPhone = phoneFormatter.format(payeePhone.count == 10 ? "7\(payeePhone)" : payeePhone)
-                return .init(title: "Номер телефона получателя",
-                             iconType: IconType.phone.icon,
-                             value: formattedPhone)
+                
+                return .init(
+                    title: "Номер телефона получателя",
+                    iconType: IconType.phone.icon,
+                    value: formattedPhone)
                 
             } else {
                 
                 let formattedPhone = phoneFormatter.format(payeePhone)
-                return .init(title: "Номер телефона получателя",
-                             iconType: IconType.phone.icon,
-                             value: formattedPhone)
+                
+                return .init(
+                    title: "Номер телефона получателя",
+                    iconType: IconType.phone.icon,
+                    value: formattedPhone)
             }
             
         case .user:
@@ -2023,9 +2050,10 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Получатель",
-                         iconType: IconType.user.icon,
-                         value: payeeName)
+            return .init(
+                title: "Получатель",
+                iconType: IconType.user.icon,
+                value: payeeName)
             
         case .operationNumber:
             
@@ -2033,18 +2061,21 @@ extension OperationDetailInfoViewModel {
                 return nil
             }
             
-            return .init(title: "Номер операции СБП",
-                         iconType: IconType.operationNumber.icon,
-                         value: transferNumber)
+            return .init(
+                title: "Номер операции СБП",
+                iconType: IconType.operationNumber.icon,
+                value: transferNumber)
             
         default:
             return nil
         }
     }
     
-    private func makeProductViewModel(title: String,
-                                      productId: Int?,
-                                      productNumber: String?) -> ProductCellViewModel? {
+    private func makeProductViewModel(
+        title: String,
+        productId: Int?,
+        productNumber: String?
+    ) -> ProductCellViewModel? {
         
         guard let productId = productId,
               let productData = model.product(productId: productId) ?? model.product(additionalId: productId),
@@ -2064,12 +2095,13 @@ extension OperationDetailInfoViewModel {
                                               style: .main)
         let description = productData.additionalField ?? ""
         
-        let viewModel: ProductCellViewModel = .init(title: title,
-                                                    icon: icon,
-                                                    name: name,
-                                                    iconPaymentService: productData.paymentSystem,
-                                                    balance: formattedBalance,
-                                                    description: "\(lastNumber)\(description)")
+        let viewModel: ProductCellViewModel = .init(
+            title: title,
+            icon: icon,
+            name: name,
+            iconPaymentService: productData.paymentSystem,
+            balance: formattedBalance,
+            description: "\(lastNumber)\(description)")
         
         return viewModel
     }
@@ -2102,6 +2134,37 @@ extension OperationDetailInfoViewModel {
             return BankCellViewModel(title: title,
                                      icon: Image("BankIcon"),
                                      name: bankName)
+        }
+    }
+}
+
+extension OperationDetailData {
+    
+    var merchant: OperationDetailInfoViewModel.BankCellViewModel? {
+        
+        guard let icon = merchantIcon,
+              let image = ImageData(with: .init(description: icon))?.image,
+              let name = merchantSubName
+        else { return nil }
+        
+        return .init(
+            title: "Наименование ТСП",
+            icon: image,
+            name: name
+        )
+    }
+    
+    var payeeName: OperationDetailInfoViewModel.PropertyCellViewModel? {
+        
+        let iconType = OperationDetailInfoViewModel.IconType.user.icon
+        
+        return payeeFullName.map { name in
+            
+                .init(
+                    title: "Получатель",
+                    iconType: iconType,
+                    value: name
+                )
         }
     }
 }
