@@ -132,6 +132,46 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(newState.productSelect, productSelect)
     }
     
+    func test_reduce_productSelect_shouldSetAmountToDisabledOnAmountGreaterThanBalanceOfSelectedProduct() {
+        
+        let amount: Decimal = 4.22
+        let current = ProductSelect.Product.test2
+        let selectedProduct = ProductSelect.Product.test
+        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let (sut, _) = makeSUT()
+        
+        let newState = sut.reduce(
+            makeEditableAmount(
+                productSelect: .compact(current),
+                amount: amount
+            ),
+            .productSelect(event)
+        )
+        
+        XCTAssertFalse(newState.amount.button.isEnabled)
+        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
+    }
+    
+    func test_reduce_productSelect_shouldSetAmountToEnabledOnAmountLesserThanBalanceOfSelectedProduct() {
+        
+        let amount: Decimal = 4.21
+        let current = ProductSelect.Product.test2
+        let selectedProduct = ProductSelect.Product.test
+        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let (sut, _) = makeSUT()
+        
+        let newState = sut.reduce(
+            makeEditableAmount(
+                productSelect: .compact(current),
+                amount: amount
+            ),
+            .productSelect(event)
+        )
+        
+        XCTAssert(newState.amount.button.isEnabled)
+        XCTAssertGreaterThanOrEqual(newState.productSelect.selected.balance, amount)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SberQRConfirmPaymentStateEditableAmountReducer

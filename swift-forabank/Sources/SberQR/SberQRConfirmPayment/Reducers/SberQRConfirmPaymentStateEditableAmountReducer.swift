@@ -49,6 +49,7 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
                 state.productSelect,
                 productSelectEvent
             )
+            newState.amount.button.isEnabled = newState.productSelect.canPay(newState.amount.value)
         }
         
         return newState
