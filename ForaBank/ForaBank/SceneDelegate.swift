@@ -20,7 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         logger: logger,
         qrResolverFeatureFlag: .init(.active)
     )
-    private lazy var rootViewFactory = RootViewFactory(with: model)
+    private lazy var rootViewFactory = RootViewFactory(
+        with: model.imageCache()
+    )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

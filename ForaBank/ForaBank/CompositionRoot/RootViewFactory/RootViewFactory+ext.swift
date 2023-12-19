@@ -11,9 +11,7 @@ import SwiftUI
 
 extension RootViewFactory {
     
-    init(with model: Model) {
-        
-        let imageCache = model.imageCache()
+    init(with imageCache: ImageCache) {
         
         self.init(
             makeSberQRConfirmPaymentView: { viewModel in
@@ -36,7 +34,7 @@ extension RootViewFactory {
     }
 }
 
-private extension ImageCache {
+extension ImageCache {
     
     func imagePublisher(
         for icon: GetSberQRDataResponse.Parameter.Info.Icon
@@ -47,26 +45,7 @@ private extension ImageCache {
             return Just(.init(icon.value)).eraseToAnyPublisher()
             
         case .remote:
-            return image(forKey: icon.imageKey)
+            return image(forKey: .init(icon.value))
         }
-    }
-}
-
-private extension GetSberQRDataResponse.Parameter.Info.Icon {
-    
-    var imageKey: ImageCache.ImageKey { .init(value) }
-}
-
-private extension Model {
-    
-    func imageCache() -> ImageCache {
-        
-        .init(
-            requestImages: {
-                
-                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0.map(\.rawValue)))
-            },
-            imagesPublisher: images
-        )
     }
 }
