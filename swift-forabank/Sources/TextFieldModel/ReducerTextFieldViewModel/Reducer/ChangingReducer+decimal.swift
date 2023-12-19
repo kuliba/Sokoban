@@ -47,7 +47,12 @@ public extension ChangingReducer {
                     text: textState.text,
                     allowDecimalSeparator: true
                 )
-                let isLastDecimalSeparator = formatter.isDecimalSeparator(.init(cleanText.last ?? .init("")))
+                let isLastDecimalSeparator = {
+                    
+                    guard let last = cleanText.last else { return false }
+                    
+                    return formatter.isDecimalSeparator(.init(last))
+                }()
                 if replacementText == "0" && isLastDecimalSeparator {
                     return changed
                 }
