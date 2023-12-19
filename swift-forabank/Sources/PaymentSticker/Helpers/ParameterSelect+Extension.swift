@@ -10,7 +10,7 @@ import Foundation
 extension Operation.Parameter.Select {
     
     
-    public func updatedStateToSelect(
+    public func updatingStateToSelect(
         iconName: String
     ) -> Self {
         
@@ -30,7 +30,7 @@ extension Operation.Parameter.Select {
         )
     }
     
-    public func updatedStateToList(
+    public func updatingStateToList(
         iconName: String
     ) -> Self {
         
