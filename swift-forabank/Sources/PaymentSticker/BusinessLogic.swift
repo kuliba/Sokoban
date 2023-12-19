@@ -68,7 +68,7 @@ public extension BusinessLogic {
             
             switch selectEvent {
             case let .search(text, parameter):
-                let result = reduceSearchAction(parameter, text, operation)
+                let result = reduceSearchAction(operation, text, parameter)
                 completion(result)
                 
             case let .selectOption(id, parameter):
@@ -83,130 +83,21 @@ public extension BusinessLogic {
                 case .transferTypeSticker:
                     switch id.name {
                     case "Получить в офисе":
-                        processDictionaryService(.stickerOrderDeliveryOffice) { result in
-                            
-                            switch result {
-                            case let .success(dictionaryResponse):
-                                let state = self.dictionaryStickerReduce(
-                                    operation,
-                                    dictionaryResponse
-                                )
-                                
-                                if operation.parameters.contains(where: { $0.id == .input }) {
-                                    
-                                    switch state {
-                                    case let .operation(operation):
-                                        
-                                        let operationBack = operation.parameters.filter({ $0.id != .input })
-                                        completion(.success(.operation(.init(parameters: operationBack))))
-                                        
-                                    default:
-                                        
-                                        completion(.success(self.dictionaryStickerReduce(
-                                            operation,
-                                            dictionaryResponse
-                                        )))
-                                    }
-                                }
-                                
-                                completion(.success(state))
-                                
-                            case let .failure(error):
-                                completion(.failure(error))
-                            }
-                        }
                         
+                        deliveryOffice(operation, completion)
                         completion(.success(.operation(operation)))
                         
                     case "Доставка курьером":
-                        processDictionaryService(.stickerOrderDeliveryCourier) { result in
-                            
-                            switch result {
-                            case let .success(dictionaryResponse):
-                                
-                                let state = self.dictionaryStickerReduce(
-                                    operation,
-                                    dictionaryResponse
-                                )
-                                
-                                if operation.parameters.contains(where: { $0.id == .input }) {
-                                    
-                                    switch state {
-                                    case let .operation(operation):
-                                        
-                                        let operationBack = operation.parameters.filter({ $0.id != .input })
-                                        completion(.success(.operation(.init(parameters: operationBack))))
-                                        
-                                    default:
-                                        
-                                        completion(.success(self.dictionaryStickerReduce(
-                                            operation,
-                                            dictionaryResponse
-                                        )))
-                                    }
-                                }
-                                
-                                completion(.success(state))
-                                
-                            case let .failure(error):
-                                completion(.failure(error))
-                            }
-                        }
                         
+                        deliveryCourier(operation, completion)
                         completion(.success(.operation(operation)))
+                        
                     default:
                         break
                     }
                     
                 case .citySelector:
-                    
-                    if let _ = operation.parameters.first(where: { $0.id == .input }) {
-                        
-                        let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
-                        completion(.success(.operation(.init(parameters: parameters))))
-                        
-                    } else {
-                     
-                        let newOperation = operation.updateOperation(
-                            operation: operation,
-                            newParameter: .select(parameter)
-                        )
-                        
-                        if let transferType = operation.parameters.first(where: { $0.id == .transferType }) {
-                            
-                            switch transferType {
-                            case let .select(select):
-                                if select.value == "typeDeliveryOffice" {
-                                    
-                                    let filterOperation = newOperation.updateOperation(
-                                        operation: newOperation,
-                                        newParameter: .select(.branchSelect)
-                                    )
-                                    
-                                    let operation = selectOption(
-                                        id: id.name,
-                                        operation: filterOperation,
-                                        parameter: parameter
-                                    )
-                                    
-                                    completion(.success(.operation(operation)))
-                                    
-                                } else {
-                                    
-                                    let operation = selectOption(
-                                        id: id.name,
-                                        operation: newOperation,
-                                        parameter: parameter
-                                    )
-                                    
-                                    completion(.success(.operation(operation)))
-                                }
-                                
-                            default:
-                                completion(.success(.operation(newOperation)))
-                            }
-                        }
-                    }
+                    citySelector(id, operation, parameter, completion)
                     
                 case .selector:
                     completion(.success(.operation(operation)))
@@ -214,7 +105,9 @@ public extension BusinessLogic {
                     completion(.success(.operation(operation)))
 
                 }
-
+                
+                break
+                
             case let .openBranch(location):
                 
                 let location = Location(id: location.id)
@@ -226,11 +119,13 @@ public extension BusinessLogic {
                         switch result {
                         case let .some(office):
                             
-                            if let _ = operation.parameters.first(where: { $0.id == .input }) {
+                            let parametersWithInput = operation.parameters.filter { $0.id != .input }
+                            
+                            if parametersWithInput.isEmpty {
                                 
-                                let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
+                                let parameters = parametersWithInput.filter({ $0.id != .amount })
                                 completion(.success(.operation(.init(parameters: parameters))))
-                                
+
                             } else {
                                 
                                 let newOperation = operation.updateOperation(
@@ -360,7 +255,7 @@ public extension BusinessLogic {
                 ))))
                 
             case .code:
-                if let input = operation.parameters.first(where: { $0.id == .input }) {
+                if let input = operation.inputParameter {
                     
                     switch input {
                     case let .input(input):
@@ -441,7 +336,7 @@ public extension BusinessLogic {
                 type: "STICKER",
                 deliverToOffice: parameters.deliveryToOffice ?? false,
                 officeId: parameters.officeID,
-                cityId:  parameters.deliveryToOffice == false ? parameters.cityID : nil
+                cityId: parameters.deliveryToOffice == true ? nil : parameters.cityID
             ))
     }
     
@@ -464,7 +359,7 @@ public extension BusinessLogic {
             
         case let .selectProduct(option, product):
             
-            if let _ = operation.parameters.first(where: { $0.id == .input }) {
+            if operation.parameters.first(where: { $0.id == .input }) != nil {
                 
                 let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
                 return .success(.operation(.init(parameters: parameters)))
@@ -487,6 +382,141 @@ public extension BusinessLogic {
                     return .success(.operation(operation))
                 }
             }
+        }
+    }
+    
+    fileprivate func citySelector(
+        _ id: Event.SelectOptionID,
+        _ operation: Operation,
+        _ parameter: Event.ParameterSelect,
+        _ completion: (BusinessLogic.OperationResult) -> Void
+    ) {
+        if operation.parameters.first(where: { $0.id == .input }) != nil {
+            
+            let parameters = operation.parameters.filter({ $0.id != .input }).filter({ $0.id != .amount })
+            completion(.success(.operation(.init(parameters: parameters))))
+            
+        } else {
+            
+            let newOperation = operation.updateOperation(
+                operation: operation,
+                newParameter: .select(parameter)
+            )
+            
+            if let transferType = operation.parameters.first(where: { $0.id == .transferType }) {
+                
+                switch transferType {
+                case let .select(select):
+                    if select.value == "typeDeliveryOffice" {
+                        
+                        let filterOperation = newOperation.updateOperation(
+                            operation: newOperation,
+                            newParameter: .select(.branchSelect)
+                        )
+                        
+                        let operation = selectOption(
+                            id: id.name,
+                            operation: filterOperation,
+                            parameter: parameter
+                        )
+                        
+                        completion(.success(.operation(operation)))
+                        
+                    } else {
+                        
+                        let operation = selectOption(
+                            id: id.name,
+                            operation: newOperation,
+                            parameter: parameter
+                        )
+                        
+                        completion(.success(.operation(operation)))
+                    }
+                    
+                default:
+                    completion(.success(.operation(newOperation)))
+                }
+            }
+        }
+    }
+    
+    fileprivate func deliveryCourier(
+        _ operation: Operation,
+        _ completion: @escaping (BusinessLogic.OperationResult) -> Void
+    ) {
+        processDictionaryService(.stickerOrderDeliveryCourier) { [weak self] result in
+            
+            switch result {
+            case let .success(dictionaryResponse):
+                
+                let state = self?.dictionaryStickerReduce(
+                    operation,
+                    dictionaryResponse
+                )
+                
+                if operation.parameters.contains(where: { $0.id == .input }) {
+                    
+                    switch state {
+                    case let .operation(operation):
+                        
+                        let operationBack = operation.parameters.filter({ $0.id != .input })
+                        completion(.success(.operation(.init(parameters: operationBack))))
+                        
+                    default:
+                        
+                        completion(.success(self?.dictionaryStickerReduce(
+                            operation,
+                            dictionaryResponse
+                        ) ?? .operation(operation)))
+                    }
+                }
+                
+                completion(.success(state ?? .operation(operation)))
+                
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    fileprivate func deliveryOffice(
+        _ operation: Operation,
+        _ completion: @escaping (BusinessLogic.OperationResult) -> Void
+    ) {
+        
+        processDictionaryService(.stickerOrderDeliveryOffice) { result in
+
+            switch result {
+            case let .success(dictionaryResponse):
+                let state = self.dictionaryStickerReduce(
+                    operation,
+                    dictionaryResponse
+                )
+                
+                if operation.parameters.contains(where: { $0.id == .input }) {
+                    
+                    switch state {
+                    case let .operation(operation):
+                        
+                        let operationBack = operation.parameters.filter({ $0.id != .input })
+                        completion(.success(.operation(.init(parameters: operationBack))))
+                        
+                    default:
+                        
+                        completion(.success(self.dictionaryStickerReduce(
+                            operation,
+                            dictionaryResponse
+                        )))
+                    }
+                }
+                
+                completion(.success(state))
+                
+            case let .failure(error):
+                completion(.failure(error))
+            }
+            
+            completion(.success(.operation(operation)))
         }
     }
     
@@ -568,7 +598,7 @@ public extension BusinessLogic {
                         return .productSelector(.init(
                             state: .select,
                             selectedProduct: product,
-                            allProducts: self.products
+                            allProducts: self.products()
                         ))
                     } else {
                         
@@ -708,9 +738,9 @@ public extension BusinessLogic {
 extension BusinessLogic {
     
     func reduceSearchAction(
-        _ parameter: Event.ParameterSelect,
+        _ operation: Operation,
         _ text: String,
-        _ operation: Operation
+        _ parameter: Event.ParameterSelect
     ) -> BusinessLogic.OperationResult {
         
         let newOptions = parameter.staticOptions.filter({ $0.name.localizedCaseInsensitiveContains(text) })
@@ -750,7 +780,7 @@ extension BusinessLogic {
             
         case let .selected(selectedViewModel):
             
-            let parameter = select.updatedStateToList(
+            let parameter = select.updatingStateToList(
                 iconName: selectedViewModel.iconName
             )
             
@@ -763,7 +793,7 @@ extension BusinessLogic {
             
             if select.value != nil {
                 
-                let parameter = select.updatedStateToSelect(
+                let parameter = select.updatingStateToSelect(
                     iconName: listViewModel.iconName
                 )
                 
@@ -804,6 +834,14 @@ extension BusinessLogic {
 }
 
 // MARK: Helpers
+
+extension Operation {
+
+    var inputParameter: Operation.Parameter? {
+        
+        self.parameters.first(where: { $0.id == .input })
+    }
+}
 
 extension PaymentSticker.ParameterViewModel {
     
