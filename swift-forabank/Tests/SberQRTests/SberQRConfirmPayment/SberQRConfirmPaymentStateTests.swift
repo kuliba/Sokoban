@@ -28,6 +28,26 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
         )))
     }
     
+    func test_init_editableAmount_fromResponseWithEditableAmount_zero() throws {
+        
+        let amount: Decimal = 0
+        let response = responseWithEditableAmount(amount: amount)
+        
+        let state = try SberQRConfirmPaymentState(product: .test2, response: response)
+        
+        XCTAssertNoDiff(state, .editableAmount(.init(
+            header: .payQR,
+            productSelect: .compact(.test2),
+            brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
+            recipientBank: .recipientBank,
+            currency: .rub,
+            amount: .paymentAmount(
+                value: amount,
+                isEnabled: false
+            )
+        )))
+    }
+    
     func test_init_editableAmount_fromResponseWithEditableAmount() throws {
         
         let amount: Decimal = 123.45
@@ -41,7 +61,10 @@ final class SberQRConfirmPaymentStateTests: GetSberQRDataResponseTests {
             brandName: .brandName(value: "Тест Макусов. Кутуза_QR"),
             recipientBank: .recipientBank,
             currency: .rub,
-            amount: .paymentAmount(value: amount)
+            amount: .paymentAmount(
+                value: amount,
+                isEnabled: true
+            )
         )))
     }
 }

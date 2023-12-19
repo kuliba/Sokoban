@@ -73,15 +73,15 @@ private extension Array where Element == GetSberQRDataResponse.Parameter {
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
         
-        #warning("isEnabled depends on amount due (amount value) and product balance")
+        #warning("isEnabled also depends product balance")
         
         return .init(
             title: amount.title,
             value: amount.value,
             button: .init(
                 title: amount.button.title,
-                // for simplicity - as most likely default value in zero
-                isEnabled: false
+                // TODO: add product balance as a cap
+                isEnabled: 0 < amount.value
             )
         )
     }
