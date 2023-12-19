@@ -17,7 +17,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         XCTAssertNoDiff(spy.callCount, 0)
     }
     
-    func test_reduce_editAmount_shouldChangeStateOnEditAmount() {
+    func test_reduce_editAmount_shouldChangeAmountOnEditAmount() {
         
         let amount: Decimal = 123.45
         let brandName = "Some Brand Name"
