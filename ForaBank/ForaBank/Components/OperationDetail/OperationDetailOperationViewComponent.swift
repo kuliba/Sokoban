@@ -109,7 +109,7 @@ extension OperationDetailViewModel {
             case .c2b:
                 let bankLogo = Self.bankLogo(with: productStatement, model: model)
                 
-                self.init(bankLogo: bankLogo, payee: .singleRow(productStatement.merchant), amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
+                self.init(bankLogo: bankLogo, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: productStatement.fastPaymentComment, date: dateFormatted)
                 
             case .sberQRPayment:
                 
