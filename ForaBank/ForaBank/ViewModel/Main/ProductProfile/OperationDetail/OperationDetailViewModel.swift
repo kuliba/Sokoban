@@ -238,7 +238,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         
         switch productStatement.paymentDetailType {
             
-        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes:
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
             if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
