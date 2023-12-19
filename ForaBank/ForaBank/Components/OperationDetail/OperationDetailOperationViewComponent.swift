@@ -54,8 +54,8 @@ extension OperationDetailViewModel {
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .betweenTheir:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant
-                )
+                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
+                
                 let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
