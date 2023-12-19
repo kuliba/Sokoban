@@ -45,12 +45,12 @@ extension OperationDetailViewModel {
             let image = productStatement.svgImage?.image
             let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
 
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
+            
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
+            
             switch productStatement.paymentDetailType {
             case .insideBank:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                
-                let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
-                
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .betweenTheir:
