@@ -1844,6 +1844,7 @@
 		C16B8A4D2955F1FD00B0AD4C /* PrefferedBanksList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16B8A4C2955F1FD00B0AD4C /* PrefferedBanksList.swift */; };
 		C16DDBEE2B2C95BA001BF988 /* QRPaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBED2B2C95BA001BF988 /* QRPaymentType.swift */; };
 		C16DDBF02B2C9A67001BF988 /* Model+QRHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */; };
+		C16DDBF42B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */; };
 		C172098C2A9E28EC0020CE93 /* ProductDataFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */; };
 		C1722C312989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */; };
 		C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C342989613E00C503E3 /* CountyWithServiceData.swift */; };
@@ -4069,6 +4070,7 @@
 		C16B8A4C2955F1FD00B0AD4C /* PrefferedBanksList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefferedBanksList.swift; sourceTree = "<group>"; };
 		C16DDBED2B2C95BA001BF988 /* QRPaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRPaymentType.swift; sourceTree = "<group>"; };
 		C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QRHelpers.swift"; sourceTree = "<group>"; };
+		C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResult+emptySuccess.swift"; sourceTree = "<group>"; };
 		C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataFilterTests.swift; sourceTree = "<group>"; };
 		C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesWithServiceResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C1722C342989613E00C503E3 /* CountyWithServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountyWithServiceData.swift; sourceTree = "<group>"; };
@@ -8615,6 +8617,7 @@
 		77BE9A36290C2097006046B1 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				C16DDBF22B314E26001BF988 /* Helpers */,
 				8431A2542AEBE76800E60CB8 /* UserAccount */,
 				2A4B54202AB1D9AF0042A0FF /* Auth */,
 				2A3F934F2ABF111600669C1A /* RootViewModel */,
@@ -9940,6 +9943,14 @@
 				C155ABDA2A28F3F400BE66AE /* PaymentTemplateData+Stubs.swift */,
 			);
 			path = Stubs;
+			sourceTree = "<group>";
+		};
+		C16DDBF22B314E26001BF988 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		C18D25F22A25A67B00DF5643 /* TemplateButton */ = {
@@ -14377,6 +14388,7 @@
 				C14303F12A84259000FAD5AA /* AccountCellViewModelTests.swift in Sources */,
 				2A1F08662A794C0300C5B11B /* Services+EndpointFormSessionKeyTests.swift in Sources */,
 				2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */,
+				C16DDBF42B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift in Sources */,
 				2AF375912A1B7BC300B5B29E /* TextState+DSL.swift in Sources */,
 				C155ABD92A28F33300BE66AE /* TranferData+Stubs.swift in Sources */,
 				2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */,
