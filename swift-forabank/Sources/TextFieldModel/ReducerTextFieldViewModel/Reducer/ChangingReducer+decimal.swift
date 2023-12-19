@@ -38,6 +38,17 @@ public extension ChangingReducer {
             )
             
             let text = {
+                // trailing zero after decimal separator
+                let filtered = formatter.clean(
+                    text: textState.text,
+                    allowDecimalSeparator: true
+                )
+                let isLastDecimalSeparator = formatter.isDecimalSeparator(.init(filtered.last ?? .init("")))
+                if replacementText == "0",
+                   isLastDecimalSeparator {
+                    return changed
+                }
+                
                 if formatter.isDecimalSeparator(replacementText) {
                     return changed
                 } else {

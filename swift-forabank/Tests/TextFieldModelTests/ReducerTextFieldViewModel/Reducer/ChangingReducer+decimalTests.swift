@@ -207,6 +207,13 @@ final class ChangingReducer_decimalTests: XCTestCase {
         assert(newState, hasText: "12 345,67 ₽", cursorAt: 8)
     }
     
+    func test_change_shouldAddTrailingZero() throws {
+        
+        let newState = try change("12, ₽", with: "0", at: 3)
+
+        assert(newState, hasText: "12,0 ₽", cursorAt: 4)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ChangingReducer
