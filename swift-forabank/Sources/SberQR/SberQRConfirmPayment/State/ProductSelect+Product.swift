@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 17.12.2023.
 //
 
+import Foundation
 import Tagged
 
 public extension ProductSelect {
@@ -17,6 +18,7 @@ public extension ProductSelect {
         let title: String
         let number: String
         let amountFormatted: String
+        let balance: Decimal
         let look: Look
         
         public init(
@@ -26,6 +28,7 @@ public extension ProductSelect {
             title: String,
             footer: String,
             amountFormatted: String,
+            balance: Decimal,
             look: Look
         ) {
             self.id = id
@@ -34,6 +37,7 @@ public extension ProductSelect {
             self.title = title
             self.number = footer
             self.amountFormatted = amountFormatted
+            self.balance = balance
             self.look = look
         }
     }

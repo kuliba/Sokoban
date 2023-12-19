@@ -121,6 +121,7 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
     private func anyProduct(
         id: Int,
         type: ProductSelect.Product.ProductType,
+        balance: Decimal = 99,
         color: String = "red"
     ) -> ProductSelect.Product {
         
@@ -131,6 +132,7 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
             title: "",
             footer: "",
             amountFormatted: "",
+            balance: balance,
             look: .test(color: color)
         )
     }

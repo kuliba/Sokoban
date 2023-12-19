@@ -131,6 +131,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "5678",
         amountFormatted: "12.67 $",
+        balance: 12.67,
         look: .test(color: "red")
     )
     
@@ -141,6 +142,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "6789",
         amountFormatted: "4.21 $",
+        balance: 4.21,
         look: .test(color: "blue")
     )
     
@@ -151,6 +153,7 @@ extension ProductSelect.Product {
         title: "Title",
         footer: "1111",
         amountFormatted: "12.67 $",
+        balance: 12.67,
         look: .test(color: "red")
     )
 }
