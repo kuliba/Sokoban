@@ -19,41 +19,83 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
     
     func test_reduce_editAmount_shouldChangeAmountOnEditAmount() {
         
+        let amount: Decimal = 12.66
+        let brandName = "Some Brand Name"
+        let (sut, _) = makeSUT()
+        let state = makeEditableAmount(
+            brandName: brandName,
+            amount: 0
+        )
+        
+        let newState = sut.reduce(state, .editAmount(amount))
+        
+        XCTAssertNoDiff(newState, makeEditableAmount(
+            brandName: brandName,
+            amount: amount,
+            isEnabled: true
+        ))
+        XCTAssertGreaterThan(newState.productSelect.selected.balance, amount)
+    }
+    
+    func test_reduce_editAmount_shouldChangeAmountStateToDisabledOnEditAmount() {
+        
         let amount: Decimal = 123.45
         let brandName = "Some Brand Name"
         let (sut, _) = makeSUT()
         let state = makeEditableAmount(
             brandName: brandName,
-            amount: amount
+            amount: 0
         )
         
-        let newState = sut.reduce(state, .editAmount(3_456.78))
+        let newState = sut.reduce(state, .editAmount(amount))
         
         XCTAssertNoDiff(newState, makeEditableAmount(
             brandName: brandName,
-            amount: 3_456.78,
-            isEnabled: true
+            amount: amount,
+            isEnabled: false
         ))
+        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
     }
     
     func test_reduce_editAmount_shouldChangeStateOnEditAmount() {
         
-        let amount: Decimal = 0
         let brandName = "Some Brand Name"
         let (sut, _) = makeSUT()
         let state = makeEditableAmount(
             brandName: brandName,
-            amount: amount,
             isEnabled: false
         )
         
-        let newState = sut.reduce(state, .editAmount(3_456.78))
+        let newState = sut.reduce(state, .editAmount(4.20))
         
         XCTAssertNoDiff(newState, makeEditableAmount(
             brandName: brandName,
-            amount: 3_456.78,
+            amount: 4.20,
             isEnabled: true
         ))
+    }
+    
+    func test_reduce_editAmount_shouldChangeStateToDisabledOnAmountGreaterThanProductBalance() {
+        
+        let amount: Decimal = 123_457
+        let brandName = "Some Brand Name"
+        let (sut, _) = makeSUT(
+            productSelectStub: .compact(.accountPreview)
+        )
+        let state = makeEditableAmount(
+            brandName: brandName,
+            amount: 0,
+            isEnabled: false
+        )
+        
+        let newState = sut.reduce(state, .editAmount(amount))
+        
+        XCTAssertNoDiff(newState, makeEditableAmount(
+            brandName: brandName,
+            amount: amount,
+            isEnabled: false
+        ))
+        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
     }
     
     func test_reduce_productSelect_shouldCallProductSelectReduce() {

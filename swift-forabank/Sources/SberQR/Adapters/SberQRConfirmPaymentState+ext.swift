@@ -16,7 +16,7 @@ public extension SberQRConfirmPaymentState {
         .init(qrLink: url, product: product, amount: amount)
     }
     
-    private var productSelect: ProductSelect {
+    var productSelect: ProductSelect {
         
         switch self {
         case let .fixedAmount(fixedAmount):

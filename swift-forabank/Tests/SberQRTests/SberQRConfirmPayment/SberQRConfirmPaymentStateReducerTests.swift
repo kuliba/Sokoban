@@ -30,21 +30,42 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
     
     func test_reduce_editableAmount_editAmount_shouldChangeStateOnEditAmount() {
         
-        let amount: Decimal = 123.45
+        let amount: Decimal = 11.11
         let brandName = "Some Brand Name"
         let (sut, _) = makeSUT()
         let state = makeEditableAmount(
             brandName: brandName,
-            amount: amount
+            amount: 123.45
         )
         
-        let newState = sut._reduce(state, .editAmount(3_456.78))
+        let newState = sut._reduce(state, .editAmount(amount))
         
         XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: brandName,
-            amount: 3_456.78,
+            amount: amount,
             isEnabled: true
         )))
+        XCTAssertGreaterThan(newState.productSelect.selected.balance, amount)
+    }
+    
+    func test_reduce_editableAmount_editAmount_shouldChangeStateToDisabledOnEditAmount() {
+        
+        let amount: Decimal = 3_456.78
+        let brandName = "Some Brand Name"
+        let (sut, _) = makeSUT()
+        let state = makeEditableAmount(
+            brandName: brandName,
+            amount: 123.45
+        )
+        
+        let newState = sut._reduce(state, .editAmount(amount))
+        
+        XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
+            brandName: brandName,
+            amount: amount,
+            isEnabled: false
+        )))
+        XCTAssertGreaterThan(amount, newState.productSelect.selected.balance)
     }
     
     func test_reduce_editableAmount_pay_shouldCallPayWithState() {

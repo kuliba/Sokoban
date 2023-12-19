@@ -18,7 +18,7 @@ public extension ProductSelect {
         let title: String
         let number: String
         let amountFormatted: String
-        let balance: Decimal
+        public let balance: Decimal
         let look: Look
         
         public init(

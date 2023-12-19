@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 07.12.2023.
 //
 
+import Foundation
+
 public final class SberQRConfirmPaymentStateEditableAmountReducer {
     
     public typealias State = SberQRConfirmPaymentState.EditableAmount
@@ -32,12 +34,13 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
         
         switch event {
         case let .editAmount(value):
+            let isEnabled = state.productSelect.canPay(value)
             newState.amount = .init(
                 title: state.amount.title,
                 value: value,
                 button: .init(
                     title: state.amount.button.title,
-                    isEnabled: 0 < value
+                    isEnabled: isEnabled
                 )
             )
             
@@ -49,5 +52,13 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
         }
         
         return newState
+    }
+}
+
+private extension ProductSelect {
+    
+    func canPay(_ amount: Decimal) -> Bool {
+        
+        0 < amount && amount <= selected.balance
     }
 }
