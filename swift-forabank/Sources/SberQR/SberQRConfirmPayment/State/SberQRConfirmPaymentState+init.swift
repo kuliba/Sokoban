@@ -42,7 +42,7 @@ private extension SberQRConfirmPaymentState.EditableAmount {
             brandName: response.parameters.info(withID: .brandName),
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),
-            bottom: response.parameters.amount()
+            amount: response.parameters.amount()
         )
     }
 }
@@ -68,12 +68,22 @@ private extension SberQRConfirmPaymentState.FixedAmount {
 private extension Array where Element == GetSberQRDataResponse.Parameter {
     
     func amount(
-    ) throws -> GetSberQRDataResponse.Parameter.Amount {
+    ) throws -> SberQRConfirmPaymentState.Amount {
         
         guard case let .amount(amount) = first(where: { $0.case == .amount })
         else { throw ParameterError(missing: .amount) }
         
-        return amount
+        #warning("isEnabled depends on amount due (amount value) and product balance")
+        
+        return .init(
+            title: amount.title,
+            value: amount.value,
+            button: .init(
+                title: amount.button.title,
+                // for simplicity - as most likely default value in zero
+                isEnabled: false
+            )
+        )
     }
     
     func button(

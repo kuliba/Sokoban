@@ -14,7 +14,7 @@ public extension SberQRConfirmPaymentStateOf {
         public let brandName: Info
         public let recipientBank: Info
         public let currency: DataString
-        public var bottom: Amount
+        public var amount: Amount
         
         public init(
             header: Header,
@@ -22,21 +22,21 @@ public extension SberQRConfirmPaymentStateOf {
             brandName: Info,
             recipientBank: Info,
             currency: DataString,
-            bottom: Amount
+            amount: Amount
         ) {
             self.header = header
             self.productSelect = productSelect
             self.brandName = brandName
             self.recipientBank = recipientBank
             self.currency = currency
-            self.bottom = bottom
+            self.amount = amount
         }
     }
 }
 
 public extension SberQRConfirmPaymentStateOf.EditableAmount {
     
-    typealias Amount = GetSberQRDataResponse.Parameter.Amount
+    typealias Amount = SberQRConfirmPaymentState.Amount
     typealias DataString = GetSberQRDataResponse.Parameter.DataString
 }
 

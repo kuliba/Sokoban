@@ -107,6 +107,7 @@ struct ProductSelectView: View {
             productCard: .init(product: product),
             config: config.card.productCardConfig
         )
+        .onTapGesture { event(.select(product.id)) }
     }
     
     private func chevron() -> some View {

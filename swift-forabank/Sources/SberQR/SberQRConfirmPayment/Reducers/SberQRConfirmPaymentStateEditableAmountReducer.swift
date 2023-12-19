@@ -31,13 +31,11 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
         var newState = state
         
         switch event {
-        case let .editAmount(amount):
-            newState.bottom = .init(
-                id: state.bottom.id,
-                value: amount,
-                title: state.bottom.title,
-                validationRules: state.bottom.validationRules,
-                button: state.bottom.button
+        case let .editAmount(value):
+            newState.amount = .init(
+                title: state.amount.title,
+                value: value,
+                button: state.amount.button
             )
             
         case let .productSelect(productSelectEvent):
