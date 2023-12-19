@@ -31,7 +31,28 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         XCTAssertNoDiff(newState, makeEditableAmount(
             brandName: brandName,
-            amount: 3_456.78
+            amount: 3_456.78,
+            isEnabled: true
+        ))
+    }
+    
+    func test_reduce_editAmount_shouldChangeStateOnEditAmount() {
+        
+        let amount: Decimal = 0
+        let brandName = "Some Brand Name"
+        let (sut, _) = makeSUT()
+        let state = makeEditableAmount(
+            brandName: brandName,
+            amount: amount,
+            isEnabled: false
+        )
+        
+        let newState = sut.reduce(state, .editAmount(3_456.78))
+        
+        XCTAssertNoDiff(newState, makeEditableAmount(
+            brandName: brandName,
+            amount: 3_456.78,
+            isEnabled: true
         ))
     }
     

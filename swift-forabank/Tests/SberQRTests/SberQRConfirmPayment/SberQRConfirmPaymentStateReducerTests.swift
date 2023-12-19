@@ -42,7 +42,8 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         XCTAssertNoDiff(newState, .editableAmount(makeEditableAmount(
             brandName: brandName,
-            amount: 3_456.78
+            amount: 3_456.78,
+            isEnabled: true
         )))
     }
     

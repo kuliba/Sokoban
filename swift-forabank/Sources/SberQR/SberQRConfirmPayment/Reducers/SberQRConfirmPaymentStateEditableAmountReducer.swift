@@ -35,7 +35,10 @@ public extension SberQRConfirmPaymentStateEditableAmountReducer {
             newState.amount = .init(
                 title: state.amount.title,
                 value: value,
-                button: state.amount.button
+                button: .init(
+                    title: state.amount.button.title,
+                    isEnabled: 0 < value
+                )
             )
             
         case let .productSelect(productSelectEvent):
