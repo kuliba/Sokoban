@@ -54,18 +54,14 @@ extension OperationDetailViewModel {
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .betweenTheir:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-                
                 let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .otherBank:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
                 let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .contactAddressless, .direct:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
                 let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
@@ -86,7 +82,6 @@ extension OperationDetailViewModel {
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                  
             case .outsideCash:
-                let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
                 let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
