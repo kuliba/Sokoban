@@ -5,8 +5,19 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-public enum ProductSelect: Equatable {
+public struct ProductSelect: Equatable {
     
-    case compact(Product)
-    case expanded(Product, [Product])
+    // TODO: replace Array with NonEmpty
+    public typealias Products = [Product]
+    
+    var selected: Product
+    var products: Products? = nil
+    
+    public init(
+        selected: Product,
+        products: Products? = nil
+    ) {
+        self.selected = selected
+        self.products = products
+    }
 }

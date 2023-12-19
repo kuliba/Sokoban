@@ -50,24 +50,10 @@ private extension SberQRConfirmPaymentState {
         
         switch self {
         case let .editableAmount(editableAmount):
-            return editableAmount.productSelect.product
+            return editableAmount.productSelect.selected
             
         case let .fixedAmount(fixedAmount):
-            return fixedAmount.productSelect.product
-        }
-    }
-}
-
-private extension ProductSelect {
-    
-    var product: ProductSelect.Product {
-        
-        switch self {
-        case let .compact(product):
-            return product
-            
-        case let .expanded(product, _):
-            return product
+            return fixedAmount.productSelect.selected
         }
     }
 }

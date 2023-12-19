@@ -38,7 +38,7 @@ private extension SberQRConfirmPaymentState.EditableAmount {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: .compact(product),
+            productSelect: .init(selected: product),
             brandName: response.parameters.info(withID: .brandName),
             recipientBank: response.parameters.info(withID: .recipientBank),
             currency: response.parameters.dataString(withID: .currency),
@@ -56,7 +56,7 @@ private extension SberQRConfirmPaymentState.FixedAmount {
         
         try self.init(
             header: response.parameters.header(),
-            productSelect: .compact(product),
+            productSelect: .init(selected: product),
             brandName: response.parameters.info(withID: .brandName),
             amount: response.parameters.info(withID: .amount),
             recipientBank: response.parameters.info(withID: .recipientBank),

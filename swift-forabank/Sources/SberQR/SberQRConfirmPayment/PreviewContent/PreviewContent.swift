@@ -67,8 +67,11 @@ public extension SberQRConfirmPaymentState.FixedAmount {
 
 extension ProductSelect {
     
-    static let preview: Self = .compact(.cardPreview)
-    static let previewExpanded: Self = .expanded(.accountPreview, .allProducts)
+    static let preview: Self = .init(selected: .cardPreview)
+    static let previewExpanded: Self = .init(
+        selected: .accountPreview, 
+        products: .allProducts
+    )
 }
 
 public extension Array where Element == ProductSelect.Product {

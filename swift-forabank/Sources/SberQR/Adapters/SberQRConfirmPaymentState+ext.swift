@@ -27,20 +27,9 @@ public extension SberQRConfirmPaymentState {
         }
     }
     
-    private var selectedProduct: ProductSelect.Product {
-        
-        switch productSelect {
-        case let .compact(product):
-            return product
-            
-        case let .expanded(product, _):
-            return product
-        }
-    }
-    
     private var product: CreateSberQRPaymentPayload.Product {
         
-        switch (selectedProduct.type, selectedProduct.id.rawValue) {
+        switch (productSelect.selected.type, productSelect.selected.id.rawValue) {
         case let (.account, id):
             return .account(.init(id))
             

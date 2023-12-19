@@ -33,21 +33,28 @@ public extension ProductSelectReducer {
         
         switch event {
         case let .select(id):
-            guard let product = getProducts().first(where: { $0.id == id })
-            else { break }
+            guard let product = getProducts()[id] else { break }
             
-            newState = .compact(product)
+            newState = .init(selected: product)
             
         case .toggleProductSelect:
-            switch state {
-            case let .compact(product):
-                newState = .expanded(product, getProducts())
+            switch state.products {
+            case .none:
+                newState.products = getProducts()
                 
-            case let .expanded(selected, _):
-                newState = .compact(selected)
+            case .some:
+                newState.products = nil
             }
         }
         
         return newState
+    }
+}
+
+extension Array where Element == ProductSelect.Product {
+    
+    subscript(id: ProductSelect.Product.ID) -> Element? {
+     
+        first(where: { $0.id == id })
     }
 }
