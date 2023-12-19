@@ -6,6 +6,7 @@
 //
 
 @testable import ForaBank
+import SberQR
 import XCTest
 
 final class MainViewModelTests: XCTestCase {
@@ -99,7 +100,15 @@ final class MainViewModelTests: XCTestCase {
           localAgent: localAgent
         )
         
-        let sut = MainViewModel(model, makeProductProfileViewModel: { _,_,_  in nil }, onRegister: {})
+        let qrViewModelFactory = QRViewModelFactory.preview()
+
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            onRegister: {}
+        )
      
       sut.orderSticker()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
@@ -108,8 +117,12 @@ final class MainViewModelTests: XCTestCase {
     }
     
     // MARK: - Helpers
-  
+    fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
+    private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+
     private func makeSUT(
+        createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
+        getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -117,11 +130,21 @@ final class MainViewModelTests: XCTestCase {
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
+        let sberQRServices = SberQRServices.preview(
+            createSberQRPaymentResultStub: createSberQRPaymentStub,
+            getSberQRDataResultStub: getSberQRDataResultStub
+        )
+        
+        let qrViewModelFactory = QRViewModelFactory.preview()
+        
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_ in nil },
+            makeProductProfileViewModel: { _,_,_  in nil },
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: qrViewModelFactory,
             onRegister: {}
         )
+
         
         trackForMemoryLeaks(sut, file: file, line: line)
         // TODO: restore memory leaks tracking after Model fix
@@ -168,7 +191,9 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
-            makeProductProfileViewModel: { _,_,_ in nil },
+            makeProductProfileViewModel: { _,_,_  in nil },
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
             onRegister: {}
         )
 
